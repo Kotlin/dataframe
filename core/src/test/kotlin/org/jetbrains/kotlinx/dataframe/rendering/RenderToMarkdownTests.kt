@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.io.MarkdownAlignment
 import org.jetbrains.kotlinx.dataframe.io.renderToMarkdown
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +20,7 @@ class RenderToMarkdownTests {
         val expected =
             """
             |  | name | age | city |
-            |---:|---:|---:|---:|
+            |---|---|---|---|
             | 0 | Alice | 30 | Berlin |
             | 1 | Bob | 25 | Paris |
             | 2 | Charlie | 35 | London |
@@ -34,7 +35,7 @@ class RenderToMarkdownTests {
         val expected =
             """
             | name | age | city |
-            |---:|---:|---:|
+            |---|---|---|
             | Alice | 30 | Berlin |
             | Bob | 25 | Paris |
             | Charlie | 35 | London |
@@ -49,7 +50,7 @@ class RenderToMarkdownTests {
         val expected =
             """
             |  | name:String | age:Int | city:String |
-            |---:|---:|---:|---:|
+            |---|---|---|---|
             | 0 | Alice | 30 | Berlin |
             | 1 | Bob | 25 | Paris |
             | 2 | Charlie | 35 | London |
@@ -60,7 +61,7 @@ class RenderToMarkdownTests {
 
     @Test
     fun `markdown align left`() {
-        val result = df.renderToMarkdown(alignLeft = true, rowIndex = false)
+        val result = df.renderToMarkdown(alignment = MarkdownAlignment.LEFT, rowIndex = false)
         val expected =
             """
             | name | age | city |
@@ -75,11 +76,26 @@ class RenderToMarkdownTests {
 
     @Test
     fun `markdown align right`() {
-        val result = df.renderToMarkdown(alignLeft = false, rowIndex = false)
+        val result = df.renderToMarkdown(alignment = MarkdownAlignment.RIGHT, rowIndex = false)
         val expected =
             """
             | name | age | city |
             |---:|---:|---:|
+            | Alice | 30 | Berlin |
+            | Bob | 25 | Paris |
+            | Charlie | 35 | London |
+            
+            """.trimIndent()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `markdown align center`() {
+        val result = df.renderToMarkdown(alignment = MarkdownAlignment.CENTER, rowIndex = false)
+        val expected =
+            """
+            | name | age | city |
+            |:---:|:---:|:---:|
             | Alice | 30 | Berlin |
             | Bob | 25 | Paris |
             | Charlie | 35 | London |
@@ -96,7 +112,7 @@ class RenderToMarkdownTests {
             **DataFrame [3 x 3]**
 
             | name | age | city |
-            |---:|---:|---:|
+            |---|---|---|
             | Alice | 30 | Berlin |
             | Bob | 25 | Paris |
             | Charlie | 35 | London |
@@ -111,7 +127,7 @@ class RenderToMarkdownTests {
         val expected =
             """
             | name | age | city |
-            |---:|---:|---:|
+            |---|---|---|
             | Alice | 30 | Berlin |
 
             *... 2 more rows*
@@ -127,7 +143,7 @@ class RenderToMarkdownTests {
         val expected =
             """
             | cmd |
-            |---:|
+            |---|
             | a\|b |
 
             """.trimIndent()

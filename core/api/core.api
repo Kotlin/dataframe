@@ -6124,9 +6124,20 @@ public final class org/jetbrains/kotlinx/dataframe/io/HtmlKt {
 	public static synthetic fun toStaticHtml$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;Lorg/jetbrains/kotlinx/dataframe/jupyter/CellRenderer;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/MarkdownAlignment : java/lang/Enum {
+	public static final field CENTER Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+	public static final field LEFT Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+	public static final field RIGHT Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+	public static final field UNSPECIFIED Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getSeparator ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/MarkdownKt {
-	public static final fun renderToMarkdown (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZ)Ljava/lang/String;
-	public static synthetic fun renderToMarkdown$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;ZZZZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun renderToMarkdown (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;ZZZ)Ljava/lang/String;
+	public static synthetic fun renderToMarkdown$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Integer;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/MarkdownAlignment;ZZZILjava/lang/Object;)Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/MethodArguments {
