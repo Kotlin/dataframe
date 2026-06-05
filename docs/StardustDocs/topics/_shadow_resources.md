@@ -326,3 +326,13 @@
 <resource src="countDistinctColumnsOnGroupBy_properties.html"></resource>
 <resource src="countDistinctColumnsCustomNameOnGroupBy_properties.html"></resource>
 <resource src="countDistinctColumnsGroupBy.html"></resource>
+<resource src="filterWithCondition.html"></resource>
+<resource src="dropWithCondition_properties.html"></resource>
+<resource src="firstWithCondition_properties.html"></resource>
+<resource src="updateWithCondition_properties.html"></resource>
+<resource src="gatherWithCondition_properties.html"></resource>
+<resource src="formatWithCondition_properties.html"></resource>
+<resource src="addWithExpression_properties.html"></resource>
+<resource src="updateWithExpression_properties.html"></resource>
+<resource src="pivotWithExpression_properties.html"></resource>
+<resource src="dfDataRow.html"></resource>
