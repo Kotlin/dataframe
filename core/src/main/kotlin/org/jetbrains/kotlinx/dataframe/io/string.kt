@@ -83,6 +83,15 @@ public fun AnyFrame.renderToString(
             sb.append(borderStyle.headerSplit)
         }
         sb.appendLine()
+    } else {
+        for ((i, colLength) in columnLengths.withIndex()) {
+            val splitterSize = minOf(colLength, 4)
+            val char = if (rowIndex && i == 0) " " else "-"
+            val str = char.repeat(splitterSize)
+            val padded = if (alignLeft) str.padEnd(colLength) else str.padStart(colLength)
+            sb.append(padded)
+        }
+        sb.appendLine()
     }
 
     // data
