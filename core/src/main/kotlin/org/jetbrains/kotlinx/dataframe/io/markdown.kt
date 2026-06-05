@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.size
 public fun AnyFrame.renderToMarkdown(
     rowsLimit: Int? = 20,
     valueLimit: Int? = 40,
-    alignLeft: Boolean = false,
+    alignment: MarkdownAlignment = MarkdownAlignment.UNSPECIFIED,
     columnTypes: Boolean = false,
     title: Boolean = false,
     rowIndex: Boolean = true,
@@ -30,7 +30,8 @@ public fun AnyFrame.renderToMarkdown(
     // separator
     sb.append("|")
     repeat(table.header.size) {
-        sb.append(if (alignLeft) ":---|" else "---:|")
+        sb.append(alignment.separator)
+        sb.append("|")
     }
     sb.appendLine()
 
@@ -49,4 +50,11 @@ public fun AnyFrame.renderToMarkdown(
         sb.appendLine("*... ${table.totalRows - table.rowsCount} more rows*")
     }
     return sb.toString()
+}
+
+public enum class MarkdownAlignment(public val separator: String) {
+    LEFT(":---"),
+    RIGHT("---:"),
+    CENTER(":---:"),
+    UNSPECIFIED("---"),
 }
