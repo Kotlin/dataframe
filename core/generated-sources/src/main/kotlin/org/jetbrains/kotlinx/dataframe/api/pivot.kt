@@ -88,10 +88,10 @@ internal interface PivotDocs {
      *
      * ### Reduce [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`first`**][Pivot.first]`  [ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
@@ -100,16 +100,16 @@ internal interface PivotDocs {
      * `| `__`.`__[**`last`**][Pivot.last]`  [ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     * __`.`__[**`with`**][ReducedPivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`values`**][Pivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[**`values`**][ReducedPivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [Pivot] into [DataRow]
      *
@@ -164,8 +164,8 @@ internal interface PivotDocs {
      *   (optionally, the first or last one that satisfies a predicate) of each group;
      * * [minBy][Pivot.minBy] / [maxBy][Pivot.maxBy] — take the row with the minimum or maximum value
      *   of the given [RowExpression] evaluated on rows within each group;
-     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row with
-     *   the median or a specific percentile value of the given [RowExpression] evaluated on rows within each group.
+     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row at the position closest
+     *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
      *
      * These functions return a [ReducedPivot], which can then be transformed into a new [DataFrame]
      * containing a single combined row (either using the original reduced rows or their transformed versions)
