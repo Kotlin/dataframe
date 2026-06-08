@@ -1,5 +1,5 @@
 [versions]
-kotlinJupyter = "0.16.0-736"
+kotlinJupyter = "0.18.1-942"
 
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"
