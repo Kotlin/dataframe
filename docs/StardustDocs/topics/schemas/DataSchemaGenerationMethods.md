@@ -80,6 +80,22 @@ df
 df.generateInterfaces(markerName = "Customer")
 ```
 
+Output:
+
+```kotlin
+@DataSchema
+interface Customer {
+    val orders: List<Orders>
+    val user: String
+
+    @DataSchema(isOpen = false)
+    interface Orders {
+        val amount: Double
+        val orderId: Int
+    }
+}
+```
+
 <!---END-->
 
 By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
@@ -157,6 +173,22 @@ Useful when you want to:
 
 ```kotlin
 df.generateDataClasses("Customer")
+```
+
+Output:
+
+```kotlin
+@DataSchema
+data class Customer(
+    val orders: List<Orders>,
+    val user: String
+) {
+    @DataSchema
+    data class Orders(
+        val amount: Double,
+        val orderId: Int
+    )
+}
 ```
 
 <!---END-->
