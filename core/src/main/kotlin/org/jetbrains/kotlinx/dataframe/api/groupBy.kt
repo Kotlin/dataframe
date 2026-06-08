@@ -112,10 +112,10 @@ internal interface GroupByDocs {
      * ### Reduce [GroupBy] into [DataFrame]
      *
      * {@include [Indent]}
-     * [GroupBy][GroupBy]`.`[**`minBy`**][GroupBy.minBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * [GroupBy][GroupBy]`.`[**`minBy`**][GroupBy.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * `| `__`.`__[**`maxBy`**][GroupBy.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`first`**][GroupBy.first]`  \[ `**`  {  `**`rowCondition: `[`RowFilter`][RowFilter]**` } `**`]`

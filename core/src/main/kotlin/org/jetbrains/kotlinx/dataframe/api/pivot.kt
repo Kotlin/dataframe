@@ -75,10 +75,10 @@ internal interface PivotDocs {
      *
      * ### Reduce [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`first`**][Pivot.first]`  \[ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
@@ -93,10 +93,10 @@ internal interface PivotDocs {
      * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     * __`.`__[**`with`**][ReducedPivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`values`**][Pivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[**`values`**][ReducedPivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [Pivot] into [DataRow]
      *
