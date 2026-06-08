@@ -34,7 +34,7 @@ public fun AnyFrame.renderToString(
 ): String {
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
-    val columnLengths = table.values.mapIndexed { col, vals ->
+    val columnWidths = table.values.mapIndexed { col, vals ->
         (vals + table.header[col] + (table.types?.get(col) ?: "")).maxOf { it.length } + 2
     }
 
@@ -47,7 +47,7 @@ public fun AnyFrame.renderToString(
     // top border
     if (borders) {
         sb.append(borderStyle.topLeft)
-        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(borderStyle.horizontal) }
+        repeat(columnWidths.sum() + columnWidths.size - 1) { sb.append(borderStyle.horizontal) }
         sb.append(borderStyle.topRight)
         sb.appendLine()
         sb.append(borderStyle.vertical)
@@ -55,9 +55,9 @@ public fun AnyFrame.renderToString(
 
     // header
     for (col in table.header.indices) {
-        val len = columnLengths[col]
+        val width = columnWidths[col]
         val str = table.header[col]
-        val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+        val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
         sb.append(padded)
         if (borders) sb.append(borderStyle.vertical)
     }
@@ -66,9 +66,9 @@ public fun AnyFrame.renderToString(
     table.types?.let { types ->
         if (borders) sb.append(borderStyle.vertical)
         for (col in table.header.indices) {
-            val len = columnLengths[col]
+            val width = columnWidths[col]
             val str = types[col]
-            val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+            val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
             sb.append(padded)
             if (borders) sb.append(borderStyle.vertical)
         }
@@ -78,17 +78,17 @@ public fun AnyFrame.renderToString(
     // header splitter
     if (borders) {
         sb.append(borderStyle.vertical)
-        for (colLength in columnLengths) {
-            repeat(colLength) { sb.append(borderStyle.horizontal) }
+        for (colWidth in columnWidths) {
+            repeat(colWidth) { sb.append(borderStyle.horizontal) }
             sb.append(borderStyle.headerSplit)
         }
         sb.appendLine()
     } else {
-        for ((i, colLength) in columnLengths.withIndex()) {
-            val splitterSize = minOf(colLength, 4)
+        for ((i, colWidth) in columnWidths.withIndex()) {
+            val splitterSize = minOf(colWidth, 4)
             val char = if (rowIndex && i == 0) " " else "-"
             val str = char.repeat(splitterSize)
-            val padded = if (alignLeft) str.padEnd(colLength) else str.padStart(colLength)
+            val padded = if (alignLeft) str.padEnd(colWidth) else str.padStart(colWidth)
             sb.append(padded)
         }
         sb.appendLine()
@@ -98,9 +98,9 @@ public fun AnyFrame.renderToString(
     for (row in 0 until table.rowsCount) {
         if (borders) sb.append(borderStyle.vertical)
         for (col in table.values.indices) {
-            val len = columnLengths[col]
+            val width = columnWidths[col]
             val str = table.values[col][row]
-            val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+            val padded = if (alignLeft) str.padEnd(width) else str.padStart(width)
             sb.append(padded)
             if (borders) sb.append(borderStyle.vertical)
         }
@@ -113,7 +113,7 @@ public fun AnyFrame.renderToString(
         sb.appendLine("${size.ncol} columns x ${size.nrow} rows")
     } else if (borders) {
         sb.append(borderStyle.bottomLeft)
-        repeat(columnLengths.sum() + columnLengths.size - 1) { sb.append(borderStyle.horizontal) }
+        repeat(columnWidths.sum() + columnWidths.size - 1) { sb.append(borderStyle.horizontal) }
         sb.append(borderStyle.bottomRight)
         sb.appendLine()
     }
