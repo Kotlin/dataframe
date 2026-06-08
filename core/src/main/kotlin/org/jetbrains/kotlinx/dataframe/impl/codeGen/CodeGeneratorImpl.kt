@@ -280,7 +280,8 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
     /**
      * Generate a try-catch block for column accessor with custom error messages.
      *
-     * Catch any exception. Returns an `error()` with a special message. Can be improved with custom exception (#1872).
+     * Catch any exception. Throws an [IllegalStateException] with a special message and original exception.
+     * Can be improved with custom exception (#1872).
      *
      * 1) IllegalArgumentException -> most probably column not found. Should be replaced with a custom exception (#1871)
      * 2) ClassCastException -> most probably incorrect column type. Should be replaced with a custom exception (#1871)
@@ -291,12 +292,13 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         return """
             try {
                 $columnAccessCode
-            } catch (e: Exception) {
-                 when (e) {
-                    is IllegalArgumentException -> error(message = "Column not found exception in the generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + ". See $troubleshootingLink for more information.")
-                    is ClassCastException -> error(message = "Incorrect column type exception in generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + " See $troubleshootingLink for more information.")
-                    else -> error(message = "Unexpected exception in generated DataFrame extension property '$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues." + "Exception message: " + e.toString())
+            } catch (e: kotlin.Exception) {
+                 val msg = when (e) {
+                    is kotlin.IllegalArgumentException -> "Column not found exception in the generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + ". See $troubleshootingLink for more information."
+                    is kotlin.ClassCastException -> "Incorrect column type exception in generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + " See $troubleshootingLink for more information."
+                    else -> "Unexpected exception in generated DataFrame extension property '$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues." + "Exception message: " + e.toString()
                 }
+                throw IllegalStateException(msg, e)
             }
             """.trimIndent()
     }
