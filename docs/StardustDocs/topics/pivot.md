@@ -477,7 +477,7 @@ The following aggregation methods are available:
 * `frames` — returns this [`Pivot`](pivot.md) as a [`DataRow`](DataRow.md) with pivot keys as [`columns`](DataColumn.md) 
 (or [`column groups`](DataColumn.md#columngroup)) and corresponding groups stored as [`FrameColumns`](DataColumn.md#framecolumn);
 * [`values`](values.md) — collects values from all rows of each group for the selected columns into a single `List` 
-(values from [`column groups`](DataColumn.md#columngroup) are collected into a [`FrameColumn`](DataColumn.md#framecolumn));
+(values from [`column groups`](DataColumn.md#columngroup) are collected into a [`DataFrame`](DataFrame.md));
 * [`count`](count.md) — creates a [`DataRow`](DataRow.md) with the `Pivot` key columns containing the number of rows in each corresponding group;
 * `with` — creates a [`DataRow`](DataRow.md) containing values computed using a [`row expression`](DataRow.md#row-expressions) 
 across all rows of each group:
