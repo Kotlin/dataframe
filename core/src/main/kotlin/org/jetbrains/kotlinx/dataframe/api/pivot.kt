@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -182,11 +183,14 @@ internal interface PivotDocs {
      * * [frames][Pivot.frames] — returns this [Pivot] as a [DataRow] with pivot keys as columns
      *   (or [column groups][ColumnGroup]) and corresponding groups stored as [FrameColumn]s;
      * * [values][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
-     *   from all rows of each group for the selected columns;
+     *   from all rows of each group for the selected columns
+     *   (values from [column groups][ColumnGroup] are collected into a [DataFrame]);
      * * [count][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
      *   with the number of rows in each corresponding group;
      * * [with][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
-     *   across all rows of each group and collected into a single [List] for every group;
+     *   across all rows of each group.
+     *   Values of the [DataRow] type are collected into a [DataFrame], and the resulting column is a [FrameColumn].
+     *   Values of other types are collected into a [List], and the resulting column is a [DataColumn] of [List];
      * * [aggregate][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing computation of one or more derived values per group;
      * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
