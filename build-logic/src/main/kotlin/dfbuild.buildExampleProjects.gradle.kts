@@ -33,6 +33,13 @@ val versionsToSync =
         "kotlin-spark",
         "spark4",
         "kotlin-dl",
+        "multik",
+        "exposed",
+        "sqlite",
+        "h2db",
+        "hibernate",
+        "hikari",
+        "sl4j",
     )
 
 val syncAllExampleFolders by tasks.registering {
