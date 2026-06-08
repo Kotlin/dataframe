@@ -839,6 +839,14 @@ public class FormattedFrame<T>(
             cellFormatter = formatter as RowColFormatter<*, *>?,
             headerFormatter = headerFormatter,
         )
+
+    @Suppress("FunctionName")
+    @Deprecated(
+        message = "Binary compatibility with saveDfHtmlSample() in :samples.",
+        level = DeprecationLevel.HIDDEN,
+    )
+    @JvmName($$"getDf$core")
+    public fun _getDf_(): DataFrame<T> = df
 }
 
 /**
