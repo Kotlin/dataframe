@@ -34,6 +34,18 @@ class ReplCodeGenTests : BaseTest() {
     val intName = Int::class.simpleName!!
     val stringName = String::class.simpleName!!
 
+    private fun personProperties(marker: String) =
+        listOf(
+            expectedExtensionProperty("$dfName<$marker>", "age", "$dataCol<$intName>", "${marker}_age"),
+            expectedExtensionProperty("$dfRowName<$marker>", "age", intName, "${marker}_age"),
+            expectedExtensionProperty("$dfName<$marker>", "city", "$dataCol<$stringName?>", "${marker}_city"),
+            expectedExtensionProperty("$dfRowName<$marker>", "city", "$stringName?", "${marker}_city"),
+            expectedExtensionProperty("$dfName<$marker>", "name", "$dataCol<$stringName>", "${marker}_name"),
+            expectedExtensionProperty("$dfRowName<$marker>", "name", stringName, "${marker}_name"),
+            expectedExtensionProperty("$dfName<$marker>", "weight", "$dataCol<$intName?>", "${marker}_weight"),
+            expectedExtensionProperty("$dfRowName<$marker>", "weight", "$intName?", "${marker}_weight"),
+        ).joinToString("\n", prefix = "\n")
+
     class Test1 {
         @DataSchema
         interface _DataFrameType
@@ -95,16 +107,8 @@ class ReplCodeGenTests : BaseTest() {
                 val name: String
                 val weight: Int?
             }
-            
-            val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
-            val $dfRowName<$marker>.age: $intName @JvmName("${marker}_age") get() = this["age"] as $intName
-            val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
-            val $dfName<$marker>.name: $dataCol<$stringName> @JvmName("${marker}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$marker>.name: $stringName @JvmName("${marker}_name") get() = this["name"] as $stringName
-            val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+
+            """.trimIndent() + personProperties(marker)
         code shouldBe expected
 
         val code2 = repl.process<Test1._DataFrameType>()
@@ -119,10 +123,11 @@ class ReplCodeGenTests : BaseTest() {
             interface $marker3 : $markerFull {
                 override val city: String
             }
-            
-            val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
-            val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
-            """.trimIndent()
+
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<$marker3>", "city", "$dataCol<$stringName>", "${marker3}_city"),
+                expectedExtensionProperty("$dfRowName<$marker3>", "city", stringName, "${marker3}_city"),
+            ).joinToString("\n", prefix = "\n")
 
         code3 shouldBe expected3
 
@@ -138,10 +143,11 @@ class ReplCodeGenTests : BaseTest() {
             interface $marker5 : $markerFull {
                 override val weight: Int
             }
-            
-            val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
-            val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
-            """.trimIndent()
+
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<$marker5>", "weight", "$dataCol<$intName>", "${marker5}_weight"),
+                expectedExtensionProperty("$dfRowName<$marker5>", "weight", intName, "${marker5}_weight"),
+            ).joinToString("\n", prefix = "\n")
         code5 shouldBe expected5
 
         val code6 = repl.process<Test1._DataFrameType2>()
@@ -184,12 +190,13 @@ class ReplCodeGenTests : BaseTest() {
                 val city: String?
                 val weight: Int?
             }
-            
-            val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
-            val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<$marker>", "city", "$dataCol<$stringName?>", "${marker}_city"),
+                expectedExtensionProperty("$dfRowName<$marker>", "city", "$stringName?", "${marker}_city"),
+                expectedExtensionProperty("$dfName<$marker>", "weight", "$dataCol<$intName?>", "${marker}_weight"),
+                expectedExtensionProperty("$dfRowName<$marker>", "weight", "$intName?", "${marker}_weight"),
+            ).joinToString("\n", prefix = "\n")
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
@@ -286,22 +293,35 @@ class ReplCodeGenTests : BaseTest() {
                 val c: Int
             }
 
-            val $dfName<Leaf>.a: $dataCol<Int> @JvmName("Leaf_a") get() = this["a"] as $dataCol<Int>
-            val $dfRowName<Leaf>.a: Int @JvmName("Leaf_a") get() = this["a"] as Int
-            val $dfName<Leaf>.c: $dataCol<Int> @JvmName("Leaf_c") get() = this["c"] as $dataCol<Int>
-            val $dfRowName<Leaf>.c: Int @JvmName("Leaf_c") get() = this["c"] as Int
-
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<Leaf>", "a", "$dataCol<Int>", "Leaf_a"),
+                expectedExtensionProperty("$dfRowName<Leaf>", "a", "Int", "Leaf_a"),
+                expectedExtensionProperty("$dfName<Leaf>", "c", "$dataCol<Int>", "Leaf_c"),
+                expectedExtensionProperty("$dfRowName<Leaf>", "c", "Int", "Leaf_c"),
+            ).joinToString("\n", prefix = "\n", postfix = "\n\n") +
+            """
             @DataSchema
             interface _DataFrameType2 {
                 val col: String
                 val leaf: Leaf
             }
 
-            val $dfName<_DataFrameType2>.col: $dataCol<String> @JvmName("_DataFrameType2_col") get() = this["col"] as $dataCol<String>
-            val $dfRowName<_DataFrameType2>.col: String @JvmName("_DataFrameType2_col") get() = this["col"] as String
-            val $dfName<_DataFrameType2>.leaf: ColumnGroup<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as ColumnGroup<Leaf>
-            val $dfRowName<_DataFrameType2>.leaf: $dfRowName<Leaf> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as $dfRowName<Leaf>
-            """.trimIndent()
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<_DataFrameType2>", "col", "$dataCol<String>", "_DataFrameType2_col"),
+                expectedExtensionProperty("$dfRowName<_DataFrameType2>", "col", "String", "_DataFrameType2_col"),
+                expectedExtensionProperty(
+                    "$dfName<_DataFrameType2>",
+                    "leaf",
+                    "ColumnGroup<Leaf>",
+                    "_DataFrameType2_leaf",
+                ),
+                expectedExtensionProperty(
+                    "$dfRowName<_DataFrameType2>",
+                    "leaf",
+                    "$dfRowName<Leaf>",
+                    "_DataFrameType2_leaf",
+                ),
+            ).joinToString("\n", prefix = "\n")
     }
 
     object TestColumnOrderInGroup {
