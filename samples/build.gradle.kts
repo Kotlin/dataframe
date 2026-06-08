@@ -1,3 +1,4 @@
+import io.github.devcrocod.korro.KorroGenerateTask
 import org.gradle.kotlin.dsl.libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -72,6 +73,11 @@ dependencies {
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
     testImplementation(libs.hikaricp)
+}
+
+// Tests create
+tasks.withType<KorroGenerateTask>().configureEach {
+    mustRunAfter(tasks.test)
 }
 
 korro {
