@@ -8,6 +8,14 @@ Automatically generated archives of example projects.
 
 **Download:** [android-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
 
+### Exposed
+
+**Download:** [exposed.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/exposed.zip)
+
+### Hibernate
+
+**Download:** [hibernate.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/hibernate.zip)
+
 ### Json Openapi
 
 **Download:** [json-openapi.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/json-openapi.zip)
@@ -28,6 +36,10 @@ Automatically generated archives of example projects.
 
 **Download:** [movies.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/movies.zip)
 
+### Multik
+
+**Download:** [multik.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/multik.zip)
+
 ### Spark Parquet Dataframe
 
 **Download:** [spark-parquet-dataframe.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
@@ -42,6 +54,6 @@ Automatically generated archives of example projects.
 
 ---
 
-Last updated: 2026-06-02 14:51 UTC
+Last updated: 2026-06-08 10:15 UTC
 
-Source commit: 727081434fca01befe834f2a59d76d17485501a2
+Source commit: 4848ac1c7a482fbdbc770f82c03e675c6f21d3b0
