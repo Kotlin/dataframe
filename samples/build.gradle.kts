@@ -75,9 +75,9 @@ dependencies {
     testImplementation(libs.hikaricp)
 }
 
-// Tests create
+// Running tests creates korro output lines!
 tasks.withType<KorroGenerateTask>().configureEach {
-    mustRunAfter(tasks.test)
+    dependsOn(tasks.test)
 }
 
 korro {
