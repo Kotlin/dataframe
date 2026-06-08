@@ -219,10 +219,10 @@ Reducing is a specific case of [`aggregation`](pivot.md#aggregation).
 ### Step 1: use a reducing method
 Use the following functions to collapse each group in a [`Pivot`](pivot.md) into a single row:
 * [`first`](first.md) / [`last`](last.md) — take the first or last row (optionally, the first or last one that satisfies a predicate) of each group;
-* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) — take the row with the minimum or maximum value of the given 
-[`row expression`](DataRow.md#row-expressions) evaluated on rows within each group;
-* [`medianBy`](median.md) / [`percentileBy`](percentile.md) — take the row with the median or a specific percentile value 
-of the given [`row expression`](DataRow.md#row-expressions) evaluated on rows within each group.
+* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) — take the row with the minimum or maximum value 
+of the given [`row expression`](DataRow.md#row-expressions) evaluated on rows within each group;
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) — take the row at the position closest to the estimated
+median/percentile index of the [`row expression`](DataRow.md#row-expressions)'s results calculated on rows within each group.
 
 These functions return an instance of `ReducedPivot`, which is a class serving as a transitional step between performing a reduction on [`Pivot`](pivot.md) groups 
 and specifying how the resulting reduced rows should be represented in a resulting [`DataRow`](DataRow.md).
