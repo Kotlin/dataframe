@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -428,30 +427,6 @@ class Access : TestBase() {
         df.distinct { age and name }
         // same as
         df.select { age and name }.distinct()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinct() {
-        // SampleStart
-        df.countDistinct()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinctColumns_properties() {
-        // SampleStart
-        df.countDistinct { age and name }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countDistinctColumns_strings() {
-        // SampleStart
-        df.countDistinct("age", "name")
         // SampleEnd
     }
 
