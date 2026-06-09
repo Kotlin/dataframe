@@ -54,9 +54,12 @@ class NameGenerationTests {
     @Test
     fun `properties generation`() {
         val codeGen = ReplCodeGenerator.create()
-        val code = codeGen.process<DataRecord>().split("\n")
-        code.size shouldBe 8
-        code.forEach {
+        val propertyDeclarations = codeGen.process<DataRecord>()
+            .lineSequence()
+            .filter { it.startsWith("val ") }
+            .toList()
+        propertyDeclarations.size shouldBe 8
+        propertyDeclarations.forEach {
             it.count { it == '`' } shouldBe 2
         }
     }

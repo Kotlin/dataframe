@@ -99,6 +99,7 @@ import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.codeGen.expectedExtensionProperty
 import org.jetbrains.kotlinx.dataframe.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -517,21 +518,70 @@ class DataFrameTreeTests : BaseTest() {
         val nameAndCity = NameAndCity::class.qualifiedName
         val groupedColumn = ColumnGroup::class.qualifiedName
         val columnData = DataColumn::class.qualifiedName
-        val expected =
-            """
-            val $columnsContainer<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
-            val $dataFrameRowBase<$className>.age: kotlin.Int @JvmName("${shortName}_age") get() = this["age"] as kotlin.Int
-            val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_age") get() = this["age"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className?>.age: kotlin.Int? @JvmName("Nullable${shortName}_age") get() = this["age"] as kotlin.Int?
-            val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
-            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
-            val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity?>
-            val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity?>
-            val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className>.weight: kotlin.Int? @JvmName("${shortName}_weight") get() = this["weight"] as kotlin.Int?
-            val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className?>.weight: kotlin.Int? @JvmName("Nullable${shortName}_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
+        val expected = listOf(
+            expectedExtensionProperty(
+                "$columnsContainer<$className>",
+                "age",
+                "$columnData<kotlin.Int>",
+                "${shortName}_age",
+            ),
+            expectedExtensionProperty("$dataFrameRowBase<$className>", "age", "kotlin.Int", "${shortName}_age"),
+            expectedExtensionProperty(
+                "$columnsContainer<$className?>",
+                "age",
+                "$columnData<kotlin.Int?>",
+                "Nullable${shortName}_age",
+            ),
+            expectedExtensionProperty(
+                "$dataFrameRowBase<$className?>",
+                "age",
+                "kotlin.Int?",
+                "Nullable${shortName}_age",
+            ),
+            expectedExtensionProperty(
+                "$columnsContainer<$className>",
+                "nameAndCity",
+                "$groupedColumn<$nameAndCity>",
+                "${shortName}_nameAndCity",
+            ),
+            expectedExtensionProperty(
+                "$dataFrameRowBase<$className>",
+                "nameAndCity",
+                "$dataFrameRow<$nameAndCity>",
+                "${shortName}_nameAndCity",
+            ),
+            expectedExtensionProperty(
+                "$columnsContainer<$className?>",
+                "nameAndCity",
+                "$groupedColumn<$nameAndCity?>",
+                "Nullable${shortName}_nameAndCity",
+            ),
+            expectedExtensionProperty(
+                "$dataFrameRowBase<$className?>",
+                "nameAndCity",
+                "$dataFrameRow<$nameAndCity?>",
+                "Nullable${shortName}_nameAndCity",
+            ),
+            expectedExtensionProperty(
+                "$columnsContainer<$className>",
+                "weight",
+                "$columnData<kotlin.Int?>",
+                "${shortName}_weight",
+            ),
+            expectedExtensionProperty("$dataFrameRowBase<$className>", "weight", "kotlin.Int?", "${shortName}_weight"),
+            expectedExtensionProperty(
+                "$columnsContainer<$className?>",
+                "weight",
+                "$columnData<kotlin.Int?>",
+                "Nullable${shortName}_weight",
+            ),
+            expectedExtensionProperty(
+                "$dataFrameRowBase<$className?>",
+                "weight",
+                "kotlin.Int?",
+                "Nullable${shortName}_weight",
+            ),
+        ).joinToString("\n")
         code shouldBe expected
     }
 
