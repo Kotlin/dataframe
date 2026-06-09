@@ -58,7 +58,8 @@ make sure your data schema is compatible with the dataframe.
 * Use [`.cast<Schema>()`](cast.md) with `verify=true` for verifying the `Schema` compatibility.
 * Use [special methods](DataSchemaGenerationMethods.md) for generating a data schema code 
 instead of defining data schema manually. However, you may still need to edit a generated schema —
-adjust a type nullability or the whole type, since sometimes type can be inferred incorrect.
+adjust a type nullability or the whole type, since sometimes type can be inferred incorrect 
+if the data sample used for generation is not representative or if there's a bug in this `DataFrame`.
 
 ### Bug in the DataFrame reader
 
@@ -92,9 +93,10 @@ df.replace { wrongTypeCol }.with { it.asValueColumn().changeType(typeOf<ActualTy
     > using it once to figure out the actual type and change it to `changeType()` for production code.
     {style="warning"}
 
-2) Change the compiler-time schema of dataframe
+2) Change the compiler-time schema of a dataframe
 
-You need to edit (you can view a correct one with [`.schema().print()`](schema.md)) or regenerate the correct data schema (with [generate..()](DataSchemaGenerationMethods.md) methods)
+You need to edit (you can view the correct one with [`.schema().print()`](schema.md)) or regenerate 
+the correct data schema (with [generate..()](DataSchemaGenerationMethods.md) methods)
 manually and apply it (with [`cast()`](cast.md) or [`convertTo()`](convertTo.md)).
 
 #### Problems with type affinity in SQLite
