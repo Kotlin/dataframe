@@ -84,7 +84,7 @@ public fun AnyFrame.renderToString(
         }
         sb.appendLine()
     } else {
-        for ((i, colWidth) in columnWidths.withIndex()) {
+        for ([i, colWidth] in columnWidths.withIndex()) {
             val splitterSize = minOf(colWidth, 4)
             val char = if (rowIndex && i == 0) " " else "-"
             val str = char.repeat(splitterSize)

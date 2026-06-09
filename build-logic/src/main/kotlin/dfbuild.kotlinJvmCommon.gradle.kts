@@ -9,6 +9,9 @@ plugins {
 kotlin {
     explicitApi()
     jvmToolchain(libs.versions.gradle.jdk.get().toInt())
+    compilerOptions {
+        freeCompilerArgs.add("-Xname-based-destructuring=complete")
+    }
 }
 
 // Adds the instrumentedJars configuration/artifact to all Kotlin sub-projects.

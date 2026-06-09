@@ -331,7 +331,7 @@ public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType:
     val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
     val targetColumnSchemas = getTargetColumnSchemas(dbType, tableColumns, preprocessedValueTypes)
         .withIndex()
-        .associate { (index, it) ->
+        .associate { [index, it] ->
             tableColumns[index].name to (it ?: ColumnSchema.Value(typeOf<Any?>()))
         }
 

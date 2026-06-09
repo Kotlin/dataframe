@@ -330,7 +330,7 @@ private fun readField(
         if (vector is ListVector) {
             return readListVector(vector.asAccessor(), field, range, nullability)
         }
-        val (list, type) = when (vector) {
+        val [list, type] = when (vector) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)

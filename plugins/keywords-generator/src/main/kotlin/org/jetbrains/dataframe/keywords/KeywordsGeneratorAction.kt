@@ -32,7 +32,7 @@ public abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorActi
             "HardKeywords" to KtTokens.KEYWORDS,
             "SoftKeywords" to KtTokens.SOFT_KEYWORDS,
             "ModifierKeywords" to KtTokens.MODIFIER_KEYWORDS,
-        ).forEach { (name, set) ->
+        ).forEach { (name = first, set = second) ->
             generateKeywordsEnum(name, set)
         }
     }

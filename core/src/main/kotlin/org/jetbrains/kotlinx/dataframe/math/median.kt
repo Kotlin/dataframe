@@ -44,7 +44,7 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
     val p = 0.5
 
     // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
-    val (values, method) =
+    val [values, method] =
         when {
             type.isPrimitiveNumber() ->
                 this.map { (it as Number).toDouble() } to QuantileEstimationMethod.Interpolating.R8
@@ -104,7 +104,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
 
     // propagate NaN to return if they are not to be skipped
     if (nonNullType.canBeNaN && !skipNaN) {
-        for ((i, it) in this.withIndex()) {
+        for ([i, it] in this.withIndex()) {
             if (it.isNaN) return i
         }
     }

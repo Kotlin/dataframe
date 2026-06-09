@@ -19,7 +19,7 @@ internal fun compileTimeSchemaImpl(runtimeSchema: DataFrameSchema?, klass: KClas
 }
 
 internal fun MutableMap<ColumnPath, Int>.putColumnsOrder(schema: DataFrameSchema, path: ColumnPath) {
-    schema.columns.entries.forEachIndexed { i, (name, column) ->
+    schema.columns.entries.forEachIndexed { i, [name, column] ->
         val columnPath = path + name
         this[columnPath] = i
         when (column) {
@@ -31,7 +31,7 @@ internal fun MutableMap<ColumnPath, Int>.putColumnsOrder(schema: DataFrameSchema
 }
 
 internal fun DataFrameSchema.sortedBy(order: Map<ColumnPath, Int>, path: ColumnPath): DataFrameSchema {
-    val sorted = columns.map { (name, column) ->
+    val sorted = columns.map { [name, column] ->
         name to when (column) {
             is ColumnSchema.Frame -> ColumnSchema.Frame(
                 column.schema.sortedBy(order, path + name),
@@ -43,7 +43,7 @@ internal fun DataFrameSchema.sortedBy(order: Map<ColumnPath, Int>, path: ColumnP
 
             is ColumnSchema.Value -> column
         }
-    }.sortedBy { (name, _) ->
+    }.sortedBy { [name, _] ->
         order[path + name]
     }.toMap()
     return DataFrameSchemaImpl(sorted)

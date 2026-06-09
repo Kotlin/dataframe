@@ -38,7 +38,7 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
     val p = percentile / 100.0
 
     // TODO make configurable https://github.com/Kotlin/dataframe/issues/1121
-    val (values, method) =
+    val [values, method] =
         when {
             type.isPrimitiveNumber() ->
                 this.map { (it as Number).toDouble() } to QuantileEstimationMethod.Interpolating.R8

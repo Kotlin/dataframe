@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
  * Public API to be re-used in compiler plugin implementation
  */
 public fun <T> Pair<List<String>, List<T>>.withValuesImpl(): List<Pair<String, List<T>>> {
-    val (header, values) = this
+    val [header, values] = this
     val ncol = header.size
 
     if (!(header.isNotEmpty() && values.size.rem(ncol) == 0)) {

@@ -24,7 +24,7 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         // check for each column in this schema if there is a column with the same name in the other schema
         // - if so, check those schemas for equality, taking comparisonMode into account
         // - if not, consider the other schema derived from this (or unrelated (None) if comparisonMode == STRICT)
-        this.columns.forEach { (thisColName, thisSchema) ->
+        this.columns.forEach { [thisColName, thisSchema] ->
             val otherSchema = other.columns[thisColName]
             result += when {
                 otherSchema != null -> {
@@ -45,7 +45,7 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         }
         // then check for each column in the other schema if there is a column with the same name in this schema
         // if not, consider the other schema as super to this (or unrelated (None) if comparisonMode == STRICT)
-        other.columns.forEach { (otherColName, _) ->
+        other.columns.forEach { [otherColName, _] ->
             if (this.columns[otherColName] != null) return@forEach
             result += if (comparisonMode == STRICT) None else IsSuper
             if (result == None) return None
@@ -70,7 +70,7 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         if (this.compare(other) != Matches) return false
         if (columns.keys.toList() != other.columns.keys.toList()) return false
 
-        for ((name, col) in columns) {
+        for ([name, col] in columns) {
             val other = other.columns[name]!!
             when (col) {
                 is ColumnSchema.Group -> {
@@ -104,7 +104,7 @@ internal fun DataFrameSchemaImpl.render(): String {
 }
 
 internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, indentSequence: String): String {
-    entries.forEachIndexed { i, (name, columnSchema) ->
+    entries.forEachIndexed { i, [name, columnSchema] ->
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")
         when (columnSchema) {

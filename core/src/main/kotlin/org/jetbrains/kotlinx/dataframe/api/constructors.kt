@@ -274,7 +274,7 @@ public fun columnOf(vararg values: BaseColumn<*>): DataColumn<DataRow<*>> = colu
 @Interpretable("ColumnOfPairs")
 public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*> =
     dataFrameOf(
-        columns.map { (name, col) ->
+        columns.map { [name, col] ->
             col.rename(name)
         },
     ).asColumnGroup()
@@ -339,7 +339,7 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
 @JvmName("dataFrameOfColumns")
 @Interpretable("DataFrameOfPairs")
 public fun dataFrameOf(vararg columns: Pair<String, BaseColumn<*>>): DataFrame<*> =
-    dataFrameOf(columns.map { (name, col) -> col.rename(name) })
+    dataFrameOf(columns.map { [name, col] -> col.rename(name) })
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
@@ -393,7 +393,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
-        (header to values.asList()).withValuesImpl().map { (name, values) ->
+        (header to values.asList()).withValuesImpl().map { [name, values] ->
             DataColumn.createByInference(name, values)
         }.toDataFrame()
 

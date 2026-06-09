@@ -282,7 +282,8 @@ internal fun AnyFrame.toHtmlData(
     val rootId = nextTableId()
     queue += RenderingQueueItem(this, rootId, defaultConfiguration)
     while (!queue.isEmpty()) {
-        val (nextDf, nextId, configuration) = queue.pop()
+        val (nextDf = df, nextId = id, configuration) = queue.pop()
+
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
         val preparedColumns = nextDf.columns().map {
             nextDf.columnToJs(it.addPath(), rowsLimit, configuration)
@@ -399,7 +400,7 @@ public fun AnyFrame.toStaticHtml(
         emitTag("thead") {
             for (row in colGrid) {
                 emitTag("tr") {
-                    for ((j, col) in row.withIndex()) {
+                    for ([j, col] in row.withIndex()) {
                         val colBorders = col.borders.toMutableSet()
                         // check if the next cell has a left border, and if so, add a right border to this cell
                         if (row.getOrNull(j + 1)?.borders?.contains(Border.LEFT) == true) {
@@ -465,7 +466,7 @@ public fun AnyFrame.toStaticHtml(
     // Adds a single row to the html. This row uses the flattened columns to get them displayed non-collapsed.
     fun StringBuilder.emitRow(row: AnyRow) =
         emitTag("tr") {
-            for ((i, col) in flattenedCols.withIndex()) {
+            for ([i, col] in flattenedCols.withIndex()) {
                 val border = borders[i].toMutableSet()
                 // check if the next cell has a left border, and if so, add a right border to this cell
                 if (borders.getOrNull(i + 1)?.contains(Border.LEFT) == true) {
@@ -580,7 +581,7 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
         var breadth = breadth
         val children = cols()
         val lastIndex = children.lastIndex
-        for ((i, child) in cols().withIndex()) {
+        for ([i, child] in cols().withIndex()) {
             matrix[depth][breadth] = matrix[depth][breadth].copy(columnWithPath = child)
 
             // draw colGroup side borders unless at start/end of table

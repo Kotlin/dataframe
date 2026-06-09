@@ -57,7 +57,7 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
 
     val chain = inheritanceChain(jvmErasure, superClass)
     var current = this
-    chain.forEach { (clazz, declaredBaseType) ->
+    chain.forEach { [clazz, declaredBaseType] ->
         val substitution = clazz.typeParameters.zip(current.arguments.map { it.type }).toMap()
         current = declaredBaseType.replace(substitution)
     }
@@ -94,7 +94,7 @@ internal fun KType.replaceGenericTypeParametersWithUpperbound(): KType {
 
                 else -> oldType
             }
-            val (replacedDownwards, newType) = type.replaceRecursively()
+            val [replacedDownwards, newType] = type.replaceRecursively()
             if (replacedDownwards) replacedAnyArgument = true
 
             KTypeProjection.invariant(newType)
@@ -123,7 +123,7 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
     val chain = inheritanceChain(subClass, classifier as KClass<*>)
     var type = this
 
-    chain.reversed().forEach { (clazz, declaredBaseType) ->
+    chain.reversed().forEach { [clazz, declaredBaseType] ->
         val substitution = resolve(type, declaredBaseType)
         val projection = clazz.typeParameters.map {
             substitution[it]?.let { KTypeProjection.invariant(it) } ?: KTypeProjection.STAR
@@ -150,7 +150,7 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
 
     fun resolveRec(actualType: KType, declaredType: KType) {
         require(actualType.classifier == declaredType.classifier)
-        actualType.arguments.zip(declaredType.arguments).forEach { (actualArgument, declaredArgument) ->
+        actualType.arguments.zip(declaredType.arguments).forEach { [actualArgument, declaredArgument] ->
             val declared = declaredArgument.type
             val actual = actualArgument.type
             if (declared?.classifier is KTypeParameter) {

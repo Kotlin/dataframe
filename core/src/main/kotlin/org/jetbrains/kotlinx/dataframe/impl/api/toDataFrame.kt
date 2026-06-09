@@ -439,7 +439,7 @@ private fun KType.classifierOrAny(): KClass<*> = classifier as? KClass<*> ?: Any
 
 internal fun KType.typeParametersSubstitution(): Map<KTypeParameter, KType> {
     val klass = classifier as? KClass<*> ?: return emptyMap()
-    return klass.typeParameters.zip(arguments).mapNotNull { (param, projection) ->
+    return klass.typeParameters.zip(arguments).mapNotNull { [param, projection] ->
         projection.type?.let { param to it }
     }.toMap()
 }

@@ -99,7 +99,7 @@ internal class SchemaProcessorImpl(
             }
 
         return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
-            val (columnName, columnSchema) = column
+            val [columnName, columnSchema] = column
             val fieldType = getFieldType(columnName, columnSchema)
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }

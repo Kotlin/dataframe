@@ -42,14 +42,14 @@ internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (Conver
         is ColumnSchema.Value -> type.toArrowField(name, mismatchSubscriber)
 
         is ColumnSchema.Group -> {
-            val childFields = schema.columns.map { (childName, childSchema) ->
+            val childFields = schema.columns.map { [childName, childSchema] ->
                 childSchema.toArrowField(childName, mismatchSubscriber)
             }
             Field(name, FieldType(nullable, ArrowType.Struct(), null), childFields)
         }
 
         is ColumnSchema.Frame -> {
-            val childFields = schema.columns.map { (childName, childSchema) ->
+            val childFields = schema.columns.map { [childName, childSchema] ->
                 childSchema.toArrowField(childName, mismatchSubscriber)
             }
             val childStructField = Field("item", FieldType(true, ArrowType.Struct(), null), childFields)

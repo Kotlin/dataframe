@@ -108,8 +108,8 @@ internal fun <T> insertImpl(
     var k = 0 // index in 'removedSiblings' list
     var insertionIndexOffset = 0
 
-    columnsToAdd.forEach { (insertionIndex, pair) ->
-        val (name, columns) = pair
+    columnsToAdd.forEach { [insertionIndex, pair] ->
+        val [name, columns] = pair
 
         // adjust insertion index by number of columns that were removed before current index
         if (removedSiblings != null) {

@@ -168,7 +168,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     .withPreprocessor { it?.toKotlinUuid() }
 
                 MAP -> {
-                    val (key, value) = parseMapTypes(sqlTypeName)
+                    val [key, value] = parseMapTypes(sqlTypeName)
 
                     val parsedKeyType = parseDuckDbType(key, false)
                     val parsedValueType = parseDuckDbType(value, true).castToAny()
@@ -183,7 +183,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                     jdbcToDfConverterFor<Map<String, Any?>>(isNullable)
                         .withPreprocessor(preprocessedValueType = targetMapType) { map ->
                             // only need to preprocess the values, as the keys are just Strings
-                            map?.mapValues { (_, value) ->
+                            map?.mapValues { (value) ->
                                 parsedValueType.preprocessOrCast(value)
                             }
                         }
@@ -234,7 +234,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
                 STRUCT -> {
                     val structEntries = parseStructType(sqlTypeName)
-                    val parsedStructEntries = structEntries.mapValues { (_, type) ->
+                    val parsedStructEntries = structEntries.mapValues { (type = value) ->
                         parseDuckDbType(sqlTypeName = type, isNullable = true)
                     }
 
@@ -255,7 +255,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                             } else {
                                 // read data from the struct
                                 val attrs = struct.getAttributes(
-                                    parsedStructEntries.mapValues { (fieldName, entry) ->
+                                    parsedStructEntries.mapValues { [fieldName, entry] ->
                                         val expectedType = entry.expectedJdbcType
                                         val classifier = expectedType.classifier as? KClass<*>
                                             ?: error(
@@ -266,7 +266,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                                 )
 
                                 // and potentially, preprocess each value individually
-                                parsedStructEntries.entries.withIndex().associate { (i, entry) ->
+                                parsedStructEntries.entries.withIndex().associate { [i, entry] ->
                                     entry.key to entry.value.castToAny().preprocessOrCast(attrs[i])
                                 }
                             }

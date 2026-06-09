@@ -32,7 +32,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
         }
 
         fun addEdges(vararg edges: Pair<T, T>): Builder<T> {
-            edges.forEach { (from, to) -> addEdge(from, to) }
+            edges.forEach { [from, to] -> addEdge(from, to) }
             return this
         }
 
@@ -103,7 +103,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
             if (current in visited) return
             visited.add(current)
 
-            adjacencyList.forEach { (parent, children) ->
+            adjacencyList.forEach { [parent, children] ->
                 if (current in children) {
                     ancestors.add(parent)
                     dfs(parent)
@@ -145,7 +145,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
         val cachedConversion: (T) -> R = { cache.getOrPut(it) { conversion(it) } }
 
         return Builder<R>().apply {
-            for ((from, to) in adjacencyList) {
+            for ([from, to] in adjacencyList) {
                 for (to in to) {
                     addEdge(from = cachedConversion(from), to = cachedConversion(to))
                 }

@@ -89,7 +89,7 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDslInternal<T> {
         converters[fromType.withNullability(false) to toSchema.type.withNullability(false)]
             ?: flexibleConverters
                 .entries
-                .firstOrNull { (predicate, _) ->
+                .firstOrNull { (predicate = key) ->
                     predicate(fromType, toSchema)
                 }?.value
 }
@@ -279,7 +279,7 @@ internal fun AnyFrame.convertToImpl(
         // when the target is nullable but the source does not contain a column,
         // fill it in with nulls / empty dataframes
         val size = this.size.nrow
-        schema.columns.forEach { (name, targetColumn) ->
+        schema.columns.forEach { [name, targetColumn] ->
             if (name !in visited) {
                 try {
                     newColumns += targetColumn.createNullFilledColumn(name, size)
@@ -314,7 +314,7 @@ internal fun AnyFrame.convertToImpl(
         val paths = result.getColumnPaths(UnresolvedColumnsPolicy.Create, filler.columns).toSet()
 
         // split the paths into those that are already in the df and those that are missing
-        val (newPaths, existingPaths) = paths.partition { it in missingPaths }
+        val [newPaths, existingPaths] = paths.partition { it in missingPaths }
 
         // first fill cols that are already in the df using the `with {}` part of the dsl
         result = result.update { existingPaths.toColumnSet() }.with { filler.expr(this, this) }

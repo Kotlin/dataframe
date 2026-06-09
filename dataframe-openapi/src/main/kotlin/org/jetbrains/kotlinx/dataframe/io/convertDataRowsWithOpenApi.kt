@@ -20,8 +20,8 @@ public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
 
     // Provide converter for (recursive) List<DataFrame<>>
     convertIf({ fromType, toSchema ->
-        val (fromIsRecursiveListOfDataFrame, fromDepth) = fromType.isRecursiveListOfDataFrame()
-        val (toIsRecursiveListOfDataFrame, toDepth) = toSchema.type.isRecursiveListOfDataFrame()
+        val [fromIsRecursiveListOfDataFrame, fromDepth] = fromType.isRecursiveListOfDataFrame()
+        val [toIsRecursiveListOfDataFrame, toDepth] = toSchema.type.isRecursiveListOfDataFrame()
 
         fromIsRecursiveListOfDataFrame && toIsRecursiveListOfDataFrame && fromDepth == toDepth
     }) {

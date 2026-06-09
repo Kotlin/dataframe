@@ -20,7 +20,7 @@ internal fun BufferedImage.resizeKeepingAspectRatio(
     val aspectRatio = width.toDouble() / height.toDouble()
     val size = min(maxSize, max(width, height))
 
-    val (nWidth, nHeight) = if (width > height) {
+    val [nWidth, nHeight] = if (width > height) {
         Pair(size, (size / aspectRatio).toInt())
     } else {
         Pair((size * aspectRatio).toInt(), size)

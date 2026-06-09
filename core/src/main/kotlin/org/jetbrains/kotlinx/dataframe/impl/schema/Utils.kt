@@ -40,12 +40,12 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val columnsToUpdate = mutableSetOf<String>()
     forEach { schema ->
         if (first) {
-            schema.columns.forEach { (name, columnSchema) ->
+            schema.columns.forEach { [name, columnSchema] ->
                 collectedTypes[name] = mutableSetOf(columnSchema)
             }
             first = false
         } else {
-            collectedTypes.forEach { (name, columnSchemas) ->
+            collectedTypes.forEach { [name, columnSchemas] ->
                 val otherType = schema.columns[name]
                 if (otherType == null) {
                     columnsToUpdate.add(name)
@@ -57,7 +57,7 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
             columnsToUpdate.clear()
         }
     }
-    val result = collectedTypes.mapValues { (name, columnSchemas) ->
+    val result = collectedTypes.mapValues { (columnSchemas = value) ->
         val columnKinds = columnSchemas.map { it.kind }.distinct()
         val kind = columnKinds.first()
         when {
@@ -148,7 +148,7 @@ internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
-    columns.map { (name, schema) ->
+    columns.map { [name, schema] ->
         schema.createEmptyColumn(name)
     }.toDataFrame()
 
@@ -156,7 +156,7 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
     if (columns.isEmpty()) {
         DataFrame.empty(numberOfRows)
     } else {
-        columns.map { (name, schema) ->
+        columns.map { [name, schema] ->
             schema.createNullFilledColumn(name, numberOfRows)
         }.toDataFrame()
     }
@@ -201,7 +201,7 @@ internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): L
 
     // else sort the ones in the primary constructor first according to the order in there
     // leave the rest at the end in lexicographical order
-    val (propsInConstructor, propsNotInConstructor) =
+    val [propsInConstructor, propsNotInConstructor] =
         lexicographicalColumns.partition { it.getterName in primaryConstructorOrder.keys }
 
     return propsInConstructor

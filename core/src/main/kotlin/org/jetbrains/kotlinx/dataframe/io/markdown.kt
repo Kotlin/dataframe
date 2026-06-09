@@ -21,7 +21,7 @@ public fun AnyFrame.renderToMarkdown(
 
     // header
     sb.append("|")
-    for ((i, col) in table.header.withIndex()) {
+    for ([i, col] in table.header.withIndex()) {
         val type = table.types?.getOrNull(i)?.takeIf { it.isNotEmpty() }?.let { ":$it" } ?: ""
         sb.append(" ${col.replace("|", "\\|")}$type |")
     }

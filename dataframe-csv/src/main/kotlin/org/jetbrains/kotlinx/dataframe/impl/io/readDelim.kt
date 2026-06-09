@@ -310,7 +310,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  * This is intended.
  */
 private fun CsvSpecs.Builder.parsers(parserOptions: ParserOptions?, colTypes: Map<String, ColType>): CsvSpecs.Builder {
-    for ((colName, colType) in colTypes) {
+    for ([colName, colType] in colTypes) {
         if (colName == ColType.DEFAULT) continue
         putParserForName(colName, colType.toCsvParser())
     }

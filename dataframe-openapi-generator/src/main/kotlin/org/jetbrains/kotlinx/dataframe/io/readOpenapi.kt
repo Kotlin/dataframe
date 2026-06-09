@@ -132,7 +132,7 @@ private fun readOpenApi(
             ).declarations
         }
 
-    val (typeAliases, markers) = result
+    val [typeAliases, markers] = result
         .partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
 
     val generatedMarkers = markers
@@ -201,7 +201,7 @@ private fun readOpenApi(
  */
 private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): List<OpenApiMarker> {
     // Convert the schemas to toMarker calls that can be repeated to resolve references.
-    val retrievableMarkers = mapValues { (typeName, value) ->
+    val retrievableMarkers = mapValues { (typeName = key, value) ->
         RetrievableMarker { getRefMarker, produceAdditionalMarker ->
             value.toMarker(
                 typeName = typeName,
@@ -221,7 +221,7 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
     // convert all the retrievable markers to actual markers, resolving references as we go and if possible
     while (retrievableMarkers.isNotEmpty()) {
         try {
-            retrievableMarkers.entries.first { (name, retrieveMarker) ->
+            retrievableMarkers.entries.first { [name, retrieveMarker] ->
                 // To avoid producing additional markers twice due to a CannotFindRefMarker, save them here first
                 val additionalMarkers = mutableMapOf<String, OpenApiMarker>()
 
@@ -314,7 +314,7 @@ private fun Schema<*>.toMarker(
             val superMarkers = mutableListOf<Marker>()
             val fields = mutableListOf<GeneratedField>()
             val additionalPropertyPaths = mutableListOf<JsonPath>()
-            for ((schema, openApiTypeResult) in allOfSchemas) {
+            for ([schema, openApiTypeResult] in allOfSchemas) {
                 when (openApiTypeResult) {
                     is OpenApiTypeResult.CannotFindRefMarker ->
                         return MarkerResult.CannotFindRefMarker
@@ -433,7 +433,7 @@ private fun Schema<*>.toMarker(
 
                 // build a list of fields from properties
                 val fields = buildList {
-                    for ((name, property) in (properties ?: emptyMap())) {
+                    for ([name, property] in (properties ?: emptyMap())) {
                         val isRequired = name in required
 
                         // find the OpenApiType of the property (or ref or enum)

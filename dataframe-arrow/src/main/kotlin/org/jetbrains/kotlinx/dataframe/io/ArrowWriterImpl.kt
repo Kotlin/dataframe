@@ -330,7 +330,7 @@ internal class ArrowWriterImpl(
         val containNulls = (column == null || column.hasNulls())
         // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
 
-        val (convertedColumn, actualField) = try {
+        val [convertedColumn, actualField] = try {
             convertColumnToTarget(column, field.type) to field
         } catch (e: CellConversionException) {
             if (strictType) {

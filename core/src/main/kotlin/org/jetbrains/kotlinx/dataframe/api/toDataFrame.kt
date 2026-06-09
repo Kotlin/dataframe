@@ -97,7 +97,7 @@ public fun <T> Iterable<Pair<ColumnPath, BaseColumn<*>>>.toDataFrameFromPairs():
     val columnIndices = mutableMapOf<String, Int>()
     val columnGroupName = mutableMapOf<String, String>()
 
-    forEach { (path, col) ->
+    forEach { [path, col] ->
         when (path.size) {
             0 -> {
             }

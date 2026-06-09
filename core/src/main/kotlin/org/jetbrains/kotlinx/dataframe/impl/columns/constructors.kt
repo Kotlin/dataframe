@@ -65,7 +65,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
-    val (nullable, values) = computeValues(df, expression)
+    val [nullable, values] = computeValues(df, expression)
     return when (infer) {
         Infer.Nulls -> DataColumn.createByType(
             name = name,
@@ -94,7 +94,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
     name: String,
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
-    val (_, values) = computeValues(this as DataFrame<T>, expression)
+    val [_, values] = computeValues(this as DataFrame<T>, expression)
     return createColumnGuessingType(name, values)
 }
 

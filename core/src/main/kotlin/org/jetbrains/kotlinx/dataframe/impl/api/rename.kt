@@ -42,7 +42,7 @@ internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>)
     val tree = df.getColumnsWithPaths { colsAtAnyDepth() }.collectTree()
 
     // perform rename in nodes
-    tree.allChildrenNotNull().map { it to it.pathFromRoot() }.forEach { (node, originalPath) ->
+    tree.allChildrenNotNull().map { it to it.pathFromRoot() }.forEach { [node, originalPath] ->
         // Check if the current node/column is a selected column and, if so, get its ColumnWithPath
         val column = selectedColumnsWithPath[originalPath] ?: return@forEach
         // Use the found selected ColumnWithPath to query for the new name

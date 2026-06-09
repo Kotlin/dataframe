@@ -112,7 +112,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
             data += null
             hasNulls = true
         }
-        for ((srcIndex, _) in (destBegin..<destEnd).withIndex()) {
+        for ((srcIndex = index) in (destBegin..<destEnd).withIndex()) {
             data += getValue(src, srcIndex, isNull)
         }
     }
@@ -123,7 +123,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         destEnd: Int,
         isNull: BooleanArray,
     ) {
-        for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
+        for ((srcIndex = index, destIndex = value) in (destBegin..<destEnd).withIndex()) {
             data[destIndex] = getValue(src, srcIndex, isNull)
         }
     }
@@ -158,7 +158,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         when (dataType) {
             BYTE -> {
                 dest as ByteArray
-                for ((srcIndex, destIndex) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
+                for ((srcIndex = index, destIndex = value) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
                     val value = data[srcIndex] as Byte?
                     if (value != null) dest[destIndex] = value
                     isNull[destIndex] = value == null
@@ -167,7 +167,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
 
             SHORT -> {
                 dest as ShortArray
-                for ((srcIndex, destIndex) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
+                for ((srcIndex = index, destIndex = value) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
                     val value = data[srcIndex] as Short?
                     if (value != null) dest[destIndex] = value
                     isNull[destIndex] = value == null
@@ -176,7 +176,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
 
             INT -> {
                 dest as IntArray
-                for ((srcIndex, destIndex) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
+                for ((srcIndex = index, destIndex = value) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
                     val value = data[srcIndex] as Int?
                     if (value != null) dest[destIndex] = value
                     isNull[destIndex] = value == null
@@ -185,7 +185,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
 
             LONG -> {
                 dest as LongArray
-                for ((srcIndex, destIndex) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
+                for ((srcIndex = index, destIndex = value) in (srcBeginAsInt..<srcEndAsInt).withIndex()) {
                     val value = data[srcIndex] as Long?
                     if (value != null) dest[destIndex] = value
                     isNull[destIndex] = value == null

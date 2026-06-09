@@ -60,7 +60,7 @@ public value class JsonPath(
                 if (path.size != otherPath.size) {
                     false
                 } else {
-                    path.zip(otherPath).all { (p, o) ->
+                    path.zip(otherPath).all { [p, o] ->
                         p == o || p == "*" || o == "*"
                     }
                 }

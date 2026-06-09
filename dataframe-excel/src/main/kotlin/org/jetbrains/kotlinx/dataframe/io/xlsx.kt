@@ -536,7 +536,7 @@ public fun DataFrame.Companion.readExcel(
 private fun getColumnIndices(columns: String): List<Int> =
     columns.split(",").flatMap {
         if (it.contains(":")) {
-            val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
+            val [start, end] = it.split(":").map { CellReference.convertColStringToIndex(it) }
             start..end
         } else {
             listOf(CellReference.convertColStringToIndex(it))

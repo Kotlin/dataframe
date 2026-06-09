@@ -41,7 +41,7 @@ internal class HybridAggregationHandler<in Value : Any, out Return : Any?>(
      */
     @Suppress("UNCHECKED_CAST")
     override fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int {
-        val (values, valueType) = aggregator!!.preprocessAggregation(values, valueType)
+        val [values, valueType] = aggregator!!.preprocessAggregation(values, valueType)
         return indexOfResult(values, valueType)
     }
 
@@ -58,7 +58,7 @@ internal class HybridAggregationHandler<in Value : Any, out Return : Any?>(
      */
     @Suppress("UNCHECKED_CAST")
     override fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return {
-        val (values, valueType) = aggregator!!.preprocessAggregation(values, valueType)
+        val [values, valueType] = aggregator!!.preprocessAggregation(values, valueType)
         return reducer(
             // values =
             if (valueType.isMarkedNullable) {

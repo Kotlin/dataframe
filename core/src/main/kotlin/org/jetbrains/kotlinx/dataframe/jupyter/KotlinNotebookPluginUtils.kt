@@ -147,7 +147,7 @@ public object KotlinNotebookPluginUtils {
         sortKeys: List<ColumnPath>,
         isDesc: List<Boolean>,
     ): Comparator<DataRow<*>> {
-        val columnComparators = sortKeys.zip(isDesc).map { (key, desc) ->
+        val columnComparators = sortKeys.zip(isDesc).map { [key, desc] ->
             val column = df.getColumn(key)
             createColumnComparator(column, desc)
         }

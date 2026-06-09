@@ -33,7 +33,7 @@ internal fun <T, C> DataFrame<T>.xsImpl(
     return filter {
         val rowIndex = index()
         var include = true
-        for ((col, value) in pairs) {
+        for ([col, value] in pairs) {
             if (col[rowIndex] != value) {
                 include = false
                 break

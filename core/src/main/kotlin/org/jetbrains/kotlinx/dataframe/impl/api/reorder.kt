@@ -42,7 +42,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
 
     columnsWithPaths
         .groupBy({ it.path.parent()!! }) { it.name() }
-        .forEach { (parentPath, names) ->
+        .forEach { [parentPath, names] ->
             val group = if (parentPath.isEmpty()) df else df.getColumnGroup(parentPath)
 
             val removed = group.removeImpl(false) { names.toColumnSet() }

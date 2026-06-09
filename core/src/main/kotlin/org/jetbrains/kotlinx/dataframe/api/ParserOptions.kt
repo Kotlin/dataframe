@@ -613,7 +613,7 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
             ): Kotlin =
                 Kotlin(
                     dateTimeFormats = setOf(unicodePattern, *unicodePatterns)
-                        .map { (formatType, pattern) ->
+                        .map { [formatType, pattern] ->
                             formatType to DateTimeFormat.fromPattern(pattern, formatType)
                         }.toSet(),
                 )
@@ -711,7 +711,7 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
                     dateTimeFormats = setOf(
                         dateTimePattern,
                         *dateTimePatterns,
-                    ).map { (formatType, pattern) ->
+                    ).map { [formatType, pattern] ->
                         formatType to DateTimeFormatter.ofPattern(pattern)
                     }.toSet(),
                 )
