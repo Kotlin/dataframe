@@ -67,26 +67,42 @@ class OpenApiTests : JupyterReplTestCase() {
         jvmName: String,
         columnName: String,
         castType: String,
-    ): String {
-        val renderedColumnName = columnName
-            .replace("\\", "\\\\")
-            .replace("$", "\\\$")
-            .replace("\"", "\\\"")
-            .replace("\n", "\\n")
-            .replace("\r", "\\r")
+    ): String =
+        buildString {
+            val renderedColumnName = columnName
+                .replace("\\", "\\\\")
+                .replace("$", "\\\$")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
 
-        return """
-            val $receiverType.$name: $propertyType @JvmName("$jvmName") get() = try {
-                this["$columnName"] as $castType
-            } catch (e: Exception) {
-                 when (e) {
-                    is IllegalArgumentException -> error(message = "Column not found exception in the generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + ". See  for more information.")
-                    is ClassCastException -> error(message = "Incorrect column type exception in generated DataFrame extension property '$renderedColumnName': " + e.getLocalizedMessage() + " See  for more information.")
-                    else -> error(message = "Unexpected exception in generated DataFrame extension property '$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues." + "Exception message: " + e.toString())
-                }
-            }
-        """.trimLines()
-    }
+            appendLine("""val $receiverType.$name: $propertyType @JvmName("$jvmName") get() = try {""")
+            appendLine("""    this["$renderedColumnName"] as $castType""")
+            appendLine("} catch (e: kotlin.Exception) {")
+            appendLine("    val msg = when (e) {")
+            appendLine("        is kotlin.IllegalArgumentException ->")
+            appendLine(
+                "            \"Column not found exception in the generated DataFrame extension property " +
+                    "'$renderedColumnName': \${e.localizedMessage}. See  for more information.\"",
+            )
+            appendLine("")
+            appendLine("        is kotlin.ClassCastException ->")
+            appendLine(
+                "            \"Incorrect column type exception in generated DataFrame extension property " +
+                    "'$renderedColumnName': \${e.localizedMessage}. See  for more information.\"",
+            )
+
+            appendLine("")
+            appendLine("        else ->")
+            appendLine(
+                "            \"Unexpected exception in generated DataFrame extension property " +
+                    "'$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues. " +
+                    "Exception message: \$e.\"",
+            )
+            appendLine("    }")
+            appendLine("    throw IllegalStateException(msg, e)")
+            append("} ")
+        }.trimLines()
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
