@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -49,10 +48,10 @@ public inline fun <T, reified R : Number?> DataColumn<T>.stdOf(
 
 // region DataRow
 
-public fun AnyRow.rowStd(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): Double =
+public fun DataRow<*>.rowStd(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): Double =
     Aggregators.std(skipNaN, ddof).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
-public inline fun <reified T : Number?> AnyRow.rowStdOf(
+public inline fun <reified T : Number?> DataRow<*>.rowStdOf(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
 ): Double {

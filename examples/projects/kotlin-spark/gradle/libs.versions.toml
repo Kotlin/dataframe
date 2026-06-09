@@ -1,0 +1,24 @@
+[versions]
+kotlin = "2.3.21"
+dataframe = "1.0.0-Beta5"
+ktlint-gradle = "14.0.1"
+ktlint = "1.8.0"
+log4j = "2.25.4"
+
+# check the versions down in the [libraries] section too!
+kotlin-spark = "1.2.4"
+spark3 = "3.3.2"
+
+[libraries]
+dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
+log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
+log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
+kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api_3.3.2_2.13", version.ref = "kotlin-spark" }
+spark-sql = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+
+# The Kotlin DataFrame Compiler plugin is the same version as the Kotlin plugin.
+kotlin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }

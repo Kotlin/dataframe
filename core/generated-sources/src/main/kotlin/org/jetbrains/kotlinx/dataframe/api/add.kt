@@ -1,11 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -51,7 +48,7 @@ import kotlin.reflect.KProperty
     replaceWith = ReplaceWith(ADD_VARARG_COLUMNS_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+public fun <T> DataFrame<T>.add(vararg columns: BaseColumn<*>): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
@@ -65,7 +62,7 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addA
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.addAll(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
+public fun <T> DataFrame<T>.addAll(vararg columns: BaseColumn<*>): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Adds new [columns] to the end of this [DataFrame] (at the top level).
@@ -79,7 +76,7 @@ public fun <T> DataFrame<T>.addAll(vararg columns: AnyBaseCol): DataFrame<T> = a
  * @throws [UnequalColumnSizesException] if columns in an expected result have different sizes.
  * @return new [DataFrame] with added columns.
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
+public fun <T> DataFrame<T>.addAll(columns: Iterable<BaseColumn<*>>): DataFrame<T> =
     dataFrameOf(columns() + columns).cast()
 
 /**
@@ -100,7 +97,7 @@ public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> 
     replaceWith = ReplaceWith(ADD_VARARG_FRAMES_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+public fun <T> DataFrame<T>.add(vararg dataFrames: DataFrame<*>): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
@@ -117,7 +114,7 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  */
 @Refine
 @Interpretable("DataFrameAddAll")
-public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+public fun <T> DataFrame<T>.addAll(vararg dataFrames: DataFrame<*>): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
  * Adds all columns from the given [dataFrames] to the end of this [DataFrame] (at the top level).
@@ -133,7 +130,7 @@ public fun <T> DataFrame<T>.addAll(vararg dataFrames: AnyFrame): DataFrame<T> = 
  * @return new [DataFrame] with added columns.
  */
 @JvmName("addAllFrames")
-public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<DataFrame<*>>): DataFrame<T> =
     addAll(dataFrames.flatMap { it.columns() })
 
 // endregion
@@ -154,7 +151,7 @@ public interface AddDataRow<out T> : DataRow<T> {
      *
      * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
      */
-    public fun <C> AnyRow.newValue(): C
+    public fun <C> DataRow<*>.newValue(): C
 }
 
 /**

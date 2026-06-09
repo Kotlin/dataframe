@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -11,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 
 // region DataColumn
 
-public fun AnyCol.addId(columnName: String = "id"): AnyFrame = toDataFrame().addId(columnName)
+public fun AnyCol.addId(columnName: String = "id"): DataFrame<*> = toDataFrame().addId(columnName)
 
 // endregion
 

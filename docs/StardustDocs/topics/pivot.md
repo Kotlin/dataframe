@@ -219,8 +219,10 @@ Reducing is a specific case of [`aggregation`](pivot.md#aggregation).
 ### Step 1: use a reducing method
 Use the following functions to collapse each group in a [`Pivot`](pivot.md) into a single row:
 * [`first`](first.md) / [`last`](last.md) — take the first or last row (optionally, the first or last one that satisfies a predicate) of each group;
-* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) — take the row with the minimum or maximum value of the given `RowExpression` evaluated on rows within each group;
-* [`medianBy`](median.md) / [`percentileBy`](percentile.md) — take the row with the median or a specific percentile value of the given `RowExpression` evaluated on rows within each group.
+* [`minBy`](minBy.md) / [`maxBy`](maxBy.md) — take the row with the minimum or maximum value 
+of the given [`row expression`](DataRow.md#row-expressions) evaluated on rows within each group;
+* [`medianBy`](median.md) / [`percentileBy`](percentile.md) — take the row at the position closest to the estimated
+median/percentile index of the [`row expression`](DataRow.md#row-expressions)'s results calculated on rows within each group.
 
 These functions return an instance of `ReducedPivot`, which is a class serving as a transitional step between performing a reduction on [`Pivot`](pivot.md) groups 
 and specifying how the resulting reduced rows should be represented in a resulting [`DataRow`](DataRow.md).
@@ -414,7 +416,8 @@ df.pivot("isHappy").percentileBy(25.0) { "weight"<Int>() }
 
 To perform this transformation, use one of the following functions:
 * [`values`](values.md) — creates a new [`DataRow`](DataRow.md) containing the values from the reduced rows in the selected columns;
-* `with` — computes a new value for each reduced row using a `RowExpression` and produces a [`DataRow`](DataRow.md) containing these computed values.
+* `with` — computes a new value for each reduced row using a [`row expression`](DataRow.md#row-expressions) 
+and produces a [`DataRow`](DataRow.md) containing these computed values.
 
 Each of these functions returns a new [`DataRow`](DataRow.md) with [`Pivot`](pivot.md) keys as top-level columns (or as [`column groups`](DataColumn.md#columngroup)) 
 and values composed of the reduced results from each group.
@@ -474,9 +477,12 @@ The following aggregation methods are available:
 * `frames` — returns this [`Pivot`](pivot.md) as a [`DataRow`](DataRow.md) with pivot keys as [`columns`](DataColumn.md) 
 (or [`column groups`](DataColumn.md#columngroup)) and corresponding groups stored as [`FrameColumns`](DataColumn.md#framecolumn);
 * [`values`](values.md) — collects values from all rows of each group for the selected columns into a single `List` 
-(values from [`column groups`](DataColumn.md#columngroup) are collected into a [`FrameColumn`](DataColumn.md#framecolumn));
+(values from [`column groups`](DataColumn.md#columngroup) are collected into a [`DataFrame`](DataFrame.md));
 * [`count`](count.md) — creates a [`DataRow`](DataRow.md) with the `Pivot` key columns containing the number of rows in each corresponding group;
-* `with` — creates a [`DataRow`](DataRow.md) containing values computed using a `RowExpression` across all rows of each group and collected into a single List for every group;
+* `with` — creates a [`DataRow`](DataRow.md) containing values computed using a [`row expression`](DataRow.md#row-expressions) 
+across all rows of each group:
+  * values of `DataRow<T>` are collected into `DataFrame<T>`, the resulting column is `FrameColumn<T>`;
+  * values of other types `R` are collected into `List<R>`, the resulting column is `DataColumn<List<R>>`;
 * `aggregate` — performs a set of custom aggregations using `AggregateDsl`, allowing computation of one or more derived values per group; 
 * various [`aggregation statistics`](pivot.md#aggregation-statistics).
 

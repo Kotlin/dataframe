@@ -337,7 +337,7 @@ public fun <T> Split<T, String>.inward(
 
 @Refine
 @Interpretable("SplitAnyFrameIntoColumns")
-public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> =
+public fun <T, C : DataFrame<*>> Split<T, C>.intoColumns(): DataFrame<T> =
     df.convert(columns).with {
         when {
             it == null -> null
@@ -360,7 +360,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 @JvmName("intoRowsFrame")
 @Refine
 @Interpretable("SplitAnyFrameRows")
-public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
+public fun <T, C : DataFrame<*>> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
 internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
@@ -393,7 +393,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> =
 
 // region DataColumn
 
-public fun DataColumn<Iterable<*>>.splitInto(vararg names: String): AnyFrame =
+public fun DataColumn<Iterable<*>>.splitInto(vararg names: String): DataFrame<*> =
     toDataFrame().split { this@splitInto }.into(*names)
 
 // endregion

@@ -3,7 +3,6 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -77,45 +76,45 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
 
 // region DataRow
 
-public fun AnyRow.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
+public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
     Aggregators.sum(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfShort")
-public inline fun <reified T : Short> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
+public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfByte")
-public inline fun <reified T : Byte> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
+public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfInt")
-public inline fun <reified T : Int> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
+public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfLong")
-public inline fun <reified T : Long> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
+public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
     rowSumOf(typeOf<T>(), false) as Long
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfFloat")
-public inline fun <reified T : Float> AnyRow.rowSumOf(
+public inline fun <reified T : Float> DataRow<*>.rowSumOf(
     skipNaN: Boolean = skipNaNDefault,
     _kClass: KClass<Float> = Float::class,
 ): Float = rowSumOf(typeOf<T>(), skipNaN) as Float
 
 @Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfDouble")
-public inline fun <reified T : Double> AnyRow.rowSumOf(
+public inline fun <reified T : Double> DataRow<*>.rowSumOf(
     skipNaN: Boolean = skipNaNDefault,
     _kClass: KClass<Double> = Double::class,
 ): Double = rowSumOf(typeOf<T>(), skipNaN) as Double
 
 // unfortunately, we cannot make a `reified T : Number?` due to clashes
-public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Number {
+public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Number {
     require(type.isPrimitiveOrMixedNumber()) {
         "Type $type is not a primitive number type. Mean only supports primitive number types."
     }
@@ -437,20 +436,20 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(crossinline expre
     sumOf(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun AnyRow.rowSum(): Number = rowSum(skipNaN = skipNaNDefault)
+public fun DataRow<*>.rowSum(): Number = rowSum(skipNaN = skipNaNDefault)
 
 @JvmName("rowSumOfFloat")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Float?> AnyRow.rowSumOf(_kClass: KClass<Float> = Float::class): Float =
+public inline fun <reified T : Float?> DataRow<*>.rowSumOf(_kClass: KClass<Float> = Float::class): Float =
     rowSumOf(typeOf<T>(), skipNaN = skipNaNDefault) as Float
 
 @JvmName("rowSumOfDouble")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Double?> AnyRow.rowSumOf(_kClass: KClass<Double> = Double::class): Double =
+public inline fun <reified T : Double?> DataRow<*>.rowSumOf(_kClass: KClass<Double> = Double::class): Double =
     rowSumOf(typeOf<T>(), skipNaN = skipNaNDefault) as Double
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun AnyRow.rowSumOf(type: KType): Number = rowSumOf(type, skipNaN = skipNaNDefault)
+public fun DataRow<*>.rowSumOf(type: KType): Number = rowSumOf(type, skipNaN = skipNaNDefault)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.sum(): DataRow<T> = sum(skipNaN = skipNaNDefault)

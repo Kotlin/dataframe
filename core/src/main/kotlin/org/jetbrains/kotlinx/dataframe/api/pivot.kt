@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -74,10 +75,10 @@ internal interface PivotDocs {
      *
      * ### Reduce [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`first`**][Pivot.first]`  \[ `**` {  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
@@ -86,16 +87,16 @@ internal interface PivotDocs {
      * `| `__`.`__[**`last`**][Pivot.last]`  \[ `**`{  `**`rowCondition: `[`RowFilter`][RowFilter]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`medianBy`**][Pivot.medianBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`column: `[`RowExpression`][RowExpression]**` }`**
+     * `| `__`.`__[**`percentileBy`**][Pivot.percentileBy]**`(`**`percentile: `[`Double`][Double]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * __`.`__[**`with`**][Pivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     * __`.`__[**`with`**][ReducedPivot.with]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`values`**][Pivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[**`values`**][ReducedPivot.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * ### Aggregate [Pivot] into [DataRow]
      *
@@ -150,8 +151,8 @@ internal interface PivotDocs {
      *   (optionally, the first or last one that satisfies a predicate) of each group;
      * * [minBy][Pivot.minBy] / [maxBy][Pivot.maxBy] — take the row with the minimum or maximum value
      *   of the given [RowExpression] evaluated on rows within each group;
-     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row with
-     *   the median or a specific percentile value of the given [RowExpression] evaluated on rows within each group.
+     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row at the position closest
+     *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
      *
      * These functions return a [ReducedPivot], which can then be transformed into a new [DataFrame]
      * containing a single combined row (either using the original reduced rows or their transformed versions)
@@ -182,11 +183,14 @@ internal interface PivotDocs {
      * * [frames][Pivot.frames] — returns this [Pivot] as a [DataRow] with pivot keys as columns
      *   (or [column groups][ColumnGroup]) and corresponding groups stored as [FrameColumn]s;
      * * [values][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
-     *   from all rows of each group for the selected columns;
+     *   from all rows of each group for the selected columns
+     *   (values from [column groups][ColumnGroup] are collected into a [DataFrame]);
      * * [count][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
      *   with the number of rows in each corresponding group;
      * * [with][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
-     *   across all rows of each group and collected into a single [List] for every group;
+     *   across all rows of each group.
+     *   Values of the [DataRow] type are collected into a [DataFrame], and the resulting column is a [FrameColumn].
+     *   Values of other types are collected into a [List], and the resulting column is a [DataColumn] of [List];
      * * [aggregate][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing computation of one or more derived values per group;
      * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts

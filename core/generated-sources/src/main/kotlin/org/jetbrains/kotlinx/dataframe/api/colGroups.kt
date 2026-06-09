@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
@@ -179,7 +178,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups0")
-    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroupsInternal(filter)
 
     /**
@@ -215,7 +214,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups1")
-    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         asSingleColumn().columnGroupsInternal(filter)
 
     /**
@@ -251,7 +250,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols]
      */
     @Interpretable("ColGroups2")
-    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
@@ -286,7 +285,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun String.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -321,7 +320,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun KProperty<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 
     /**
@@ -354,7 +353,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<AnyRow> =
+    public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): ColumnSet<DataRow<*>> =
         columnGroup(this).colGroups(filter)
 }
 
@@ -367,6 +366,6 @@ public interface ColGroupsColumnsSelectionDsl {
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.columnGroupsInternal(
     crossinline filter: (ColumnGroup<*>) -> Boolean,
-): ColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
+): ColumnSet<DataRow<*>> = colsInternal { it.isColumnGroup() && filter(it) }.cast()
 
 // endregion

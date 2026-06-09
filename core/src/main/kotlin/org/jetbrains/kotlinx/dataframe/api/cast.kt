@@ -3,8 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -23,9 +21,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import kotlin.reflect.typeOf
 
 @Check
-public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
+public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
 
-public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> =
+public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> =
     if (verify) {
         convertToImpl(
             typeOf<T>(),
@@ -36,7 +34,7 @@ public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T
         cast()
     }
 
-public inline fun <reified T> AnyFrame.castTo(
+public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     verify: Boolean = true,
 ): DataFrame<T> = cast<T>(verify = verify)
@@ -66,14 +64,14 @@ public inline fun <reified T> AnyFrame.castTo(
  * }
  * ```
  */
-public inline fun <reified T> AnyFrame.castTo(
+public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: Function<DataFrame<T>>,
     verify: Boolean = true,
 ): DataFrame<T> = cast<T>(verify = verify)
 
-public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
+public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
 
-public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
+public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
 
 @Interpretable("AnyColCast")
 public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
