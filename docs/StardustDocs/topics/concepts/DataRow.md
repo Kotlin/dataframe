@@ -1,5 +1,5 @@
 [//]: # (title: DataRow)
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DataRowApiSamples-->
 
 `DataRow` represents a single record, one piece of data within a [`DataFrame`](DataFrame.md)
 
@@ -7,76 +7,318 @@
 
 <snippet id="rowFunctions">
 
-* `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0
-* `prev(): DataRow?` — previous row (`null` for the first row)
-* `next(): DataRow?` — next row (`null` for the last row)
-* `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results of a [row expression](DataRow.md#row-expressions) calculated for current and previous rows
-* `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
-* `values(): List<Any?>` — list of all cell values from the current row
-* `valuesOf<T>(): List<T>` — list of values of the given type 
-* `columnsCount(): Int` — number of columns
-* `columnNames(): List<String>` — list of all column names
-* `columnTypes(): List<KType>` — list of all column types 
-* `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
-* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
-* `transpose(): DataFrame<NameValuePair<*>>` — [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: Any?` is cell values
-* `transposeTo<T>(): DataFrame<NameValuePair<T>>`— [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: T` is cell values
-* `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
-* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by absolute row index. 
-* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
-* `getValue<T>(columnName)` — cell value of type `T` by this row and given `columnName`
-* `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row and given `columnName` or `null` if there's no such column
-* `get(column): T` — cell value by this row and given `column`
-* `String.invoke<T>(): T` — cell value of type `T` by this row and given `this` column name
-* `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and given `this` column path
-* `ColumnReference.invoke(): T` — cell value of type `T` by this row and given `this` column
-* `df()` — [`DataFrame`](DataFrame.md) that current row belongs to
+* `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0;
+* `prev(): DataRow?` — previous row (`null` for the first row);
+* `next(): DataRow?` — next row (`null` for the last row);
+* `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results 
+of a [row expression](DataRow.md#row-expressions) calculated for the current and previous rows;
+* `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows;
+* `values(): List<Any?>` — list of all cell values from the current row;
+* `valuesOf<T>(): List<T>` — list of values of the given type ;
+* `columnsCount(): Int` — number of columns;
+* `columnNames(): List<String>` — list of all column names;
+* `columnTypes(): List<KType>` — list of all column types;
+* `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name 
+and `value` is a cell value;
+* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where the value has the given type;
+* `transpose(): DataFrame<NameValuePair<*>>` — [`DataFrame`](DataFrame.md) with two columns: `name: String` for column names 
+and `value: Any?` for cell values;
+* `transposeTo<T>(): DataFrame<NameValuePair<T>>` — [`DataFrame`](DataFrame.md) with two columns: `name: String` for column names 
+and `value: T` for cell values;
+* `getRow(Int): DataRow` — row from the [`DataFrame`](DataFrame.md) by a row index;
+* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by absolute row indices;
+* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by relative row indices:
+`relative(-1..1)` will return the previous, current, and next row. Requested indices will be coerced to the valid range
+and invalid indices will be skipped;
+* `getValue<T>(columnName)` — cell value of type `T` by this row and the given `columnName`;
+* `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row 
+and the given `columnName` or `null` if there's no such column;
+* `get(column): T` — cell value by this row and the given `column`;
+* `String.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column name;
+* `ColumnPath.invoke<T>(): T` — cell value of type `T` by this row and the given `this` column path;
+* `ColumnReference.invoke(): T` — cell value of type `T` by this row and the given `this` column;
+* `df()` — [`DataFrame`](DataFrame.md) that the current row belongs to.
 
 </snippet>
 
-## Row expressions
-Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations.
+The following dataframe will be used in the examples below:
 
-<!---FUN expressions-->
+<!---FUN dfDataRow-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="resources/dfDataRow.html" width="100%"/>
+
+## Row expressions
+Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) 
+and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md), and other operations.
+
+Row expression signature: ```DataRow.(DataRow) -> T```. Row values can be accessed with or without ```it``` keyword. 
+Implicit and explicit argument represent the same `DataRow` object.
+
+### Row expressions examples
+
+#### add {collapsible="true"}
+
+<!---FUN addWithExpression-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 // Row expression computes values for a new column
 df.add("fullName") { name.firstName + " " + name.lastName }
+```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row expression computes values for a new column
+df.add("fullName") { "name"["firstName"] + " " + "name"["lastName"] }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/addWithExpression_properties.html" width="100%"/>
+
+#### update (expression) {collapsible="true"}
+
+<!---FUN updateWithExpression-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 // Row expression computes updated values
 df.update { weight }.at(1, 3, 4).with { prev()?.weight }
+```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row expression computes updated values
+df.update("weight").at(1, 3, 4).with { prev()?.get("weight") }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/updateWithExpression_properties.html" width="100%"/>
+
+#### pivot {collapsible="true"}
+
+<!---FUN pivotWithExpression-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 // Row expression computes cell content for values of pivoted column
 df.pivot { city }.with { name.lastName.uppercase() }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.expressions.html" width="100%"/>
-<!---END-->
-
-Row expression signature: ```DataRow.(DataRow) -> T```. Row values can be accessed with or without ```it``` keyword. Implicit and explicit argument represent the same `DataRow` object.
-
-## Row conditions
-Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`. 
-
-<!---FUN conditions-->
+</tab>
+<tab title="Strings">
 
 ```kotlin
-// Row condition is used to filter rows by index
-df.filter { index() % 5 == 0 }
-
-// Row condition is used to drop rows where `age` is the same as in the previous row
-df.drop { diffOrNull { age } == 0 }
-
-// Row condition is used to filter rows for value update
-df.update { weight }.where { index() > 4 && city != "Paris" }.with { 50 }
+// Row expression computes cell content for values of pivoted column
+df.pivot { city }.with { "name"["lastName"]<String>().uppercase() }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.conditions.html" width="100%"/>
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/pivotWithExpression_properties.html" width="100%"/>
+
+## Row conditions
+Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
+There are two types of row conditions:
+
+### Row filter
+`RowFilter` evaluates a [`DataRow`](DataRow.md) 
+and returns a `Boolean` indicating whether the row should be included in the result.
+Both `this` and `it` in `RowFilter` refer to the same [`DataRow`](DataRow.md).
+`RowFilter` is used in functions such as [`filter`](filter.md), [`drop`](drop.md), 
+[`first`](first.md), and [`count`](count.md). 
+
+`RowFilter` signature: ```DataRow.(DataRow) -> Boolean```.
+
+#### Row filter examples
+
+##### filter {collapsible="true"}
+
+<!---FUN filterWithCondition-->
+
+```kotlin
+// Row filter is used to filter rows by index
+df.filter { index() % 5 == 0 }
+```
+
+<!---END-->
+<inline-frame src="resources/filter.html" width="100%"/>
+
+##### drop {collapsible="true"}
+
+<!---FUN dropWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row filter is used to drop rows where `city` or `weight` is null
+df.drop { city == null || weight == null }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row filter is used to drop rows where `city` or `weight` is null
+df.drop { "city"<String?>() == null || "weight"<Int?>() == null }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/dropWithCondition_properties.html" width="100%"/>
+
+##### first {collapsible="true"}
+
+<!---FUN firstWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row filter is used to take the first row where `city` is Milan
+df.first { city == "Milan" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row filter is used to take the first row where `city` is Milan
+df.first { "city"<String?>() == "Milan" }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/firstWithCondition_properties.html" width="100%"/>
+
+##### count {collapsible="true"}
+
+<!---FUN countWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row filter is used to count happy people
+df.count { isHappy } // the result is 5
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row filter is used to count happy people
+df.count { "isHappy"() } // the result is 5
+```
+
+</tab></tabs>
 <!---END-->
 
-Row condition signature: ```DataRow.(DataRow) -> Boolean```
+### Row value filter
+`RowValueFilter` is used via the `where` clause after selecting columns in functions
+such as [`update`](update.md), [`gather`](gather.md), and [`format`](format.md).
+Like `RowFilter`, it returns a `Boolean` indicating whether the row should be included in the result.
+However, unlike `RowFilter`, where both `this` and `it` refer to the current [`DataRow`](DataRow.md), 
+`RowValueFilter` uses the current row as `this` and can also access the selected column value from this row as `it`.
 
+RowValueFilter signature: ```DataRow.(C) -> Boolean```.
 
+#### Row value filter examples
+
+##### update (condition) {collapsible="true"}
+
+<!---FUN updateWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row value filter is used to filter rows for value update
+df.update { age }.where { name.firstName == "Alice" && name.lastName == "Cooper" }.with { 16 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row value filter is used to filter rows for value update
+df.update("age")
+    .where {
+        "name"["firstName"]<String>() == "Alice" &&
+            "name"["lastName"]<String>() == "Cooper"
+    }
+    .with { 16 }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/updateWithCondition_properties.html" width="100%"/>
+
+##### gather {collapsible="true"}
+
+<!---FUN gatherWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row value filter is used to gather only unfilled profile fields
+df.gather { age and city and weight and isHappy }
+    .where { it == null }
+    .into("field", "value")
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row value filter is used to gather only unfilled profile fields
+df.gather("age", "city", "weight", "isHappy")
+    .where { it == null }
+    .into("field", "value")
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/gatherWithCondition_properties.html" width="100%"/>
+
+##### format {collapsible="true"}
+
+<!---FUN formatWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row value filter is used to format only rows with minors
+df
+    .format { age }
+    .where { it < 18 }
+    .with { background(RgbColor(242, 210, 189)) and textColor(black) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row value filter is used to format only rows with minors
+df
+    .format("age")
+    .where { "age"<Int>() < 18 }
+    .with { background(RgbColor(242, 210, 189)) and textColor(black) }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/formatWithCondition_properties.html" width="100%"/>
 
 ## Row statistics
 
@@ -91,7 +333,7 @@ These statistics will be applied only to values of appropriate types, and incomp
 For example, if a [dataframe](DataFrame.md) has columns of types `String` and `Int`,
 `rowSum()` will compute the sum of the `Int` values in the row and ignore `String` values.
 
-To apply statistics only to values of a particular type use `-Of` versions:
+To apply statistics only to values of a particular type, use `-Of` versions:
 * `rowSumOf<T>`
 * `rowMeanOf<T>`
 * `rowStdOf<T>`
