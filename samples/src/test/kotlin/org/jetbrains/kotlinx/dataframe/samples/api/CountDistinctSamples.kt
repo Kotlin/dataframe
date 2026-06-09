@@ -68,7 +68,7 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
         // SampleStart
         df.groupBy { city }
             // SampleEnd
-            .toExpandedHtml()
+            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -131,7 +131,7 @@ class CountDistinctSamples : DataFrameSampleHelper("countDistinct", "api") {
                     background(firstNameToColor(firstName)) and textColor(black)
                 }
             }
-            .toExpandedHtml()
+            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 }

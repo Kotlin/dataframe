@@ -87,11 +87,11 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
             """.trimIndent(),
     )
 
-    fun DataFrame<*>.toExpandedHtml() =
+    fun DataFrame<*>.toHtmlWithOpenedNestedDfs() =
         toStandaloneHtml(
             configuration = DisplayConfiguration(enableFallbackStaticTables = false),
             getFooter = { "" },
         ) + expandNestedFramesScript
 
-    fun GroupBy<*, *>.toExpandedHtml() = toDataFrame().toExpandedHtml()
+    fun GroupBy<*, *>.toHtmlWithOpenedNestedDfs() = toDataFrame().toHtmlWithOpenedNestedDfs()
 }
