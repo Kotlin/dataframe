@@ -18,29 +18,54 @@ val buildExampleProjectsGroup = "build example projects"
 // region syncing
 
 val versionsToSync =
-    listOf(
-        "kotlin",
-        "dataframe",
-        "kandy",
-        "ktlint-gradle",
-        "ktlint",
-        "maven-wrapper",
-        "maven-surefire",
-        "maven",
-        "kotlinDatetime",
-        "log4j",
-        "spark3",
-        "kotlin-spark",
-        "spark4",
-        "kotlin-dl",
-        "multik",
-        "exposed",
-        "sqlite",
-        "h2db",
-        "hibernate",
-        "hikari",
-        "sl4j",
-    )
+    with(libs.versions) {
+        listOf(
+            kotlin,
+            dataframe,
+            kandy,
+            ktlint.gradle,
+            ktlint,
+            maven.wrapper,
+            maven.surefire,
+            maven,
+            kotlinDatetime,
+            log4j,
+            spark3,
+            kotlin.spark,
+            spark4,
+            kotlin.dl,
+            multik,
+            exposed,
+            sqlite,
+            h2db,
+            hibernate,
+            hikari,
+            sl4j,
+        )
+    }.map { it.getVersionName() }
+
+// tiny reflection-based solution to retrieve the original version name from the accessor,
+// so we can keep the list of version type-safe
+private fun Any.getVersionName(): String {
+    val klass = this::class.java
+    if (this is Provider<*>) {
+        val valueField = klass.declaredFields
+            .single { it.name == "value" }
+            .also { it.isAccessible = true }
+        val result = valueField.get(this)
+        val lambdaClass = result::class.java
+        val nameField = lambdaClass.declaredFields
+            .single { it.type == String::class.java }
+            .also { it.isAccessible = true }
+        val name = nameField.get(result) as String
+        return name.replace('.', '-')
+    } else {
+        val asProviderFunction = klass.declaredMethods
+            .single { it.name == "asProvider" }
+        val provider = asProviderFunction.invoke(this) as Provider<*>
+        return provider.getVersionName()
+    }
+}
 
 val syncAllExampleFolders by tasks.registering {
     group = buildExampleProjectsGroup
