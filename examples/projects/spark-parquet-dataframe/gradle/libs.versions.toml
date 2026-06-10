@@ -3,7 +3,7 @@ kotlin = "2.4.0"
 dataframe = "1.0.0-Beta5"
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"
-kandy = "0.8.4"
+kandy = "0.8.5-dev-100"
 log4j = "2.25.4"
 spark4 = "4.0.0"
 
