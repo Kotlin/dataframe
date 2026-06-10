@@ -9,10 +9,6 @@ plugins {
 kotlin {
     explicitApi()
     jvmToolchain(libs.versions.gradle.jdk.get().toInt())
-    compilerOptions {
-        // can be removed once kotlin.uuid.ExperimentalUuidApi is marked "stable".
-        optIn.add("kotlin.uuid.ExperimentalUuidApi")
-    }
 }
 
 // Adds the instrumentedJars configuration/artifact to all Kotlin sub-projects.
