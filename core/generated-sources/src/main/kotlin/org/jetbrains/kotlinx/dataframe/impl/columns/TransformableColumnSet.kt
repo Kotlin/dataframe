@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * @see [TransformableSingleColumn]
  * @see [SingleColumn]
  */
+@PublishedApi
 internal interface TransformableColumnSet<out C> : ColumnSet<C> {
     fun transformResolve(
         context: ColumnResolutionContext,
