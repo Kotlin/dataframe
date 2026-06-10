@@ -40,7 +40,10 @@ import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
+import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
+import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent.Companion.media
+import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.FORMATTING_DSL
 import org.jetbrains.kotlinx.dataframe.util.FORMATTING_DSL_REPLACE
@@ -803,10 +806,16 @@ public class FormattedFrame<T>(
      *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
+     * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+     * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+     *   Default: `"DataFrame [rows x cols]"`
      * @see toStandaloneHtml
      */
-    public fun toHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
-        df.toHtml(getDisplayConfiguration(configuration))
+    public fun toHtml(
+        configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+        cellRenderer: CellRenderer = DefaultCellRenderer,
+        getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
+    ): DataFrameHtmlData = df.toHtml(getDisplayConfiguration(configuration), cellRenderer, getFooter)
 
     /**
      * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
@@ -827,10 +836,16 @@ public class FormattedFrame<T>(
      *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
+     * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+     * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
+     *   Default: `"DataFrame [rows x cols]"`
      * @see toHtml
      */
-    public fun toStandaloneHtml(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
-        df.toStandaloneHtml(getDisplayConfiguration(configuration))
+    public fun toStandaloneHtml(
+        configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+        cellRenderer: CellRenderer = DefaultCellRenderer,
+        getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
+    ): DataFrameHtmlData = df.toStandaloneHtml(getDisplayConfiguration(configuration), cellRenderer, getFooter)
 
     /** Applies this formatter to the given [configuration] and returns a new instance. */
     @Suppress("UNCHECKED_CAST")
