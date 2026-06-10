@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenLocal()
         gradlePluginPortal()
         mavenCentral()
+        google()
         maven("https://redirector.kotlinlang.org/maven/bootstrap")
         jupyterApiTCRepo?.let { jupyterApiTCRepo ->
             if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)

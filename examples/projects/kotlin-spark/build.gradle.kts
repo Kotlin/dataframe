@@ -17,7 +17,7 @@ dependencies {
 
     // (Kotlin) Spark SQL (Spark 3.3.2)
     implementation(libs.kotlin.spark)
-    compileOnly(libs.spark.sql)
+    compileOnly(libs.spark3.sql)
 
     // Logging to keep Spark quiet
     implementation(libs.log4j.core)
