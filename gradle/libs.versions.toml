@@ -82,6 +82,18 @@ spark4 = "4.0.0"
 
 multik = "0.3.1"
 
+# Used by the Android example project; keys mirror examples/projects/android-example/gradle/libs.versions.toml
+agp = "9.0.0"
+coreKtx = "1.10.1"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+lifecycleRuntimeKtx = "2.6.1"
+activityCompose = "1.8.0"
+composeBom = "2024.09.00"
+
+# Maven exec
+exec = "3.5.0"
+
 [libraries]
 jupyter-api = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
 
@@ -176,9 +188,6 @@ kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
-dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
-dataframe-release-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe" }
-dataframe-release-json = { group = "org.jetbrains.kotlinx", name = "dataframe-json", version.ref = "dataframe" }
 
 hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref = "duckdb" }
@@ -194,12 +203,53 @@ hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp",
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 
 kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api_3.3.2_2.13", version.ref = "kotlin-spark" }
-spark = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
+spark3-sql = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
 log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
 
 multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "multik" }
 multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref = "multik" }
+
+# Released DataFrame artifacts used by example projects.
+# `dataframe-release-core`/`dataframe-release-json` above are the same artifacts (kept under their
+# existing alias for build-logic use); the entries below mirror the aliases used by the examples.
+dataframe = { group = "org.jetbrains.kotlinx", name = "dataframe", version.ref = "dataframe" }
+dataframe-core = { group = "org.jetbrains.kotlinx", name = "dataframe-core", version.ref = "dataframe" }
+dataframe-csv = { group = "org.jetbrains.kotlinx", name = "dataframe-csv", version.ref = "dataframe" }
+dataframe-json = { group = "org.jetbrains.kotlinx", name = "dataframe-json", version.ref = "dataframe" }
+dataframe-openapi = { group = "org.jetbrains.kotlinx", name = "dataframe-openapi", version.ref = "dataframe" }
+dataframe-openapi-generator = { group = "org.jetbrains.kotlinx", name = "dataframe-openapi-generator", version.ref = "dataframe" }
+
+# Kotlin-DL example (titanic)
+kotlin-dl-api = { group = "org.jetbrains.kotlinx", name = "kotlin-deeplearning-api", version.ref = "kotlin-dl" }
+kotlin-dl-impl = { group = "org.jetbrains.kotlinx", name = "kotlin-deeplearning-impl", version.ref = "kotlin-dl" }
+kotlin-dl-tensorflow = { group = "org.jetbrains.kotlinx", name = "kotlin-deeplearning-tensorflow", version.ref = "kotlin-dl" }
+kotlin-dl-dataset = { group = "org.jetbrains.kotlinx", name = "kotlin-deeplearning-dataset", version.ref = "kotlin-dl" }
+
+# Spark 4 example (spark-parquet-dataframe); the `spark` entry above is the spark3 variant.
+spark4-sql = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark4" }
+spark4-mllib = { group = "org.apache.spark", name = "spark-mllib_2.13", version.ref = "spark4" }
+
+# Maven exec plugin (kotlin-dataframe-plugin-maven-example)
+maven-exec-plugin = { group = "org.codehaus.mojo", name = "exec-maven-plugin", version.ref = "exec" }
+# Maven surefire/failsafe plugins (kotlin-dataframe-plugin-maven-example); both share the
+# `maven-surefire` version, so tracking surefire covers failsafe too.
+maven-surefire-plugin = { group = "org.apache.maven.plugins", name = "maven-surefire-plugin", version.ref = "maven-surefire" }
+
+# Android example
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
@@ -222,3 +272,8 @@ kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "ben
 dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
 gradlePlugin-gradle-foojayToolchains = { id = "org.gradle.toolchains:foojay-resolver-convention", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { id = "dev.panuszewski:typesafe-conventions", version.ref = "typesafe-conventions" }
+
+# Android example
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenLocal()
         gradlePluginPortal()
         mavenCentral()
+        google()
         jupyterApiTCRepo?.let { jupyterApiTCRepo ->
             if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
         }

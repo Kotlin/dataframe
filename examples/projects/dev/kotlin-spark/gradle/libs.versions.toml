@@ -14,7 +14,7 @@ dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "datafra
 log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
 kotlin-spark = { group = "org.jetbrains.kotlinx.spark", name = "kotlin-spark-api_3.3.2_2.13", version.ref = "kotlin-spark" }
-spark-sql = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
+spark3-sql = { group = "org.apache.spark", name = "spark-sql_2.13", version.ref = "spark3" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
