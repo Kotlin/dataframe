@@ -79,13 +79,13 @@ Possible workarounds (for [`ValueColumn`s](DataColumn.md#valuecolumn)):
 
    * Specify the correct type using [`.replace {}`](replace.md) and `ValueColumn.changeType()`:
 
-   <!---FUN changeType-->
+   <!---ignore:incorrect indent FUN changeType-->
 
-```kotlin
-df.replace { wrongTypeCol }.with { it.asValueColumn().changeType(typeOf<ActualType>()) }
-```
+    ```kotlin
+    df.replace { wrongTypeCol }.with { it.asValueColumn().changeType(typeOf<ActualType>()) }
+    ```
 
-<!---END-->
+    <!---ignore:incorrect indent END-->
 
    * Use [`.inferType { columns }`](inferType.md) to infer the correct types 
    for the selected columns from the actual values. Doesn't work for generic types like `Map`.
@@ -107,10 +107,9 @@ This problem often occurs when reading data from an SQLite database with column 
 
 You can provide types for such columns manually:
 
-```Kotlin
-import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
-import kotlin.reflect.typeOf
+<!---FUN readSqliteCustom-->
 
+```kotlin
 val sqliteCustom = Sqlite.withCustomTypes(
     mapOf(
         "LONGVARCHAR" to typeOf<String>(),
@@ -118,6 +117,8 @@ val sqliteCustom = Sqlite.withCustomTypes(
     )
 )
 val df = DataFrame.readSqlTable(
-    connection, "table_name", dbType = sqliteCustom
+    connectionConfig, "table_name", dbType = sqliteCustom
 )
 ```
+
+<!---END-->

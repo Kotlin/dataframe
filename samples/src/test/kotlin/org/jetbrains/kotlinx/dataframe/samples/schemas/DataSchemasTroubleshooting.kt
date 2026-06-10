@@ -9,11 +9,13 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Ignore
 import org.junit.Test
+import java.sql.Connection
 import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
@@ -57,6 +59,25 @@ class DataSchemasTroubleshooting {
         val df = dataFrameOf("wrongTypeCol" to listOf())
         // SampleStart
         df.replace { wrongTypeCol }.with { it.asValueColumn().changeType(typeOf<ActualType>()) }
+        // SampleEnd
+    }
+
+
+    @Ignore
+    @Test
+    fun readSqliteCustom() {
+        val connectionConfig = DbConnectionConfig("")
+
+        // SampleStart
+        val sqliteCustom = Sqlite.withCustomTypes(
+            mapOf(
+                "LONGVARCHAR" to typeOf<String>(),
+                "LONGINT" to typeOf<Long>()
+            )
+        )
+        val df = DataFrame.readSqlTable(
+            connectionConfig, "table_name", dbType = sqliteCustom
+        )
         // SampleEnd
     }
 }
