@@ -113,11 +113,13 @@ You can provide types for such columns manually:
 val sqliteCustom = Sqlite.withCustomTypes(
     mapOf(
         "LONGVARCHAR" to typeOf<String>(),
-        "LONGINT" to typeOf<Long>()
-    )
+        "LONGINT" to typeOf<Long>(),
+    ),
 )
 val df = DataFrame.readSqlTable(
-    connectionConfig, "table_name", dbType = sqliteCustom
+    connectionConfig,
+    "table_name",
+    dbType = sqliteCustom,
 )
 ```
 
