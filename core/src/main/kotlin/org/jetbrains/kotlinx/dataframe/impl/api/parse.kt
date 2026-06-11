@@ -69,7 +69,6 @@ import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 import kotlin.time.toKotlinInstant
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import java.time.Duration as JavaDuration
 import java.time.Instant as JavaInstant
@@ -341,7 +340,7 @@ internal object Parsers : GlobalParserOptions {
         customGlobalDateTimeFormats.values.forEach { it.clear() }
 
         useFastDoubleParser = true
-        parseExperimentalUuid = false
+        parseExperimentalUuid = true
         parseExperimentalInstant = true
         _locale = null
         dateTimeLibrary = null
@@ -847,7 +846,6 @@ internal object Parsers : GlobalParserOptions {
         }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
