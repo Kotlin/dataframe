@@ -134,6 +134,7 @@ korro {
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/schemas/*.kt")
             },
         )
 

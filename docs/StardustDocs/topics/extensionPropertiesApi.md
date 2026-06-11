@@ -291,3 +291,15 @@ However, you can work around this by casting back to the original schema:
 df.add("name") { "branchName" }
     .filter { it.cast<BranchData>().profit > 0 }
 ```
+
+## Troubleshooting 
+
+Sometimes you can get an exception with a message containing
+
+```plain text
+..exception in generated DataFrame extension property..
+```
+
+This may be caused by incompatible schema usage or incorrectly defined column types.
+
+See [](Data-Schemas-And-Extension-Properties-Troubleshooting.md) for more information.
