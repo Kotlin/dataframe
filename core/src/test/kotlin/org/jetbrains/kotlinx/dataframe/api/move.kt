@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.junit.Test
 
@@ -318,5 +321,24 @@ class MoveTests {
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["b"] and "b"["c"] }.to(0, true)
         }.message shouldBe "Cannot move columns to an index remaining inside group if they have different parent"
+    }
+
+    @Test
+    fun `custom compiler plugin-like columns resolver`() {
+        // main diff:
+        // runtime selector { a.b } => ColumnWithPath(DataColumnWithParent, pathOf)
+        // compile time ResolvedDataColumn => just normal ColumnWithPath(DataColumn, pathOf)
+        val ref = object : ColumnSet<Any?> {
+            override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> =
+                listOf(
+                    ColumnWithPath(
+                        columnOf<Any?>(values = arrayOf()) named "b",
+                        pathOf("a", "b"),
+                    ),
+                )
+        }
+        // should resolve column by provided path
+        val res = grouped.move { ref }.toEnd(insideGroup = true)
+        res.getColumnGroup("a").columnNames() shouldBe listOf("c", "b")
     }
 }
