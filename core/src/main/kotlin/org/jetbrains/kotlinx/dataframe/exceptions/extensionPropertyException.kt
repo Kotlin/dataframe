@@ -21,13 +21,13 @@ private const val TROUBLESHOOTING_LINK =
 public fun handleExtensionPropertyException(e: Exception, columnName: String) {
     val msg = when (e) {
         is IllegalArgumentException ->
-            "Column not found exception in the generated DataFrame extension property '$columnName': ${e.localizedMessage}. See $$TROUBLESHOOTING_LINK for more information."
+            "Column not found exception in the generated DataFrame extension property '$columnName': ${e.localizedMessage}. See $TROUBLESHOOTING_LINK for more information."
 
         is ClassCastException ->
-            "Incorrect column type exception in generated DataFrame extension property '$columnName': ${e.localizedMessage}. See $$TROUBLESHOOTING_LINK for more information."
+            "Incorrect column type exception in generated DataFrame extension property '$columnName': ${e.localizedMessage}. See $TROUBLESHOOTING_LINK for more information."
 
         else ->
-            "Unexpected exception in generated DataFrame extension property '$columnName'. Please report it to https://github.com/Kotlin/dataframe/issues. See $$TROUBLESHOOTING_LINK for more information. Exception message: $e."
+            "Unexpected exception in generated DataFrame extension property '$columnName'. Please report it to https://github.com/Kotlin/dataframe/issues. See $TROUBLESHOOTING_LINK for more information. Exception message: $e."
     }
     throw IllegalStateException(msg, e)
 }
