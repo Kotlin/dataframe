@@ -60,6 +60,8 @@ tasks.processJupyterApiResources {
 
 tasks.test {
     maxHeapSize = "2g"
+    forkEvery = 1
+    jvmArgs("-XX:+HeapDumpOnOutOfMemoryError")
 }
 
 kotlinPublications {
