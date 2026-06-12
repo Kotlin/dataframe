@@ -949,6 +949,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
