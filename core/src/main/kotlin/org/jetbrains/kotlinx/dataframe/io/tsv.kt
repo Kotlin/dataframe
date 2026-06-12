@@ -1,11 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadTsvMethod
-import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV_FILE_OR_URL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV_FILE_REPLACE
@@ -17,31 +13,6 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
-import java.nio.file.Path
-
-@Deprecated(
-    message = APACHE_CSV,
-    level = DeprecationLevel.WARNING,
-)
-public class TSV : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readTSV(stream, header = header)
-
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
-
-    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
-        // legacy TSV implementation lives in this module; delegate via File to keep behavior
-        DataFrame.readTSV(path.toFile(), header = header)
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 30_001
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadTsvMethod(pathRepresentation)
-}
 
 private const val TAB_CHAR = '\t'
 

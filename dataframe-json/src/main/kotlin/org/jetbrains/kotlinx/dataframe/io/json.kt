@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.NameValueProperty
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -32,62 +31,8 @@ import java.io.InputStream
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.writeText
-import kotlin.reflect.typeOf
 
-public class JSON(
-    private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-    private val keyValuePaths: List<JsonPath> = emptyList(),
-    private val unifyNumbers: Boolean = true,
-) : SupportedDataFrameFormat {
-
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readJson(
-            stream = stream,
-            header = header,
-            typeClashTactic = typeClashTactic,
-            keyValuePaths = keyValuePaths,
-            unifyNumbers = unifyNumbers,
-        )
-
-    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
-        DataFrame.readJson(
-            path = path,
-            header = header,
-            keyValuePaths = keyValuePaths,
-            typeClashTactic = typeClashTactic,
-            unifyNumbers = unifyNumbers,
-        )
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "json"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 10_000
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadJsonMethod(
-            path = pathRepresentation,
-            arguments = MethodArguments()
-                .add(
-                    "keyValuePaths",
-                    typeOf<List<JsonPath>>(),
-                    "listOf(${
-                        keyValuePaths.joinToString {
-                            "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
-                        }
-                    })",
-                )
-                .add(
-                    "typeClashTactic",
-                    typeOf<TypeClashTactic>(),
-                    "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
-                )
-                .add(
-                    "unifyNumbers",
-                    typeOf<Boolean>(),
-                    unifyNumbers.toString(),
-                ),
-        )
+public object JSON {
 
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.

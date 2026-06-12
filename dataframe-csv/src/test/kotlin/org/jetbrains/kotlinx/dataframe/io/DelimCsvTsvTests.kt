@@ -99,7 +99,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun readCsv() {
-        val df = DataFrame.read(simpleCsv)
+        val df = DataFrame.readCsv(simpleCsv)
 
         df.columnsCount() shouldBe 11
         df.rowsCount() shouldBe 5
@@ -326,13 +326,6 @@ class DelimCsvTsvTests {
     fun `CSV String of saved dataframe starts with column name`() {
         val df = dataFrameOf("a")(1)
         df.toCsvStr().first() shouldBe 'a'
-    }
-
-    @Test
-    fun `guess tsv`() {
-        val df = DataFrame.read(testResource("abc.tsv"))
-        df.columnsCount() shouldBe 3
-        df.rowsCount() shouldBe 2
     }
 
     @Test
