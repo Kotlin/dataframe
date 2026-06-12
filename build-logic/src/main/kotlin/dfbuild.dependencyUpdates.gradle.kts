@@ -35,6 +35,7 @@ val dependencyUpdateExclusions = listOf(
     // need to revise our tests to update
     libs.android.gradle.api.get().group,
     // we have spark3 and spark4 for examples, keep spark3 at 3.3.2
+    libs.spark3.sql.get().name,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates

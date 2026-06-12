@@ -24,8 +24,8 @@ dependencies {
     compileOnly("org.gradle.kotlin:gradle-kotlin-dsl-plugins:$expectedKotlinDslPluginsVersion")
 
     // So we can create pretty tables in gradle task outputs, parse json, and rename to camelCase
-    implementation(libs.dataframe.release.core)
-    implementation(libs.dataframe.release.json)
+    implementation(libs.dataframe.core)
+    implementation(libs.dataframe.json)
 
     // We need to declare a dependency for each plugin used in convention plugins below
     implementation(pluginMarker(libs.plugins.ktlint.gradle))
