@@ -48,8 +48,6 @@ private val logger = KotlinLogging.logger {}
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
@@ -60,12 +58,11 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
     return withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlTable(conn, tableName, limit, inferNullability, dbType, strictValidation, configureStatement)
+        readSqlTable(conn, tableName, limit, inferNullability, dbType, configureStatement)
     }
 }
 
@@ -80,8 +77,6 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
@@ -94,7 +89,6 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
@@ -105,7 +99,6 @@ public fun DataFrame.Companion.readSqlTable(
             limit,
             inferNullability,
             dbType,
-            strictValidation,
             configureStatement,
         )
     }
@@ -122,8 +115,6 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
- * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
- *                           Default is `true` for strict validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
@@ -136,16 +127,12 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
-    if (strictValidation) {
-        require(isValidTableName(tableName)) {
-            "The provided table name '$tableName' is invalid. Please ensure it matches a valid table name in the database schema."
-        }
-    } else {
-        logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
+    require(isValidTableName(tableName)) {
+        "The table name '$tableName' is not a valid SQL identifier. " +
+            "Only Unicode letters, digits, underscores, and dots (for schema-qualified names) are allowed."
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -231,8 +218,9 @@ private fun executeQueryAndBuildDataFrame(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *                     only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
+ *                     [SqlValidation.None] (default) passes the query to the database without validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -243,20 +231,17 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
     return withReadOnlyConnection(dbConfig, dbType) { conn ->
-        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
+        readSqlQuery(conn, sqlQuery, limit, inferNullability, dbType, validation, configureStatement)
     }
 }
 
 /**
  * Converts the result of an SQL query to the DataFrame.
- *
- * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
  *
  * @param [dataSource] the [DataSource] to obtain a database connection from.
  * @param [sqlQuery] the SQL query to execute.
@@ -266,8 +251,9 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dataSource].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *                     only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
+ *                     [SqlValidation.None] (default) passes the query to the database without validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -280,20 +266,17 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
     dataSource.connection.use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation, configureStatement)
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, validation, configureStatement)
     }
 }
 
 /**
  * Converts the result of an SQL query to the DataFrame.
- *
- * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
  *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
@@ -303,8 +286,9 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
- * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
- *                           Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *                     only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
+ *                     [SqlValidation.None] (default) passes the query to the database without validation.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -317,17 +301,15 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
-    if (strictValidation) {
+    if (validation == SqlValidation.ReadOnly) {
         require(isValidSqlQuery(sqlQuery)) {
-            "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
-                "Also it should not contain any separators like `;`."
+            "SQL validation failed: query is not a read-only statement. " +
+                "Only SELECT, WITH, VALUES, TABLE, and EXPLAIN queries are allowed in ReadOnly mode."
         }
-    } else {
-        logger.warn { "Strict validation is disabled. Ensure the SQL query '$sqlQuery' is correct and safe." }
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -358,18 +340,16 @@ public fun DataFrame.Companion.readSqlQuery(
  * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  *                `null` (default) means no limit - all available rows will be fetched
  *                or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation when a query (not a table name) is provided.
+ *                     [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *                     Table name validation is always strict regardless of this parameter.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -379,7 +359,7 @@ public fun DbConnectionConfig.readDataFrame(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
@@ -390,7 +370,7 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation,
+            validation,
             configureStatement,
         )
 
@@ -400,7 +380,6 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation,
             configureStatement,
         )
 
@@ -413,18 +392,16 @@ public fun DbConnectionConfig.readDataFrame(
 /**
  * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  *                `null` (default) means no limit - all available rows will be fetched
  *                or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [Connection].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation when a query (not a table name) is provided.
+ *                     [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *                     Table name validation is always strict regardless of this parameter.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -434,7 +411,7 @@ public fun Connection.readDataFrame(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
@@ -445,7 +422,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation,
+            validation,
             configureStatement,
         )
 
@@ -455,7 +432,6 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation,
             configureStatement,
         )
 
@@ -487,18 +463,16 @@ public fun Connection.readDataFrame(
  * val queryDF = dataSource.readDataFrame("SELECT * FROM orders WHERE amount > 100")
  * ```
  *
- * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
- * It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  *                `null` (default) means no limit - all available rows will be fetched
  *                or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DataSource].
- * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
- * Default is `true` for strict validation.
+ * @param [validation] controls SQL query validation when a query (not a table name) is provided.
+ *                     [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *                     Table name validation is always strict regardless of this parameter.
  * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
  *                            This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
@@ -510,7 +484,7 @@ public fun DataSource.readDataFrame(
     limit: Int? = null,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true,
+    validation: SqlValidation = SqlValidation.None,
     configureStatement: (PreparedStatement) -> Unit = {},
 ): AnyFrame {
     validateLimit(limit)
@@ -522,7 +496,7 @@ public fun DataSource.readDataFrame(
                 limit,
                 inferNullability,
                 dbType,
-                strictValidation,
+                validation,
                 configureStatement,
             )
 
@@ -532,7 +506,6 @@ public fun DataSource.readDataFrame(
                 limit,
                 inferNullability,
                 dbType,
-                strictValidation,
                 configureStatement,
             )
 
@@ -853,7 +826,6 @@ private fun readTableAsDataFrame(
         limit,
         inferNullability,
         dbType,
-        true,
         configureStatement,
     )
 

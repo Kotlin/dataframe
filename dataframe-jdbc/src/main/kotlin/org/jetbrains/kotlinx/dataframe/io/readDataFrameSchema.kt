@@ -110,7 +110,6 @@ public fun DataFrameSchema.Companion.readSqlTable(
         limit = 1,
         inferNullability = false, // Schema extraction doesn't need nullability inference
         dbType = determinedDbType,
-        strictValidation = true,
     )
 
     return singleRowDataFrame.schema()
@@ -211,7 +210,6 @@ public fun DataFrameSchema.Companion.readSqlQuery(
         limit = 1,
         inferNullability = false, // Schema extraction doesn't need nullability inference
         dbType = determinedDbType,
-        strictValidation = true,
     )
 
     return singleRowDataFrame.schema()
