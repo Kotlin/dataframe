@@ -2,7 +2,9 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromStream
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -29,10 +31,274 @@ import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import java.io.File
 import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.typeOf
+
+public class Json :
+    DataFrameReadSource,
+    DataFrameWriteTarget {
+
+    public data class ReadOptions(
+        val header: List<String>,
+        val typeClashTactic: TypeClashTactic,
+        val keyValuePaths: List<JsonPath>,
+        val unifyNumbers: Boolean,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                header: List<String> = emptyList(),
+                typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+                keyValuePaths: List<JsonPath> = emptyList(),
+                unifyNumbers: Boolean = true,
+            ): ReadOptions =
+                ReadOptions(
+                    header = header,
+                    typeClashTactic = typeClashTactic,
+                    keyValuePaths = keyValuePaths,
+                    unifyNumbers = unifyNumbers,
+                )
+        }
+    }
+
+    override val supportedReadingTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<String>(),
+            typeOf<InputStream>(),
+            typeOf<JsonElement>(),
+        )
+
+    public data class WriteOptions(val prettyPrint: Boolean) : DataFrameWriteOptions {
+        public companion object {
+            public operator fun invoke(prettyPrint: Boolean = false): WriteOptions =
+                WriteOptions(prettyPrint = prettyPrint)
+        }
+    }
+
+    override val supportedWritingTypes: Set<KType> =
+        setOf(
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<Appendable>(),
+            typeOf<OutputStream>(),
+            // used like df.write({ json: JsonElement -> })
+            typeOf<Function1<JsonArray, *>>(),
+            typeOf<Function1<JsonObject, *>>(),
+            typeOf<Function1<String, *>>(),
+        )
+
+    public companion object {
+        internal const val EXTENSION = "json"
+        internal val MIME_TYPES = setOf(
+            "application/json",
+            "application/x-json",
+            "text/json",
+            "text/x-json",
+        )
+    }
+
+    override fun acceptsTarget(sourceInfo: DataSourceInfo, options: DataFrameWriteOptions?): Boolean {
+        if (options != null && options !is WriteOptions) return false
+        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
+        return supportedWritingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun writeDataRow(
+        dataRow: DataRow<*>,
+        target: Any,
+        targetInfo: DataSourceInfo,
+        options: DataFrameWriteOptions?,
+    ): Result<Unit> =
+        runCatching {
+            val opts = (options ?: WriteOptions()) as WriteOptions
+            val kType = targetInfo.kType
+
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when {
+                kType.isSubTypeOf<Path>() ->
+                    dataRow.writeJson(path = target as Path, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<File>() ->
+                    dataRow.writeJson(path = (target as File).toPath(), prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<Appendable>() ->
+                    dataRow.writeJson(writer = target as Appendable, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<OutputStream>() ->
+                    dataRow.writeJson(stream = target as OutputStream, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<Function1<JsonObject, *>>() -> {
+                    (target as Function1<JsonObject, *>).invoke(
+                        dataRow.toJsonElement(prettyPrint = opts.prettyPrint),
+                    )
+                    Unit
+                }
+
+                kType.isSubTypeOf<Function1<JsonArray, *>>() ->
+                    return Result.failure(
+                        IllegalArgumentException(
+                            "Can only turn a single DataRow into a JsonObject. A DataFrame can only be converted to a JsonArray.",
+                        ),
+                    )
+
+                kType.isSubTypeOf<Function1<String, *>>() -> {
+                    (target as Function1<String, *>).invoke(
+                        dataRow.toJson(prettyPrint = opts.prettyPrint),
+                    )
+                    Unit
+                }
+
+                else -> return Result.failure(
+                    IllegalStateException("Unsupported target type for JSON writing: $kType"),
+                )
+            }
+        }
+
+    override fun writeDataFrame(
+        dataFrame: DataFrame<*>,
+        target: Any,
+        targetInfo: DataSourceInfo,
+        options: DataFrameWriteOptions?,
+    ): Result<Unit> =
+        runCatching {
+            val opts = (options ?: WriteOptions()) as WriteOptions
+            val kType = targetInfo.kType
+
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when {
+                kType.isSubTypeOf<Path>() ->
+                    dataFrame.writeJson(path = target as Path, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<File>() ->
+                    dataFrame.writeJson(path = (target as File).toPath(), prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<Appendable>() ->
+                    dataFrame.writeJson(writer = target as Appendable, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<OutputStream>() ->
+                    dataFrame.writeJson(stream = target as OutputStream, prettyPrint = opts.prettyPrint)
+
+                kType.isSubTypeOf<Function1<JsonArray, *>>() -> {
+                    (target as Function1<JsonArray, *>).invoke(
+                        dataFrame.toJsonElement(prettyPrint = opts.prettyPrint),
+                    )
+                    Unit
+                }
+
+                kType.isSubTypeOf<Function1<JsonObject, *>>() ->
+                    return Result.failure(
+                        IllegalArgumentException(
+                            "Can only turn a single DataRow into a JsonObject. A DataFrame can only be converted to a JsonArray.",
+                        ),
+                    )
+
+                kType.isSubTypeOf<Function1<String, *>>() -> {
+                    (target as Function1<String, *>).invoke(
+                        dataFrame.toJson(prettyPrint = opts.prettyPrint),
+                    )
+                    Unit
+                }
+
+                else -> return Result.failure(
+                    IllegalStateException("Unsupported target type for JSON writing: $kType"),
+                )
+            }
+        }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is ReadOptions) return false
+        if (sourceInfo.extension?.lowercase()?.equals(EXTENSION) == false) return false
+        if (sourceInfo.mimeType != null && sourceInfo.mimeType !in MIME_TYPES) return false
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun readDataFrame(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: ReadOptions()) as ReadOptions
+            val kType = sourceInfo.kType
+
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readJson(
+                    url = url,
+                    header = opts.header,
+                    typeClashTactic = opts.typeClashTactic,
+                    keyValuePaths = opts.keyValuePaths,
+                    unifyNumbers = opts.unifyNumbers,
+                )
+            }
+
+            val element: JsonElement = when {
+                kType.isSubTypeOf<InputStream>() ->
+                    Json.decodeFromStream<JsonElement>(source as InputStream)
+
+                kType.isSubTypeOf<String>() -> {
+                    if ((source as String).isNotJson()) {
+                        return Result.failure(
+                            IllegalArgumentException("Source string is not valid JSON"),
+                        )
+                    }
+                    Json.decodeFromString<JsonElement>(source)
+                }
+
+                kType.isSubTypeOf<JsonElement>() ->
+                    source as JsonElement
+
+                else -> return Result.failure(IllegalStateException("Unsupported JSON source type: $kType"))
+            }
+
+            return@runCatching readJsonImpl(
+                parsed = element,
+                header = opts.header,
+                typeClashTactic = opts.typeClashTactic,
+                keyValuePaths = opts.keyValuePaths,
+                unifyNumbers = opts.unifyNumbers,
+            )
+        }
+
+    override val testOrder: Int = 10_000
+
+    override fun toString(): String = "Json"
+
+    // early-exit check for String to see if it's definitely not json
+    private fun String.isNotJson(): Boolean =
+        trim().let {
+            it.isEmpty() ||
+                !(
+                    (it.startsWith('{') && it.endsWith('}')) ||
+                        (it.startsWith('[') && it.endsWith(']'))
+                )
+        }
+}
+
+public val DataFrameReadOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Json.ReadOptions.Companion
+
+public val DataFrameWriteOptions.Companion.Json: org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.Json.WriteOptions.Companion
+
+private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
+
+private inline fun <reified T> KType.isSuperTypeOf(): Boolean = this.isSupertypeOf(typeOf<T>())
 
 public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
@@ -479,6 +745,29 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
     return json.encodeToString(JsonElement.serializer(), encodeFrame(this@toJson))
 }
 
+public fun AnyFrame.toJsonElement(prettyPrint: Boolean = false): JsonArray {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    val res = json.encodeToJsonElement(JsonElement.serializer(), encodeFrame(this@toJsonElement))
+    return res as JsonArray
+}
+
+public fun AnyRow.toJsonElement(prettyPrint: Boolean = false): JsonObject {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    val res = json.encodeToJsonElement(
+        JsonElement.serializer(),
+        encodeRow(this@toJsonElement.df(), this@toJsonElement.index()),
+    )
+    return res as JsonObject
+}
+
 /**
  * Converts the DataFrame to a JSON string representation with additional metadata about serialized data.
  * It is heavily used to implement some integration features in Kotlin Notebook IntelliJ IDEA plugin.
@@ -590,6 +879,10 @@ public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) 
     writer.append(toJson(prettyPrint))
 }
 
+public fun AnyFrame.writeJson(stream: OutputStream, prettyPrint: Boolean = false) {
+    stream.write(toJson(prettyPrint).toByteArray())
+}
+
 public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
     writeJson(file.toPath(), prettyPrint)
 }
@@ -604,6 +897,10 @@ public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {
 
 public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
     writer.append(toJson(prettyPrint))
+}
+
+public fun AnyRow.writeJson(stream: OutputStream, prettyPrint: Boolean = false) {
+    stream.write(toJson(prettyPrint).toByteArray())
 }
 
 private const val READ_JSON = "readJson"

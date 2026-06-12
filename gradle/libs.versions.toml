@@ -31,6 +31,7 @@ commonsCsv = "1.14.1"
 commonsCompress = "1.28.0"
 commonsIo = "2.21.0"
 commonsStatistics = "1.2"
+tika = "3.3.0"
 serialization = "1.11.0"
 poi = "5.5.1"
 mariadb = "3.5.8"
@@ -95,6 +96,7 @@ commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref =
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
 commonsStatisticsDescriptive = { group = "org.apache.commons", name = "commons-statistics-descriptive", version.ref = "commonsStatistics" }
+tika = { group = "org.apache.tika", name = "tika-core", version.ref = "tika" }
 
 # Serialization
 serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
