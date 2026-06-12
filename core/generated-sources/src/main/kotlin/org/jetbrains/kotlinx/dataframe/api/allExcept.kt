@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_1
 import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_2
 import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_1
@@ -256,6 +256,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptSelector")
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> = except(selector())
 
     /**
@@ -360,6 +361,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptColumnsResolver")
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> = exceptInternal(other)
 
     /**
@@ -464,6 +466,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptColumnsResolvers")
     public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
@@ -568,6 +571,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptString")
     public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> = except(column<Any?>(other))
 
     /**
@@ -672,6 +676,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptStrings")
     public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> = except(others.toColumnSet())
 
     /**
@@ -988,6 +993,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptColumnPath")
     public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> = except(column<Any?>(other))
 
     /**
@@ -1092,6 +1098,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @Interpretable("ColumnSetExceptColumnPaths")
     public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> = except(others.toColumnSet())
 
     // endregion
@@ -1199,6 +1206,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("CSDslAllExceptSelector")
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
 
@@ -1304,6 +1312,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("CSDslAllExceptColumnsResolvers")
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -1408,6 +1417,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("CSDslAllExceptStrings")
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -1618,6 +1628,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("CSDslAllExceptColumnPaths")
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -1728,6 +1739,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupAllColsExceptSelector")
     public fun <C> SingleColumn<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         allColsExceptInternal(selector.toColumns())
 
@@ -1849,6 +1861,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupAllColsExceptStrings")
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: String): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
@@ -2061,6 +2074,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupAllColsExceptColumnPaths")
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
 
@@ -2170,6 +2184,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupExceptSelector")
     public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         exceptInternal(selector.toColumns())
 
@@ -2283,6 +2298,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupExceptStrings")
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: String): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
 
@@ -2495,6 +2511,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnGroupExceptColumnPaths")
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
 
@@ -2600,6 +2617,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringExceptSelector")
     public fun String.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).except(selector)
 
@@ -2721,6 +2739,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringExceptStrings")
     public fun String.except(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
@@ -2933,6 +2952,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringExceptColumnPaths")
     public fun String.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
@@ -3811,6 +3831,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathExceptSelector")
     public fun ColumnPath.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(selector.toColumns<Any?, Any?>())
 
@@ -3932,6 +3953,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathExceptStrings")
     public fun ColumnPath.except(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
@@ -4144,6 +4166,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathExceptColumnPaths")
     public fun ColumnPath.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
@@ -4254,6 +4277,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringAllColsExceptSelector")
     public fun String.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
@@ -4375,6 +4399,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringAllColsExceptStrings")
     public fun String.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -4587,6 +4612,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("StringAllColsExceptColumnPaths")
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -5146,6 +5172,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathAllColsExceptSelector")
     public fun ColumnPath.allColsExcept(selector: ColumnsSelector<*, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
@@ -5267,6 +5294,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathAllColsExceptStrings")
     public fun ColumnPath.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -5372,6 +5400,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Deprecated(DEPRECATED_ACCESS_API)
+    @AccessApiOverload
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -5477,6 +5507,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Interpretable("ColumnPathAllColsExceptColumnPaths")
     public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
