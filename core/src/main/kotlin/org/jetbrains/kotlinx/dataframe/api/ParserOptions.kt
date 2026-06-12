@@ -253,10 +253,11 @@ public interface GlobalParserOptions {
     public val availableParserTypes: Set<KType>
 
     /**
-     * Whether to allow parsing UUIDs to the experimental [Uuid] type.
-     * By default, this is false and UUIDs are not recognized.
+     * Whether to allow parsing UUIDs to the [Uuid] type.
+     * This is marked "stable" from Kotlin 2.4.0+, so, by default this is `true`.
      *
-     * NOTE: Interacting with a [Uuid][Uuid] in your code might require
+     * NOTE: If you are using an older Kotlin version,
+     * interacting with a [Uuid][Uuid] in your code might require
      * `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
      * In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
      */
@@ -389,9 +390,10 @@ internal typealias DateTimeComponentsFallbackLink = Nothing
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
  *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
  * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
- * @param parseExperimentalUuid whether to allow parsing UUIDs to the experimental [Uuid] type.
- *   By default, this is false and UUIDs are not recognized.
- *   NOTE: Interacting with a [Uuid][Uuid] in your code might require
+ * @param parseExperimentalUuid whether to allow parsing UUIDs to the [Uuid] type.
+ *   This is marked "stable" from Kotlin 2.4.0+, so, by default this is `true`.
+ *   NOTE: If you are using an older Kotlin version,
+ *   interacting with a [Uuid][Uuid] in your code might require
  *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
  *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
  * @param parseExperimentalInstant whether to allow parsing to the [kotlin.time.Instant] type.

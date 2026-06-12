@@ -59,7 +59,8 @@ tasks.processJupyterApiResources {
 }
 
 tasks.test {
-    maxHeapSize = "2g"
+    maxHeapSize = "3g"
+    forkEvery = 1
 }
 
 kotlinPublications {
