@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -137,7 +138,7 @@ internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: B
         return moveTo(columnIndex)
     }
 
-    val columnsToMove = df.getColumns(columns)
+    val columnsToMove = df.getColumnsWithPaths(columns)
 
     // check if columns to move have the same parent
     val columnsToMoveParents = columnsToMove.map { it.path.dropLast() }
