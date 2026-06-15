@@ -79,7 +79,8 @@ fun main() {
     // 0 1Password Connect   1.3.0 https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.yaml      3.0.2
 
     // We could now go full-circle and fetch the OpenAPI spec, to use it inside DataFrame!
-    runCatching {
+    // TODO `Unit.` required because of #1723, fixed in kotlin 2.4.20
+    Unit.runCatching {
         readOpenApi(
             uri = info.swaggerYamlUrl.single(),
             name = "1Password",

@@ -32,14 +32,19 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsScope {
 public abstract interface class org/jetbrains/kotlinx/dataframe/DataColumn : org/jetbrains/kotlinx/dataframe/columns/BaseColumn {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/DataColumn$Companion;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun hasNulls ()Z
 	public fun iterator ()Ljava/util/Iterator;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun resolveSingle (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnResolutionContext;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
 }
 
@@ -5095,6 +5100,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/BaseColu
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun kind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun size ()I
 	public fun toList ()Ljava/util/List;
 	public abstract fun toSet ()Ljava/util/Set;
@@ -5111,19 +5117,29 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ColumnAc
 	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ColumnGroup : org/jetbrains/kotlinx/dataframe/DataFrame, org/jetbrains/kotlinx/dataframe/columns/BaseColumn {
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public synthetic fun get (I[I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public synthetic fun get (I[I)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (I[I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public abstract fun get (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun kind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 }
 
 public class org/jetbrains/kotlinx/dataframe/columns/ColumnKind : java/lang/Enum {
@@ -5242,6 +5258,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ColumnWi
 	public fun getParentName ()Ljava/lang/String;
 	public abstract fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public fun path ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnWithPath;
 }
 
@@ -5272,10 +5291,17 @@ public final class org/jetbrains/kotlinx/dataframe/columns/ConstructorsKt {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/FrameColumn : org/jetbrains/kotlinx/dataframe/DataColumn {
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public abstract fun getSchema ()Lkotlin/Lazy;
 	public fun kind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 }
 
@@ -5332,14 +5358,23 @@ public final class org/jetbrains/kotlinx/dataframe/columns/UnresolvedColumnsPoli
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ValueColumn : org/jetbrains/kotlinx/dataframe/DataColumn {
 	public abstract fun changeType (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
+	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public fun kind ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
+	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public abstract fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 }
 
@@ -5839,6 +5874,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/columns/ConstructorsKt {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/columns/DataColumnInternalKt {
 	public static final fun forceResolve (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet : org/jetbrains/kotlinx/dataframe/columns/ColumnSet {
+	public abstract fun transformResolve (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnResolutionContext;Lorg/jetbrains/kotlinx/dataframe/impl/columns/ColumnsResolverTransformer;)Ljava/util/List;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/columns/UtilsKt {
