@@ -37,7 +37,12 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 
 - `dfbuild.buildExampleProjects`: Generates tasks that sync versions and
     build all example projects in the `/examples/projects` and `/examples/projects/dev` directories.
-    - Only apply this plugin to the root project!
+    - NOTE: Only apply this plugin to the root project!
+    - NOTE: Add every dependency version that needs to be synced to the `libs.versions.toml` file of the example in
+      the `versionsToSync` list!
+    - NOTE: Add every dependency used in each example project to `dependencies { exampleDependencyUpdates() }`
+      so `dependencyUpdates` can detect outdated dependencies in examples.
+
     - Projects inside `/examples/projects` are built using the latest release version of DataFrame.
       They are meant to be downloadable as separate projects by users.
     - Projects inside `/examples/projects/dev` are built using sources of DataFrame.
