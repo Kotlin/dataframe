@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io.h2
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
@@ -15,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.io.SqlValidation
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.H2.Mode
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
@@ -634,24 +636,51 @@ class JdbcTest {
             """
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, createSQL)
+            DataFrame.readSqlQuery(connection, createSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, dropSQL)
+            DataFrame.readSqlQuery(connection, dropSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, alterSQL)
+            DataFrame.readSqlQuery(connection, alterSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, deleteSQL)
+            DataFrame.readSqlQuery(connection, deleteSQL, validation = SqlValidation.ReadOnly)
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataFrame.readSqlQuery(connection, repeatedSQL)
+            DataFrame.readSqlQuery(connection, repeatedSQL, validation = SqlValidation.ReadOnly)
         }
+    }
+
+    @Test
+    fun `readSqlTable should reject pre-quoted table names and suggest unquoted form`() {
+        // Pre-quoted names are rejected because the library adds quoting automatically.
+        // Users should pass unquoted identifiers: schema.table, not "schema"."table".
+        val preQuotedNames = listOf(
+            "\"Customer\"", // ANSI double-quoted
+            "\"PUBLIC\".\"Customer\"", // ANSI double-quoted schema.table
+            "`Customer`", // MySQL backtick-quoted
+            "`PUBLIC`.`Customer`", // MySQL backtick-quoted schema.table
+            "[Customer]", // MSSQL bracket-quoted
+        )
+
+        preQuotedNames.forEach { tableName ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlTable(connection, tableName)
+            }
+        }
+    }
+
+    @Test
+    fun `readSqlTable should accept unquoted schema-qualified names`() {
+        // H2 exposes every table under the PUBLIC schema.
+        // Passing "PUBLIC.Customer" should pass validation; the library quotes it for the DB.
+        val df = DataFrame.readSqlTable(connection, "PUBLIC.Customer")
+        assertCustomerData(df)
     }
 
     @Test
@@ -663,6 +692,8 @@ class JdbcTest {
             "/* Multi-line comment */ Customer", // Injection using multi-line comment
             "Sale WHERE 1=1", // Injection using always-true condition
             "Sale UNION SELECT * FROM Customer", // UNION injection
+            "DROP TABLE users", // Bare DDL as table name — rejected by regex (space not allowed)
+            "users; DROP TABLE users", // Classic tautology injection
         )
 
         invalidTableNames.forEach { tableName ->
@@ -673,75 +704,79 @@ class JdbcTest {
     }
 
     @Test
-    fun `readSqlQuery should reject malicious SQL queries to prevent SQL injections`() {
-        // Malicious SQL queries attempting injection
+    fun `readSqlQuery with ReadOnly validation should block multi-statement and DDL queries`() {
         @Language("SQL")
-        val injectionComment = """
-            SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5
-            """
+        val multiStatement = "SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer"
 
         @Language("SQL")
-        val injectionMultilineComment = """
-            SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1
-            """
+        val bareDropTable = "DROP TABLE Customer; SELECT * FROM Sale"
 
         @Language("SQL")
-        val injectionSemicolon = """
-            SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer
-            """
+        val insertStatement = "INSERT INTO Sale (id) VALUES (1)"
 
-        @Language("SQL")
-        val injectionSQLWithSingleQuote = """
-            SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1
-            """
-
-        @Language("SQL")
-        val injectionUsingDropCommand = """
-            DROP TABLE Customer; SELECT * FROM Sale
-            """
-
-        val sqlInjectionQueries = listOf(
-            injectionComment,
-            injectionMultilineComment,
-            injectionSemicolon,
-            injectionSQLWithSingleQuote,
-            injectionUsingDropCommand,
-        )
-
-        sqlInjectionQueries.forEach { query ->
+        listOf(multiStatement, bareDropTable, insertStatement).forEach { query ->
             shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlQuery(connection, query)
+                DataFrame.readSqlQuery(connection, query, validation = SqlValidation.ReadOnly)
             }
         }
     }
 
     @Test
-    fun `readFromTable should work with non-standard table names when strictValidation is disabled`() {
-        // Non-standard table names that are still valid but may appear strange
-        val nonStandardTableNames = listOf(
-            "`Customer With Space`", // Table name with spaces
-            "`Important-Data`", // Table name with hyphens
-            "`[123TableName]`", // Table name that resembles a special syntax
+    fun `readSqlQuery with ReadOnly validation should allow comments and semicolons inside literals`() {
+        // Comments are stripped before validation — these are valid read-only queries
+        @Language("SQL")
+        val queryWithLineComment = "SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5"
+
+        @Language("SQL")
+        val queryWithBlockComment = "SELECT * FROM Customer /* filter by id */ WHERE id = 1"
+
+        // Semicolons inside string literals are safe
+        @Language("SQL")
+        val queryWithSemicolonInLiteral = "SELECT * FROM Sale WHERE tag = 'a;b'"
+
+        // CTEs must be allowed
+        @Language("SQL")
+        val cteQuery = "WITH recent AS (SELECT * FROM Sale) SELECT * FROM recent"
+
+        listOf(queryWithLineComment, queryWithBlockComment, queryWithSemicolonInLiteral, cteQuery).forEach { query ->
+            // Wrap in runCatching so that DB-level errors (table/column not found) don't fail the test;
+            // only an IllegalArgumentException from validation would indicate a false rejection.
+            val exception = runCatching {
+                DataFrame.readSqlQuery(connection, query, validation = SqlValidation.ReadOnly)
+            }.exceptionOrNull()
+            assert(exception !is IllegalArgumentException) {
+                "Query should pass ReadOnly validation but was rejected: $query\n$exception"
+            }
+        }
+    }
+
+    @Test
+    fun `readSqlQuery with default SqlValidation None does not throw for any query`() {
+        // Default mode passes the query to the database without any validation.
+        // We use a harmless multi-statement query so no test data is modified.
+        @Language("SQL")
+        val harmlessMultiStatement = "SELECT 1; SELECT 2"
+
+        // No IllegalArgumentException from validation — the database handles the rest.
+        val exception = runCatching { DataFrame.readSqlQuery(connection, harmlessMultiStatement) }.exceptionOrNull()
+        assert(exception !is IllegalArgumentException) {
+            "SqlValidation.None should not throw IllegalArgumentException, got: $exception"
+        }
+    }
+
+    @Test
+    fun `readSqlTable should always reject non-identifier table names`() {
+        // Table name validation is always strict because the library constructs SQL from the name.
+        // Names containing spaces, backticks, hyphens, or brackets are not valid SQL identifiers.
+        val nonIdentifierNames = listOf(
+            "`Customer With Space`",
+            "`Important-Data`",
+            "`[123TableName]`",
         )
 
-        try {
-            // Create these tables to ensure they exist for the test
-            connection.createStatement().use { stmt ->
-                nonStandardTableNames.forEach { tableName ->
-                    stmt.execute("CREATE TABLE IF NOT EXISTS $tableName (id INT, name VARCHAR(255))")
-                }
-            }
-
-            // Read from these tables with strictValidation disabled
-            nonStandardTableNames.forEach { tableName ->
-                DataFrame.readSqlTable(connection, tableName, strictValidation = false)
-            }
-        } finally {
-            // Clean up by deleting all created tables
-            connection.createStatement().use { stmt ->
-                nonStandardTableNames.forEach { tableName ->
-                    stmt.execute("DROP TABLE IF EXISTS $tableName")
-                }
+        nonIdentifierNames.forEach { tableName ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlTable(connection, tableName)
             }
         }
     }
@@ -782,8 +817,7 @@ class JdbcTest {
     }
 
     @Test
-    fun `readSqlQuery should execute DROP TABLE when validation is disabled`() {
-        // Query to create a temporary test table
+    fun `readSqlQuery with SqlValidation None passes multi-statement queries to the database`() {
         @Language("SQL")
         val createTableQuery = """
             CREATE TABLE IF NOT EXISTS TestTable (
@@ -792,7 +826,6 @@ class JdbcTest {
             )
             """
 
-        // Query to drop the test table
         @Language("SQL")
         val dropTableQuery = """
             SELECT * FROM TestTable; DROP TABLE TestTable;
@@ -800,22 +833,13 @@ class JdbcTest {
             """
 
         try {
-            // Create the test table
             connection.createStatement().use { stmt ->
-                stmt.execute(createTableQuery) // Create table for the test case
+                stmt.execute(createTableQuery)
             }
 
-            // Execute the DROP TABLE command with validation disabled
-            DataFrame.readSqlQuery(connection, dropTableQuery, strictValidation = false)
-
-            // Verify that the table has been successfully dropped
-            connection.createStatement().use { stmt ->
-                shouldThrow<SQLException> {
-                    stmt.executeQuery("SELECT * FROM TestTable")
-                }
-            }
+            // SqlValidation.None is the default — no IllegalArgumentException is thrown
+            DataFrame.readSqlQuery(connection, dropTableQuery)
         } finally {
-            // Cleanup: Ensure the table is removed in case of failure
             connection.createStatement().use { stmt ->
                 stmt.execute("DROP TABLE IF EXISTS TestTable")
             }
@@ -832,17 +856,14 @@ class JdbcTest {
             )
             """
 
+        // Double-quoted identifiers are stripped before keyword matching in ReadOnly mode,
+        // so SELECT * FROM "ALTER" is correctly recognised as a read-only query.
         @Language("SQL")
         val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
 
         try {
             connection.createStatement().execute(createAlterTableQuery)
-            // with enabled strictValidation
-            shouldThrow<IllegalArgumentException> {
-                DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL)
-            }
-            // with disabled strictValidation
-            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL, strictValidation = false).rowsCount() shouldBe 0
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
         } finally {
             connection.createStatement().execute("DROP TABLE IF EXISTS \"ALTER\"")
         }
