@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.prev
@@ -25,9 +27,24 @@ import org.junit.Test
 class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
     private val df = peopleDf
 
-    private fun lastNameToColor(name: String): RgbColor? =
+    private fun lastNameToColorUpdateCondition(name: String): RgbColor? =
         when (name) {
             "Cooper" -> RgbColor(189, 206, 233)
+            else -> null
+        }
+
+    private fun lastNameToColorUpdateExpression(name: String): RgbColor? =
+        when (name) {
+            "Daniels" -> RgbColor(189, 206, 233)
+            "Chaplin" -> RgbColor(242, 210, 189)
+            "Wolf" -> RgbColor(233, 199, 220)
+            else -> null
+        }
+
+    private fun lastNameToColorFilter(name: String): RgbColor? =
+        when (name) {
+            "Wolf" -> RgbColor(242, 210, 189)
+            "Smith" -> RgbColor(233, 199, 220)
             else -> null
         }
 
@@ -60,18 +77,41 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
     @Test
     fun updateWithExpression_properties() {
         // SampleStart
-        // Row expression computes updated values
-        df.update { weight }.at(1, 3, 4).with { prev()?.weight }
+        // "it" refers to the current "weight" cell, and "prev()" is called on the row "this"
+        df.update { weight }.at(2, 3, 5).with { it ?: prev()?.weight }
             // SampleEnd
+            .format().perRowCol { row, _ ->
+                val lastName = df[row.index()].name.lastName
+                lastNameToColorUpdateExpression(lastName)?.let { color ->
+                    background(color) and textColor(black)
+                }
+            }
             .saveDfHtmlSample()
     }
 
     @Test
     fun updateWithExpression_strings() {
         // SampleStart
-        // Row expression computes updated values
-        df.update("weight").at(1, 3, 4).with { prev()?.get("weight") }
+        // "it" refers to the current "weight" cell, and "prev()" is called on the row "this"
+        df.update("weight").at(2, 3, 5).with { it ?: prev()?.get("weight") }
         // SampleEnd
+    }
+
+    @Test
+    fun convertExpression_properties() {
+        // SampleStart
+        // "it" refers to the current "city" cell
+        df.convert { city }.notNull { it.uppercase() }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertExpression_strings() {
+        // SampleStart
+        // "it" refers to the current "city" cell
+        df.convert("city").notNull { (it as String).uppercase() }
+            // SampleEnd
     }
 
     @Test
@@ -93,12 +133,37 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
     }
 
     @Test
-    fun filterWithCondition() {
-        // SampleStart
-        // Row filter is used to filter rows by index
-        df.filter { index() % 5 == 0 }
-            // SampleEnd
+    fun filterWithConditionDf() {
+        df.format().perRowCol { row, _ ->
+            val lastName = row.name.lastName
+            lastNameToColorFilter(lastName)?.let { color ->
+                background(color) and textColor(black)
+            }
+        }
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun filterWithCondition_properties() {
+        // SampleStart
+        // Row filter is used to filter rows
+        df.filter { name.firstName == "Alice" && age >= 18 }
+            // SampleEnd
+            .format().perRowCol { row, _ ->
+            val lastName = row.name.lastName
+            lastNameToColorFilter(lastName)?.let { color ->
+                background(color) and textColor(black)
+            }
+        }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun filterWithCondition_strings() {
+        // SampleStart
+        // Row filter is used to filter rows
+        df.filter { "name"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18 }
+            // SampleEnd
     }
 
     @Test
@@ -160,7 +225,7 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
             // SampleEnd
             .format().perRowCol { row, _ ->
                 val lastName = df[row.index()].name.lastName
-                lastNameToColor(lastName)?.let { color ->
+                lastNameToColorUpdateCondition(lastName)?.let { color ->
                     background(color) and textColor(black)
                 }
             }
@@ -202,14 +267,13 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         // SampleEnd
     }
 
-    // TODO: format the whole rows when #1888 is fixed
     @Test
     fun formatWithCondition_properties() {
         // SampleStart
         // Row value filter is used to format only rows with minors
         df
-            .format { age }
-            .where { it < 18 }
+            .format()
+            .where { age < 18 }
             .with { background(RgbColor(242, 210, 189)) and textColor(black) }
             // SampleEnd
             .saveDfHtmlSample()
@@ -220,7 +284,7 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         // SampleStart
         // Row value filter is used to format only rows with minors
         df
-            .format("age")
+            .format()
             .where { "age"<Int>() < 18 }
             .with { background(RgbColor(242, 210, 189)) and textColor(black) }
         // SampleEnd

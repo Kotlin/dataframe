@@ -326,7 +326,8 @@
 <resource src="countDistinctColumnsOnGroupBy_properties.html"></resource>
 <resource src="countDistinctColumnsCustomNameOnGroupBy_properties.html"></resource>
 <resource src="countDistinctColumnsGroupBy.html"></resource>
-<resource src="filterWithCondition.html"></resource>
+<resource src="filterWithCondition_properties.html"></resource>
+<resource src="filterWithConditionDf.html"></resource>
 <resource src="dropWithCondition_properties.html"></resource>
 <resource src="firstWithCondition_properties.html"></resource>
 <resource src="updateWithCondition_properties.html"></resource>
@@ -336,3 +337,4 @@
 <resource src="updateWithExpression_properties.html"></resource>
 <resource src="pivotWithExpression_properties.html"></resource>
 <resource src="dfDataRow.html"></resource>
+<resource src="convertExpression_properties.html"></resource>
