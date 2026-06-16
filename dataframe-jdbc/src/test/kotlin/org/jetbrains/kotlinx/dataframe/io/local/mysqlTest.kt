@@ -27,7 +27,7 @@ import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
-private const val URL = "jdbc:mysql://localhost:3306"
+private const val URL = "jdbc:mysql://localhost:3307"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
@@ -490,5 +490,34 @@ class MySqlTest {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    // https://github.com/Kotlin/dataframe/issues/1746
+    @Test
+    fun `readAllSqlTables without catalogue should only return tables from URL database`() {
+        val secondDb = "testKDFdatabase2"
+        val testRootConn = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
+        try {
+            testRootConn.createStatement().use { stmt ->
+                stmt.executeUpdate("DROP DATABASE IF EXISTS $secondDb")
+                stmt.executeUpdate("CREATE DATABASE $secondDb")
+            }
+            DriverManager.getConnection("$URL/$secondDb", USER_NAME, PASSWORD).use { conn2 ->
+                conn2.createStatement().use { stmt ->
+                    stmt.executeUpdate("CREATE TABLE onlyInDb2 (id INT PRIMARY KEY, val VARCHAR(50))")
+                }
+            }
+
+            DriverManager.getConnection("$URL/$TEST_DATABASE_NAME", USER_NAME, PASSWORD).use { scopedConn ->
+                val tableNames = DataFrame.readAllSqlTables(scopedConn).keys
+
+                tableNames.none { "onlyInDb2" in it } shouldBe true
+                tableNames.any { "table1" in it } shouldBe true
+            }
+        } finally {
+            testRootConn.use { conn ->
+                conn.createStatement().execute("DROP DATABASE IF EXISTS $secondDb")
+            }
+        }
     }
 }
