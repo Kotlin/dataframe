@@ -552,8 +552,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.ColumnPathArgs]
      */
     @Interpretable("ColumnGroupAllColsExceptColumnPaths")
-    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
-        allColsExceptInternal(other.toColumnSet())
+    public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
+        allColsExceptInternal(others.toColumnSet())
 
     // endregion
 
