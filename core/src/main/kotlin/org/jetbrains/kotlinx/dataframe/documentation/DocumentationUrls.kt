@@ -35,8 +35,20 @@ internal interface DocumentationUrls {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         typealias RowExpressions = Nothing
 
+        /** [See RowExpression on the documentation website.]({@include [Url]}/datarow.html#rowexpression) */
+        typealias RowExpression = Nothing
+
+        /** [See RowValueExpression on the documentation website.]({@include [Url]}/datarow.html#rowvalueexpression) */
+        typealias RowValueExpression = Nothing
+
         /** [See Row Conditions on the documentation website.]({@include [Url]}/datarow.html#row-conditions) */
         typealias RowConditions = Nothing
+
+        /** [See RowFilter on the documentation website.]({@include [Url]}/datarow.html#rowfilter) */
+        typealias RowFilter = Nothing
+
+        /** [See RowValueFilter on the documentation website.]({@include [Url]}/datarow.html#rowvaluefilter) */
+        typealias RowValueFilter = Nothing
     }
 
     /** [See `drop` on the documentation website.]({@include [Url]}/drop.html) */
