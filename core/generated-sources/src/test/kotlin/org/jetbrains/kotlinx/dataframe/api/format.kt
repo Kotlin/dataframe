@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
@@ -312,6 +313,18 @@ class FormatTests : TestBase() {
         // Should handle null values gracefully
         html.split("background-color:#00ff00").size - 1 shouldBe 5 // Only non-null weight values get formatted
         formatted::class.simpleName shouldBe "FormattedFrame"
+    }
+
+    @Test
+    fun `format with where clause on df with a column group`() {
+        val formatted = df
+            .format { all() }
+            .where { age < 18 }
+            .with { background(red) and textColor(black) }
+
+        val html = formatted.toHtml().toString()
+
+        html.split("background-color:#ff0000").size - 1 shouldBe 7
     }
 
     // Issue #982
