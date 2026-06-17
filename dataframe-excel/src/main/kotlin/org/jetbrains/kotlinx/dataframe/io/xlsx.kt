@@ -33,7 +33,9 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
+import org.jetbrains.kotlinx.dataframe.util.READ_EXCEL_NAME_REPAIR
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -64,9 +66,6 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
-private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
-internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
-
 internal class DefaultReadExcelMethod(path: String?) :
     AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
 
@@ -93,19 +92,6 @@ private fun setWorkbookTempDirectory() {
     )
 }
 
-@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readExcel(
-    url: URL,
-    sheetName: String? = null,
-    skipRows: Int = 0,
-    columns: String? = null,
-    stringColumns: StringColumns? = null,
-    rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-    firstRowIsHeader: Boolean = true,
-): AnyFrame =
-    readExcel(url, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
-
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -113,12 +99,9 @@ public fun DataFrame.Companion.readExcel(
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -129,7 +112,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
@@ -143,25 +125,11 @@ public fun DataFrame.Companion.readExcel(
             columns,
             stringColumns?.toFormattingOptions(),
             rowsCount,
-            nameRepairStrategy,
             firstRowIsHeader,
             parseEmptyAsNull,
         )
     }
 }
-
-@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readExcel(
-    file: File,
-    sheetName: String? = null,
-    skipRows: Int = 0,
-    columns: String? = null,
-    stringColumns: StringColumns? = null,
-    rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-    firstRowIsHeader: Boolean = true,
-): AnyFrame =
-    readExcel(file, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -170,12 +138,9 @@ public fun DataFrame.Companion.readExcel(
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -186,7 +151,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame =
@@ -197,7 +161,6 @@ public fun DataFrame.Companion.readExcel(
         columns,
         stringColumns,
         rowsCount,
-        nameRepairStrategy,
         firstRowIsHeader,
         parseEmptyAsNull,
     )
@@ -209,12 +172,9 @@ public fun DataFrame.Companion.readExcel(
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -225,7 +185,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
@@ -241,26 +200,12 @@ public fun DataFrame.Companion.readExcel(
                 columns,
                 stringColumns?.toFormattingOptions(),
                 rowsCount,
-                nameRepairStrategy,
                 firstRowIsHeader,
                 parseEmptyAsNull,
             )
         }
     }
 }
-
-@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readExcel(
-    fileOrUrl: String,
-    sheetName: String? = null,
-    skipRows: Int = 0,
-    columns: String? = null,
-    stringColumns: StringColumns? = null,
-    rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-    firstRowIsHeader: Boolean = true,
-): AnyFrame =
-    readExcel(fileOrUrl, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -269,12 +214,9 @@ public fun DataFrame.Companion.readExcel(
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -285,7 +227,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame =
@@ -296,23 +237,9 @@ public fun DataFrame.Companion.readExcel(
         columns,
         stringColumns,
         rowsCount,
-        nameRepairStrategy,
         firstRowIsHeader,
         parseEmptyAsNull,
     )
-
-@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readExcel(
-    inputStream: InputStream,
-    sheetName: String? = null,
-    skipRows: Int = 0,
-    columns: String? = null,
-    stringColumns: StringColumns? = null,
-    rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-    firstRowIsHeader: Boolean = true,
-): AnyFrame =
-    readExcel(inputStream, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -321,12 +248,9 @@ public fun DataFrame.Companion.readExcel(
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -337,7 +261,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
@@ -351,25 +274,11 @@ public fun DataFrame.Companion.readExcel(
             columns,
             stringColumns?.toFormattingOptions(),
             rowsCount,
-            nameRepairStrategy,
             firstRowIsHeader,
             parseEmptyAsNull,
         )
     }
 }
-
-@Deprecated(message = READ_EXCEL_OLD, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readExcel(
-    wb: Workbook,
-    sheetName: String? = null,
-    skipRows: Int = 0,
-    columns: String? = null,
-    formattingOptions: FormattingOptions? = null,
-    rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-    firstRowIsHeader: Boolean = true,
-): AnyFrame =
-    readExcel(wb, sheetName, skipRows, columns, formattingOptions, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -379,12 +288,9 @@ public fun DataFrame.Companion.readExcel(
  * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
  * These cells are ignored when inferring the column’s type.
  */
@@ -395,7 +301,6 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     formattingOptions: FormattingOptions? = null,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
@@ -408,7 +313,6 @@ public fun DataFrame.Companion.readExcel(
         formattingOptions,
         skipRows,
         rowsCount,
-        nameRepairStrategy,
         firstRowIsHeader,
         parseEmptyAsNull,
     )
@@ -439,12 +343,9 @@ public class FormattingOptions(range: String, public val formatter: DataFormatte
  * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
- * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
- * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
- * for unstructured data.
+ * When set to false, columns will be named according to Excel columns, like "A", "B", "C" etc.
+ * Duplicate column names are always made unique via suffixing.
  */
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
@@ -452,7 +353,6 @@ public fun DataFrame.Companion.readExcel(
     formattingOptions: FormattingOptions? = null,
     skipRows: Int = 0,
     rowsCount: Int? = null,
-    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     firstRowIsHeader: Boolean = true,
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
@@ -490,7 +390,7 @@ public fun DataFrame.Companion.readExcel(
     val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
     val valueRowsRange = (first..last)
 
-    val columnNameCounters = mutableMapOf<String, Int>()
+    val nameGenerator = ColumnNameGenerator()
     val columns = columnIndexes.map { index ->
         val headerCell = headerRow?.getCell(index)
         val nameFromCell = if (headerCell?.cellType == CellType.NUMERIC) {
@@ -500,13 +400,7 @@ public fun DataFrame.Companion.readExcel(
                 ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
 
-        val name = repairNameIfRequired(
-            nameFromCell,
-            columnNameCounters,
-            if (firstRowIsHeader) nameRepairStrategy else NameRepairStrategy.MAKE_UNIQUE,
-        )
-        columnNameCounters[nameFromCell] =
-            columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
+        val name = nameGenerator.addUnique(nameFromCell)
         val getCellValue: (Cell?) -> Any? = { cell ->
             if (cell == null) {
                 null
@@ -541,48 +435,6 @@ private fun getColumnIndices(columns: String): List<Int> =
         } else {
             listOf(CellReference.convertColStringToIndex(it))
         }
-    }
-
-/**
- * This is a universal function for name repairing
- * and should be moved to the API module later,
- * when the functionality will be enabled for all IO sources.
- *
- * TODO: https://github.com/Kotlin/dataframe/issues/387
- */
-private fun repairNameIfRequired(
-    nameFromCell: String,
-    columnNameCounters: MutableMap<String, Int>,
-    nameRepairStrategy: NameRepairStrategy,
-): String =
-    when (nameRepairStrategy) {
-        NameRepairStrategy.DO_NOTHING -> nameFromCell
-
-        NameRepairStrategy.CHECK_UNIQUE ->
-            if (columnNameCounters.contains(nameFromCell)) {
-                throw DuplicateColumnNamesException(
-                    columnNameCounters.keys.toList(),
-                )
-            } else {
-                nameFromCell
-            }
-
-        // probably it's never empty because of filling empty column names earlier
-        NameRepairStrategy.MAKE_UNIQUE ->
-            if (nameFromCell.isEmpty()) {
-                val emptyName = "Unknown column"
-                if (columnNameCounters.contains(emptyName)) {
-                    "${emptyName}${columnNameCounters[emptyName]}"
-                } else {
-                    emptyName
-                }
-            } else {
-                if (columnNameCounters.contains(nameFromCell)) {
-                    "${nameFromCell}${columnNameCounters[nameFromCell]}"
-                } else {
-                    nameFromCell
-                }
-            }
     }
 
 private fun Cell?.cellValue(sheetName: String): Any? {
@@ -922,7 +774,418 @@ private fun Cell.setDate(date: JavaDate) {
 
 // region deprecated
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
+private fun readExcelLegacy(
+    sheet: Sheet,
+    columns: String?,
+    formattingOptions: FormattingOptions?,
+    skipRows: Int,
+    rowsCount: Int?,
+    nameRepairStrategy: NameRepairStrategy,
+    firstRowIsHeader: Boolean,
+    parseEmptyAsNull: Boolean,
+): AnyFrame {
+    val columnIndexes: Iterable<Int> = when {
+        columns != null -> getColumnIndices(columns)
+
+        firstRowIsHeader -> {
+            val headerRow = checkNotNull(sheet.getRow(skipRows)) {
+                "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
+            }
+            val firstCellNum = headerRow.firstCellNum
+            check(firstCellNum != (-1).toShort()) {
+                "There are no defined cells on header row number ${skipRows + 1} (1-based index). Pass `columns` argument to specify what columns to read or make sure the index is correct"
+            }
+            headerRow.firstCellNum until headerRow.lastCellNum
+        }
+
+        else -> {
+            val largestRow = sheet.rowIterator().asSequence().maxByOrNull { it.lastCellNum }
+            checkNotNull(largestRow) {
+                "There are no defined cells"
+            }
+            largestRow.firstCellNum until largestRow.lastCellNum
+        }
+    }
+
+    val headerRow: Row? = if (firstRowIsHeader) {
+        sheet.getRow(skipRows)
+    } else {
+        sheet.shiftRows(0, sheet.lastRowNum, 1)
+        sheet.createRow(0)
+    }
+
+    val first = skipRows + 1
+    val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
+    val valueRowsRange = (first..last)
+
+    val columnNameCounters = mutableMapOf<String, Int>()
+    val columns = columnIndexes.map { index ->
+        val headerCell = headerRow?.getCell(index)
+        val nameFromCell = if (headerCell?.cellType == CellType.NUMERIC) {
+            headerCell.numericCellValue.toString()
+        } else {
+            headerCell?.stringCellValue
+                ?: CellReference.convertNumToColString(index)
+        }
+
+        val name = repairNameIfRequired(
+            nameFromCell,
+            columnNameCounters,
+            if (firstRowIsHeader) nameRepairStrategy else NameRepairStrategy.MAKE_UNIQUE,
+        )
+        columnNameCounters[nameFromCell] =
+            columnNameCounters.getOrDefault(nameFromCell, 0) + 1
+        val getCellValue: (Cell?) -> Any? = { cell ->
+            if (cell == null) {
+                null
+            } else {
+                val rawValue: Any? = if (formattingOptions != null && index in formattingOptions.columnIndices) {
+                    formattingOptions.formatter.formatCellValue(cell)
+                } else {
+                    cell.cellValue(sheet.sheetName)
+                }
+                if (parseEmptyAsNull && rawValue is String && rawValue.isEmpty()) {
+                    null
+                } else {
+                    rawValue
+                }
+            }
+        }
+        val values: List<Any?> = valueRowsRange.map {
+            val row: Row? = sheet.getRow(it)
+            val cell: Cell? = row?.getCell(index)
+            getCellValue(cell)
+        }
+        DataColumn.createByInference(name, values)
+    }
+    return dataFrameOf(columns)
+}
+
+@Suppress("DEPRECATION")
+private fun repairNameIfRequired(
+    nameFromCell: String,
+    columnNameCounters: MutableMap<String, Int>,
+    nameRepairStrategy: NameRepairStrategy,
+): String =
+    when (nameRepairStrategy) {
+        NameRepairStrategy.DO_NOTHING -> nameFromCell
+
+        NameRepairStrategy.CHECK_UNIQUE ->
+            if (columnNameCounters.contains(nameFromCell)) {
+                throw DuplicateColumnNamesException(columnNameCounters.keys.toList())
+            } else {
+                nameFromCell
+            }
+
+        NameRepairStrategy.MAKE_UNIQUE ->
+            if (nameFromCell.isEmpty()) {
+                val emptyName = "Unknown column"
+                if (columnNameCounters.contains(emptyName)) {
+                    "${emptyName}${columnNameCounters[emptyName]}"
+                } else {
+                    emptyName
+                }
+            } else {
+                if (columnNameCounters.contains(nameFromCell)) {
+                    "${nameFromCell}${columnNameCounters[nameFromCell]}"
+                } else {
+                    nameFromCell
+                }
+            }
+    }
+
+@Suppress("DEPRECATION")
+private fun readExcelLegacyFromWorkbook(
+    wb: Workbook,
+    sheetName: String?,
+    skipRows: Int,
+    columns: String?,
+    formattingOptions: FormattingOptions?,
+    rowsCount: Int?,
+    nameRepairStrategy: NameRepairStrategy,
+    firstRowIsHeader: Boolean,
+    parseEmptyAsNull: Boolean,
+): AnyFrame {
+    val sheet: Sheet = sheetName
+        ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
+        ?: wb.getSheetAt(0)
+    return readExcelLegacy(
+        sheet,
+        columns,
+        formattingOptions,
+        skipRows,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+}
+
+@Suppress("DEPRECATION")
+private fun readExcelLegacyFromUrl(
+    url: URL,
+    sheetName: String?,
+    skipRows: Int,
+    columns: String?,
+    stringColumns: StringColumns?,
+    rowsCount: Int?,
+    nameRepairStrategy: NameRepairStrategy,
+    firstRowIsHeader: Boolean,
+    parseEmptyAsNull: Boolean,
+): AnyFrame {
+    setWorkbookTempDirectory()
+    val wb = WorkbookFactory.create(url.openStream())
+    return wb.use {
+        readExcelLegacyFromWorkbook(
+            wb,
+            sheetName,
+            skipRows,
+            columns,
+            stringColumns?.toFormattingOptions(),
+            rowsCount,
+            nameRepairStrategy,
+            firstRowIsHeader,
+            parseEmptyAsNull,
+        )
+    }
+}
+
+@Suppress("DEPRECATION")
+private fun readExcelLegacyFromPath(
+    path: Path,
+    sheetName: String?,
+    skipRows: Int,
+    columns: String?,
+    stringColumns: StringColumns?,
+    rowsCount: Int?,
+    nameRepairStrategy: NameRepairStrategy,
+    firstRowIsHeader: Boolean,
+    parseEmptyAsNull: Boolean,
+): AnyFrame {
+    path.inputStream().use { inputStream ->
+        setWorkbookTempDirectory()
+        @Suppress("ktlint:standard:comment-wrapping")
+        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        return wb.use {
+            readExcelLegacyFromWorkbook(
+                it,
+                sheetName,
+                skipRows,
+                columns,
+                stringColumns?.toFormattingOptions(),
+                rowsCount,
+                nameRepairStrategy,
+                firstRowIsHeader,
+                parseEmptyAsNull,
+            )
+        }
+    }
+}
+
+@Suppress("DEPRECATION")
+private fun readExcelLegacyFromInputStream(
+    inputStream: InputStream,
+    sheetName: String?,
+    skipRows: Int,
+    columns: String?,
+    stringColumns: StringColumns?,
+    rowsCount: Int?,
+    nameRepairStrategy: NameRepairStrategy,
+    firstRowIsHeader: Boolean,
+    parseEmptyAsNull: Boolean,
+): AnyFrame {
+    setWorkbookTempDirectory()
+    val wb = WorkbookFactory.create(inputStream)
+    return wb.use {
+        readExcelLegacyFromWorkbook(
+            it,
+            sheetName,
+            skipRows,
+            columns,
+            stringColumns?.toFormattingOptions(),
+            rowsCount,
+            nameRepairStrategy,
+            firstRowIsHeader,
+            parseEmptyAsNull,
+        )
+    }
+}
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    url: URL,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromUrl(
+        url,
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    file: File,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromPath(
+        file.toPath(),
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    path: Path,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromPath(
+        path,
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    fileOrUrl: String,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromUrl(
+        asUrl(fileOrUrl),
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    inputStream: InputStream,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromInputStream(
+        inputStream,
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    wb: Workbook,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacyFromWorkbook(
+        wb,
+        sheetName,
+        skipRows,
+        columns,
+        formattingOptions,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
+@Deprecated(READ_EXCEL_NAME_REPAIR, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    sheet: Sheet,
+    columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
+    skipRows: Int = 0,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    firstRowIsHeader: Boolean = true,
+    parseEmptyAsNull: Boolean = true,
+): AnyFrame =
+    readExcelLegacy(
+        sheet,
+        columns,
+        formattingOptions,
+        skipRows,
+        rowsCount,
+        nameRepairStrategy,
+        firstRowIsHeader,
+        parseEmptyAsNull,
+    )
+
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -933,18 +1196,19 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        url = url,
-        sheetName = sheetName,
-        skipRows = skipRows,
-        columns = columns,
-        stringColumns = stringColumns,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacyFromUrl(
+        url,
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     file: File,
@@ -955,18 +1219,19 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        file = file,
-        sheetName = sheetName,
-        skipRows = skipRows,
-        columns = columns,
-        stringColumns = stringColumns,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacyFromPath(
+        file.toPath(),
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
@@ -977,18 +1242,19 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        fileOrUrl = fileOrUrl,
-        sheetName = sheetName,
-        skipRows = skipRows,
-        columns = columns,
-        stringColumns = stringColumns,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacyFromUrl(
+        asUrl(fileOrUrl),
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
@@ -999,18 +1265,19 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        inputStream = inputStream,
-        sheetName = sheetName,
-        skipRows = skipRows,
-        columns = columns,
-        stringColumns = stringColumns,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacyFromInputStream(
+        inputStream,
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     wb: Workbook,
@@ -1021,18 +1288,19 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        wb = wb,
-        sheetName = sheetName,
-        skipRows = skipRows,
-        columns = columns,
-        formattingOptions = formattingOptions,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacyFromWorkbook(
+        wb,
+        sheetName,
+        skipRows,
+        columns,
+        formattingOptions,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
-/** For binary compatibility */
+@Suppress("DEPRECATION")
 @Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
@@ -1042,14 +1310,15 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame =
-    readExcel(
-        sheet = sheet,
-        columns = columns,
-        formattingOptions = formattingOptions,
-        skipRows = skipRows,
-        rowsCount = rowsCount,
-        nameRepairStrategy = nameRepairStrategy,
+    readExcelLegacy(
+        sheet,
+        columns,
+        formattingOptions,
+        skipRows,
+        rowsCount,
+        nameRepairStrategy,
         firstRowIsHeader = true,
+        parseEmptyAsNull = true,
     )
 
 // endregion
