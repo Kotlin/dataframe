@@ -55,13 +55,18 @@ df
 ## Row expressions
 Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) 
 and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md), and other operations.
+There are two types of row expressions, differing in what the `it` argument refers to:
 
-Row expression signature: ```DataRow.(DataRow) -> T```. Row values can be accessed with or without ```it``` keyword. 
-Implicit and explicit argument represent the same `DataRow` object.
+### `RowExpression`
+`RowExpression` computes a new value for every selected cell given the [`DataRow`](DataRow.md) of that cell.
+Both `this` and `it` keywords in `RowExpression` refer to the same [`DataRow`](DataRow.md). 
+Row values can be accessed with or without these keywords.
 
-### Row expressions examples
+`RowExpression` signature: ```DataRow.(DataRow) -> T```.
 
-#### add {collapsible="true"}
+#### `RowExpression` examples
+
+##### add {collapsible="true"}
 
 <!---FUN addWithExpression-->
 <tabs>
@@ -84,30 +89,7 @@ df.add("fullName") { "name"["firstName"] + " " + "name"["lastName"] }
 <!---END-->
 <inline-frame src="resources/addWithExpression_properties.html" width="100%"/>
 
-#### update (expression) {collapsible="true"}
-
-<!---FUN updateWithExpression-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-// Row expression computes updated values
-df.update { weight }.at(1, 3, 4).with { prev()?.weight }
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-// Row expression computes updated values
-df.update("weight").at(1, 3, 4).with { prev()?.get("weight") }
-```
-
-</tab></tabs>
-<!---END-->
-<inline-frame src="resources/updateWithExpression_properties.html" width="100%"/>
-
-#### pivot {collapsible="true"}
+##### pivot {collapsible="true"}
 
 <!---FUN pivotWithExpression-->
 <tabs>
@@ -130,11 +112,66 @@ df.pivot { city }.with { "name"["lastName"]<String>().uppercase() }
 <!---END-->
 <inline-frame src="resources/pivotWithExpression_properties.html" width="100%"/>
 
+### `RowValueExpression`
+`RowValueExpression` computes a new value for every selected cell given the [`DataRow`](DataRow.md) of that cell 
+and the current value of that cell. `this` refers to the current [`DataRow`](DataRow.md), 
+and `it` refers to the current value of the cell.
+`RowValueExpression` is used after selecting columns in functions such as [`update`](update.md) or [`convert`](convert.md).
+
+`RowValueExpression` signature: ```DataRow.(C) -> T```.
+
+#### `RowValueExpression` examples
+
+##### update (expression) {collapsible="true"}
+
+<!---FUN updateWithExpression-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// "it" refers to the current "weight" cell, and "prev()" is called on the row "this"
+df.update { weight }.at(2, 3, 5).with { it ?: prev()?.weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// "it" refers to the current "weight" cell, and "prev()" is called on the row "this"
+df.update("weight").at(2, 3, 5).with { it ?: prev()?.get("weight") }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/updateWithExpression_properties.html" width="100%"/>
+
+##### convert {collapsible="true"}
+<!---FUN convertExpression-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// "it" refers to the current "city" cell
+df.convert { city }.notNull { it.uppercase() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// "it" refers to the current "city" cell
+df.convert("city").notNull { (it as String).uppercase() }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/convertExpression_properties.html" width="100%"/>
+
 ## Row conditions
 Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
 There are two types of row conditions:
 
-### Row filter
+### `RowFilter`
 `RowFilter` evaluates a [`DataRow`](DataRow.md) 
 and returns a `Boolean` indicating whether the row should be included in the result.
 Both `this` and `it` in `RowFilter` refer to the same [`DataRow`](DataRow.md).
@@ -143,19 +180,39 @@ Both `this` and `it` in `RowFilter` refer to the same [`DataRow`](DataRow.md).
 
 `RowFilter` signature: ```DataRow.(DataRow) -> Boolean```.
 
-#### Row filter examples
+#### `RowFilter` examples
 
 ##### filter {collapsible="true"}
 
-<!---FUN filterWithCondition-->
+<!---FUN dfDataRow-->
 
 ```kotlin
-// Row filter is used to filter rows by index
-df.filter { index() % 5 == 0 }
+df
 ```
 
 <!---END-->
-<inline-frame src="resources/filter.html" width="100%"/>
+<inline-frame src="resources/filterWithConditionDf.html" width="100%"/>
+
+<!---FUN filterWithCondition-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// Row filter is used to filter rows
+df.filter { name.firstName == "Alice" && age >= 18 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// Row filter is used to filter rows
+df.filter { "name"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18 }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/filterWithCondition_properties.html" width="100%"/>
 
 ##### drop {collapsible="true"}
 
@@ -225,16 +282,16 @@ df.count { "isHappy"() } // the result is 5
 </tab></tabs>
 <!---END-->
 
-### Row value filter
-`RowValueFilter` is used via the `where` clause after selecting columns in functions
+### `RowValueFilter`
+`RowValueFilter` is used after selecting columns in functions
 such as [`update`](update.md), [`gather`](gather.md), and [`format`](format.md).
 Like `RowFilter`, it returns a `Boolean` indicating whether the row should be included in the result.
 However, unlike `RowFilter`, where both `this` and `it` refer to the current [`DataRow`](DataRow.md), 
 `RowValueFilter` uses the current row as `this` and can also access the selected column value from this row as `it`.
 
-RowValueFilter signature: ```DataRow.(C) -> Boolean```.
+`RowValueFilter` signature: ```DataRow.(C) -> Boolean```.
 
-#### Row value filter examples
+#### `RowValueFilter` examples
 
 ##### update (condition) {collapsible="true"}
 
@@ -300,8 +357,8 @@ df.gather("age", "city", "weight", "isHappy")
 ```kotlin
 // Row value filter is used to format only rows with minors
 df
-    .format { age }
-    .where { it < 18 }
+    .format()
+    .where { age < 18 }
     .with { background(RgbColor(242, 210, 189)) and textColor(black) }
 ```
 
@@ -311,7 +368,7 @@ df
 ```kotlin
 // Row value filter is used to format only rows with minors
 df
-    .format("age")
+    .format()
     .where { "age"<Int>() < 18 }
     .with { background(RgbColor(242, 210, 189)) and textColor(black) }
 ```
