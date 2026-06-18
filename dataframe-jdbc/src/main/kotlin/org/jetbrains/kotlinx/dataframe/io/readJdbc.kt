@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -15,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
+import org.jetbrains.kotlinx.dataframe.io.documentation.AutoRenameInputSnippet
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
@@ -31,7 +31,7 @@ private val logger = KotlinLogging.logger {}
 /**
  * Reads data from an SQL table and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * ### Default Behavior:
  * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
@@ -71,7 +71,7 @@ public fun DataFrame.Companion.readSqlTable(
 /**
  * Reads data from an SQL table and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [dataSource] the [DataSource] to get a database connection from.
  * @param [tableName] the name of the table to read data from.
@@ -111,7 +111,7 @@ public fun DataFrame.Companion.readSqlTable(
 /**
  * Reads data from an SQL table and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [connection] the database connection to read tables from.
  * @param [tableName] the name of the table to read data from.
@@ -204,7 +204,7 @@ private fun executeQueryAndBuildDataFrame(
 /**
  * Converts the result of an SQL query to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
@@ -251,7 +251,7 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [dataSource] the [DataSource] to obtain a database connection from.
  * @param [sqlQuery] the SQL query to execute.
@@ -288,7 +288,7 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
@@ -343,7 +343,7 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * ### Default Behavior:
  * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
@@ -406,7 +406,7 @@ public fun DbConnectionConfig.readDataFrame(
 /**
  * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
@@ -460,7 +460,7 @@ public fun Connection.readDataFrame(
 /**
  * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -537,7 +537,7 @@ public fun DataSource.readDataFrame(
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
@@ -572,7 +572,7 @@ public fun DataFrame.Companion.readResultSet(
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
@@ -599,7 +599,7 @@ public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNull
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
@@ -639,7 +639,7 @@ public fun DataFrame.Companion.readResultSet(
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
@@ -675,7 +675,7 @@ public fun ResultSet.readDataFrame(
  * Reads all non-system tables from a database and returns them
  * as a map of SQL tables and corresponding [DataFrame]s using the provided database configuration and limit.
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * ### Default Behavior:
  * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
@@ -716,7 +716,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * Reads all non-system tables from a database and returns them
  * as a map of SQL tables and corresponding [DataFrame]s.
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -770,7 +770,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * Reads all non-system tables from a database and returns them
  * as a map of SQL tables and corresponding [DataFrame]s.
  *
- * @include [AutoRenameInputSnippet].
+ * @include [AutoRenameInputSnippet]
  *
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
