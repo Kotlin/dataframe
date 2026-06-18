@@ -41,11 +41,17 @@ internal interface ExpressionsGivenRow {
 
     // Using <code>` notation to not create double `` when including
 
-    /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
+    /**
+     * Provide a new value for every selected cell given its row using a [row expression][DfRowExpression].
+     *
+     * Fore more information, [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
+     */
     interface RowExpression {
 
         /**
          * Provide a new value for every selected cell given its row using a [row expression][org.jetbrains.kotlinx.dataframe.RowExpression].
+         *
+         * Fore more information, [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
          *
          * For example:
          *
@@ -59,12 +65,16 @@ internal interface ExpressionsGivenRow {
 
     /** Provide a new value for every selected cell given its row and its previous value using a
      * [row value expression][DfRowValueExpression].
+     *
+     * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
      */
     interface RowValueExpression {
 
         /**
          * Provide a new value for every selected cell given its row and its previous value using a
          * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
+         *
+         * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
          *
          * For example:
          *

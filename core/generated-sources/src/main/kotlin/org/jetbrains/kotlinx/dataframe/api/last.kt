@@ -117,7 +117,7 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -158,7 +158,7 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -268,7 +268,7 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -331,7 +331,7 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -411,7 +411,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See Row Conditions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-conditions)
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *

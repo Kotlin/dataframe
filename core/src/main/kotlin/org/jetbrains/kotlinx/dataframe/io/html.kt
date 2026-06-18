@@ -265,7 +265,7 @@ internal fun AnyFrame.toHtmlData(
         }
         val nested = if (col is ColumnGroup<*>) {
             col.columns().map {
-                col.columnToJs(it.addParentPath(col.path), rowsLimit, configuration, renderRootDf)
+                renderRootDf.columnToJs(it.addParentPath(col.path), rowsLimit, configuration, renderRootDf)
             }
         } else {
             emptyList()

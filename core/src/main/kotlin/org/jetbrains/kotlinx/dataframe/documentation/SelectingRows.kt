@@ -41,7 +41,7 @@ internal interface SelectingRows {
      * including through [extension properties][AccessApis.ExtensionPropertiesApi]
      * for convenient and type-safe access.
      *
-     * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
+     * Fore more information, {@include [DocumentationUrls.DataRow.RowFilter]}
      */
     @ExcludeFromSources
     typealias RowFilterSnippet = Nothing
@@ -60,7 +60,7 @@ internal interface SelectingRows {
      * including through [extension properties][AccessApis.ExtensionPropertiesApi]
      * for convenient and type-safe access.
      *
-     * Fore more information, {@include [DocumentationUrls.DataRow.RowConditions]}
+     * Fore more information, {@include [DocumentationUrls.DataRow.RowValueFilter]}
      */
     @ExcludeFromSources
     typealias RowValueFilterSnippet = Nothing
