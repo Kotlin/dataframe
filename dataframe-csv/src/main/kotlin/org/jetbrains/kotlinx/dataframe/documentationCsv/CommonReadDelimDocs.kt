@@ -8,11 +8,14 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
 
 /**
  * ### Read $[FILE_TYPE_TITLE] $[DATA_TITLE] to [DataFrame]
  *
  * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
  *
  * Parameters you can use to customize the reading process include, for instance, \[delimiter\],
  * \[header\], \[colTypes\], \[readLines\], and \[parserOptions\].

@@ -14,12 +14,13 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
  *    Link to it with `@include [AutoRenamingLink]`.
  * }
  *
- * ## Auto-renaming in [DataFrame]
+ * ## Auto-renaming columns in [DataFrame]
  *
- * In some operations, multiple columns with the same name may appear
- * in the resulting [DataFrame].
+ * [DataFrame] can not contain columns with duplicate names.
+ * However, sometimes after reading dataframes from sources or
+ * after some operations, columns with duplicate names may appear in the result.
  *
- * In such cases, columns with duplicate names are automatically renamed
+ * In such cases, columns with duplicate names are automatically renamed in the resulting [DataFrame]
  * using the pattern `"\$name\$n"`, where `name` is the original column name
  * and `n` is a unique index (1, 2, 3, and so on);
  * the first time the name of the column is encountered, no number is appended.
@@ -31,6 +32,13 @@ internal typealias AutoRenamingColumnsInDataFrame = Nothing
 
 /** [Auto-renaming columns in DataFrame][AutoRenamingColumnsInDataFrame] */
 internal typealias AutoRenamingLink = Nothing
+
+/**
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
+ */
+internal typealias AutoRenameInputSnippet = Nothing
 
 /**
  * {@comment

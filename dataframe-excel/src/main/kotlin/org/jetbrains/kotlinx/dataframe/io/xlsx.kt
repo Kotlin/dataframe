@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
@@ -93,6 +94,10 @@ private fun setWorkbookTempDirectory() {
 }
 
 /**
+ * Reads an Excel sheet from the given [URL] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -132,6 +137,10 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
+ * Reads an Excel sheet from the given [File] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -166,6 +175,10 @@ public fun DataFrame.Companion.readExcel(
     )
 
 /**
+ * Reads an Excel sheet from the given [Path] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -208,6 +221,10 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
+ * Reads an Excel sheet from the given file or URL into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -242,6 +259,10 @@ public fun DataFrame.Companion.readExcel(
     )
 
 /**
+ * Reads an Excel sheet from the given [InputStream] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -281,6 +302,10 @@ public fun DataFrame.Companion.readExcel(
 }
 
 /**
+ * Reads an Excel sheet from [Workbook] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param formattingOptions range of columns to read as String regardless of a cell type.
@@ -336,6 +361,10 @@ public class FormattingOptions(range: String, public val formatter: DataFormatte
 }
 
 /**
+ * Reads Excel [Sheet] into a [DataFrame].
+ *
+ * @include [AutoRenameInputSnippet].
+ *
  * @param sheet sheet to read.
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param formattingOptions range of columns to read as String regardless of a cell's type.
