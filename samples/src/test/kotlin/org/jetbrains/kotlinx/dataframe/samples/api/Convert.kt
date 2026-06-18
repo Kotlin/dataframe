@@ -39,8 +39,6 @@ import org.jetbrains.kotlinx.dataframe.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.api.toLong
 import org.jetbrains.kotlinx.dataframe.api.toStdlibInstant
 import org.jetbrains.kotlinx.dataframe.api.toStr
-import org.jetbrains.kotlinx.dataframe.api.toURL
-import org.jetbrains.kotlinx.dataframe.api.toUrl
 import org.jetbrains.kotlinx.dataframe.api.toUtcOffset
 import org.jetbrains.kotlinx.dataframe.api.toYearMonth
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -82,29 +80,7 @@ class Convert {
         assertNullabilityPreserved(converted, typeOf<IMG>())
     }
 
-//    @Test
-//    fun `convert to Url preserves nullability of the column type`() {
-//        val df = dataFrameOf(
-//            "a" to columnOf("https://kotlinlang.org", "https://kotlinlang.org"),
-//            "b" to columnOf("https://github.com/Kotlin/dataframe", null)
-//        )
-//
-//        val convertedToUrl = df.convert { a and b }.toUrl()
-//
-//        assertNullabilityPreserved(convertedToUrl, typeOf<URL>())
-//    }
-//
-//    @Test
-//    fun `convert to URL preserves nullability of the column type`() {
-//        val df = dataFrameOf(
-//            "a" to columnOf("https://kotlinlang.org", "https://kotlinlang.org"),
-//            "b" to columnOf("https://github.com/Kotlin/dataframe", null)
-//        )
-//
-//        val convertedToURL = df.convert { a and b }.toURL()
-//
-//        assertNullabilityPreserved(convertedToURL, typeOf<URL>())
-//    }
+    // TODO: Add tests for toUrl (and maybe for toURL) when #1903 is resolved
 
     @Test
     fun `convert to Instant preserves nullability of the column type`() {

@@ -927,7 +927,7 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
 // region convert URL
 
 /**
- * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
+ * Converts values in the [URL] columns previously selected with [convert] to [IFRAME],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -954,7 +954,7 @@ public fun <T> Convert<T, URL?>.toIFrame(
 ): DataFrame<T> = asColumn { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
 
 /**
- * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
+ * Converts values in the [URL] columns previously selected with [convert] to [IMG],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
