@@ -296,4 +296,41 @@ class MSSQLTest {
     fun `infer nullability`() {
         inferNullability(connection)
     }
+
+    // https://github.com/Kotlin/dataframe/issues/1746
+    @Test
+    fun `readAllSqlTables without catalogue should only return tables from URL database`() {
+        val secondDb = "testKDFdatabase2"
+        val testRootConn = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
+        try {
+            testRootConn.createStatement().use { stmt ->
+                stmt.executeUpdate(
+                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb",
+                )
+                stmt.executeUpdate("CREATE DATABASE $secondDb")
+            }
+            DriverManager.getConnection("$URL;databaseName=$secondDb", USER_NAME, PASSWORD).use { conn2 ->
+                conn2.createStatement().use { stmt ->
+                    stmt.executeUpdate("CREATE TABLE onlyInDb2 (id INT PRIMARY KEY, val VARCHAR(50))")
+                }
+            }
+
+            DriverManager.getConnection(
+                "$URL;databaseName=$TEST_DATABASE_NAME",
+                USER_NAME,
+                PASSWORD,
+            ).use { scopedConn ->
+                val tableNames = DataFrame.readAllSqlTables(scopedConn).keys
+
+                tableNames.none { "onlyInDb2" in it } shouldBe true
+                tableNames.any { "Table1" in it } shouldBe true
+            }
+        } finally {
+            testRootConn.use { conn ->
+                conn.createStatement().execute(
+                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb",
+                )
+            }
+        }
+    }
 }
