@@ -434,9 +434,9 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
     val tableTypes = determinedDbType.tableTypes?.toTypedArray()
     // Same catalog-scoping fix as in readJdbc.kt: use connection.catalog to avoid reading
     // tables from all MySQL/MariaDB databases when no specific catalog is given.
-    val effectiveCatalog = try {
+    val effectiveCatalog = runCatching {
         connection.catalog.takeUnless { it.isNullOrBlank() }
-    } catch (_: Exception) { null }
+    }.getOrNull()
     val tables = metaData.getTables(effectiveCatalog, null, null, tableTypes)
 
     val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()

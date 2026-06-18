@@ -305,7 +305,7 @@ class MSSQLTest {
         try {
             testRootConn.createStatement().use { stmt ->
                 stmt.executeUpdate(
-                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb"
+                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb",
                 )
                 stmt.executeUpdate("CREATE DATABASE $secondDb")
             }
@@ -315,7 +315,11 @@ class MSSQLTest {
                 }
             }
 
-            DriverManager.getConnection("$URL;databaseName=$TEST_DATABASE_NAME", USER_NAME, PASSWORD).use { scopedConn ->
+            DriverManager.getConnection(
+                "$URL;databaseName=$TEST_DATABASE_NAME",
+                USER_NAME,
+                PASSWORD,
+            ).use { scopedConn ->
                 val tableNames = DataFrame.readAllSqlTables(scopedConn).keys
 
                 tableNames.none { "onlyInDb2" in it } shouldBe true
@@ -324,7 +328,7 @@ class MSSQLTest {
         } finally {
             testRootConn.use { conn ->
                 conn.createStatement().execute(
-                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb"
+                    "IF DB_ID('$secondDb') IS NOT NULL DROP DATABASE $secondDb",
                 )
             }
         }
