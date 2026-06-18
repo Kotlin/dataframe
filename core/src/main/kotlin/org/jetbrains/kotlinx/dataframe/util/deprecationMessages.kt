@@ -284,11 +284,8 @@ internal const val KEY_VALUE_PROPERTY = "Deprecated in favor of NameValuePropert
 internal const val KEY_VALUE_PROPERTY_KEY =
     "This column will be renamed to 'name' when KeyValueProperty will be replaced with NameValueProperty. $MESSAGE_1_1"
 
-public const val NAME_REPAIR_STRATEGY: String =
+internal const val NAME_REPAIR_STRATEGY: String =
     "NameRepairStrategy is deprecated. Name repair is now always applied via ColumnNameGenerator, consistent with other IO readers. $MESSAGE_1_1"
-
-public const val READ_EXCEL_NAME_REPAIR: String =
-    "The `nameRepairStrategy` parameter is deprecated. Name repair is now always applied via ColumnNameGenerator. Use the overload without `nameRepairStrategy`. $MESSAGE_1_1"
 
 // endregion
 
