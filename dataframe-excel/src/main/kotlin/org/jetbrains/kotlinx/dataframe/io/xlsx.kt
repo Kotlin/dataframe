@@ -644,6 +644,8 @@ public fun DataFrame.Companion.readExcel(
     val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
     val valueRowsRange = (first..last)
 
+    val nameGenerator = ColumnNameGenerator()
+
     val columns = columnIndexes.map { index ->
         val headerCell = headerRow?.getCell(index)
         val nameFromCell = if (headerCell?.cellType == CellType.NUMERIC) {
@@ -653,7 +655,6 @@ public fun DataFrame.Companion.readExcel(
                 ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
 
-        val nameGenerator = ColumnNameGenerator()
 
         val name = nameGenerator.addUnique(nameFromCell)
 
