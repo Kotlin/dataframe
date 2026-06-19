@@ -2,6 +2,7 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
         alias(buildConfig)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -32,6 +33,10 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.hikaricp)
+}
+
+tasks.processKDocsMain {
+    dependsOn(tasks.generateBuildConfigClasses)
 }
 
 kotlinPublications {

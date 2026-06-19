@@ -14,6 +14,8 @@ import java.net.URL
  *
  * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
  *
+ * @include [AutoRenameInputSnippet]
+ *
  * Parameters you can use to customize the reading process include, for instance, \[delimiter\],
  * \[header\], \[colTypes\], \[readLines\], and \[parserOptions\].
  * See the param list below for all settings.
