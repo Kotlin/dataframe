@@ -35,6 +35,10 @@ dependencies {
     testImplementation(libs.hikaricp)
 }
 
+tasks.processKDocsMain {
+    dependsOn(tasks.generateBuildConfigClasses)
+}
+
 kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
