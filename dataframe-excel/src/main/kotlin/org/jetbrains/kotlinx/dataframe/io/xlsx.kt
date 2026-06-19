@@ -655,7 +655,6 @@ public fun DataFrame.Companion.readExcel(
                 ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
 
-
         val name = nameGenerator.addUnique(nameFromCell)
 
         val getCellValue: (Cell?) -> Any? = { cell ->
