@@ -6788,7 +6788,5 @@ public final class org/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Compan
 
 public final class org/jetbrains/kotlinx/dataframe/util/DeprecationMessagesKt {
 	public static final field DF_READ_EXCEL Ljava/lang/String;
-	public static final field NAME_REPAIR_STRATEGY Ljava/lang/String;
-	public static final field READ_EXCEL_NAME_REPAIR Ljava/lang/String;
 }
 
