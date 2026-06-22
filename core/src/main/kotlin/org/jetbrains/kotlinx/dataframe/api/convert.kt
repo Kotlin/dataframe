@@ -973,7 +973,7 @@ public fun <T> Convert<T, URL?>.toIFrame(
 @Refine
 @Converter(IMG::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
+public fun <T> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
     asColumn { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
 
 // endregion
