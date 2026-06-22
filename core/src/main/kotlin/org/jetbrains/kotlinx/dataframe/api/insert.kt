@@ -423,3 +423,9 @@ public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).
 // endregion
 
 // endregion
+
+public sealed class InsertException(message: String) : IllegalStateException(message)
+
+public class NotAColumnGroupInsertException(message: String) : InsertException(message)
+
+public class DuplicateColumnPathInsertException(message: String) : InsertException(message)
