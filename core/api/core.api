@@ -2136,6 +2136,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/DropKt {
 	public static final fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/api/DuplicateColumnPathInsertException : org/jetbrains/kotlinx/dataframe/api/InsertException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
 public final class org/jetbrains/kotlinx/dataframe/api/DuplicateKt {
 	public static final fun duplicate (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public static final fun duplicate (Lorg/jetbrains/kotlinx/dataframe/DataRow;I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -2627,6 +2631,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/InferTypeKt {
 public final class org/jetbrains/kotlinx/dataframe/api/InsertClause {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)V
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/api/InsertException : java/lang/IllegalStateException {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/InsertKt {
@@ -3533,6 +3541,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/NoneColumnsS
 public final class org/jetbrains/kotlinx/dataframe/api/NoneKt {
 	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Z
 	public static final fun none (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Z
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/NotAColumnGroupInsertException : org/jetbrains/kotlinx/dataframe/api/InsertException {
+	public fun <init> (Ljava/lang/String;)V
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/NullabilityException : java/lang/Exception {
