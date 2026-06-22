@@ -75,7 +75,7 @@ class Convert {
             "b" to columnOf(URL("https://example.com/photo3.jpg"), null),
         )
 
-        val converted = df.convert { a and b }.toImg<_, URL?>()
+        val converted = df.convert { a and b }.toImg()
 
         assertNullabilityPreserved(converted, typeOf<IMG>())
     }
