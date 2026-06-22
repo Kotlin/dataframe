@@ -1,6 +1,8 @@
 import io.github.devcrocod.korro.KorroGenerateTask
 import org.gradle.kotlin.dsl.libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.nio.file.Files
+import kotlin.io.path.name
 
 plugins {
     with(convention.plugins) {
@@ -173,4 +175,28 @@ korro {
 
 tasks.test {
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+}
+
+
+val resourcesDir = rootProject.file("docs/StardustDocs/resources")
+val mdFile = rootProject.file("docs/StardustDocs/topics/_shadow_resources.md")
+
+tasks.register("updateShadowResources") {
+    group = "documentation"
+    description = "Updates _shadow_resources.md with resource tags for all files in resources directory"
+
+    val ignore = listOf(".DS_Store")
+    doLast {
+        val resourceFiles = Files.walk(resourcesDir.toPath())
+            .filter { Files.isRegularFile(it) && it.name !in ignore }
+            .sorted()
+            .toList()
+
+        val content = resourceFiles.joinToString("\n") { file ->
+            """<resource src="${file.name}"></resource>"""
+        }
+
+        mdFile.writeText(content)
+
+    }
 }
