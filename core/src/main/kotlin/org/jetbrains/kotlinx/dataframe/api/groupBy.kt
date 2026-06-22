@@ -545,6 +545,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * Creates a new [GroupBy] by transforming each group’s [DataFrame]
      * using the provided [transform] function.
      *
+     * __NOTE:__ This operation removes key-column status from each column in the group.
+     * In other words, each column in the group is treated as a new column,
+     * and not omitted when [`.values()`][Grouped.values] or other aggregations are called.
+     *
      * @param [transform] A lambda that takes each group as a [DataFrame]
      * (available both as a receiver and as a parameter) and returns a transformed [DataFrame].
      * @return A new [GroupBy] instance containing the transformed groups.
@@ -563,6 +567,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * // or where the group contains at least 5 rows
      * gb.filter { category == "Engineer" || group.rowsCount() >= 5 }
      * ```
+     *
+     * __NOTE:__ This operation removes key-column status from each column in the group.
+     * In other words, each column in the group is treated as a new column,
+     * and not omitted when [`.values()`][Grouped.values] or other aggregations called.
      *
      * @param [predicate] A [GroupedRowFilter] used to determine which groups should be retained.
      * @return A new [GroupBy] containing only the key–group pairs that satisfy the [predicate].
