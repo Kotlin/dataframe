@@ -943,7 +943,6 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
  * @param height Optional height of the iframe in pixels.
  * @return A new [DataFrame] with the values converted to an [IFRAME].
  */
-@JvmName("toIframeFromUrlNullable")
 @Refine
 @Converter(IFRAME::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -969,7 +968,6 @@ public fun <T> Convert<T, URL?>.toIFrame(
  * @param height Optional height of the image in pixels.
  * @return A new [DataFrame] with the values converted to an [IMG].
  */
-@JvmName("toImgFromUrlNullable")
 @Refine
 @Converter(IMG::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1003,7 +1001,6 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
 public fun DataColumn<String?>.convertToUrl(): DataColumn<URL?> = map { it?.let { URI(it).toURL() } }
 
 @Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
-@JvmName("toURLFromStringNullable")
 @Refine
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1023,7 +1020,6 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convert
  *
  * @return A new [DataFrame] with the values converted to an [URL].
  */
-@JvmName("toUrlFromStringNullable")
 @Refine
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1162,7 +1158,6 @@ public fun DataColumn<DateTimeComponents?>.convertToStdlibInstant(): DataColumn<
  * This function will be migrated to [kotlin.time.Instant] in 1.1.
  */
 
-@JvmName("toInstantFromStringNullable")
 @Refine
 @Converter(DeprecatedInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1185,7 +1180,6 @@ public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = asColumn { it.con
  *
  * @return A new [DataFrame] with the values converted to [kotlinx.datetime.Instant].
  */
-@JvmName("toDeprecatedInstantFromStringNullable")
 @Refine
 @Converter(DeprecatedInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1289,7 +1283,6 @@ public fun DataColumn<DateTimeComponents?>.convertToUtcOffset(): DataColumn<UtcO
  *
  * @return A new [DataFrame] with the values converted to [UtcOffset].
  */
-@JvmName("toUtcOffsetFromDateTimeComponentsNullable")
 @Refine
 @Converter(UtcOffset::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1323,7 +1316,6 @@ public fun DataColumn<DateTimeComponents?>.convertToYearMonth(): DataColumn<Year
  *
  * @return A new [DataFrame] with the values converted to [YearMonth].
  */
-@JvmName("toYearMonthFromDateTimeComponentsNullable")
 @Refine
 @Converter(YearMonth::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1510,7 +1502,6 @@ public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): D
  * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
-@JvmName("toLocalDateFromStringNullable")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -1535,7 +1526,6 @@ public fun <T> Convert<T, String?>.toLocalDate(format: DateTimeFormat<LocalDate>
  * @param pattern An optional date pattern to use for parsing.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
-@JvmName("toLocalDateFromStringNullablePattern")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -1757,7 +1747,6 @@ public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): D
  * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
-@JvmName("toLocalTimeFromStringNullable")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -1782,7 +1771,6 @@ public fun <T> Convert<T, String?>.toLocalTime(format: DateTimeFormat<LocalTime>
  * @param pattern An optional date pattern to use for parsing.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
-@JvmName("toLocalTimeFromStringNullablePattern")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -2106,7 +2094,6 @@ public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone
  * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromStringNullable")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -2131,7 +2118,6 @@ public fun <T> Convert<T, String?>.toLocalDateTime(format: DateTimeFormat<LocalD
  * @param pattern An optional date pattern to use for parsing.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromStringNullablePattern")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -2259,7 +2245,6 @@ public fun DataColumn<String?>.convertToDateTimeComponents(pattern: String): Dat
  * @param [format] An optional [DateTimeFormat] to use when parsing. If `null`, the defaults will be used.
  * @return A new [DataFrame] with the values converted to [DateTimeComponents].
  */
-@JvmName("toDateTimeComponentsFromStringNullable")
 @Refine
 @Converter(DateTimeComponents::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -2285,7 +2270,6 @@ public fun <T> Convert<T, String?>.toDateTimeComponents(
  * @param pattern An optional date-time pattern to use for parsing.
  * @return A new [DataFrame] with the values converted to [DateTimeComponents].
  */
-@JvmName("toDateTimeComponentsFromStringNullablePattern")
 @Refine
 @Converter(DateTimeComponents::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -3059,7 +3043,6 @@ public fun <T> Convert<T, Any?>.toJavaLocalDateTime(): DataFrame<T> = to<JavaLoc
  * @param locale An optional [Locale] for parsing. If `null`, the default locale is used.
  * @return A new [DataFrame] with the values converted to [JavaLocalDateTime].
  */
-@JvmName("toJavaLocalDateTimeFromStringNullable")
 @Refine
 @Converter(JavaLocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -3082,7 +3065,6 @@ public fun <T> Convert<T, String?>.toJavaLocalDateTime(
  * @param locale An optional [Locale] for parsing. If `null`, the default locale is used.
  * @return A new [DataFrame] with the values converted to [JavaLocalDateTime].
  */
-@JvmName("toJavaLocalDateTimeFromStringNullablePattern")
 @Refine
 @Converter(JavaLocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
@@ -3297,7 +3279,6 @@ public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean =
     replaceWith = ReplaceWith("this.toJavaLocalDate(pattern, locale)"),
     level = DeprecationLevel.ERROR,
 )
-@JvmName("toLocalDateFromStringNullable")
 public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale?): DataFrame<T> =
     toJavaLocalDate(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
         .convert(this.columns).toLocalDate()
@@ -3307,7 +3288,6 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: 
     replaceWith = ReplaceWith("this.toJavaLocalTime(pattern, locale)"),
     level = DeprecationLevel.ERROR,
 )
-@JvmName("toLocalTimeFromStringNullable")
 public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
     toJavaLocalTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
         .convert(this.columns).toLocalTime()
@@ -3317,7 +3297,6 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: 
     replaceWith = ReplaceWith("this.toJavaLocalDateTime(pattern, locale)"),
     level = DeprecationLevel.ERROR,
 )
-@JvmName("toLocalDateTimeFromStringNullable")
 public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale?): DataFrame<T> =
     toJavaLocalDateTime(formatter = pattern?.let { DateTimeFormatter.ofPattern(pattern) }, locale = locale)
         .convert(this.columns).toLocalDateTime()
