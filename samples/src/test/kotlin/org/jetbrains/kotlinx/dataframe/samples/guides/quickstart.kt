@@ -127,6 +127,13 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     }
 
     @Test
+    fun dfToHtmlOpenInBrowser() {
+        // SampleStart
+        df.toHtml().openInBrowser()
+        // SampleEnd
+    }
+
+    @Test
     fun dfDescribe() {
         // SampleStart
         df.describe()

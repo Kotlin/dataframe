@@ -210,6 +210,16 @@ df.toHtml().writeHtml("df.html")
 
 <inline-frame src="./resources/dfToHtml.html" width="705px" height="500px"></inline-frame>
 
+Alternatively, you can open it directly in your browser without saving it to a file
+using `openInBrowser()` method.
+
+<!---FUN dfToHtmlOpenInBrowser-->
+
+```kotlin
+df.toHtml().openInBrowser()
+```
+
+<!---END-->
 
 ### Describe
 
