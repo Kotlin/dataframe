@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toInt
-import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
@@ -163,14 +162,7 @@ class XlsxTest {
 
     @Test
     fun `read xlsx file with duplicated columns and repair column names`() {
-        shouldThrow<DuplicateColumnNamesException> {
-            DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"))
-        }
-
-        val df = DataFrame.readExcel(
-            testResource("iris_duplicated_column.xlsx"),
-            nameRepairStrategy = NameRepairStrategy.MAKE_UNIQUE,
-        )
+        val df = DataFrame.readExcel(testResource("iris_duplicated_column.xlsx"))
         df.columnNames() shouldBe
             listOf(
                 "Sepal.Length",
