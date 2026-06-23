@@ -310,7 +310,18 @@ But most importantly, you can use these properties in various operations!
 > you need first to run a cell with `DataFrame` reading to generate extension properties,
 > and then use them since the next cell.
 > {style="warning"}
+
+After performing some operations, the schema may change: 
+existing columns can be removed, 
+new columns can be added, and both column names and types may be modified. 
+The [Compiler Plugin](Compiler-Plugin.md) automatically tracks these changes, updates the schema, 
+and generates new [extension properties](extensionPropertiesApi.md) on the fly.
+
+You can inspect the current schema at any time by hovering over a [`DataFrame`](DataFrame.md) 
+variable or any `DataFrame` expression.
  
+![](schema_hover.png)
+
 ## Select Columns
 
 Kotlin DataFrame features a typesafe [Columns Selection DSL](ColumnSelectors.md), 
