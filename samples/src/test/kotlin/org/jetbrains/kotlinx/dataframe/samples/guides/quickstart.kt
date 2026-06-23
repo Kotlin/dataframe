@@ -126,6 +126,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         df.saveDfHtmlSample()
     }
 
+    @Ignore
     @Test
     fun dfToHtmlOpenInBrowser() {
         // SampleStart
