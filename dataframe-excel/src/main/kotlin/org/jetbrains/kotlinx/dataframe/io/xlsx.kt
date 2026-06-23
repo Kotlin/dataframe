@@ -32,9 +32,10 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.io.documentation.AutoRenameInputSnippet
+import org.jetbrains.kotlinx.dataframe.io.util.NAME_REPAIR_STRATEGY
+import org.jetbrains.kotlinx.dataframe.io.util.READ_EXCEL_OLD
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
 import java.io.File
 import java.io.InputStream
@@ -65,11 +66,6 @@ public class Excel : SupportedDataFrameFormat {
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadExcelMethod(pathRepresentation)
 }
-
-private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
-internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
-internal const val NAME_REPAIR_STRATEGY: String =
-    "NameRepairStrategy is deprecated. Name repair is now always applied via ColumnNameGenerator, consistent with other IO readers. $MESSAGE_REMOVE_1_1"
 
 internal class DefaultReadExcelMethod(path: String?) :
     AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)

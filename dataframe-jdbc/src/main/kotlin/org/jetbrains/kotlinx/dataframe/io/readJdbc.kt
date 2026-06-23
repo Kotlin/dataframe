@@ -11,10 +11,10 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
-import org.jetbrains.kotlinx.dataframe.io.documentation.AutoRenameInputSnippet
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.Connection
 import java.sql.DatabaseMetaData
