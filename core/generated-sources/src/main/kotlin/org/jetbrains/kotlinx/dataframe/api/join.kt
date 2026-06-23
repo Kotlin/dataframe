@@ -57,7 +57,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Each join type has a corresponding shortcut function:
@@ -147,7 +147,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Each join type has a corresponding shortcut function:
@@ -196,7 +196,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -261,7 +261,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -304,7 +304,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -369,7 +369,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -412,7 +412,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -477,7 +477,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -520,7 +520,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -585,7 +585,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -628,7 +628,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -693,7 +693,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -736,7 +736,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
@@ -801,7 +801,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  *
  * If both [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * See also general [join][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
