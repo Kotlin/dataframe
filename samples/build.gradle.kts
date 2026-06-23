@@ -177,7 +177,6 @@ tasks.test {
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }
 
-
 val resourcesDir = rootProject.file("docs/StardustDocs/resources")
 val mdFile = rootProject.file("docs/StardustDocs/topics/_shadow_resources.md")
 
@@ -197,6 +196,5 @@ tasks.register("updateShadowResources") {
         }
 
         mdFile.writeText(content)
-
     }
 }

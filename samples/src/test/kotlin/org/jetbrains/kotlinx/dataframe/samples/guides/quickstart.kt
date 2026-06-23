@@ -213,7 +213,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
             .update { name }.with { it.split("/")[1] }
             // Convert "topics" `String` values into `List<String>` by splitting:
             .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
-            // SampleEnd
+        // SampleEnd
         dfUpdated.saveDfHtmlSample()
     }
 
@@ -235,7 +235,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfWithIsIntellij = dfUpdated.add("isIntellij") {
             name.lowercase().contains("intellij") || "intellij" in topics
         }
-            // SampleEnd
+        // SampleEnd
         dfWithIsIntellij.saveDfHtmlSample()
     }
 
@@ -244,7 +244,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
         val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
-            // SampleEnd
+        // SampleEnd
         groupedByIsIntellij.saveDfHtmlSample()
     }
 
@@ -278,7 +278,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfTop10 = dfWithIsIntellij
             // Sort by "starsCount" value descending
             .sortByDesc { starsCount }.take(10)
-            // SampleEnd
+        // SampleEnd
         dfTop10.saveDfHtmlSample()
     }
 
