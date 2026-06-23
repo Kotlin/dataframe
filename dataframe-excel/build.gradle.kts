@@ -1,6 +1,7 @@
 plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -36,4 +37,16 @@ kotlinPublications {
         description = "Excel support for Kotlin DataFrame"
         packageName = artifactId
     }
+}
+
+kodexConvention {
+    contextualSourcesDirectories =
+        project(projects.core.path)
+            .sourceSets
+            .main.get()
+            .allSource
+}
+
+tasks.processKDocsMain {
+    dependsOn(project(projects.core.path).tasks.assemble)
 }

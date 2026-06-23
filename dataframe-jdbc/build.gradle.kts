@@ -2,6 +2,7 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
         alias(buildConfig)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -34,6 +35,10 @@ dependencies {
     testImplementation(libs.hikaricp)
 }
 
+tasks.processKDocsMain {
+    dependsOn(tasks.generateBuildConfigClasses)
+}
+
 kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
@@ -41,4 +46,16 @@ kotlinPublications {
         description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
+}
+
+kodexConvention {
+    contextualSourcesDirectories =
+        project(projects.core.path)
+            .sourceSets
+            .main.get()
+            .allSource
+}
+
+tasks.processKDocsMain {
+    dependsOn(project(projects.core.path).tasks.assemble)
 }

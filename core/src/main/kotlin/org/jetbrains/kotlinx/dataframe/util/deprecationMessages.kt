@@ -284,6 +284,9 @@ internal const val KEY_VALUE_PROPERTY = "Deprecated in favor of NameValuePropert
 internal const val KEY_VALUE_PROPERTY_KEY =
     "This column will be renamed to 'name' when KeyValueProperty will be replaced with NameValueProperty. $MESSAGE_1_1"
 
+internal const val NAME_REPAIR_STRATEGY: String =
+    "NameRepairStrategy is deprecated. Name repair is now always applied via ColumnNameGenerator, consistent with other IO readers. $MESSAGE_1_1"
+
 // endregion
 
 // region keep across releases
