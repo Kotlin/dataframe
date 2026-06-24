@@ -525,3 +525,16 @@ public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).
 // endregion
 
 // endregion
+
+/**
+ * The [insert] operation can throw two types of [InsertException]:
+ * - [NotAColumnGroupInsertException] - when trying to insert a column group into a non-column group.
+ * - [DuplicateColumnPathInsertException] - when trying to insert a column with a path that already exists in the DataFrame.
+ */
+public sealed class InsertException(message: String) : IllegalStateException(message)
+
+/** The [InsertException] thrown when trying to insert a column group into a non-column group. */
+public class NotAColumnGroupInsertException(message: String) : InsertException(message)
+
+/** The [InsertException] thrown when trying to insert a column with a path that already exists in the DataFrame. */
+public class DuplicateColumnPathInsertException(message: String) : InsertException(message)

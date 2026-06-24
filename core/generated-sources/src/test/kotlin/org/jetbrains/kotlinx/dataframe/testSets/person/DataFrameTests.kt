@@ -5,6 +5,7 @@ import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -14,7 +15,9 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
+import org.jetbrains.kotlinx.dataframe.api.GROUP_BY_VALUES_EXCEPTION_MESSAGE
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.Merge
@@ -789,6 +792,22 @@ class DataFrameTests : BaseTest() {
     fun `groupBy meanOf`() {
         typed.groupBy { name }.meanOf { age * 2 } shouldBe typed
             .groupBy { name }.aggregate { mean { age } * 2 into "mean" }
+    }
+
+    // Issue #1569
+    @Test
+    fun `groupBy values should throw helpful exception`() {
+        shouldThrow<DuplicateColumnPathInsertException> {
+            typed.groupBy { age }.updateGroups { it }.values()
+        }.message shouldContain GROUP_BY_VALUES_EXCEPTION_MESSAGE
+
+        shouldThrow<DuplicateColumnPathInsertException> {
+            typed.groupBy { age }.filter { true }.values()
+        }.message shouldContain GROUP_BY_VALUES_EXCEPTION_MESSAGE
+
+        shouldThrow<DuplicateColumnPathInsertException> {
+            typed.groupBy { age }.add("123") { 1 }.values()
+        }.message shouldContain GROUP_BY_VALUES_EXCEPTION_MESSAGE
     }
 
     @Test
