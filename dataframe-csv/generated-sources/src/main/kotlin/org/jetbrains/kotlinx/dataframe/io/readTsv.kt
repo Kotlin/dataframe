@@ -43,6 +43,10 @@ import kotlin.io.path.inputStream
  *
  * Reads any TSV file to a [DataFrame][DataFrame].
  *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
+ *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
  * See the param list below for all settings.
@@ -202,6 +206,10 @@ public fun DataFrame.Companion.readTsv(
  * ### Read TSV File to [DataFrame]
  *
  * Reads any TSV file to a [DataFrame][DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -363,6 +371,10 @@ public fun DataFrame.Companion.readTsv(
  *
  * Reads any TSV url to a [DataFrame][DataFrame].
  *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
+ *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
  * See the param list below for all settings.
@@ -522,6 +534,10 @@ public fun DataFrame.Companion.readTsv(
  * ### Read TSV File or URL to [DataFrame]
  *
  * Reads any TSV file or url to a [DataFrame][DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -683,6 +699,10 @@ public fun DataFrame.Companion.readTsv(
  * ### Read TSV InputStream to [DataFrame]
  *
  * Reads any TSV input stream to a [DataFrame][DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].

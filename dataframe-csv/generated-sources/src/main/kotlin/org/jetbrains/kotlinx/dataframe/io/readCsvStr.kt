@@ -27,6 +27,10 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *
  * Reads any CSV [String] to a [DataFrame][DataFrame].
  *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentationCsv.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
+ *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
  * See the param list below for all settings.
