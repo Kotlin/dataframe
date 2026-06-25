@@ -2,6 +2,7 @@ plugins {
     with(convention.plugins) {
         alias(kotlinJvm8)
         alias(buildConfig)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -41,4 +42,8 @@ kotlinPublications {
         description = "JDBC support for Kotlin DataFrame"
         packageName = artifactId
     }
+}
+
+tasks.processKDocsMain {
+    dependsOn(tasks.generateBuildConfigClasses)
 }

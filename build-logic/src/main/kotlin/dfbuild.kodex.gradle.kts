@@ -29,7 +29,7 @@ interface KodexConventionExtension {
      *
      * This can be useful if you want to use `@sample` or `@includeFile`.
      *
-     * By default, this contains all source directories of `kotlin.sourceSets.test`.
+     * By default, this contains all `api`/`implementation`/`compileOnly` project source sets this project depends on.
      */
     val contextualSourcesDirectories: SetProperty<File>
 
@@ -50,13 +50,30 @@ val extension = project.extensions.create<KodexConventionExtension>("kodexConven
                     .toSet(),
             )
 
-            contextualSourcesDirectories.convention(
-                kotlin.sourceSets.test.get()
-                    .kotlin
-                    .sourceDirectories
-                    // important! This clones the collection
-                    .toSet(),
+            val dependentProjects =
+                sequenceOf(
+                    configurations.api,
+                    configurations.implementation,
+                    configurations.compileOnly,
+                ).flatMap { it.get().dependencies }
+                    .filterIsInstance<ProjectDependency>()
+                    .distinctBy { it.path }
+                    .map { project(it.path) }
+
+            tasks["processKDocsMain"].dependsOn(
+                dependentProjects.map { it.path + ":assemble" }.toList(),
             )
+            val projectSources = dependentProjects.flatMap {
+                it.extensions
+                    .findByName("sourceSets")?.let { it as SourceSetContainer }
+                    ?.findByName("main")
+                    ?.extensions
+                    ?.findByName("kotlin")?.let { it as SourceDirectorySet }
+                    ?.sourceDirectories
+                    ?: emptyList()
+            }.toSet()
+
+            contextualSourcesDirectories.convention(projectSources)
         }
     }
 
