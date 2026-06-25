@@ -29,6 +29,7 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
     - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
     - The plugin can be configured via the `kodexConvention` extension for your needs.
+    - Modules the project depends on are included in the context of KoDEx.
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
