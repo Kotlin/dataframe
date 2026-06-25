@@ -52,6 +52,21 @@ class ColTests : ColumnsSelectionDslTests() {
     }
 
     @Test
+    @Suppress("DEPRECATION")
+    fun `column constructors are aliases of col`() {
+        listOf(
+            df.select { col("age") },
+            df.select { column<Any?>("age") },
+            df.select { col<Int>("age") },
+            df.select { column<Int>("age") },
+            df.select { col(pathOf("age")) },
+            df.select { column<Any?>(pathOf("age")) },
+            df.select { col<Int>(pathOf("age")) },
+            df.select { column<Int>(pathOf("age")) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun `col at lower level`() {
         val firstNameAccessor = column<String>("firstName")
         listOf(
