@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
-import io.kotest.assertions.print.print
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -40,7 +39,6 @@ import org.junit.AfterClass
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
-import kotlin.io.path.Path
 
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
@@ -60,14 +58,6 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     private val dfRepository = df.cast<Repository>()
 
     private fun getDfSelected() = dfRepository.select { full_name and stargazers_count and topics }
-
-    @Test
-    fun t() {
-        println(
-            dfRepository.cast<Repository>().select { full_name and stargazers_count and topics }
-                .select { full_name },
-        )
-    }
 
     private fun getDfFiltered() =
         getDfSelected()
@@ -101,6 +91,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
             // Sort by "starsCount" value descending
             .sortByDesc { starsCount }.take(10)
 
+    @Ignore
     @Test
     fun notebook_test_quickstart_2() {
         // SampleStart

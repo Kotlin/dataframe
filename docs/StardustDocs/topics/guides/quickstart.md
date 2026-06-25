@@ -5,8 +5,8 @@ Get started with Kotlin DataFrame in a few simple steps: load data, transform it
 </web-summary>
 
 <card-summary>
-Get started with Kotlin DataFrame right away — integrate it to your project seamlessly and 
-load process, analyze and visualize some data!
+Get started with Kotlin DataFrame right away — 
+effortlessly integrate it into your project and load, process, analyze, and visualize data!
 </card-summary>
 
 <link-summary>
@@ -14,7 +14,7 @@ Learn the basics of Kotlin DataFrame: reading data, applying transformations, an
 </link-summary>
 
 This guide shows how to quickly get started with **Kotlin DataFrame**:  
-you'll learn how to integrate it to your [Gradle](SetupGradle.md) (or [Maven](SetupMaven.md)) project,
+you'll learn how to integrate it into your [Gradle](SetupGradle.md) (or [Maven](SetupMaven.md)) project,
 load data, perform basic transformations, and build a simple plot using Kandy.
 
 You can also view the similar guide for [Kotlin Notebook](SetupKotlinNotebook.md) and 
@@ -30,7 +30,7 @@ or download
 
 > See **[](SetupGradle.md)** and **[](SetupMaven.md)** for detailed setup instructions.
 
-Add Kotlin DataFrame library [general artifact](Modules.md#dataframe-general) dependency:
+Add the Kotlin DataFrame library [general artifact](Modules.md#dataframe-general) dependency:
 
 <tabs>
 <tab title="Gradle (Kotlin DSL)">
@@ -66,15 +66,15 @@ dependencies {
 </tab>
 </tabs>
 
-This will add [Kotlin DataFrame core API and implementation](Modules.md#dataframe-core) as well as all
+This will add the [Kotlin DataFrame core API and implementation](Modules.md#dataframe-core) as well as all
 [IO modules](Modules.md#io-modules) (excluding [experimental ones](Modules.md#experimental-modules)).  
 For flexible dependencies configuration see [Custom configuration](SetupCustomGradle.md).
 
 ### Set up Kotlin DataFrame Compiler Plugin
 
-[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) generates 
+The [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) generates 
 [extension properties](extensionPropertiesApi.md) for dataframe columns,
-allows accessing them name- and type-safe.
+allowing name- and type-safe access.
 
 Add it to your project in the "plugins" section:
 
@@ -129,7 +129,9 @@ plugins {
 ## Read dataframe from sources
 
 Kotlin DataFrame supports all popular data formats, including 
-[CSV](read.md#read-from-csv), [JSON](read.md#read-from-json), and [Excel](read.md#read-from-excel), 
+[CSV](read.md#read-from-csv), [JSON](read.md#read-from-json), 
+[Excel](read.md#read-from-excel), [Apache Parquet](Parquet.md),
+and [Apache Arrow](read.md#read-apache-arrow-formats),
 as well as [reading from various databases](readSqlDatabases.md). 
 
 Read a CSV with the "Jetbrains Repositories" dataset into the `df` variable
@@ -154,7 +156,7 @@ Variable `df` has the type [`DataFrame`](DataFrame.md).
 
 ## Display And Explore
 
-To print your dataframe into the standard output, you can use `.print()` extension method:
+To print your dataframe into the stdout (console), you can use the `.print()` extension method:
 
 <!---FUN dfPrint-->
 
@@ -167,7 +169,8 @@ df.print()
 Output:
 
 ```text
-  ㅤ                               full_name                                 html_url stargazers_count                                   topics watchers
+  ㅤ                        
+                                 full_name                                 html_url stargazers_count                                   topics watchers
   0                          JetBrains/JPS         https://github.com/JetBrains/JPS               23                                       []       23
   1                JetBrains/YouTrackSharp https://github.com/JetBrains/YouTrack...              115 [jetbrains, jetbrains-youtrack, youtr...      115
   2              JetBrains/colorSchemeTool https://github.com/JetBrains/colorSch...              290                                       []      290
@@ -179,17 +182,7 @@ Output:
   8       JetBrains/teamcity-nuget-support https://github.com/JetBrains/teamcity...               41 [nuget, nuget-feed, teamcity, teamcit...       41
   9                  JetBrains/Grammar-Kit https://github.com/JetBrains/Grammar-Kit              534                                       []      534
  10     JetBrains/intellij-starteam-plugin https://github.com/JetBrains/intellij...                6                                       []        6
- 11                   JetBrains/la-clojure  https://github.com/JetBrains/la-clojure              218                                       []      218
- 12                          JetBrains/MPS         https://github.com/JetBrains/MPS             1241          [domain-specific-language, dsl]     1241
- 13           JetBrains/intellij-community https://github.com/JetBrains/intellij...            12926 [code-editor, ide, intellij, intellij...    12926
- 14     JetBrains/TeamCity.ServiceMessages https://github.com/JetBrains/TeamCity...               39 [c-sharp, teamcity, teamcity-service-...       39
- 15 JetBrains/youtrack-rest-python-library https://github.com/JetBrains/youtrack...              118                                       []      118
- 16               JetBrains/intellij-scala https://github.com/JetBrains/intellij...             1066  [intellij-idea, intellij-plugin, scala]     1066
- 17            JetBrains/teamcity-messages https://github.com/JetBrains/teamcity...              125                                       []      125
- 18                 JetBrains/teamcity-cpp https://github.com/JetBrains/teamcity...               27                                       []       27
- 19                       JetBrains/kotlin      https://github.com/JetBrains/kotlin            39402 [compiler, gradle-plugin, intellij-pl...    39402
 ...
-
 
 ```
 
@@ -211,7 +204,7 @@ df.toHtml().writeHtml("df.html")
 <inline-frame src="./resources/dfToHtml.html" width="705px" height="500px"></inline-frame>
 
 Alternatively, you can open it directly in your browser without saving it to a file
-using `openInBrowser()` method.
+using the `openInBrowser()` method.
 
 <!---FUN dfToHtmlOpenInBrowser-->
 
@@ -225,7 +218,7 @@ df.toHtml().openInBrowser()
 
 Use the [`.describe()`](describe.md) method to get dataframe summaries — column types, number of nulls, and simple statistics.
 The result of `describe()` is also of the type [`DataFrame`](DataFrame.md), so you can use `.print()` on it or
-save as a web table:
+save it as a web table:
 
 <!---FUN dfDescribe-->
 
@@ -282,8 +275,8 @@ interface Repository {
 
 <!---END-->
 
-Now you can copy-paste this schema into your code and use it in [`cast()`](cast.md)
-method to specify a schema of `DataFrame` (assign a result into a new variable `dfRepository`)
+Now you can copy-paste this schema into your code and use it in the [`cast()`](cast.md)
+method to specify the schema of your `DataFrame` (assigning the result to a new variable `dfRepository`)
 
 <!---FUN dfCast-->
 
@@ -294,7 +287,7 @@ val dfRepository = df.cast<Repository>()
 <!---END-->
 
 Now you can use [extension properties](extensionPropertiesApi.md), for example, 
-get the "full_name" column as a property:
+to get the "full_name" column as a property:
 
 <!---FUN dfRepositoryGetFullName-->
 
@@ -307,12 +300,13 @@ val fullNameColumn: DataColumn<String> = dfRepository.full_name
 But most importantly, you can use these properties in various operations!
 
 > In a notebook, you don't need to specify schema manually, but 
-> you need first to run a cell with `DataFrame` reading to generate extension properties,
-> and then use them since the next cell.
+> but you need to have **run a cell** containing a `DataFrame` variable 
+> to generate extension properties for it.
+> They can be used from the **next** cell onwards.
 > {style="warning"}
 
 After performing some operations, the schema may change: 
-existing columns can be removed, 
+existing columns may have been removed,
 new columns can be added, and both column names and types may be modified. 
 The [Compiler Plugin](Compiler-Plugin.md) automatically tracks these changes, updates the schema, 
 and generates new [extension properties](extensionPropertiesApi.md) on the fly.
@@ -327,7 +321,7 @@ variable or any `DataFrame` expression.
 Kotlin DataFrame features a typesafe [Columns Selection DSL](ColumnSelectors.md), 
 enabling flexible and safe selection of any combination of columns.
 Column selectors are widely used across operations — one of the simplest examples is [`.select { }`](select.md), 
-which returns a new `DataFrame` with only the columns chosen in *Columns Selection expression*.
+which returns a new `DataFrame` with only the columns chosen in a *Columns Selection expression*.
 
 Select some columns:
 
@@ -346,12 +340,12 @@ val dfSelected = dfRepository.select { full_name and stargazers_count and topics
 
 Some operations use the [DataRow API](DataRow.md), with [expressions](DataRow.md#row-expressions) 
 and [conditions](DataRow.md#row-conditions) that are applied for all `DataFrame` rows.
-For example, [`.filter { }`](filter.md) that returns a new `DataFrame` with rows 
-that satisfy a condition given by row expression.
+For example, [`.filter { }`](filter.md) returns a new `DataFrame` with rows 
+that satisfy a condition given by the row expression.
 
 Inside a row expression, you can access the values of the current row by column names through 
 [extension properties](extensionPropertiesApi.md).
-Similar to the [Columns Selection DSL](ColumnSelectors.md),
+This is similar to the [Columns Selection DSL](ColumnSelectors.md),
 but in this case the properties represent actual values, not column references.
 
 Filter rows by "stargazers_count" value:
@@ -373,7 +367,7 @@ Columns can be renamed using the [`.rename { }`](rename.md) operation,
 which also uses the Columns Selection DSL to select a column to rename.
 The [`rename`](rename.md) operation does not perform the renaming immediately; instead, 
 it creates an intermediate object that must
-be finalized into a new [`DataFrame`](DataFrame.md) by calling the `.into()` function with the new column name.
+be finalized into a new [`DataFrame`](DataFrame.md) by calling the `.to()` function with the new column name.
 
 Rename "full_name" and "stargazers_count" columns:
 
@@ -391,7 +385,7 @@ val dfRenamed = dfFiltered
 
 <inline-frame src="./resources/notebook_test_quickstart_7.html" width="705px" height="500px"></inline-frame>
 
-Schema is updated automatically after `rename` so you can use new extension properties right away:
+The schema is updated automatically after `rename` so you can use new extension properties right away:
 
 <!---FUN dfRenamedSelectName-->
 
@@ -401,9 +395,10 @@ dfRenamed.select { name }
 
 <!---END-->
 
-> In a notebook, you need first to run a cell with a column renaming / changing type
-> to get an updated schema for `DataFrame` property and the relevant extension properties, 
-> and then use them since the next cell.
+> In a notebook, you need to have **run a cell** containing a `DataFrame` variable
+> with a column renamed / changed type
+> to get an updated schema for `DataFrame` property and the relevant extension properties. 
+> They can be used from the **next** cell onwards.
 > {style="warning"}
 
 ## Modify Columns
@@ -450,7 +445,7 @@ kotlin.collections.List<kotlin.String>
 
 ## Adding New Columns
 
-The [`.add { }`](add.md) function allows creating a `DataFrame` with a new column, 
+The [`.add("name") { rowExpression }`](add.md) operation allows creating a `DataFrame` with a new column, 
 where the value for each row is computed based
 on the existing values in that row. 
 These values can be accessed within the [row expressions](DataRow.md#row-expressions).
@@ -473,7 +468,7 @@ val dfWithIsIntellij = dfUpdated.add("isIntellij") {
 
 ## Grouping And Aggregating
 
-A [`DataFrame`](DataFrame.md) can be grouped by column keys, 
+A [`DataFrame`](DataFrame.md) can be grouped by key columns, 
 meaning its rows are split into groups based on the values in the key
 columns.
 The [`.groupBy { }`](groupBy.md) operation selects columns and groups the `DataFrame` by their values, 
@@ -501,10 +496,9 @@ the key columns along with new columns holding the computed
 statistics for a corresponding group.
 
 For example, `count()` computes the size of each group.
-It returns a new `DataFrame` where each row corresponds to one group
-and contains its unique key (or unique combination of keys) 
-columns and a new "count"
-column with the group size:
+It returns a new `DataFrame` where each row corresponds to a group 
+and contains the group's unique key (or combination of keys), 
+along with a new "count" column with the group size:
 
 <!---FUN notebook_test_quickstart_12-->
 
@@ -535,11 +529,11 @@ groupedByIsIntellij.aggregate {
 
 ## Sorting Rows
 
-[`.sortBy { }`/`.sortByDesc { }`](sortBy.md) sortes rows by value in selected columns, 
+[`.sortBy { }`/`.sortByDesc { }`](sortBy.md) sorts rows by value in selected columns, 
 returning a `DataFrame` with sorted rows. 
 `take(n)` returns a new `DataFrame` with the first `n` rows.
 
-Combine them to get Top-10 repositories by number of stars:
+Combine them to get the Top-10 repositories by number of stars:
 
 <!---FUN notebook_test_quickstart_14-->
 
@@ -594,9 +588,9 @@ dependencies {
 </tab>
 </tabs>
 
-Build a simple bar chart with `.plot { }` extension for `DataFrame`, 
-that allows using DataFrame [extension properties](extensionPropertiesApi.md) inside Kandy
-plotting DSL (plot will be rendered as an output after cell execution):
+Build a simple bar chart with the `.plot { }` extension for `DataFrame`, 
+that allows using DataFrame [extension properties](extensionPropertiesApi.md) inside the Kandy
+plotting DSL:
 
 <!---FUN notebook_test_quickstart_16-->
 
@@ -622,9 +616,10 @@ dfTop10.plot {
 
 ## Write DataFrame
 
-A `DataFrame` supports writing to all formats that it is capable of reading (except writing to databases, for now).
+Kotlin DataFrame supports writing to all formats that it is capable of reading 
+(except writing to databases, OpenAPI JSON and Apache Parquet, for now).
 
-Write a dataframe into the Excel file:
+Write a dataframe into an Excel file:
 
 <!---FUN notebook_test_quickstart_17-->
 
