@@ -19,25 +19,6 @@ import kotlin.io.path.outputStream
 /**
  *
  *
- * Writes this [GeoDataFrame] into a [GeoJSON](https://geojson.org/) file.
- *
- * Each [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * in the resulting GeoJSON file corresponds to a single
- * row in this [GeoDataFrame]:
- * * `"geometry"` value is taken from the `geometry` column.
- * * other column values are stored as "properties" of the corresponding names and with the
- * corresponding structure.
- *
- * > According to the specification, the CRS in GeoJSON should be
- * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187);
- */
-@ExcludeFromSources
-internal typealias WriteGeoJsonSnippet = Nothing
-
-/**
- *
- *
  * Writes this [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] into a [GeoJSON](https://geojson.org/) file.
  *
  * Each [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
@@ -101,26 +82,6 @@ public fun GeoDataFrame<*>.writeGeoJson(path: Path) {
 public fun GeoDataFrame<*>.writeGeoJson(file: File) {
     writeGeoJson(file.toPath())
 }
-
-/**
- * Writes this [GeoDataFrame] into a
- * [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm).
- *
- * The shapefile is written into the specified directory. The resulting files use the directory name
- * as the base file name. For example, writing to `roads/` creates `roads.shp`, `roads.shx`,
- * `roads.dbf`, and related files inside that directory.
- *
- * Each feature in the resulting shapefile corresponds to a single row in this [GeoDataFrame]:
- * * `"geometry"` value is taken from the `geometry` column.
- * * other column values are written as feature attributes.
- *
- * The CRS is written to the schema if it is defined in this [GeoDataFrame]. Otherwise,
- * [default CRS][GeoDataFrame.DEFAULT_CRS] is used.
- *
- * If the target directory does not exist, it is created automatically.
- */
-@ExcludeFromSources
-internal typealias WriteShapefileSnippet = Nothing
 
 /**
  * Writes this [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] into a

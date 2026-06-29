@@ -18,28 +18,6 @@ import java.net.URL
 /**
  *
  *
- * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame].
- *
- * Each row in the resulting [GeoDataFrame] corresponds to a single
- * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * from the input file :
- * * `"geometry"` value is stored in the `geometry` column.
- * * `"properties"` are flattened into individual columns using their keys as column names.
- * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
- *
- * > Uses the [GeoTools](https://geotools.org/) GeoJSON parser.
- * > Nested properties are not supported and parsed as [`LinkedHashMap<*, *>`][java.util.LinkedHashMap].
- * > According to the specification, the CRS in GeoJSON should be
- * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field is used for now;
- * > if it is not present, it is read as `null`.
- */
-@ExcludeFromSources
-internal typealias ReadGeoJsonSnippet = Nothing
-
-/**
- *
- *
  * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
  * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
@@ -136,28 +114,6 @@ public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoD
  * @return a new [GeoDataFrame] with the data from the GeoJSON file
  */
 public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
-
-/**
- *
- *
- * Reads a [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm) file
- * into a [GeoDataFrame].
- *
- * Each row in the resulting [GeoDataFrame] corresponds to a single feature
- * from the shapefile:
- * * `Geometry` is stored in the `geometry` column.
- * * Attribute data from the `.dbf` file is stored in separate columns.
- * * CRS is read from the `.prj` file if present, otherwise set to `null`.
- *
- * Supported input formats:
- * * Path to a `.shp` file.
- * * Path to a `.shp.gz` file.
- * * Path to a directory containing a shapefile with the same name as the directory (expects `<dir>/<dir>.shp`).
- *
- * Requires `.shx` and `.dbf` files with the same name to be present in the same directory as the `.shp` file.
- */
-@ExcludeFromSources
-internal typealias ReadShapefileSnippet = Nothing
 
 /**
  *
