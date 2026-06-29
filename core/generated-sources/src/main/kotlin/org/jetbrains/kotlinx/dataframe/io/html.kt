@@ -173,7 +173,6 @@ internal fun AnyFrame.toHtmlData(
         col: ColumnWithPath<*>,
         rowsLimit: Int?,
         configuration: DisplayConfiguration,
-        renderRootDf: AnyFrame = this,
     ): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
@@ -209,7 +208,7 @@ internal fun AnyFrame.toHtmlData(
                 val parentCols = col.path.indices
                     .map { i -> col.path.take(i + 1) }
                     .dropLast(1)
-                    .map { ColumnWithPath(renderRootDf[it], it) }
+                    .map { ColumnWithPath(this@columnToJs[it], it) }
                 val parentAttributes = parentCols
                     .map { formatter(FormattingDsl, row, it) }
                     .reduceOrNull(CellAttributes?::and)
@@ -249,7 +248,7 @@ internal fun AnyFrame.toHtmlData(
                 val parentCols = col.path.indices
                     .map { i -> col.path.take(i + 1) }
                     .dropLast(1)
-                    .map { ColumnWithPath(renderRootDf[it], it) }
+                    .map { ColumnWithPath(this@columnToJs[it], it) }
                 val parentAttributes = parentCols
                     .map { hf(FormattingDsl, it) }
                     .reduceOrNull(CellAttributes?::and)
@@ -264,8 +263,8 @@ internal fun AnyFrame.toHtmlData(
             }
         }
         val nested = if (col is ColumnGroup<*>) {
-            col.columns().map {
-                renderRootDf.columnToJs(it.addParentPath(col.path), rowsLimit, configuration, renderRootDf)
+            col.columns().map { childCol ->
+                this@columnToJs.columnToJs(childCol.addParentPath(col.path), rowsLimit, configuration)
             }
         } else {
             emptyList()
