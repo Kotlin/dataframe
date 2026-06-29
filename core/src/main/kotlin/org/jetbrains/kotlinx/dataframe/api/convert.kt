@@ -1441,7 +1441,7 @@ public fun DataColumn<DateTimeComponents>.convertToLocalDate(): DataColumn<Local
 public fun DataColumn<DateTimeComponents?>.convertToLocalDate(): DataColumn<LocalDate?> = convertTo<LocalDate?>()
 
 /**
- * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the [Long] columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1463,7 +1463,7 @@ public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): 
     asColumn { it.convertToLocalDate(zone) }
 
 /**
- * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the [Int] columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1485,7 +1485,7 @@ public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): D
     asColumn { it.convertToLocalDate(zone) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1509,7 +1509,7 @@ public fun <T> Convert<T, String?>.toLocalDate(format: DateTimeFormat<LocalDate>
     asColumn { it.convertToLocalDate(format) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1534,7 +1534,7 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String): DataFrame<T> =
     asColumn { it.convertToLocalDate(pattern) }
 
 /**
- * Converts values in the [DateTimeComponents] columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the [DateTimeComponents] columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1549,7 +1549,7 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String): DataFrame<T> =
 public fun <T> Convert<T, DateTimeComponents?>.toLocalDate(): DataFrame<T> = asColumn { it.convertToLocalDate() }
 
 /**
- * Converts values in the columns previously selected with [convert] to the [LocalDate],
+ * Converts values in the columns previously selected with [convert] to [LocalDate],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -1686,7 +1686,7 @@ public fun DataColumn<DateTimeComponents>.convertToLocalTime(): DataColumn<Local
 public fun DataColumn<DateTimeComponents?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo<LocalTime?>()
 
 /**
- * Converts values in the [Long] columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the [Long] columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1708,7 +1708,7 @@ public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): 
     asColumn { it.convertToLocalTime(zone) }
 
 /**
- * Converts values in the [Int] columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the [Int] columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1730,7 +1730,7 @@ public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): D
     asColumn { it.convertToLocalTime(zone) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1754,7 +1754,7 @@ public fun <T> Convert<T, String?>.toLocalTime(format: DateTimeFormat<LocalTime>
     asColumn { it.convertToLocalTime(format) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1779,7 +1779,7 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String): DataFrame<T> =
     asColumn { it.convertToLocalTime(pattern) }
 
 /**
- * Converts values in the [DateTimeComponents] columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the [DateTimeComponents] columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -1794,7 +1794,7 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String): DataFrame<T> =
 public fun <T> Convert<T, DateTimeComponents?>.toLocalTime(): DataFrame<T> = asColumn { it.convertToLocalTime() }
 
 /**
- * Converts values in the columns previously selected with [convert] to the [LocalTime],
+ * Converts values in the columns previously selected with [convert] to [LocalTime],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -1989,7 +1989,7 @@ public fun DataColumn<DateTimeComponents?>.convertToLocalDateTime(): DataColumn<
     convertTo<LocalDateTime?>()
 
 /**
- * Converts values in the [Long] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [Long] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2011,7 +2011,7 @@ public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZon
     asColumn { it.convertToLocalDateTime(zone) }
 
 /**
- * Converts values in the [kotlinx.datetime.Instant] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [kotlinx.datetime.Instant] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2033,7 +2033,7 @@ public fun <T> Convert<T, DeprecatedInstant?>.toLocalDateTime(zone: TimeZone = d
     asColumn { it.convertToLocalDateTime(zone) }
 
 /**
- * Converts values in the [kotlin.time.Instant] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [kotlin.time.Instant] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2055,7 +2055,7 @@ public fun <T> Convert<T, StdlibInstant?>.toLocalDateTime(zone: TimeZone = defau
     asColumn { it.convertToLocalDateTime(zone) }
 
 /**
- * Converts values in the [Int] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [Int] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2077,7 +2077,7 @@ public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone
     asColumn { it.convertToLocalDateTime(zone) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2101,7 +2101,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(format: DateTimeFormat<LocalD
     asColumn { it.convertToLocalDateTime(format) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [String] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2126,7 +2126,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String): DataFrame<T
     asColumn { it.convertToLocalDateTime(pattern) }
 
 /**
- * Converts values in the [DateTimeComponents] columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the [DateTimeComponents] columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2142,7 +2142,7 @@ public fun <T> Convert<T, DateTimeComponents?>.toLocalDateTime(): DataFrame<T> =
     asColumn { it.convertToLocalDateTime() }
 
 /**
- * Converts values in the columns previously selected with [convert] to the [LocalDateTime],
+ * Converts values in the columns previously selected with [convert] to [LocalDateTime],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -2228,7 +2228,7 @@ public fun DataColumn<String?>.convertToDateTimeComponents(pattern: String): Dat
     convertToDateTimeComponents(DateTimeComponents.Format { byUnicodePattern(pattern) })
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [DateTimeComponents],
+ * Converts values in the [String] columns previously selected with [convert] to [DateTimeComponents],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2253,7 +2253,7 @@ public fun <T> Convert<T, String?>.toDateTimeComponents(
 ): DataFrame<T> = asColumn { it.convertToDateTimeComponents(format) }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [DateTimeComponents],
+ * Converts values in the [String] columns previously selected with [convert] to [DateTimeComponents],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -2278,7 +2278,7 @@ public fun <T> Convert<T, String?>.toDateTimeComponents(pattern: String): DataFr
     asColumn { it.convertToDateTimeComponents(pattern) }
 
 /**
- * Converts values in the columns previously selected with [convert] to the [DateTimeComponents],
+ * Converts values in the columns previously selected with [convert] to [DateTimeComponents],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -3074,7 +3074,7 @@ public fun <T> Convert<T, String?>.toJavaLocalDateTime(pattern: String, locale: 
 // endregion
 
 /**
- * Converts values in the columns previously selected with [convert] to the [Int],
+ * Converts values in the columns previously selected with [convert] to [Int],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3094,7 +3094,7 @@ public fun <T> Convert<T, String?>.toJavaLocalDateTime(pattern: String, locale: 
 public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [Long],
+ * Converts values in the columns previously selected with [convert] to [Long],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3114,7 +3114,7 @@ public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
 public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [String],
+ * Converts values in the columns previously selected with [convert] to [String],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3134,7 +3134,7 @@ public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
 public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [Double],
+ * Converts values in the columns previously selected with [convert] to [Double],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3154,7 +3154,7 @@ public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
 public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [Float],
+ * Converts values in the columns previously selected with [convert] to [Float],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3174,7 +3174,7 @@ public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
 public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [BigDecimal],
+ * Converts values in the columns previously selected with [convert] to [BigDecimal],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3194,7 +3194,7 @@ public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [BigInteger],
+ * Converts values in the columns previously selected with [convert] to [BigInteger],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3214,7 +3214,7 @@ public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
 public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 
 /**
- * Converts values in the columns previously selected with [convert] to the [Boolean],
+ * Converts values in the columns previously selected with [convert] to [Boolean],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -3234,7 +3234,7 @@ public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
 
 /**
- * Converts a list of lists values in the columns previously selected with [convert] to the [DataFrame],
+ * Converts a list of lists values in the columns previously selected with [convert] to [DataFrame],
  * preserving their original names and positions within the [DataFrame].
  *
  * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
@@ -3258,7 +3258,7 @@ public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolea
     asColumn { it.toDataFrames(containsColumns) }
 
 /**
- * Converts a list of lists values in this [DataColumn] to the [DataFrame].
+ * Converts a list of lists values in this [DataColumn] to [DataFrame].
  *
  * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
  * If [containsColumns] is `true`, interprets each inner list as a column,
