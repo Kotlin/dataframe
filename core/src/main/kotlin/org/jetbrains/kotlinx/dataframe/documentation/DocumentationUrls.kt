@@ -10,199 +10,205 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * Include it in KDoc with `@include [-class-]`.
  * For example: `For more information: {@include [DocumentationUrls.SomeUrl]}`.
  */
-internal interface DocumentationUrls {
+public interface DocumentationUrls {
 
     /** https://kotlin.github.io/dataframe */
-    typealias Url = Nothing
+    public typealias Url = Nothing
 
     /** [See Access APIs on the documentation website.]({@include [Url]}/apilevels.html) */
-    interface AccessApis {
+    public interface AccessApis {
 
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
-        typealias StringApi = Nothing
+        public typealias StringApi = Nothing
 
         /** [See Extension Properties API on the documentation website.]({@include [Url]}/extensionpropertiesapi.html) */
-        typealias ExtensionPropertiesApi = Nothing
+        public typealias ExtensionPropertiesApi = Nothing
     }
 
     /** [See Column Selectors on the documentation website.]({@include [Url]}/columnselectors.html) */
-    typealias ColumnSelectors = Nothing
+    public typealias ColumnSelectors = Nothing
 
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
-    typealias CompilerPlugin = Nothing
+    public typealias CompilerPlugin = Nothing
 
-    interface DataRow {
+    public interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
-        typealias RowExpressions = Nothing
+        public typealias RowExpressions = Nothing
 
         /** [See RowExpression on the documentation website.]({@include [Url]}/datarow.html#rowexpression) */
-        typealias RowExpression = Nothing
+        public typealias RowExpression = Nothing
 
         /** [See RowValueExpression on the documentation website.]({@include [Url]}/datarow.html#rowvalueexpression) */
-        typealias RowValueExpression = Nothing
+        public typealias RowValueExpression = Nothing
 
         /** [See Row Conditions on the documentation website.]({@include [Url]}/datarow.html#row-conditions) */
-        typealias RowConditions = Nothing
+        public typealias RowConditions = Nothing
 
         /** [See RowFilter on the documentation website.]({@include [Url]}/datarow.html#rowfilter) */
-        typealias RowFilter = Nothing
+        public typealias RowFilter = Nothing
 
         /** [See RowValueFilter on the documentation website.]({@include [Url]}/datarow.html#rowvaluefilter) */
-        typealias RowValueFilter = Nothing
+        public typealias RowValueFilter = Nothing
     }
 
     /** [See `drop` on the documentation website.]({@include [Url]}/drop.html) */
-    interface Drop {
+    public interface Drop {
 
         /** [See `dropNulls` on the documentation website.]({@include [Url]}/drop.html#dropnulls) */
-        typealias DropNulls = Nothing
+        public typealias DropNulls = Nothing
 
         /** [See `dropNaNs` on the documentation website.]({@include [Url]}/drop.html#dropnans) */
-        typealias DropNaNs = Nothing
+        public typealias DropNaNs = Nothing
 
         /** [See `dropNA` on the documentation website.]({@include [Url]}/drop.html#dropna) */
-        typealias DropNA = Nothing
+        public typealias DropNA = Nothing
     }
 
     /** [See `fill` on the documentation website.]({@include [Url]}/fill.html) */
-    interface Fill {
+    public interface Fill {
         /** [See `fillNulls` on the documentation website.]({@include [Url]}/fill.html#fillnulls) */
-        typealias FillNulls = Nothing
+        public typealias FillNulls = Nothing
 
         /** [See `fillNaNs` on the documentation website.]({@include [Url]}/fill.html#fillnans) */
-        typealias FillNaNs = Nothing
+        public typealias FillNaNs = Nothing
 
         /** [See `fillNA` on the documentation website.]({@include [Url]}/fill.html#fillna) */
-        typealias FillNA = Nothing
+        public typealias FillNA = Nothing
     }
 
     /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
-    interface NanAndNa {
+    public interface NanAndNa {
 
         /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
-        typealias NaN = Nothing
+        public typealias NaN = Nothing
 
         /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
-        typealias NA = Nothing
+        public typealias NA = Nothing
     }
 
     /** [See `select` on the documentation website.]({@include [Url]}/select.html) */
-    typealias Select = Nothing
+    public typealias Select = Nothing
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
-    typealias Update = Nothing
+    public typealias Update = Nothing
 
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
-    typealias Remove = Nothing
+    public typealias Remove = Nothing
 
     /** [See `distinct` on the documentation website.]({@include [Url]}/distinct.html) */
-    typealias Distinct = Nothing
+    public typealias Distinct = Nothing
 
     /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
-    typealias DistinctBy = Nothing
+    public typealias DistinctBy = Nothing
 
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
-    typealias Flatten = Nothing
+    public typealias Flatten = Nothing
 
     /** <a href="{@include [Url]}/cumsum.html">See `cumSum` on the documentation website.</a> */
-    typealias CumSum = Nothing
+    public typealias CumSum = Nothing
 
     /** [See `describe` on the documentation website.]({@include [Url]}/describe.html) */
-    typealias Describe = Nothing
+    public typealias Describe = Nothing
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
-    typealias Move = Nothing
+    public typealias Move = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
-    typealias Group = Nothing
+    public typealias Group = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
-    typealias Ungroup = Nothing
+    public typealias Ungroup = Nothing
 
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
-    typealias Convert = Nothing
+    public typealias Convert = Nothing
 
     /** [See `convert` on the documentation website.]({@include [Url]}/corr.html) */
-    typealias Corr = Nothing
+    public typealias Corr = Nothing
 
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
-    typealias Add = Nothing
+    public typealias Add = Nothing
 
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
-    typealias Gather = Nothing
+    public typealias Gather = Nothing
 
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
-    typealias Filter = Nothing
+    public typealias Filter = Nothing
 
     /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
-    typealias Count = Nothing
+    public typealias Count = Nothing
 
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
-    typealias CountDistinct = Nothing
+    public typealias CountDistinct = Nothing
 
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
-    typealias Explode = Nothing
+    public typealias Explode = Nothing
 
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
-    typealias DataSchemaGeneration = Nothing
+    public typealias DataSchemaGeneration = Nothing
 
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
-    typealias Format = Nothing
+    public typealias Format = Nothing
 
     /** [See `insert` on the documentation website.]({@include [Url]}/insert.html) */
-    typealias Insert = Nothing
+    public typealias Insert = Nothing
 
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
-    typealias Rename = Nothing
+    public typealias Rename = Nothing
 
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
-    typealias GroupBy = Nothing
+    public typealias GroupBy = Nothing
 
     /** [See "`GroupBy` Transformation" on the documentation website.]({@include [Url]}/groupby.html#transformation) */
-    typealias GroupByTransformation = Nothing
+    public typealias GroupByTransformation = Nothing
 
     /** [See "`GroupBy` Reducing" on the documentation website.]({@include [Url]}/groupby.html#reducing) */
-    typealias GroupByReducing = Nothing
+    public typealias GroupByReducing = Nothing
 
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
-    typealias GroupByAggregation = Nothing
+    public typealias GroupByAggregation = Nothing
 
     /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
-    typealias GroupByStatistics = Nothing
+    public typealias GroupByStatistics = Nothing
 
     /** [See "`pivot` + `groupBy`" on the documentation website.]({@include [Url]}/pivot.html#pivot-groupby) */
-    typealias PivotGroupBy = Nothing
+    public typealias PivotGroupBy = Nothing
 
     /** [See `pivot` on the documentation website.]({@include [Url]}/pivot.html) */
-    typealias Pivot = Nothing
+    public typealias Pivot = Nothing
 
     /** [See `pivotMatches` on the documentation website.]({@include [Url]}/pivot.html#pivotmatches) */
-    typealias PivotMatches = Nothing
+    public typealias PivotMatches = Nothing
 
     /** [See `pivotCounts` on the documentation website.]({@include [Url]}/pivot.html#pivotcounts) */
-    typealias PivotCounts = Nothing
+    public typealias PivotCounts = Nothing
 
     /** [See "`pivot` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#pivot-statistics) */
-    typealias PivotStatistics = Nothing
+    public typealias PivotStatistics = Nothing
 
     /** [See "Pivot` reducing" on the documentation website.]({@include [Url]}/pivot.html#reducing) */
-    typealias PivotReducing = Nothing
+    public typealias PivotReducing = Nothing
 
     /** [See "Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
-    typealias PivotAggregation = Nothing
+    public typealias PivotAggregation = Nothing
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
-    typealias PivotInsideAggregationStatistics = Nothing
+    public typealias PivotInsideAggregationStatistics = Nothing
 
     /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
-    typealias Join = Nothing
+    public typealias Join = Nothing
 
     /** [See `joinWith` on the documentation website.]({@include [Url]}/joinWith.html) */
-    typealias JoinWith = Nothing
+    public typealias JoinWith = Nothing
 
     /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
-    typealias Statistics = Nothing
+    public typealias Statistics = Nothing
 
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
-    typealias Concat = Nothing
+    public typealias Concat = Nothing
+
+    /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
+    public typealias Deephaven = Nothing
+
+    /** [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) */
+    public typealias ApacheCsv = Nothing
 }

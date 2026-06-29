@@ -20,31 +20,31 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
  *
  */
 @ExcludeFromSources
-internal typealias LineBreak = Nothing
+public typealias LineBreak = Nothing
 
 /** &nbsp; */
 @ExcludeFromSources
-internal typealias QuarterIndent = Nothing
+public typealias QuarterIndent = Nothing
 
 /** &nbsp;&nbsp; */
 @ExcludeFromSources
-internal typealias HalfIndent = Nothing
+public typealias HalfIndent = Nothing
 
 /** &nbsp;&nbsp;&nbsp;&nbsp; */
 @ExcludeFromSources
-internal typealias Indent = Nothing
+public typealias Indent = Nothing
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
 @ExcludeFromSources
-internal typealias DoubleIndent = Nothing
+public typealias DoubleIndent = Nothing
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
 @ExcludeFromSources
-internal typealias TripleIndent = Nothing
+public typealias TripleIndent = Nothing
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
 @ExcludeFromSources
-internal typealias QuadrupleIndent = Nothing
+public typealias QuadrupleIndent = Nothing
 
 /**
  * Any `Documentable` annotated with this annotation will be excluded from the generated sources by
@@ -67,7 +67,7 @@ internal typealias QuadrupleIndent = Nothing
     TYPEALIAS,
     FILE,
 )
-internal annotation class ExcludeFromSources
+public annotation class ExcludeFromSources
 
 /**
  * Any `Documentable` annotated with this annotation will be exported to HTML by the documentation

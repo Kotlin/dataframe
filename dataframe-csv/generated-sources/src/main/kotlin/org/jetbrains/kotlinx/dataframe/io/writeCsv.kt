@@ -23,9 +23,9 @@ import java.nio.file.Path
 import kotlin.io.path.writer
 
 /**
- * ### Write [DataFrame] to CSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a CSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -92,9 +92,9 @@ public fun AnyFrame.writeCsv(
     )
 
 /**
- * ### Write [DataFrame] to CSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a CSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -161,9 +161,9 @@ public fun AnyFrame.writeCsv(
     )
 
 /**
- * ### Write [DataFrame] to CSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a CSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -231,9 +231,9 @@ public fun AnyFrame.writeCsv(
 
 /**
  *
- * ### Write [DataFrame] to CSV Appendable
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV Appendable
  *
- * Writes [this][this] [DataFrame][DataFrame] to a CSV [Appendable].
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV [Appendable].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].

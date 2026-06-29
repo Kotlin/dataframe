@@ -23,9 +23,9 @@ import java.nio.file.Path
 import kotlin.io.path.writer
 
 /**
- * ### Write [DataFrame] to TSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a TSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -92,9 +92,9 @@ public fun AnyFrame.writeTsv(
     )
 
 /**
- * ### Write [DataFrame] to TSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a TSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -161,9 +161,9 @@ public fun AnyFrame.writeTsv(
     )
 
 /**
- * ### Write [DataFrame] to TSV File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a TSV file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -231,9 +231,9 @@ public fun AnyFrame.writeTsv(
 
 /**
  *
- * ### Write [DataFrame] to TSV Appendable
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV Appendable
  *
- * Writes [this][this] [DataFrame][DataFrame] to a TSV [Appendable].
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV [Appendable].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].

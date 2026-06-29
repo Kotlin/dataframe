@@ -3,6 +3,9 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CHARSET
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import java.io.File
