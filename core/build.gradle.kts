@@ -20,7 +20,6 @@ plugins {
         // generates keywords using the :generator module
         alias(keywordGenerator)
     }
-    idea
 }
 
 group = "org.jetbrains.kotlinx"

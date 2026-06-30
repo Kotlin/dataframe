@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TSV_DELIMITE
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**
- * ### Convert [DataFrame] to TSV String
+ * ### Convert [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV String
  *
- * Converts [this][this] [DataFrame][DataFrame] to a TSV [String].
+ * Converts [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV [String].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].

@@ -23,9 +23,9 @@ import java.nio.file.Path
 import kotlin.io.path.writer
 
 /**
- * ### Write [DataFrame] to Delimiter-Separated Text File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a delimiter-separated text file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -92,9 +92,9 @@ public fun AnyFrame.writeDelim(
     )
 
 /**
- * ### Write [DataFrame] to Delimiter-Separated Text File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a delimiter-separated text file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -161,9 +161,9 @@ public fun AnyFrame.writeDelim(
     )
 
 /**
- * ### Write [DataFrame] to Delimiter-Separated Text File
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text File
  *
- * Writes [this][this] [DataFrame][DataFrame] to a delimiter-separated text file.
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -231,9 +231,9 @@ public fun AnyFrame.writeDelim(
 
 /**
  *
- * ### Write [DataFrame] to Delimiter-Separated Text Appendable
+ * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text Appendable
  *
- * Writes [this][this] [DataFrame][DataFrame] to a delimiter-separated text [Appendable].
+ * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [Appendable].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].

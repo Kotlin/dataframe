@@ -5432,6 +5432,24 @@ public final class org/jetbrains/kotlinx/dataframe/dataTypes/IMG {
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$AccessApis {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$DataRow {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Drop {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Fill {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$NanAndNa {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl {
 }
 
@@ -5439,6 +5457,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$UsageTemplateExample {
+}
+
+public abstract interface annotation class org/jetbrains/kotlinx/dataframe/documentation/ExcludeFromSources : java/lang/annotation/Annotation {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/UnifyingNumbers {
