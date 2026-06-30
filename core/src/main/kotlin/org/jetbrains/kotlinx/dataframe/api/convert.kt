@@ -1206,7 +1206,7 @@ public fun <T> Convert<T, String?>.toDeprecatedInstant(): DataFrame<T> = asColum
  *
  * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
  */
-@JvmName("toStdlibInstantFromStringNullable")
+@JvmName("toStdlibInstantFromString")
 @Refine
 @Converter(StdlibInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1226,7 +1226,7 @@ public fun <T> Convert<T, String?>.toStdlibInstant(): DataFrame<T> = asColumn { 
  *
  * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
  */
-@JvmName("toStdlibInstantFromDeprecatedInstantNullable")
+@JvmName("toStdlibInstantFromDeprecatedInstant")
 @Refine
 @Converter(StdlibInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1248,7 +1248,7 @@ public fun <T> Convert<T, DeprecatedInstant?>.toStdlibInstant(): DataFrame<T> = 
  *
  * @return A new [DataFrame] with the values converted to [kotlin.time.Instant].
  */
-@JvmName("toStdlibInstantFromDateTimeComponentsNullable")
+@JvmName("toStdlibInstantFromDateTimeComponents")
 @Refine
 @Converter(StdlibInstant::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1455,7 +1455,7 @@ public fun DataColumn<DateTimeComponents?>.convertToLocalDate(): DataColumn<Loca
  * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
-@JvmName("toLocalDateFromTLongNullable")
+@JvmName("toLocalDateFromTLong")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -1477,7 +1477,7 @@ public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): 
  * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
-@JvmName("toLocalDateFromTIntNullable")
+@JvmName("toLocalDateFromTInt")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -1542,7 +1542,7 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String): DataFrame<T> =
  *
  * @return A new [DataFrame] with the values converted to [LocalDate].
  */
-@JvmName("toLocalDateFromDateTimeComponentsNullable")
+@JvmName("toLocalDateFromDateTimeComponents")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -1700,7 +1700,7 @@ public fun DataColumn<DateTimeComponents?>.convertToLocalTime(): DataColumn<Loca
  * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
-@JvmName("toLocalTimeFromTLongNullable")
+@JvmName("toLocalTimeFromTLong")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -1722,7 +1722,7 @@ public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): 
  * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
-@JvmName("toLocalTimeFromTIntNullable")
+@JvmName("toLocalTimeFromTInt")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -1787,7 +1787,7 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String): DataFrame<T> =
  *
  * @return A new [DataFrame] with the values converted to [LocalTime].
  */
-@JvmName("toLocalTimeFromDateTimeComponentsNullable")
+@JvmName("toLocalTimeFromDateTimeComponents")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificType")
@@ -2003,7 +2003,7 @@ public fun DataColumn<DateTimeComponents?>.convertToLocalDateTime(): DataColumn<
  * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromTLongNullable")
+@JvmName("toLocalDateTimeFromTLong")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -2025,7 +2025,7 @@ public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZon
  * @param zone The [TimeZone] used to interpret the [kotlinx.datetime.Instant] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromTDeprecatedInstantNullable")
+@JvmName("toLocalDateTimeFromTDeprecatedInstant")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -2047,7 +2047,7 @@ public fun <T> Convert<T, DeprecatedInstant?>.toLocalDateTime(zone: TimeZone = d
  * @param zone The [TimeZone] used to interpret the [kotlin.time.Instant] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromTStdlibInstantNullable")
+@JvmName("toLocalDateTimeFromTStdlibInstant")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -2069,7 +2069,7 @@ public fun <T> Convert<T, StdlibInstant?>.toLocalDateTime(zone: TimeZone = defau
  * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromTIntNullable")
+@JvmName("toLocalDateTimeFromTInt")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
@@ -2134,7 +2134,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String): DataFrame<T
  *
  * @return A new [DataFrame] with the values converted to [LocalDateTime].
  */
-@JvmName("toLocalDateTimeFromDateTimeComponentsNullable")
+@JvmName("toLocalDateTimeFromDateTimeComponents")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificType")
