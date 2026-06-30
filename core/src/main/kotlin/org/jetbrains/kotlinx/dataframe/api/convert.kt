@@ -1000,12 +1000,6 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
 @JvmName("convertToUrlFromStringNullable")
 public fun DataColumn<String?>.convertToUrl(): DataColumn<URL?> = map { it?.let { URI(it).toURL() } }
 
-@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
-@Refine
-@Converter(URL::class, nullable = true)
-@Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convertToUrl() }
-
 /**
  * Converts values in the [String] columns previously selected with [convert] to an [URL],
  * preserving their original names and positions within the [DataFrame].
