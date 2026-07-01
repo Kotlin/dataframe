@@ -43,6 +43,7 @@ import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.inferType
@@ -158,7 +159,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                         .withColumnBuilder(targetSchema = null) { name, values, inferNullability ->
                             values
                                 .toColumn(name, if (inferNullability) Infer.Nulls else Infer.None)
-                                .tryParse()
+                                .tryParse(ParserOptions(parseToDataFrameReadSource = true))
                                 .inferType()
                         }
 

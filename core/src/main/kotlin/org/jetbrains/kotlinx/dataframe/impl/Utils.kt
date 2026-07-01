@@ -511,3 +511,19 @@ internal val KCallable<*>.columnName: String
         is KProperty<*> -> columnName
         else -> findAnnotation<ColumnName>()?.name ?: getterName
     }
+
+/**
+ * Similar to [Result.map], but allows a new [Result] to be returned if [this] was successful.
+ * This result will be unpacked (so you won't get `Result<Result<U>>`).
+ */
+@PublishedApi
+internal inline fun <T, U> Result<T>.flatMap(function: (T) -> Result<U>): Result<U> =
+    fold(
+        onSuccess = { function(it) },
+        onFailure = { Result.failure(it) },
+    )
+
+internal fun <T> Result<Result<T>>.flatten(): Result<T> = this.flatMap { it }
+
+internal fun <T : Any> T?.toResult(exception: Throwable = NullPointerException()) =
+    this?.let { Result.success(it) } ?: Result.failure(exception)

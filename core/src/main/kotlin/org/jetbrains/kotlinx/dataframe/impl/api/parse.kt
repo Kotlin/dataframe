@@ -39,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.singleOrNull
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
@@ -47,10 +48,15 @@ import org.jetbrains.kotlinx.dataframe.impl.LazyMap
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.flatMap
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.impl.lazyMapOf
+import org.jetbrains.kotlinx.dataframe.impl.toResult
+import org.jetbrains.kotlinx.dataframe.io.DataFrameReadSource
 import org.jetbrains.kotlinx.dataframe.io.isUrl
+import org.jetbrains.kotlinx.dataframe.io.dataframeReadSources
+import org.jetbrains.kotlinx.dataframe.io.readSourceImpl
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -333,6 +339,8 @@ internal object Parsers : GlobalParserOptions {
 
     override var dateTimeLibrary: ParseDateTimeLibrary? = null
 
+    override var parseToDataFrameReadSource by Delegates.notNull<Boolean>()
+
     override fun resetToDefault() {
         customGlobalJavaFormatters.values.forEach { it.clear() }
         nullStrings.clear()
@@ -342,6 +350,8 @@ internal object Parsers : GlobalParserOptions {
         useFastDoubleParser = true
         parseExperimentalUuid = true
         parseExperimentalInstant = true
+        // disabled by default, because it can be very heavy
+        parseToDataFrameReadSource = false
         _locale = null
         dateTimeLibrary = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
@@ -939,40 +949,77 @@ internal object Parsers : GlobalParserOptions {
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
         stringParser<BigDecimal> { it.toBigDecimalOrNull() },
-        // JSON array as DataFrame<*>
-        stringParser<AnyFrame>(catch = true) {
-            val trimmed = it.trim()
-            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-                if (readJsonStrAnyFrame == null) {
-                    logger.warn {
-                        "parse() encountered a string that looks like a JSON array, but the dataframe-json dependency was not detected. Skipping for now."
-                    }
-                    null
-                } else {
-                    readJsonStrAnyFrame!!(trimmed)
-                }
-            } else {
-                null
-            }
-        },
-        // JSON object as DataRow<*>
-        stringParser<AnyRow>(catch = true) {
-            val trimmed = it.trim()
-            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-                if (readJsonStrAnyRow == null) {
-                    logger.warn {
-                        "parse() encountered a string that looks like a JSON object, but the dataframe-json dependency was not detected. Skipping for now."
-                    }
-                    null
-                } else {
-                    readJsonStrAnyRow!!(trimmed)
-                }
-            } else {
-                null
-            }
-        },
         // Char
         stringParser<Char> { it.singleOrNull() },
+        stringParserWithOptions<AnyRow> { options, isConverter ->
+            if (options?.parseToDataFrameReadSource ?: this.parseToDataFrameReadSource) {
+                parseBy {
+                    readSourceImpl(
+                        source = it,
+                        sourceType = typeOf<String>(),
+                        readOptions = null,
+                        formats = dataframeReadSources,
+                        resultKind = "DataRow",
+                        doStringToUrlConversion = isConverter,
+                        read = { source, sourceInfo, options ->
+                            readDataFrame(source, sourceInfo, options)
+                                .flatMap { it.singleOrNull().toResult() }
+                        },
+                    ).getOrNull()
+                }
+            } else {
+                SKIP_PARSER
+            }
+        },
+        stringParserWithOptions<AnyFrame> { options, isConverter ->
+            if (options?.parseToDataFrameReadSource ?: this.parseToDataFrameReadSource) {
+                parseBy {
+                    readSourceImpl(
+                        source = it,
+                        sourceType = typeOf<String>(),
+                        readOptions = null,
+                        formats = dataframeReadSources,
+                        resultKind = "DataFrame",
+                        doStringToUrlConversion = isConverter,
+                        read = DataFrameReadSource::readDataFrame,
+                    ).getOrNull()
+                }
+            } else {
+                SKIP_PARSER
+            }
+        },
+//        // JSON array as DataFrame<*>
+//        stringParser<AnyFrame>(catch = true) {
+//            val trimmed = it.trim()
+//            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+//                if (readJsonStrAnyFrame == null) {
+//                    logger.warn {
+//                        "parse() encountered a string that looks like a JSON array, but the dataframe-json dependency was not detected. Skipping for now."
+//                    }
+//                    null
+//                } else {
+//                    readJsonStrAnyFrame!!(trimmed)
+//                }
+//            } else {
+//                null
+//            }
+//        },
+//        // JSON object as DataRow<*>
+//        stringParser<AnyRow>(catch = true) {
+//            val trimmed = it.trim()
+//            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+//                if (readJsonStrAnyRow == null) {
+//                    logger.warn {
+//                        "parse() encountered a string that looks like a JSON object, but the dataframe-json dependency was not detected. Skipping for now."
+//                    }
+//                    null
+//                } else {
+//                    readJsonStrAnyRow!!(trimmed)
+//                }
+//            } else {
+//                null
+//            }
+//        },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },

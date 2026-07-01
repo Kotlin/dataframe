@@ -45,6 +45,9 @@ import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
@@ -63,6 +66,160 @@ public class Excel : SupportedDataFrameFormat {
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadExcelMethod(pathRepresentation)
 }
+
+public class ExcelNEW : DataFrameReadSource {
+
+    public data class ReadOptions(
+        val sheetName: String?,
+        val skipRows: Int,
+        val columns: String?,
+        val stringColumns: StringColumns?,
+        val rowsCount: Int?,
+        val nameRepairStrategy: NameRepairStrategy,
+        val firstRowIsHeader: Boolean,
+        val parseEmptyAsNull: Boolean,
+    ) : DataFrameReadOptions {
+        public companion object {
+            public operator fun invoke(
+                sheetName: String? = null,
+                skipRows: Int = 0,
+                columns: String? = null,
+                stringColumns: StringColumns? = null,
+                rowsCount: Int? = null,
+                nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+                firstRowIsHeader: Boolean = true,
+                parseEmptyAsNull: Boolean = true,
+            ): ReadOptions =
+                ReadOptions(
+                    sheetName = sheetName,
+                    skipRows = skipRows,
+                    columns = columns,
+                    stringColumns = stringColumns,
+                    rowsCount = rowsCount,
+                    nameRepairStrategy = nameRepairStrategy,
+                    firstRowIsHeader = firstRowIsHeader,
+                    parseEmptyAsNull = parseEmptyAsNull,
+                )
+        }
+    }
+
+    // String reference paths are normalized to URL by readSourceImpl, so no String entry here;
+    // Excel is binary, so raw String content isn't a meaningful input either.
+    override val supportedReadingTypes: Set<KType> =
+        setOf(
+            typeOf<URL>(),
+            typeOf<Path>(),
+            typeOf<File>(),
+            typeOf<InputStream>(),
+            typeOf<Workbook>(),
+            typeOf<Sheet>(),
+        )
+
+    public companion object {
+        internal val EXTENSIONS: Set<String> = setOf("xls", "xlsx")
+        internal val MIME_TYPES: Set<String> = setOf(
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/x-tika-ooxml",
+            "application/x-tika-msoffice",
+        )
+    }
+
+    override fun acceptsSource(sourceInfo: DataSourceInfo, options: DataFrameReadOptions?): Boolean {
+        if (options != null && options !is ReadOptions) return false
+        val ext = sourceInfo.extension?.lowercase()
+        if (ext != null && ext !in EXTENSIONS) return false
+        val mime = sourceInfo.mimeType?.lowercase()
+        if (mime != null && mime !in MIME_TYPES) return false
+        return supportedReadingTypes.any { sourceInfo.kType.isSubtypeOf(it) }
+    }
+
+    override fun readDataFrame(
+        source: Any,
+        sourceInfo: DataSourceInfo,
+        options: DataFrameReadOptions?,
+    ): Result<DataFrame<*>> =
+        runCatching {
+            val opts = (options ?: ReadOptions()) as ReadOptions
+            val kType = sourceInfo.kType
+
+            val url: URL? = when {
+                kType.isSubTypeOf<URL>() -> source as? URL
+                kType.isSubTypeOf<Path>() -> (source as? Path)?.toUri()?.toURL()
+                kType.isSubTypeOf<File>() -> (source as? File)?.toPath()?.toUri()?.toURL()
+                else -> null
+            }
+            if (url != null) {
+                return@runCatching DataFrame.readExcel(
+                    url = url,
+                    sheetName = opts.sheetName,
+                    skipRows = opts.skipRows,
+                    columns = opts.columns,
+                    stringColumns = opts.stringColumns,
+                    rowsCount = opts.rowsCount,
+                    nameRepairStrategy = opts.nameRepairStrategy,
+                    firstRowIsHeader = opts.firstRowIsHeader,
+                    parseEmptyAsNull = opts.parseEmptyAsNull,
+                )
+            }
+
+            @Suppress("RedundantReturnKeyword")
+            return@runCatching when {
+                kType.isSubTypeOf<InputStream>() -> {
+                    DataFrame.readExcel(
+                        inputStream = source as InputStream,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        stringColumns = opts.stringColumns,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+                kType.isSubTypeOf<Workbook>() -> {
+                    DataFrame.readExcel(
+                        wb = source as Workbook,
+                        sheetName = opts.sheetName,
+                        skipRows = opts.skipRows,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+                kType.isSubTypeOf<Sheet>() -> {
+                    // readExcel(Sheet) has no sheetName parameter — the sheet is already selected.
+                    DataFrame.readExcel(
+                        sheet = source as Sheet,
+                        columns = opts.columns,
+                        formattingOptions = opts.stringColumns?.toFormattingOptions(),
+                        skipRows = opts.skipRows,
+                        rowsCount = opts.rowsCount,
+                        nameRepairStrategy = opts.nameRepairStrategy,
+                        firstRowIsHeader = opts.firstRowIsHeader,
+                        parseEmptyAsNull = opts.parseEmptyAsNull,
+                    )
+                }
+
+                else -> return Result.failure(IllegalStateException("Cannot read source of type $kType as Excel"))
+            }
+        }
+
+    override val testOrder: Int = 40_000
+
+    override fun toString(): String = "Xlsx"
+}
+
+public val DataFrameReadOptions.Companion.Excel: org.jetbrains.kotlinx.dataframe.io.ExcelNEW.ReadOptions.Companion
+    get() = org.jetbrains.kotlinx.dataframe.io.ExcelNEW.ReadOptions.Companion
+
+private inline fun <reified T> KType.isSubTypeOf(): Boolean = this.isSubtypeOf(typeOf<T>())
 
 private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
 internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"

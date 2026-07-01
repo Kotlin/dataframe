@@ -9,6 +9,47 @@ public final class org/jetbrains/kotlinx/dataframe/io/Excel : org/jetbrains/kotl
 	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/ExcelNEW : org/jetbrains/kotlinx/dataframe/io/DataFrameReadSource {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ExcelNEW$Companion;
+	public fun <init> ()V
+	public fun acceptsSource (Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Z
+	public fun getSupportedTypes ()Ljava/util/Set;
+	public fun getTestOrder ()I
+	public fun readDataFrameOrNull (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrameSchemaOrNull (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+	public fun readDataSchemaCodeOrNull-myXLQ2E (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ExcelNEW$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ExcelNEW$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4-358K8uM ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6 ()Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun copy-vOPuZIo (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZZ)Lorg/jetbrains/kotlinx/dataframe/io/ExcelNEW$ReadOptions;
+	public static synthetic fun copy-vOPuZIo$default (Lorg/jetbrains/kotlinx/dataframe/io/ExcelNEW$ReadOptions;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ExcelNEW$ReadOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumns ()Ljava/lang/String;
+	public final fun getFirstRowIsHeader ()Z
+	public final fun getNameRepairStrategy ()Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;
+	public final fun getParseEmptyAsNull ()Z
+	public final fun getRowsCount ()Ljava/lang/Integer;
+	public final fun getSheetName ()Ljava/lang/String;
+	public final fun getSkipRows ()I
+	public final fun getStringColumns-358K8uM ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/FormattingOptions {
 	public fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;)V
 	public synthetic fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

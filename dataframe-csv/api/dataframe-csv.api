@@ -1,3 +1,98 @@
+public final class org/jetbrains/kotlinx/dataframe/io/Csv : org/jetbrains/kotlinx/dataframe/io/DataFrameReadSource, org/jetbrains/kotlinx/dataframe/io/DataFrameWriteTarget {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Csv$Companion;
+	public fun <init> ()V
+	public fun acceptsSource (Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Z
+	public fun acceptsTarget (Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Z
+	public fun getSupportedReadingTypes ()Ljava/util/Set;
+	public fun getSupportedWritingTypes ()Ljava/util/Set;
+	public fun getTestOrder ()I
+	public fun readDataFrame-0E7RQCE (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun readDataFrameSchema-0E7RQCE (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun readDataSchemaCode-BWLJW6A (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public fun writeDataFrame-BWLJW6A (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Ljava/lang/Object;
+	public fun writeDataRow-BWLJW6A (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions$Companion;
+	public fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)V
+	public final fun component1 ()C
+	public final fun component10 ()Z
+	public final fun component11 ()C
+	public final fun component12 ()Z
+	public final fun component13 ()Z
+	public final fun component14 ()Z
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/nio/charset/Charset;
+	public final fun component4 ()Ljava/util/Map;
+	public final fun component5 ()J
+	public final fun component6 ()Ljava/lang/Long;
+	public final fun component7 ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowMissingColumns ()Z
+	public final fun getCharset ()Ljava/nio/charset/Charset;
+	public final fun getColTypes ()Ljava/util/Map;
+	public final fun getDelimiter ()C
+	public final fun getHeader ()Ljava/util/List;
+	public final fun getIgnoreEmptyLines ()Z
+	public final fun getIgnoreExcessColumns ()Z
+	public final fun getIgnoreSurroundingSpaces ()Z
+	public final fun getParseParallel ()Z
+	public final fun getParserOptions ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun getQuote ()C
+	public final fun getReadLines ()Ljava/lang/Long;
+	public final fun getSkipLines ()J
+	public final fun getTrimInsideQuoted ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions$Companion {
+	public final fun invoke (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
+	public static synthetic fun invoke$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions$Companion;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions$Companion;
+	public fun <init> (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public final fun component1 ()C
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/Character;
+	public final fun component4 ()Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public final fun component5 ()Ljava/lang/Character;
+	public final fun component6 ()Ljava/lang/Character;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAdjustCsvFormat ()Lkotlin/jvm/functions/Function2;
+	public final fun getCommentChar ()Ljava/lang/Character;
+	public final fun getDelimiter ()C
+	public final fun getEscapeChar ()Ljava/lang/Character;
+	public final fun getHeaderComments ()Ljava/util/List;
+	public final fun getIncludeHeader ()Z
+	public final fun getQuote ()Ljava/lang/Character;
+	public final fun getQuoteMode ()Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public final fun getRecordSeparator ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions$Companion {
+	public final fun invoke (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions;
+	public static synthetic fun invoke$default (Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions$Companion;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephaven : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
 	public fun <init> ()V
 	public fun <init> (C)V
@@ -9,6 +104,11 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephaven : org/jetbrai
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/CsvDeephavenKt {
+	public static final fun getCsv (Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions$Companion;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$ReadOptions$Companion;
+	public static final fun getCsv (Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions$Companion;)Lorg/jetbrains/kotlinx/dataframe/io/Csv$WriteOptions$Companion;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/QuoteMode : java/lang/Enum {
@@ -121,6 +221,101 @@ public final class org/jetbrains/kotlinx/dataframe/io/ToTsvStrKt {
 	public static synthetic fun toTsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZCLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv : org/jetbrains/kotlinx/dataframe/io/DataFrameReadSource, org/jetbrains/kotlinx/dataframe/io/DataFrameWriteTarget {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Tsv$Companion;
+	public fun <init> ()V
+	public fun acceptsSource (Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Z
+	public fun acceptsTarget (Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Z
+	public fun getSupportedReadingTypes ()Ljava/util/Set;
+	public fun getSupportedWritingTypes ()Ljava/util/Set;
+	public fun getTestOrder ()I
+	public fun readDataFrame-0E7RQCE (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun readDataFrameSchema-0E7RQCE (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun readDataSchemaCode-BWLJW6A (Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public fun writeDataFrame-BWLJW6A (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Ljava/lang/Object;
+	public fun writeDataRow-BWLJW6A (Lorg/jetbrains/kotlinx/dataframe/DataRow;Ljava/lang/Object;Lorg/jetbrains/kotlinx/dataframe/io/DataSourceInfo;Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$Companion {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions$Companion;
+	public fun <init> (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)V
+	public final fun component1 ()C
+	public final fun component10 ()Z
+	public final fun component11 ()C
+	public final fun component12 ()Z
+	public final fun component13 ()Z
+	public final fun component14 ()Z
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/nio/charset/Charset;
+	public final fun component4 ()Ljava/util/Map;
+	public final fun component5 ()J
+	public final fun component6 ()Ljava/lang/Long;
+	public final fun component7 ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowMissingColumns ()Z
+	public final fun getCharset ()Ljava/nio/charset/Charset;
+	public final fun getColTypes ()Ljava/util/Map;
+	public final fun getDelimiter ()C
+	public final fun getHeader ()Ljava/util/List;
+	public final fun getIgnoreEmptyLines ()Z
+	public final fun getIgnoreExcessColumns ()Z
+	public final fun getIgnoreSurroundingSpaces ()Z
+	public final fun getParseParallel ()Z
+	public final fun getParserOptions ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun getQuote ()C
+	public final fun getReadLines ()Ljava/lang/Long;
+	public final fun getSkipLines ()J
+	public final fun getTrimInsideQuoted ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions$Companion {
+	public final fun invoke (CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
+	public static synthetic fun invoke$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions$Companion;CLjava/util/List;Ljava/nio/charset/Charset;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions : org/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions$Companion;
+	public fun <init> (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public final fun component1 ()C
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/Character;
+	public final fun component4 ()Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public final fun component5 ()Ljava/lang/Character;
+	public final fun component6 ()Ljava/lang/Character;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAdjustCsvFormat ()Lkotlin/jvm/functions/Function2;
+	public final fun getCommentChar ()Ljava/lang/Character;
+	public final fun getDelimiter ()C
+	public final fun getEscapeChar ()Ljava/lang/Character;
+	public final fun getHeaderComments ()Ljava/util/List;
+	public final fun getIncludeHeader ()Z
+	public final fun getQuote ()Ljava/lang/Character;
+	public final fun getQuoteMode ()Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public final fun getRecordSeparator ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions$Companion {
+	public final fun invoke (CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions;
+	public static synthetic fun invoke$default (Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions$Companion;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephaven : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
 	public fun <init> ()V
 	public fun <init> (C)V
@@ -132,6 +327,11 @@ public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephaven : org/jetbrai
 	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/TsvDeephavenKt {
+	public static final fun getTsv (Lorg/jetbrains/kotlinx/dataframe/io/DataFrameReadOptions$Companion;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$ReadOptions$Companion;
+	public static final fun getTsv (Lorg/jetbrains/kotlinx/dataframe/io/DataFrameWriteOptions$Companion;)Lorg/jetbrains/kotlinx/dataframe/io/Tsv$WriteOptions$Companion;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
