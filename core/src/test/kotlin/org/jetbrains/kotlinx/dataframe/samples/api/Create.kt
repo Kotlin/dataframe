@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ValueProperty
@@ -176,9 +177,12 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun createEmptyDataFrame() {
         // SampleStart
-        val df = emptyDataFrame<Any>()
+        @DataSchema
+        class Person(val name: String, val age: Int)
+
+        val df = emptyDataFrame<Person>()
         // SampleEnd
-        df.columnsCount() shouldBe 0
+        df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 0
     }
 
