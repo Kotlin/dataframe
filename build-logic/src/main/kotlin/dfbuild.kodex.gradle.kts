@@ -29,9 +29,9 @@ interface KodexConventionExtension {
      *
      * This can be useful if you want to use `@sample` or `@includeFile`.
      *
-     * By default, this contains all source directories of `kotlin.sourceSets.test`.
+     * By default, this contains all `api`/`implementation`/`compileOnly` project source sets this project depends on.
      */
-    val contextualSourcesDirectories: SetProperty<File>
+    val contextualSourcesDirectories: SetProperty<List<File>>
 
     val generatedSourcesFolderName: Property<String>
 }
@@ -50,13 +50,31 @@ val extension = project.extensions.create<KodexConventionExtension>("kodexConven
                     .toSet(),
             )
 
-            contextualSourcesDirectories.convention(
-                kotlin.sourceSets.test.get()
-                    .kotlin
-                    .sourceDirectories
-                    // important! This clones the collection
-                    .toSet(),
+            val dependentProjects =
+                sequenceOf(
+                    configurations.api,
+                    configurations.implementation,
+                    configurations.compileOnly,
+                ).flatMap { it.get().dependencies }
+                    .filterIsInstance<ProjectDependency>()
+                    .distinctBy { it.path }
+                    .map { project(it.path) }
+
+            tasks["processKDocsMain"].dependsOn(
+                dependentProjects.map { it.path + ":assemble" }.toList(),
             )
+            val projectSources = dependentProjects.map {
+                it.extensions
+                    .findByName("sourceSets")?.let { it as SourceSetContainer }
+                    ?.findByName("main")
+                    ?.extensions
+                    ?.findByName("kotlin")?.let { it as SourceDirectorySet }
+                    ?.sourceDirectories
+                    ?.toList()
+                    ?: emptyList()
+            }.toSet()
+
+            contextualSourcesDirectories.convention(projectSources)
         }
     }
 
@@ -80,15 +98,14 @@ val generatedMainSources by kotlin.sourceSets.creating {
 
 // Task to generate the processed documentation
 val processKDocsMain by tasks.registering(RunKodexTask::class) {
-    // Include both test and main sources for cross-referencing, plus contextualSourcesDirectories
-    sources = buildSet<File> {
-        this += extension.kotlinMainSourcesDirectories.get()
-        this += extension.contextualSourcesDirectories.get()
-    }.also {
-        logger.info("$name: Preprocessing sources with KoDEx: ${it.toList()}")
-    }
+    sources = extension.kotlinMainSourcesDirectories.get()
+        .also {
+            logger.info("$name: Preprocessing sources with KoDEx: ${it.toList()}")
+        }
+    contextualSources = extension.contextualSourcesDirectories
+
     group = "KDocs"
-    target = file(extension.generatedSourcesFolderName.get())
+    target = file(extension.generatedSourcesFolderName)
 
     // false, so `ktlintGeneratedMainSourcesSourceSetFormat` can format the output
     outputReadOnly = false

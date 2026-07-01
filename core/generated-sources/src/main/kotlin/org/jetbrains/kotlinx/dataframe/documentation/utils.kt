@@ -35,7 +35,7 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
     TYPEALIAS,
     FILE,
 )
-internal annotation class ExcludeFromSources
+public annotation class ExcludeFromSources
 
 /**
  * Any `Documentable` annotated with this annotation will be exported to HTML by the documentation

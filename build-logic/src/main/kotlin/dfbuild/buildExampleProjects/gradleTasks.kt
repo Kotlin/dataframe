@@ -56,16 +56,6 @@ internal fun Project.setupGradleSyncVersionsTask(
                 gradlePropertiesContent.removeAll { it.startsWith("kotlin.code.style=") }
                 gradlePropertiesContent.add("kotlin.code.style=official")
             }
-            if ("kotlin.incremental=false" !in gradlePropertiesContent) {
-                gradlePropertiesContent.removeAll { it.startsWith("kotlin.incremental=") }
-                gradlePropertiesContent.add(
-                    """
-                    # Disabling incremental compilation will no longer be necessary
-                    # when https://youtrack.jetbrains.com/issue/KT-66735 is resolved.
-                    kotlin.incremental=false
-                    """.trimIndent(),
-                )
-            }
 
             gradleProperties.writeText(gradlePropertiesContent.joinToString("\n"))
 

@@ -9,7 +9,6 @@ plugins {
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
     }
-    idea
 }
 
 group = "org.jetbrains.kotlinx"

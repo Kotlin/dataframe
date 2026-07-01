@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.RECORD_SEPAR
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**
- * ### Convert [DataFrame] to Delimiter-Separated Text String
+ * ### Convert [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text String
  *
- * Converts [this][this] [DataFrame][DataFrame] to a delimiter-separated text [String].
+ * Converts [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [String].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].

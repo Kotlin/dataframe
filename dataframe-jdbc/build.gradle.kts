@@ -35,10 +35,6 @@ dependencies {
     testImplementation(libs.hikaricp)
 }
 
-tasks.processKDocsMain {
-    dependsOn(tasks.generateBuildConfigClasses)
-}
-
 kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"
@@ -48,14 +44,6 @@ kotlinPublications {
     }
 }
 
-kodexConvention {
-    contextualSourcesDirectories =
-        project(projects.core.path)
-            .sourceSets
-            .main.get()
-            .allSource
-}
-
 tasks.processKDocsMain {
-    dependsOn(project(projects.core.path).tasks.assemble)
+    dependsOn(tasks.generateBuildConfigClasses)
 }

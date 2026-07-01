@@ -39,9 +39,9 @@ import java.nio.file.Path
 import kotlin.io.path.inputStream
 
 /**
- * ### Read CSV File to [DataFrame]
+ * ### Read CSV File to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any CSV file to a [DataFrame][DataFrame].
+ * Reads any CSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -62,7 +62,7 @@ import kotlin.io.path.inputStream
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -76,12 +76,12 @@ import kotlin.io.path.inputStream
  *
  * @param path The file path to read.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
  * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
  *   Default: `null`
  *
@@ -104,32 +104,32 @@ import kotlin.io.path.inputStream
  *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ * @param colTypes The expected [ColType][org.jetbrains.kotlinx.dataframe.io.ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+ * @param parserOptions Optional [parsing options][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [String].
  *   Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+ *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+ *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -199,9 +199,9 @@ public fun DataFrame.Companion.readCsv(
     }
 
 /**
- * ### Read CSV File to [DataFrame]
+ * ### Read CSV File to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any CSV file to a [DataFrame][DataFrame].
+ * Reads any CSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -222,7 +222,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -236,12 +236,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * @param file The file to read.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
  * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
  *   Default: `null`
  *
@@ -264,32 +264,32 @@ public fun DataFrame.Companion.readCsv(
  *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ * @param colTypes The expected [ColType][org.jetbrains.kotlinx.dataframe.io.ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+ * @param parserOptions Optional [parsing options][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [String].
  *   Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+ *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+ *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -359,9 +359,9 @@ public fun DataFrame.Companion.readCsv(
     }
 
 /**
- * ### Read CSV Url to [DataFrame]
+ * ### Read CSV Url to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any CSV url to a [DataFrame][DataFrame].
+ * Reads any CSV url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -382,7 +382,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -396,12 +396,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * @param url The URL from which to fetch the data.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
  * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
  *   Default: `null`
  *
@@ -424,32 +424,32 @@ public fun DataFrame.Companion.readCsv(
  *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ * @param colTypes The expected [ColType][org.jetbrains.kotlinx.dataframe.io.ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+ * @param parserOptions Optional [parsing options][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [String].
  *   Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+ *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+ *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -519,9 +519,9 @@ public fun DataFrame.Companion.readCsv(
     }
 
 /**
- * ### Read CSV File or URL to [DataFrame]
+ * ### Read CSV File or URL to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any CSV file or url to a [DataFrame][DataFrame].
+ * Reads any CSV file or url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -542,7 +542,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -556,12 +556,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * @param fileOrUrl The file path or URL to read the data from.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
  * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
  *   Default: `null`
  *
@@ -584,32 +584,32 @@ public fun DataFrame.Companion.readCsv(
  *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ * @param colTypes The expected [ColType][org.jetbrains.kotlinx.dataframe.io.ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+ * @param parserOptions Optional [parsing options][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [String].
  *   Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+ *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+ *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -680,9 +680,9 @@ public fun DataFrame.Companion.readCsv(
 
 /**
  *
- * ### Read CSV InputStream to [DataFrame]
+ * ### Read CSV InputStream to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any CSV input stream to a [DataFrame][DataFrame].
+ * Reads any CSV input stream to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -703,7 +703,7 @@ public fun DataFrame.Companion.readCsv(
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -721,7 +721,7 @@ public fun DataFrame.Companion.readCsv(
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
  * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
  *   Default: `null`
  *
@@ -744,32 +744,32 @@ public fun DataFrame.Companion.readCsv(
  *   Requires [hasFixedWidthColumns]. If empty, the column widths will be determined by the header in the data
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
- * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+ * @param colTypes The expected [ColType][org.jetbrains.kotlinx.dataframe.io.ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
- *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
- *   to set a _default_ column type, like [ColType.String].
+ *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
  *   Useful for files with metadata, or comments at the beginning, or to give a custom [header].
  * @param readLines The maximum number of lines to read from the data. Default: `null`.
  *
  *   If `null`, all lines will be read.
- * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+ * @param parserOptions Optional [parsing options][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [String].
  *   Default, `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+ *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+ *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *

@@ -44,7 +44,7 @@ jobs:
       - name: Check for changes in generated sources
         id: git-diff
         run: |
-          git add './core/generated-sources' './dataframe-csv/generated-sources' './dataframe-excel/generated-sources' './dataframe-jdbc/generated-sources' './dataframe-geo/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics' './examples/projects'
+          git add './core/generated-sources' './dataframe-csv/generated-sources' './dataframe-geo/generated-sources' './dataframe-excel/generated-sources' './dataframe-jdbc/generated-sources' './docs/StardustDocs/resources/snippets' './docs/StardustDocs/topics' './examples/projects'
           echo "changed=$(if git diff --staged --quiet; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changes

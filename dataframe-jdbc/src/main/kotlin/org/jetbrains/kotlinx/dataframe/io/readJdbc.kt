@@ -797,7 +797,13 @@ public fun DataFrame.Companion.readAllSqlTables(
     validateLimit(limit)
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
     val metaData = connection.metaData
-    val tablesResultSet = retrieveTableMetadata(metaData, catalogue, determinedDbType)
+    // Fall back to connection.catalog so that MySQL/MariaDB connections scoped to a specific database
+    // (e.g. jdbc:mysql://host/mydb) don't leak tables from other databases. MySQL's getTables(null,...)
+    // returns tables from ALL catalogs, unlike PostgreSQL/SQLite where the connection is already scoped.
+    val effectiveCatalogue = catalogue ?: runCatching {
+        connection.catalog.takeUnless { it.isNullOrBlank() }
+    }.getOrNull()
+    val tablesResultSet = retrieveTableMetadata(metaData, effectiveCatalogue, determinedDbType)
 
     return buildMap {
         while (tablesResultSet.next()) {

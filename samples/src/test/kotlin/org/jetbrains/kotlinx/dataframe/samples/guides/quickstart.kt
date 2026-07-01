@@ -2,8 +2,10 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -11,9 +13,10 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.maxOf
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
@@ -22,32 +25,39 @@ import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.io.readCsv
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
 import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
+import org.junit.AfterClass
 import org.junit.Ignore
 import org.junit.Test
-import java.net.URL
+import java.io.File
 
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
     @DataSchema
-    interface Repositories {
-        val html_url: URL
-        val watchers: Int
+    interface Repository {
         val full_name: String
+        val html_url: java.net.URL
         val stargazers_count: Int
         val topics: String
+        val watchers: Int
     }
 
     private val df = DataFrame.readCsv(
         "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
-    ).cast<Repositories>()
+    )
 
-    private fun getDfSelected() = df.select { full_name and stargazers_count and topics }
+    private val dfRepository = df.cast<Repository>()
+
+    private fun getDfSelected() = dfRepository.select { full_name and stargazers_count and topics }
 
     private fun getDfFiltered() =
         getDfSelected()
@@ -81,9 +91,11 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
             // Sort by "starsCount" value descending
             .sortByDesc { starsCount }.take(10)
 
+    @Ignore
     @Test
     fun notebook_test_quickstart_2() {
         // SampleStart
+        // Read a csv file from the given URL string
         val df = DataFrame.readCsv(
             "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
         )
@@ -91,15 +103,30 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     }
 
     @Test
-    fun notebook_test_quickstart_3() {
+    fun dfPrint() {
         // SampleStart
-        df
-            // SampleEnd
-            .saveDfHtmlSample()
+        df.print()
+        // SampleEnd
     }
 
     @Test
-    fun notebook_test_quickstart_4() {
+    fun dfToHtml() {
+        // SampleStart
+        df.toHtml().writeHtml("df.html")
+        // SampleEnd
+        df.saveDfHtmlSample()
+    }
+
+    @Ignore
+    @Test
+    fun dfToHtmlOpenInBrowser() {
+        // SampleStart
+        df.toHtml().openInBrowser()
+        // SampleEnd
+    }
+
+    @Test
+    fun dfDescribe() {
         // SampleStart
         df.describe()
             // SampleEnd
@@ -107,13 +134,35 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     }
 
     @Test
+    fun dfGenerateInterfaces() {
+        // SampleStart
+        df.generateInterfaces("Repository", nameNormalizer = NameNormalizer.id()).print()
+        // SampleEnd
+        df.generateInterfaces("Repository", nameNormalizer = NameNormalizer.id()).saveSample()
+    }
+
+    @Test
+    fun dfCast() {
+        // SampleStart
+        val dfRepository = df.cast<Repository>()
+        // SampleEnd
+    }
+
+    @Test
+    fun dfRepositoryGetFullName() {
+        // SampleStart
+        val fullNameColumn: DataColumn<String> = dfRepository.full_name
+        // SampleEnd
+        fullNameColumn.saveDfHtmlSample()
+    }
+
+    @Test
     fun notebook_test_quickstart_5() {
         // SampleStart
         // Select "full_name", "stargazers_count" and "topics" columns
-        val dfSelected = df.select { full_name and stargazers_count and topics }
-        dfSelected
-            // SampleEnd
-            .saveDfHtmlSample()
+        val dfSelected = dfRepository.select { full_name and stargazers_count and topics }
+        // SampleEnd
+        dfSelected.saveDfHtmlSample()
     }
 
     @Test
@@ -122,22 +171,29 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         // SampleStart
         // Keep only rows where "stargazers_count" value is more than 1000
         val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
-        dfFiltered
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        dfFiltered.saveDfHtmlSample()
     }
 
     @Test
     fun notebook_test_quickstart_7() {
         val dfFiltered = getDfFiltered()
         // SampleStart
-        // Rename "full_name" column to "name"
-        val dfRenamed = dfFiltered.rename { full_name }.to("name")
-            // And "stargazers_count" to "starsCount"
+        val dfRenamed = dfFiltered
+            // Rename "full_name" column to "name"
+            .rename { full_name }.to("name")
+            // and "stargazers_count" to "starsCount"
             .rename { stargazers_count }.to("starsCount")
-        dfRenamed
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        dfRenamed.saveDfHtmlSample()
+    }
+
+    @Test
+    fun dfRenamedSelectName() {
+        val dfRenamed = getDfRenamed()
+        // SampleStart
+        dfRenamed.select { name }
+        // SampleEnd
     }
 
     @Test
@@ -149,17 +205,17 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
             .update { name }.with { it.split("/")[1] }
             // Convert "topics" `String` values into `List<String>` by splitting:
             .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
-        dfUpdated
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        dfUpdated.saveDfHtmlSample()
     }
 
     @Test
     fun notebook_test_quickstart_9() {
         val dfUpdated = getDfUpdated()
         // SampleStart
-        dfUpdated.topics.type()
+        println(dfUpdated.topics.type())
         // SampleEnd
+        CodeString(dfUpdated.topics.type().toString()).saveSample()
     }
 
     @Test
@@ -169,11 +225,10 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         // Add a `Boolean` column indicating whether the `name` contains the "intellij" substring
         // or the topics include "intellij".
         val dfWithIsIntellij = dfUpdated.add("isIntellij") {
-            name.contains("intellij") || "intellij" in topics
+            name.lowercase().contains("intellij") || "intellij" in topics
         }
-        dfWithIsIntellij
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        dfWithIsIntellij.saveDfHtmlSample()
     }
 
     @Test
@@ -181,9 +236,8 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
         val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
-        groupedByIsIntellij
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        groupedByIsIntellij.saveDfHtmlSample()
     }
 
     @Test
@@ -200,7 +254,8 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val groupedByIsIntellij = getGroupedByIsIntellij()
         // SampleStart
         groupedByIsIntellij.aggregate {
-            // Compute sum and max of "starsCount" within each group into "sumStars" and "maxStars" columns
+            // Compute sum and max of "starsCount" within each group
+            // into "sumStars" and "maxStars" columns
             sumOf { starsCount } into "sumStars"
             maxOf { starsCount } into "maxStars"
         }
@@ -215,15 +270,29 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         val dfTop10 = dfWithIsIntellij
             // Sort by "starsCount" value descending
             .sortByDesc { starsCount }.take(10)
-        dfTop10
-            // SampleEnd
-            .saveDfHtmlSample()
+        // SampleEnd
+        dfTop10.saveDfHtmlSample()
     }
 
     @Test
     fun notebook_test_quickstart_16() {
         val dfTop10 = getDfTop10()
         // SampleStart
+        dfTop10.plot {
+            // Create a bar layer
+            bars {
+                // Use values from "name" as bars categories
+                x(name)
+                // Use values from "starsCount" as bars heights
+                y(starsCount)
+            }
+
+            layout.title = "Top 10 JetBrains repositories by stars count"
+        }
+            // save the plot as an SVG image
+            .save("top_10_repos.svg", path = "plots/")
+        // SampleEnd
+
         dfTop10.plot {
             bars {
                 x(name)
@@ -232,16 +301,24 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
 
             layout.title = "Top 10 JetBrains repositories by stars count"
         }
-            // SampleEnd
             .savePlotSVGSample()
     }
 
-    @Ignore
     @Test
     fun notebook_test_quickstart_17() {
         val dfWithIsIntellij = getDfWithIsIntellij()
         // SampleStart
         dfWithIsIntellij.writeExcel("jb_repos.xlsx")
         // SampleEnd
+    }
+
+    companion object {
+        @JvmStatic
+        @AfterClass
+        fun removeGeneratedFiles() {
+            File("plots").deleteRecursively()
+            File("jb_repos.xlsx").deleteRecursively()
+            File("df.html").deleteRecursively()
+        }
     }
 }

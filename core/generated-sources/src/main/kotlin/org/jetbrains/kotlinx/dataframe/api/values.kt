@@ -30,6 +30,12 @@ public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any>
 
 // region GroupBy
 
+internal const val GROUP_BY_VALUES_EXCEPTION_MESSAGE =
+    "This grouped dataframe might have lost track of key-columns in the groups, " +
+        "causing this duplicate-column exception. " +
+        "This can happen when using `.updateGroups {}`, `.filter {}`, or `.add() {}`. " +
+        "Try renaming the columns inside the groups or aggregate them manually."
+
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Grouped<T>.values(
@@ -48,7 +54,12 @@ public fun <T> Grouped<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> = aggregate { internal().columnValues(columns, true, dropNA, distinct) }
+): DataFrame<T> =
+    try {
+        aggregate { internal().columnValues(columns, true, dropNA, distinct) }
+    } catch (e: DuplicateColumnPathInsertException) {
+        throw DuplicateColumnPathInsertException("${e.message!!} $GROUP_BY_VALUES_EXCEPTION_MESSAGE")
+    }
 
 public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> =
     values(dropNA, distinct, remainingColumnsSelector())
@@ -72,7 +83,11 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
     values { columns.toColumnSet() }
 
 public fun <T, G> ReducedGroupBy<T, G>.values(columns: ColumnsForAggregateSelector<G, *>): DataFrame<G> =
-    groupBy.aggregate { internal().columnValues(columns, reducer) }
+    try {
+        groupBy.aggregate { internal().columnValues(columns, reducer) }
+    } catch (e: DuplicateColumnPathInsertException) {
+        throw DuplicateColumnPathInsertException("${e.message!!} $GROUP_BY_VALUES_EXCEPTION_MESSAGE")
+    }
 
 // endregion
 
@@ -184,7 +199,12 @@ public fun <T> PivotGroupBy<T>.values(
     distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> = aggregate(separate = separate) { internal().columnValues(columns, false, dropNA, distinct) }
+): DataFrame<T> =
+    try {
+        aggregate(separate = separate) { internal().columnValues(columns, false, dropNA, distinct) }
+    } catch (e: DuplicateColumnPathInsertException) {
+        throw DuplicateColumnPathInsertException("${e.message!!} $GROUP_BY_VALUES_EXCEPTION_MESSAGE")
+    }
 
 // endregion
 
@@ -211,6 +231,11 @@ public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separ
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> = pivot.aggregate(separate = separate) { internal().columnValues(columns, reducer) }
+): DataFrame<T> =
+    try {
+        pivot.aggregate(separate = separate) { internal().columnValues(columns, reducer) }
+    } catch (e: DuplicateColumnPathInsertException) {
+        throw DuplicateColumnPathInsertException("${e.message!!} $GROUP_BY_VALUES_EXCEPTION_MESSAGE")
+    }
 
 // endregion
