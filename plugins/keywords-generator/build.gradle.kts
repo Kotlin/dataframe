@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
         alias(buildConfig)
     }

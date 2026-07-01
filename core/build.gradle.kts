@@ -5,7 +5,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
         alias(buildConfig)
         alias(kodex)

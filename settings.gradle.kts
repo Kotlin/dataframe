@@ -6,7 +6,7 @@ pluginManagement {
     includeBuild("./build-settings-logic")
 }
 plugins {
-    id("dfsettings.catalogs")
+    id("dfsettings.version-catalog")
 }
 
 // Enables our build logic convention plugins for the root project,

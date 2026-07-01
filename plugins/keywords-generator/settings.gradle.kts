@@ -3,7 +3,7 @@ pluginManagement {
 }
 
 plugins {
-    id("dfsettings.catalogs")
+    id("dfsettings.version-catalog")
 }
 
 includeBuild("../../build-logic")
