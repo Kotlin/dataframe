@@ -39,7 +39,6 @@ kotlinPublications {
     }
 }
 
-
 tasks.processKDocsMain {
     dependsOn(project(projects.core.path).tasks.assemble)
 }
