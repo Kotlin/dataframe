@@ -32,7 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.util.NAME_REPAIR_STRATEGY
 import org.jetbrains.kotlinx.dataframe.io.util.READ_EXCEL_OLD
@@ -107,7 +107,15 @@ public fun DataFrame.Companion.readExcel(
     readExcel(url, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * @include [AutoRenameInputSnippet]
+ * Reads an Excel sheet to [DataFrame].
+ *
+ * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
+ */
+@ExcludeFromSources
+internal typealias CommonReadExcelDocs = Nothing
+
+/**
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -189,7 +197,7 @@ public fun DataFrame.Companion.readExcel(
 ): AnyFrame = readExcel(file, sheetName, skipRows, columns, stringColumns, rowsCount, firstRowIsHeader)
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -250,7 +258,7 @@ public fun DataFrame.Companion.readExcel(
     )
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -340,7 +348,7 @@ public fun DataFrame.Companion.readExcel(
     readExcel(fileOrUrl, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -414,7 +422,7 @@ public fun DataFrame.Companion.readExcel(
     readExcel(inputStream, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -498,7 +506,7 @@ public fun DataFrame.Companion.readExcel(
     readExcel(wb, sheetName, skipRows, columns, formattingOptions, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -583,7 +591,7 @@ public class FormattingOptions(range: String, public val formatter: DataFormatte
 }
 
 /**
- * @include [AutoRenameInputSnippet]
+ * @include [CommonReadExcelDocs]
  *
  * @param sheet sheet to read.
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
