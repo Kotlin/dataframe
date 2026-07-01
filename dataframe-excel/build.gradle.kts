@@ -39,13 +39,6 @@ kotlinPublications {
     }
 }
 
-kodexConvention {
-    contextualSourcesDirectories =
-        project(projects.core.path)
-            .sourceSets
-            .main.get()
-            .allSource
-}
 
 tasks.processKDocsMain {
     dependsOn(project(projects.core.path).tasks.assemble)
