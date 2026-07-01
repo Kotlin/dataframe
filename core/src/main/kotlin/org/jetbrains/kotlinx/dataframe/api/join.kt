@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * If both [DataFrame]s contain columns with the same name that are *not* part of the join keys,
  * such columns are treated as distinct. Such a column from the right [DataFrame] will be
- * [automatically renamed][`AutoRenamingColumnsInDataFrame`]
+ * [automatically renamed][AutoRenamingColumnsInDataFrame]
  * in the resulting [DataFrame].
  */
 @ExcludeFromSources

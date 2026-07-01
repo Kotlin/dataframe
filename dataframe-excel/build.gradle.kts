@@ -38,3 +38,7 @@ kotlinPublications {
         packageName = artifactId
     }
 }
+
+tasks.processKDocsMain {
+    dependsOn(project(projects.core.path).tasks.assemble)
+}
