@@ -49,28 +49,9 @@ import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
 
-public class Excel : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
-
-    override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readExcel(path)
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 40000
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadExcelMethod(pathRepresentation)
-}
-
 private const val MESSAGE_REMOVE_1_1 = "Will be removed in 1.1."
 internal const val READ_EXCEL_OLD = "This function is only here for binary compatibility. $MESSAGE_REMOVE_1_1"
 
-internal class DefaultReadExcelMethod(path: String?) :
-    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
-
-private const val READ_EXCEL = "readExcel"
 private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
 
 /**

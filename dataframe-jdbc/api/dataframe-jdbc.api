@@ -12,24 +12,6 @@ public final class org/jetbrains/kotlinx/dataframe/io/DbConnectionConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/Jdbc : org/jetbrains/kotlinx/dataframe/io/SupportedCodeGenerationFormat, org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
-	public fun <init> ()V
-	public fun acceptsExtension (Ljava/lang/String;)Z
-	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
-	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
-	public fun getTestOrder ()I
-	public fun readCodeForGeneration (Ljava/io/File;Ljava/lang/String;Z)Ljava/lang/String;
-	public fun readCodeForGeneration (Ljava/io/InputStream;Ljava/lang/String;Z)Ljava/lang/String;
-	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public fun readDataFrame (Ljava/nio/file/Path;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/JdbcSchemaKt {
-	public static final fun buildCodeForDB (Ljava/net/URL;Ljava/lang/String;)Ljava/lang/String;
-	public static final fun getDatabaseCodeGenReader (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
-}
-
 public final class org/jetbrains/kotlinx/dataframe/io/ReadDataFrameSchemaKt {
 	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljava/sql/Connection;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;
 	public static final fun readAllSqlTables (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema$Companion;Ljavax/sql/DataSource;Lorg/jetbrains/kotlinx/dataframe/io/db/DbType;)Ljava/util/Map;

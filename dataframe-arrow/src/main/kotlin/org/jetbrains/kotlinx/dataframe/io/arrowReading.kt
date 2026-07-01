@@ -19,29 +19,7 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.nio.file.Path
 
-public class ArrowFeather : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
-
-    override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(path, NullabilityOptions.Widening)
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "feather"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 50000
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadArrowMethod(pathRepresentation)
-}
-
-private const val READ_ARROW_FEATHER = "readArrowFeather"
-
 internal const val ARROW_PARQUET_DEFAULT_BATCH_SIZE = 32768L
-
-private class DefaultReadArrowMethod(path: String?) :
-    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_ARROW_FEATHER)
 
 internal object Allocator {
     val ROOT by lazy {
