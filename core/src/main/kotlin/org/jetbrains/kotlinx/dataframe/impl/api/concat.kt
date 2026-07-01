@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -85,7 +84,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
 internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     when (dataFrames.size) {
-        0 -> return emptyDataFrame()
+        0 -> return DataFrame.empty().cast()
         1 -> return dataFrames[0]
     }
 
