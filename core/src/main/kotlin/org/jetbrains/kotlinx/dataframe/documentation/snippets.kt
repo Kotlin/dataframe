@@ -6,31 +6,17 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 
-// File with KDF common KDoc-topics and -snippets.
-
-/**
- * {@comment
- *    Auto-renaming in [DataFrame] KDoc-topic.
- *    Link to it with `@include [AutoRenamingLink]`.
- * }
- *
- * ## Auto-renaming in [DataFrame]
- *
- * In some operations, multiple columns with the same name may appear
- * in the resulting [DataFrame].
- *
- * In such cases, columns with duplicate names are automatically renamed
- * using the pattern `"\$name\$n"`, where `name` is the original column name
- * and `n` is a unique index (1, 2, 3, and so on);
- * the first time the name of the column is encountered, no number is appended.
- *
- * It is recommended to [rename][org.jetbrains.kotlinx.dataframe.api.rename] them
- * to maintain clarity and improve code readability.
- */
-internal typealias AutoRenamingColumnsInDataFrame = Nothing
+// File with KDF common KDoc-snippets.
 
 /** [Auto-renaming columns in DataFrame][AutoRenamingColumnsInDataFrame] */
 internal typealias AutoRenamingLink = Nothing
+
+/**
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame].
+ */
+internal typealias AutoRenameInputSnippet = Nothing
 
 /**
  * {@comment

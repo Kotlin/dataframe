@@ -40,6 +40,17 @@ See [](read.md#read-from-csv).
 | `df.writeCSV(..)`/`df.writeTSV(..)`             | `df.writeCsv(..)`/`df.writeTsv(..)`             |
 | `df.toCSV(..)`                                  | `df.toCsvStr(..)`                               |
 
+
+### Column name repair standardization and `NameRepairStrategy` deprecation
+
+Now all `DataFrame` creation / reading methods handle duplicating column names the same way.
+
+`NameRepairStrategy` and `readExcel()` overloads that use it are deprecated.
+
+| 0.15                                             | 1.0                                                              | 
+|--------------------------------------------------|------------------------------------------------------------------|
+| `DataFrame.readExcel(nameRepairStrategy = ..)`   | Deprecated                                                       |
+
 ### Migration to Standard Library `Instant`
 
 Since Kotlin 2.1.20,
