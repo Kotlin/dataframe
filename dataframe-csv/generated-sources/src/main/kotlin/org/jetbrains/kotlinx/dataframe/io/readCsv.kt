@@ -43,6 +43,10 @@ import kotlin.io.path.inputStream
  *
  * Reads any CSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
  * See the param list below for all settings.
@@ -202,6 +206,10 @@ public fun DataFrame.Companion.readCsv(
  * ### Read CSV File to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
  * Reads any CSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -363,6 +371,10 @@ public fun DataFrame.Companion.readCsv(
  *
  * Reads any CSV url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
  * See the param list below for all settings.
@@ -522,6 +534,10 @@ public fun DataFrame.Companion.readCsv(
  * ### Read CSV File or URL to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
  * Reads any CSV file or url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
@@ -683,6 +699,10 @@ public fun DataFrame.Companion.readCsv(
  * ### Read CSV InputStream to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
  * Reads any CSV input stream to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * Note that if input dataframe contains duplicate column names,
+ * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, [delimiter],
  * [header], [colTypes], [readLines], and [parserOptions].
