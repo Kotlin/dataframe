@@ -578,13 +578,13 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
 }
 
 /**
- * Returns [DataFrame] with no rows and no columns.
+ * Returns [DataFrame] with empty columns according to schema [T].
  *
  * To create [DataFrame] with empty columns or empty rows see [DataFrame.empty]
  *
  * @param T schema marker for [DataFrame]
  */
-public fun <T> emptyDataFrame(): DataFrame<T> = DataFrame.empty().cast()
+public inline fun <reified T> emptyDataFrame(): DataFrame<T> = DataFrame.emptyOf<T>()
 
 // endregion
 

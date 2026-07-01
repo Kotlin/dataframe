@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
@@ -142,7 +141,7 @@ internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int
 
         is ColumnSchema.Frame -> DataColumn.createFrameColumn(
             name = name,
-            groups = List(numberOfRows) { emptyDataFrame<Any?>() },
+            groups = List(numberOfRows) { DataFrame.empty(schema) },
             schema = lazyOf(schema),
         )
     }
