@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.DisableInterpretation
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -27,6 +28,13 @@ import kotlin.reflect.typeOf
 @Refine
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
+    toDataFrame {
+        properties()
+    }
+
+@JvmName("dataRowSchemaIterableToDataFrame")
+public inline fun <reified T : DataRowSchema> Iterable<T>.toDataFrame(): DataFrame<T> =
+    @DisableInterpretation
     toDataFrame {
         properties()
     }
