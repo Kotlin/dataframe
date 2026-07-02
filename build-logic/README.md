@@ -70,3 +70,12 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
       and the generated tests in `/build/generated/testBuildingExamples`,
       plus the right dependencies to run them. `:build-logic` is one of the dependencies as well,
       allowing the tests to call helper functions from it.
+
+- `dfbuild.keywordsGenerator`: Generates enums with restricted Kotlin keywords for `:core`.
+    Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
+    - Its sole purpose of this plugin is to provide [:core](../core) with the `generateKeywordsSrc` task.
+      This task, generates three enum classes: `HardKeywords`, `ModifierKeywords`, and `SoftKeywords`.
+      These enums together contain all restricted Kotlin keywords to be taken into account when generating our own
+      code in Notebooks or any of our [plugins](../plugins). Words like "package", "fun", "suspend", etc...
+      As the Kotlin language can change over time, this task ensures that any changes to the language
+      will be reflected in our code generation.

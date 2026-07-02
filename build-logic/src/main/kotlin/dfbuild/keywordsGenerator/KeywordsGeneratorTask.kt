@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe.keywords
+package dfbuild.keywordsGenerator
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
@@ -11,22 +11,22 @@ import org.gradle.workers.WorkerExecutor
 import java.io.File
 import javax.inject.Inject
 
-public abstract class KeywordsGeneratorTask: DefaultTask() {
+abstract class KeywordsGeneratorTask: DefaultTask() {
 
     @get:Inject
-    public abstract val executor: WorkerExecutor
+    abstract val executor: WorkerExecutor
 
     @get:Classpath
-    public abstract val kotlinCompiler: ConfigurableFileCollection
+    abstract val kotlinCompiler: ConfigurableFileCollection
 
     @OutputDirectory
-    public lateinit var srcDir: File
+    lateinit var srcDir: File
 
     @Input
     override fun getGroup(): String = "codegen"
 
     @TaskAction
-    public fun generate() {
+    fun generate() {
         val workQueue = executor.classLoaderIsolation {
             classpath.from(kotlinCompiler)
         }
@@ -35,7 +35,7 @@ public abstract class KeywordsGeneratorTask: DefaultTask() {
         }
     }
 
-    public companion object {
-        public const val NAME: String = "generateKeywordsSrc"
+    companion object {
+        const val NAME: String = "generateKeywordsSrc"
     }
 }

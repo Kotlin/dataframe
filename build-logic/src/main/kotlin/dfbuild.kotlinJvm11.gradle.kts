@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(convention.plugins.kotlinJvmCommon)
+    alias(conventions.plugins.dfbuild.kotlinJvmCommon)
 }
 
 kotlin {

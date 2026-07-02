@@ -19,7 +19,7 @@ dataframe = "1.0.0-Beta5"
 korro = "0.2.2"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
-typesafe-conventions = "0.10.1"
+typesafe-conventions = "0.11.1" # manually sync with /build-logic/settings.gradle.kts!
 maven-invoker = "3.3.0"
 maven-wrapper = "3.3.4"
 maven = "3.9.11"
@@ -256,7 +256,6 @@ jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJu
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
