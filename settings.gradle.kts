@@ -13,8 +13,6 @@ plugins {
 // so they can be applied in child projects in their build.gradle.kts files.
 includeBuild("./build-logic")
 
-includeBuild("plugins/keywords-generator")
-
 include("plugins:expressions-converter")
 include("plugins:public-api-modifier")
 include("samples")

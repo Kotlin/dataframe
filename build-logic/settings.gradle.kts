@@ -9,4 +9,3 @@ plugins {
 }
 
 rootProject.name = "build-logic"
-

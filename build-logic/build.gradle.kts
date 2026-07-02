@@ -19,4 +19,8 @@ dependencies {
     // So we can create pretty tables in gradle task outputs, parse json, and rename to camelCase
     implementation(libs.dataframe.core)
     implementation(libs.dataframe.json)
+
+    // For `dfbuild.keywordsGenerator`
+    implementation(libs.kotlinpoet)
+    compileOnly(kotlin("compiler-embeddable", libs.versions.kotlin.asProvider().get()))
 }
