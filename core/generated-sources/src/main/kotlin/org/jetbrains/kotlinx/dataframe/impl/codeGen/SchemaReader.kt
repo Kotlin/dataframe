@@ -13,12 +13,15 @@ import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCodeForGeneration
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import java.net.URL
 
 /**
  * Reader that can read a dataframe from a URL. It tries to guess the format based on the given [formats] and returns
  * [DfReadResult.Success], or returns [DfReadResult.Error] if it fails.
  */
+@Deprecated(SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
     get() = { url, formats ->
         try {
@@ -35,6 +38,8 @@ public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<Support
         }
     }
 
+@Deprecated(SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public sealed interface DfReadResult {
 
     public class Success(private val df: AnyFrame, public val format: SupportedDataFrameFormat) : DfReadResult {
