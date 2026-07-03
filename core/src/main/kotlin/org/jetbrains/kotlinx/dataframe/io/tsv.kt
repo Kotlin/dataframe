@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.util.READ_TSV_FILE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV_STREAM_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_TSV_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -19,16 +20,18 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.nio.file.Path
 
-@Deprecated(
-    message = APACHE_CSV,
-    level = DeprecationLevel.WARNING,
-)
+@Deprecated(message = APACHE_CSV, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class TSV : SupportedDataFrameFormat {
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readTSV(stream, header = header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         // legacy TSV implementation lives in this module; delegate via File to keep behavior
         DataFrame.readTSV(path.toFile(), header = header)
