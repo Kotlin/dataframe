@@ -34,10 +34,10 @@ import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readJson
 import java.net.URL
 
-fun load(path: String) = DataRow.read("$BASE_PATH/$path&key=$API_KEY")
+fun load(path: String) = DataRow.readJson("$BASE_PATH/$path&key=$API_KEY")
 
 fun load(path: String, maxPages: Int): AnyFrame =
     buildList {
