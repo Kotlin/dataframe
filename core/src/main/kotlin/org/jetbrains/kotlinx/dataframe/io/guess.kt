@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_READ
 import org.jetbrains.kotlinx.dataframe.util.DATAROW_READ
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -55,17 +56,26 @@ public sealed interface SupportedFormatSample {
 }
 
 /**
+ * **Deprecated:** As a result of Issue #450 and the removal of our old Gradle/KSP plugin and `DataFrame.read()`,
+ * the `SupportedDataFrameFormat` system is deprecated and will be removed in version 1.0.
+ *
  * Implement this interface to provide additional supported formats for DataFrames (such as JSON, XML, CSV, etc.).
  * A [SupportedDataFrameFormat] is read directly to a DataFrame. If specified using
  * [ImportDataSchema] or using the Gradle plugin, the read DataFrame will be used to
  * generate [DataSchema] interfaces.
  */
+@Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
 public interface SupportedDataFrameFormat : SupportedFormat {
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
+    @Suppress("DEPRECATION_ERROR")
     public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*> =
         readDataFrame(file.toPath(), header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     public fun readDataFrame(path: Path, header: List<String> = emptyList()): DataFrame<*>
 }
 
@@ -133,7 +143,7 @@ public class MethodArguments {
  */
 internal val supportedFormats: List<SupportedFormat> by lazy {
     (
-        ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
+        ServiceLoader.load(@Suppress("DEPRECATION_ERROR") SupportedDataFrameFormat::class.java).toList() +
             ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList() +
             ServiceLoader.load(SupportedFormat::class.java).toList()
     ).distinct()
@@ -213,6 +223,7 @@ internal fun readCodeForGeneration(
     }
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal fun DataFrame.Companion.read(
     stream: InputStream,
     format: SupportedDataFrameFormat? = null,
@@ -232,6 +243,7 @@ internal fun DataFrame.Companion.read(
     }
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal fun DataFrame.Companion.read(
     path: Path,
     format: SupportedDataFrameFormat? = null,
@@ -250,8 +262,10 @@ internal fun DataFrame.Companion.read(
     throw IllegalArgumentException("Unknown file format; Tried $formats")
 }
 
+@Suppress("DEPRECATION_ERROR")
 internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
 
+@Suppress("DEPRECATION_ERROR")
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
 internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: Code)

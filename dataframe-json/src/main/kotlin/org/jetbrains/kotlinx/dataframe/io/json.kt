@@ -34,12 +34,14 @@ import java.nio.file.Path
 import kotlin.io.path.writeText
 import kotlin.reflect.typeOf
 
+@Suppress("DEPRECATION_ERROR")
 public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     private val keyValuePaths: List<JsonPath> = emptyList(),
     private val unifyNumbers: Boolean = true,
 ) : SupportedDataFrameFormat {
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.1.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readJson(
             stream = stream,
@@ -49,6 +51,7 @@ public class JSON(
             unifyNumbers = unifyNumbers,
         )
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.1.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         DataFrame.readJson(
             path = path,

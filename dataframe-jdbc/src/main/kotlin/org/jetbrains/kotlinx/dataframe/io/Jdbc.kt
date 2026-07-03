@@ -10,11 +10,16 @@ import java.io.InputStream
 import java.nio.file.Path
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.1.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class Jdbc :
     SupportedCodeGenerationFormat,
     SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.1.", level = DeprecationLevel.ERROR)
     public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.1.", level = DeprecationLevel.ERROR)
     public override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readJDBC(path)
 
     override fun readCodeForGeneration(
