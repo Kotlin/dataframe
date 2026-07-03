@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_READ
+import org.jetbrains.kotlinx.dataframe.util.DATAROW_READ
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -256,12 +258,18 @@ internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val
 
 internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(file.toPath(), header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(file.toPath(), header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
     when {
         isFile(url) -> read(urlAsFile(url), header)
@@ -279,23 +287,39 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
         else -> throw IllegalArgumentException("Invalid protocol for url $url")
     }
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asUrl(path), header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(path: String, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun URL.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
     read(
         path = path,
@@ -305,9 +329,15 @@ public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList
         header = header,
     ).df
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
+@Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun Path.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 
+@Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public fun Path.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)

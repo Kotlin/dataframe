@@ -5,7 +5,6 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
@@ -99,7 +98,7 @@ class DelimCsvTsvTests {
 
     @Test
     fun readCsv() {
-        val df = DataFrame.read(simpleCsv)
+        val df = DataFrame.readCsv(simpleCsv)
 
         df.columnsCount() shouldBe 11
         df.rowsCount() shouldBe 5
@@ -329,8 +328,8 @@ class DelimCsvTsvTests {
     }
 
     @Test
-    fun `guess tsv`() {
-        val df = DataFrame.read(testResource("abc.tsv"))
+    fun `read tsv`() {
+        val df = DataFrame.readTsv(testResource("abc.tsv"))
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
     }
