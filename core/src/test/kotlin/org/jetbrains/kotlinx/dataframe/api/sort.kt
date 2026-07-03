@@ -3,7 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrowMessage
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.io.readDataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.testSets.DsSalaries
@@ -78,7 +79,7 @@ class SortDataColumn {
 
     @Test
     fun `sort by nested column`() {
-        val df = testResource("ds_salaries.csv").readDataFrame().cast<DsSalaries>()
+        val df = DataFrame.readCsv(testResource("ds_salaries.csv")).cast<DsSalaries>()
         val aggregate = df.pivot(false) { companySize }.groupBy { companyLocation }.aggregate {
             maxOf { salaryInUsd } into "salary"
             maxBy { salaryInUsd } into "extra"
@@ -89,7 +90,7 @@ class SortDataColumn {
 
     @Test
     fun `sort by invalid nested column`() {
-        val df = testResource("ds_salaries.csv").readDataFrame().cast<DsSalaries>()
+        val df = DataFrame.readCsv(testResource("ds_salaries.csv")).cast<DsSalaries>()
         val aggregate = df.pivot(false) { companySize }.groupBy { companyLocation }.aggregate {
             maxOf { salaryInUsd } into "salary"
             maxBy { salaryInUsd } into "extra"

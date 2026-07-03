@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.junit.Ignore
 import org.junit.Test
 
@@ -91,7 +91,7 @@ class AccessApis {
     @Test
     fun strings() {
         // SampleStart
-        DataFrame.read("titanic.csv")
+        DataFrame.readCsv("titanic.csv")
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
             .filter {
@@ -113,7 +113,7 @@ class AccessApis {
     @Ignore
     @Test
     fun extensionProperties2() {
-        val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
+        val df = DataFrame.readCsv("titanic.csv").cast<TitanicPassenger>()
         // SampleStart
         df.add("lastName") { name.split(",").last() }
             .dropNulls { age }
@@ -125,7 +125,7 @@ class AccessApis {
     @Test
     fun extensionProperties1() {
         // SampleStart
-        val df = DataFrame.read("titanic.csv")
+        val df = DataFrame.readCsv("titanic.csv")
         // SampleEnd
     }
 }

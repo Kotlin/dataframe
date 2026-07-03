@@ -19,10 +19,15 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.nio.file.Path
 
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class ArrowFeather : SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         DataFrame.readArrowFeather(path, NullabilityOptions.Widening)
 
