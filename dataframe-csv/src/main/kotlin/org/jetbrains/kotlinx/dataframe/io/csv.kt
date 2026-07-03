@@ -11,13 +11,19 @@ import java.io.InputStream
 import java.nio.file.Path
 import kotlin.reflect.typeOf
 
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITER) : SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
         DataFrame.readCsv(inputStream = stream, header = header, delimiter = delimiter)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(file: File, header: List<String>): DataFrame<*> =
         DataFrame.readCsv(file = file, header = header, delimiter = delimiter)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): DataFrame<*> =
         DataFrame.readCsv(path = path, delimiter = delimiter, header = header)
 

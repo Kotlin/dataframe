@@ -173,6 +173,9 @@ internal const val DATAFRAME_READ =
 internal const val DATAROW_READ =
     "This function is deprecated in favor of the IO-specific functions, like `DataRow.readJson()`, and `DataFrame.readCsv().single()`. $MESSAGE_1_0"
 
+internal const val SUPPORTED_DATAFRAME_FORMAT: String =
+    "SupportedDataFrameFormat is deprecated. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
