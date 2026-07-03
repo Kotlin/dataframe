@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.util.READ_CSV_URL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_READER_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_STREAM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.SUPPORTED_DATAFRAME_FORMAT
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.TO_CSV_REPLACE
@@ -66,14 +67,19 @@ import kotlin.time.Duration
 import kotlin.time.Instant as StdlibInstant
 import kotlinx.datetime.Instant as DeprecatedInstant
 
-@Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
+@Deprecated(message = APACHE_CSV, level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
+
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readCSV(stream = stream, delimiter = delimiter, header = header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(file: File, header: List<String>): AnyFrame =
         DataFrame.readCSV(file = file, delimiter = delimiter, header = header)
 
+    @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame =
         // core CSV impl is deprecated, delegate via File to preserve module boundaries
         DataFrame.readCSV(file = path.toFile(), delimiter = delimiter, header = header)

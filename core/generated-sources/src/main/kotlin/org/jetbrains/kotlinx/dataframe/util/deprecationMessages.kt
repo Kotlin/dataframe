@@ -167,6 +167,15 @@ internal const val CONVERT_TO_KOTLIN_DATETIME_LOCALE =
         "as we now directly parse to Kotlin. " +
         "If you need to specify a locale to make it work, convert to Java-based types first. $MESSAGE_1_0"
 
+internal const val DATAFRAME_READ =
+    "This function is deprecated in favor of the IO-specific functions, like `DataFrame.readCsv()`, and `DataFrame.readJson()`. $MESSAGE_1_0"
+
+internal const val DATAROW_READ =
+    "This function is deprecated in favor of the IO-specific functions, like `DataRow.readJson()`, and `DataFrame.readCsv().single()`. $MESSAGE_1_0"
+
+internal const val SUPPORTED_DATAFRAME_FORMAT: String =
+    "SupportedDataFrameFormat is deprecated. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1

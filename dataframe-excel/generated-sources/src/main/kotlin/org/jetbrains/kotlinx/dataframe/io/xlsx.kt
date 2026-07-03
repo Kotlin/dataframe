@@ -52,9 +52,14 @@ import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
 
+@Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
+@Suppress("DEPRECATION_ERROR")
 public class Excel : SupportedDataFrameFormat {
+
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
+    @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
     override fun readDataFrame(path: Path, header: List<String>): AnyFrame = DataFrame.readExcel(path)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
