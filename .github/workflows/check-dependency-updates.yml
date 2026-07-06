@@ -1,0 +1,37 @@
+name: Check Dependency Updates
+
+on:
+  # Allow running the workflow manually from the Actions tab on GitHub.
+  workflow_dispatch:
+  # Run weekly on Monday at 06:00 UTC.
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  check-dependency-updates:
+    name: Check Dependency Updates
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    env:
+      CAUPAIN_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run checkDependencyUpdates
+        timeout-minutes: 60
+        run: ./gradlew checkDependencyUpdates --no-configuration-cache --stacktrace --args="-t markdown"
+
+      - name: Update summary
+        run: cat build/reports/dependencies-update.md >> $GITHUB_STEP_SUMMARY
