@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
 
 plugins {
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
     }
     with(libs.plugins) {

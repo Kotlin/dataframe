@@ -1,5 +1,5 @@
 plugins {
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
         alias(buildConfig)
         alias(kodex)

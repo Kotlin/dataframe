@@ -1,7 +1,7 @@
 plugins {
-    alias(convention.plugins.base)
+    alias(conventions.plugins.dfbuild.base)
     // enables the linter for every Kotlin module in the project
-    alias(convention.plugins.ktlint)
+    alias(conventions.plugins.dfbuild.ktlint)
 
     alias(libs.plugins.kotlin.jvm)
 }

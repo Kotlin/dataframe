@@ -2,7 +2,7 @@ import dfbuild.findRootDir
 import nl.jolanrensen.kodex.gradle.RunKodexTask
 
 plugins {
-    alias(convention.plugins.kotlinJvmCommon)
+    alias(conventions.plugins.dfbuild.kotlinJvmCommon)
 
     alias(libs.plugins.kodex)
     idea

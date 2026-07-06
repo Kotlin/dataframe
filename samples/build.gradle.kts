@@ -5,7 +5,7 @@ import java.nio.file.Files
 import kotlin.io.path.name
 
 plugins {
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm11)
         alias(ktlint)
     }

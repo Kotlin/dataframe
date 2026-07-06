@@ -1,6 +1,7 @@
 ## :plugins
 
-This folder holds all our Gradle- and Kotlin Compiler plugins:
+This folder holds all our (mostly deprecated) Gradle- and Kotlin Compiler plugins.
+Plugins we still use are being migrated to convention plugins in [build-logic](../build-logic).
 
 ### [~~:plugins:dataframe-gradle-plugin~~](./dataframe-gradle-plugin)
 The Gradle plugin for DataFrame that can generate data schemas from a data sample using the simple
@@ -26,7 +27,3 @@ https://github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe
 ### [:plugins:expressions-converter](./expressions-converter)
 A small Kotlin Compiler plugin that provides intermediate expressions of DataFrame
 operation chains, used internally by [:core](../core) to generate "explainer dataframes" on the documentation website.
-
-### [:plugins:keywords-generator](./keywords-generator) 
-A small Gradle plugin that is used internally to generate enums with restricted Kotlin keywords for the 
-[:core](../core) module.

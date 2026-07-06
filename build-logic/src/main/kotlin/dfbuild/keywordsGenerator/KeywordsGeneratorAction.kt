@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe.keywords
+package dfbuild.keywordsGenerator
 
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -13,10 +13,10 @@ import org.jetbrains.kotlin.lexer.KtKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens
 import java.io.File
 
-public abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Parameters> {
+abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Parameters> {
 
-    public interface Parameters : WorkParameters {
-        public var srcDir: File
+    interface Parameters : WorkParameters {
+        var srcDir: File
     }
 
     private val taskPackageName = "org.jetbrains.kotlinx.dataframe.keywords"
