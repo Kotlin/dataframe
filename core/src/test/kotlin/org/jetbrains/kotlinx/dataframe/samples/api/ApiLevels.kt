@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.junit.Ignore
 import org.junit.Test
 
@@ -20,7 +20,7 @@ class ApiLevels {
     @TransformDataFrameExpressions
     fun strings() {
         // SampleStart
-        DataFrame.read("titanic.csv")
+        DataFrame.readCsv("titanic.csv")
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
             .filter {
@@ -42,7 +42,7 @@ class ApiLevels {
     @Test
     @TransformDataFrameExpressions
     fun extensionProperties2() {
-        val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
+        val df = DataFrame.readCsv("titanic.csv").cast<TitanicPassenger>()
         // SampleStart
         df.add("lastName") { name.split(",").last() }
             .dropNulls { age }
@@ -54,7 +54,7 @@ class ApiLevels {
     @TransformDataFrameExpressions
     fun extensionProperties1() {
         // SampleStart
-        val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
+        val df /* : AnyFrame */ = DataFrame.readCsv("titanic.csv")
         // SampleEnd
     }
 }

@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.StringColumns
-import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readCsvStr
@@ -45,7 +44,7 @@ class Read : DataFrameSampleHelper("read", "api") {
     @Test
     fun read() {
         // SampleStart
-        DataFrame.read("input.csv")
+        DataFrame.readCsv("input.csv")
         // SampleEnd
     }
 

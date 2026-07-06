@@ -81,7 +81,7 @@ In Gradle projects it means that sometimes you'd need to provide [data schema](d
 In Kotlin Notebook, the compiler plugin complements the built-in code generator that updates types or variables after cell execution.
 
 ```kotlin
-val df = DataFrame.read("...")
+val df = DataFrame.readX("...")
 ```
 
 In the next cell you can add, convert, remove, aggregate columns and expect that schema will be updated accordingly, 

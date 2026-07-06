@@ -23,12 +23,13 @@ The reading from SQL databases is also supported.
 Read [here](readSqlDatabases.md) to know more 
 or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
 
-The `.read()` function automatically detects the input format based on a file extension and content:
+Each IO source has its own set of `read` functions, like `.readCsv()`, `.readJson()`, `.readExcel()`, etc.
+For instance:
 
 <!---FUN read-->
 
 ```kotlin
-DataFrame.read("input.csv")
+DataFrame.readCsv("input.csv")
 ```
 
 <!---END-->

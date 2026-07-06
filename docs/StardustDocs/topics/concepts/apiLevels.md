@@ -119,7 +119,7 @@ there's a tab selector that allows switching between Access APIs.
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
+val df /* : AnyFrame */ = DataFrame.readCsv("titanic.csv")
 ```
 
 <!---END-->
@@ -141,7 +141,7 @@ df.add("lastName") { name.split(",").last() }
 <!---FUN strings-->
 
 ```kotlin
-DataFrame.read("titanic.csv")
+DataFrame.readCsv("titanic.csv")
     .add("lastName") { "name"<String>().split(",").last() }
     .dropNulls("age")
     .filter {
