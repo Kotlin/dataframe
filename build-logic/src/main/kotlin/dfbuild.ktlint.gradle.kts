@@ -1,5 +1,5 @@
 plugins {
-    alias(convention.plugins.base)
+    alias(conventions.plugins.dfbuild.base)
     alias(libs.plugins.ktlint.gradle)
 }
 

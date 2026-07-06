@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.withType
 
 plugins {
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
     }
     with(libs.plugins) {

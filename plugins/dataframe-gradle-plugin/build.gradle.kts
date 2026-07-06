@@ -1,7 +1,7 @@
 plugins {
     id("org.gradle.kotlin.kotlin-dsl")
     `maven-publish`
-    with(convention.plugins) {
+    with(conventions.plugins.dfbuild) {
         alias(kotlinJvm11)
         alias(buildConfig)
     }

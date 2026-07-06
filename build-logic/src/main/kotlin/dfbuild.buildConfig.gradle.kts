@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    alias(convention.plugins.kotlinJvmCommon)
+    alias(conventions.plugins.dfbuild.kotlinJvmCommon)
     alias(libs.plugins.buildconfig)
 }
 

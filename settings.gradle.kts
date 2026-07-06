@@ -6,14 +6,12 @@ pluginManagement {
     includeBuild("./build-settings-logic")
 }
 plugins {
-    id("dfsettings.catalogs")
+    id("dfsettings.base")
 }
 
 // Enables our build logic convention plugins for the root project,
 // so they can be applied in child projects in their build.gradle.kts files.
 includeBuild("./build-logic")
-
-includeBuild("plugins/keywords-generator")
 
 include("plugins:expressions-converter")
 include("plugins:public-api-modifier")
