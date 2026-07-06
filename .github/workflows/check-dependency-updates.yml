@@ -31,7 +31,7 @@ jobs:
 
       - name: Run checkDependencyUpdates
         timeout-minutes: 60
-        run: ./gradlew checkDependencyUpdates --no-configuration-cache --stacktrace --args="-t markdown"
+        run: ./gradlew checkDependencyUpdates --no-configuration-cache --stacktrace
 
       - name: Update summary
         run: cat build/reports/dependencies-update.md >> $GITHUB_STEP_SUMMARY
