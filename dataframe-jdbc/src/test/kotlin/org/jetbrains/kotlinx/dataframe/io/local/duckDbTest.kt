@@ -112,6 +112,8 @@ class DuckDbTest {
         val float8Col: Double,
         @ColumnName("float_col")
         val floatCol: Float,
+        @ColumnName("geometry_col")
+        val geometryCol: Blob,
         @ColumnName("hugeint_col")
         val hugeintCol: BigInteger,
         @ColumnName("int128_col")
@@ -158,6 +160,8 @@ class DuckDbTest {
         val textCol: String,
         @ColumnName("time_col")
         val timeCol: LocalTime,
+        @ColumnName("time_ns_col")
+        val timeNsCol: LocalTime,
         @ColumnName("timestamp_col")
         val timestampCol: Instant,
         @ColumnName("timestamptz_col")
@@ -201,6 +205,12 @@ class DuckDbTest {
                     bitCol = "1010",
                     bitstringCol = "1010",
                     blobCol = DuckDBResultSet.DuckDBBlobResult(ByteBuffer.wrap("DEADBEEF".toByteArray())),
+                    // TODO improve this test case once DuckDB supports the geometry type fully
+                    geometryCol = DuckDBResultSet.DuckDBBlobResult(
+                        ByteBuffer.wrap(
+                            byteArrayOf(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 36, 64),
+                        ),
+                    ),
                     boolCol = true,
                     booleanCol = true,
                     bpcharCol = "test",
@@ -237,6 +247,7 @@ class DuckDbTest {
                     stringCol = "test string",
                     textCol = "test text",
                     timeCol = LocalTime.parse("12:34:56"),
+                    timeNsCol = LocalTime.parse("12:34:56"),
                     timestampCol = Timestamp.valueOf("2025-06-19 12:34:56").toInstant().toKotlinInstant(),
                     timestamptzCol = JavaOffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
                     timestampwtzCol = JavaOffsetDateTime.parse("2025-06-19T12:34:56+02:00"),
@@ -289,6 +300,8 @@ class DuckDbTest {
         val stringlistlistCol: List<List<String?>?>,
         @ColumnName("union_col")
         val unionCol: Any,
+        @ColumnName("variant_col")
+        val variantCol: Any,
     )
 
     // endregion
@@ -464,6 +477,7 @@ class DuckDbTest {
                     float8_col FLOAT8,
                     float_col FLOAT,
                     float4_col FLOAT4,
+                    geometry_col GEOMETRY,
                     real_col REAL,
                     hugeint_col HUGEINT,
                     int128_col INT128,
@@ -479,6 +493,7 @@ class DuckDbTest {
                     int16_col INT16,
                     short_col SHORT,
                     time_col TIME,
+                    time_ns_col TIME_NS,
                     timestampwtz_col TIMESTAMP WITH TIME ZONE,
                     timestamptz_col TIMESTAMPTZ,
                     timestamp_col TIMESTAMP,
@@ -529,6 +544,7 @@ class DuckDbTest {
                     3.14159,                               -- float8
                     3.14,                                  -- float
                     3.14,                                  -- float4
+                    'POINT (30 10)'::GEOMETRY,             -- geometry
                     3.14,                                  -- real
                     '170141183460469231731687303715884105727',  -- hugeint
                     '170141183460469231731687303715884105727',  -- int128
@@ -544,6 +560,7 @@ class DuckDbTest {
                     32767,                                 -- int16
                     32767,                                 -- short
                     '12:34:56',                            -- time
+                    '12:34:56',                            -- time_ns
                     '2025-06-19 12:34:56+02',             -- timestampwtz
                     '2025-06-19 12:34:56+02',             -- timestamptz
                     '2025-06-19 12:34:56',                -- timestamp
@@ -610,6 +627,7 @@ class DuckDbTest {
                     ijstruct_col STRUCT(i INTEGER, j VARCHAR),
                     ijstructlist_col STRUCT(i INTEGER, j VARCHAR)[],
                     union_col UNION(num INTEGER, text VARCHAR),
+                    variant_col VARIANT,
                 )
                 """.trimIndent(),
             ).executeUpdate()
@@ -628,6 +646,7 @@ class DuckDbTest {
                     { 'i': 42, 'j': 'answer' },               -- struct
                     list_value({ 'i': 42, 'j': 'answer' }, { 'i': 44, 'j': 'answer' }), -- struct list
                     union_value(num := 2),                    -- union
+                    'a'::VARIANT,                             -- variant
                 )
                 """.trimIndent(),
             ).executeUpdate()
@@ -660,6 +679,7 @@ class DuckDbTest {
                     NestedEntry(44, "answer"),
                 )
             it["union_col"] shouldBe 2
+            it["variant_col"] shouldBe "a"
         }
     }
 
