@@ -540,13 +540,13 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check name normalization for generated data classes`() {
-        val code = dataFrameOf("my_name")(1).generateDataClasses()
+        val code = dataFrameOf("my_[name")(1).generateDataClasses()
         val expected =
             """
             @DataSchema
             data class DataEntry(
-                @ColumnName("my_name")
-                val myName: Int
+                @ColumnName("my_[name")
+                val `my_{name`: Int
             )
             """.trimIndent()
         assertEquals(expected, code.value)
