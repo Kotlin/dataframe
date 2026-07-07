@@ -1,7 +1,9 @@
 import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
+import org.gradle.kotlin.dsl.named
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -104,7 +106,7 @@ tasks.named<JavaCompile>("compileTestJava16Java") {
 
 tasks.named<KotlinCompile>("compileTestJava16Kotlin") {
     compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_16
+        jvmTarget = JvmTarget.JVM_16
         freeCompilerArgs.add("-Xjdk-release=16")
     }
 }
@@ -128,7 +130,17 @@ val samplesImplementation by configurations.getting {
     extendsFrom(configurations.testImplementation.get())
 }
 
+tasks.named<JavaCompile>("compileSamplesJava") {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+    options.release.set(11)
+}
+
 val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
     tasks.named<KotlinCompile>("compileTestKotlin").get().let {
         friendPaths.from(it.friendPaths)
         libraries.from(it.libraries)

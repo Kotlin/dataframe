@@ -1,12 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.Actual
-import io.kotest.assertions.AssertionFailedError
-import io.kotest.assertions.Exceptions
 import io.kotest.assertions.Expected
-import io.kotest.assertions.failure
-import io.kotest.assertions.print.printed
-import io.kotest.assertions.withClue
+import io.kotest.assertions.createAssertionError
+import io.kotest.assertions.print.print
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -151,20 +148,22 @@ internal fun inferNullability(connection: Connection) {
 @Suppress("INVISIBLE_REFERENCE")
 fun AnyFrame.assertInferredTypesMatchSchema() {
     if (!schema().compare(inferType().schema()).isSuperOrMatches()) {
-        throw failure(
-            expected = Expected(inferType().schema().toString().lines().sorted().joinToString("\n").printed()),
-            actual = Actual(schema().toString().lines().sorted().joinToString("\n").printed()),
-            prependMessage = "Inferred schema must be <: Provided schema",
+        throw createAssertionError(
+            message = "Inferred schema must be <: Provided schema",
+            cause = null,
+            expected = Expected(inferType().schema().toString().lines().sorted().joinToString("\n").print()),
+            actual = Actual(schema().toString().lines().sorted().joinToString("\n").print()),
         )
     }
 }
 
 fun DataFrameSchema.assertMatches(other: DataFrameSchema) {
     if (!this.compare(other).isSuperOrMatches()) {
-        throw failure(
-            expected = Expected(other.toString().lines().sorted().joinToString("\n").printed()),
-            actual = Actual(this.toString().lines().sorted().joinToString("\n").printed()),
-            prependMessage = "Schemas must be <:",
+        throw createAssertionError(
+            message = "Schemas must be <:",
+            cause = null,
+            expected = Expected(other.toString().lines().sorted().joinToString("\n").print()),
+            actual = Actual(this.toString().lines().sorted().joinToString("\n").print()),
         )
     }
 }
