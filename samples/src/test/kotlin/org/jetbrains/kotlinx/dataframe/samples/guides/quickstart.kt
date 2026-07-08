@@ -136,9 +136,9 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     @Test
     fun dfGenerateInterfaces() {
         // SampleStart
-        df.generateInterfaces("Repository", nameNormalizer = NameNormalizer.id()).print()
+        df.generateInterfaces("Repository").print()
         // SampleEnd
-        df.generateInterfaces("Repository", nameNormalizer = NameNormalizer.id()).saveSample()
+        df.generateInterfaces("Repository").saveSample()
     }
 
     @Test

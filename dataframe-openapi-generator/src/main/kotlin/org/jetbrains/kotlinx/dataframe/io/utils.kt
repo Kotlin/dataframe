@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.typeOf
@@ -17,13 +18,26 @@ internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): S
         this
     }
 
-internal fun String.snakeToLowerCamelCase(): String = toCamelCaseByDelimiters()
-
 internal fun String.snakeToUpperCamelCase(): String =
-    snakeToLowerCamelCase()
+    toCamelCaseByDelimiters()
         .replaceFirstChar { it.uppercaseChar() }
 
 internal fun String.toNullable() = if (this.last() == '?') this else "$this?"
+
+/**
+ * Returns whether this [FieldType] refers to a [Marker][OpenApiMarker] that is itself nullable
+ * (such as a nullable enum, whose nullability is defined by the type and cannot be removed by
+ * making a property required). Returns `false` for primitives and non-nullable markers.
+ */
+internal fun FieldType.refersToNullableMarker(getRefMarker: GetRefMarker, topInterfaceName: ValidFieldName): Boolean {
+    val refName = name
+        .removeSuffix("?")
+        .withoutTopInterfaceName(topInterfaceName)
+    return when (val res = getRefMarker(refName)) {
+        is MarkerResult.OpenApiMarker -> res.marker.nullable
+        else -> false
+    }
+}
 
 internal interface IsObject {
     val isObject: Boolean
