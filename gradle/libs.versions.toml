@@ -83,7 +83,7 @@ spark4 = "4.1.2"
 multik = "0.3.1"
 
 # Used by the Android example project; keys mirror examples/projects/android-example/gradle/libs.versions.toml
-agp = "9.0.0"
+agp = "9.2.1"
 coreKtx = "1.19.0"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
