@@ -6,7 +6,9 @@ import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Root
 import org.hibernate.FlushMode
 import org.hibernate.SessionFactory
-import org.hibernate.cfg.Configuration
+import org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+import org.hibernate.jpa.HibernatePersistenceConfiguration
+import org.hibernate.tool.schema.Action
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asSequence
@@ -242,7 +244,13 @@ private inline fun <T> SessionFactory.withReadOnlyTransaction(block: (session: o
         }
     }
 
-private fun buildSessionFactory(): SessionFactory {
-    // Load configuration from resources/hibernate/hibernate.cfg.xml
-    return Configuration().configure("hibernate/hibernate.cfg.xml").buildSessionFactory()
-}
+private fun buildSessionFactory(): SessionFactory =
+    HibernatePersistenceConfiguration("hibernate-example")
+        .managedClasses(CustomersEntity::class.java, ArtistsEntity::class.java, AlbumsEntity::class.java)
+        .jdbcUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1")
+        .jdbcCredentials("sa", "")
+        .schemaToolingAction(Action.CREATE_DROP)
+        .showSql(true, true, true)
+        .property("hibernate.connection.provider_class", HikariCPConnectionProvider::class.java)
+        .property("hibernate.hikari.maximumPoolSize", 5)
+        .createEntityManagerFactory()
