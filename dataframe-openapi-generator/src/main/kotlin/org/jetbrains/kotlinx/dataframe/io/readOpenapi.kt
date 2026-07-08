@@ -332,7 +332,12 @@ private fun Schema<*>.toMarker(
 
                         fields += allSuperFields
                             .filter {
-                                it.fieldName.unquoted in requiredFields && it.fieldType.isNullable()
+                                it.fieldName.unquoted in requiredFields &&
+                                    it.fieldType.isNullable() &&
+                                    // Don't override intrinsically nullable types (like nullable enums) to be
+                                    // non-null. Their nullability comes from the type itself, not from being
+                                    // optional, so being required in a child schema cannot make them non-null.
+                                    !it.fieldType.refersToNullableMarker(getRefMarker, topInterfaceName)
                             }.map {
                                 generatedFieldOf(
                                     fieldName = it.fieldName,
