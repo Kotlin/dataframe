@@ -2,9 +2,12 @@ package org.jetbrains.kotlinx.dataframe.examples.hibernate
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -17,9 +20,10 @@ class AlbumsEntity(
     @Column(name = "AlbumId")
     var albumId: Int? = null,
     @Column(name = "Title", length = 160, nullable = false)
-    var title: String = "",
-    @Column(name = "ArtistId", nullable = false)
-    var artistId: Int = 0,
+    var title: String,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ArtistId", nullable = false)
+    var artist: ArtistsEntity,
 )
 
 @Entity
@@ -30,7 +34,7 @@ class ArtistsEntity(
     @Column(name = "ArtistId")
     var artistId: Int? = null,
     @Column(name = "Name", length = 120, nullable = false)
-    var name: String = "",
+    var name: String,
 )
 
 @Entity
@@ -41,9 +45,9 @@ class CustomersEntity(
     @Column(name = "CustomerId")
     var customerId: Int? = null,
     @Column(name = "FirstName", length = 40, nullable = false)
-    var firstName: String = "",
+    var firstName: String,
     @Column(name = "LastName", length = 20, nullable = false)
-    var lastName: String = "",
+    var lastName: String,
     @Column(name = "Company", length = 80)
     var company: String? = null,
     @Column(name = "Address", length = 70)
@@ -61,7 +65,7 @@ class CustomersEntity(
     @Column(name = "Fax", length = 24)
     var fax: String? = null,
     @Column(name = "Email", length = 60, nullable = false)
-    var email: String = "",
+    var email: String,
     @Column(name = "SupportRepId")
     var supportRepId: Int? = null,
 )
