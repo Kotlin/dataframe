@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.examples.json.openApi
 
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
@@ -87,9 +86,7 @@ interface OnePassword {
         val id: String?
         val name: String?
         val size: Int?
-
-        @ColumnName("content_path")
-        val contentPath: String?
+        val content_path: String?
         val section: Section?
         val content: Byte?
 
