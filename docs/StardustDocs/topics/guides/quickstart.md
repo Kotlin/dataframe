@@ -257,7 +257,7 @@ a special method that returns a string with a schema of a receiver `DataFrame`:
 <!---FUN dfGenerateInterfaces-->
 
 ```kotlin
-df.generateInterfaces("Repository", nameNormalizer = NameNormalizer.id()).print()
+df.generateInterfaces("Repository").print()
 ```
 
 Output:

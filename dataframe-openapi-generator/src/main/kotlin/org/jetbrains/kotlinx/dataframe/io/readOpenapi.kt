@@ -332,7 +332,12 @@ private fun Schema<*>.toMarker(
 
                         fields += allSuperFields
                             .filter {
-                                it.fieldName.unquoted in requiredFields && it.fieldType.isNullable()
+                                it.fieldName.unquoted in requiredFields &&
+                                    it.fieldType.isNullable() &&
+                                    // Don't override intrinsically nullable types (like nullable enums) to be
+                                    // non-null. Their nullability comes from the type itself, not from being
+                                    // optional, so being required in a child schema cannot make them non-null.
+                                    !it.fieldType.refersToNullableMarker(getRefMarker, topInterfaceName)
                             }.map {
                                 generatedFieldOf(
                                     fieldName = it.fieldName,
@@ -450,7 +455,7 @@ private fun Schema<*>.toMarker(
                                     .additionalPropertyPaths
                                     .map { it.prepend(name) }
 
-                                val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                val validName = ValidFieldName.of(name)
 
                                 // find the field type of the marker reference
                                 val fieldType = openApiTypeResult.marker.toFieldType()
@@ -476,7 +481,7 @@ private fun Schema<*>.toMarker(
 
                                 this += generatedFieldOf(
                                     overrides = false,
-                                    fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
+                                    fieldName = ValidFieldName.of(name),
                                     columnName = name,
                                     fieldType = FieldType.ValueFieldType(
                                         typeFqName = enumMarker.name +
@@ -503,7 +508,7 @@ private fun Schema<*>.toMarker(
                                         return MarkerResult.CannotFindRefMarker
 
                                     is FieldTypeResult.FieldType -> {
-                                        val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                        val validName = ValidFieldName.of(name)
 
                                         keyValuePaths += fieldTypeResult
                                             .additionalPropertyPaths
