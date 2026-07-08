@@ -293,7 +293,8 @@ public val NameNormalizer.Companion.toCamelCaseByDelimiter: NameNormalizer
 /**
  * Performs no name normalization.
  *
- * (Inside the actual code generation, [ValidFieldName] is still used to prevent incompilable code from being generated)
+ * (Inside the [code generation][CodeGenerator.generate],
+ * [ValidFieldName] is still used to prevent incompilable code from being generated.)
  *
  * @see [NameNormalizer.Companion.toCamelCaseByDelimiter]
  */
