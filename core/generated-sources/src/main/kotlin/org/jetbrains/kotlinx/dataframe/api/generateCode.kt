@@ -9,12 +9,14 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.toCamelCaseFrom
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE
 import org.jetbrains.kotlinx.dataframe.util.GENERATE_CODE_REPLACE1
@@ -369,7 +371,19 @@ internal inline fun <reified T> markerName(): String =
 /**
  * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
  */
-public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormalizer.from(setOf('\t', ' ', '_'))
+public val NameNormalizer.Companion.toCamelCaseByDelimiter: NameNormalizer
+    get() = NameNormalizer.toCamelCaseFrom(setOf('\t', ' ', '_'))
+
+/**
+ * Performs no name normalization.
+ *
+ * (Inside the [code generation][CodeGenerator.generate],
+ * [ValidFieldName] is still used to prevent incompilable code from being generated.)
+ *
+ * @see [NameNormalizer.Companion.toCamelCaseByDelimiter]
+ */
+public val NameNormalizer.Companion.default: NameNormalizer
+    get() = NameNormalizer.id()
 
 /**
  * A value class wrapper for [String], containing
