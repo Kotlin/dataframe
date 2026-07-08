@@ -450,7 +450,7 @@ private fun Schema<*>.toMarker(
                                     .additionalPropertyPaths
                                     .map { it.prepend(name) }
 
-                                val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                val validName = ValidFieldName.of(name)
 
                                 // find the field type of the marker reference
                                 val fieldType = openApiTypeResult.marker.toFieldType()
@@ -476,7 +476,7 @@ private fun Schema<*>.toMarker(
 
                                 this += generatedFieldOf(
                                     overrides = false,
-                                    fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
+                                    fieldName = ValidFieldName.of(name),
                                     columnName = name,
                                     fieldType = FieldType.ValueFieldType(
                                         typeFqName = enumMarker.name +
@@ -503,7 +503,7 @@ private fun Schema<*>.toMarker(
                                         return MarkerResult.CannotFindRefMarker
 
                                     is FieldTypeResult.FieldType -> {
-                                        val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+                                        val validName = ValidFieldName.of(name)
 
                                         keyValuePaths += fieldTypeResult
                                             .additionalPropertyPaths

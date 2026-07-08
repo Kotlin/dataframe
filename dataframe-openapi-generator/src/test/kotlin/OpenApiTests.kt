@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
 import java.io.File.separatorChar
-import java.io.InputStream
 
 class OpenApiTests : JupyterReplTestCase() {
 
@@ -622,14 +621,12 @@ class OpenApiTests : JupyterReplTestCase() {
         val petInterface = """
             @DataSchema(isOpen = false)
             interface Pet {
-                @ColumnName("pet_type")
-                val petType: kotlin.String
+                val pet_type: kotlin.String
                 val value: kotlin.Any?
                 val name: kotlin.String
                 val tag: kotlin.String?
                 val other: kotlin.Any?
-                @ColumnName("eye_color")
-                val eyeColor: $functionName.EyeColor?
+                val eye_color: $functionName.EyeColor?
                 
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
@@ -640,16 +637,16 @@ class OpenApiTests : JupyterReplTestCase() {
                           convertTo()
                       }
         """.trimLines()
-        // petType was named pet_type, id is either Long or String, other is not integer, eyeColor is a required but nullable enum
+        // id is either Long or String, other is not integer, eye_color is a required but nullable enum
 
         code should haveSubstring(petInterface)
 
         @Language("kt")
         val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("Pet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.eyeColor: $functionName.EyeColor? @JvmName("Pet_eyeColor") get() = this["eye_color"] as $functionName.EyeColor?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.eyeColor: $functionName.EyeColor? @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as $functionName.EyeColor?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.eye_color: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("Pet_eye_color") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.eye_color: $functionName.EyeColor? @JvmName("Pet_eye_color") get() = this["eye_color"] as $functionName.EyeColor?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.eye_color: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("NullablePet_eye_color") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.eye_color: $functionName.EyeColor? @JvmName("NullablePet_eye_color") get() = this["eye_color"] as $functionName.EyeColor?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
@@ -658,10 +655,10 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.other: kotlin.Any? @JvmName("Pet_other") get() = this["other"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.other: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_other") get() = this["other"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.other: kotlin.Any? @JvmName("NullablePet_other") get() = this["other"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.petType: kotlin.String @JvmName("Pet_petType") get() = this["pet_type"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.petType: kotlin.String? @JvmName("NullablePet_petType") get() = this["pet_type"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.pet_type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_pet_type") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.pet_type: kotlin.String @JvmName("Pet_pet_type") get() = this["pet_type"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.pet_type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_pet_type") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.pet_type: kotlin.String? @JvmName("NullablePet_pet_type") get() = this["pet_type"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Pet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
@@ -1025,13 +1022,13 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val res1 = execRaw(
-            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<$functionName.Cat>(ExcessiveColumns.Remove)",
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { pet_type == \"Cat\" }.convertTo<$functionName.Cat>(ExcessiveColumns.Remove)",
         ) as AnyFrame
         val res1Schema = res1.schema()
 
         @Language("kts")
         val res2 = execRaw(
-            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<$functionName.Dog>(ExcessiveColumns.Remove)",
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { pet_type == \"Dog\" }.convertTo<$functionName.Dog>(ExcessiveColumns.Remove)",
         ) as AnyFrame
         val res2Schema = res2.schema()
 

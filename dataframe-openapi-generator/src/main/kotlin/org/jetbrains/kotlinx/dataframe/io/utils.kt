@@ -17,10 +17,8 @@ internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): S
         this
     }
 
-internal fun String.snakeToLowerCamelCase(): String = toCamelCaseByDelimiters()
-
 internal fun String.snakeToUpperCamelCase(): String =
-    snakeToLowerCamelCase()
+    toCamelCaseByDelimiters()
         .replaceFirstChar { it.uppercaseChar() }
 
 internal fun String.toNullable() = if (this.last() == '?') this else "$this?"
