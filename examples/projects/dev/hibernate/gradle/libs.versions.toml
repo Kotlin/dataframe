@@ -4,7 +4,7 @@ dataframe = "1.0.0-Beta5"
 ktlint-gradle = "14.0.1"
 ktlint = "1.8.0"
 h2db = "2.4.240"
-hibernate = "7.3.7.Final"
+hibernate = "7.4.4.Final"
 hikari = "7.0.2"
 sl4j = "2.0.17"
 
@@ -22,3 +22,5 @@ ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gr
 
 # The Kotlin DataFrame Compiler plugin is the same version as the Kotlin plugin.
 kotlin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
+
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
