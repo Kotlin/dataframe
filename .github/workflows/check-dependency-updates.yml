@@ -34,4 +34,4 @@ jobs:
         run: ./gradlew checkDependencyUpdates --no-configuration-cache --stacktrace
 
       - name: Update summary
-        run: cat build/reports/dependencies-update.md >> $GITHUB_STEP_SUMMARY
+        run: cat ./build/reports/dependency-updates.md >> $GITHUB_STEP_SUMMARY

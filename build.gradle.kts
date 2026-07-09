@@ -6,9 +6,8 @@ plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
         alias(buildExampleProjects)
-        alias(dependencyUpdates)
+        alias(caupain)
     }
-
     with(libs.plugins) {
         alias(publisher)
         alias(serialization) apply false

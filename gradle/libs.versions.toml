@@ -45,8 +45,11 @@ kotlinLogging = "8.0.4"
 sl4j = "2.0.18"
 log4j = "2.26.1"
 
+# ignoreUpdates
 junit = "4.13.2" # Issue #426
+# ignoreUpdates
 junit-jupiter = "5.11.3"
+# ignoreUpdates
 junit-platform = "1.11.3" # Issue #426
 kotestAsserions = "6.2.2"
 
@@ -54,11 +57,13 @@ jsoup = "1.22.2"
 arrow = "19.0.0"
 kodex = "0.5.4"
 simpleGit = "2.3.1"
-dependencyVersions = "0.54.0"
+caupain = "1.9.1"
 plugin-publish = "2.1.1"
 shadow = "9.5.1"
+# ignoreUpdates
 android-gradle-api = "7.3.1" # unused for now
 ktor = "3.5.1"
+# ignoreUpdates
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
 duckdb = "1.5.4.0"
@@ -77,7 +82,7 @@ hibernate = "7.4.4.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
-spark3 = "3.3.2"
+spark3 = "3.3.2" # ignoreUpdates
 spark4 = "4.1.2"
 
 multik = "0.3.1"
@@ -263,7 +268,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
+caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
