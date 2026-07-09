@@ -1,9 +1,9 @@
 [versions]
 kotlin = "2.4.0"
 dataframe = "1.0.0-Beta5"
-ktlint-gradle = "14.0.1"
+ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
-kotlinDatetime = "0.7.1-0.6.x-compat"
+kotlinDatetime = "0.8.0-0.6.x-compat"
 
 [libraries]
 dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }

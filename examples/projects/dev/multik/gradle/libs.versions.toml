@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.4.0"
 dataframe = "1.0.0-Beta5"
-ktlint-gradle = "14.0.1"
+ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 multik = "0.3.1"
 
