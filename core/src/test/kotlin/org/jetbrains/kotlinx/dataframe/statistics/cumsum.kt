@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -69,13 +70,13 @@ class CumsumTests {
     @Test
     fun `double column`() {
         val doubles by columnOf(1.0, 2.0, null, Double.NaN, 4.0)
-        doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
+        doubles.cumSum().toList() shouldBeEqual listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
     }
 
     @Test
     fun `number column`() {
         val doubles: DataColumn<Number?> by columnOf<Number?>(1, 2, null, Double.NaN, 4)
-        doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
+        doubles.cumSum().toList() shouldBeEqual listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
     }
 
     @Test
@@ -112,13 +113,13 @@ class CumsumTests {
         val res = df.cumSum()
 
         // works for Doubles, turns nulls into NaNs
-        res["doubles"].values() shouldBe columnOf(1.0, 3.0, Double.NaN).values()
+        res["doubles"].values() shouldBeEqual columnOf(1.0, 3.0, Double.NaN).values()
         // works for Shorts, turns into Ints, skips nulls
         res["shorts"].values() shouldBe columnOf(1, 3, null).values()
         // does not work for big numbers, keeps them as is
         res["bigInts"].values() shouldBe columnOf(1.toBigInteger(), 2.toBigInteger(), null).values()
         // works for mixed columns of primitives, number-unifies them; in this case to Doubles
-        res["mixed"].values() shouldBe columnOf(1.0, 3.0, Double.NaN).values()
+        res["mixed"].values() shouldBeEqual columnOf(1.0, 3.0, Double.NaN).values()
         // runs at any depth
         res["group"]["ints"].values() shouldBe columnOf(1, 3, 6).values()
     }

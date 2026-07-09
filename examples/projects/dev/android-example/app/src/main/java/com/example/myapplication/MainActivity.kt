@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming")
+
 package com.example.myapplication
 
 import android.os.Bundle
@@ -30,10 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.rows
 
 @DataSchema
-data class Person(
-    val age: Int,
-    val name: String
-)
+data class Person(val age: Int, val name: String)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
         val df = dataFrameOf(
             "name" to listOf("Andrei", "Nikita", "Jolan"),
-            "age" to listOf(22, 16, 37)
+            "age" to listOf(22, 16, 37),
         ).cast<Person>()
 
         setContent {
@@ -60,7 +59,7 @@ class MainActivity : ComponentActivity() {
 fun DefaultDataFrameScreenPreview() {
     val df = dataFrameOf(
         "name" to listOf("Andrei", "Nikita", "Jolan"),
-        "age" to listOf(22, 16, 37)
+        "age" to listOf(22, 16, 37),
     ).cast<Person>()
     DataFrameScreen(df)
 }
@@ -71,19 +70,19 @@ fun DataFrameScreen(df: DataFrame<Person>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 48.dp, start = 16.dp, end = 16.dp),
     ) {
         Text(
             text = "Kotlin DataFrame on Android",
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
 
         Text(
             text = "df",
             modifier = Modifier
                 .background(color = Color.LightGray)
-                .padding(2.dp)
+                .padding(2.dp),
         )
 
         DataFrameTable(df)
@@ -92,7 +91,7 @@ fun DataFrameScreen(df: DataFrame<Person>) {
             text = "df.filter { age >= 20 }",
             modifier = Modifier
                 .background(color = Color.LightGray)
-                .padding(2.dp)
+                .padding(2.dp),
         )
 
         DataFrameTable(filtered)
@@ -104,7 +103,7 @@ fun DataFrameScreen(df: DataFrame<Person>) {
 fun DefaultDataFrameTablePreview() {
     val df = dataFrameOf(
         "name" to listOf("Andrei", "Nikita", "Jolan"),
-        "age" to listOf(22, 16, 37)
+        "age" to listOf(22, 16, 37),
     ).cast<Person>()
     DataFrameTable(df)
 }
@@ -124,7 +123,7 @@ fun DataFrameTable(df: DataFrame<*>) {
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 }
             }
@@ -139,7 +138,7 @@ fun DataFrameTable(df: DataFrame<*>) {
                         text = cell.toString(),
                         modifier = Modifier
                             .weight(1f)
-                            .padding(4.dp)
+                            .padding(4.dp),
                     )
                 }
             }
