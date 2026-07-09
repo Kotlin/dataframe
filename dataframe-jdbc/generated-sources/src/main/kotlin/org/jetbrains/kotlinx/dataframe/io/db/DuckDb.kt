@@ -13,6 +13,7 @@ import org.duckdb.DuckDBColumnType.DECIMAL
 import org.duckdb.DuckDBColumnType.DOUBLE
 import org.duckdb.DuckDBColumnType.ENUM
 import org.duckdb.DuckDBColumnType.FLOAT
+import org.duckdb.DuckDBColumnType.GEOMETRY
 import org.duckdb.DuckDBColumnType.HUGEINT
 import org.duckdb.DuckDBColumnType.INTEGER
 import org.duckdb.DuckDBColumnType.INTERVAL
@@ -27,6 +28,7 @@ import org.duckdb.DuckDBColumnType.TIMESTAMP_MS
 import org.duckdb.DuckDBColumnType.TIMESTAMP_NS
 import org.duckdb.DuckDBColumnType.TIMESTAMP_S
 import org.duckdb.DuckDBColumnType.TIMESTAMP_WITH_TIME_ZONE
+import org.duckdb.DuckDBColumnType.TIME_NS
 import org.duckdb.DuckDBColumnType.TIME_WITH_TIME_ZONE
 import org.duckdb.DuckDBColumnType.TINYINT
 import org.duckdb.DuckDBColumnType.UBIGINT
@@ -38,6 +40,7 @@ import org.duckdb.DuckDBColumnType.USMALLINT
 import org.duckdb.DuckDBColumnType.UTINYINT
 import org.duckdb.DuckDBColumnType.UUID
 import org.duckdb.DuckDBColumnType.VARCHAR
+import org.duckdb.DuckDBColumnType.VARIANT
 import org.duckdb.DuckDBResultSetMetaData
 import org.duckdb.JsonNode
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -135,7 +138,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
                 DECIMAL -> jdbcToDfConverterFor<BigDecimal>(isNullable)
 
-                TIME ->
+                TIME, TIME_NS ->
                     jdbcToDfConverterFor<JavaLocalTime>(isNullable)
                         .withPreprocessor { it?.toKotlinLocalTime() }
 
@@ -162,7 +165,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                                 .inferType()
                         }
 
-                BLOB -> jdbcToDfConverterFor<Blob>(isNullable)
+                BLOB, GEOMETRY -> jdbcToDfConverterFor<Blob>(isNullable)
 
                 UUID -> jdbcToDfConverterFor<JavaUUID>(isNullable)
                     .withPreprocessor { it?.toKotlinUuid() }
@@ -280,7 +283,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
                 }
 
                 // Cannot handle this in Kotlin
-                UNION -> jdbcToDfConverterFor<Any>(isNullable)
+                UNION, VARIANT -> jdbcToDfConverterFor<Any>(isNullable)
 
                 VARCHAR -> jdbcToDfConverterFor<String>(isNullable)
 
