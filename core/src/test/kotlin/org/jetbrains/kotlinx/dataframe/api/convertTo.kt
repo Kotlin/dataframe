@@ -184,6 +184,21 @@ class ConvertToTests {
     @DataSchema
     data class DataSchemaWithAnyFrame(val dfs: AnyFrame?)
 
+    private fun locationsFrame(): DataFrame<Location?> =
+        listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+            null,
+        ).toDataFrame()
+            .alsoDebug("locations:")
+
+    private fun gpsFrame(): DataFrame<Gps?> =
+        listOf(
+            Gps(0.0, 0.0),
+            null,
+        ).toDataFrame()
+            .alsoDebug("gps:")
+
     @Test
     fun test() {
         val df1 = dataFrameOf("a")(1, 2, 3)
@@ -202,67 +217,70 @@ class ConvertToTests {
     }
 
     @Test
-    fun `convert df with AnyFrame to itself`() {
-        val locationsList = listOf(
-            Location("Home", Gps(0.0, 0.0)),
-            Location("Away", null),
-            null,
-        )
-        val locations = locationsList
-            .toDataFrame()
-            .alsoDebug("locations:")
+    fun `convert df with AnyFrame containing locations to itself`() {
+        val locations = locationsFrame()
 
-        val gpsList = listOf(
-            Gps(0.0, 0.0),
-            null,
-        )
-        val gps = gpsList
+        listOf(DataSchemaWithAnyFrame(locations))
             .toDataFrame()
-            .alsoDebug("gps:")
-
-        val df1 = listOf(
-            DataSchemaWithAnyFrame(locations),
-        ).toDataFrame()
             .alsoDebug("df1:")
+            .convertTo<DataSchemaWithAnyFrame>()
+    }
 
-        df1.convertTo<DataSchemaWithAnyFrame>()
+    @Test
+    fun `convert df with AnyFrame containing gps to itself`() {
+        val gps = gpsFrame()
 
-        val df2 = listOf(
-            DataSchemaWithAnyFrame(gps),
-        ).toDataFrame()
+        listOf(DataSchemaWithAnyFrame(gps))
+            .toDataFrame()
             .alsoDebug("df2:")
+            .convertTo<DataSchemaWithAnyFrame>()
+    }
 
-        df2.convertTo<DataSchemaWithAnyFrame>()
+    @Test
+    fun `convert df with preserved AnyFrame containing null and gps to itself`() {
+        val gps = gpsFrame()
 
-        val df3 = listOf(
+        listOf(
             DataSchemaWithAnyFrame(null),
             DataSchemaWithAnyFrame(gps),
         ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df3 before convert:")
+            .convertTo<DataSchemaWithAnyFrame>()
+    }
 
-        df3.convertTo<DataSchemaWithAnyFrame>()
-
-        val df4 = listOf(
+    @Test
+    fun `convert df with preserved null AnyFrame to itself`() {
+        listOf(
             DataSchemaWithAnyFrame(null),
         ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df4 before convert:")
+            .convertTo<DataSchemaWithAnyFrame>()
+    }
 
-        df4.convertTo<DataSchemaWithAnyFrame>()
+    @Test
+    fun `convert raw df with AnyFrame column to itself`() {
+        val locations = locationsFrame()
+        val gps = gpsFrame()
 
-        val df5a: DataFrame<*> = dataFrameOf(
+        val df: DataFrame<*> = dataFrameOf(
             columnOf(locations, gps, null).named("dfs"),
         ).alsoDebug("df5a:")
 
-        df5a.convertTo<DataSchemaWithAnyFrame>()
+        df.convertTo<DataSchemaWithAnyFrame>()
+    }
 
-        val df5 = listOf(
+    @Test
+    fun `convert df with preserved mixed AnyFrame values to itself repeatedly`() {
+        val locations = locationsFrame()
+        val gps = gpsFrame()
+
+        listOf(
             DataSchemaWithAnyFrame(null),
             DataSchemaWithAnyFrame(locations),
             DataSchemaWithAnyFrame(gps),
         ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df5 before convert:")
-
-        df5.convertTo<DataSchemaWithAnyFrame>()
+            .convertTo<DataSchemaWithAnyFrame>()
             .alsoDebug("df5 after convert:")
             .convertTo<DataSchemaWithAnyFrame>()
             .alsoDebug("df5 after second convert:")
@@ -394,4 +412,11 @@ class ConvertToTests {
         converted["a"].type() shouldBe typeOf<SimpleEnum?>()
         converted shouldBe dataFrameOf("a")(SimpleEnum.A, SimpleEnum.B, null)
     }
+
+//    @Test
+//    fun fff() {
+//        dataFrameOf("a" to columnOf(1, 2, 3)).convertTo<NullableA>()
+//    }
+//
+//    data class NullableA(val a: Int?)
 }

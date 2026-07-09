@@ -22,7 +22,7 @@ import kotlin.reflect.typeOf
 internal fun KType.getFieldKind(): FieldKind =
     FieldKind.of(
         this,
-        isDataFrame = { jvmErasure == DataFrame::class },
+        isDataFrame = { jvmErasure == DataFrame::class && !isMarkedNullable },
         isListToFrame = {
             jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true)
         },
