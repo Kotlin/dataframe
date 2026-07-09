@@ -4,7 +4,9 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
@@ -16,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -23,9 +26,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
+import kotlin.reflect.typeOf
 import kotlin.test.assertEquals
 
 class CodeGenerationTests : BaseTest() {
@@ -568,6 +573,18 @@ class CodeGenerationTests : BaseTest() {
             )
             """.trimIndent()
         assertEquals(expected, df.generateDataClasses().value)
+    }
+
+    @DataSchema
+    class C(val i: Int)
+
+    @DataSchema
+    class Schema(val df: DataFrame<C>?)
+
+    @Test
+    fun extractNullableDataFrameSchema() {
+        val schema = MarkersExtractor.get<Schema>().schema
+        schema.columns["df"] shouldBe ColumnSchema.Value(typeOf<DataFrame<C>?>())
     }
 
     // region Tests for generateX functions
