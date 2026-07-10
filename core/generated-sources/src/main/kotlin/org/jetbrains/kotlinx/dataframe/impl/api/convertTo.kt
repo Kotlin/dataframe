@@ -193,7 +193,14 @@ internal fun AnyFrame.convertToImpl(
 
                         when (targetSchema.kind) {
                             ColumnKind.Value ->
-                                convertedColumn ?: originalColumn.convertTo(to)
+                                when {
+                                    convertedColumn != null -> convertedColumn
+
+                                    originalColumn.kind == ColumnKind.Frame && to.jvmErasure == DataFrame::class ->
+                                        originalColumn
+
+                                    else -> originalColumn.convertTo(to)
+                                }
 
                             ColumnKind.Group -> {
                                 val column = when {
