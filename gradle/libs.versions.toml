@@ -271,6 +271,7 @@ kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "ben
 dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
 gradlePlugin-gradle-foojayToolchains = { id = "org.gradle.toolchains:foojay-resolver-convention", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { id = "dev.panuszewski:typesafe-conventions", version.ref = "typesafe-conventions" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 
 # Android example
 android-application = { id = "com.android.application", version.ref = "agp" }
