@@ -17,14 +17,14 @@ public interface ValueColumn<out T> : DataColumn<T> {
 
     override fun distinct(): ValueColumn<T>
 
-    override fun get(indices: Iterable<Int>): ValueColumn<T>
+    override fun get(indices: Iterable<Int>): DataColumn<T>
 
     override fun rename(newName: String): ValueColumn<T>
 
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): ValueColumn<T> =
         super.getValue(thisRef, property) as ValueColumn<T>
 
-    public override operator fun get(range: IntRange): ValueColumn<T>
+    public override operator fun get(range: IntRange): DataColumn<T>
 
     /**
      * Changes column [type][BaseColumn.type].
