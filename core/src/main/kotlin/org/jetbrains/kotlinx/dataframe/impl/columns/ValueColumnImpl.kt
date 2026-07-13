@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -78,12 +79,17 @@ internal open class ValueColumnImpl<T>(
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
-    override fun createWithValues(values: List<T>, hasNulls: Boolean?): ValueColumn<T> {
+    override fun createWithValues(values: List<T>, hasNulls: Boolean?): DataColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
+
+        // If this value column was of type `AnyFrame?` and all nulls are filtered out, return a frame column instead
+        if (!nulls && type.isSubtypeOf(typeOf<AnyFrame?>())) {
+            return DataColumn.createFrameColumn(name, values as List<AnyFrame>).cast()
+        }
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 
-    override fun get(indices: Iterable<Int>): ValueColumn<T> {
+    override fun get(indices: Iterable<Int>): DataColumn<T> {
         var nullable = false
         val newValues = indices.map {
             val value = values[it]
@@ -96,7 +102,7 @@ internal open class ValueColumnImpl<T>(
     override fun get(columnName: String) =
         throw UnsupportedOperationException("Can not get nested column '$columnName' from ValueColumn '$name'")
 
-    override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
+    override operator fun get(range: IntRange): DataColumn<T> = super<DataColumnImpl>.get(range) as DataColumn<T>
 
     override fun defaultValue() = defaultValue
 

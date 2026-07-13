@@ -5304,12 +5304,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ValueCol
 	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
-	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
-	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
-	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
-	public abstract fun get (Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;
 	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
