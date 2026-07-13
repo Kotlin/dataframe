@@ -320,18 +320,27 @@ internal fun convertToDataFrame(
         val kClass = returnType.classifier as KClass<*>
         val fieldKind = returnType.getFieldKind()
 
-        val keepSubtree =
-            maxDepth <= 0 && !fieldKind.shouldBeConvertedToFrameColumn && !fieldKind.shouldBeConvertedToColumnGroup
-        val shouldCreateValueCol = keepSubtree ||
-            kClass in preserveClasses ||
-            property in preserveProperties ||
-            (
-                !kClass.canBeUnfolded &&
-                    !fieldKind.shouldBeConvertedToFrameColumn &&
-                    !fieldKind.shouldBeConvertedToColumnGroup
-            )
-
+        // property type might not be of FrameColumn kind if `AnyFrame?`, but we still have to narrow it to FrameCol
+        // when no actual nulls are met
         val shouldCreateFrameCol = kClass == DataFrame::class && !nullable
+
+        val keepSubtree =
+            maxDepth <= 0 &&
+                !fieldKind.shouldBeConvertedToFrameColumn &&
+                !fieldKind.shouldBeConvertedToColumnGroup &&
+                !shouldCreateFrameCol
+
+        val shouldCreateValueCol =
+            keepSubtree ||
+                kClass in preserveClasses ||
+                property in preserveProperties ||
+                (
+                    !kClass.canBeUnfolded &&
+                        !fieldKind.shouldBeConvertedToFrameColumn &&
+                        !fieldKind.shouldBeConvertedToColumnGroup &&
+                        !shouldCreateFrameCol
+                )
+
         val shouldCreateColumnGroup = kClass == DataRow::class
 
         if (shouldCreateFrameCol && shouldCreateValueCol) {
@@ -358,7 +367,7 @@ internal fun convertToDataFrame(
             shouldCreateColumnGroup ->
                 DataColumn.createColumnGroup(
                     name = it.columnName,
-                    df = (values as List<AnyRow>).concat(),
+                    df = (values as List<AnyRow?>).concat(),
                 )
 
             kClass.isSubclassOf(Iterable::class) ->
