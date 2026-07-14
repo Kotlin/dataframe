@@ -134,8 +134,8 @@ private fun SessionFactory.countCustomersPerCountryWithHibernate() {
         val cb = session.criteriaBuilder
         val cq: CriteriaQuery<CountryCountDto> = cb.createQuery(CountryCountDto::class.java)
         val root: Root<CustomersEntity> = cq.from(CustomersEntity::class.java)
-        val countryPath = root.get<String?>("country")
-        val idPath = root.get<Int?>("customerId")
+        val countryPath = root.get(CustomersEntity_.country)
+        val idPath = root.get(CustomersEntity_.customerId)
 
         val countExpr = cb.count(idPath)
 

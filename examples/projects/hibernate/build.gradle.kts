@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.dataframe)
     alias(libs.plugins.kotlin.jpa)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ktlint.gradle)
 
     application
@@ -17,6 +18,7 @@ dependencies {
 
     // Hibernate + H2 + HikariCP (for Hibernate example)
     implementation(libs.hibernate.core)
+    kapt(libs.hibernate.processor)
     implementation(libs.hibernate.hikaricp)
     implementation(libs.hikaricp)
 
