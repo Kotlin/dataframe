@@ -12,6 +12,7 @@ sl4j = "2.0.18"
 dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
 hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+hibernate-processor = { group = "org.hibernate.orm", name = "hibernate-processor", version.ref = "hibernate" }
 hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
@@ -22,3 +23,6 @@ ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gr
 
 # The Kotlin DataFrame Compiler plugin is the same version as the Kotlin plugin.
 kotlin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
+
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
