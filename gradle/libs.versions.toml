@@ -199,6 +199,7 @@ exposed-json = { group = "org.jetbrains.exposed", name = "exposed-json", version
 exposed-money = { group = "org.jetbrains.exposed", name = "exposed-money", version.ref = "exposed" }
 
 hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+hibernate-processor = { group = "org.hibernate.orm", name = "hibernate-processor", version.ref = "hibernate" }
 hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 
@@ -271,6 +272,8 @@ kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "ben
 dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
 gradlePlugin-gradle-foojayToolchains = { id = "org.gradle.toolchains:foojay-resolver-convention", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { id = "dev.panuszewski:typesafe-conventions", version.ref = "typesafe-conventions" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 # Android example
 android-application = { id = "com.android.application", version.ref = "agp" }
