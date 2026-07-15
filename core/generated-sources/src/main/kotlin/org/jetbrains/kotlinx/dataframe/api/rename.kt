@@ -340,7 +340,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
 
 /**
  * __NOTE:__ While you can keep using 'into', we recommend using [to][RenameClause.to] for
- *  * better readability and more natural English.
+ * better readability and more natural English.
  *
  * Renames the columns selected with [rename] to the specified [newNames],
  * preserving their values and positions within the [DataFrame].
