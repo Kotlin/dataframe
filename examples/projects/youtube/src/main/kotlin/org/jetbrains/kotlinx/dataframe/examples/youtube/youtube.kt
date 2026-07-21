@@ -34,10 +34,10 @@ import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readJson
 import java.net.URL
 
-fun load(path: String) = DataRow.read("$BASE_PATH/$path&key=$API_KEY")
+fun load(path: String) = DataRow.readJson("$BASE_PATH/$path&key=$API_KEY")
 
 fun load(path: String, maxPages: Int): AnyFrame =
     buildList {
@@ -95,7 +95,7 @@ fun main() {
         // TODO replace with requireColumn {} when available
         // parse cannot know what type the columns will be at runtime,
         // so we need to cast the columns ourselves.
-        .convert { all().nameEndsWith("Count") }.toInt()
+        .convert { nameEndsWith("Count") }.toInt()
 
     val withStat = videos.join(stats) { id match right.id }
 
