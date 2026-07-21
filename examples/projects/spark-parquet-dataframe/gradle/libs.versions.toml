@@ -1,9 +1,9 @@
 [versions]
 kotlin = "2.4.0"
-dataframe = "1.0.0-Beta5"
+dataframe = "1.0.0-rc01"
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
-kandy = "0.8.5-dev-100"
+kandy = "0.8.5"
 log4j = "2.26.1"
 spark4 = "4.1.2"
 
