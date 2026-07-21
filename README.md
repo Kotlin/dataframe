@@ -2,12 +2,11 @@
 
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component beta stability](https://img.shields.io/badge/project-beta-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
-[![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.4.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%27dev%27%29%29+and+not%28contains%28text%28%29%2C%27n%27%29%29%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bcontains%28text%28%29%2C%22dev%22%29%5D%5Blast%28%29%5D&label=Dev%20version&color=yellow
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
 
 Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full
 power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and
@@ -19,7 +18,6 @@ REPL.
   possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
-* **Minimalistic** — simple, yet powerful data model of three column kinds.
 * **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other
   libraries' data structures is usually quite straightforward!
 * **Generic** — can store objects of any type, not only numbers or strings.
@@ -64,8 +62,6 @@ You could find the following articles there:
 ### What's new
 
 1.0.0-rc01: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-rc01)
-
-Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
 ## Setup
 
@@ -144,10 +140,6 @@ for detailed setup instructions (including Groovy DSL).
 * See [IDEA Gradle example projects](examples) 
 and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
 
-Refer to the
-[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
-for details.
-
 ### Maven
 
 Add dependencies in the `pom.xml` configuration file:
@@ -214,14 +206,6 @@ reposUpdated.writeCsv("jetbrains_repositories_new.csv")
 ```
 
 Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).
-
-## Data model
-
-* `DataFrame` is a list of columns with equal sizes and distinct names.
-* `DataColumn` is a named list of values. Can be one of three kinds:
-    * `ValueColumn` — contains data
-    * `ColumnGroup` — contains columns
-    * `FrameColumn` — contains dataframes
 
 ## Visualizations
 
