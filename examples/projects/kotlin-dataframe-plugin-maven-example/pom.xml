@@ -10,8 +10,8 @@
 
     <properties>
         <kotlin.version>2.4.0</kotlin.version>
-        <dataframe.version>1.0.0-Beta5</dataframe.version>
-        <kandy.version>0.8.5-dev-100</kandy.version>
+        <dataframe.version>1.0.0-rc01</dataframe.version>
+        <kandy.version>0.8.5</kandy.version>
         <ktlint.version>1.8.0</ktlint.version>
 
         <junit.version>5.10.0</junit.version>
