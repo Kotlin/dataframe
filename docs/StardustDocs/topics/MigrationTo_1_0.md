@@ -187,6 +187,7 @@ The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
+| `df.sortBy { col.desc() }`                                                                               | `df.sortBy { col.reversed() }`                                                                                                | Renamed to better reflect its purpose.                                       |
 
 ## Parsing and Converting Date-Time
 
