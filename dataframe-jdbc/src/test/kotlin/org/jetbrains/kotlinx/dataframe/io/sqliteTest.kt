@@ -14,6 +14,7 @@ import java.io.File
 import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.Types
 import kotlin.reflect.typeOf
 
 @DataSchema
@@ -45,6 +46,13 @@ interface CustomerOrderSQLite {
     val orderDate: String?
     val totalAmount: Double
     val orderDetails: ByteArray?
+}
+
+@DataSchema
+interface FlagSQLite {
+    val id: Int?
+    val enabled: Boolean
+    val optional: Boolean?
 }
 
 class SqliteTest {
@@ -92,6 +100,29 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(createOrderTableQuery)
+
+            @Language("SQL")
+            val createFlagsTableQuery = """
+            CREATE TABLE Flags (
+                id INTEGER PRIMARY KEY,
+                enabled BOOLEAN NOT NULL,
+                optional BOOLEAN
+            )
+            """
+
+            connection.createStatement().execute(createFlagsTableQuery)
+
+            connection.prepareStatement("INSERT INTO Flags (enabled, optional) VALUES (?, ?)").use {
+                it.setBoolean(1, true)
+                it.setBoolean(2, false)
+                it.executeUpdate()
+            }
+
+            connection.prepareStatement("INSERT INTO Flags (enabled, optional) VALUES (?, ?)").use {
+                it.setBoolean(1, false)
+                it.setNull(2, Types.BOOLEAN)
+                it.executeUpdate()
+            }
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()
@@ -247,18 +278,34 @@ class SqliteTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
-        val customerDf = dataframes[0].cast<CustomerSQLite>()
+        val customerDf = dataframes.getValue("Customers").cast<CustomerSQLite>()
 
         customerDf.rowsCount() shouldBe 2
         customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
-        val orderDf = dataframes[1].cast<OrderSQLite>()
+        val orderDf = dataframes.getValue("Orders").cast<OrderSQLite>()
 
         orderDf.rowsCount() shouldBe 2
         orderDf.filter { "totalAmount"<Double>() > 200 }.rowsCount() shouldBe 1
         orderDf[0][1] shouldBe null
+    }
+
+    @Test
+    fun `read boolean column`() {
+        val flagsTableName = "Flags"
+        val df = DataFrame.readSqlTable(connection, flagsTableName).cast<FlagSQLite>()
+
+        df.rowsCount() shouldBe 2
+        df["enabled"][0] shouldBe true
+        df["enabled"][1] shouldBe false
+        df["optional"][0] shouldBe false
+        df["optional"][1] shouldBe null
+
+        val schema = DataFrameSchema.readSqlTable(connection, flagsTableName)
+        schema.columns["enabled"]!!.type shouldBe typeOf<Boolean>()
+        schema.columns["optional"]!!.type shouldBe typeOf<Boolean?>()
     }
 }
