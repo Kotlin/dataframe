@@ -68,51 +68,6 @@ You could find the following articles there:
 > For more detailed instructions on how to get started with Kotlin DataFrame, refer to the
 > [Getting Started](https://kotlin.github.io/dataframe/setup.html).
 
-### Kotlin Notebook
-
-You can use Kotlin DataFrame in [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html),
-or other interactive environment with [Kotlin Jupyter Kernel](https://github.com/Kotlin/kotlin-jupyter) support,
-such as [Datalore](https://datalore.jetbrains.com/),
-and [Jupyter Notebook](https://jupyter.org/).
-
-You can include all the necessary dependencies and imports in the notebook using *line magic*:
-
-```
-%use dataframe
-```
-
-This will add the `dataframe` of the version bundled in the selected Kotlin Jupyter kernel.
-You can use `%useLatestDescriptors`
-to get the latest stable version without updating the Kotlin kernel:
-
-```
-%useLatestDescriptors
-%use dataframe
-```
-
-Or manually specify the version:
-
-```
-%use dataframe(1.0.0-rc01n)
-```
-
-> [!WARNING]  
-> Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
-> 
-> Use specified `1.0.0-rc01n` version in Kotlin Notebook. 
-> Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116), 
-> common `dataframe:1.0.0-rc01` version works incorrectly in Notebook.
->
-> If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
-> ```kotlin
-> %useLatestDescriptors
-> %use dataframe, kandy
-> ```
-
-Refer to the
-[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
-for details.
-
 ### Gradle
 
 Add dependencies in the `build.gradle.kts` script:
@@ -168,6 +123,50 @@ Refer to
 
 * See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
 
+### Kotlin Notebook
+
+You can use Kotlin DataFrame in [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html),
+or other interactive environment with [Kotlin Jupyter Kernel](https://github.com/Kotlin/kotlin-jupyter) support,
+such as [Datalore](https://datalore.jetbrains.com/),
+and [Jupyter Notebook](https://jupyter.org/).
+
+You can include all the necessary dependencies and imports in the notebook using *line magic*:
+
+```
+%use dataframe
+```
+
+This will add the `dataframe` of the version bundled in the selected Kotlin Jupyter kernel.
+You can use `%useLatestDescriptors`
+to get the latest stable version without updating the Kotlin kernel:
+
+```
+%useLatestDescriptors
+%use dataframe
+```
+
+Or manually specify the version:
+
+```
+%use dataframe(1.0.0-rc01n)
+```
+
+> [!WARNING]
+> Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
+>
+> Use specified `1.0.0-rc01n` version in Kotlin Notebook.
+> Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116),
+> common `dataframe:1.0.0-rc01` version works incorrectly in Notebook.
+>
+> If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
+> ```kotlin
+> %useLatestDescriptors
+> %use dataframe, kandy
+> ```
+
+Refer to the
+[Setup Kotlin DataFrame in Kotlin Notebook](https://kotlin.github.io/dataframe/setupkotlinnotebook.html)
+for details.
 
 ## Code example
 
