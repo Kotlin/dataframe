@@ -97,7 +97,7 @@
                 <toc-element topic="columns.md"/>
                 <toc-element topic="getColumn.md"/>
             </toc-element>
-            <toc-element topic="getValues.md">
+            <toc-element toc-title="Get values">
                 <toc-element topic="values.md"/>
             </toc-element>
         </toc-element>
