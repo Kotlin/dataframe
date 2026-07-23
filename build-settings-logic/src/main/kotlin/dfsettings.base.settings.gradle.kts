@@ -26,6 +26,13 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://redirector.kotlinlang.org/maven/bootstrap")
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
     }
 }
 
