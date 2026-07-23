@@ -5,6 +5,7 @@ import org.sqlite.SQLiteConfig
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.Types
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -26,6 +27,26 @@ public class Sqlite(public val customTypesMap: Map<String, KType> = mapOf()) : D
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType =
         customTypesMap[tableColumnMetadata.sqlTypeName]?.withNullability(tableColumnMetadata.isNullable)
             ?: super.getExpectedJdbcType(tableColumnMetadata)
+
+    // SQLite has no native BOOLEAN storage class — values are kept as INTEGER.
+    // The Xerial JDBC driver reports Types.BOOLEAN in metadata but returns Integer from getObject.
+    override fun <J> getValueFromResultSet(
+        rs: ResultSet,
+        columnIndex: Int,
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
+    ): J {
+        val idx = columnIndex + 1
+        return when (tableColumnMetadata.jdbcType) {
+            Types.BOOLEAN, Types.BIT -> {
+                val value = rs.getBoolean(idx)
+                @Suppress("UNCHECKED_CAST")
+                (if (rs.wasNull()) null else value) as J
+            }
+
+            else -> super.getValueFromResultSet(rs, columnIndex, tableColumnMetadata, expectedJdbcType)
+        }
+    }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")
 
