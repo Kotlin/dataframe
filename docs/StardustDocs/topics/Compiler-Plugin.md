@@ -16,7 +16,7 @@ a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </link-summary>
 
 
-> Now available in Gradle (IDEA 2025.2+) and Maven (IDEA 2025.3+) projects, is coming soon to Kotlin Notebook.
+> Now available in Gradle (IDEA 2025.2+) and Maven (IDEA 2025.3+) projects, is coming soon to Kotlin Toolchain.
 
 **Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
 **[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
@@ -45,6 +45,7 @@ Setup plugins in build.gradle.kts:
 ```kotlin
 kotlin("jvm") version "%compilerPluginKotlinVersion%"
 ```
+
 
 ```kotlin
 kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
