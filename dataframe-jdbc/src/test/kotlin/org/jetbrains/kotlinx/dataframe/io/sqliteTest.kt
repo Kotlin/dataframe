@@ -124,6 +124,36 @@ class SqliteTest {
                 it.executeUpdate()
             }
 
+            // Dates and timestamps: SQLite stores each in one of three encodings — ISO text,
+            // Unix seconds (INTEGER), or Julian days (REAL). The library returns the raw stored
+            // value; downstream code is responsible for parsing.
+            @Language("SQL")
+            val createTemporalTableQuery = """
+            CREATE TABLE Temporal (
+                id INTEGER PRIMARY KEY,
+                isoDate DATE,
+                isoDateTime DATETIME,
+                isoTimestamp TIMESTAMP,
+                unixTimestamp TIMESTAMP,
+                julianDate DATE,
+                julianTimestamp TIMESTAMP
+            )
+            """
+
+            connection.createStatement().execute(createTemporalTableQuery)
+
+            // Julian day 2460146.5 = 2023-07-21 00:00:00 UTC.
+            // The `.5` fraction forces SQLite to store it as REAL (Julian day convention).
+            connection.createStatement().execute(
+                """
+                INSERT INTO Temporal
+                    (isoDate, isoDateTime, isoTimestamp, unixTimestamp, julianDate, julianTimestamp)
+                    VALUES
+                    ('2023-07-21', '2023-07-21 10:30:00', '2023-07-21T10:30:00Z', 1690000000,
+                     2460146.5, 2460146.5)
+                """.trimIndent(),
+            )
+
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()
 
@@ -307,5 +337,33 @@ class SqliteTest {
         val schema = DataFrameSchema.readSqlTable(connection, flagsTableName)
         schema.columns["enabled"]!!.type shouldBe typeOf<Boolean>()
         schema.columns["optional"]!!.type shouldBe typeOf<Boolean?>()
+    }
+
+    @Test
+    fun `read date and timestamp columns converts storage class to declared type`() {
+        // SQLite doesn't have native DATE/TIMESTAMP storage — values may be TEXT (ISO), INTEGER
+        // (Unix seconds), or REAL (Julian day). The library preserves an idiomatic Kotlin
+        // date-time type in the schema and converts each value in preprocessing based on its
+        // runtime storage class.
+        val df = DataFrame.readSqlTable(connection, "Temporal")
+
+        df.rowsCount() shouldBe 1
+        // TEXT storage — ISO strings.
+        df["isoDate"][0] shouldBe kotlinx.datetime.LocalDate.parse("2023-07-21")
+        df["isoDateTime"][0] shouldBe kotlinx.datetime.LocalDateTime.parse("2023-07-21T10:30:00")
+        df["isoTimestamp"][0] shouldBe kotlin.time.Instant.parse("2023-07-21T10:30:00Z")
+        // INTEGER storage — Unix seconds.
+        df["unixTimestamp"][0] shouldBe kotlin.time.Instant.fromEpochSeconds(1690000000)
+        // REAL storage — Julian day 2460146.5 = 2023-07-21 00:00:00 UTC.
+        df["julianDate"][0] shouldBe kotlinx.datetime.LocalDate.parse("2023-07-21")
+        df["julianTimestamp"][0] shouldBe kotlin.time.Instant.parse("2023-07-21T00:00:00Z")
+
+        val schema = DataFrameSchema.readSqlTable(connection, "Temporal")
+        schema.columns["isoDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["isoDateTime"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
+        schema.columns["isoTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["unixTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["julianDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["julianTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
     }
 }
