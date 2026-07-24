@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+
 plugins {
     alias(conventions.plugins.dfbuild.base)
     // enables the linter for every Kotlin module in the project
@@ -9,6 +11,19 @@ plugins {
 kotlin {
     explicitApi()
     jvmToolchain(libs.versions.gradle.jdk.get().toInt())
+
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation()
+}
+
+// Aliases akin to the old binary compatibility validator plugin
+val apiCheck by tasks.registering {
+    group = "verification"
+    dependsOn("checkKotlinAbi")
+}
+val apiDump by tasks.registering {
+    group = "verification"
+    dependsOn("updateKotlinAbi")
 }
 
 // Adds the instrumentedJars configuration/artifact to all Kotlin sub-projects.

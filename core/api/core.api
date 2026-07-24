@@ -192,7 +192,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/aggregation/Colu
 
 public final class org/jetbrains/kotlinx/dataframe/aggregation/NamedValue {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/aggregation/NamedValue$Companion;
-	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/lang/Object;Lkotlin/reflect/KType;Ljava/lang/Object;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun component3 ()Lkotlin/reflect/KType;
@@ -1939,7 +1938,6 @@ public abstract class org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions 
 
 public class org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Java : org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Java$Companion;
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/util/Set;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun copy ()Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Java;
 	public synthetic fun copy ()Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions;
 	public final fun copy (Ljava/util/Locale;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Java;
@@ -1968,7 +1966,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Jav
 
 public class org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Kotlin : org/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Kotlin$Companion;
-	public synthetic fun <init> (Ljava/util/Set;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun copy ()Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Kotlin;
 	public synthetic fun copy ()Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions;
 	public final fun copy (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/api/DateTimeParserOptions$Kotlin;
@@ -4998,7 +4995,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/TypeCast
 
 public final class org/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator$DataFrameApi : org/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator$DataFrameApi$Companion;
-	public synthetic fun <init> ([Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addCastTo (Ljava/lang/String;)Ljava/lang/String;
 	public final fun getTypes ()[Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
@@ -5016,7 +5012,6 @@ public final class org/jetbrains/kotlinx/dataframe/codeGen/TypeCastGenerator$Emp
 
 public final class org/jetbrains/kotlinx/dataframe/codeGen/ValidFieldName {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/ValidFieldName$Companion;
-	public synthetic fun <init> (Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getNeedsQuote ()Z
 	public final fun getQuotedIfNeeded ()Ljava/lang/String;
 	public final fun getUnquoted ()Ljava/lang/String;
@@ -5089,7 +5084,6 @@ public class org/jetbrains/kotlinx/dataframe/columns/ColumnKind : java/lang/Enum
 	public static final field Frame Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public static final field Group Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public static final field Value Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
-	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
 	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnKind;
