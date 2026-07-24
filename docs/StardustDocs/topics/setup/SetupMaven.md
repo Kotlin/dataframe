@@ -36,7 +36,45 @@ that you want to use in your project. The minimum supported version is JDK 8.
 
 You have successfully created a project with Maven.
 
-## Add Kotlin DataFrame Maven dependency
+## Setup Kotlin DataFrame
+
+### 1. Add the plugin
+
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
+[extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
+on-the-fly in Maven projects, making development with Kotlin DataFrame faster,
+more convenient, and fully type- and name-safe.
+
+> Requires Kotlin 2.2.20-Beta1 or higher and IntelliJ IDEA 2025.3 or higher.  
+> { style = "note" }
+
+To enable the plugin in your Maven project, update the `<kotlin-maven-plugin>` in the `<plugin>` section of your `pom.xml`:
+
+```xml
+<plugin>
+    <artifactId>kotlin-maven-plugin</artifactId>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <version>%compilerPluginKotlinVersion%</version>
+
+    <configuration>
+        <!-- Specify the Kotlin-dataframe plugin -->
+        <compilerPlugins>
+            <plugin>kotlin-dataframe</plugin>
+        </compilerPlugins>
+    </configuration>
+
+    <!-- Add the Kotlin-dataframe plugin dependency -->
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-dataframe</artifactId>
+            <version>%compilerPluginKotlinVersion%</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+### 2. Add the library dependency
 
 In your Maven build file (`pom.xml`), add the Kotlin DataFrame library as a dependency:
 
@@ -73,39 +111,6 @@ fun main() {
 }
 ```
 
-## Kotlin DataFrame Compiler Plugin
-
-[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
-[extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
-on-the-fly in Maven projects, making development with Kotlin DataFrame faster,
-more convenient, and fully type- and name-safe.
-
-> Requires Kotlin 2.2.20-Beta1 or higher and IntelliJ IDEA 2025.3 or higher.  
-> { style = "note" }
-
-To enable the plugin in your Maven project, add it to the `plugins` section:
-
-```xml
-<plugin>
-    <artifactId>kotlin-maven-plugin</artifactId>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <version>%compilerPluginKotlinVersion%</version>
-
-    <configuration>
-        <compilerPlugins>
-            <plugin>kotlin-dataframe</plugin>
-        </compilerPlugins>
-    </configuration>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-dataframe</artifactId>
-            <version>%compilerPluginKotlinVersion%</version>
-        </dependency>
-    </dependencies>
-</plugin>
-```
 
 ## Project Example
 

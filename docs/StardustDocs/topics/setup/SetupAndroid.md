@@ -14,6 +14,48 @@ How to use Kotlin DataFrame in your Android project with Gradle setup and compil
 
 > See an [Android project example](https://github.com/Kotlin/dataframe/tree/master/examples/projects/android-example).
 
+
+### 1. Add the plugin
+
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation
+of [extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
+on-the-fly in Android projects, making development with Kotlin DataFrame
+faster, more convenient, and fully type- and name-safe.
+
+> Requires Kotlin 2.2.20-Beta1 or higher.
+
+To enable the plugin in your Gradle project, add it to the `plugins` section:
+
+<tabs>
+<tab title="Kotlin DSL">
+
+```kotlin
+plugins {
+    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
+}
+```
+
+</tab>
+
+<tab title="Groovy DSL">
+
+```groovy
+plugins {
+    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
+}
+```
+
+</tab>
+</tabs>
+
+In versions older than Kotlin 2.4.0 add following line to your `gradle.properties`:
+
+```properties
+kotlin.incremental=false
+```
+
+### 2. Add the library
+
 Kotlin DataFrame doesn't provide a dedicated Android artifact yet, 
 but you can add the Kotlin DataFrame JVM dependency to your Android project with minimal configuration:
 
@@ -52,54 +94,6 @@ dependencies {
 
 </tab>
 </tabs>
-
-This setup adds the [Kotlin DataFrame core](Modules.md#dataframe-core) 
-as well as a subset of the [IO modules](Modules.md#io-modules) 
-(excluding [experimental ones](Modules.md#experimental-modules)).
-For flexible configuration, see [Custom configuration](SetupCustomGradle.md).
-
-## Kotlin DataFrame Compiler Plugin
-
-[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation 
-of [extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md) 
-on-the-fly in Android projects, making development with Kotlin DataFrame 
-faster, more convenient, and fully type- and name-safe.
-
-> Requires Kotlin 2.2.20-Beta1 or higher.  
-> { style = "note" }
-
-To enable the plugin in your Gradle project, add it to the `plugins` section:
-
-<tabs>
-<tab title="Kotlin DSL">
-
-```kotlin
-plugins {
-    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
-}
-```
-
-</tab>
-
-<tab title="Groovy DSL">
-
-```groovy
-plugins {
-    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
-}
-```
-
-</tab>
-</tabs>
-
-If you're using a version older than Kotlin 2.4.0,
-incremental compilation must be disabled due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735),
-
-Add the following line to your `gradle.properties` file:
-
-```properties
-kotlin.incremental=false
-```
 
 ## Next Steps
 

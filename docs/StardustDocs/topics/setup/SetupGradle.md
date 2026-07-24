@@ -38,8 +38,45 @@ that you want to use in your project. The minimum supported version is JDK 8.
 
 You have successfully created a project with Gradle.
 
-## Add Kotlin DataFrame Gradle dependency
+## Setup Kotlin DataFrame
 
+### 1. Add the plugin
+[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
+[extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
+on-the-fly in Gradle projects, making development with Kotlin DataFrame faster,
+more convenient, and fully type- and name-safe.
+
+> Requires Kotlin 2.2.20-Beta1 or higher
+
+To enable the plugin in your Gradle project, add it to the `plugins` section:
+
+<tabs>
+<tab title="Kotlin DSL">
+
+```kotlin
+plugins {
+    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
+}
+```
+</tab>
+<tab title="Groovy DSL">
+
+```groovy
+plugins {
+    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
+}
+```
+
+</tab>
+</tabs>
+
+In versions older than Kotlin 2.4.0 add following line to your `gradle.properties`:
+
+```properties
+kotlin.incremental=false
+```
+
+### 2. Add the library dependency
 In your Gradle build file (`build.gradle` or `build.gradle.kts`), add the Kotlin DataFrame library as a dependency:
 
 <tabs>
@@ -85,49 +122,6 @@ fun main() {
 
     df.print()
 }
-```
-
-## Kotlin DataFrame Compiler Plugin
-
-[Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
-[extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
-on-the-fly in Gradle projects, making development with Kotlin DataFrame faster,
-more convenient, and fully type- and name-safe.
-
-> Requires Kotlin 2.2.20-Beta1 or higher.  
-> { style = "note" }
-
-To enable the plugin in your Gradle project, add it to the `plugins` section:
-
-<tabs>
-<tab title="Kotlin DSL">
-
-```kotlin
-plugins {
-    kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
-}
-```
-
-</tab>
-
-<tab title="Groovy DSL">
-
-```groovy
-plugins {
-    id 'org.jetbrains.kotlin.plugin.dataframe' version '%compilerPluginKotlinVersion%'
-}
-```
-
-</tab>
-</tabs>
-
-If you're using a version older than Kotlin 2.4.0,
-incremental compilation must be disabled due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735),
-
-Add the following line to your `gradle.properties` file:
-
-```properties
-kotlin.incremental=false
 ```
 
 ## Project Example
