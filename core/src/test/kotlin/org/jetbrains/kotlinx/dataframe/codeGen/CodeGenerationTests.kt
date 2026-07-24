@@ -230,60 +230,125 @@ class CodeGenerationTests : BaseTest() {
     fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) =
         buildString {
             appendLine(
-                """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""",
+                expectedExtensionProperty(
+                    "$dfName<$fullTypeName>",
+                    "age",
+                    "$dataCol<$intName>",
+                    "${shortTypeName}_age",
+                ),
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""",
-            )
-            if (addNullable) {
-                appendLine(
-                    """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""",
-                )
-                appendLine(
-                    """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""",
-                )
-            }
-            appendLine(
-                """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
-            )
-            appendLine(
-                """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""",
+                expectedExtensionProperty("$dfRowName<$fullTypeName>", "age", intName, "${shortTypeName}_age"),
             )
             if (addNullable) {
                 appendLine(
-                    """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+                    expectedExtensionProperty(
+                        "$dfName<$fullTypeName?>",
+                        "age",
+                        "$dataCol<$intName?>",
+                        "Nullable${shortTypeName}_age",
+                    ),
                 )
                 appendLine(
-                    """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""",
+                    expectedExtensionProperty(
+                        "$dfRowName<$fullTypeName?>",
+                        "age",
+                        "$intName?",
+                        "Nullable${shortTypeName}_age",
+                    ),
                 )
             }
             appendLine(
-                """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""",
+                expectedExtensionProperty(
+                    "$dfName<$fullTypeName>",
+                    "city",
+                    "$dataCol<$stringName?>",
+                    "${shortTypeName}_city",
+                ),
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""",
+                expectedExtensionProperty("$dfRowName<$fullTypeName>", "city", "$stringName?", "${shortTypeName}_city"),
             )
             if (addNullable) {
                 appendLine(
-                    """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""",
+                    expectedExtensionProperty(
+                        "$dfName<$fullTypeName?>",
+                        "city",
+                        "$dataCol<$stringName?>",
+                        "Nullable${shortTypeName}_city",
+                    ),
                 )
                 appendLine(
-                    """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""",
+                    expectedExtensionProperty(
+                        "$dfRowName<$fullTypeName?>",
+                        "city",
+                        "$stringName?",
+                        "Nullable${shortTypeName}_city",
+                    ),
                 )
             }
             appendLine(
-                """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                expectedExtensionProperty(
+                    "$dfName<$fullTypeName>",
+                    "name",
+                    "$dataCol<$stringName>",
+                    "${shortTypeName}_name",
+                ),
+            )
+            appendLine(
+                expectedExtensionProperty("$dfRowName<$fullTypeName>", "name", stringName, "${shortTypeName}_name"),
+            )
+            if (addNullable) {
+                appendLine(
+                    expectedExtensionProperty(
+                        "$dfName<$fullTypeName?>",
+                        "name",
+                        "$dataCol<$stringName?>",
+                        "Nullable${shortTypeName}_name",
+                    ),
+                )
+                appendLine(
+                    expectedExtensionProperty(
+                        "$dfRowName<$fullTypeName?>",
+                        "name",
+                        "$stringName?",
+                        "Nullable${shortTypeName}_name",
+                    ),
+                )
+            }
+            appendLine(
+                expectedExtensionProperty(
+                    "$dfName<$fullTypeName>",
+                    "weight",
+                    "$dataCol<$intName?>",
+                    "${shortTypeName}_weight",
+                ),
             )
             append(
-                """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                expectedExtensionProperty(
+                    "$dfRowName<$fullTypeName>",
+                    "weight",
+                    "$intName?",
+                    "${shortTypeName}_weight",
+                ),
             )
             if (addNullable) {
                 appendLine("")
                 appendLine(
-                    """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                    expectedExtensionProperty(
+                        "$dfName<$fullTypeName?>",
+                        "weight",
+                        "$dataCol<$intName?>",
+                        "Nullable${shortTypeName}_weight",
+                    ),
                 )
                 append(
-                    """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                    expectedExtensionProperty(
+                        "$dfRowName<$fullTypeName?>",
+                        "weight",
+                        "$intName?",
+                        "Nullable${shortTypeName}_weight",
+                    ),
                 )
             }
         }
@@ -357,12 +422,22 @@ class CodeGenerationTests : BaseTest() {
                 val name: String
             }
 
-            val $dfName<$nestedType>.city: $dataCol<$stringName?> @JvmName("${nestedType}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$nestedType>.city: $stringName? @JvmName("${nestedType}_city") get() = this["city"] as $stringName?
-            val $dfName<$nestedType>.name: $dataCol<$stringName> @JvmName("${nestedType}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$nestedType>.name: $stringName @JvmName("${nestedType}_name") get() = this["name"] as $stringName
-
-            """.trimIndent()
+            """.trimIndent() + listOf(
+                expectedExtensionProperty(
+                    "$dfName<$nestedType>",
+                    "city",
+                    "$dataCol<$stringName?>",
+                    "${nestedType}_city",
+                ),
+                expectedExtensionProperty("$dfRowName<$nestedType>", "city", "$stringName?", "${nestedType}_city"),
+                expectedExtensionProperty(
+                    "$dfName<$nestedType>",
+                    "name",
+                    "$dataCol<$stringName>",
+                    "${nestedType}_name",
+                ),
+                expectedExtensionProperty("$dfRowName<$nestedType>", "name", stringName, "${nestedType}_name"),
+            ).joinToString("\n", prefix = "\n", postfix = "\n")
 
         val declaration2 =
             """
@@ -373,13 +448,24 @@ class CodeGenerationTests : BaseTest() {
                 val weight: Int?
             }
 
-            val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
-            val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
-            val $dfName<$type2>.nameAndCity: $colGroup<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$nestedType>
-            val $dfRowName<$type2>.nameAndCity: $dataRow<$nestedType> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$nestedType>
-            val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
-            """.trimIndent()
+            """.trimIndent() + listOf(
+                expectedExtensionProperty("$dfName<$type2>", "age", "$dataCol<$intName>", "${type2}_age"),
+                expectedExtensionProperty("$dfRowName<$type2>", "age", intName, "${type2}_age"),
+                expectedExtensionProperty(
+                    "$dfName<$type2>",
+                    "nameAndCity",
+                    "$colGroup<$nestedType>",
+                    "${type2}_nameAndCity",
+                ),
+                expectedExtensionProperty(
+                    "$dfRowName<$type2>",
+                    "nameAndCity",
+                    "$dataRow<$nestedType>",
+                    "${type2}_nameAndCity",
+                ),
+                expectedExtensionProperty("$dfName<$type2>", "weight", "$dataCol<$intName?>", "${type2}_weight"),
+                expectedExtensionProperty("$dfRowName<$type2>", "weight", "$intName?", "${type2}_weight"),
+            ).joinToString("\n", prefix = "\n")
 
         val expectedConverter = "it.cast<$type2>()"
 
@@ -433,11 +519,32 @@ class CodeGenerationTests : BaseTest() {
                 override val weight: kotlin.Int
             }
 
-            val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
-            val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
-            """.trimIndent()
+            """.trimIndent() + listOf(
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<ValidPerson>",
+                    "city",
+                    "$packageName.DataColumn<kotlin.String>",
+                    "ValidPerson_city",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<ValidPerson>",
+                    "city",
+                    "kotlin.String",
+                    "ValidPerson_city",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<ValidPerson>",
+                    "weight",
+                    "$packageName.DataColumn<kotlin.Int>",
+                    "ValidPerson_weight",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<ValidPerson>",
+                    "weight",
+                    "kotlin.Int",
+                    "ValidPerson_weight",
+                ),
+            ).joinToString("\n", prefix = "\n")
         assertEquals(expected, code)
     }
 
@@ -485,16 +592,65 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-            
-            internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            internal val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
-            internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            internal val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
-            internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
-            internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-            """.trimIndent()
+
+            """.trimIndent() + listOf(
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "age",
+                    "$packageName.DataColumn<kotlin.Int>",
+                    "DataType_age",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "age",
+                    "kotlin.Int",
+                    "DataType_age",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "city",
+                    "$packageName.DataColumn<kotlin.String?>",
+                    "DataType_city",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "city",
+                    "kotlin.String?",
+                    "DataType_city",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "name",
+                    "$packageName.DataColumn<kotlin.String>",
+                    "DataType_name",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "name",
+                    "kotlin.String",
+                    "DataType_name",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "weight",
+                    "$packageName.DataColumn<kotlin.Int?>",
+                    "DataType_weight",
+                    visibility = "internal ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "weight",
+                    "kotlin.Int?",
+                    "DataType_weight",
+                    visibility = "internal ",
+                ),
+            ).joinToString("\n", prefix = "\n")
         assertEquals(expected, code)
     }
 
@@ -510,7 +666,8 @@ class CodeGenerationTests : BaseTest() {
             MarkerVisibility.EXPLICIT_PUBLIC,
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        val expected = """
+        val expected =
+            """
             @DataSchema(isOpen = false)
             public interface DataType {
                 public val age: kotlin.Int
@@ -519,17 +676,66 @@ class CodeGenerationTests : BaseTest() {
                 public val weight: kotlin.Int?
             }
             
-            public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            public val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
-            public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            public val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
-            public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
-            public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-            """
+            """.trimIndent() + listOf(
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "age",
+                    "$packageName.DataColumn<kotlin.Int>",
+                    "DataType_age",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "age",
+                    "kotlin.Int",
+                    "DataType_age",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "city",
+                    "$packageName.DataColumn<kotlin.String?>",
+                    "DataType_city",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "city",
+                    "kotlin.String?",
+                    "DataType_city",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "name",
+                    "$packageName.DataColumn<kotlin.String>",
+                    "DataType_name",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "name",
+                    "kotlin.String",
+                    "DataType_name",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.ColumnsContainer<DataType>",
+                    "weight",
+                    "$packageName.DataColumn<kotlin.Int?>",
+                    "DataType_weight",
+                    visibility = "public ",
+                ),
+                expectedExtensionProperty(
+                    "$packageName.DataRow<DataType>",
+                    "weight",
+                    "kotlin.Int?",
+                    "DataType_weight",
+                    visibility = "public ",
+                ),
+            ).joinToString("\n", prefix = "\n")
 
-        assertEquals(expected.trimIndent(), code)
+        assertEquals(expected, code)
     }
 
     @Test

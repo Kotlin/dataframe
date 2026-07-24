@@ -18,6 +18,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
     private val openApi = OpenApi()
     private val additionalImports = openApi.createDefaultReadMethod().additionalImports.joinToString("\n")
+    private val extensionPropertyRegex =
+        """val (.+)\.([^.:]+): (.+) @JvmName\("([^"]+)"\) get\(\) = this\["((?:\\.|[^"])*)"] as (.+)""".toRegex()
 
     private fun execGeneratedCode(code: Code): Code {
         @Language("kts")
@@ -39,6 +41,67 @@ class OpenApiTests : JupyterReplTestCase() {
         )
         return execGeneratedCode(code)
     }
+
+    private fun String.expectedExtensionProperties(): String =
+        trimLines().lines().joinToString("\n") { line ->
+            extensionPropertyRegex.matchEntire(line)
+                ?.destructured
+                ?.let { (receiverType, name, propertyType, jvmName, columnName, castType) ->
+                    expectedExtensionProperty(
+                        receiverType = receiverType,
+                        name = name,
+                        propertyType = propertyType,
+                        jvmName = jvmName,
+                        columnName = columnName,
+                        castType = castType,
+                    )
+                }
+                ?: error("Unexpected extension property format: $line")
+        }
+
+    private fun expectedExtensionProperty(
+        receiverType: String,
+        name: String,
+        propertyType: String,
+        jvmName: String,
+        columnName: String,
+        castType: String,
+    ): String =
+        buildString {
+            val renderedColumnName = columnName
+                .replace("\\", "\\\\")
+                .replace("$", "\\\$")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+
+            appendLine("""val $receiverType.$name: $propertyType @JvmName("$jvmName") get() = try {""")
+            appendLine("""    this["$renderedColumnName"] as $castType""")
+            appendLine("} catch (e: kotlin.Exception) {")
+            appendLine("    val msg = when (e) {")
+            appendLine("        is kotlin.IllegalArgumentException ->")
+            appendLine(
+                "            \"Column not found exception in the generated DataFrame extension property " +
+                    "'$renderedColumnName': \${e.localizedMessage}. See  for more information.\"",
+            )
+            appendLine("")
+            appendLine("        is kotlin.ClassCastException ->")
+            appendLine(
+                "            \"Incorrect column type exception in generated DataFrame extension property " +
+                    "'$renderedColumnName': \${e.localizedMessage}. See  for more information.\"",
+            )
+
+            appendLine("")
+            appendLine("        else ->")
+            appendLine(
+                "            \"Unexpected exception in generated DataFrame extension property " +
+                    "'$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues. " +
+                    "Exception message: \$e.\"",
+            )
+            appendLine("    }")
+            appendLine("    throw IllegalStateException(msg, e)")
+            append("} ")
+        }.trimLines()
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
@@ -110,7 +173,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(petExtensions)
 
@@ -143,7 +206,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(errorExtensions)
 
@@ -225,7 +288,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer>.username: kotlin.String? @JvmName("Customer_username") get() = this["username"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCustomer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer?>.username: kotlin.String? @JvmName("NullableCustomer_username") get() = this["username"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(customerExtensions)
 
@@ -255,7 +318,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.status: $functionName.Status? @JvmName("Order_status") get() = this["status"] as $functionName.Status?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?> @JvmName("NullableOrder_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.status: $functionName.Status? @JvmName("NullableOrder_status") get() = this["status"] as $functionName.Status?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(orderExtensions)
 
@@ -291,7 +354,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.zip: kotlin.String? @JvmName("Address_zip") get() = this["zip"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address?>.zip: kotlin.String? @JvmName("NullableAddress_zip") get() = this["zip"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(addressExtensions)
 
@@ -317,7 +380,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category>.name: kotlin.String? @JvmName("Category_name") get() = this["name"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCategory_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>.name: kotlin.String? @JvmName("NullableCategory_name") get() = this["name"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(categoryExtensions)
 
@@ -373,7 +436,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.username: kotlin.String? @JvmName("User_username") get() = this["username"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.username: kotlin.String? @JvmName("NullableUser_username") get() = this["username"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(userExtensions)
 
@@ -443,7 +506,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(petExtensions)
 
@@ -474,7 +537,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse>.type: kotlin.String? @JvmName("ApiResponse_type") get() = this["type"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse?>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse?>.type: kotlin.String? @JvmName("NullableApiResponse_type") get() = this["type"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(apiResponseExtensions)
 
@@ -547,7 +610,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog>.tag: kotlin.String @JvmName("Dog_tag") get() = this["tag"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableDog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog?>.tag: kotlin.String? @JvmName("NullableDog_tag") get() = this["tag"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(dogExtensions)
 
@@ -601,7 +664,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat>.hunts: kotlin.Boolean? @JvmName("Cat_hunts") get() = this["hunts"] as kotlin.Boolean?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat?>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableCat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat?>.hunts: kotlin.Boolean? @JvmName("NullableCat_hunts") get() = this["hunts"] as kotlin.Boolean?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(catExtensions)
 
@@ -667,7 +730,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.value: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.value: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(petExtensions)
 
@@ -716,7 +779,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList>.list: kotlin.collections.List<kotlin.Int> @JvmName("IntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.IntList?>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?> @JvmName("NullableIntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?>.list: kotlin.collections.List<kotlin.Int>? @JvmName("NullableIntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(intListExtensions)
 
@@ -749,7 +812,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties>.value: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties?>.value: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(objectWithAdditionalPropertiesExtensions)
 
@@ -782,7 +845,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2>.value: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2?>.value: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(objectWithAdditional2Extensions)
 
@@ -815,7 +878,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3>.value: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3?>.value: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(objectWithAdditional3Extensions)
 
@@ -889,7 +952,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(errorExtensions)
 
@@ -930,7 +993,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional>.value: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional?>.value: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional?>.value: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(objectWithAdditionalExtensions)
 
@@ -977,7 +1040,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.value: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.value: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.value: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(someArrayContentExtensions)
 
@@ -1016,7 +1079,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>
-        """.trimLines()
+        """.expectedExtensionProperties()
 
         code should haveSubstring(errorHolderExtensions)
 
