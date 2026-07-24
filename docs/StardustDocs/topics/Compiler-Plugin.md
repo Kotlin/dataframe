@@ -73,7 +73,7 @@ Sync the project. This is not needed anymore from Kotlin 2.4.0+.
 
 The DataFrame compiler plugin can be used in Maven projects starting from IntelliJ IDEA 2025.3, available now as EAP builds
 
-Setup plugin in pom.xml:
+Update the `<kotlin-maven-plugin>` in the `<plugin>` section of your `pom.xml`::
 
 ```xml
 <plugin>
@@ -82,11 +82,13 @@ Setup plugin in pom.xml:
     <version>%compilerPluginKotlinVersion%</version>
 
     <configuration>
+        <!-- Specify the Kotlin-dataframe plugin -->
         <compilerPlugins>
             <plugin>kotlin-dataframe</plugin>
         </compilerPlugins>
     </configuration>
 
+    <!-- Add the Kotlin-dataframe plugin dependency -->
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
