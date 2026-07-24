@@ -170,40 +170,6 @@ including support for reading and writing GeoJSON and Shapefile formats, as well
 See the [GeoDataFrame Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html) for details 
 and examples with beautiful [Kandy](https://kotlin.github.io/kandy) geo visualizations.
 
-## What is the difference between Compiler Plugin, Gradle Plugin, and KSP Plugin?
-
-> The current Gradle plugin is **under consideration for deprecation** and may be officially marked as deprecated 
-> in future releases.
->
-> The KSP plugin is **not compatible with [KSP2](https://github.com/google/ksp?tab=readme-ov-file#ksp2-is-here)**
-> and may **not work properly with Kotlin 2.1 or newer**.
->
-> At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead 
-> of relying on the plugins. 
-> See [](Migration-From-Plugins.md).
-{style="warning"}
-
-All these plugins relate to working with [dataframe schemas](schemas.md), but they serve different purposes:
-
-- **[Gradle Plugin](Gradle-Plugin.md)** and **[KSP Plugin](https://github.com/Kotlin/dataframe/tree/master/plugins/symbol-processor)** 
- are used to **generate data schemas** from external sources as part of the Gradle build process.
-
-    - **Gradle Plugin**: You declare the data source in your `build.gradle.kts` file  
-      using the `dataframes { ... }` block.
-
-    - **KSP Plugin**: You annotate your Kotlin file with `@ImportDataSchema` file annotation,  
-      and the schema will be generated via Kotlin Symbol Processing.
-
-  See [Data Schemas in Gradle Projects](https://kotlin.github.io/dataframe/schemasgradle.html) for more.
-
-- **[Compiler Plugin](Compiler-Plugin.md)** provides **on-the-fly generation** of 
-[extension properties](extensionPropertiesApi.md)
-based on an existing schema **during compilation**, and updates the [`DataFrame`](DataFrame.md)
-schema seamlessly after operations.
-However, when reading data from files or external sources (like SQL),
-the initial `DataFrame` schema cannot be inferred automatically —
-you need to specify it manually or generate it using the [`generate..()` methods](DataSchemaGenerationMethods.md).
-
 ## How do I contribute or report an issue?
 
 We’re always happy to receive contributions!
