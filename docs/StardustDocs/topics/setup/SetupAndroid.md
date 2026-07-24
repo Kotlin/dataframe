@@ -31,23 +31,6 @@ dependencies {
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
     // Apache Arrow is not supported well on Android.
 }
-
-android {
-    defaultConfig {
-        minSdk = 21
-    }
-    // Requires Java 8 or higher
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> { 
-    kotlinOptions.jvmTarget = "1.8" 
-}
 ```
 
 </tab>
@@ -64,23 +47,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%'
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
     // Apache Arrow is not supported well on Android.
-}
-
-android {
-    defaultConfig {
-        minSdk 21
-    }
-    // Requires Java 8 or higher
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach { 
-    kotlinOptions.jvmTarget = "1.8"
 }
 ```
 
