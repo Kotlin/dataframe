@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -429,6 +430,10 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * Returns a new [GroupBy] with the new column
  * appended to each group [DataFrame] to the original list of [DataFrame.columns].
  *
+ * Check out [`GroupBy grammar`][Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.GroupByTransformation]}
+ *
  * ## Example
  *
  * ```kotlin
@@ -444,8 +449,6 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
  * }
  * ```
- *
- * For more information: {@include [DocumentationUrls.Add]}.
  *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
