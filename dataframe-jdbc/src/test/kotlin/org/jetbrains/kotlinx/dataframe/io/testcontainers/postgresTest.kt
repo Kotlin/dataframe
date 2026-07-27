@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.io.local
+package org.jetbrains.kotlinx.dataframe.io.testcontainers
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
