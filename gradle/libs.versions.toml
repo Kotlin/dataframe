@@ -128,6 +128,7 @@ sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 
 testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-mysql = { group = "org.testcontainers", name = "testcontainers-mysql", version.ref = "testcontainers" }
 
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-geo = { group = "org.jetbrains.kotlinx", name = "kandy-geo", version.ref = "kandy" }
