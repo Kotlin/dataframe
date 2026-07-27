@@ -35,6 +35,7 @@ dependencies {
     testImplementation(libs.hikaricp)
     testImplementation(libs.testcontainers)
     testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.mysql)
 }
 
 kotlinPublications {
