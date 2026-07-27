@@ -258,7 +258,6 @@ internal fun clearTestData(connection: Connection) {
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 }
 
-@Ignore
 class PostgresTest {
     companion object {
         private val postgres: PostgreSQLContainer = PostgreSQLContainer(POSTGRES_IMAGE).apply {

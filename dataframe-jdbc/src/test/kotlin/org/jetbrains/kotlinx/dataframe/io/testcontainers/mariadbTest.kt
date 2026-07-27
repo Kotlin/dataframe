@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import org.testcontainers.mariadb.MariaDBContainer
 import java.math.BigDecimal
@@ -120,7 +119,6 @@ private const val JSON_STRING =
         "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
         "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
-@Ignore
 class MariadbTest {
     companion object {
         private val mariadb: MariaDBContainer = MariaDBContainer(MARIADB_IMAGE).apply {
