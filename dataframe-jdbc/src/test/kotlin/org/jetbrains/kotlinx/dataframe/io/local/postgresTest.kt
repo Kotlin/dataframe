@@ -27,6 +27,7 @@ import org.postgresql.geometric.PGpolygon
 import org.postgresql.util.PGInterval
 import org.postgresql.util.PGmoney
 import org.postgresql.util.PGobject
+import org.testcontainers.postgresql.PostgreSQLContainer
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.Date
@@ -38,9 +39,11 @@ import java.sql.Types
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val BASIC_URL = "jdbc:postgresql://localhost:5432/test"
+// Available image tags: https://hub.docker.com/_/postgres/tags
+private const val POSTGRES_IMAGE = "postgres:16-alpine"
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
+private const val DATABASE_NAME = "test"
 
 @DataSchema
 interface Table1 {
@@ -260,12 +263,19 @@ internal fun clearTestData(connection: Connection) {
 @Ignore
 class PostgresTest {
     companion object {
+        private val postgres: PostgreSQLContainer = PostgreSQLContainer(POSTGRES_IMAGE).apply {
+            withDatabaseName(DATABASE_NAME)
+            withUsername(USER_NAME)
+            withPassword(PASSWORD)
+        }
+
         private lateinit var connection: Connection
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(BASIC_URL, USER_NAME, PASSWORD)
+            postgres.start()
+            connection = DriverManager.getConnection(postgres.jdbcUrl, USER_NAME, PASSWORD)
             createTestData(connection)
         }
 
@@ -278,6 +288,7 @@ class PostgresTest {
             } catch (e: SQLException) {
                 e.printStackTrace()
             }
+            postgres.stop()
         }
     }
 
