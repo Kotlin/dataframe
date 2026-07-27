@@ -24,12 +24,12 @@ import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Time
+import java.sql.Timestamp
 import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
-// Available image tags: https://hub.docker.com/_/mariadb/tags
-private const val MARIADB_IMAGE = "mariadb:11"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
@@ -274,9 +274,9 @@ class MariadbTest {
                     st.setDouble(11, i * 10.0)
                     st.setBigDecimal(12, BigDecimal(i * 10))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTime(16, java.sql.Time(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
+                    st.setTime(16, Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -314,9 +314,9 @@ class MariadbTest {
                     st.setDouble(11, i * 20.0)
                     st.setBigDecimal(12, BigDecimal(i * 20))
                     st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTime(16, java.sql.Time(System.currentTimeMillis()))
+                    st.setTimestamp(14, Timestamp(System.currentTimeMillis()))
+                    st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
+                    st.setTime(16, Time(System.currentTimeMillis()))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -370,7 +370,7 @@ class MariadbTest {
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["datetimeCol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
-        schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
+        schema.columns["timeCol"]!!.type shouldBe typeOf<Time>()
         schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
