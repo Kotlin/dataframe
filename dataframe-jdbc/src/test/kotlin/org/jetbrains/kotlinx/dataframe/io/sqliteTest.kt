@@ -125,32 +125,69 @@ class SqliteTest {
             }
 
             // Dates and timestamps: SQLite stores each in one of three encodings — ISO text,
-            // Unix seconds (INTEGER), or Julian days (REAL). The library returns the raw stored
-            // value; downstream code is responsible for parsing.
+            // Unix seconds (INTEGER), or Julian days (REAL). Each type is declared twice:
+            // once NOT NULL (guaranteed non-null column) and once without NOT NULL (nullable
+            // column with at least one NULL row).
             @Language("SQL")
             val createTemporalTableQuery = """
             CREATE TABLE Temporal (
                 id INTEGER PRIMARY KEY,
-                isoDate DATE,
-                isoDateTime DATETIME,
-                isoTimestamp TIMESTAMP,
-                unixTimestamp TIMESTAMP,
-                julianDate DATE,
-                julianTimestamp TIMESTAMP
+                isoDate DATE NOT NULL,
+                isoDateOpt DATE,
+                isoDateTime DATETIME NOT NULL,
+                isoDateTimeOpt DATETIME,
+                isoTimestamp TIMESTAMP NOT NULL,
+                isoTimestampOpt TIMESTAMP,
+                unixTimestamp TIMESTAMP NOT NULL,
+                unixTimestampOpt TIMESTAMP,
+                julianDate DATE NOT NULL,
+                julianDateOpt DATE,
+                julianTimestamp TIMESTAMP NOT NULL,
+                julianTimestampOpt TIMESTAMP
             )
             """
 
             connection.createStatement().execute(createTemporalTableQuery)
 
-            // Julian day 2460146.5 = 2023-07-21 00:00:00 UTC.
-            // The `.5` fraction forces SQLite to store it as REAL (Julian day convention).
+            // Row 0: every column populated. Julian day 2460146.5 = 2023-07-21 00:00:00 UTC;
+            // the `.5` fraction forces SQLite to store it as REAL (Julian day convention).
             connection.createStatement().execute(
                 """
                 INSERT INTO Temporal
-                    (isoDate, isoDateTime, isoTimestamp, unixTimestamp, julianDate, julianTimestamp)
+                    (isoDate, isoDateOpt,
+                     isoDateTime, isoDateTimeOpt,
+                     isoTimestamp, isoTimestampOpt,
+                     unixTimestamp, unixTimestampOpt,
+                     julianDate, julianDateOpt,
+                     julianTimestamp, julianTimestampOpt)
                     VALUES
-                    ('2023-07-21', '2023-07-21 10:30:00', '2023-07-21T10:30:00Z', 1690000000,
+                    ('2023-07-21', '2023-07-21',
+                     '2023-07-21 10:30:00', '2023-07-21 10:30:00',
+                     '2023-07-21T10:30:00Z', '2023-07-21T10:30:00Z',
+                     1690000000, 1690000000,
+                     2460146.5, 2460146.5,
                      2460146.5, 2460146.5)
+                """.trimIndent(),
+            )
+
+            // Row 1: NOT NULL columns keep their values; the nullable variants are set to NULL to
+            // exercise the nullable path of every date/time converter.
+            connection.createStatement().execute(
+                """
+                INSERT INTO Temporal
+                    (isoDate, isoDateOpt,
+                     isoDateTime, isoDateTimeOpt,
+                     isoTimestamp, isoTimestampOpt,
+                     unixTimestamp, unixTimestampOpt,
+                     julianDate, julianDateOpt,
+                     julianTimestamp, julianTimestampOpt)
+                    VALUES
+                    ('2023-07-21', NULL,
+                     '2023-07-21 10:30:00', NULL,
+                     '2023-07-21T10:30:00Z', NULL,
+                     1690000000, NULL,
+                     2460146.5, NULL,
+                     2460146.5, NULL)
                 """.trimIndent(),
             )
 
@@ -334,6 +371,10 @@ class SqliteTest {
         df["optional"][0] shouldBe false
         df["optional"][1] shouldBe null
 
+        // Actual DataFrame column types (per-column, not just schema).
+        df["enabled"].type() shouldBe typeOf<Boolean>()
+        df["optional"].type() shouldBe typeOf<Boolean?>()
+
         val schema = DataFrameSchema.readSqlTable(connection, flagsTableName)
         schema.columns["enabled"]!!.type shouldBe typeOf<Boolean>()
         schema.columns["optional"]!!.type shouldBe typeOf<Boolean?>()
@@ -344,26 +385,72 @@ class SqliteTest {
         // SQLite doesn't have native DATE/TIMESTAMP storage — values may be TEXT (ISO), INTEGER
         // (Unix seconds), or REAL (Julian day). The library preserves an idiomatic Kotlin
         // date-time type in the schema and converts each value in preprocessing based on its
-        // runtime storage class.
+        // runtime storage class. Each type is tested in both NOT NULL and nullable variants.
         val df = DataFrame.readSqlTable(connection, "Temporal")
+        val expectedDate = kotlinx.datetime.LocalDate.parse("2023-07-21")
+        val expectedDateTime = kotlinx.datetime.LocalDateTime.parse("2023-07-21T10:30:00")
+        val expectedIsoInstant = kotlin.time.Instant.parse("2023-07-21T10:30:00Z")
+        val expectedUnixInstant = kotlin.time.Instant.fromEpochSeconds(1690000000)
+        val expectedJulianInstant = kotlin.time.Instant.parse("2023-07-21T00:00:00Z")
 
-        df.rowsCount() shouldBe 1
-        // TEXT storage — ISO strings.
-        df["isoDate"][0] shouldBe kotlinx.datetime.LocalDate.parse("2023-07-21")
-        df["isoDateTime"][0] shouldBe kotlinx.datetime.LocalDateTime.parse("2023-07-21T10:30:00")
-        df["isoTimestamp"][0] shouldBe kotlin.time.Instant.parse("2023-07-21T10:30:00Z")
-        // INTEGER storage — Unix seconds.
-        df["unixTimestamp"][0] shouldBe kotlin.time.Instant.fromEpochSeconds(1690000000)
-        // REAL storage — Julian day 2460146.5 = 2023-07-21 00:00:00 UTC.
-        df["julianDate"][0] shouldBe kotlinx.datetime.LocalDate.parse("2023-07-21")
-        df["julianTimestamp"][0] shouldBe kotlin.time.Instant.parse("2023-07-21T00:00:00Z")
+        df.rowsCount() shouldBe 2
 
+        // Row 0 — both NOT NULL and nullable columns populated with the same value.
+        df["isoDate"][0] shouldBe expectedDate
+        df["isoDateOpt"][0] shouldBe expectedDate
+        df["isoDateTime"][0] shouldBe expectedDateTime
+        df["isoDateTimeOpt"][0] shouldBe expectedDateTime
+        df["isoTimestamp"][0] shouldBe expectedIsoInstant
+        df["isoTimestampOpt"][0] shouldBe expectedIsoInstant
+        df["unixTimestamp"][0] shouldBe expectedUnixInstant
+        df["unixTimestampOpt"][0] shouldBe expectedUnixInstant
+        df["julianDate"][0] shouldBe expectedDate
+        df["julianDateOpt"][0] shouldBe expectedDate
+        df["julianTimestamp"][0] shouldBe expectedJulianInstant
+        df["julianTimestampOpt"][0] shouldBe expectedJulianInstant
+
+        // Row 1 — NOT NULL columns still populated; nullable columns are NULL.
+        df["isoDate"][1] shouldBe expectedDate
+        df["isoDateOpt"][1] shouldBe null
+        df["isoDateTime"][1] shouldBe expectedDateTime
+        df["isoDateTimeOpt"][1] shouldBe null
+        df["isoTimestamp"][1] shouldBe expectedIsoInstant
+        df["isoTimestampOpt"][1] shouldBe null
+        df["unixTimestamp"][1] shouldBe expectedUnixInstant
+        df["unixTimestampOpt"][1] shouldBe null
+        df["julianDate"][1] shouldBe expectedDate
+        df["julianDateOpt"][1] shouldBe null
+        df["julianTimestamp"][1] shouldBe expectedJulianInstant
+        df["julianTimestampOpt"][1] shouldBe null
+
+        // Actual DataFrame column types — NOT NULL columns are narrowed by Infer.Nulls;
+        // nullable columns keep the nullable type.
+        df["isoDate"].type() shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        df["isoDateOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        df["isoDateTime"].type() shouldBe typeOf<kotlinx.datetime.LocalDateTime>()
+        df["isoDateTimeOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
+        df["isoTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["isoTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+        df["unixTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["unixTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+        df["julianDate"].type() shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        df["julianDateOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        df["julianTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["julianTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+
+        // Schema types follow the SQL nullability declaration exactly.
         val schema = DataFrameSchema.readSqlTable(connection, "Temporal")
-        schema.columns["isoDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
-        schema.columns["isoDateTime"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
-        schema.columns["isoTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
-        schema.columns["unixTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
-        schema.columns["julianDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
-        schema.columns["julianTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["isoDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        schema.columns["isoDateOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["isoDateTime"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime>()
+        schema.columns["isoDateTimeOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
+        schema.columns["isoTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["isoTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["unixTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["unixTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["julianDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        schema.columns["julianDateOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["julianTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["julianTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
     }
 }
