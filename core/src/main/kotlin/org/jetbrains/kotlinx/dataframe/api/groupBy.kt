@@ -109,6 +109,8 @@ internal interface GroupByDocs {
      * {@include [Indent]}
      * `\[ `__`.`__[**`add`**][GroupBy.add]**`(`**`column: `[`DataColumn`][DataColumn]**`)  {  `**`rowExpression: `[`RowExpression`][RowExpression]**`  }  `**`]`
      *
+     * See [GroupBy Transformations][Transformation].
+     *
      * ### Reduce [GroupBy] into [DataFrame]
      *
      * {@include [Indent]}
@@ -138,6 +140,8 @@ internal interface GroupByDocs {
      * {@include [Indent]}
      * `| `__`.`__[**`values`**][ReducedGroupBy.values]**`  {  `**`valueColumns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
+     * See [GroupBy Reducing][Reducing].
+     *
      * ### Aggregate [GroupBy] into [DataFrame]
      *
      * {@include [Indent]}
@@ -163,6 +167,8 @@ internal interface GroupByDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
+     *
+     *  See [GroupBy Aggregations][Aggregation].
      *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
@@ -240,10 +246,13 @@ internal interface GroupByDocs {
      * * [sortBy][GroupBy.sortBy] / [sortByDesc][GroupBy.sortByDesc] — sorts the **order of rows within each group**
      *   by one or more column values;
      * * [updateGroups][GroupBy.updateGroups] — transforms each group into a new one;
-     * * [filter][GroupBy.filter] — filters group rows by the given predicate (as usual [DataFrame.filter]);
+     * * [filter][GroupBy.filter] — filters out keys and corresponding groups that
+     *   do not satisfy the given key-group predicate;
      * * [add][GroupBy.add] — adds a new column to each group.
      *
      * Each method returns a new [GroupBy] with updated group order or modified group content.
+     *
+     * Check out [`GroupBy grammar`][Grammar].
      *
      * For more information: {@include [DocumentationUrls.GroupByTransformation]}
      */
@@ -545,6 +554,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * Creates a new [GroupBy] by transforming each group’s [DataFrame]
      * using the provided [transform] function.
      *
+     * Check out [`GroupBy grammar`][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.GroupByTransformation]}
+     *
      * __NOTE:__ This operation removes key-column status from each column in the group.
      * In other words, each column in the group is treated as a new column,
      * and not omitted when [`.values()`][Grouped.values] or other aggregations are called.
@@ -560,6 +573,10 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      *
      * The [predicate] is a [GroupedRowFilter], which behaves similarly to a [RowFilter] used in [DataFrame.filter],
      * but also provides access to the [group][GroupedDataRow.group] in the current row.
+     *
+     * Check out [`GroupBy grammar`][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.GroupByTransformation]}
      *
      * ### Example
      * ```kotlin
