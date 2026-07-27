@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.sqlite.SQLiteConfig
 import java.sql.Connection
@@ -111,101 +111,97 @@ public typealias SqliteCustomTypeConverter<T> = Pair<KType, ((rawValue: T) -> An
  * val df = DataFrame.readSqlTable(connection, "events", dbType = sqliteCustom)
  * ```
  */
-public class SqliteCustomConvertersBuilder @PublishedApi internal constructor() {
+public class SqliteCustomConvertersBuilder
     @PublishedApi
-    internal val typeMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
+    internal constructor() {
+        @PublishedApi
+        internal val typeMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
 
-    @PublishedApi
-    internal val columnMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
+        @PublishedApi
+        internal val columnMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
 
-    /**
-     * Register a converter for every column with the given declared SQL type name.
-     *
-     * @param T the storage class of the raw stored value ([String], [Int], [Long], [Double],
-     *    or [ByteArray]  or their nullable variants).
-     * @param R the target Kotlin type for the resulting DataFrame column. Resolved via
-     *   `typeOf<R>()` — must be a non-abstract type reachable by reflection.
-     *
-     * @param [sqlTypeName] name of the declared SQL type (as written in `CREATE TABLE`).
-     * @param [convert] lambda to convert the raw stored value to the target Kotlin type.
-     */
-    public inline fun <T, reified R> forType(
-        sqlTypeName: String,
-        crossinline convert: (T) -> R,
-    ) {
-        val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
-        typeMappings[sqlTypeName] = mapping
+        /**
+         * Register a converter for every column with the given declared SQL type name.
+         *
+         * @param T the storage class of the raw stored value ([String], [Int], [Long], [Double],
+         *    or [ByteArray]  or their nullable variants).
+         * @param R the target Kotlin type for the resulting DataFrame column. Resolved via
+         *   `typeOf<R>()` — must be a non-abstract type reachable by reflection.
+         *
+         * @param [sqlTypeName] name of the declared SQL type (as written in `CREATE TABLE`).
+         * @param [convert] lambda to convert the raw stored value to the target Kotlin type.
+         */
+        public inline fun <T, reified R> forType(sqlTypeName: String, crossinline convert: (T) -> R) {
+            val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
+            typeMappings[sqlTypeName] = mapping
+        }
+
+        /**
+         * Register an **identity converter** for every column with the given declared SQL type name:
+         * values pass through unchanged, but the [DataFrame] [column type][org.jetbrains.kotlinx.dataframe.DataColumn.type]
+         * is fixed to `T` (resolved via `typeOf<T>()`).
+         *
+         * Useful when SQLite's [type affinity](https://www.sqlite.org/datatype3.html#type_affinity)
+         * misclassifies your column and the built-in mapping resolves the wrong Kotlin type. Example:
+         * a column declared `MY_ID` has NUMERIC affinity (no `INT`/`CHAR`/`BLOB`/`REAL`/`FLOA`/`DOUB`
+         * substring), so SQLite will happily convert `'42'` to an integer on insert; declaring
+         * `forType<String>("MY_ID")` pins the column to `String` regardless.
+         *
+         * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
+         *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
+         *   or [ByteArray] or their nullable variants).
+         *
+         * ### Example
+         * ```
+         * Sqlite.withCustomConverters {
+         *     forType<String?>("LONGVARCHAR")   // read as `String?` even though affinity says NUMERIC
+         *     forType<ByteArray?>("BINARY_ID")  // read as raw bytes
+         * }
+         * ```
+         */
+        public inline fun <reified T> forType(sqlTypeName: String) {
+            val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
+            typeMappings[sqlTypeName] = mapping
+        }
+
+        /**
+         * Register a converter for a specific column by name. Column-name overrides take
+         * precedence over type-name overrides registered via [forType].
+         *
+         * @param T the storage class of the raw stored value.
+         * @param R the target Kotlin type for the resulting DataFrame column.
+         */
+        public inline fun <T, reified R> forColumn(columnName: String, crossinline convert: (T) -> R) {
+            val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
+            columnMappings[columnName] = mapping
+        }
+
+        /**
+         * Register an **identity converter** for a specific column by name: values pass through
+         * unchanged, but the DataFrame column type is fixed to `T` (resolved via `typeOf<T>()`).
+         * Column-name overrides take precedence over type-name overrides.
+         *
+         * Useful for a single column whose declared SQL type is misleading — either because SQLite's
+         * type affinity picks the wrong bucket or because you want a stricter type than the shared
+         * declared type would give.
+         *
+         * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
+         *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
+         *   or [ByteArray] or their nullable variants).
+         *
+         * ### Example
+         * ```
+         * Sqlite.withCustomConverters {
+         *     forColumn<String>("uuid")      // treat the `uuid` column as raw text
+         *     forColumn<ByteArray?>("payload")
+         * }
+         * ```
+         */
+        public inline fun <reified T> forColumn(columnName: String) {
+            val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
+            columnMappings[columnName] = mapping
+        }
     }
-
-    /**
-     * Register an **identity converter** for every column with the given declared SQL type name:
-     * values pass through unchanged, but the [DataFrame] [column type][org.jetbrains.kotlinx.dataframe.DataColumn.type]
-     * is fixed to `T` (resolved via `typeOf<T>()`).
-     *
-     * Useful when SQLite's [type affinity](https://www.sqlite.org/datatype3.html#type_affinity)
-     * misclassifies your column and the built-in mapping resolves the wrong Kotlin type. Example:
-     * a column declared `MY_ID` has NUMERIC affinity (no `INT`/`CHAR`/`BLOB`/`REAL`/`FLOA`/`DOUB`
-     * substring), so SQLite will happily convert `'42'` to an integer on insert; declaring
-     * `forType<String>("MY_ID")` pins the column to `String` regardless.
-     *
-     * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
-     *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
-     *   or [ByteArray] or their nullable variants).
-     *
-     * ### Example
-     * ```
-     * Sqlite.withCustomConverters {
-     *     forType<String?>("LONGVARCHAR")   // read as `String?` even though affinity says NUMERIC
-     *     forType<ByteArray?>("BINARY_ID")  // read as raw bytes
-     * }
-     * ```
-     */
-    public inline fun <reified T> forType(sqlTypeName: String) {
-        val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
-        typeMappings[sqlTypeName] = mapping
-    }
-
-    /**
-     * Register a converter for a specific column by name. Column-name overrides take
-     * precedence over type-name overrides registered via [forType].
-     *
-     * @param T the storage class of the raw stored value.
-     * @param R the target Kotlin type for the resulting DataFrame column.
-     */
-    public inline fun <T, reified R> forColumn(
-        columnName: String,
-        crossinline convert: (T) -> R,
-    ) {
-        val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
-        columnMappings[columnName] = mapping
-    }
-
-    /**
-     * Register an **identity converter** for a specific column by name: values pass through
-     * unchanged, but the DataFrame column type is fixed to `T` (resolved via `typeOf<T>()`).
-     * Column-name overrides take precedence over type-name overrides.
-     *
-     * Useful for a single column whose declared SQL type is misleading — either because SQLite's
-     * type affinity picks the wrong bucket or because you want a stricter type than the shared
-     * declared type would give.
-     *
-     * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
-     *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
-     *   or [ByteArray] or their nullable variants).
-     *
-     * ### Example
-     * ```
-     * Sqlite.withCustomConverters {
-     *     forColumn<String>("uuid")      // treat the `uuid` column as raw text
-     *     forColumn<ByteArray?>("payload")
-     * }
-     * ```
-     */
-    public inline fun <reified T> forColumn(columnName: String) {
-        val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
-        columnMappings[columnName] = mapping
-    }
-}
 
 /**
  * Represents the Sqlite database type.
@@ -283,10 +279,7 @@ public class Sqlite(
     // For DECIMAL/NUMERIC we already resolved the DataFrame type from the storage class in
     // getExpectedJdbcType, so we keep that as-is. For other types we let the base decide
     // (base maps TIMESTAMP → Instant, BINARY(UUID) → Uuid, etc.).
-    override fun getPreprocessedValueType(
-        tableColumnMetadata: TableColumnMetadata,
-        expectedJdbcType: KType,
-    ): KType =
+    override fun getPreprocessedValueType(tableColumnMetadata: TableColumnMetadata, expectedJdbcType: KType): KType =
         when (tableColumnMetadata.jdbcType) {
             Types.DECIMAL, Types.NUMERIC -> expectedJdbcType
             else -> super.getPreprocessedValueType(tableColumnMetadata, expectedJdbcType)
@@ -310,9 +303,13 @@ public class Sqlite(
         @Suppress("UNCHECKED_CAST")
         return when (target) {
             Boolean::class -> convertToBoolean(value, tableColumnMetadata) as D
+
             Instant::class -> convertToInstant(value, tableColumnMetadata) as D
+
             LocalDate::class -> convertToLocalDate(value, tableColumnMetadata) as D
+
             LocalDateTime::class -> convertToLocalDateTime(value, tableColumnMetadata) as D
+
             LocalTime::class -> convertToLocalTime(value, tableColumnMetadata) as D
 
             // DECIMAL / NUMERIC (or any other type resolved via storage class): return as-is.
@@ -373,11 +370,15 @@ public class Sqlite(
     private fun convertToBoolean(value: Any?, meta: TableColumnMetadata): Boolean? =
         when (value) {
             null -> null
+
             // SQLite convention: booleans are stored as INTEGER (0/1). Any non-zero → true.
             is Int -> value != 0
+
             is Long -> value != 0L
+
             // Some users may store booleans as REAL. Any non-zero → true.
             is Double -> value != 0.0
+
             is String -> when (value.trim().lowercase()) {
                 "true", "1", "yes", "y", "t" -> true
                 "false", "0", "no", "n", "f" -> false
@@ -390,23 +391,33 @@ public class Sqlite(
     private fun convertToInstant(value: Any?, meta: TableColumnMetadata): Instant? =
         when (value) {
             null -> null
+
             // SQLite convention: INTEGER = Unix seconds since 1970-01-01 UTC.
             is Int -> Instant.fromEpochSeconds(value.toLong())
+
             is Long -> Instant.fromEpochSeconds(value)
+
             // SQLite convention: REAL = Julian day (days since -4713-11-24 12:00 UTC).
             is Double -> julianDayToInstant(value)
+
             is String -> parseStringAsInstant(value, meta)
+
             else -> unsupportedConversion(value, "kotlin.time.Instant", meta)
         }
 
     private fun convertToLocalDate(value: Any?, meta: TableColumnMetadata): LocalDate? =
         when (value) {
             null -> null
+
             is Int -> instantToLocalDate(Instant.fromEpochSeconds(value.toLong()))
+
             is Long -> instantToLocalDate(Instant.fromEpochSeconds(value))
+
             // SQLite convention: REAL = Julian day (days since -4713-11-24 12:00 UTC).
             is Double -> instantToLocalDate(julianDayToInstant(value))
+
             is String -> parseStringAsLocalDate(value, meta)
+
             else -> unsupportedConversion(value, "kotlinx.datetime.LocalDate", meta)
         }
 
@@ -423,10 +434,14 @@ public class Sqlite(
     private fun convertToLocalTime(value: Any?, meta: TableColumnMetadata): LocalTime? =
         when (value) {
             null -> null
+
             // Interpret INTEGER as seconds since midnight.
             is Int -> JavaLocalTime.ofSecondOfDay(value.toLong()).toKotlinLocalTime()
+
             is Long -> JavaLocalTime.ofSecondOfDay(value).toKotlinLocalTime()
+
             is String -> parseStringAsLocalTime(value, meta)
+
             else -> unsupportedConversion(value, "kotlinx.datetime.LocalTime", meta)
         }
 

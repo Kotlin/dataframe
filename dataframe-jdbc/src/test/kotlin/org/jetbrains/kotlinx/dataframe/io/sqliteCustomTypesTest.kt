@@ -1,21 +1,21 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toInstant
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.db.Sqlite
 import org.jetbrains.kotlinx.dataframe.io.db.SqliteCustomTypeConverter
 import org.jetbrains.kotlinx.dataframe.type
-import org.intellij.lang.annotations.Language
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format.char
-import kotlinx.datetime.toInstant
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
@@ -77,13 +77,14 @@ class SqliteTestCustomTypes {
             // integer on insert. `forType<String>("MY_ID")` pins the resulting DataFrame column
             // to `String`. `forColumn<String>("token")` does the same for a single column.
             @Language("SQL")
-            val create = """
-            CREATE TABLE items (
-                id INTEGER PRIMARY KEY,
-                shortId MY_ID NOT NULL,
-                token MY_ID NOT NULL
-            )
-            """.trimIndent()
+            val create =
+                """
+                CREATE TABLE items (
+                    id INTEGER PRIMARY KEY,
+                    shortId MY_ID NOT NULL,
+                    token MY_ID NOT NULL
+                )
+                """.trimIndent()
             conn.createStatement().execute(create)
             conn.createStatement().execute(
                 """
@@ -121,13 +122,14 @@ class SqliteTestCustomTypes {
             // stored as-is). The by-type mapping reads them as String; the `ratio` column has a
             // by-name override that parses the same string into a Double instead.
             @Language("SQL")
-            val create = """
-            CREATE TABLE metrics (
-                id INTEGER PRIMARY KEY,
-                label MYSTR_TEXT NOT NULL,
-                ratio MYSTR_TEXT NOT NULL
-            )
-            """.trimIndent()
+            val create =
+                """
+                CREATE TABLE metrics (
+                    id INTEGER PRIMARY KEY,
+                    label MYSTR_TEXT NOT NULL,
+                    ratio MYSTR_TEXT NOT NULL
+                )
+                """.trimIndent()
             conn.createStatement().execute(create)
             conn.createStatement().execute(
                 """
@@ -169,15 +171,16 @@ class SqliteTestCustomTypes {
 
         DriverManager.getConnection(url).use { conn ->
             @Language("SQL")
-            val create = """
-            CREATE TABLE events (
-                id INTEGER PRIMARY KEY,
-                occurredAt MY_DATETIME NOT NULL,
-                note MY_DATETIME,
-                score MYSTR_TEXT NOT NULL,
-                ratio MYSTR_TEXT NOT NULL
-            )
-            """.trimIndent()
+            val create =
+                """
+                CREATE TABLE events (
+                    id INTEGER PRIMARY KEY,
+                    occurredAt MY_DATETIME NOT NULL,
+                    note MY_DATETIME,
+                    score MYSTR_TEXT NOT NULL,
+                    ratio MYSTR_TEXT NOT NULL
+                )
+                """.trimIndent()
             conn.createStatement().execute(create)
             conn.createStatement().execute(
                 """
@@ -188,9 +191,17 @@ class SqliteTestCustomTypes {
             )
 
             val format = LocalDateTime.Format {
-                year(); char('-'); monthNumber(); char('-'); dayOfMonth()
+                year()
+                char('-')
+                monthNumber()
+                char('-')
+                dayOfMonth()
                 char(' ')
-                hour(); char(':'); minute(); char(':'); second()
+                hour()
+                char(':')
+                minute()
+                char(':')
+                second()
                 chars(" UTC")
             }
             val sqlite = Sqlite.withCustomConverters {
@@ -234,7 +245,8 @@ class SqliteTestCustomTypes {
 
         DriverManager.getConnection(url).use { conn ->
             @Language("SQL")
-            val create = "CREATE TABLE events (id INTEGER PRIMARY KEY, occurredAt MY_DATETIME NOT NULL, note MY_DATETIME)"
+            val create =
+                "CREATE TABLE events (id INTEGER PRIMARY KEY, occurredAt MY_DATETIME NOT NULL, note MY_DATETIME)"
             conn.createStatement().execute(create)
             conn.createStatement().execute(
                 """
@@ -245,9 +257,17 @@ class SqliteTestCustomTypes {
             )
 
             val format = LocalDateTime.Format {
-                year(); char('-'); monthNumber(); char('-'); day()
+                year()
+                char('-')
+                monthNumber()
+                char('-')
+                day()
                 char(' ')
-                hour(); char(':'); minute(); char(':'); second()
+                hour()
+                char(':')
+                minute()
+                char(':')
+                second()
                 chars(" UTC")
             }
 
@@ -273,4 +293,3 @@ class SqliteTestCustomTypes {
         }
     }
 }
-
