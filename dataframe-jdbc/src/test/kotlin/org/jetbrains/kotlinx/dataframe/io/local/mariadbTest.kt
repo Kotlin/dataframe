@@ -17,6 +17,7 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
+import org.testcontainers.mariadb.MariaDBContainer
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.sql.Blob
@@ -27,7 +28,8 @@ import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
-private const val URL = "jdbc:mariadb://localhost:3306"
+// Available image tags: https://hub.docker.com/_/mariadb/tags
+private const val MARIADB_IMAGE = "mariadb:11"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
@@ -121,12 +123,21 @@ private const val JSON_STRING =
 @Ignore
 class MariadbTest {
     companion object {
+        private val mariadb: MariaDBContainer = MariaDBContainer(MARIADB_IMAGE).apply {
+            withUsername(USER_NAME)
+            withPassword(PASSWORD)
+        }
+
         private lateinit var connection: Connection
+
+        private val rootUrl: String
+            get() = "jdbc:mariadb://${mariadb.host}:${mariadb.firstMappedPort}"
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
+            mariadb.start()
+            connection = DriverManager.getConnection(rootUrl, USER_NAME, PASSWORD)
 
             connection.createStatement().use { st ->
                 // Drop the test database if it exists
@@ -337,6 +348,7 @@ class MariadbTest {
             } catch (e: SQLException) {
                 e.printStackTrace()
             }
+            mariadb.stop()
         }
     }
 
@@ -493,19 +505,19 @@ class MariadbTest {
     @Test
     fun `readAllSqlTables without catalogue should only return tables from URL database`() {
         val secondDb = "testKDFdatabase2"
-        val testRootConn = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
+        val testRootConn = DriverManager.getConnection(rootUrl, USER_NAME, PASSWORD)
         try {
             testRootConn.createStatement().use { stmt ->
                 stmt.executeUpdate("DROP DATABASE IF EXISTS $secondDb")
                 stmt.executeUpdate("CREATE DATABASE $secondDb")
             }
-            DriverManager.getConnection("$URL/$secondDb", USER_NAME, PASSWORD).use { conn2 ->
+            DriverManager.getConnection("$rootUrl/$secondDb", USER_NAME, PASSWORD).use { conn2 ->
                 conn2.createStatement().use { stmt ->
                     stmt.executeUpdate("CREATE TABLE onlyInDb2 (id INT PRIMARY KEY, val VARCHAR(50))")
                 }
             }
 
-            DriverManager.getConnection("$URL/$TEST_DATABASE_NAME", USER_NAME, PASSWORD).use { scopedConn ->
+            DriverManager.getConnection("$rootUrl/$TEST_DATABASE_NAME", USER_NAME, PASSWORD).use { scopedConn ->
                 val tableNames = DataFrame.readAllSqlTables(scopedConn).keys
 
                 tableNames.none { "onlyInDb2" in it } shouldBe true
