@@ -36,6 +36,7 @@ dependencies {
     testImplementation(libs.testcontainers)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.mysql)
+    testImplementation(libs.testcontainers.mariadb)
 }
 
 kotlinPublications {
