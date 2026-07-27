@@ -51,3 +51,21 @@ kotlinPublications {
 tasks.processKDocsMain {
     dependsOn(tasks.generateBuildConfigClasses)
 }
+
+private val testcontainersPackage = "org.jetbrains.kotlinx.dataframe.io.testcontainers.*"
+
+tasks.test {
+    filter {
+        excludeTestsMatching(testcontainersPackage)
+    }
+}
+
+tasks.register<Test>("testcontainersTest") {
+    description = "Runs tests that require Docker via Testcontainers."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    filter {
+        includeTestsMatching(testcontainersPackage)
+    }
+}

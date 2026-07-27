@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import org.postgresql.util.PSQLException
 import org.testcontainers.postgresql.PostgreSQLContainer
@@ -23,7 +22,6 @@ private const val URL_PARAMS = "connectTimeout=10&tcpKeepAlive=true"
 
 private const val TABLE_NAME = "table1"
 
-@Ignore
 class PostgresConnectionUrlTest {
     companion object {
         private val postgres: PostgreSQLContainer = PostgreSQLContainer(POSTGRES_IMAGE).apply {

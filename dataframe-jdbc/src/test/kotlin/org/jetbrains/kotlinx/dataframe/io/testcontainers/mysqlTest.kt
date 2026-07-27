@@ -115,7 +115,6 @@ interface Table3MySql {
     val setCol: Char?
 }
 
-@Ignore
 class MySqlTest {
     companion object {
         private val mysql: MySQLContainer = MySQLContainer(MYSQL_IMAGE).apply {
