@@ -12,11 +12,10 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
+import org.postgresql.util.PSQLException
 import org.testcontainers.postgresql.PostgreSQLContainer
 import java.sql.DriverManager
 
-// Available image tags: https://hub.docker.com/_/postgres/tags
-private const val POSTGRES_IMAGE = "postgres:16-alpine"
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
 private const val DATABASE_NAME = "test"
@@ -97,7 +96,7 @@ class PostgresConnectionUrlTest {
     fun `read from table without login and password`() {
         val dbConfig = DbConnectionConfig(urlNoLoginPassword)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
+        shouldThrow<PSQLException> {
             testReadFromTable(dbConfig)
         }
     }
@@ -106,7 +105,7 @@ class PostgresConnectionUrlTest {
     fun `read from table with password only`() {
         val dbConfig = DbConnectionConfig(urlWithPassword)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
+        shouldThrow<PSQLException> {
             testReadFromTable(dbConfig)
         }
     }
@@ -115,7 +114,7 @@ class PostgresConnectionUrlTest {
     fun `read from table with login only`() {
         val dbConfig = DbConnectionConfig(urlWithLogin)
 
-        shouldThrow<org.postgresql.util.PSQLException> {
+        shouldThrow<PSQLException> {
             testReadFromTable(dbConfig)
         }
     }

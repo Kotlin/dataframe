@@ -39,8 +39,6 @@ import java.sql.Types
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-// Available image tags: https://hub.docker.com/_/postgres/tags
-private const val POSTGRES_IMAGE = "postgres:16-alpine"
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
 private const val DATABASE_NAME = "test"
@@ -311,11 +309,11 @@ class PostgresTest {
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["circlecol"]!!.type shouldBe typeOf<PGcircle>()
-        schema.columns["intarraycol"]!!.type.classifier shouldBe kotlin.Array::class
-        schema.columns["doublearraycol"]!!.type.classifier shouldBe kotlin.Array::class
-        schema.columns["datearraycol"]!!.type.classifier shouldBe kotlin.Array::class
-        schema.columns["textarraycol"]!!.type.classifier shouldBe kotlin.Array::class
-        schema.columns["booleanarraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["intarraycol"]!!.type.classifier shouldBe Array::class
+        schema.columns["doublearraycol"]!!.type.classifier shouldBe Array::class
+        schema.columns["datearraycol"]!!.type.classifier shouldBe Array::class
+        schema.columns["textarraycol"]!!.type.classifier shouldBe Array::class
+        schema.columns["booleanarraycol"]!!.type.classifier shouldBe Array::class
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
