@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.samples.schemas
 
 import io.kotest.assertions.throwables.shouldThrow
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.DateTimeFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.asValueColumn
@@ -67,13 +69,24 @@ class DataSchemasTroubleshooting {
     fun readSqliteCustom() {
         val connectionConfig = DbConnectionConfig("")
 
+        val customFormat = LocalDateTime.Format { year() }
+
         // SampleStart
-        val sqliteCustom = Sqlite.withCustomTypes(
-            mapOf(
-                "LONGVARCHAR" to typeOf<String>(),
-                "LONGINT" to typeOf<Long>(),
-            ),
-        )
+        val sqliteCustom = Sqlite.withCustomConverters {
+            // SQLite assigns `NUMERIC` affinity to the custom `LONGVARCHAR` type,
+            // so the JDBC driver reports the column type as Int.
+            // However, the actual stored values are strings, so we explicitly
+            // set the resulting Kotlin type to String?.
+            forType<String?>("LONGVARCHAR")
+
+            // Convert values from the "time_stamp" column regardless of its SQL type.
+            // The raw values are stored as strings and parsed into LocalDateTime values;
+            //  the resulting column has LocalDateTime type as well.
+            forColumn("time_stamp") { raw: String ->
+                LocalDateTime.parse(raw, customFormat)
+            }
+        }
+
         val df = DataFrame.readSqlTable(
             connectionConfig,
             "table_name",

@@ -68,6 +68,15 @@
             <toc-element topic="read.md"/>
             <toc-element topic="readSqlDatabases.md"/>
             <toc-element topic="readSqlFromCustomDatabase.md"/>
+            <toc-element topic="readSqlTypeMapping.md">
+                <toc-element topic="readSqlTypeMapping_MariaDB.md"/>
+                <toc-element topic="readSqlTypeMapping_MySQL.md"/>
+                <toc-element topic="readSqlTypeMapping_PostgreSQL.md"/>
+                <toc-element topic="readSqlTypeMapping_MsSql.md"/>
+                <toc-element topic="readSqlTypeMapping_H2.md"/>
+                <toc-element topic="readSqlTypeMapping_SQLite.md"/>
+                <toc-element topic="readSqlTypeMapping_DuckDB.md"/>
+            </toc-element>
             <toc-element topic="write.md"/>
         </toc-element>
         <toc-element topic="info.md">
