@@ -33,11 +33,11 @@ import java.sql.Connection
 import java.sql.Date
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.sql.Time
-import java.sql.Timestamp
 import java.sql.Types
 import java.util.UUID
 import kotlin.reflect.typeOf
+import java.sql.Time as SqlTime
+import java.sql.Timestamp as SqlTimestamp
 
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
@@ -236,11 +236,11 @@ internal fun createTestData(connection: Connection) {
             st.setInt(11, 1000 + i)
             st.setInt(12, 1000000 + i)
             st.setString(13, null)
-            st.setTime(14, Time.valueOf("12:34:56"))
+            st.setTime(14, SqlTime.valueOf("12:34:56"))
 
-            st.setTimestamp(15, Timestamp(System.currentTimeMillis()))
-            st.setTimestamp(16, Timestamp(System.currentTimeMillis()))
-            st.setTimestamp(17, Timestamp(System.currentTimeMillis()))
+            st.setTimestamp(15, SqlTimestamp(System.currentTimeMillis()))
+            st.setTimestamp(16, SqlTimestamp(System.currentTimeMillis()))
+            st.setTimestamp(17, SqlTimestamp(System.currentTimeMillis()))
 
             st.setObject(18, UUID.randomUUID(), Types.OTHER)
             val xmlObject = PGobject()
