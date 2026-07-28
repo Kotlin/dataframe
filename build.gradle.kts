@@ -17,7 +17,7 @@ plugins {
     }
 }
 
-val projectName: String by project
+val projectName: String = providers.gradleProperty("projectName").get()
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get())
@@ -55,7 +55,7 @@ fun detectVersion(): String {
     }
 }
 
-val detectVersionForTC by tasks.registering {
+val detectVersionForTC = tasks.register("detectVersionForTC") {
     doLast {
         println("##teamcity[buildNumber '$version']")
     }

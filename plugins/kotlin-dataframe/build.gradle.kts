@@ -9,7 +9,7 @@ plugins {
 
 group = "org.jetbrains.kotlinx.dataframe"
 
-val kotlinVersion: String by project.properties
+val kotlinVersion: String = providers.gradleProperty("kotlinVersion").get()
 
 repositories {
     mavenCentral()

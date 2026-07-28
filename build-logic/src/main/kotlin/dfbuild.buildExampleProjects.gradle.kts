@@ -56,7 +56,7 @@ val versionsToSync =
         )
     }.map { it.getVersionName() }
 
-val syncAllExampleFolders by tasks.registering {
+val syncAllExampleFolders = tasks.register("syncAllExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Sync the versions in the nested projects in /examples/projects"
 }
@@ -108,7 +108,7 @@ private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
 
 // region promoting
 
-val promoteDevExamples by tasks.registering {
+val promoteDevExamples = tasks.register("promoteDevExamples") {
     group = buildExampleProjectsGroup
     description = "Promotes the /examples/projects/dev example projects to /examples/projects"
 
@@ -134,7 +134,7 @@ val promoteDevExamples by tasks.registering {
 
 // region testing/building examples
 
-val generateAllExampleFoldersTests by tasks.registering {
+val generateAllExampleFoldersTests = tasks.register("generateAllExampleFoldersTests") {
     group = buildExampleProjectsGroup
     description = "Generates test classes for each example in /examples/projects"
 
@@ -148,7 +148,7 @@ val generateAllExampleFoldersTests by tasks.registering {
     }
 }
 
-val runBuildAllExampleFolders by tasks.registering(Test::class) {
+val runBuildAllExampleFolders = tasks.register<Test>("runBuildAllExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds all the nested builds in /examples/projects to verify they compile correctly."
 }
@@ -159,27 +159,27 @@ tasks.named("test") {
     }
 }
 
-val runBuildReleaseExampleFolders by tasks.registering(Test::class) {
+val runBuildReleaseExampleFolders = tasks.register<Test>("runBuildReleaseExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested release builds in /examples/projects to verify they compile correctly."
 }
-val runBuildDevExampleFolders by tasks.registering(Test::class) {
+val runBuildDevExampleFolders = tasks.register<Test>("runBuildDevExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested dev builds in /examples/projects to verify they compile correctly."
 }
-val runBuildMavenExampleFolders by tasks.registering(Test::class) {
+val runBuildMavenExampleFolders = tasks.register<Test>("runBuildMavenExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested Maven builds in /examples/projects to verify they compile correctly."
 }
-val runBuildGradleExampleFolders by tasks.registering(Test::class) {
+val runBuildGradleExampleFolders = tasks.register<Test>("runBuildGradleExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
 }
-val runBuildAndroidExampleFolders by tasks.registering(Test::class) {
+val runBuildAndroidExampleFolders = tasks.register<Test>("runBuildAndroidExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
 }
-val runBuildNonAndroidExampleFolders by tasks.registering(Test::class) {
+val runBuildNonAndroidExampleFolders = tasks.register<Test>("runBuildNonAndroidExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested non-Android builds in /examples/projects to verify they compile correctly."
 }
@@ -267,7 +267,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
     }
 }
 
-val testBuildingExamples: SourceSet by sourceSets.creating {
+val testBuildingExamples: SourceSet = sourceSets.create("testBuildingExamples") {
     kotlin.setSrcDirs(
         listOf(
             // base class
@@ -296,10 +296,10 @@ tasks.named<JavaCompile>("compile${testBuildingExamples.name.capitalized()}Java"
     options.release.set(javaVersion.majorVersion.toInt())
 }
 
-val testBuildingExamplesImplementation: Configuration by configurations.getting {
+val testBuildingExamplesImplementation: Configuration = configurations.getByName("testBuildingExamplesImplementation") {
     extendsFrom(configurations.implementation.get())
 }
-val testBuildingExamplesRuntimeOnly: Configuration by configurations.getting {
+val testBuildingExamplesRuntimeOnly: Configuration = configurations.getByName("testBuildingExamplesRuntimeOnly") {
     extendsFrom(configurations.runtimeOnly.get())
 }
 
