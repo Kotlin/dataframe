@@ -174,4 +174,11 @@ class SortDataColumn {
             filteredGroups.sortBy { invalidPath }
         }.message.orEmpty() shouldContain "missing/nested"
     }
+
+    @Test
+    fun `group by sort preserves schema after filtering all groups`() {
+        val filteredGroups = dataFrameOf("key", "value")(1, 2).groupBy("key").filter { false }
+
+        filteredGroups.sortBy("value").toDataFrame() shouldBe filteredGroups.toDataFrame()
+    }
 }
