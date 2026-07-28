@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.TRAVERSE_PROPERTIES_DSL
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -188,7 +189,10 @@ public interface TraversePropertiesDsl {
 @Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
-public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
+@Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
+public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = preserve(T::class)
+
+public abstract class CreateDataFrameDsl<T> {
 
     public abstract val source: Iterable<T>
 
@@ -206,6 +210,18 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
         maxDepth: Int = 0,
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
+    public fun exclude(vararg classes: KClass<*>): Unit = properties { exclude(*classes) }
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
+    public fun exclude(vararg properties: KCallable<*>): Unit = this.properties { exclude(*properties) }
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
+    public fun preserve(vararg classes: KClass<*>): Unit = properties { preserve(*classes) }
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
+    public fun preserve(vararg properties: KCallable<*>): Unit = this.properties { preserve(*properties) }
 
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
