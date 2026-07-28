@@ -69,6 +69,7 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(projects.commonTestUtils)
     // kotest shouldBe forcefully escapes newlines when content is identical except additional newlines
     // which makes diff very hard to perceive. CodeGenerationTests.kt suffers from it a lot. using assertEquals there for working diff.
     testImplementation(kotlin("test"))
