@@ -182,6 +182,10 @@ internal const val SUPPORTED_DATAFRAME_FORMAT: String =
 
 private const val MESSAGE_1_1 = "Will be ERROR in 1.1."
 
+internal const val TRAVERSE_PROPERTIES_DSL =
+    "Top-level `exclude`/`preserve` calls in `toDataFrame {}` are removed. " +
+        "Use `properties { }` block to configure traversal instead. $MESSAGE_1_1"
+
 internal const val APACHE_CSV =
     "The Apache-based CSV/TSV reader is deprecated in favor of the new Deephaven CSV reader in dataframe-csv. $MESSAGE_1_1"
 internal const val READ_CSV =
