@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
@@ -127,7 +128,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnSet<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
     /**
@@ -153,7 +154,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
     /**
@@ -179,7 +180,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
     /**
@@ -203,7 +204,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun String.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
@@ -222,7 +223,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun KProperty<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
@@ -232,7 +233,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
-    public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnPath.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
