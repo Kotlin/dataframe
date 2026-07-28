@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -114,5 +115,5 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
         return newColumns.toDataFrame()
     }
 
-    return splitIntoRows(this, columns.associate { it.path to it.data }).cast()
+    return splitIntoRows(this, columns.associate { it.path to it.data }).castUnsafe()
 }

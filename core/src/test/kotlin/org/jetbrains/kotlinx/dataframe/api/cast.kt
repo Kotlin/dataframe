@@ -21,7 +21,10 @@ class CastTests {
         }
         val converted = df.convert("a").toDouble()
         converted.cast<Data>(verify = false) shouldBe converted
-        converted.cast<Data>() shouldBe converted
+        converted.castUnsafe<Data>() shouldBe converted
+        shouldThrow<IllegalArgumentException> {
+            converted.cast<Data>()
+        }
     }
 
     @DataSchema

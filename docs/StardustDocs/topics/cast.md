@@ -4,15 +4,17 @@
 Changes the type argument of the [`DataFrame`](DataFrame.md) instance without changing its contents.
 
 ```kotlin
-cast<T>(verify = false)
+cast<T>()
 ```
 
 Related operations: [](adjustSchema.md)
 
 **Parameters:**
-* `verify: Boolean = false` —
-  when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema. 
-Otherwise, it just changes the format type without actual data checks.
+* `verify: Boolean = true` —
+when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema.
+When `false`, it just changes the format type without actual data checks.
+
+Use `castUnsafe<T>()` when the schema check should be skipped.
 
 Use this operation to change the formal type of a [`DataFrame`](DataFrame.md) instance
 to match the expected schema and enable generated [extension properties](extensionPropertiesApi.md) for it.

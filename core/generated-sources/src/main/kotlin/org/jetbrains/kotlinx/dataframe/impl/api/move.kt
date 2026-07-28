@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
@@ -130,7 +131,7 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
             } else {
                 emptyList()
             }
-    return newColumnList.toDataFrame().cast()
+    return newColumnList.toDataFrame().castUnsafe()
 }
 
 internal fun <T, C> MoveClause<T, C>.moveToImpl(columnIndex: Int, insideGroup: Boolean): DataFrame<T> {

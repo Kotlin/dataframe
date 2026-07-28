@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -21,7 +22,7 @@ internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> =
     columns()
         .map { it.duplicateValuesImpl(n) }
         .toDataFrame()
-        .cast()
+        .castUnsafe()
 
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
     require(n > 0) { "Number of duplicates must be greater than 0, but was $n" }
@@ -77,7 +78,7 @@ internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<
     columns()
         .map { it.duplicateValuesImpl(n, indicesSorted) }
         .toDataFrame()
-        .cast()
+        .castUnsafe()
 
 internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
     owner.columns().map { col ->
@@ -97,4 +98,4 @@ internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
                 }
             }
         }
-    }.toDataFrame().cast()
+    }.toDataFrame().castUnsafe()

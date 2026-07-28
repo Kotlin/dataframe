@@ -65,7 +65,7 @@ private typealias CommonSelectDocs = Nothing
  */
 @Refine
 @Interpretable("Select0")
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().castUnsafe()
 
 /**
  * @include [CommonSelectDocs]

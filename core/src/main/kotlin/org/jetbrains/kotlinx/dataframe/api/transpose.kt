@@ -16,7 +16,7 @@ import kotlin.reflect.typeOf
 public fun DataRow<*>.transpose(): DataFrame<NameValuePair<*>> {
     val valueColumn = DataColumn.createByInference(NameValuePair<*>::value.columnName, values)
     val nameColumn = owner.columnNames().toValueColumn(NameValuePair<*>::name.name)
-    return dataFrameOf(nameColumn, valueColumn).cast()
+    return dataFrameOf(nameColumn, valueColumn).castUnsafe()
 }
 
 public inline fun <reified T> DataRow<*>.transposeTo(): DataFrame<NameValuePair<T>> = transposeTo(typeOf<T>())
@@ -26,7 +26,7 @@ internal fun <T> AnyRow.transposeTo(type: KType): DataFrame<NameValuePair<T>> {
     val convertedValues = values.map { it?.convertTo(type) as T? }
     val valueColumn = DataColumn.createByInference(NameValuePair<T>::value.columnName, convertedValues)
     val nameColumn = owner.columnNames().toValueColumn(NameValuePair<T>::name.name)
-    return dataFrameOf(nameColumn, valueColumn).cast()
+    return dataFrameOf(nameColumn, valueColumn).castUnsafe()
 }
 
 // endregion

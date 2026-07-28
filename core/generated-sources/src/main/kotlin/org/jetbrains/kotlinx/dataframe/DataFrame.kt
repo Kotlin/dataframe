@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -52,7 +53,7 @@ public interface DataFrame<out T> :
          * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
          *
          */
-        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
+        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).castUnsafe()
 
         /**
          * Creates a DataFrame with empty columns (rows = 0).
@@ -148,10 +149,10 @@ public interface DataFrame<out T> :
     public operator fun get(index: Int): DataRow<T>
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> =
-        columns().map { col -> col[indices] }.toDataFrame().cast()
+        columns().map { col -> col[indices] }.toDataFrame().castUnsafe()
 
     public operator fun get(range: IntRange): DataFrame<T> =
-        if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().cast()
+        if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().castUnsafe()
 
     public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
         getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
@@ -165,7 +166,7 @@ public interface DataFrame<out T> :
 
     public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
 
-    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
+    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().castUnsafe()
 
     // endregion
 }

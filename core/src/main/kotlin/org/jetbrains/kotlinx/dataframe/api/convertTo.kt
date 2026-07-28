@@ -161,7 +161,7 @@ public class ConvertType<T>(
 public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnsafe()
 
 /**
  * Converts values in [DataFrame] to match given column schema [T].
@@ -198,7 +198,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).castUnsafe()
 
 /**
  * Converts values in [DataFrame] to match given column schema [schemaType].

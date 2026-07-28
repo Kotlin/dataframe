@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -256,7 +257,7 @@ internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): It
 internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
     (startIndices + nrow).zipWithNext { start, endExclusive ->
         if (start == endExclusive) {
-            DataFrame.empty().cast()
+            DataFrame.empty().castUnsafe()
         } else {
             get(start until endExclusive)
         }

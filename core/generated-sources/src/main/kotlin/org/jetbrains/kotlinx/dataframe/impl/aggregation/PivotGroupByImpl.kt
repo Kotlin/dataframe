@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
@@ -25,7 +26,7 @@ internal data class PivotGroupByImpl<T>(
     override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> =
         df.aggregate {
             aggregatePivot(this as GroupByReceiverImpl<T>, columns, separate, inward, default, body)
-        }.cast()
+        }.castUnsafe()
 
     override fun default(value: Any?) = copy(default = value)
 

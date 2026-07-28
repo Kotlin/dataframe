@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.indices
@@ -64,7 +65,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     infer: Infer = Infer.Nulls,
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
-    val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
+    val df = this as? DataFrame<T> ?: dataFrameOf(columns()).castUnsafe()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
         Infer.Nulls -> DataColumn.createByType(
@@ -153,18 +154,18 @@ internal inline fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.t
 @JvmName("toColumnSetForPivot")
 internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnsafe(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
     }
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnsafe(), it.unresolvedColumnsPolicy), SortDsl<T> {}
     }
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnsafe(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
     }
 
 // endregion

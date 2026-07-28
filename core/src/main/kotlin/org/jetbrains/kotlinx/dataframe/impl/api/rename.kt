@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.RenameClause
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -70,5 +71,5 @@ internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>)
 
     // convert the created ColumnGroup to a DataFrame
     val renamedDf = renamedDfAsColumnGroup.columns().toDataFrame()
-    return renamedDf.cast()
+    return renamedDf.castUnsafe()
 }

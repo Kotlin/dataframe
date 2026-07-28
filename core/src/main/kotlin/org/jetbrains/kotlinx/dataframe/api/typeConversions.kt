@@ -346,7 +346,7 @@ public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 public fun Iterable<BaseColumn<*>>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
 
 public fun <T> Iterable<BaseColumn<*>>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> =
-    dataFrameOf(this).cast<T>().asColumnGroup(column)
+    dataFrameOf(this).castUnsafe<T>().asColumnGroup(column)
 
 public fun <T> Iterable<BaseColumn<*>>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
 

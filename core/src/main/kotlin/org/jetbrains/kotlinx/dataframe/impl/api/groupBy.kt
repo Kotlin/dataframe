@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.indices
@@ -49,7 +50,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
         ColumnToInsert(path, column, null)
     }
 
-    val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
+    val keyColumnsDf = dataFrameOf(keyColumnsToInsert).castUnsafe<T>()
 
     val permutation = groups.flatMap { it.second }
     val sorted = getRows(permutation)

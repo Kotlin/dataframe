@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.JoinedDataRow
 import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
 import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -115,5 +116,5 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
         }
     }.toDataFrame()
 
-    return df.cast()
+    return df.castUnsafe()
 }

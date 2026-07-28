@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.canHaveNA
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -42,7 +43,7 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
 @JvmName("toColumnSetForAggregate")
 internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> =
     toColumnSet {
-        object : DataFrameReceiver<T>(it.df.cast(), UnresolvedColumnsPolicy.Fail), ColumnsForAggregateSelectionDsl<T> {}
+        object : DataFrameReceiver<T>(it.df.castUnsafe(), UnresolvedColumnsPolicy.Fail), ColumnsForAggregateSelectionDsl<T> {}
     }
 
 @PublishedApi

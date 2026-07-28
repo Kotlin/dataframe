@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.Corr
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castToNotNullable
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
@@ -78,5 +79,5 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
         values.toValueColumn(c2.name)
     }
 
-    return dataFrameOf(listOf(index) + newColumns).cast()
+    return dataFrameOf(listOf(index) + newColumns).castUnsafe()
 }

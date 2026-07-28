@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Reorder
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -62,14 +63,14 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
                     column = column.asAnyFrameColumn()
-                        .map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
+                        .map(typeOf<AnyFrame>()) { it.castUnsafe<T>().reorder(columns).reorderImpl(desc, expression) }
                         .cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)
             }
             val newGroup = removed.df.insertImpl(toInsert)
             df = if (parentPath.isEmpty()) {
-                newGroup.cast()
+                newGroup.castUnsafe()
             } else {
                 df.replace { parentPath }.with { newGroup.asColumnGroup(it.name()) }
             }

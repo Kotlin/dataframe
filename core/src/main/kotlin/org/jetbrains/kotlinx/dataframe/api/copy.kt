@@ -7,6 +7,6 @@ import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 // region DataFrame
 
 @Deprecated(MESSAGE_SHORTCUT, ReplaceWith(COPY_REPLACE), DeprecationLevel.WARNING)
-public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().cast()
+public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().castUnsafe()
 
 // endregion

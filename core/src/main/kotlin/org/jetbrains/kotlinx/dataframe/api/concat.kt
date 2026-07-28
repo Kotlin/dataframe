@@ -48,7 +48,7 @@ public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = 
 @Refine
 @Interpretable("DataFrameConcat")
 public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<Any> =
-    concatImpl(listOf(this) + frame).cast()
+    concatImpl(listOf(this) + frame).castUnsafe()
 
 @JvmName("concatT")
 public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (rows() + rows).concat()
@@ -158,6 +158,6 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
 
 @JvmName("concatRows")
 public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> =
-    concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).cast() })
+    concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).castUnsafe() })
 
 // endregion

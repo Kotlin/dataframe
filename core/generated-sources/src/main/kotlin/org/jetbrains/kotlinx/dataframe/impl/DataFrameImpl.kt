@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -114,7 +115,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
         val receiver = GroupByReceiverImpl(this, false)
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]
-        return row.cast()
+        return row.castUnsafe()
     }
 
     override fun getColumnOrNull(name: String): AnyCol? =

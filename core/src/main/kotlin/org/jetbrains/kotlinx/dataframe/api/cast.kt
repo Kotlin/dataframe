@@ -21,18 +21,19 @@ import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import kotlin.reflect.typeOf
 
 @Check
-public fun <T> DataFrame<*>.cast(): DataFrame<T> = this as DataFrame<T>
-
 public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> =
     if (verify) {
         convertToImpl(
             typeOf<T>(),
             allowConversion = false,
             ExcessiveColumns.Keep,
-        ).cast()
+        ).castUnsafe()
     } else {
-        cast()
+        castUnsafe()
     }
+
+@JvmName("cast")
+public fun <T> DataFrame<*>.castUnsafe(): DataFrame<T> = this as DataFrame<T>
 
 public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
@@ -69,7 +70,8 @@ public inline fun <reified T> DataFrame<*>.castTo(
     verify: Boolean = true,
 ): DataFrame<T> = cast<T>(verify = verify)
 
-public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
+@JvmName("cast")
+public fun <T> DataRow<*>.castUnsafe(): DataRow<T> = this as DataRow<T>
 
 public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
 

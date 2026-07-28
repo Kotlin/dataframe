@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.NotAColumnGroupInsertException
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.before
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castUnsafe
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -48,7 +49,7 @@ internal fun <T> insertImpl(
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int,
 ): DataFrame<T> {
-    if (columns.isEmpty()) return df ?: DataFrame.empty().cast()
+    if (columns.isEmpty()) return df ?: DataFrame.empty().castUnsafe()
 
     val childDepth = depth + 1
 
@@ -164,7 +165,7 @@ internal fun <T> insertImpl(
         }
     }
 
-    return newColumns.toDataFrame().cast()
+    return newColumns.toDataFrame().castUnsafe()
 }
 
 internal fun <T> InsertClause<T>.afterImpl(columnPath: ColumnPath): DataFrame<T> {
