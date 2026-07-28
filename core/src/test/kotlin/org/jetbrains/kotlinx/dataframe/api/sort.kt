@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowMessage
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.readCsv
@@ -98,5 +101,77 @@ class SortDataColumn {
         shouldThrowMessage("Can not use ColumnGroup as sort column") {
             aggregate.sortBy { pathOf("L", "extra") }
         }
+    }
+
+    @Test
+    fun `group by sort validates nested paths`() {
+        val df = DataFrame.readCsv(testResource("ds_salaries.csv")).cast<DsSalaries>()
+        val grouped = df.group { salaryInUsd }.into("group").groupBy { companyLocation }
+        val salaryPath = pathOf("group", "group", "salary_in_usd")
+
+        grouped.sortBy { salaryPath }.groups.values().forEach {
+            val salaries = it[pathOf("group", "salary_in_usd")].values().map { value -> value as Int }
+            salaries shouldBe salaries.sorted()
+        }
+        grouped.sortByDesc { salaryPath }.groups.values().forEach {
+            val salaries = it[pathOf("group", "salary_in_usd")].values().map { value -> value as Int }
+            salaries shouldBe salaries.sortedDescending()
+        }
+
+        val invalidPath = pathOf("group", "salaryInUsd")
+        val ascendingError = shouldThrow<IllegalStateException> {
+            grouped.sortBy { invalidPath }
+        }.message
+        val descendingError = shouldThrow<IllegalStateException> {
+            grouped.sortByDesc { invalidPath }
+        }.message
+
+        ascendingError shouldBe descendingError
+        ascendingError.orEmpty() shouldContain "group/salaryInUsd"
+        ascendingError.orEmpty() shouldNotContain "Can not apply sort flag to column kind"
+
+        shouldThrowMessage(ascendingError.orEmpty()) {
+            grouped.sortBy { salaryPath and invalidPath }
+        }
+    }
+
+    @Test
+    fun `group by sort preserves group and key sorting`() {
+        val df = DataFrame.readCsv(testResource("ds_salaries.csv")).cast<DsSalaries>()
+
+        df.groupBy { companyLocation }.sortBy { salaryInUsd }.groups.values().forEach {
+            val salaries = it[salaryInUsd].values()
+            salaries shouldBe salaries.sorted()
+        }
+
+        val grouped = df.group { salaryInUsd }.into("group").groupBy { companyLocation }
+        val sortedKeys = grouped.sortBy { companyLocation }.keys[companyLocation].values()
+        sortedKeys shouldBe sortedKeys.sorted()
+    }
+
+    @Test
+    fun `group by sort accepts columns present in later heterogeneous groups`() {
+        val grouped = dataFrameOf("key", "groups")(
+            "first",
+            dataFrameOf("other")(2),
+            "second",
+            dataFrameOf("value")(2, 1),
+        ).asGroupBy("groups")
+
+        grouped.sortBy("value").groups.values().toList()[1]["value"].values() shouldBe listOf(1, 2)
+    }
+
+    @Test
+    fun `group by sort validates paths when no groups are present`() {
+        val emptySource = dataFrameOf("value") { emptyList<Int>() }.groupBy("value")
+        val filteredGroups = dataFrameOf("value")(1).groupBy("value").filter { false }
+        val invalidPath = pathOf("missing", "nested")
+
+        shouldThrow<IllegalStateException> {
+            emptySource.sortBy { invalidPath }
+        }.message.orEmpty() shouldContain "missing/nested"
+        shouldThrow<IllegalStateException> {
+            filteredGroups.sortBy { invalidPath }
+        }.message.orEmpty() shouldContain "missing/nested"
     }
 }
