@@ -222,12 +222,10 @@ class JdbcTypesTest {
 
         @Test
         fun `customTypesMap overrides the default mapping by SQL type name`() {
-            val custom = Sqlite(
-                customTypesMap = mapOf(
-                    "INTEGER" to typeOf<Long>(),
-                    "MY_TYPE" to typeOf<String>(),
-                ),
-            )
+            val custom = Sqlite.withCustomConverters {
+                forType<Long>("INTEGER")
+                forType<String>("MY_TYPE")
+            }
             // INTEGER is normally Int, but is overridden to Long
             custom.getExpectedJdbcType(
                 createColumnMetadata(
