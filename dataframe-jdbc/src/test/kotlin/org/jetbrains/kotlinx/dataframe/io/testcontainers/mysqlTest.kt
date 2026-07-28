@@ -24,11 +24,11 @@ import java.math.BigInteger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.sql.Time
-import java.sql.Timestamp
 import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
+import java.sql.Time as SqlTime
+import java.sql.Timestamp as SqlTimestamp
 
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
@@ -274,9 +274,9 @@ class MySqlTest {
                     st.setDouble(11, i * 10.0)
                     st.setBigDecimal(12, BigDecimal(i * 10))
                     st.setDate(13, java.sql.Date(TIMESTAMP))
-                    st.setTimestamp(14, Timestamp(TIMESTAMP))
-                    st.setTimestamp(15, Timestamp(TIMESTAMP))
-                    st.setTime(16, Time(TIMESTAMP))
+                    st.setTimestamp(14, SqlTimestamp(TIMESTAMP))
+                    st.setTimestamp(15, SqlTimestamp(TIMESTAMP))
+                    st.setTime(16, SqlTime(TIMESTAMP))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -313,9 +313,9 @@ class MySqlTest {
                     st.setDouble(11, i * 20.0)
                     st.setBigDecimal(12, BigDecimal(i * 20))
                     st.setDate(13, java.sql.Date(TIMESTAMP))
-                    st.setTimestamp(14, Timestamp(TIMESTAMP))
-                    st.setTimestamp(15, Timestamp(TIMESTAMP))
-                    st.setTime(16, Time(TIMESTAMP))
+                    st.setTimestamp(14, SqlTimestamp(TIMESTAMP))
+                    st.setTimestamp(15, SqlTimestamp(TIMESTAMP))
+                    st.setTime(16, SqlTime(TIMESTAMP))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -365,7 +365,7 @@ class MySqlTest {
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["datetimeCol"]!!.type shouldBe typeOf<LocalDateTime>()
         schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
-        schema.columns["timeCol"]!!.type shouldBe typeOf<Time>()
+        schema.columns["timeCol"]!!.type shouldBe typeOf<SqlTime>()
         schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["varbinaryCol"]!!.type shouldBe typeOf<ByteArray>()
