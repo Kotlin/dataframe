@@ -5,9 +5,7 @@ import dfbuild.buildExampleProjects.isAndroid
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
 import dfbuild.getVersionName
-import org.gradle.api.provider.Provider
 import org.gradle.internal.extensions.stdlib.capitalized
-import org.gradle.plugin.use.PluginDependency
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
@@ -57,96 +55,6 @@ val versionsToSync =
             exec,
         )
     }.map { it.getVersionName() }
-
-val exampleDependencyUpdates by configurations.creating {
-    isCanBeResolved = true
-    isCanBeConsumed = false
-    isVisible = false
-}
-
-/**
- * Every library and plugin used by the projects in /examples/projects (excluding deps already
- * declared by the root build itself, which `dependencyUpdates` picks up anyway).
- *
- * This makes the ben-manes `dependencyUpdates` task aware of example-only dependencies without
- * having to apply the plugin inside the example projects.
- */
-dependencies {
-    // android-example
-    exampleDependencyUpdates(libs.androidx.core.ktx)
-    exampleDependencyUpdates(libs.androidx.junit)
-    exampleDependencyUpdates(libs.androidx.espresso.core)
-    exampleDependencyUpdates(libs.androidx.lifecycle.runtime.ktx)
-    exampleDependencyUpdates(libs.androidx.activity.compose)
-    // BOM-managed compose artifacts (versions come from the BOM)
-    exampleDependencyUpdates(platform(libs.androidx.compose.bom))
-    exampleDependencyUpdates(libs.androidx.ui)
-    exampleDependencyUpdates(libs.androidx.ui.graphics)
-    exampleDependencyUpdates(libs.androidx.ui.tooling)
-    exampleDependencyUpdates(libs.androidx.ui.tooling.preview)
-    exampleDependencyUpdates(libs.androidx.ui.test.manifest)
-    exampleDependencyUpdates(libs.androidx.ui.test.junit4)
-    exampleDependencyUpdates(libs.androidx.material3)
-    exampleDependencyUpdates(pluginMarker(libs.plugins.android.application))
-    exampleDependencyUpdates(pluginMarker(libs.plugins.kotlin.android))
-    exampleDependencyUpdates(pluginMarker(libs.plugins.kotlin.compose))
-
-    // exposed
-    exampleDependencyUpdates(libs.sqlite)
-    exampleDependencyUpdates(libs.exposed.core)
-    exampleDependencyUpdates(libs.exposed.kotlin.datetime)
-    exampleDependencyUpdates(libs.exposed.jdbc)
-    exampleDependencyUpdates(libs.exposed.json)
-    exampleDependencyUpdates(libs.exposed.money)
-
-    // hibernate
-    exampleDependencyUpdates(libs.hibernate.core)
-    exampleDependencyUpdates(libs.hibernate.hikaricp)
-    exampleDependencyUpdates(libs.hikaricp)
-    exampleDependencyUpdates(libs.h2db)
-    exampleDependencyUpdates(libs.sl4jsimple)
-
-    // json-openapi
-    exampleDependencyUpdates(libs.dataframe.openapi)
-    exampleDependencyUpdates(libs.dataframe.openapi.generator)
-
-    // kotlin-dataframe-plugin-gradle-example
-    exampleDependencyUpdates(libs.dataframe)
-    exampleDependencyUpdates(libs.kandy)
-
-    // kotlin-dataframe-plugin-maven-example
-    exampleDependencyUpdates(libs.maven.exec.plugin)
-    exampleDependencyUpdates(libs.maven.surefire.plugin)
-
-    // kotlin-spark
-    exampleDependencyUpdates(libs.spark3.sql)
-    exampleDependencyUpdates(libs.kotlin.spark)
-    exampleDependencyUpdates(libs.log4j.core)
-    exampleDependencyUpdates(libs.log4j.api)
-
-    // movies
-    // all already here
-
-    // multik
-    exampleDependencyUpdates(libs.multik.core)
-    exampleDependencyUpdates(libs.multik.default)
-
-    // spark-parquet-dataframe
-    exampleDependencyUpdates(libs.spark4.sql)
-    exampleDependencyUpdates(libs.spark4.mllib)
-
-    // titanic
-    exampleDependencyUpdates(libs.kotlin.dl.api)
-    exampleDependencyUpdates(libs.kotlin.dl.impl)
-    exampleDependencyUpdates(libs.kotlin.dl.tensorflow)
-    exampleDependencyUpdates(libs.kotlin.dl.dataset)
-
-    // youtube
-    exampleDependencyUpdates(libs.kotlin.datetimeJvm)
-}
-
-private fun pluginMarker(provider: Provider<PluginDependency>): Provider<String> =
-    provider.map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }
 
 val syncAllExampleFolders by tasks.registering {
     group = buildExampleProjectsGroup
