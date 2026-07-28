@@ -12,6 +12,7 @@ plugins {
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
+        alias(kodex)
 
         alias(simpleGit) apply false
     }
