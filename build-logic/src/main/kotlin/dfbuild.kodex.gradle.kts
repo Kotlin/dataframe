@@ -82,7 +82,7 @@ fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
 // main sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
 // This also makes sure the contextual sources are not in the final jar
-val generatedMainSources by kotlin.sourceSets.creating {
+val generatedMainSources = kotlin.sourceSets.create("generatedMainSources") {
     kotlin {
         afterEvaluate {
             this@kotlin.setSrcDirs(
@@ -97,7 +97,7 @@ val generatedMainSources by kotlin.sourceSets.creating {
 }
 
 // Task to generate the processed documentation
-val processKDocsMain by tasks.registering(RunKodexTask::class) {
+val processKDocsMain = tasks.register<RunKodexTask>("processKDocsMain") {
     sources = extension.kotlinMainSourcesDirectories.get()
         .also {
             logger.info("$name: Preprocessing sources with KoDEx: ${it.toList()}")
@@ -120,7 +120,7 @@ val processKDocsMain by tasks.registering(RunKodexTask::class) {
 }
 
 // Alias for processKDocsMain
-val kodex by tasks.registering {
+val kodex = tasks.register("kodex") {
     group = "KDocs"
     dependsOn(processKDocsMain)
 }
@@ -144,7 +144,7 @@ idea {
 // If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
-val changeJarTask by tasks.registering {
+val changeJarTask = tasks.register("changeJarTask") {
     outputs.upToDateWhen { project.hasProperty("skipKodex") }
     doFirst {
         tasks.withType<Jar> {

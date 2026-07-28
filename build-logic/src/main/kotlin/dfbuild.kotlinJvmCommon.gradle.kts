@@ -14,7 +14,7 @@ kotlin {
 // Adds the instrumentedJars configuration/artifact to all Kotlin sub-projects.
 // This allows other modules to depend on the output of this task, aka the compiled jar of that module
 // Used in :plugins:dataframe-gradle-plugin integration tests and in :samples for compiler plugin support
-val instrumentedJars: Configuration by configurations.creating {
+val instrumentedJars: Configuration = configurations.create("instrumentedJars") {
     isCanBeConsumed = true
     isCanBeResolved = false
 }

@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-val jupyterApiTCRepo: String? by settings
+val jupyterApiTCRepo: String? = providers.gradleProperty("jupyterApiTCRepo").orNull
 
 dependencyResolutionManagement {
 
