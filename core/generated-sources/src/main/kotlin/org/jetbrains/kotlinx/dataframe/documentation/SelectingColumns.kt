@@ -31,6 +31,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
+ * Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -78,6 +81,9 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
+     * Columns Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
      * Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -98,6 +104,9 @@ internal interface SelectingColumns {
          * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
          * This is an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into one or more columns.
+         *
+         * Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+         * for specifying columns type- and name-safe.
          *
          * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
          *
@@ -131,6 +140,8 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into a single column.
      *
+     * Column Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * for specifying column type- and name-safe.
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -153,6 +164,8 @@ internal interface SelectingColumns {
          * This is an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into a single column.
          *
+         * Column Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+         * for specifying column type- and name-safe.
          *
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;
