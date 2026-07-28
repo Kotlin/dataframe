@@ -54,6 +54,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(projects.dataframeJson)
+    testImplementation(projects.commonTestUtils)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

@@ -21,6 +21,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -34,7 +35,6 @@ import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
@@ -1220,16 +1220,6 @@ fun testResource(resourcePath: String): URL = JsonTests::class.java.classLoader.
 fun parseJsonStr(jsonStr: String): JsonObject = Json.parseToJsonElement(jsonStr).jsonObject
 
 fun testJson(jsonName: String) = testResource("$jsonName.json")
-
-/**
- * Prints dataframe to console with borders, title, column types and schema
- */
-fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T =
-    apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
-        schema().print()
-    }
 
 internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!

@@ -28,6 +28,7 @@ dependencies {
     }
     testImplementation(libs.arrow.c.data)
     testImplementation(libs.duckdb.jdbc)
+    testImplementation(projects.commonTestUtils)
 }
 
 kotlinPublications {
