@@ -216,6 +216,9 @@ public interface DocumentationUrls {
     /** [See `maxBy` on the documentation website.]({@include [Url]}/maxby.html) */
     public typealias MaxBy = Nothing
 
+    /** [See `minBy` on the documentation website.]({@include [Url]}/minby.html) */
+    public typealias MinBy = Nothing
+
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
     public typealias Concat = Nothing
 
