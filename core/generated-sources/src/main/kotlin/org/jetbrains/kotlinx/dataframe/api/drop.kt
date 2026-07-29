@@ -718,7 +718,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun <C> ColumnSet<C>.dropWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.dropWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropWhile(predicate) }
 
     /**
@@ -750,7 +750,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun ColumnsSelectionDsl<*>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.dropWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropColsWhile(predicate)
 
     /**
@@ -782,7 +782,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
@@ -814,7 +814,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun String.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     /**
@@ -848,7 +848,7 @@ public interface DropColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     /**
@@ -880,7 +880,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun ColumnPath.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     // endregion
@@ -949,7 +949,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun <C> ColumnSet<C>.dropLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.dropLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropLastWhile(predicate) }
 
     /**
@@ -981,7 +981,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropLastColsWhile(predicate)
 
     /**
@@ -1013,7 +1013,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
@@ -1045,7 +1045,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun String.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     /**
@@ -1081,7 +1081,7 @@ public interface DropColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     /**
@@ -1113,7 +1113,7 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun ColumnPath.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     // endregion
