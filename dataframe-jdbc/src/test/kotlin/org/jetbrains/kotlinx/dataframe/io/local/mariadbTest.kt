@@ -1,36 +1,28 @@
-package org.jetbrains.kotlinx.dataframe.io.testcontainers
+package org.jetbrains.kotlinx.dataframe.io.local
 
 import org.jetbrains.kotlinx.dataframe.io.MariadbTestBase
 import org.jetbrains.kotlinx.dataframe.io.setUpMariadbTestData
 import org.jetbrains.kotlinx.dataframe.io.tearDownMariadbTestData
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.testcontainers.mariadb.MariaDBContainer
 import java.sql.Connection
 import java.sql.DriverManager
 
+private const val URL = "jdbc:mariadb://localhost:3306"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 
-class MariadbContainerTest : MariadbTestBase() {
+class MariadbLocalTest : MariadbTestBase() {
     override val connection: Connection get() = Companion.connection
 
     override fun connect(database: String?): Connection = openConnection(database)
 
     companion object {
-        private val mariadb: MariaDBContainer = MariaDBContainer(MARIADB_IMAGE).apply {
-            withUsername(USER_NAME)
-            withPassword(PASSWORD)
-        }
-
         private lateinit var connection: Connection
-
-        private val rootUrl: String
-            get() = "jdbc:mariadb://${mariadb.host}:${mariadb.firstMappedPort}"
 
         private fun openConnection(database: String?): Connection =
             DriverManager.getConnection(
-                if (database == null) rootUrl else "$rootUrl/$database",
+                if (database == null) URL else "$URL/$database",
                 USER_NAME,
                 PASSWORD,
             )
@@ -38,7 +30,6 @@ class MariadbContainerTest : MariadbTestBase() {
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            mariadb.start()
             connection = openConnection(null)
             setUpMariadbTestData(connection)
         }
@@ -47,7 +38,6 @@ class MariadbContainerTest : MariadbTestBase() {
         @JvmStatic
         fun tearDownClass() {
             tearDownMariadbTestData(connection)
-            mariadb.stop()
         }
     }
 }

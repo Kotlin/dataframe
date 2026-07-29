@@ -1,35 +1,27 @@
-package org.jetbrains.kotlinx.dataframe.io.testcontainers
+package org.jetbrains.kotlinx.dataframe.io.local
 
 import org.jetbrains.kotlinx.dataframe.io.PostgresTestBase
 import org.jetbrains.kotlinx.dataframe.io.createPostgresTestData
 import org.jetbrains.kotlinx.dataframe.io.tearDownPostgresTestData
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.testcontainers.postgresql.PostgreSQLContainer
 import java.sql.Connection
 import java.sql.DriverManager
 
+private const val URL = "jdbc:postgresql://localhost:5432/test"
 private const val USER_NAME = "postgres"
 private const val PASSWORD = "pass"
-private const val DATABASE_NAME = "test"
 
-class PostgresContainerTest : PostgresTestBase() {
+class PostgresLocalTest : PostgresTestBase() {
     override val connection: Connection get() = Companion.connection
 
     companion object {
-        private val postgres: PostgreSQLContainer = PostgreSQLContainer(POSTGRES_IMAGE).apply {
-            withDatabaseName(DATABASE_NAME)
-            withUsername(USER_NAME)
-            withPassword(PASSWORD)
-        }
-
         private lateinit var connection: Connection
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            postgres.start()
-            connection = DriverManager.getConnection(postgres.jdbcUrl, USER_NAME, PASSWORD)
+            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
             createPostgresTestData(connection)
         }
 
@@ -37,7 +29,6 @@ class PostgresContainerTest : PostgresTestBase() {
         @JvmStatic
         fun tearDownClass() {
             tearDownPostgresTestData(connection)
-            postgres.stop()
         }
     }
 }

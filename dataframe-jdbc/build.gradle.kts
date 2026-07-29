@@ -52,11 +52,16 @@ tasks.processKDocsMain {
     dependsOn(tasks.generateBuildConfigClasses)
 }
 
-private val testcontainersPackage = "org.jetbrains.kotlinx.dataframe.io.testcontainers.*"
+// Implementations of the abstract database tests running against databases in Docker containers
+private val testcontainersTests = "org.jetbrains.kotlinx.dataframe.io.testcontainers.*"
+
+// Implementations of the abstract database tests running against database servers on localhost
+private val localDbTests = "org.jetbrains.kotlinx.dataframe.io.local.*LocalTest"
 
 tasks.test {
     filter {
-        excludeTestsMatching(testcontainersPackage)
+        excludeTestsMatching(testcontainersTests)
+        excludeTestsMatching(localDbTests)
     }
 }
 
@@ -66,6 +71,16 @@ tasks.register<Test>("testcontainersTest") {
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath
     filter {
-        includeTestsMatching(testcontainersPackage)
+        includeTestsMatching(testcontainersTests)
+    }
+}
+
+tasks.register<Test>("localDbTest") {
+    description = "Runs tests that require database servers running on localhost."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    filter {
+        includeTestsMatching(localDbTests)
     }
 }
