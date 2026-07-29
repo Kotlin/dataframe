@@ -192,8 +192,9 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.singleCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().single(condition)
+    public fun SingleColumn<DataRow<*>>.singleCol(
+        condition: (ColumnWithPath<*>) -> Boolean = { true },
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * @include [CommonSingleDocs]

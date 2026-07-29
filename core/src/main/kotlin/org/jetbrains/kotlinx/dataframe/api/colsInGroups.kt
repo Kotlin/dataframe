@@ -169,8 +169,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
+    public fun SingleColumn<DataRow<*>>.colsInGroups(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
     /**
      * @include [ColsInGroupsDocs]
