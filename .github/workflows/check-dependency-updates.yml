@@ -3,12 +3,13 @@ name: Check Dependency Updates
 on:
   # Allow running the workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
-  # Run weekly on Monday at 06:00 UTC.
+  # Run daily at 06:00 UTC.
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 6 * * *'
 
 permissions:
-  contents: read
+  # `write` is needed to push the badge data to the `badges` branch.
+  contents: write
 
 jobs:
   check-dependency-updates:
@@ -35,3 +36,38 @@ jobs:
 
       - name: Update summary
         run: cat ./build/reports/dependency-updates.md >> $GITHUB_STEP_SUMMARY
+
+      # Counts the entries of the "Versions updates" section of the report, in other words, the number of
+      # version references in `/gradle/libs.versions.toml` that have an update available.
+      - name: Build badge data
+        run: |
+          count=$(jq '(.versionReferenceInfo // []) | length' ./build/reports/dependency-updates.json)
+          echo "Outdated version references: $count"
+          if [ "$count" -eq 0 ]; then
+            message='up to date'
+            color='brightgreen'
+          else
+            message="$count outdated"
+            if [ "$count" -lt 10 ]; then color='yellow'; else color='orange'; fi
+          fi
+          jq -n --arg message "$message" --arg color "$color" \
+            '{schemaVersion: 1, label: "dependencies", message: $message, color: $color}' \
+            > "$RUNNER_TEMP/dependency-updates.json"
+
+      # Publishes the badge data to the `badges` branch, where https://shields.io can read it from.
+      # The branch holds nothing but the badge data and is overwritten on each run.
+      # Skipped when run manually from a branch, so that testing cannot affect the badge in the README.
+      - name: Publish badge data
+        if: github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init --quiet --initial-branch=badges "$RUNNER_TEMP/badges"
+          mv "$RUNNER_TEMP/dependency-updates.json" "$RUNNER_TEMP/badges/"
+          git -C "$RUNNER_TEMP/badges" add dependency-updates.json
+          git -C "$RUNNER_TEMP/badges" \
+            -c user.name='github-actions[bot]' \
+            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit --quiet -m "Update dependency updates badge"
+          git -C "$RUNNER_TEMP/badges" push --quiet --force \
+            "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" badges

@@ -7,6 +7,7 @@
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bcontains%28text%28%29%2C%22dev%22%29%5D%5Blast%28%29%5D&label=Dev%20version&color=yellow
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Dependency updates](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FKotlin%2Fdataframe%2Fbadges%2Fdependency-updates.json)](https://github.com/Kotlin/dataframe/actions/workflows/check-dependency-updates.yml)
 
 Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full
 power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and

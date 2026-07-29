@@ -15,6 +15,8 @@ caupain {
     }
     outputs {
         markdown { enabled = true }
+        // machine-readable version of the report, used to build the "outdated versions" badge in CI
+        json { enabled = true }
     }
     System.getenv("CAUPAIN_GITHUB_TOKEN")?.let {
         githubToken = it

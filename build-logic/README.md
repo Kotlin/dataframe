@@ -82,9 +82,13 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     This plugin is meant to be applied only to the main project.
     - See https://github.com/deezer/caupain/tree/main for more information.
     - Run `checkDependencyUpdates` to check for outdated dependencies.
-      This produces a report in the terminal, and as HTML and Markdown files in `/build/reports`.
+      This produces a report in the terminal, and as HTML, Markdown, and JSON files in `/build/reports`.
     - There's also `replaceOutdatedDependencies` to replace outdated dependencies directly in the
       `/gradle/libs.versions.toml` file, but be careful.
     - Comment `#ignoreUpdates` in `/gradle/libs.versions.toml` to ignore updates for specific dependencies.
-    - `/.github/workflows/check-dependency-updates.yml` is a Github Action which runs `checkDependencyUpdates`. 
+    - `/.github/workflows/check-dependency-updates.yml` is a Github Action which runs `checkDependencyUpdates`
+      daily. It also derives the "dependencies" badge in the main `/README.md` from the JSON report: the badge
+      shows how many version references in `/gradle/libs.versions.toml` have an update available.
+      The badge data is force-pushed to the `badges` branch, which contains nothing else, and is read from
+      there by https://shields.io. 
   
