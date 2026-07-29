@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
 /**
  * {@comment
  *    The Max Operation KDoc-topic; it also holds all common `max` KDoc-snippets.
- *    Link to it with `[The Max Operation][MaxDocs]`.
+ *    Link to it with `{@include [MaxDocsLink]}`.
  * }
  *
  * ## The Max Operation
@@ -86,7 +86,7 @@ internal interface MaxDocs {
      *
      * `null` values in the input are always ignored.
      *
-     * If the input contains [`NaN`][NaN] values, the result will be `NaN` as well,
+     * If the input contains [`NaN`][NaN] values, the result will be `NaN`,
      * unless `skipNaN` is set to `true`.
      */
     @ExcludeFromSources
@@ -214,6 +214,10 @@ internal interface MaxDocs {
     typealias MaxForSelectingOptions = Nothing
 }
 
+/** [The Max Operation][MaxDocs] */
+@ExcludeFromSources
+private typealias MaxDocsLink = Nothing
+
 /** {@set [SelectingColumns.OPERATION] [max][max]} */
 @ExcludeFromSources
 private typealias SetMaxOperationArg = Nothing
@@ -244,7 +248,7 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * - [maxOf][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
  * - [maxBy][DataColumn.maxBy] — the element for which a selector returns the maximum value.
  * - [min][DataColumn.min] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -279,7 +283,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * - [maxByOrNull][DataColumn.maxByOrNull] — the element for which a selector returns
  *   the maximum value.
  * - [minOrNull][DataColumn.minOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -311,13 +315,13 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * - [maxOf][DataColumn.maxOf] — returns the maximum [selector] value itself
  *   instead of the element it belongs to.
  * - [minBy][DataColumn.minBy] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
  * ### Example
  * ```kotlin
- * // The longest first name in the "name/firstName" column
+ * // The longest first name in the "name"/"firstName" column
  * df.name.firstName.maxBy { it.length }
  * ```
  *
@@ -346,13 +350,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * - [maxOfOrNull][DataColumn.maxOfOrNull] — returns the maximum [selector] value itself
  *   instead of the element it belongs to.
  * - [minByOrNull][DataColumn.minByOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
  * ### Example
  * ```kotlin
- * // The longest first name in the "name/firstName" column,
+ * // The longest first name in the "name"/"firstName" column,
  * // or `null` if the column is empty
  * df.name.firstName.maxByOrNull { it.length }
  * ```
@@ -382,13 +386,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * - [maxBy][DataColumn.maxBy] — returns the element the maximum [selector] value belongs to
  *   instead of that value.
  * - [minOf][DataColumn.minOf] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
  * ### Example
  * ```kotlin
- * // The length of the longest first name in the "name/firstName" column
+ * // The length of the longest first name in the "name"/"firstName" column
  * df.name.firstName.maxOf { it.length }
  * ```
  *
@@ -417,13 +421,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * - [maxByOrNull][DataColumn.maxByOrNull] — returns the element the maximum [selector] value
  *   belongs to instead of that value.
  * - [minOfOrNull][DataColumn.minOfOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
  * ### Example
  * ```kotlin
- * // The length of the longest first name in the "name/firstName" column,
+ * // The length of the longest first name in the "name"/"firstName" column,
  * // or `null` if the column is empty
  * df.name.firstName.maxOfOrNull { it.length }
  * ```
@@ -465,7 +469,7 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * - [rowMaxOf][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
  * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — the mirror operation.
  * - [maxOrNull][DataFrame.maxOrNull] — the maximum of the values in specific columns of a [DataFrame].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
  *
@@ -500,7 +504,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  *   when there's nothing to compare.
  * - [rowMinOf][DataRow.rowMinOf] — the mirror operation.
  * - [max][DataFrame.max] — the maximum of the values in specific columns of a [DataFrame].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
  *
@@ -539,14 +543,14 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * - [maxFor][DataFrame.maxFor] — the same, but for an explicit selection of columns.
  * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
  * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
  * ### Example
  * ```kotlin
  * // A single row with the largest value of each comparable column
- * // ("name/firstName", "name/lastName", "age", "city", "weight", and "isHappy")
+ * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
  * df.max()
  * ```
  *
@@ -577,7 +581,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * - [max][DataFrame.max]`()` — the same, but for all suitable columns at once.
  * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
  * - [minFor][DataFrame.minFor] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -618,7 +622,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * - [max][DataFrame.max]`()` — the same, but for all suitable columns at once.
  * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
  * - [minFor][DataFrame.minFor] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -666,7 +670,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
  * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
  * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -706,7 +710,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
  * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
  * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -758,7 +762,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
  * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -800,7 +804,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
  * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -854,7 +858,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *   instead of that value.
  * - [max][DataFrame.max] — a single maximum of all values in the selected columns.
  * - [minOf][DataFrame.minOf] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -892,7 +896,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *   belongs to instead of that value.
  * - [maxOrNull][DataFrame.maxOrNull] — a single maximum of all values in the selected columns.
  * - [minOfOrNull][DataFrame.minOfOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -932,7 +936,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *   instead of the row it belongs to.
  * - [minBy][DataFrame.minBy] — the mirror operation.
  * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -970,7 +974,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * - [max][DataFrame.max] — returns the largest value itself instead of the row it belongs to.
  * - [minBy][DataFrame.minBy] — the mirror operation.
  * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1019,7 +1023,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * - [maxOfOrNull][DataFrame.maxOfOrNull] — returns the maximum [expression] value itself
  *   instead of the row it belongs to.
  * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1054,7 +1058,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * - [maxOrNull][DataFrame.maxOrNull] — returns the largest value itself instead of
  *   the row it belongs to.
  * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1111,7 +1115,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *   per group.
  * - [min][Grouped.min] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1154,7 +1158,7 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *   per group.
  * - [minFor][Grouped.minFor] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1199,7 +1203,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *   per group.
  * - [minFor][Grouped.minFor] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1255,7 +1259,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *   for each row of a group.
  * - [min][Grouped.min] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1306,7 +1310,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *   for each row of a group.
  * - [min][Grouped.min] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1367,7 +1371,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *   the maximum value.
  * - [minOf][Grouped.minOf] — the mirror operation.
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]}
  *
@@ -1407,7 +1411,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  * See also:
  * - [maxOf][Grouped.maxOf] — the maximum value itself instead of the row it belongs to.
  * - [minBy][GroupBy.minBy] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1450,7 +1454,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * See also:
  * - [max][Grouped.max] — the maximum value itself instead of the row it belongs to.
  * - [minBy][GroupBy.minBy] — the mirror operation.
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1500,7 +1504,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *   per group.
  * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1542,7 +1546,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *   per group.
  * - [minFor][Pivot.minFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1589,7 +1593,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *   per group.
  * - [minFor][Pivot.minFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1648,7 +1652,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
  * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1690,7 +1694,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
  * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1744,7 +1748,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *   the maximum value.
  * - [minOf][Pivot.minOf] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1781,7 +1785,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * - [maxOf][Pivot.maxOf] — the maximum value the expression returns itself, instead of the row.
  * - [minBy][Pivot.minBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1823,7 +1827,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * - [max][Pivot.max]` { columns }` — the maximum value itself, instead of the row.
  * - [minBy][Pivot.minBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -1874,7 +1878,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1917,7 +1921,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * - [minFor][PivotGroupBy.minFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -1963,7 +1967,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * - [minFor][PivotGroupBy.minFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -2024,7 +2028,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -2068,7 +2072,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -2086,49 +2090,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
 public fun <T> PivotGroupBy<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     max(skipNaN) { columns.toComparableColumns() }
 
-/**
- * Aggregates this [PivotGroupBy] by computing a single maximum of all the values
- * in the selected columns, per group.
- *
- * Returns a [DataFrame] where each cell contains the largest value among all the values in the
- * selected columns of the group corresponding to that [pivot] key (column)
- * and [groupBy] key (row).
- *
- * {@include [MaxDocs.SelfComparableSnippet]}
- *
- * {@include [MaxDocs.NullAndNaNSnippet]}
- *
- * {@include [MaxDocs.NullCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
- *
- * See also:
- * - [max][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
- * - [maxFor][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
- * - [min][PivotGroupBy.min] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
- *
- * ### Example
- * ```kotlin
- * val age by column<Int>()
- * val weight by column<Int?>()
- *
- * // Per city and last name, the largest of all values in the `age` and `weight` columns
- * df.pivot { city }.groupBy { name.lastName }.max(age, weight)
- * ```
- *
- * @param [columns] The [column references][ColumnReference] of the columns
- *   to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
- * @return A [DataFrame] with, per group, the largest value among all the values
- *   in the selected columns.
- */
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
@@ -2164,7 +2127,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * - [minOf][PivotGroupBy.minOf] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]}
  *
@@ -2203,7 +2166,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * - [minBy][PivotGroupBy.minBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
@@ -2247,7 +2210,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  * - [minBy][PivotGroupBy.minBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
- * - [The Max Operation][MaxDocs] — an overview of all `max` modes.
+ * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
  *
