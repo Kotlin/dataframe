@@ -81,7 +81,7 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * Columns Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
      * Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
@@ -137,7 +137,7 @@ internal interface SelectingColumns {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into a single column.
      *
-     * Column Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * The Column Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
      * for specifying column type- and name-safe.
      *
      * {@include [LineBreak]}

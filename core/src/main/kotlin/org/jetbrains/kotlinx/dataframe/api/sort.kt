@@ -37,8 +37,8 @@ import org.jetbrains.kotlinx.dataframe.util.DESC_TO_REVERSED
 import kotlin.reflect.KProperty
 
 /**
- * [SortDsl] allows selecting columns to sort rows by (the order in which columns are selected
- * determines the sort priority).
+ * The [Sort DSL][SortDsl] allows selecting columns to sort rows by
+ * values in these columns.
  * It also allows reversing the sort order for individual columns or column sets,
  * and controlling the position of `null` values.
  *
@@ -55,7 +55,7 @@ import kotlin.reflect.KProperty
 private typealias SortDslSnippet = Nothing
 
 /**
- * A specialized [ColumnsSelectionDsl] for selecting columns to sort rows by
+ * A specialized {@include [ColumnsSelectionDslLink]} for selecting columns to sort rows by
  * and specifying how each column should be sorted.
  *
  * @include [SortDslSnippet]
@@ -92,7 +92,7 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     /**
      * Marks the selected column to be sorted in reversed order.
      */
-    public fun String.reversed(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>>().desc()
+    public fun String.reversed(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>?>().reversed()
 
     @Deprecated(
         message = "Inside the sorting DSL, reverse() reverses the sorting order. Use reversed() instead.",
@@ -115,7 +115,11 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     public fun <C> KProperty<C>.desc(): SingleColumn<C> = toColumnAccessor().desc()
 
     /**
-     * Places `null` values after non-null values when sorting by the selected columns.
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by these columns.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
      *
      * When [flag] is `false`, the selected columns remain unchanged.
      *
@@ -125,7 +129,11 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
         if (flag) addFlag(SortFlag.NullsLast) else this
 
     /**
-     * Places `null` values after non-null values when sorting by this column.
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by this column.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
      *
      * When [flag] is `false`, the column remains unchanged.
      *
@@ -135,7 +143,11 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
         if (flag) addFlag(SortFlag.NullsLast).single() else this
 
     /**
-     * Places `null` values after non-null values when sorting by this column.
+     * Places `null` values after non-null values when sorting in ascending order,
+     * or before non-null values when sorting in descending order by this column.
+     *
+     * By default, `null` values are considered the smallest values when sorting.
+     * Use this method to treat them as the largest values.
      *
      * When [flag] is `false`, the default `null` ordering is used.
      *
@@ -155,8 +167,10 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
  * Provides [SortDsl] both as the receiver (`this`) and the lambda parameter (`it`), and expects
  * a [ColumnsResolver] as the return value.
  *
- * Enables defining the descending ordering of sort columns using [desc][SortDsl.desc]
+ * Enables defining the descending ordering of sort columns using [reversed][SortDsl.reversed]
  * and specifiyng `null`s place using [nullsLast][SortDsl.nullsLast].
+ *
+ * See {@include [CSDslLink]}.
  */
 public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnsResolver<C>>
 
@@ -177,7 +191,7 @@ public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> =
     DataColumn.createValueColumn(name, values().sorted(), type, defaultValue = defaultValue())
 
 /**
- * Sorts the values in this [column][DataColumn] in descengind order.
+ * Sorts the values in this [column][DataColumn] in descending order.
  *
  * Accepts only [Comparable] values.
  *
@@ -552,7 +566,7 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  * gb.sortByDesc("age", "name")
  * ```
  *
- * @param cols The [Column Names][String] that defines which columns are used for sorting.
+ * @param cols The [Column Names][String] that define which columns are used for sorting.
  * @return A new [GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
  */
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: String): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
@@ -621,6 +635,13 @@ private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
     }
 
 /**
+ * @param [\nullsLast] Whether `null` values are considered as the largest values when sorting.
+ *      Default is `false`.
+ */
+@ExcludeFromSources
+private typealias NullsLastArgumentDescription = Nothing
+
+/**
  * Sorts the key-group pairs of this [GroupBy] by a value computed for each group
  * using the specified [expression] ascending.
  *
@@ -647,7 +668,7 @@ private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
  * gb.sortByGroup { group -> group.rowsCount() * group.quantity.max() }
  * ```
  *
- * @param [nullsLast] Whether `null` values should be placed after non-null values.
+ * @include [NullsLastArgumentDescription]
  * @param [expression] The expression used to compute the sorting value for each group.
  * @return A new [GroupBy] with its key-group pairs sorted by the values produced by [expression].
  */
@@ -686,7 +707,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroup(
  * gb.sortByGroupDesc { group -> group.rowsCount() * group.quantity.max() }
  * ```
  *
- * @param [nullsLast] Whether `null` values should be placed after non-null values.
+ * @include [NullsLastArgumentDescription]
  * @param [expression] The expression used to compute the sorting value for each group.
  * @return A new [GroupBy] with its key-group pairs sorted by the values produced by [expression].
  */
@@ -757,12 +778,12 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc {
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
- * @param [nullsLast] Whether `null` values should be placed after non-null values.
+ * @include [NullsLastArgumentDescription]
  * @return A new [GroupBy] with its key-group pairs sorted by the keys.
  */
 public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
     toDataFrame()
-        .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }
+        .sortBy { keys.columns().toColumnSet().reversed().nullsLast(nullsLast) }
         .asGroupBy(groups)
 
 /**
@@ -782,7 +803,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
- * @param [nullsLast] Whether `null` values should be placed after non-null values.
+ * @include [NullsLastArgumentDescription]
  * @return A new [GroupBy] with its key-group pairs sorted by the keys.
  */
 public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
