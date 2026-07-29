@@ -1672,14 +1672,18 @@ public final class org/jetbrains/kotlinx/dataframe/api/CountKt {
 	public static synthetic fun count$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public abstract class org/jetbrains/kotlinx/dataframe/api/CreateDataFrameDsl : org/jetbrains/kotlinx/dataframe/api/TraversePropertiesDsl {
+public abstract class org/jetbrains/kotlinx/dataframe/api/CreateDataFrameDsl {
 	public fun <init> ()V
 	public abstract fun add (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)V
 	public static synthetic fun add$default (Lorg/jetbrains/kotlinx/dataframe/api/CreateDataFrameDsl;Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;ILjava/lang/Object;)V
+	public final fun exclude ([Lkotlin/reflect/KCallable;)V
+	public final fun exclude ([Lkotlin/reflect/KClass;)V
 	public abstract fun getSource ()Ljava/lang/Iterable;
 	public final fun into (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;Ljava/lang/String;)V
 	public final fun into (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)V
 	public abstract fun invoke (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun preserve ([Lkotlin/reflect/KCallable;)V
+	public final fun preserve ([Lkotlin/reflect/KClass;)V
 	public abstract fun properties ([Lkotlin/reflect/KCallable;ILkotlin/jvm/functions/Function1;)V
 	public static synthetic fun properties$default (Lorg/jetbrains/kotlinx/dataframe/api/CreateDataFrameDsl;[Lkotlin/reflect/KCallable;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
