@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
@@ -207,7 +208,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_SET_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    public fun <C> ColumnSet<C>.single(condition: (ColumnWithPath<C>) -> Boolean = { true }): SingleColumn<C> =
         singleInternal(condition)
 
     /**
@@ -273,7 +274,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_PLAIN_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.single(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         asSingleColumn().singleCol(condition)
 
     /**
@@ -337,8 +338,9 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().single(condition)
+    public fun SingleColumn<DataRow<*>>.singleCol(
+        condition: (ColumnWithPath<*>) -> Boolean = { true },
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * ## Single (Col)
@@ -400,7 +402,7 @@ public interface SingleColumnsSelectionDsl {
         replaceWith = ReplaceWith(SINGLE_COL_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.singleCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -461,7 +463,7 @@ public interface SingleColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.singleCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 
     /**
@@ -490,7 +492,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if there are no columns in [this].
      * @throws [IllegalArgumentException] if there is more than one column in [this].
      */
-    public fun ColumnPath.singleCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.singleCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)
 }
 
