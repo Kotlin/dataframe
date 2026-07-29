@@ -255,7 +255,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** @include [ColumnSetColsPredicateDocs] */
-    public operator fun <C> ColumnSet<C>.get(predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> = cols(predicate)
+    public operator fun <C> ColumnSet<C>.get(predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
+        cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -313,8 +314,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
      */
-    public operator fun SingleColumn<DataRow<*>>.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
-        cols(predicate)
+    public operator fun SingleColumn<DataRow<*>>.get(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -364,7 +366,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> = cols(predicate)
+    public operator fun KProperty<*>.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
+        cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -379,13 +382,15 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnPathPredicateDocs = Nothing
 
     /** @include [ColumnPathPredicateDocs] */
-    public fun ColumnPath.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
+        columnGroup(this).cols(predicate)
 
     @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
     public fun ColumnPath.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnPathPredicateDocs] */
-    public operator fun ColumnPath.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> = cols(predicate)
+    public operator fun ColumnPath.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
+        cols(predicate)
 
     // endregion
 

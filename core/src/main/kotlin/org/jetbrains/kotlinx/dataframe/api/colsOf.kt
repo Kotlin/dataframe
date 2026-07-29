@@ -202,8 +202,9 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> B
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
 @Interpretable("ColsOf1")
-public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
-    colsOf(typeOf<C>(), filter)
+public inline fun <reified C> ColumnSet<*>.colsOf(
+    noinline filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -213,8 +214,10 @@ public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (ColumnWithPa
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnsSelectionDsl<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
-    asSingleColumn().colsOf(type, filter)
+public fun <C> ColumnsSelectionDsl<*>.colsOf(
+    type: KType,
+    filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = asSingleColumn().colsOf(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -239,8 +242,10 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> SingleColumn<DataRow<*>>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
-    ensureIsColumnGroup().colsOfInternal(type, filter)
+public fun <C> SingleColumn<DataRow<*>>.colsOf(
+    type: KType,
+    filter: (ColumnWithPath<C>) -> Boolean = { true },
+): ColumnSet<C> = ensureIsColumnGroup().colsOfInternal(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]

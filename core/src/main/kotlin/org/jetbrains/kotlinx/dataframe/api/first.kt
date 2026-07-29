@@ -502,8 +502,9 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
     @Interpretable("First2")
-    public fun SingleColumn<DataRow<*>>.firstCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().first(condition)
+    public fun SingleColumn<DataRow<*>>.firstCol(
+        condition: (ColumnWithPath<*>) -> Boolean = { true },
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
      * @include [CommonFirstDocs]

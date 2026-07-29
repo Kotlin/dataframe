@@ -154,8 +154,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
-        asSingleColumn().colsAtAnyDepthInternal(predicate)
+    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = asSingleColumn().colsAtAnyDepthInternal(predicate)
 
     /**
      * @include [CommonAtAnyDepthDocs]
@@ -180,8 +181,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
+    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
     /**
      * @include [CommonAtAnyDepthDocs]
