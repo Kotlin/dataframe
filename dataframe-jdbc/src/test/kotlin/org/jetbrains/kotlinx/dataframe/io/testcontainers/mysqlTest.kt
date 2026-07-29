@@ -18,7 +18,7 @@ class MySqlContainerTest : MySqlTestBase() {
     override fun connect(database: String?): Connection = openConnection(database)
 
     companion object {
-        private val mysql: MySQLContainer = MySQLContainer(MYSQL_IMAGE).apply {
+        private val mysql: MySQLContainer = MySQLContainer(BuildConfig.MYSQL_IMAGE).apply {
             withUsername(USER_NAME)
             withPassword(PASSWORD)
         }
