@@ -68,6 +68,12 @@ kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
 duckdb = "1.5.4.0"
 testcontainers = "2.0.5"
+
+# Docker image tags of the databases used in the Testcontainers tests
+dockerImage-mariadb = "12.3.2" # available tags: https://hub.docker.com/_/mariadb/tags
+dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
+dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
+
 buildconfig = "6.0.10"
 benchmark = "0.4.17"
 

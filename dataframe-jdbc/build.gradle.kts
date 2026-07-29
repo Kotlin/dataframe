@@ -39,6 +39,16 @@ dependencies {
     testImplementation(libs.testcontainers.mariadb)
 }
 
+buildConfig {
+    sourceSets.named("test") {
+        packageName = "org.jetbrains.kotlinx.dataframe.io.testcontainers"
+        className = "BuildConfig"
+        buildConfigField("MARIADB_IMAGE", "mariadb:${libs.versions.dockerImage.mariadb.get()}")
+        buildConfigField("MYSQL_IMAGE", "mysql:${libs.versions.dockerImage.mysql.get()}")
+        buildConfigField("POSTGRES_IMAGE", "postgres:${libs.versions.dockerImage.postgres.get()}")
+    }
+}
+
 kotlinPublications {
     publication {
         publicationName = "dataframeJDBC"

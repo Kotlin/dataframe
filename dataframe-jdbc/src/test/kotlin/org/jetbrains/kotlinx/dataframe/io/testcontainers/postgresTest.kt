@@ -17,7 +17,7 @@ class PostgresContainerTest : PostgresTestBase() {
     override val connection: Connection get() = Companion.connection
 
     companion object {
-        private val postgres: PostgreSQLContainer = PostgreSQLContainer(POSTGRES_IMAGE).apply {
+        private val postgres: PostgreSQLContainer = PostgreSQLContainer(BuildConfig.POSTGRES_IMAGE).apply {
             withDatabaseName(DATABASE_NAME)
             withUsername(USER_NAME)
             withPassword(PASSWORD)

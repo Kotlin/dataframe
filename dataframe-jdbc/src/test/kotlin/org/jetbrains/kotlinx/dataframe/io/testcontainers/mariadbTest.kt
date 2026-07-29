@@ -18,7 +18,7 @@ class MariadbContainerTest : MariadbTestBase() {
     override fun connect(database: String?): Connection = openConnection(database)
 
     companion object {
-        private val mariadb: MariaDBContainer = MariaDBContainer(MARIADB_IMAGE).apply {
+        private val mariadb: MariaDBContainer = MariaDBContainer(BuildConfig.MARIADB_IMAGE).apply {
             withUsername(USER_NAME)
             withPassword(PASSWORD)
         }
