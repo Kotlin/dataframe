@@ -192,14 +192,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/aggregation/Colu
 
 public final class org/jetbrains/kotlinx/dataframe/aggregation/NamedValue {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/aggregation/NamedValue$Companion;
-	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/lang/Object;Lkotlin/reflect/KType;Ljava/lang/Object;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public final fun component2 ()Ljava/lang/Object;
 	public final fun component3 ()Lkotlin/reflect/KType;
 	public final fun component4 ()Ljava/lang/Object;
 	public final fun component5 ()Z
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/lang/Object;Lkotlin/reflect/KType;Ljava/lang/Object;Z)Lorg/jetbrains/kotlinx/dataframe/aggregation/NamedValue;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/aggregation/NamedValue;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/lang/Object;Lkotlin/reflect/KType;Ljava/lang/Object;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/aggregation/NamedValue;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDefault ()Ljava/lang/Object;
 	public final fun getGuessType ()Z
