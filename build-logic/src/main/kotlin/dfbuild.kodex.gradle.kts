@@ -79,7 +79,6 @@ afterEvaluate {
     contextualProjects.forEach {
         it.tasks.withType<RunKodexTask>().configureEach {
             logger.lifecycle("${processKDocsMain.path} now dependsOn ${this.path}, contextual cache is transferred.")
-            processKDocsMain.dependsOn(this)
             extension.inputCacheFiles.from(this.outputCacheFile)
         }
     }
