@@ -5,16 +5,16 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs.InputValuesSnippet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.`NaN`
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
@@ -43,9 +43,7 @@ import kotlin.reflect.KProperty
  *
  * Computes the [minimum](https://en.wikipedia.org/wiki/Maximum_and_minimum) of values.
  *
- * @include [SelfComparableSnippet]
- *
- * @include [NullAndNaNSnippet]
+ * @include [InputValuesSnippet]
  *
  * ### Min Modes
  *
@@ -69,137 +67,7 @@ import kotlin.reflect.KProperty
  *
  * See all summary statistics: {@include [DocumentationUrls.Statistics]}
  */
-internal interface MinDocs {
-
-    /**
-     * {@comment Note about the self-comparability requirement. KDoc-snippet.}
-     *
-     * Only self-comparable values are supported: values of a type `T : Comparable<T>`
-     * that are mutually comparable (like strings, primitive numbers, or dates).
-     * This includes all primitive number types, but no mix of different number types.
-     */
-    @ExcludeFromSources
-    typealias SelfComparableSnippet = Nothing
-
-    /**
-     * {@comment Note about how `null` and `NaN` values are treated. KDoc-snippet.}
-     *
-     * `null` values in the input are always ignored.
-     *
-     * If the input contains [`NaN`][NaN] values, the result will be `NaN`,
-     * unless `skipNaN` is set to `true`.
-     */
-    @ExcludeFromSources
-    typealias NullAndNaNSnippet = Nothing
-
-    /**
-     * {@comment Note about the behavior on empty input for non-`-OrNull` overloads. KDoc-snippet.}
-     *
-     * Throws a [NoSuchElementException] when there is nothing left to compare,
-     * for instance when the input is empty or contains only `null`
-     * (or, if `skipNaN` is `true`, only `null` and [`NaN`][NaN]) values.
-     */
-    @ExcludeFromSources
-    typealias ThrowsOnEmptySnippet = Nothing
-
-    /**
-     * {@comment Note about the behavior on empty input for `-OrNull` overloads. KDoc-snippet.}
-     *
-     * Returns `null` when there is nothing left to compare,
-     * for instance when the input is empty or contains only `null`
-     * (or, if `skipNaN` is `true`, only `null` and [`NaN`][NaN]) values.
-     */
-    @ExcludeFromSources
-    typealias NullOnEmptySnippet = Nothing
-
-    /**
-     * {@comment Note about the behavior on empty input for the modes with multiple results.}
-     *
-     * Result cells for which there is nothing left to compare
-     * (for instance, because the input was empty or contained only `null` values)
-     * simply become `null`.
-     *
-     * For more information about the resulting types:
-     * {@include [DocumentationUrls.MinMax.TypeConversion]}
-     */
-    @ExcludeFromSources
-    typealias NullCellOnEmptySnippet = Nothing
-
-    /**
-     * {@comment Note about the row expression argument. KDoc-snippet.}
-     *
-     * The given [RowExpression] is evaluated for each row of the dataframe.
-     * The row is both the receiver and the argument (`it`) of the expression,
-     * so the values in it can be accessed directly.
-     *
-     * For more information: {@include [DocumentationUrls.DataRow.RowExpression]}
-     */
-    @ExcludeFromSources
-    typealias RowExpressionSnippet = Nothing
-
-    /**
-     * {@comment Note about the aggregate columns selector of the `-For` modes. KDoc-snippet.}
-     *
-     * The columns are selected with the [ColumnsForAggregateSelectionDsl] — an extension of the
-     * Columns Selection DSL which lets you rename the result of a column with
-     * [into][ColumnsForAggregateSelectionDsl.into] and supply a
-     * [default][ColumnsForAggregateSelectionDsl.default] value for columns without any values.
-     */
-    @ExcludeFromSources
-    typealias AggregateColumnsSelectorSnippet = Nothing
-
-    /**
-     * {@comment Note about [ReducedGroupBy] being an intermediate step. KDoc-snippet.}
-     *
-     * This operation does not produce a result right away.
-     * Instead, it returns a [ReducedGroupBy] — an intermediate step which can be finished with
-     * [concat][ReducedGroupBy.concat] (to get a [DataFrame] with the selected rows),
-     * [values][ReducedGroupBy.values], or [into][ReducedGroupBy.into].
-     *
-     * See [GroupBy reducing][GroupByDocs.Reducing] for more details.
-     */
-    @ExcludeFromSources
-    typealias ReducedGroupBySnippet = Nothing
-
-    /**
-     * {@comment Note about [ReducedPivot] being an intermediate step. KDoc-snippet.}
-     *
-     * This operation does not produce a result right away.
-     * Instead, it returns a [ReducedPivot] — an intermediate step which can be finished with
-     * [values][ReducedPivot.values] or [with][ReducedPivot.with].
-     */
-    @ExcludeFromSources
-    typealias ReducedPivotSnippet = Nothing
-
-    /**
-     * {@comment Note about [ReducedPivotGroupBy] being an intermediate step. KDoc-snippet.}
-     *
-     * This operation does not produce a result right away.
-     * Instead, it returns a [ReducedPivotGroupBy] — an intermediate step which can be finished with
-     * [values][ReducedPivotGroupBy.values] or [with][ReducedPivotGroupBy.with].
-     */
-    @ExcludeFromSources
-    typealias ReducedPivotGroupBySnippet = Nothing
-
-    /**
-     * {@comment The shared `skipNaN` parameter documentation. KDoc-snippet.}
-     *
-     * @param [skipNaN\] If `true`, [`NaN`][NaN] values are ignored, just like `null` values.
-     *   If `false` (the default), a [`NaN`][NaN] in the input is propagated to the result.
-     *   Only has an effect on [Double] and [Float] values.
-     */
-    @ExcludeFromSources
-    typealias SkipNaNParam = Nothing
-
-    /**
-     * {@comment The shared `separate` parameter documentation. KDoc-snippet.}
-     *
-     * @param [separate\] If `false` (the default), the resulting columns are indexed
-     *   first by the pivot key(s) and then by the names of the aggregated columns.
-     *   If `true`, this order is reversed: the results are grouped by aggregated column first.
-     */
-    @ExcludeFromSources
-    typealias SeparateParam = Nothing
+internal interface MinDocs : CommonMinMaxDocs {
 
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
@@ -237,9 +105,7 @@ private typealias SetMinOrNullOperationArg = Nothing
 /**
  * Returns the minimum of the values in this [DataColumn].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -270,9 +136,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
 /**
  * Returns the minimum of the values in this [DataColumn], or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -304,9 +168,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -339,9 +201,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value, or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -375,9 +235,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * Returns the minimum of the values that the given [selector] returns
  * for each element of this [DataColumn].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -410,9 +268,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * Returns the minimum of the values that the given [selector] returns
  * for each element of this [DataColumn], or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -459,9 +315,7 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -493,9 +347,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -533,9 +385,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -565,9 +415,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 /**
  * Returns the minimum of the values of each selected column of this [DataFrame] separately.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -608,9 +456,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 /**
  * Returns the minimum of the values of each selected column of this [DataFrame] separately.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -656,9 +502,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -696,9 +540,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -748,9 +590,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
  * or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -790,9 +630,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
  * or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -845,9 +683,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -884,9 +720,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -923,9 +757,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -962,9 +794,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * Returns the first row of this [DataFrame] that has the smallest value
  * in the column with the given name.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
@@ -1012,9 +842,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -1047,9 +875,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * Returns the first row of this [DataFrame] that has the smallest value in the column with
  * the given name, or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
@@ -1103,9 +929,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1140,9 +964,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * Returns a new [DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1187,9 +1009,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * Returns a new [DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1243,9 +1063,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * That column is named [name], or, if [name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1294,9 +1112,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * That column is named [name], or, if [name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1359,9 +1175,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1402,9 +1216,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1445,9 +1257,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * {@include [MinDocs.ReducedGroupBySnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1492,9 +1302,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1528,9 +1336,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1577,9 +1383,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1637,9 +1441,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1679,9 +1481,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1735,9 +1535,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1773,9 +1571,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1815,9 +1611,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
  * that has the smallest value in the given [column].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1865,9 +1659,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1902,9 +1694,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * Returns a [DataFrame] where each cell contains the minimum of each selected column
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -1950,9 +1740,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * Returns a [DataFrame] where each cell contains the minimum of each selected column
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -2012,9 +1800,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * selected columns of the group corresponding to that [pivot] key (column)
  * and [groupBy] key (row).
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -2056,9 +1842,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * selected columns of the group corresponding to that [pivot] key (column)
  * and [groupBy] key (row).
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -2113,9 +1897,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
@@ -2152,9 +1934,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * {@include [MinDocs.RowExpressionSnippet]}
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -2197,9 +1977,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
  * the first [row][DataRow] that has the smallest value in the given [column].
  *
- * {@include [MinDocs.SelfComparableSnippet]}
- *
- * {@include [MinDocs.NullAndNaNSnippet]}
+ * {@include [MinDocs.InputValuesSnippet]}
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
