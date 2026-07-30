@@ -12,8 +12,6 @@ plugins {
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
-
-        alias(simpleGit) apply false
     }
 }
 
