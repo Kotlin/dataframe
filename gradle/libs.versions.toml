@@ -56,7 +56,6 @@ kotestAsserions = "6.2.2"
 jsoup = "1.22.2"
 arrow = "19.0.0"
 kodex = "0.6.0"
-simpleGit = "2.3.1"
 caupain = "1.9.1"
 plugin-publish = "2.1.1"
 shadow = "9.5.1"
@@ -267,7 +266,6 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
-simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
