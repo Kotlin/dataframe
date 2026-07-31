@@ -207,8 +207,8 @@ public interface TraversePropertiesDsl {
 @Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
-@Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
-public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = preserve(T::class)
+@Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = Unit
 
 @CreateDataFrameDslMarker
 public abstract class CreateDataFrameDsl<T> {
@@ -230,17 +230,17 @@ public abstract class CreateDataFrameDsl<T> {
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
 
-    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
-    public fun exclude(vararg classes: KClass<*>): Unit = properties { exclude(*classes) }
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun exclude(vararg classes: KClass<*>): Unit = Unit
 
-    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
-    public fun exclude(vararg properties: KCallable<*>): Unit = this.properties { exclude(*properties) }
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun exclude(vararg properties: KCallable<*>): Unit = Unit
 
-    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
-    public fun preserve(vararg classes: KClass<*>): Unit = properties { preserve(*classes) }
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun preserve(vararg classes: KClass<*>): Unit = Unit
 
-    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
-    public fun preserve(vararg properties: KCallable<*>): Unit = this.properties { preserve(*properties) }
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun preserve(vararg properties: KCallable<*>): Unit = Unit
 
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
