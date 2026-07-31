@@ -111,8 +111,7 @@ internal class CreateDataFrameDslImpl<T>(
     private val type: KType,
     private val prefix: ColumnPath = emptyPath(),
     private val configuration: TraverseConfiguration = TraverseConfiguration(),
-) : CreateDataFrameDsl<T>(),
-    TraversePropertiesDsl by configuration {
+) : CreateDataFrameDsl<T>() {
 
     internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseCol>>()
 
