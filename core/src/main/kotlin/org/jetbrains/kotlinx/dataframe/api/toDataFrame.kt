@@ -154,6 +154,24 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
         ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
+/**
+ * [DslMarker] to prevent fucntions from [CreateDataFrameDsl] being used inside [TraversePropertiesDsl].
+ * This prevents notations like:
+ * ```kt
+ * list.toDataFrame {
+ *     "colA" from { ... }
+ *     properties {
+ *         preserve<T>()
+ *         "colB" from { ... } // ERROR, cannot be called in this context an implicit receiver.
+ *     }
+ * }
+ * ```
+ */
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class CreateDataFrameDslMarker
+
+@CreateDataFrameDslMarker
 public interface TraversePropertiesDsl {
 
     /**
@@ -192,6 +210,7 @@ public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(
 @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.WARNING)
 public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = preserve(T::class)
 
+@CreateDataFrameDslMarker
 public abstract class CreateDataFrameDsl<T> {
 
     public abstract val source: Iterable<T>
