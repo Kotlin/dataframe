@@ -190,8 +190,9 @@ class CreateDataFrameTests {
         )
 
         val res = data.toDataFrame {
-            preserve<NestedData>()
-            properties(maxDepth = 2)
+            properties(maxDepth = 2) {
+                preserve<NestedData>()
+            }
         }
 
         res.schema() shouldBe data.toDataFrame(maxDepth = 0).schema()
