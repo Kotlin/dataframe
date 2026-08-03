@@ -203,6 +203,22 @@ public interface DocumentationUrls {
     /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
     public typealias Statistics = Nothing
 
+    /** [See "Row statistics" on the documentation website.]({@include [Url]}/rowstats.html) */
+    public typealias RowStatistics = Nothing
+
+    /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
+    public interface MinMax {
+
+        /** [See "min / max Type Conversion" on the documentation website.]({@include [Url]}/minmax.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `maxBy` on the documentation website.]({@include [Url]}/maxby.html) */
+    public typealias MaxBy = Nothing
+
+    /** [See `minBy` on the documentation website.]({@include [Url]}/minby.html) */
+    public typealias MinBy = Nothing
+
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
     public typealias Concat = Nothing
 
