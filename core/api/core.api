@@ -1699,6 +1699,9 @@ public final class org/jetbrains/kotlinx/dataframe/api/CreateDataFrameDsl$InferT
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface annotation class org/jetbrains/kotlinx/dataframe/api/CreateDataFrameDslMarker : java/lang/annotation/Annotation {
+}
+
 public final class org/jetbrains/kotlinx/dataframe/api/CumSumKt {
 	public static final fun cumSum (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun cumSum (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
