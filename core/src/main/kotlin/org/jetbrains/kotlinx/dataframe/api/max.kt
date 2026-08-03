@@ -1620,7 +1620,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  * @include [MaxDocs.SkipNaNParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivot] holding, per group, the first row with the maximum expression result.
+ * @return A [ReducedPivot] holding, per group,
+ *   the first row where the [rowExpression] produced the maximum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -2002,8 +2003,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  * @include [MaxDocs.SkipNaNParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivotGroupBy] holding, per group, the first row with the maximum
- *   expression result.
+ * @return A [ReducedPivotGroupBy] holding, per group,
+ *   the first row where the [rowExpression] produced the maximum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
