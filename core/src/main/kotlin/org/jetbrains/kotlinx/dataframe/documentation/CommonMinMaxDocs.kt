@@ -33,8 +33,8 @@ internal interface CommonMinMaxDocs {
      *
      * `null` values in the input are always ignored.
      *
-     * If the input contains [`NaN`][NaN] values, the result will be `NaN`,
-     * unless `skipNaN` is set to `true`.
+     * If the input contains {@include [NaNLink]} values, the result will be `NaN`,
+     * unless [skipNaN\] is set to `true`.
      */
     @ExcludeFromSources
     typealias InputValuesSnippet = Nothing
@@ -44,7 +44,7 @@ internal interface CommonMinMaxDocs {
      *
      * Throws a [NoSuchElementException] when there is nothing left to compare,
      * for instance when the input is empty or contains only `null`
-     * (or, if `skipNaN` is `true`, only `null` and [`NaN`][NaN]) values.
+     * (or, if [skipNaN\] is `true`, only `null` and {@include [NaNLink]}) values.
      */
     @ExcludeFromSources
     typealias ThrowsOnEmptySnippet = Nothing
@@ -54,7 +54,7 @@ internal interface CommonMinMaxDocs {
      *
      * Returns `null` when there is nothing left to compare,
      * for instance when the input is empty or contains only `null`
-     * (or, if `skipNaN` is `true`, only `null` and [`NaN`][NaN]) values.
+     * (or, if [skipNaN\] is `true`, only `null` and {@include [NaNLink]}) values.
      */
     @ExcludeFromSources
     typealias NullOnEmptySnippet = Nothing
@@ -131,8 +131,8 @@ internal interface CommonMinMaxDocs {
     /**
      * {@comment The shared `skipNaN` parameter documentation. KDoc-snippet.}
      *
-     * @param [skipNaN\] If `true`, [`NaN`][NaN] values are ignored, just like `null` values.
-     *   If `false` (the default), a [`NaN`][NaN] in the input is propagated to the result.
+     * @param [skipNaN\] If `true`, {@include [NaNLink]} values are ignored, just like `null` values.
+     *   If `false` (the default), a {@include [NaNLink]} in the input is propagated to the result.
      *   Only has an effect on [Double] and [Float] values.
      */
     @ExcludeFromSources
