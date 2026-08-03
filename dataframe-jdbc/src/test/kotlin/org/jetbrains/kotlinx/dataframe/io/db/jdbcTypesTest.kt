@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.io.db.JdbcTypesTest.MySqlDBTypes.BIGINT_UNSIGNED
 import org.junit.Test
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
@@ -81,7 +80,7 @@ class JdbcTypesTest {
 
         // Taken from #964
 
-        object LONGVARCHAR_1 : ColumnType(
+        object LONGVARCHAR_NON_NULL : ColumnType(
             "LONGVARCHAR",
             -2,
             "java.lang.Object",
@@ -89,7 +88,7 @@ class JdbcTypesTest {
             typeOf<String>(),
         )
 
-        object LONGVARCHAR_2 : ColumnType(
+        object LONGVARCHAR_NULLABLE : ColumnType(
             "LONGVARCHAR",
             12,
             "java.lang.String",
@@ -97,19 +96,23 @@ class JdbcTypesTest {
             typeOf<String?>(),
         )
 
-        val customTypes: List<ColumnType> = listOf(
-            LONGVARCHAR_1,
-            LONGVARCHAR_2,
-        )
+        @Test
+        fun `identity forType with non-null T resolves to non-null String`() {
+            // User's KType is authoritative; column nullability is not applied on top of it.
+            val sqliteCustom = Sqlite.withCustomConverters {
+                forType<String>("LONGVARCHAR")
+            }
+            sqliteCustom.getExpectedJdbcType(LONGVARCHAR_NON_NULL.mockkColMetaData()) shouldBe
+                LONGVARCHAR_NON_NULL.expectedKotlinType
+        }
 
         @Test
-        fun `SQLite custom types`() {
-            val sqliteCustom = Sqlite(
-                mapOf("LONGVARCHAR" to typeOf<String>()),
-            )
-            customTypes.forEach { type ->
-                sqliteCustom.getExpectedJdbcType(type.mockkColMetaData()) shouldBe type.expectedKotlinType
+        fun `identity forType with nullable T resolves to nullable String`() {
+            val sqliteCustom = Sqlite.withCustomConverters {
+                forType<String?>("LONGVARCHAR")
             }
+            sqliteCustom.getExpectedJdbcType(LONGVARCHAR_NULLABLE.mockkColMetaData()) shouldBe
+                LONGVARCHAR_NULLABLE.expectedKotlinType
         }
     }
 }
