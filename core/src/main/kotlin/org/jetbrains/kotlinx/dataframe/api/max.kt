@@ -110,7 +110,7 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
  * See also:
- * - [maxOrNull][DataColumn.maxOrNull] — returns `null` instead of throwing for an empty column.
+ * - [maxOrNull][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
  * - [maxOf][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
  * - [maxBy][DataColumn.maxBy] — the element for which a selector returns the maximum value.
  * - [min][DataColumn.min] — the mirror operation.
@@ -141,7 +141,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
  * See also:
- * - [max][DataColumn.max] — throws instead of returning `null` for an empty column.
+ * - [max][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
  * - [maxOfOrNull][DataColumn.maxOfOrNull] — the maximum of the values a selector returns
  *   for each element.
  * - [maxByOrNull][DataColumn.maxByOrNull] — the element for which a selector returns
@@ -176,7 +176,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * instead of the element it belongs to.
  *
  * See also:
- * - [maxByOrNull][DataColumn.maxByOrNull] — returns `null` instead of throwing for an empty column.
+ * - [maxByOrNull][DataColumn.maxByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
  * - [minBy][DataColumn.minBy] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -210,7 +210,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * [selector] value itself instead of the element it belongs to.
  *
  * See also:
- * - [maxBy][DataColumn.maxBy] — throws instead of returning `null` for an empty column.
+ * - [maxBy][DataColumn.maxBy] — throws instead of returning `null` for a column with nothing to compare.
  * - [minByOrNull][DataColumn.minByOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -245,7 +245,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * [selector] value belongs to instead of that value.
  *
  * See also:
- * - [maxOfOrNull][DataColumn.maxOfOrNull] — returns `null` instead of throwing for an empty column.
+ * - [maxOfOrNull][DataColumn.maxOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
  * - [minOf][DataColumn.minOf] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -279,7 +279,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * the maximum [selector] value belongs to instead of that value.
  *
  * See also:
- * - [maxOf][DataColumn.maxOf] — throws instead of returning `null` for an empty column.
+ * - [maxOf][DataColumn.maxOf] — throws instead of returning `null` for a column with nothing to compare.
  * - [minOfOrNull][DataColumn.minOfOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
