@@ -1,4 +1,5 @@
 import dfbuild.findRootDir
+import nl.jolanrensen.kodex.gradle.KodexIsolationMode
 import nl.jolanrensen.kodex.gradle.RunKodexTask
 
 plugins {
@@ -123,11 +124,15 @@ val processKDocsMain = tasks.register<RunKodexTask>("processKDocsMain") {
             logger.info("$name: Preprocessing sources with KoDEx: ${it.toList()}")
         }
     contextualSources = extension.contextualSourcesDirectories
-
     inputCacheFiles = extension.inputCacheFiles
 
     group = "KoDEx"
     target = file(extension.generatedSourcesFolderName)
+
+    workerIsolation {
+        mode = KodexIsolationMode.PROCESS
+        maxHeapSize = "512m"
+    }
 
     // false, so `ktlintGeneratedMainSourcesSourceSetFormat` can format the output
     outputReadOnly = false

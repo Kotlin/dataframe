@@ -55,7 +55,7 @@ kotestAsserions = "6.2.2"
 
 jsoup = "1.22.2"
 arrow = "19.0.0"
-kodex = "0.6.0"
+kodex = "0.6.1"
 caupain = "1.9.1"
 plugin-publish = "2.1.1"
 shadow = "9.5.1"
