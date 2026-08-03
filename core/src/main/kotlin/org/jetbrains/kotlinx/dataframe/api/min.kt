@@ -333,8 +333,7 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  *
  * ### Example
  * ```kotlin
- * // The smallest of all `Int` values in the first row
- * // (so, in the "age" and "weight" columns), or `null` if there are none
+ * // The smallest of all `Int` values in the first row, or `null` if there are none
  * df[0].rowMinOfOrNull<Int>()
  * ```
  *
@@ -367,7 +366,6 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * ### Example
  * ```kotlin
  * // The smallest of all `Int` values in the first row
- * // (so, in the "age" and "weight" columns)
  * df[0].rowMinOf<Int>()
  * ```
  *

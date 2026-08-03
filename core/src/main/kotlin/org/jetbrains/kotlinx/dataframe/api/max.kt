@@ -333,8 +333,7 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  *
  * ### Example
  * ```kotlin
- * // The largest of all `Int` values in the first row
- * // (so, in the "age" and "weight" columns), or `null` if there are none
+ * // The largest of all `Int` values in the first row, or `null` if there are none
  * df[0].rowMaxOfOrNull<Int>()
  * ```
  *
@@ -367,7 +366,6 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * ### Example
  * ```kotlin
  * // The largest of all `Int` values in the first row
- * // (so, in the "age" and "weight" columns)
  * df[0].rowMaxOf<Int>()
  * ```
  *
