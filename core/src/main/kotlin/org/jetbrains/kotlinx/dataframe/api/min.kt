@@ -1324,6 +1324,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ *
  * See also:
  * - [minFor][Pivot.minFor] — the same, but for an explicit selection of columns.
  * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
@@ -1362,7 +1364,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [min][Pivot.min]`()` — the same, but for all suitable columns at once.
@@ -1407,7 +1409,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [min][Pivot.min]`()` — the same, but for all suitable columns at once.
@@ -1465,7 +1467,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [min][Pivot.min]`()` — the minimum of each suitable column separately, per group.
@@ -1505,7 +1507,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [min][Pivot.min]`()` — the minimum of each suitable column separately, per group.
@@ -1560,6 +1562,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * Don't confuse [minOf] with [minBy][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
  *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ *
  * See also:
  * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
@@ -1598,6 +1602,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value the expression
  * returns itself, instead of the row.
+ *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [maxBy][Pivot.maxBy] — the mirror operation.
@@ -1640,6 +1646,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value a row expression
  * returns itself, instead of the row.
+ *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [min][Pivot.min]` { columns }` — the minimum value itself, instead of the row.
@@ -1687,6 +1695,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ *
  * See also:
  * - [minFor][PivotGroupBy.minFor] — the same, but for an explicit selection of columns.
  * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
@@ -1726,7 +1736,8 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [min][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
@@ -1770,7 +1781,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [min][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
@@ -1830,7 +1842,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [min][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
@@ -1872,7 +1885,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [min][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
@@ -1928,6 +1942,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * Don't confuse [minOf] with [minBy][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
  *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ *
  * See also:
  * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
@@ -1967,6 +1983,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value the
  * expression returns itself, instead of the row.
+ *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [maxBy][PivotGroupBy.maxBy] — the mirror operation.
@@ -2011,6 +2029,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row.
+ *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [min][PivotGroupBy.min]` { columns }` — the minimum value itself, instead of the row.

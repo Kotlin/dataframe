@@ -1324,6 +1324,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ *
  * See also:
  * - [maxFor][Pivot.maxFor] — the same, but for an explicit selection of columns.
  * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
@@ -1362,7 +1364,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [max][Pivot.max]`()` — the same, but for all suitable columns at once.
@@ -1407,7 +1409,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [max][Pivot.max]`()` — the same, but for all suitable columns at once.
@@ -1465,7 +1467,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [max][Pivot.max]`()` — the maximum of each suitable column separately, per group.
@@ -1505,7 +1507,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [max][Pivot.max]`()` — the maximum of each suitable column separately, per group.
@@ -1560,6 +1562,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
  *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ *
  * See also:
  * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
@@ -1598,6 +1602,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value the expression
  * returns itself, instead of the row.
+ *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [minBy][Pivot.minBy] — the mirror operation.
@@ -1640,6 +1646,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value a row expression
  * returns itself, instead of the row.
+ *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [max][Pivot.max]` { columns }` — the maximum value itself, instead of the row.
@@ -1687,6 +1695,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ *
  * See also:
  * - [maxFor][PivotGroupBy.maxFor] — the same, but for an explicit selection of columns.
  * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
@@ -1726,7 +1736,8 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [max][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
@@ -1770,7 +1781,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [max][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
@@ -1830,7 +1842,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [max][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
@@ -1872,7 +1885,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the
+ * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [max][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
@@ -1928,6 +1942,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
  *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ *
  * See also:
  * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
@@ -1967,6 +1983,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value the
  * expression returns itself, instead of the row.
+ *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [minBy][PivotGroupBy.minBy] — the mirror operation.
@@ -2011,6 +2029,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  *
  * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row.
+ *
+ * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [max][PivotGroupBy.max]` { columns }` — the maximum value itself, instead of the row.
