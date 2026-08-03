@@ -372,10 +372,7 @@ public class Sqlite(
         )
 
     /**
-     * Builds a converter that mirrors the base [DbType] pipeline end-to-end for this column —
-     * reads via [fallback]'s `getValueFromResultSet` and applies its `preprocessValue`.
-     * `expectedJdbcType` is exposed as the final (preprocessed) type so callers see one stable
-     * KType regardless of the intermediate JDBC representation.
+     * Builds a converter that mirrors the base [DbType] pipeline end-to-end for this column using [fallback].
      */
     private fun fallbackConverter(meta: TableColumnMetadata): AnyJdbcToDataFrameConverter {
         val expectedJdbcTypeBase = fallback.getExpectedJdbcType(meta)
