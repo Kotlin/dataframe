@@ -1620,7 +1620,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * @include [MinDocs.SkipNaNParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivot] holding, per group, the first row with the minimum expression result.
+ * @return A [ReducedPivot] holding, per group,
+ *   the first row where the [rowExpression] produced the minimum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -2002,8 +2003,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * @include [MinDocs.SkipNaNParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivotGroupBy] holding, per group, the first row with the minimum
- *   expression result.
+ * @return A [ReducedPivotGroupBy] holding,
+ *   the first row where the [rowExpression] produced the minumum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
