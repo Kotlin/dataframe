@@ -99,23 +99,38 @@ You need to edit (you can view the correct one with [`.schema().print()`](schema
 the correct data schema (with [generate..()](DataSchemaGenerationMethods.md) methods)
 manually and apply it (with [`cast()`](cast.md) or [`convertTo()`](convertTo.md)).
 
-#### Problems with type affinity in SQLite
+#### Problems with SQLite type affinity
 
 Because of [SQLite type affinity](https://sqlite.org/datatype3.html), 
-the column [typed defined by JDBC](readSqlDatabases.md) may differ from the actual values in the column.
-This problem often occurs when reading data from an SQLite database with column of custom types.
+the column type reported by the [JDBC driver](readSqlDatabases.md) may not match the actual types 
+of the values stored in that column.
 
-You can provide types for such columns manually:
+This commonly occurs when reading SQLite columns declared with custom or non-standard SQL types.
+
+You can explicitly specify the resulting Kotlin type using the `Sqlite.withCustomConverters { ... }` DSL:
+
+- `forColumn<T>(columnName)` sets the `T` Kotlin type for a specific column.
+- `forType<T>(typeName)` sets the `T` Kotlin type for all columns declared with the specified SQL type.
+- `forColumn(...) { ... }` and `forType(...) { ... }` additionally let you transform the raw stored value.
 
 <!---FUN readSqliteCustom-->
 
 ```kotlin
-val sqliteCustom = Sqlite.withCustomTypes(
-    mapOf(
-        "LONGVARCHAR" to typeOf<String>(),
-        "LONGINT" to typeOf<Long>(),
-    ),
-)
+val sqliteCustom = Sqlite.withCustomConverters {
+    // SQLite assigns `NUMERIC` affinity to the custom `LONGVARCHAR` type,
+    // so the JDBC driver reports the column type as Int.
+    // However, the actual stored values are strings, so we explicitly
+    // set the resulting Kotlin type to String?.
+    forType<String?>("LONGVARCHAR")
+
+    // Convert values from the "time_stamp" column regardless of its SQL type.
+    // The raw values are stored as strings and parsed into LocalDateTime values;
+    //  the resulting column has LocalDateTime type as well.
+    forColumn("time_stamp") { raw: String ->
+        LocalDateTime.parse(raw, customFormat)
+    }
+}
+
 val df = DataFrame.readSqlTable(
     connectionConfig,
     "table_name",
