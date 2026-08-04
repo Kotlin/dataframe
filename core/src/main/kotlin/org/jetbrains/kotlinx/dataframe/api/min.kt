@@ -1968,7 +1968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
-): DataFrame<T> = aggregate { minOf(skipNaN, rowExpression) }
+): DataFrame<T> = aggregate { minOfOrNull(skipNaN, rowExpression) }
 
 /**
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group

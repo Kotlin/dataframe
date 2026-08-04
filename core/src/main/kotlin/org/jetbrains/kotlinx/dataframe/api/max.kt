@@ -1968,7 +1968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
-): DataFrame<T> = aggregate { maxOf(skipNaN, rowExpression) }
+): DataFrame<T> = aggregate { maxOfOrNull(skipNaN, rowExpression) }
 
 /**
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
