@@ -953,7 +953,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -994,7 +995,8 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1037,7 +1039,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1091,7 +1094,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1140,7 +1144,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1200,7 +1205,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]}
+ * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+ * {@include [DocumentationUrls.GroupByAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1334,7 +1340,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1374,7 +1381,8 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1419,7 +1427,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1476,7 +1485,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1516,7 +1526,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1571,7 +1582,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1707,7 +1719,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1749,7 +1762,8 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1794,7 +1808,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1854,7 +1869,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1897,7 +1913,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
@@ -1953,7 +1970,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotStatistics]},
+ * {@include [DocumentationUrls.PivotAggregationStatistics]}
  *
  * ### Example
  * ```kotlin
