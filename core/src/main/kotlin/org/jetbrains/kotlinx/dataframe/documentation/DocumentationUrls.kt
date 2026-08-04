@@ -167,6 +167,9 @@ public interface DocumentationUrls {
     /** [See "`GroupBy` Aggregation" on the documentation website.]({@include [Url]}/groupby.html#aggregation) */
     public typealias GroupByAggregation = Nothing
 
+    /** [See "`GroupBy` Aggregation Statistics" on the documentation website.]({@include [Url]}/groupby.html#aggregation-statistics) */
+    public typealias GroupByAggregationStatistics = Nothing
+
     /** [See "`groupBy` statistics" on the documentation website.]({@include [Url]}/summarystatistics.html#groupby-statistics) */
     public typealias GroupByStatistics = Nothing
 
@@ -191,8 +194,11 @@ public interface DocumentationUrls {
     /** [See "Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
     public typealias PivotAggregation = Nothing
 
+    /** [See "Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    public typealias PivotAggregationStatistics = Nothing
+
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
-    public typealias PivotInsideAggregationStatistics = Nothing
+    public typealias PivotInsideAggregate = Nothing
 
     /** [See `join` on the documentation website.]({@include [Url]}/join.html) */
     public typealias Join = Nothing
@@ -202,6 +208,22 @@ public interface DocumentationUrls {
 
     /** [See "Summary statistics" on the documentation website.]({@include [Url]}/summarystatistics.html) */
     public typealias Statistics = Nothing
+
+    /** [See "Row statistics" on the documentation website.]({@include [Url]}/rowstats.html) */
+    public typealias RowStatistics = Nothing
+
+    /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
+    public interface MinMax {
+
+        /** [See "min / max Type Conversion" on the documentation website.]({@include [Url]}/minmax.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `maxBy` on the documentation website.]({@include [Url]}/maxby.html) */
+    public typealias MaxBy = Nothing
+
+    /** [See `minBy` on the documentation website.]({@include [Url]}/minby.html) */
+    public typealias MinBy = Nothing
 
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
     public typealias Concat = Nothing
