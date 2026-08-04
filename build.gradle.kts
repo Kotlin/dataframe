@@ -1,3 +1,5 @@
+import org.gradle.buildconfiguration.tasks.UpdateDaemonJvm
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -13,6 +15,13 @@ plugins {
         alias(serialization) apply false
         alias(dokka)
     }
+}
+
+// `gradle-jdk` is the single source of truth for both build toolchains and the Gradle daemon.
+// To upgrade (for example, to JDK 25), change it in gradle/libs.versions.toml, run
+// `./gradlew updateDaemonJvm`, and commit the regenerated gradle-daemon-jvm.properties file.
+tasks.named<UpdateDaemonJvm>("updateDaemonJvm") {
+    languageVersion = libs.versions.gradle.jdk.map { JavaLanguageVersion.of(it) }
 }
 
 val projectName: String = providers.gradleProperty("projectName").get()
