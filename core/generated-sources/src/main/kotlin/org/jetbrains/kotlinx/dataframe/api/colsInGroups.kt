@@ -211,7 +211,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnSet<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         transform { it.flatMap { it.cols().filter { predicate(it) } } }
 
     /**
@@ -315,7 +315,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         asSingleColumn().colsInGroups(predicate)
 
     /**
@@ -419,8 +419,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
+    public fun SingleColumn<DataRow<*>>.colsInGroups(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
     /**
      * ## Cols in Groups
@@ -522,7 +523,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun String.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -623,7 +624,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun KProperty<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -677,7 +678,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnPath.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
