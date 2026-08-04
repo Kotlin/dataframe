@@ -29,7 +29,7 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
 
     private val converterCache = mutableMapOf<CacheKey, AnyJdbcToDataFrameConverter>()
 
-    protected fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
+    protected open fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter =
         converterCache.getOrPut(tableColumnMetadata.cacheKey()) {
             generateConverter(tableColumnMetadata)
         }
