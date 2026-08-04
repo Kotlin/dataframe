@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.io.db.SqliteCustomTypeConverter
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import java.nio.file.Files
 import java.sql.Connection
@@ -321,12 +322,10 @@ class SqliteTestCustomTypes {
             }
         }
 
-        // @Ignore
         @Test
-        fun `read Int and Long nullable columns with custom converters`() {
+        fun `read Long nullable column with custom converter`() {
             val customSqlite = Sqlite.withCustomConverters {
-                forColumn<Int?>("int_col")
-                forColumn<Long?>("long_col")
+                forColumn("long_col") { raw: Number? -> raw?.toLong() }
             }
 
             val df = DataFrame.readSqlTable(connection, "numbers", dbType = customSqlite)

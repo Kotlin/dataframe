@@ -314,24 +314,28 @@ public class Sqlite(
         //    when the stored value is a Julian day / Unix seconds).
         when {
             "DATETIME" in declaredUpper ->
-                return jdbcToDfConverterFor<Any?>(expectedKType).withPreprocessor {
-                    convertToLocalDateTime(it, tableColumnMetadata)
-                }
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalDateTime(it, tableColumnMetadata)
+                    }
 
             "TIMESTAMP" in declaredUpper ->
-                return jdbcToDfConverterFor<Any?>(expectedKType).withPreprocessor {
-                    convertToInstant(it, tableColumnMetadata)
-                }
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToInstant(it, tableColumnMetadata)
+                    }
 
             "DATE" in declaredUpper ->
-                return jdbcToDfConverterFor<Any?>(expectedKType).withPreprocessor {
-                    convertToLocalDate(it, tableColumnMetadata)
-                }
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalDate(it, tableColumnMetadata)
+                    }
 
             "TIME" in declaredUpper ->
-                return jdbcToDfConverterFor<Any?>(expectedKType).withPreprocessor {
-                    convertToLocalTime(it, tableColumnMetadata)
-                }
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalTime(it, tableColumnMetadata)
+                    }
         }
 
         // 3) BOOLEAN / BIT — SQLite has no boolean storage class. Xerial reports `Types.BOOLEAN`
@@ -342,9 +346,10 @@ public class Sqlite(
             tableColumnMetadata.jdbcType == Types.BIT ||
             "BOOL" in declaredUpper || "BIT" in declaredUpper
         ) {
-            return jdbcToDfConverterFor<Any?>(expectedKType).withPreprocessor {
-                convertToBoolean(it, tableColumnMetadata)
-            }
+            return jdbcToDfConverterFor<Any?>(expectedKType)
+                .withPreprocessor {
+                    convertToBoolean(it, tableColumnMetadata)
+                }
         }
 
         // 4) DECIMAL / NUMERIC — trust the driver-reported class of the stored value.
@@ -364,7 +369,12 @@ public class Sqlite(
         val preprocessedValueType = fallback.getPreprocessedValueType(meta, expectedJdbcTypeBase)
         return jdbcToDfConverterFor<Any?>(
             expectedJdbcTypeBase,
-        ).withPreprocessor<Any?, Any?>(preprocessedValueType, valuePreprocessor = null)
+        ).withPreprocessor<Any?, Any?>(
+            preprocessedValueType,
+            valuePreprocessor = {
+                fallback.preprocessValue(it, meta, expectedJdbcTypeBase, preprocessedValueType)
+            },
+        )
     }
 
     /**
