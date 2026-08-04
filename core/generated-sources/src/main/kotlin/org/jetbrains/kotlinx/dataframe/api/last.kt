@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -597,7 +598,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("Last0")
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    public fun <C> ColumnSet<C>.last(condition: (ColumnWithPath<C>) -> Boolean = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -630,7 +631,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     @Interpretable("Last1")
-    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.last(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         asSingleColumn().lastCol(condition)
 
     /**
@@ -661,7 +662,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     @Interpretable("Last2")
-    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().last(condition)
 
     /**
@@ -691,7 +692,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
-    public fun String.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -725,7 +726,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -755,7 +756,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
-    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 }
 

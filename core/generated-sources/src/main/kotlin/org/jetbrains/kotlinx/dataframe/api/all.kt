@@ -615,7 +615,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allAfter(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allAfter(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allAfterInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) After
@@ -2532,7 +2532,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allFrom(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allFrom(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allFromInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) From
@@ -4447,7 +4447,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allBefore(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allBefore(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allBeforeInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) Before
@@ -6363,7 +6363,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allUpTo(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allUpTo(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allUpToInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) Up To
