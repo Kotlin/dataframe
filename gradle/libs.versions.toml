@@ -8,6 +8,7 @@ kotlin = "2.4.0"
 kotlinpoet = "2.3.0"
 
 # The jvmToolchain version. Gradle should run with this JDK version.
+# After changing it, run `./gradlew updateDaemonJvm` and commit the regenerated properties file.
 gradle-jdk = "21"
 
 dokka = "2.2.0"
