@@ -84,6 +84,10 @@ interface ViewTablePostgres {
 }
 
 internal fun createPostgresTestData(connection: Connection) {
+    connection.createStatement().use { st ->
+        st.execute("SET lc_monetary TO 'C'")
+        st.execute("SET client_encoding TO 'UTF8'")
+    }
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
