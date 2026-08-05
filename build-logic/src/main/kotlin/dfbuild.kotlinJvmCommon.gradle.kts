@@ -1,9 +1,16 @@
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier.Internal
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier.Package
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier.Protected
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier.Public
+
 plugins {
     alias(conventions.plugins.dfbuild.base)
     // enables the linter for every Kotlin module in the project
     alias(conventions.plugins.dfbuild.ktlint)
 
     alias(libs.plugins.kotlin.jvm)
+
+    alias(libs.plugins.dokka)
 }
 
 kotlin {
@@ -21,5 +28,11 @@ val instrumentedJars: Configuration = configurations.create("instrumentedJars") 
 artifacts {
     add("instrumentedJars", tasks.jar.get().archiveFile) {
         builtBy(tasks.jar)
+    }
+}
+
+dokka {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities(Public, Protected, Internal, Package)
     }
 }
