@@ -44,8 +44,10 @@ import kotlin.reflect.typeOf
 
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
+@Deprecated("Use col(name) instead.", ReplaceWith("col<T>(name)"))
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 
+@Deprecated("Use col(path) instead.", ReplaceWith("col<T>(path)"))
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -54,8 +56,10 @@ public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccesso
 
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
+@Deprecated("Use col(name) instead.", ReplaceWith("this.col<T>(name)"))
 public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
+@Deprecated("Use col(path) instead.", ReplaceWith("this.col<T>(path)"))
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -131,14 +135,18 @@ public fun columnGroup(): ColumnDelegate<DataRow<*>> = column()
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
+@Deprecated("Use colGroup(name) instead.", ReplaceWith("colGroup(name)"))
 public fun columnGroup(name: String): ColumnAccessor<DataRow<*>> = column(name)
 
 @JvmName("columnGroupTyped")
+@Deprecated("Use colGroup(name) instead.", ReplaceWith("colGroup<T>(name)"))
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
+@Deprecated("Use colGroup(path) instead.", ReplaceWith("colGroup(path)"))
 public fun columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = column(path)
 
 @JvmName("columnGroupTyped")
+@Deprecated("Use colGroup(path) instead.", ReplaceWith("colGroup<T>(path)"))
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 @JvmName("columnGroupDataRowKProperty")
@@ -155,17 +163,21 @@ public fun ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<*>> = Colu
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
+@Deprecated("Use colGroup(name) instead.", ReplaceWith("this.colGroup(name)"))
 public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(path() + name)
 
 @JvmName("columnGroupTyped")
+@Deprecated("Use colGroup(name) instead.", ReplaceWith("this.colGroup<T>(name)"))
 public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
 
+@Deprecated("Use colGroup(path) instead.", ReplaceWith("this.colGroup(path)"))
 public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupTyped")
+@Deprecated("Use colGroup(path) instead.", ReplaceWith("this.colGroup<T>(path)"))
 public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + path)
 
