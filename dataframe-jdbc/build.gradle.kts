@@ -33,7 +33,6 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.hikaricp)
-    testImplementation(projects.commonTestUtils)
 }
 
 kotlinPublications {

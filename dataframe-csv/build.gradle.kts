@@ -35,7 +35,6 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(projects.commonTestUtils)
 }
 
 benchmark {

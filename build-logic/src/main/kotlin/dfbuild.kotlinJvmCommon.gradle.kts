@@ -23,3 +23,7 @@ artifacts {
         builtBy(tasks.jar)
     }
 }
+
+dependencies {
+    testImplementation(project(":common-test-utils"))
+}
