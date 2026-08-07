@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.io.db.SqliteCustomTypeConverter
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import java.nio.file.Files
 import java.sql.Connection
@@ -139,13 +140,10 @@ class SqliteTestCustomTypes {
                 """.trimIndent(),
             )
 
-            val asString: SqliteCustomTypeConverter<String?> = typeOf<String>() to { raw -> raw }
-            val asDouble: SqliteCustomTypeConverter<String?> = typeOf<Double>() to { raw -> raw?.toDouble() }
-
-            val sqlite = Sqlite(
-                customTypesMap = mapOf("MYSTR_TEXT" to asString),
-                customColumnsMap = mapOf("ratio" to asDouble),
-            )
+            val sqlite = Sqlite.withCustomConverters {
+                forType<String>("MYSTR_TEXT")
+                forColumn("ratio") { raw: String -> raw.toDouble() }
+            }
 
             val df = DataFrame.readSqlTable(conn, "metrics", dbType = sqlite)
 
@@ -290,6 +288,53 @@ class SqliteTestCustomTypes {
             eventsDf["occurredAt"][1] shouldBe Instant.parse("2023-08-15T18:45:30Z")
             eventsDf["note"][0] shouldBe Instant.parse("2023-07-21T10:30:00Z")
             eventsDf["note"][1] shouldBe null
+        }
+    }
+
+    /**
+     * Xerial SQLite JDBC driver seems to give identical metadata for `Int?` and `Long?` columns
+     */
+    class DynamicTypes {
+
+        companion object {
+            private lateinit var connection: Connection
+
+            // simple table with int and long nullable columns
+            private val dbUrl =
+                "jdbc:sqlite:${(this::class as Any).javaClass.classLoader
+                    .getResource("simple_int_long_nullable.sqlite").path}"
+
+            @BeforeClass
+            @JvmStatic
+            fun setUpClass() {
+                connection = DriverManager.getConnection(dbUrl)
+            }
+
+            @AfterClass
+            @JvmStatic
+            fun tearDownClass() {
+                try {
+                    connection.close()
+                } catch (e: Exception) {
+                    // Log, but not fail
+                    println("Warning: Could not clean up test database file: ${e.message}")
+                }
+            }
+        }
+
+        @Test
+        fun `read Long nullable column with custom converter`() {
+            val customSqlite = Sqlite.withCustomConverters {
+                forColumn("long_col") { raw: Number? -> raw?.toLong() }
+            }
+
+            val df = DataFrame.readSqlTable(connection, "numbers", dbType = customSqlite)
+
+            df["int_col"].type shouldBe typeOf<Int?>()
+            df["int_col"][1] shouldBe 1
+
+            df["long_col"].type shouldBe typeOf<Long?>()
+            df["long_col"][1] shouldBe 1L
         }
     }
 }

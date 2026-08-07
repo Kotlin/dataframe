@@ -26,7 +26,7 @@ dependencies {
         exclude("jakarta.validation")
     }
 
-    testApi(projects.dataframeJupyter)
+    testImplementation(projects.dataframeJupyter)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

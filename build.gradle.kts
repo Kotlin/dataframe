@@ -1,3 +1,5 @@
+import org.gradle.buildconfiguration.tasks.UpdateDaemonJvm
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -6,19 +8,23 @@ plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
         alias(buildExampleProjects)
-        alias(dependencyUpdates)
+        alias(caupain)
     }
-
     with(libs.plugins) {
         alias(publisher)
         alias(serialization) apply false
         alias(dokka)
-
-        alias(simpleGit) apply false
     }
 }
 
-val projectName: String by project
+// `gradle-jdk` is the single source of truth for both build toolchains and the Gradle daemon.
+// To upgrade (for example, to JDK 25), change it in gradle/libs.versions.toml, run
+// `./gradlew updateDaemonJvm`, and commit the regenerated gradle-daemon-jvm.properties file.
+tasks.named<UpdateDaemonJvm>("updateDaemonJvm") {
+    languageVersion = libs.versions.gradle.jdk.map { JavaLanguageVersion.of(it) }
+}
+
+val projectName: String = providers.gradleProperty("projectName").get()
 
 configurations {
     testImplementation.get().extendsFrom(compileOnly.get())
@@ -56,7 +62,7 @@ fun detectVersion(): String {
     }
 }
 
-val detectVersionForTC by tasks.registering {
+val detectVersionForTC = tasks.register("detectVersionForTC") {
     doLast {
         println("##teamcity[buildNumber '$version']")
     }

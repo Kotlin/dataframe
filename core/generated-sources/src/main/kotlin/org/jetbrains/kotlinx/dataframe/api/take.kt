@@ -714,7 +714,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
     /**
@@ -746,7 +746,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun ColumnsSelectionDsl<*>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeColsWhile(predicate)
 
     /**
@@ -778,7 +778,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeWhile(predicate) }
 
     /**
@@ -810,7 +810,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun String.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     /**
@@ -846,7 +846,7 @@ public interface TakeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     /**
@@ -878,7 +878,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
-    public fun ColumnPath.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     // endregion
@@ -947,7 +947,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
     /**
@@ -979,7 +979,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeLastColsWhile(predicate)
 
     /**
@@ -1011,7 +1011,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun SingleColumn<DataRow<*>>.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeLastWhile(predicate) }
 
     /**
@@ -1043,7 +1043,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun String.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     /**
@@ -1079,7 +1079,7 @@ public interface TakeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     /**
@@ -1111,7 +1111,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
-    public fun ColumnPath.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     // endregion

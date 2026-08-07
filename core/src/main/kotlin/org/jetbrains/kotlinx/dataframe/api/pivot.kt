@@ -867,7 +867,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
  *
  * See [GroupBy.pivot] and [PivotGroupByDocs.Aggregation] for more information.
  *
- * For more information: {@include [DocumentationUrls.PivotInsideAggregationStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotInsideAggregate]}
  *
  * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *

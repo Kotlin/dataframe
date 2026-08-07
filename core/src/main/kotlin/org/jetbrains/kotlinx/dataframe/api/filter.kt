@@ -157,7 +157,7 @@ public interface FilterColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
 }
 

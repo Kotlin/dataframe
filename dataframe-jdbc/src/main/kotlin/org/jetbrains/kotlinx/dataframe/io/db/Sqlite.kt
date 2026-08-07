@@ -25,10 +25,12 @@ import java.time.LocalTime as JavaLocalTime
 
 /**
  * A user-provided converter from an SQLite declared column type name to
- * the [DataFrame] column type and a lambda thatн converts each stored value.
+ * the [DataFrame] column type and a lambda that converts each stored value.
  *
- * The type parameter [T] is the **storage-class type** of the column — the actual class of
+ * The type parameter [T] (and [expectedType] — this type as [KType]) is the **storage-class type** of the column
+ * — the actual class of
  * values returned by [java.sql.ResultSet.getObject][ResultSet.getObject] for that column.
+ * Used as a result of [DbType.getExpectedJdbcType].
  * The Xerial SQLite JDBC driver's `getObject(int)` returns exactly one of the following, chosen
  * from the runtime storage class of the value (not the declared column type):
  *
@@ -41,11 +43,11 @@ import java.time.LocalTime as JavaLocalTime
  *
  * The driver never produces any other type — in particular, declared `DATE` / `TIME` / `TIMESTAMP` /
  * `BOOLEAN` columns still surface as one of the six types above, not as their Java-time / Boolean
- * equivalent
+ * equivalent.
  *
- * The mapping consists of a pair of:
- * 1. The [KType] of the resulting [DataFrame] column;
- * 2. The lambda that returns a converted value (which must fit the [KType] from the first component).
+ * The type parameter [R] (and [resultingType] — this type as [KType]) is the **resulting type** of the column
+ * after applying [convert].
+ * Used as a result of [DbType.getPreprocessedValueType].
  *
  * ### Example
  * ```
@@ -71,7 +73,11 @@ import java.time.LocalTime as JavaLocalTime
  * val df = DataFrame.readSqlTable(connection, "events", dbType = sqliteCustom)
  * ```
  */
-public typealias SqliteCustomTypeConverter<T> = Pair<KType, ((rawValue: T) -> Any?)>
+public data class SqliteCustomTypeConverter<T, R>(
+    val expectedType: KType,
+    val resultingType: KType,
+    val convert: (rawValue: T) -> R,
+)
 
 /**
  * DSL builder collected by [Sqlite.withCustomConverters]. Register converters via
@@ -115,10 +121,10 @@ public class SqliteCustomConvertersBuilder
     @PublishedApi
     internal constructor() {
         @PublishedApi
-        internal val typeMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
+        internal val typeMappings: MutableMap<String, SqliteCustomTypeConverter<*, *>> = mutableMapOf()
 
         @PublishedApi
-        internal val columnMappings: MutableMap<String, SqliteCustomTypeConverter<*>> = mutableMapOf()
+        internal val columnMappings: MutableMap<String, SqliteCustomTypeConverter<*, *>> = mutableMapOf()
 
         /**
          * Register a converter for every column with the given declared SQL type name.
@@ -131,8 +137,12 @@ public class SqliteCustomConvertersBuilder
          * @param [sqlTypeName] name of the declared SQL type (as written in `CREATE TABLE`).
          * @param [convert] lambda to convert the raw stored value to the target Kotlin type.
          */
-        public inline fun <T, reified R> forType(sqlTypeName: String, crossinline convert: (T) -> R) {
-            val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
+        public inline fun <reified T, reified R> forType(sqlTypeName: String, crossinline convert: (T) -> R) {
+            val mapping: SqliteCustomTypeConverter<T, R> = SqliteCustomTypeConverter(
+                expectedType = typeOf<T>(),
+                resultingType = typeOf<R>(),
+                convert = { raw -> convert(raw) },
+            )
             typeMappings[sqlTypeName] = mapping
         }
 
@@ -160,7 +170,12 @@ public class SqliteCustomConvertersBuilder
          * ```
          */
         public inline fun <reified T> forType(sqlTypeName: String) {
-            val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
+            val kType = typeOf<T>()
+            val mapping: SqliteCustomTypeConverter<T, T> = SqliteCustomTypeConverter(
+                expectedType = kType,
+                resultingType = kType,
+                convert = { raw -> raw },
+            )
             typeMappings[sqlTypeName] = mapping
         }
 
@@ -171,8 +186,12 @@ public class SqliteCustomConvertersBuilder
          * @param T the storage class of the raw stored value.
          * @param R the target Kotlin type for the resulting DataFrame column.
          */
-        public inline fun <T, reified R> forColumn(columnName: String, crossinline convert: (T) -> R) {
-            val mapping: SqliteCustomTypeConverter<T> = typeOf<R>() to { raw -> convert(raw) }
+        public inline fun <reified T, reified R> forColumn(columnName: String, crossinline convert: (T) -> R) {
+            val mapping: SqliteCustomTypeConverter<T, R> = SqliteCustomTypeConverter(
+                expectedType = typeOf<T>(),
+                resultingType = typeOf<R>(),
+                convert = { raw -> convert(raw) },
+            )
             columnMappings[columnName] = mapping
         }
 
@@ -198,16 +217,24 @@ public class SqliteCustomConvertersBuilder
          * ```
          */
         public inline fun <reified T> forColumn(columnName: String) {
-            val mapping: SqliteCustomTypeConverter<T> = typeOf<T>() to { it }
+            val kType = typeOf<T>()
+            val mapping: SqliteCustomTypeConverter<T, T> = SqliteCustomTypeConverter(
+                expectedType = kType,
+                resultingType = kType,
+                convert = { raw -> raw },
+            )
             columnMappings[columnName] = mapping
         }
     }
 
+// TODO make constructor private? #1797.
+
 /**
  * Represents the Sqlite database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for Sqlite,
- * and to generate the corresponding column schema.
+ * This class provides methods to convert data from a [ResultSet] to the appropriate type for
+ * [Sqlite](https://sqlite.org/),
+ * and to generate the corresponding [DataFrame] schema.
  *
  * Two levels of custom overrides are supported, with the following resolution order (first match
  * wins):
@@ -217,17 +244,40 @@ public class SqliteCustomConvertersBuilder
  *     Use this to override every column that shares a declared type.
  *  3. The built-in SQLite conversion for BOOLEAN, DATE, DATETIME, TIME, TIMESTAMP, DECIMAL,
  *     NUMERIC.
+ *     **This conversion is also applied for types that have substring of these type names**.
  *  4. The base `DbType` mapping.
- *
- * Both maps take a [SqliteCustomTypeConverter] lambda that returns both the target [KType] and the
- * converted value.
  */
 public class Sqlite(
-    public val customTypesMap: Map<String, SqliteCustomTypeConverter<*>> = emptyMap(),
-    public val customColumnsMap: Map<String, SqliteCustomTypeConverter<*>> = emptyMap(),
-) : DbType("sqlite") {
+    public val customTypesMap: Map<String, SqliteCustomTypeConverter<*, *>> = emptyMap(),
+    public val customColumnsMap: Map<String, SqliteCustomTypeConverter<*, *>> = emptyMap(),
+) : AdvancedDbType("sqlite") {
     override val driverClassName: String
         get() = "org.sqlite.JDBC"
+
+    private val customColumnsConverterCache = mutableMapOf<String, AnyJdbcToDataFrameConverter>()
+
+    // override AdvancedDbType converter for columns with custom converters
+    override fun getConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter {
+        val columnName = tableColumnMetadata.name
+        return if (columnName in customColumnsMap) {
+            customColumnsConverterCache.getOrPut(columnName) {
+                generateConverter(tableColumnMetadata)
+            }
+        } else {
+            super.getConverter(tableColumnMetadata)
+        }
+    }
+
+    /**
+     * Delegate all unexpected column type handlings to default [DbType]
+     */
+    private val fallback: DbType = object : DbType("sqlite") {
+        override val driverClassName: String get() = "org.sqlite.JDBC"
+
+        override fun isSystemTable(tableMetadata: TableMetadata): Boolean = false
+
+        override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata("", null, null)
+    }
 
     // SQLite is dynamically typed with only five storage classes (NULL, INTEGER, REAL, TEXT, BLOB).
     // The declared column type is a hint (type affinity), so a column declared DATE/DATETIME/
@@ -237,96 +287,94 @@ public class Sqlite(
     //   the reported `jdbcType` based on the stored value's storage class — e.g. a DATE column
     //   with a REAL value is reported as `Types.FLOAT`) and return an idiomatic Kotlin date-time
     //   type (`kotlinx.datetime.LocalDate` / `LocalDateTime` / `LocalTime` / `kotlin.time.Instant`).
-    //   The raw storage value is converted in `preprocessValue`.
-    // - For DECIMAL and NUMERIC, we trust the driver-reported `javaClassName` (the actual stored
-    //   value's class): a NUMERIC column can hold a genuinely mixed set of ints and doubles, and
-    //   there's no natural "canonical" numeric type to promote them to.
-    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
+    //   The raw storage value is converted eagerly in the [DbResultSetReader].
+    // - For BOOLEAN/BIT — Xerial reports `Types.BOOLEAN` metadata but `getObject` returns Integer;
+    //   we convert to `Boolean` via `convertToBoolean`.
+    // - For DECIMAL/NUMERIC — no canonical numeric type; we trust the driver-reported class.
+    // - For everything else, we delegate to the base [DbType] mapping end-to-end.
+    override fun generateConverter(tableColumnMetadata: TableColumnMetadata): AnyJdbcToDataFrameConverter {
         val nullable = tableColumnMetadata.isNullable
-        // Column-name override wins over type-name override. Column nullability from the
-        // schema is always applied on top of the KType the user declared.
-        customMappingFor(tableColumnMetadata)?.let { (kType, _) ->
-            return kType
-        }
         val declaredUpper = tableColumnMetadata.sqlTypeName.uppercase()
 
-        // Date/time detection by declared type name substring matching
-        when {
-            "DATETIME" in declaredUpper ->
-                return typeOf<LocalDateTime>().withNullability(nullable)
+        val expectedKType = javaClassNameToKType(tableColumnMetadata.javaClassName, nullable)
 
-            "TIMESTAMP" in declaredUpper ->
-                return typeOf<Instant>().withNullability(nullable)
-
-            "DATE" in declaredUpper ->
-                return typeOf<LocalDate>().withNullability(nullable)
-
-            "TIME" in declaredUpper ->
-                return typeOf<LocalTime>().withNullability(nullable)
-        }
-
-        // Numeric ambiguity: trust storage class.
-        when (tableColumnMetadata.jdbcType) {
-            Types.DECIMAL, Types.NUMERIC ->
-                javaClassNameToKType(tableColumnMetadata.javaClassName)?.let {
-                    return it.withNullability(nullable)
-                }
-        }
-
-        return super.getExpectedJdbcType(tableColumnMetadata)
-    }
-
-    // For DECIMAL/NUMERIC we already resolved the DataFrame type from the storage class in
-    // getExpectedJdbcType, so we keep that as-is. For other types we let the base decide
-    // (base maps TIMESTAMP → Instant, BINARY(UUID) → Uuid, etc.).
-    override fun getPreprocessedValueType(tableColumnMetadata: TableColumnMetadata, expectedJdbcType: KType): KType =
-        when (tableColumnMetadata.jdbcType) {
-            Types.DECIMAL, Types.NUMERIC -> expectedJdbcType
-            else -> super.getPreprocessedValueType(tableColumnMetadata, expectedJdbcType)
-        }
-
-    // Converts the raw stored value into the type the DataFrame column expects. Dispatched by
-    // the target Kotlin type — this uniformly handles the SQLite "declared type ≠ storage class"
-    // mismatch for BOOLEAN, DATE, DATETIME, TIME, and TIMESTAMP. Custom mappings from
-    // `customTypesMap` take precedence and completely replace the built-in conversion.
-    override fun <J, D> preprocessValue(
-        value: J,
-        tableColumnMetadata: TableColumnMetadata,
-        expectedJdbcType: KType,
-        expectedPreprocessedValueType: KType,
-    ): D {
-        customMappingFor(tableColumnMetadata)?.let { (_, convert) ->
+        // 1) Custom mapping. Column-name override beats type-name override.
+        customMappingFor(tableColumnMetadata)?.let { converter ->
             @Suppress("UNCHECKED_CAST")
-            return convert(value) as D
-        }
-        val target = expectedPreprocessedValueType.classifier
-        @Suppress("UNCHECKED_CAST")
-        return when (target) {
-            Boolean::class -> convertToBoolean(value, tableColumnMetadata) as D
-
-            Instant::class -> convertToInstant(value, tableColumnMetadata) as D
-
-            LocalDate::class -> convertToLocalDate(value, tableColumnMetadata) as D
-
-            LocalDateTime::class -> convertToLocalDateTime(value, tableColumnMetadata) as D
-
-            LocalTime::class -> convertToLocalTime(value, tableColumnMetadata) as D
-
-            // DECIMAL / NUMERIC (or any other type resolved via storage class): return as-is.
-            else -> {
-                if (tableColumnMetadata.jdbcType == Types.DECIMAL ||
-                    tableColumnMetadata.jdbcType == Types.NUMERIC
-                ) {
-                    return value as D
-                }
-                super.preprocessValue(
-                    value = value,
-                    tableColumnMetadata = tableColumnMetadata,
-                    expectedJdbcType = expectedJdbcType,
-                    expectedPreprocessedValueType = expectedPreprocessedValueType,
-                )
+            val convert = converter.convert as (Any?) -> Any?
+            return jdbcToDfConverterFor<Any?>(
+                converter.expectedType,
+            ).withPreprocessor(preprocessedValueType = converter.resultingType) {
+                convert(it)
             }
         }
+
+        // 2) Date/time affinity by declared type name substring (matters more than jdbcType —
+        //    Xerial derives that from the actual storage class and flips it to FLOAT/INTEGER
+        //    when the stored value is a Julian day / Unix seconds).
+        when {
+            "DATETIME" in declaredUpper ->
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalDateTime(it, tableColumnMetadata)
+                    }
+
+            "TIMESTAMP" in declaredUpper ->
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToInstant(it, tableColumnMetadata)
+                    }
+
+            "DATE" in declaredUpper ->
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalDate(it, tableColumnMetadata)
+                    }
+
+            "TIME" in declaredUpper ->
+                return jdbcToDfConverterFor<Any?>(expectedKType)
+                    .withPreprocessor {
+                        convertToLocalTime(it, tableColumnMetadata)
+                    }
+        }
+
+        // 3) BOOLEAN / BIT — SQLite has no boolean storage class. Xerial reports `Types.BOOLEAN`
+        //    metadata but `getObject` returns Integer (0/1). Convert explicitly.
+        //    Also catch other columns (TEXT, REAL) that contain Boolean in String/Double format
+        if (
+            tableColumnMetadata.jdbcType == Types.BOOLEAN ||
+            tableColumnMetadata.jdbcType == Types.BIT ||
+            "BOOL" in declaredUpper || "BIT" in declaredUpper
+        ) {
+            return jdbcToDfConverterFor<Any?>(expectedKType)
+                .withPreprocessor {
+                    convertToBoolean(it, tableColumnMetadata)
+                }
+        }
+
+        // 4) DECIMAL / NUMERIC — trust the driver-reported class of the stored value.
+        when (tableColumnMetadata.jdbcType) {
+            Types.DECIMAL, Types.NUMERIC -> return jdbcToDfConverterFor<Any>(expectedKType)
+        }
+
+        // 5) Fallback — delegate to the base [DbType] end-to-end pipeline.
+        return fallbackConverter(tableColumnMetadata)
+    }
+
+    /**
+     * Builds a converter that mirrors the base [DbType] pipeline end-to-end for this column using [fallback].
+     */
+    private fun fallbackConverter(meta: TableColumnMetadata): AnyJdbcToDataFrameConverter {
+        val expectedJdbcTypeBase = fallback.getExpectedJdbcType(meta)
+        val preprocessedValueType = fallback.getPreprocessedValueType(meta, expectedJdbcTypeBase)
+        return jdbcToDfConverterFor<Any?>(
+            expectedJdbcTypeBase,
+        ).withPreprocessor<Any?, Any?>(
+            preprocessedValueType,
+            valuePreprocessor = {
+                fallback.preprocessValue(it, meta, expectedJdbcTypeBase, preprocessedValueType)
+            },
+        )
     }
 
     /**
@@ -335,37 +383,24 @@ public class Sqlite(
      * declared `T` is erased and the raw value is passed straight through.
      */
     @Suppress("UNCHECKED_CAST")
-    private fun customMappingFor(tableColumnMetadata: TableColumnMetadata): Pair<KType, (Any?) -> Any?>? =
+    private fun customMappingFor(
+        tableColumnMetadata: TableColumnMetadata,
+    ): SqliteCustomTypeConverter<out Any?, out Any?>? =
         (
             customColumnsMap[tableColumnMetadata.name]
                 ?: customTypesMap[tableColumnMetadata.sqlTypeName]
-        ) as Pair<KType, (Any?) -> Any?>?
+        )
 
-    private fun javaClassNameToKType(className: String): KType? =
+    // Xerial only can return one of these (or java.lang.Object)
+    private fun javaClassNameToKType(className: String, nullable: Boolean): KType =
         when (className) {
             "java.lang.String" -> typeOf<String>()
             "java.lang.Integer" -> typeOf<Int>()
             "java.lang.Long" -> typeOf<Long>()
             "java.lang.Double" -> typeOf<Double>()
             "[B" -> typeOf<ByteArray>()
-            else -> null
-        }
-
-    // ---------- storage class → target conversions ----------
-    //
-    // The Xerial SQLite JDBC driver's `ResultSet.getObject(int)` inspects the runtime storage
-    // class (never the declared column type) and returns exactly one of:
-    //
-    //   INTEGER  → java.lang.Integer  (values in Int range)
-    //   INTEGER  → java.lang.Long     (values outside Int range)
-    //   REAL     → java.lang.Double
-    //   TEXT     → java.lang.String
-    //   BLOB     → byte[]  (i.e. `ByteArray`)
-    //   NULL     → null
-    //
-    // No other type ever arrives here.
-    // Consequently, each `convertToX` below only branches on `null`, `Int`, `Long`, `Double`,
-    // `String`, `ByteArray` where they make sense.
+            else -> typeOf<Any>()
+        }.withNullability(nullable)
 
     private fun convertToBoolean(value: Any?, meta: TableColumnMetadata): Boolean? =
         when (value) {
@@ -440,6 +475,9 @@ public class Sqlite(
 
             is Long -> JavaLocalTime.ofSecondOfDay(value).toKotlinLocalTime()
 
+            // Fractional part is ignored
+            is Double -> JavaLocalTime.ofSecondOfDay(value.toLong()).toKotlinLocalTime()
+
             is String -> parseStringAsLocalTime(value, meta)
 
             else -> unsupportedConversion(value, "kotlinx.datetime.LocalTime", meta)
@@ -492,7 +530,10 @@ public class Sqlite(
             .toKotlinLocalDateTime()
 
     private fun julianDayToInstant(julianDay: Double): Instant {
-        val epochSeconds = ((julianDay - JULIAN_DAY_UNIX_EPOCH) * SECONDS_PER_DAY).toLong()
+        // Round instead of truncate — Double arithmetic on (julianDay - JD_UNIX) * SECONDS_PER_DAY
+        // can produce values like `1689897600.9999999…` for an exact second boundary, which
+        // `.toLong()` would truncate down to the previous second.
+        val epochSeconds = kotlin.math.round((julianDay - JULIAN_DAY_UNIX_EPOCH) * SECONDS_PER_DAY).toLong()
         return Instant.fromEpochSeconds(epochSeconds)
     }
 
@@ -509,7 +550,7 @@ public class Sqlite(
         error(
             "SQLite: $problem from column '${meta.name}' (declared '${meta.sqlTypeName}'). " +
                 "Register a custom converter for this type or column via " +
-                "`Sqlite.withCustomConverters { } to override the built-in mapping.",
+                "`Sqlite.withCustomConverters { }` to override the built-in mapping.",
         )
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")

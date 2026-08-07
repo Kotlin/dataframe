@@ -41,7 +41,7 @@ sourceSets {
 }
 
 // Separate source set for Java 16+ language-specific tests (e.g., Java Records)
-val testJava16 by sourceSets.creating {
+val testJava16 = sourceSets.create("testJava16") {
     java.srcDir("src/testJava16/java")
     kotlin.srcDir("src/testJava16/kotlin")
     compileClasspath += sourceSets.main.get().output + configurations.testCompileClasspath.get()
@@ -49,7 +49,7 @@ val testJava16 by sourceSets.creating {
 }
 
 dependencies {
-    val kotlinCompilerPluginClasspathSamples by configurations.getting
+    val kotlinCompilerPluginClasspathSamples = configurations.getByName("kotlinCompilerPluginClasspathSamples")
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
@@ -69,6 +69,7 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+
     // kotest shouldBe forcefully escapes newlines when content is identical except additional newlines
     // which makes diff very hard to perceive. CodeGenerationTests.kt suffers from it a lot. using assertEquals there for working diff.
     testImplementation(kotlin("test"))
@@ -89,10 +90,10 @@ dependencies {
 
 // Configure testJava16 dependencies to extend from test
 configurations {
-    val testJava16Implementation by getting {
+    getByName("testJava16Implementation") {
         extendsFrom(configurations.testImplementation.get())
     }
-    val testJava16RuntimeOnly by getting {
+    getByName("testJava16RuntimeOnly") {
         extendsFrom(configurations.testRuntimeOnly.get())
     }
 }
@@ -126,7 +127,7 @@ benchmark {
 // All korro/samples related tasks should be removed
 // after migration all test sample to :samples module
 
-val samplesImplementation by configurations.getting {
+configurations.getByName("samplesImplementation") {
     extendsFrom(configurations.testImplementation.get())
 }
 
@@ -149,10 +150,10 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
 }
 
-val clearTestResults by tasks.registering(Delete::class, fun Delete.() {
+val clearTestResults = tasks.register<Delete>("clearTestResults") {
     delete(layout.buildDirectory.dir("dataframes"))
     delete(layout.buildDirectory.dir("korroOutputLines"))
-})
+}
 
 val samplesTest = tasks.register<Test>("samplesTest") {
     group = "Verification"
@@ -177,7 +178,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
         sourceSets["main"].runtimeClasspath
 }
 
-val clearSamplesOutputs by tasks.registering {
+val clearSamplesOutputs = tasks.register("clearSamplesOutputs") {
     group = "documentation"
 
     doFirst {
@@ -257,7 +258,7 @@ korro {
 // generateLibrariesJson makes sure a META-INF/kotlin-jupyter-libraries/libraries.json file is generated
 // This file allows loading dataframe-jupyter when dataframe-core is present on its own in a Kotlin Notebook.
 val generatedJupyterResourcesDir = layout.buildDirectory.dir("generated/jupyter")
-val generateLibrariesJson by tasks.registering {
+val generateLibrariesJson = tasks.register("generateLibrariesJson") {
     val outDir = generatedJupyterResourcesDir.get().asFile.resolve("META-INF/kotlin-jupyter-libraries")
     val outFile = outDir.resolve("libraries.json")
     outputs.file(outFile)

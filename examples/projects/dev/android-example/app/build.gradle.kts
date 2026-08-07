@@ -69,7 +69,7 @@ dependencies {
     // https://kotlin.github.io/dataframe/setupcustomgradle.html
     //
     // You can add any additional IO modules you like, except for 'dataframe-arrow'.
-    // Apache Arrow is not supported well on Android.
+    // Apache Arrow is not well supported on Android.
     //
     // Either use:
     implementation(libs.dataframe.core)

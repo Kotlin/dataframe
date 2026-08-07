@@ -8,6 +8,8 @@ This example shows how to:
 - Inspect the saved Spark model artifacts
 - Build a 2D plot for a single model coefficient
 
+[Download this Example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
+
 Below is a faithful, step-by-step walkthrough matching the code in `SparkParquetDataframe.kt`.
 
 ## The 10 steps of the example (with explanations)
