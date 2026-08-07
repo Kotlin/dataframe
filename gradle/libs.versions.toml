@@ -67,6 +67,13 @@ ktor = "3.5.1"
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
 duckdb = "1.5.4.0"
+testcontainers = "2.0.5"
+
+# Docker image tags of the databases used in the Testcontainers tests
+dockerImage-mariadb = "12.3.2" # available tags: https://hub.docker.com/_/mariadb/tags
+dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
+dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
+
 buildconfig = "6.0.10"
 benchmark = "0.4.17"
 
@@ -124,6 +131,11 @@ mssql = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = 
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+
+testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-mysql = { group = "org.testcontainers", name = "testcontainers-mysql", version.ref = "testcontainers" }
+testcontainers-mariadb = { group = "org.testcontainers", name = "testcontainers-mariadb", version.ref = "testcontainers" }
 
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-geo = { group = "org.jetbrains.kotlinx", name = "kandy-geo", version.ref = "kandy" }
