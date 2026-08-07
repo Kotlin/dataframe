@@ -175,12 +175,13 @@ Returns `GroupBy` object.
 
 A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
-* `sortByGroup` / `sortByGroupDesc` — sorts the order of groups (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
-* `sortByCount` / `sortByCountAsc` — sorts the order of groups (and their corresponding keys) by the number of rows they contain;
-* `sortByKey` / `sortByKeyDesc` — sorts the order of groups (and their corresponding keys) by the grouping key values;
-* [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the order of rows within each group by one or more column values;
+* `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
+* `sortByCount` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain;
+* `sortByKey` / `sortByKeyDesc` — sorts the **order of groups** (and their corresponding keys) by the grouping key values;
+* [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values;
 * `updateGroups` — transforms each group into a new one using the provided transforming function;
-* [`filter`](filter.md) — filters group rows by the given predicate;
+* [`filter`](filter.md) — filters out keys and corresponding groups that
+do not satisfy the given key-group predicate;
 * [`add`](add.md) — adds a new column to each group.
 
 Any [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn) can be reinterpreted as a `GroupBy`:
