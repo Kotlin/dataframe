@@ -274,6 +274,39 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
+    private val troubleshootingLink = ""
+
+    /**
+     * Generate a try-catch block for column accessor with custom error messages.
+     *
+     * Catch any exception. Throws an [IllegalStateException] with a special message and original exception.
+     * Can be improved with custom exception (#1872).
+     *
+     * 1) IllegalArgumentException -> most probably column not found. Should be replaced with a custom exception (#1871)
+     * 2) ClassCastException -> most probably incorrect column type. Should be replaced with a custom exception (#1871)
+     * 3) else -> unexpected exception.
+     */
+    private fun generateTryCatchColumnAccess(columnAccessCode: String, columnName: String): String {
+        val renderedColumnName = renderStringLiteral(columnName)
+        return $$"""
+    try {
+        $$columnAccessCode
+    } catch (e: kotlin.Exception) {
+        val msg = when (e) {
+            is kotlin.IllegalArgumentException ->
+                "Column not found exception in the generated DataFrame extension property '$$renderedColumnName': ${e.localizedMessage}. See $$troubleshootingLink for more information."
+
+            is kotlin.ClassCastException ->
+                "Incorrect column type exception in generated DataFrame extension property '$$renderedColumnName': ${e.localizedMessage}. See $$troubleshootingLink for more information."
+
+            else ->
+                "Unexpected exception in generated DataFrame extension property '$$renderedColumnName'. Please report it to https://github.com/Kotlin/dataframe/issues. Exception message: $e."
+        }
+        throw IllegalStateException(msg, e)
+    }
+            """.trimIndent()
+    }
+
     private fun generatePropertyCode(
         marker: IsolatedMarker,
         shortMarkerName: String,
@@ -282,6 +315,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         propertyType: String,
         getter: String,
         visibility: String,
+        columnName: String,
     ): String {
         // jvm name is required to prevent signature clash like this:
         // val DataRow<Type>.name: String
@@ -296,7 +330,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         }
         return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${
             renderStringLiteral(jvmName)
-        }\") get() = $getter as $propertyType"
+        }\") get() = ${generateTryCatchColumnAccess("$getter as $propertyType", columnName)} "
     }
 
     /**
@@ -355,6 +389,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         propertyType = columnType,
                         getter = getter,
                         visibility = visibility,
+                        columnName = it.columnName,
                     ),
                     generatePropertyCode(
                         marker = marker,
@@ -364,6 +399,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         propertyType = fieldType,
                         getter = getter,
                         visibility = visibility,
+                        columnName = it.columnName,
                     ),
                 ),
             )
@@ -378,6 +414,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             propertyType = nullableColumnType,
                             getter = getter,
                             visibility = visibility,
+                            columnName = it.columnName,
                         ),
                         generatePropertyCode(
                             marker = marker,
@@ -387,6 +424,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             propertyType = nullableFieldType,
                             getter = getter,
                             visibility = visibility,
+                            columnName = it.columnName,
                         ),
                     ),
                 )
