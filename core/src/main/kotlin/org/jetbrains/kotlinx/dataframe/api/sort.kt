@@ -177,8 +177,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
     sortByDesc { cols.toColumnSet() }
 
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
-    val set = selector.toColumnSet()
-    return sortByImpl { set.desc() }
+    return sortByImpl(selector, SortFlag.Reversed)
 }
 
 private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
