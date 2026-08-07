@@ -17,7 +17,6 @@ plugins {
         alias(publisher)
         alias(serialization)
         alias(korro)
-        alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
     }
 }

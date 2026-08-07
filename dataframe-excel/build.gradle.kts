@@ -5,7 +5,6 @@ plugins {
     }
     with(libs.plugins) {
         alias(publisher)
-        alias(binary.compatibility.validator)
     }
 }
 
