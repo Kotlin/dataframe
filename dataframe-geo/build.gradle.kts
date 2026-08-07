@@ -33,17 +33,17 @@ dependencies {
     api(projects.core)
 
     // Geotools
-    implementation(libs.geotools.main) { excludeJaiCore() }
+    api(libs.geotools.main) { excludeJaiCore() }
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
     implementation(libs.geotools.geojson) { excludeJaiCore() }
-    implementation(libs.geotools.referencing) { excludeJaiCore() }
+    api(libs.geotools.referencing) { excludeJaiCore() }
     implementation(libs.geotools.epsg.hsql) { excludeJaiCore() }
 
     // JAI
     implementation(libs.jai.core)
 
     // JTS
-    implementation(libs.jts.core)
+    api(libs.jts.core)
     implementation(libs.jts.io.common)
 
     // Ktor
