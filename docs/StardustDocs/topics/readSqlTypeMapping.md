@@ -45,7 +45,7 @@ the canonical type.
 | [PostgreSQL](readSqlTypeMapping_PostgreSQL.md)               | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).     |
 | [MS SQL Server](readSqlTypeMapping_MsSql.md)                 | Default `DbType`, no overrides.                                             |
 | [H2](readSqlTypeMapping_H2.md)                               | Default `DbType` in `Regular` mode; other modes delegate to another dialect.|
-| [SQLite](readSqlTypeMapping_SQLite.md)                       | Custom: type affinity resolves declared types dynamically.                  |
+| [SQLite](readSqlTypeMapping_SQLite.md)                       | Custom: type affinity + per-storage-class conversion for `BOOLEAN`/`DATE`/`DATETIME`/`TIME`/`TIMESTAMP`. |
 | [DuckDB](readSqlTypeMapping_DuckDB.md)                       | Bypasses `getExpectedJdbcType`; uses its own converter.                     |
 
 ## Extending the mapping

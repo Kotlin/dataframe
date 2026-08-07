@@ -56,8 +56,7 @@ class JdbcTypesTest {
 
             override fun isSystemTable(tableMetadata: TableMetadata): Boolean = false
 
-            override fun buildTableMetadata(tables: java.sql.ResultSet): TableMetadata =
-                TableMetadata("t", null, null)
+            override fun buildTableMetadata(tables: java.sql.ResultSet): TableMetadata = TableMetadata("t", null, null)
         }
 
         @Test
@@ -184,26 +183,16 @@ class JdbcTypesTest {
 
         @Test
         fun `BOOLEAN declared type resolves to Boolean`() {
-            // Xerial reports Types.BOOLEAN metadata even though values are stored as INTEGER;
-            // the schema type is Boolean, and `getValueFromResultSet` converts each row via
-            // `rs.getBoolean` (see Sqlite.getValueFromResultSet).
-            Sqlite.default.getExpectedJdbcType(
-                createColumnMetadata(
-                    sqlTypeName = "BOOLEAN",
-                    jdbcType = Types.BOOLEAN,
-                    javaClassName = "java.lang.Integer",
-                    isNullable = false,
+            // SQLite has no native boolean storage — values are kept as INTEGER (0/1). The Xerial
+            // driver still reports Types.BOOLEAN in metadata, but `rs.getObject` returns Integer.
+            // The final DataFrame column type is `Boolean`, produced by a preprocessor that runs
+            // `convertToBoolean` on each raw value (see `generateConverter`).
+            assertMappings(
+                Sqlite.default,
+                listOf(
+                    TypeMapping("BOOLEAN", Types.BOOLEAN, "java.lang.Integer", typeOf<Boolean>()),
                 ),
-            ) shouldBe typeOf<Boolean>()
-
-            Sqlite.default.getExpectedJdbcType(
-                createColumnMetadata(
-                    sqlTypeName = "BOOLEAN",
-                    jdbcType = Types.BOOLEAN,
-                    javaClassName = "java.lang.Integer",
-                    isNullable = true,
-                ),
-            ) shouldBe typeOf<Boolean?>()
+            )
         }
 
         @Test
@@ -221,29 +210,32 @@ class JdbcTypesTest {
         }
 
         @Test
-        fun `customTypesMap overrides the default mapping by SQL type name`() {
+        fun `custom type mapping overrides the default mapping by SQL type name`() {
+            // The identity `forType<T>(name)` overload pins the resulting DataFrame column type
+            // to `T`. Nullability is part of `T` (there is no implicit widening from the column's
+            // isNullable metadata) — declare `T` as nullable explicitly if you want nullable.
             val custom = Sqlite.withCustomConverters {
-                forType<Long>("INTEGER")
+                forType<Long?>("INTEGER")
                 forType<String>("MY_TYPE")
             }
-            // INTEGER is normally Int, but is overridden to Long
-            custom.getExpectedJdbcType(
-                createColumnMetadata(
+            // INTEGER is normally Int, but is overridden to Long? — regardless of column nullability.
+            listOf(false, true).forEach { isNullable ->
+                val meta = createColumnMetadata(
                     sqlTypeName = "INTEGER",
                     jdbcType = Types.INTEGER,
                     javaClassName = "java.lang.Integer",
-                    isNullable = true,
-                ),
-            ) shouldBe typeOf<Long?>()
-            // Custom type name is respected as-is
-            custom.getExpectedJdbcType(
-                createColumnMetadata(
-                    sqlTypeName = "MY_TYPE",
-                    jdbcType = Types.OTHER,
-                    javaClassName = "java.lang.Object",
-                    isNullable = false,
-                ),
-            ) shouldBe typeOf<String>()
+                    isNullable = isNullable,
+                )
+                custom.getPreprocessedValueType(meta, custom.getExpectedJdbcType(meta)) shouldBe typeOf<Long?>()
+            }
+            // Custom type name is respected as-is: `MY_TYPE` -> String
+            val meta = createColumnMetadata(
+                sqlTypeName = "MY_TYPE",
+                jdbcType = Types.OTHER,
+                javaClassName = "java.lang.Object",
+                isNullable = false,
+            )
+            custom.getPreprocessedValueType(meta, custom.getExpectedJdbcType(meta)) shouldBe typeOf<String>()
         }
 
         @Test
@@ -566,22 +558,18 @@ internal val sqliteNumericAffinityMappings: List<TypeMapping> = listOf(
     TypeMapping("NUMERIC", Types.NUMERIC, "java.lang.Double", typeOf<Double>()),
     TypeMapping("NUMERIC", Types.NUMERIC, "java.lang.Integer", typeOf<Int>()),
     TypeMapping("DECIMAL", Types.DECIMAL, "java.lang.Double", typeOf<Double>()),
-
     // DATE with all three storage classes:
-    TypeMapping("DATE", Types.DATE, "java.lang.String", typeOf<KotlinLocalDate>()),    // TEXT (ISO)
-    TypeMapping("DATE", Types.DATE, "java.lang.Integer", typeOf<KotlinLocalDate>()),   // INTEGER (Unix)
-    TypeMapping("DATE", Types.FLOAT, "java.lang.Double", typeOf<KotlinLocalDate>()),   // REAL (Julian day)
-
+    TypeMapping("DATE", Types.DATE, "java.lang.String", typeOf<KotlinLocalDate>()), // TEXT (ISO)
+    TypeMapping("DATE", Types.DATE, "java.lang.Integer", typeOf<KotlinLocalDate>()), // INTEGER (Unix)
+    TypeMapping("DATE", Types.FLOAT, "java.lang.Double", typeOf<KotlinLocalDate>()), // REAL (Julian day)
     // DATETIME variants:
     TypeMapping("DATETIME", Types.DATE, "java.lang.String", typeOf<KotlinLocalDateTime>()),
     TypeMapping("DATETIME", Types.DATE, "java.lang.Integer", typeOf<KotlinLocalDateTime>()),
-
     // TIME variants:
     TypeMapping("TIME", Types.TIME, "java.lang.String", typeOf<KotlinLocalTime>()),
     TypeMapping("TIME", Types.INTEGER, "java.lang.Integer", typeOf<KotlinLocalTime>()),
-
     // TIMESTAMP with all three storage classes:
-    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.String", typeOf<Instant>()),   // TEXT (ISO)
-    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.Integer", typeOf<Instant>()),  // INTEGER (Unix)
-    TypeMapping("TIMESTAMP", Types.FLOAT, "java.lang.Double", typeOf<Instant>()),       // REAL (Julian day)
+    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.String", typeOf<Instant>()), // TEXT (ISO)
+    TypeMapping("TIMESTAMP", Types.TIMESTAMP, "java.lang.Integer", typeOf<Instant>()), // INTEGER (Unix)
+    TypeMapping("TIMESTAMP", Types.FLOAT, "java.lang.Double", typeOf<Instant>()), // REAL (Julian day)
 )
