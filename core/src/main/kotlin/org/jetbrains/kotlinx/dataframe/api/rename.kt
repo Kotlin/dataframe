@@ -108,6 +108,8 @@ private typealias CommonRenameDocs = Nothing
  * df.rename("oldName1" to "newName1", "oldName2" to "newName2")
  * ```
  *
+ * For more information: {@include [DocumentationUrls.Rename]}
+ *
  * @param mappings A vararg of pairs where each pair consists of the original column name (`first`)
  * and the new column name (`second`).
  * @return A new [DataFrame] with the renamed columns.
@@ -178,6 +180,8 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
  *   which takes the column and its path and returns a new name.
  * - [toCamelCase()][RenameClause.toCamelCase] — renames all selected columns to `camelCase`.
  *
+ * For more information: {@include [DocumentationUrls.Rename]}
+ *
  * See [Grammar][RenameDocs.Grammar] for more details.
  */
 @HasSchema(schemaArg = 0)
@@ -206,6 +210,8 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * "doner-case-name" -> "donerCaseName"
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.RenameToCamelCase]}
  *
  * @see [rename]
  * @return a [DataFrame] with column names converted to "camelCase" format.
@@ -381,6 +387,8 @@ public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
  *
+ * For more information: {@include [DocumentationUrls.RenameToCamelCase]}
+ *
  * @return a [DataFrame] with column names converted to "camelCase" format.
  */
 @Refine
@@ -410,6 +418,9 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = to { it.renam
  * "doner-case-name" -> "donerCaseName"
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.RenameToCamelCase]}
+ *
  * @return a [ColumnReference] with the name converted to "camelCase" format.
  */
 @Suppress("UNCHECKED_CAST")
@@ -444,6 +455,8 @@ public fun <T, C : ColumnReference<T>> C.rename(column: ColumnAccessor<T>): C = 
  * // Select "size" column as "dimensions"
  * df.select { size named "dimensions" }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.RenameCols]}
  *
  * @param name The new name to assign to the column.
  * @return A new column with the original structure and values but with the specified [name].
@@ -510,6 +523,8 @@ public interface RenameColumnsSelectionDsl {
      * [named][ColumnReference.named] or [into][ColumnReference.into]. They behave exactly the same,
      * so it's up to contextual preference which one to use. Any combination of {@include [AccessApiLink]} can be
      * used to specify the column to rename and which name should be used instead.
+     *
+     * For more information: {@include [DocumentationUrls.RenameCols]}
      *
      * ### Check out: [Grammar]
      *
