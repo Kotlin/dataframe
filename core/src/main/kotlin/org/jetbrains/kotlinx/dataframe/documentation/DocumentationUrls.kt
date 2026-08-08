@@ -134,6 +134,9 @@ public interface DocumentationUrls {
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html) */
     public typealias Filter = Nothing
 
+    /** [See `filter` on the documentation website.]({@include [Url]}/filter.html#filter-on-a-datacolumn) */
+    public typealias FilterColumn = Nothing
+
     /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
     public typealias Count = Nothing
 
@@ -227,6 +230,9 @@ public interface DocumentationUrls {
 
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
     public typealias Concat = Nothing
+
+    /** [See `filter` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#filter) */
+    public typealias FilterCols = Nothing
 
     /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
     public typealias Deephaven = Nothing
