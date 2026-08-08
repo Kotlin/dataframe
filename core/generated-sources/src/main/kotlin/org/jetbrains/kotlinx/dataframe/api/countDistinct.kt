@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
 public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
 
 /**
- * Returns number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns the number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Compares values in the selected columns and returns
  * the number of unique values combinations.
@@ -83,7 +83,7 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 }
 
 /**
- * Returns number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns the number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Compares values in the selected columns and returns
  * the number of unique values combinations.

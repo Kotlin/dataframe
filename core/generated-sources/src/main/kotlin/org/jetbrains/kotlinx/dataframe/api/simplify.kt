@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -72,6 +73,8 @@ public interface SimplifyColumnsSelectionDsl {
      *
      * In other words, this means that if a column in [this] is inside another column group in [this],
      * it will not be included in the result.
+     *
+     * For more information: [See `simplify` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#simplify)
      *
      * ### Check out: [Grammar]
      *

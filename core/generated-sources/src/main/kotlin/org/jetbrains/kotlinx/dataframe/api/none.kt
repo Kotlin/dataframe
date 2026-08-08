@@ -8,12 +8,17 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 
 // region DataColumn
 
-/** Returns `true` if none of the [values] match the given [predicate] */
+/**
+ * Returns `true` if none of the [values] match the given [predicate]
+ *
+ * For more information: [See `none` on the documentation website.](https://kotlin.github.io/dataframe/none.html)
+ */
 public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.none(predicate)
 
 // endregion
@@ -22,6 +27,8 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
 
 /**
  * Returns `true` if none of the rows in this [DataFrame] satisfies the given [predicate].
+ *
+ * For more information: [See `none` on the documentation website.](https://kotlin.github.io/dataframe/none.html)
  *
  *
  *
@@ -106,6 +113,8 @@ public interface NoneColumnsSelectionDsl {
      * Creates an empty [ColumnsResolver] / [ColumnSet], essentially selecting no columns at all.
      *
      * This is the opposite of [all][ColumnsSelectionDsl.all].
+     *
+     * For more information: [See `none` in the Columns Selection DSL on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#none)
      *
      * ### Check out: [Grammar]
      *

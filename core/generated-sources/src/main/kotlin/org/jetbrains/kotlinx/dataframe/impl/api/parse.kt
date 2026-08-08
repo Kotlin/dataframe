@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.LazyMap
@@ -1085,6 +1086,8 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.
+ *
+ * For more information: [See `parse` on a DataColumn on the documentation website.](https://kotlin.github.io/dataframe/parse.html#on-a-datacolumn)
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)

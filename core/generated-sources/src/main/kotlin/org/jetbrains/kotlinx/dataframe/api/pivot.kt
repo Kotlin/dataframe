@@ -181,7 +181,7 @@ internal interface PivotDocs {
      *
      * Check out [`Pivot grammar`][Grammar].
      *
-     * For more information: [See "Pivot` reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
+     * For more information: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
      */
     typealias Reducing = Nothing
 
@@ -215,7 +215,7 @@ internal interface PivotDocs {
      *
      * Check out [`Pivot grammar`][Grammar].
      *
-     * For more information: [See "Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
+     * For more information: [See "`Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
      */
     typealias Aggregation = Nothing
 
@@ -317,6 +317,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -331,6 +333,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -344,6 +348,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -356,6 +362,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      *
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
+     *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
      *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
@@ -1826,7 +1834,7 @@ public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResol
  *
  * Check out [`Pivot grammar`][Grammar].
  *
- * For more information, refer to: [See "Pivot` reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
+ * For more information, refer to: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
  */
 public class ReducedPivot<T>(
     @PublishedApi internal val pivot: Pivot<T>,
