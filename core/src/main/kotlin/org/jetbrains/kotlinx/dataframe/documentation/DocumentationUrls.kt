@@ -246,6 +246,30 @@ public interface DocumentationUrls {
     /** [See `concat` on the documentation website.]({@include [Url]}/concat.html) */
     public typealias Concat = Nothing
 
+    /** [See `drop` on the documentation website.]({@include [Url]}/slicerows.html#drop) */
+    public typealias DropFirst = Nothing
+
+    /** [See `dropLast` on the documentation website.]({@include [Url]}/slicerows.html#droplast) */
+    public typealias DropLast = Nothing
+
+    /** [See `dropWhile` on the documentation website.]({@include [Url]}/slicerows.html#dropwhile) */
+    public typealias DropWhile = Nothing
+
+    /** [See drop(Last)(Cols)(While) on the documentation website.]({@include [Url]}/columnselectors.html#drop-last-cols-while) */
+    public typealias DropCols = Nothing
+
+    /** [See take(Last)(Cols)(While) on the documentation website.]({@include [Url]}/columnselectors.html#take-last-cols-while) */
+    public typealias TakeCols = Nothing
+
+    /** [See `take` on the documentation website.]({@include [Url]}/slicerows.html#take) */
+    public typealias TakeFirst = Nothing
+
+    /** [See `takeLast` on the documentation website.]({@include [Url]}/slicerows.html#takelast) */
+    public typealias TakeLast = Nothing
+
+    /** [See `takeWhile` on the documentation website.]({@include [Url]}/slicerows.html#takewhile) */
+    public typealias TakeWhile = Nothing
+
     /** [See `filter` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#filter) */
     public typealias FilterCols = Nothing
 
