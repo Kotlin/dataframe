@@ -137,6 +137,9 @@ public interface DocumentationUrls {
     /** [See all(Cols) After/Before/From/UpTo on the documentation website.]({@include [Url]}/columnselectors.html#all-cols-after-before-from-up-to) */
     public typealias AllColsWithSuffix = Nothing
 
+    /** [See `chunked` on the documentation website.]({@include [Url]}/chunked.html) */
+    public typealias Chunked = Nothing
+
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     public typealias Gather = Nothing
 
