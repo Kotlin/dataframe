@@ -324,6 +324,9 @@ public interface DocumentationUrls {
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing
 
+    /** [See `shuffle` on the documentation website.]({@include [Url]}/shuffle.html) */
+    public typealias Shuffle = Nothing
+
     /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
     public typealias Deephaven = Nothing
 
