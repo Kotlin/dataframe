@@ -25,6 +25,8 @@ all { rowCondition }
 rowCondition: (DataRow) -> Boolean
 ```
 
+When called on a [`DataColumn`](DataColumn.md), checks that all values in the [`DataColumn`](DataColumn.md) satisfy the predicate.
+
 **Related operations**: [](any.md), [](filter.md), [](single.md), [](count.md).
 
 ### Examples
