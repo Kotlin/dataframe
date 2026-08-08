@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -72,6 +73,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this\], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this\] at any depth.
+     *
+     * For more information: {@include [DocumentationUrls.ColsInGroups]}
      *
      * ### Check out: [Grammar]
      *

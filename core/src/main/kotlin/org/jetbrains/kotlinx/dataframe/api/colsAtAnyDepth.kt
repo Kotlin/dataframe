@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -71,6 +72,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet] filter function like
      * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], or [valueCols][ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: {@include [DocumentationUrls.ColsAtAnyDepth]}
+     *
      * ### Check out: [Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`

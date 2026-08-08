@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
@@ -88,6 +89,8 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * an accessor for a value column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * {@get [CommonValueColDocs.NOTE]}
+     *
+     * For more information: {@include [DocumentationUrls.ValueCol]}
      *
      * ### Check out: [Grammar]
      *

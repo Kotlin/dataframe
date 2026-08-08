@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -92,6 +93,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]`  {  `{@get [ARGUMENT]}{@get [ARGUMENT]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     *
+     * For more information: {@include [DocumentationUrls.ColumnNameFilters]}
      *
      * ### Check out: [Grammar]
      *
@@ -276,6 +279,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * NOTE: For [column groups][ColumnGroup], the function is named `{@get [CommonNameStartsEndsDocs.COLS_NAME_OPERATION_NAME]}` to avoid confusion.
      *
      * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@get [OPERATION_NAME]}][String.{@get [OPERATION_NAME]}]`(`{@get [ARGUMENT]}{@get [ARGUMENT]}`) }`.
+     *
+     * For more information: {@include [DocumentationUrls.ColumnNameFilters]}
      *
      * ### Check out: [Grammar]
      *

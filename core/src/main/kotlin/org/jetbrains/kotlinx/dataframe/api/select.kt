@@ -144,6 +144,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * For more information: {@include [DocumentationUrls.SelectFromColumnGroup]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
