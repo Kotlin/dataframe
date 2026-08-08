@@ -234,6 +234,30 @@ public interface DocumentationUrls {
     /** [See `filter` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#filter) */
     public typealias FilterCols = Nothing
 
+    /** [See `first` on the documentation website.]({@include [Url]}/first.html) */
+    public typealias First = Nothing
+
+    /** [See `first` on the documentation website.]({@include [Url]}/firstoncolumn.html) */
+    public typealias FirstOnColumn = Nothing
+
+    /** [See `firstOrNull` on the documentation website.]({@include [Url]}/first.html#firstornull) */
+    public typealias FirstOrNull = Nothing
+
+    /** [See `firstOrNull` on the documentation website.]({@include [Url]}/firstoncolumn.html#firstornull) */
+    public typealias FirstOrNullOnColumn = Nothing
+
+    /** [See `last` on the documentation website.]({@include [Url]}/last.html) */
+    public typealias Last = Nothing
+
+    /** [See `last` on the documentation website.]({@include [Url]}/lastoncolumn.html) */
+    public typealias LastOnColumn = Nothing
+
+    /** [See `lastOrNull` on the documentation website.]({@include [Url]}/last.html#lastornull) */
+    public typealias LastOrNull = Nothing
+
+    /** [See `lastOrNull` on the documentation website.]({@include [Url]}/lastoncolumn.html#lastornull) */
+    public typealias LastOrNullOnColumn = Nothing
+
     /** [See `none` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#none) */
     public typealias NoneCols = Nothing
 
