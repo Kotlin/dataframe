@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -42,6 +43,8 @@ public fun <T> DataColumn<T>.dropLast(n: Int = 1): DataColumn<T> = take(size - n
 /**
  * Returns a DataFrame containing all rows except first [n] rows.
  *
+ * For more information: {@include [DocumentationUrls.DropFirst]}
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
@@ -52,6 +55,8 @@ public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except last [n] rows.
  *
+ * For more information: {@include [DocumentationUrls.DropLast]}
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
@@ -61,11 +66,15 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.Drop]}
  */
 public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.DropWhile]}
  */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
@@ -111,6 +120,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Drop
      * @set [CommonTakeAndDropDocs.OPERATION] drop
      * @set [CommonTakeAndDropDocs.NOUN] drop
@@ -180,6 +190,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropDocs.NOUN] drop
@@ -249,6 +260,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop
      * @set [CommonTakeAndDropWhileDocs.OPERATION] drop
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
@@ -320,6 +332,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
