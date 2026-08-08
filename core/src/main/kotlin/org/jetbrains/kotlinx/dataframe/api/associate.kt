@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 
 // region DataFrame
 
@@ -17,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
  *
  * If multiple rows produce the same key, the last row for that key is stored,
  * consistent with Kotlin's [kotlin.collections.associateBy] behavior.
+ *
+ * For more information: {@include [DocumentationUrls.AssociateBy]}
  *
  * See also:
  * - [toMap] — converts a [DataFrame] into a [Map] by using column names as keys
@@ -43,6 +46,8 @@ public inline fun <T, V> DataFrame<T>.associateBy(transform: RowExpression<T, V>
  *
  * If multiple rows produce the same key, the last value for that key is stored,
  * consistent with Kotlin's [kotlin.collections.associate] behavior.
+ *
+ * For more information: {@include [DocumentationUrls.Associate]}
  *
  * See also:
  * - [toMap] — converts a [DataFrame] into a [Map] by using column names as keys

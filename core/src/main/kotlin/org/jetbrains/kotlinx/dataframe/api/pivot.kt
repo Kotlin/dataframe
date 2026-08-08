@@ -325,6 +325,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [\other].
      *
+     * For more information: {@include [DocumentationUrls.Pivot]}
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [\other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
