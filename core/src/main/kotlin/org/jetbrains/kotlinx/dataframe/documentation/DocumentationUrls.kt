@@ -327,6 +327,9 @@ public interface DocumentationUrls {
     /** [See `shuffle` on the documentation website.]({@include [Url]}/shuffle.html) */
     public typealias Shuffle = Nothing
 
+    /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
+    public typealias SortWith = Nothing
+
     /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
     public typealias Deephaven = Nothing
 
