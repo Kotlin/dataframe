@@ -303,6 +303,12 @@ public interface DocumentationUrls {
     /** [See `none` on the documentation website.]({@include [Url]}/none.html) */
     public typealias None = Nothing
 
+    /** [See Rename: `named` / `into` on the documentation website.]({@include [Url]}/columnselectors.html#rename) */
+    public typealias RenameCols = Nothing
+
+    /** [See `renameToCamelCase` on the documentation website.]({@include [Url]}/rename.html#renametocamelcase) */
+    public typealias RenameToCamelCase = Nothing
+
     /** [See Global Parser Options on the documentation website.]({@include [Url]}/parse.html#global-parser-options) */
     public typealias GlobalParserOptions = Nothing
 
