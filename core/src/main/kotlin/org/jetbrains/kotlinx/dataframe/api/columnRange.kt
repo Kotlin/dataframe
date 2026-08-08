@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -49,6 +50,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of {@include [AccessApiLink]}.
+     *
+     * For more information: {@include [DocumentationUrls.RangeOfColumns]}
      *
      * ### Check out: [Grammar]
      *

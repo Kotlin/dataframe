@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -109,14 +110,18 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
 // endregion
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
+ *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
 internal typealias DiffDocs = Nothing
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
+ *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
@@ -208,6 +213,8 @@ public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
  * Returns the previous [row][DataRow] in the [DataFrame] relative to the current row.
  * If the current row is the first row in the [DataFrame], it returns `null`.
  *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+ *
  * @return The previous [DataRow] if it exists, or `null` if the current row is the first in the [DataFrame].
  */
 public fun <T> DataRow<T>.prev(): DataRow<T>? {
@@ -218,6 +225,8 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
 /**
  * Returns the next [row][DataRow] in the [DataFrame] relative to the current row.
  * If the current row is the last row in the [DataFrame], it returns `null`.
+ *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
  * @return The previous [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
  */
