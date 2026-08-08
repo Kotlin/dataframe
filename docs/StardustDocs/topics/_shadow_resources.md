@@ -350,3 +350,4 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWithConst.html"></resource>
 <resource src="filter_properties.html"></resource>
 <resource src="filterColumn_properties.html"></resource>
+<resource src="noneDf.html"></resource>

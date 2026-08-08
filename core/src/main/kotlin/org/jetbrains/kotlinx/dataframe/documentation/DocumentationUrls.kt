@@ -237,6 +237,12 @@ public interface DocumentationUrls {
     /** [See `filter` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#filter) */
     public typealias FilterCols = Nothing
 
+    /** [See `none` in the Columns Selection DSL on the documentation website.]({@include [Url]}/columnselectors.html#none) */
+    public typealias NoneCols = Nothing
+
+    /** [See `none` on the documentation website.]({@include [Url]}/none.html) */
+    public typealias None = Nothing
+
     /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
     public typealias Deephaven = Nothing
 
