@@ -39,6 +39,8 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
 /**
  * Returns the number of columns in this [DataRow].
  *
+ * For more information: {@include [DocumentationUrls.Count]} {@include [DocumentationUrls.DataRow.RowFunctions]}
+ *
  * @return the number of columns in this row.
  * @see [columnsCount].
  */
@@ -46,6 +48,8 @@ public fun DataRow<*>.count(): Int = columnsCount()
 
 /**
  * Counts the number of elements in the current row that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.Count]} {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
  * @param predicate A predicate function to test each element.
  * The predicate should return `true` for elements to be counted.
