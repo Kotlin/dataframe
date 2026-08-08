@@ -489,23 +489,31 @@ public typealias GroupedRowFilter<T, G> = GroupedRowSelector<T, G, Boolean>
 /**
  * A specialized form of [DataRow] representing a single row of a [GroupBy].
  * Each instance contains the key values and a reference to the corresponding [group].
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
  */
 public interface GroupedDataRow<out T, out G> : DataRow<T> {
 
     /**
      * The [DataFrame] representing the group corresponding to the current key values.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      */
     public fun group(): DataFrame<G>
 }
 
 /**
  * The [DataFrame] representing the group corresponding to the current key values.
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
  */
 public val <T, G> GroupedDataRow<T, G>.group: DataFrame<G>
     get() = group()
 
 /**
  * An alternative representation of a [GroupBy.Entry], holding a key–group pair.
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
  *
  * @property key The key represented as a [DataRow].
  * @property group The [DataFrame] containing the rows belonging to this group.
@@ -524,6 +532,8 @@ public data class GroupWithKey<T, G>(val key: DataRow<T>, val group: DataFrame<G
  *
  * Together, the rows of [keys] and [groups] define one-to-one **key–group pairs**.
  *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
+ *
  * @param G The schema of the groups (same as the schema of the original [DataFrame]).
  * @param T The schema of the grouping keys.
  */
@@ -532,12 +542,16 @@ public interface GroupBy<out T, out G> : Grouped<G> {
     /**
      * A [FrameColumn] representing all groups of rows.
      * Each cell contains a [DataFrame] with the subset of rows that share the same key values.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      */
     public val groups: FrameColumn<G>
 
     /**
      * A [DataFrame] representing the grouping keys.
      * Each column corresponds to a key column, and each row corresponds to a unique group.
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      */
     public val keys: DataFrame<T>
 
@@ -548,6 +562,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * __NOTE:__ This operation removes key-column status from each column in the group.
      * In other words, each column in the group is treated as a new column,
      * and not omitted when [`.values()`][Grouped.values] or other aggregations are called.
+     *
+     * For more information: {@include [DocumentationUrls.GroupByTransformation]}
      *
      * @param [transform] A lambda that takes each group as a [DataFrame]
      * (available both as a receiver and as a parameter) and returns a transformed [DataFrame].
@@ -572,6 +588,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * In other words, each column in the group is treated as a new column,
      * and not omitted when [`.values()`][Grouped.values] or other aggregations are called.
      *
+     * For more information: {@include [DocumentationUrls.GroupByTransformation]}
+     *
      * @param [predicate] A [GroupedRowFilter] used to determine which groups should be retained.
      * @return A new [GroupBy] containing only the key–group pairs that satisfy the [predicate].
      */
@@ -586,6 +604,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * If [groupedColumnName] is provided, the groups will be stored
      * in a [FrameColumn] with that name; otherwise, a default name "group" is used.
      *
+     * For more information: {@include [DocumentationUrls.GroupByAggregation]}
+     *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.
      * @return A new [DataFrame] that includes the grouping key columns together
@@ -597,6 +617,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     /**
      * Represents a single key–group pair in a [GroupBy].
+     *
+     * For more information: {@include [DocumentationUrls.GroupBy]}
      *
      * @property key The key of the group, represented as a [DataRow].
      * @property group The [DataFrame] containing all rows that belong to the group.
@@ -610,6 +632,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
 /**
  * Represents a dataframe-like structure with grouped values, offering aggregation capabilities.
+ *
+ * For more information: {@include [DocumentationUrls.GroupBy]}
  */
 public interface Grouped<out T> : Aggregatable<T>
 
@@ -634,7 +658,7 @@ public interface Grouped<out T> : Aggregatable<T>
  *
  * See also: [`GroupBy grammar`][Grammar].
  *
- * For more information, refer to: {@include [DocumentationUrls.GroupByReducing]}
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
  */
 public class ReducedGroupBy<T, G>(
     @PublishedApi internal val groupBy: GroupBy<T, G>,

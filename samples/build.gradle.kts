@@ -117,6 +117,7 @@ korro {
                 include("groupBy.md")
                 include("pivot.md")
                 include("countDistinct.md")
+                include("filter.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.typeOf
@@ -44,6 +45,8 @@ public interface ExprColumnsSelectionDsl {
 
 /**
  * @include [ColumnExpression.CommonDocs]
+ *
+ * For more information: {@include [DocumentationUrls.Expr]}
  *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *

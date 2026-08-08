@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
@@ -111,6 +112,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * Aside from calling [cols] directly, you can also use the [`get`][ColumnSet.get] operator in most cases.
      *
+     * For more information: {@include [DocumentationUrls.Cols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -169,6 +172,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Retrieves one or multiple columns from [this\] in the form of a [ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
+     * For more information: {@include [DocumentationUrls.Cols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -199,6 +204,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * Retrieves multiple columns from [this\] in the form of a [ColumnSet] by a [range\] of indices.
      * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * For more information: {@include [DocumentationUrls.Cols]}
      *
      * ### Check out: [Grammar]
      *
