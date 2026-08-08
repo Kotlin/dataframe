@@ -35,3 +35,6 @@ df.pivot { name.firstName }.groupBy { name.lastName }.count()
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countAggregation.html" width="100%"/>
 <!---END-->
+
+When called on a [`DataRow`](DataRow.md), returns the number of columns in this [`DataRow`](DataRow.md). If a predicate 
+is used, it counts the number of elements in the row that satisfy the given predicate.
