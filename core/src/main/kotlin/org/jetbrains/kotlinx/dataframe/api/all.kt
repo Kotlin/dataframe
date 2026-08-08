@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -37,10 +38,18 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-/** Returns `true` if all [values] match the given [predicate] or [values] is empty. */
+/**
+ * Returns `true` if all [values] match the given [predicate] or [values] is empty.
+ *
+ * For more information: {@include [DocumentationUrls.All]}
+ */
 public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(predicate)
 
-/** Returns `true` if all [values] are `null` or [values] is empty. */
+/**
+ * Returns `true` if all [values] are `null` or [values] is empty.
+ *
+ * For more information: {@include [DocumentationUrls.All]}
+ */
 public fun <C> DataColumn<C>.allNulls(): Boolean =
     size == 0 ||
         type() == nullableNothingType ||
@@ -56,7 +65,11 @@ public fun DataRow<*>.allNA(): Boolean = owner.columns().all { it[index()].isNA 
 
 // region DataFrame
 
-/** Returns `true` if all [rows] match the given [predicate] or [rows] is empty. */
+/**
+ * Returns `true` if all [rows] match the given [predicate] or [rows] is empty.
+ *
+ * For more information: {@include [DocumentationUrls.All]}
+ */
 public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
 
 // endregion
@@ -165,6 +178,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][ColumnGroup].
      * On [ColumnSets][ColumnSet] it requires a [ColumnFilter] instead.
      *
+     * For more information: {@include [DocumentationUrls.AllColsWithSuffix]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -233,6 +248,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: For [column groups][ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
      * ### Check out: [Grammar]
+     *
+     * For more information: {@include [DocumentationUrls.AllCols]}
      *
      * #### For example:
      * `df.`[move][DataFrame.move]`  {  `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
