@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -262,6 +263,8 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
 public fun columnOf(vararg values: BaseColumn<*>): DataColumn<DataRow<*>> = columnOf(values.asIterable()).forceResolve()
 
 /**
+ * {@include [DocumentationUrls.ColumnOf]}
+ *
  * Example:
  * ```kotlin
  * val columnGroup = columnOf(
@@ -307,11 +310,13 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 // region create DataFrame
 
 /**
- * Creates new [DataFrame] with given [columns]
+ * Creates new [DataFrame] with given [columns].
  *
  * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitiled1", "untitled2" etc.
  *
  * All columns must have equal sizes.
+ *
+ * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
  * @throws [DuplicateColumnNamesException] if column names are not unique
  * @throws [UnequalColumnSizesException] if column size are not equal
@@ -324,6 +329,8 @@ public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
 }
 
 /**
+ * {@include [DocumentationUrls.DataFrameOf]}
+ *
  * Example:
  * ```kotlin
  * val df = dataFrameOf(
@@ -505,6 +512,8 @@ public class DataFrameBuilder(private val header: List<String>) {
  * A builder class for dynamically constructing a DataFrame with provided columns.
  * Allows adding columns manually while automatically handling duplicate column names by assigning unique names.
  *
+ * {@include [DocumentationUrls.DynamicDataFrameBuilder]}
+ *
  * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values). If `true`,
  * doesn't add a new column if the identical one is already in the builder.
  * when adding new columns. `true` by default.
@@ -519,6 +528,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * - If a column with the same name already exists, the new column is renamed to a unique name.
      * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical values
      *   to an existing column with the same name. If the values match, the column is not added.
+     *
+     * {@include [DocumentationUrls.DynamicDataFrameBuilder]}
      *
      * @param col The column to add to the DataFrame builder.
      * @return The final unique name assigned to the column.
@@ -552,6 +563,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
      *   has identical values to an existing column with the same name. If the values match, the column is not added.
      *
+     * {@include [DocumentationUrls.DynamicDataFrameBuilder]}
+     *
      * @param T The inferred type of the elements in the column.
      * @param values The iterable collection of values to be added as a new column.
      * @param name The name of the new column. If empty, a unique name will be generated automatically.
@@ -563,6 +576,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
     /**
      * Retrieves a column from the builder by its name.
      *
+     * {@include [DocumentationUrls.DynamicDataFrameBuilder]}
+     *
      * @param column The name of the column to retrieve.
      * @return The column corresponding to the specified name, or `null` if no such column exists.
      */
@@ -571,6 +586,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
     /**
      * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame].
      * The resulting [DataFrame] is constructed from the columns stored in the builder.
+     *
+     * {@include [DocumentationUrls.DynamicDataFrameBuilder]}
      *
      * @return A [DataFrame] containing the columns defined in the [DynamicDataFrameBuilder].
      */
@@ -581,6 +598,8 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
  * Returns [DataFrame] with empty columns according to schema [T].
  *
  * To create [DataFrame] with empty columns or empty rows see [DataFrame.empty]
+ *
+ * {@include [DocumentationUrls.EmptyDataFrame]}
  *
  * @param T schema marker for [DataFrame]
  */

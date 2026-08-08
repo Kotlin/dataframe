@@ -382,6 +382,8 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
  * cell that should be included in the formatting selection.
  * Both the cell value (`it: `[C][C]) and its row (`this: `[DataRow][DataRow]`<`[T][T]`>`) are available.
  *
+ * For more information: {@include [DocumentationUrls.Format]}
+ *
  * ### Examples using [where]:
  * ```kt
  * df.format { temperature }
@@ -404,6 +406,8 @@ public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): Format
  * Only format the selected columns at given row indices.
  *
  * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  *
  * ### Examples using [at]
  */
@@ -447,6 +451,8 @@ public fun <T, C> FormatClause<T, C>.at(rowRange: IntRange): FormatClause<T, C> 
  * Filters the format-selection to only include cells where the value is not null.
  *
  * This is shorthand for `.`[where][FormatClause.where]` { it != null }`.
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  *
  * ### Examples using [notNull]:
  * ```kt
@@ -527,6 +533,8 @@ public fun <T, C> FormatClause<T, C?>.notNull(formatter: CellFormatter<C>): Form
  *
  * `.`[with][FormatClause.with]`  {  `[background][FormattingDsl.background]`(`[linear][FormattingDsl.linear]`(it, `[from][from]`, `[to][to]`)) }`
  *
+ * For more information: {@include [DocumentationUrls.Format]}
+ *
  * See also [with][FormatClause.with], [background][FormattingDsl.background], and [linear][FormattingDsl.linear].
  *
  * ### Examples using [linearBg]:
@@ -568,6 +576,8 @@ public fun <T, C : Number?> FormatClause<T, C>.linearBg(
  *
  * Inside [FormattingDsl], there are shortcuts for common colors, like [white][FormattingDsl.white],
  * [green][FormattingDsl.green], and [gray][FormattingDsl.gray].
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  */
 public data class RgbColor(val r: Short, val g: Short, val b: Short) {
 
@@ -587,11 +597,17 @@ public data class RgbColor(val r: Short, val g: Short, val b: Short) {
  *
  * `df.`[format()][DataFrame.format]`.`[`with {`][FormatClause.with]` `[background][FormattingDsl.background]`(`[white][FormattingDsl.white]`) `[and][CellAttributes.and]` `[textColor][FormattingDsl.textColor]`(`[black][FormattingDsl.black]`) `[`}`][FormatClause.with]
  *
+ * For more information: {@include [DocumentationUrls.Format]}
+ *
  * @see [CellAttributes.and]
  */
 public interface CellAttributes {
 
-    /** Retrieves all CSS cell attributes as a list of name-value pairs. */
+    /**
+     * Retrieves all CSS cell attributes as a list of name-value pairs.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     */
     public fun attributes(): List<Pair<String, String>>
 }
 
@@ -601,6 +617,8 @@ public interface CellAttributes {
  * For instance:
  *
  * `df.`[format()][DataFrame.format]`.`[`with {`][FormatClause.with]` `[background][FormattingDsl.background]`(`[white][FormattingDsl.white]`) `[and][CellAttributes.and]` `[textColor][FormattingDsl.textColor]`(`[black][FormattingDsl.black]`) `[`}`][FormatClause.with]
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  */
 public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? =
     when {
@@ -624,10 +642,16 @@ public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? =
  * colors using [linear][FormattingDsl.linear].
  *
  * Use [attr] if you want to specify a custom CSS attribute.
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  */
 public object FormattingDsl {
 
-    /** Creates a new [RgbColor] instance with [r] (red), [g] (green), and [b] (blue) values from `0..255`. */
+    /**
+     * Creates a new [RgbColor] instance with [r] (red), [g] (green), and [b] (blue) values from `0..255`.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     */
     public fun rgb(r: Short, g: Short, b: Short): RgbColor = RgbColor(r, g, b)
 
     public val black: RgbColor = rgb(0, 0, 0)
@@ -655,11 +679,16 @@ public object FormattingDsl {
      * attr("text-align", "center")
      * attr("border", "3px solid green")
      * ```
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
      */
     public fun attr(name: String, value: String): CellAttributes = SingleAttribute(name, value)
 
     /**
      * A [cell attribute][CellAttributes] that sets the background color of a cell.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     *
      * @param color Either one of the predefined colors, like [black], or [green], or a custom color using [rgb()][rgb].
      */
     public fun background(color: RgbColor): CellAttributes = attr("background-color", color.toString())
@@ -667,12 +696,18 @@ public object FormattingDsl {
     /**
      * A [cell attribute][CellAttributes] that sets the background color of a cell.
      * A shortcut for [background][background]`(`[rgb(...)][rgb]`)`.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     *
      * @see [rgb]
      */
     public fun background(r: Short, g: Short, b: Short): CellAttributes = background(RgbColor(r, g, b))
 
     /**
      * A [cell attribute][CellAttributes] that sets the text color of a cell.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     *
      * @param color Either one of the predefined colors, like [black], or [green], or a custom color using [rgb()][rgb].
      */
     public fun textColor(color: RgbColor): CellAttributes = attr("color", color.toString())
@@ -680,17 +715,32 @@ public object FormattingDsl {
     /**
      * A [cell attribute][CellAttributes] that sets the text color of a cell.
      * A shortcut for [textColor][textColor]`(`[rgb(...)][rgb]`)`.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     *
      * @see [rgb]
      */
     public fun textColor(r: Short, g: Short, b: Short): CellAttributes = textColor(RgbColor(r, g, b))
 
-    /** A [cell attribute][CellAttributes] that makes the text inside the cell *italic*. */
+    /**
+     * A [cell attribute][CellAttributes] that makes the text inside the cell *italic*.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     */
     public val italic: CellAttributes = attr("font-style", "italic")
 
-    /** A [cell attribute][CellAttributes] that makes the text inside the cell **bold**. */
+    /**
+     * A [cell attribute][CellAttributes] that makes the text inside the cell **bold**.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     */
     public val bold: CellAttributes = attr("font-weight", "bold")
 
-    /** A [cell attribute][CellAttributes] that u͟n͟d͟e͟r͟l͟i͟n͟e͟s͟ the text inside the cell. */
+    /**
+     * A [cell attribute][CellAttributes] that u͟n͟d͟e͟r͟l͟i͟n͟e͟s͟ the text inside the cell.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
+     */
     public val underline: CellAttributes = attr("text-decoration", "underline")
 
     /**
@@ -700,6 +750,8 @@ public object FormattingDsl {
      * by interpolating between [from] and [to], given [value].
      *
      * See [linear] for more information.
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
      *
      * @see linear
      * @see background
@@ -723,6 +775,8 @@ public object FormattingDsl {
      *       textColor(black)
      * }
      * ```
+     *
+     * For more information: {@include [DocumentationUrls.Format]}
      *
      * @param [value] The value to interpolate the color for.
      * @param [from] The lower bound of the interpolation range and the color that will be returned when [value] touches this bound.
@@ -787,6 +841,8 @@ public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
  * Use [toHtml] or [toStandaloneHtml] when this produces unexpected results.
  *
  * You can apply further formatting to this [FormattedFrame] by calling [format()][FormattedFrame.format] once again.
+ *
+ * For more information: {@include [DocumentationUrls.Format]} {@include [DocumentationUrls.ToHtml]}
  */
 public class FormattedFrame<T>(
     internal val df: DataFrame<T>,
@@ -803,6 +859,8 @@ public class FormattedFrame<T>(
      *
      * By default, cell content is formatted as text
      * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     *
+     * For more information: {@include [DocumentationUrls.ToHtml]}
      *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
@@ -834,6 +892,8 @@ public class FormattedFrame<T>(
      * as that environment already has CSS- and script definitions for DataFrame.
      * Using [toStandaloneHtml] might produce unexpected results.
      *
+     * For more information: {@include [DocumentationUrls.ToHtml]}
+     *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
      * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
@@ -847,7 +907,11 @@ public class FormattedFrame<T>(
         getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
     ): DataFrameHtmlData = df.toStandaloneHtml(getDisplayConfiguration(configuration), cellRenderer, getFooter)
 
-    /** Applies this formatter to the given [configuration] and returns a new instance. */
+    /**
+     * Applies this formatter to the given [configuration] and returns a new instance.
+     *
+     * For more information: {@include [DocumentationUrls.ToHtml]}
+     */
     @Suppress("UNCHECKED_CAST")
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
         configuration.copy(
@@ -877,6 +941,8 @@ public class FormattedFrame<T>(
  *   Shorthand for `.`[with][FormatClause.with]`  {  `[background][FormattingDsl.background]`(`[linear][FormattingDsl.linear]`(it, from, to)) }`
  * - [notNull][FormatClause.notNull] – Specifies how to format non-null cells using a [CellFormatter].
  *   Shorthand for `.`[notNull()][FormatClause.notNull]`.`[with { }][FormatClause.with].
+ *
+ * For more information: {@include [DocumentationUrls.Format]}
  *
  * See [Grammar][FormatDocs.Grammar] for more details.
  */
