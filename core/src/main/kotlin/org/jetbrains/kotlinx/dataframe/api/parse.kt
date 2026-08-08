@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
@@ -51,6 +52,8 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * returns strings.
  *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
+ *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
  * @return a new column with parsed values
@@ -68,6 +71,8 @@ public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColum
  * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
  * use [tryParse] instead.
  *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
+ *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found
  * @return a new column with parsed values
@@ -83,6 +88,8 @@ public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn
  *
  * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
  * use [tryParse] instead.
+ *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @return a new column with parsed values
