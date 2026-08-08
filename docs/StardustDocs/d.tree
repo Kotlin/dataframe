@@ -194,6 +194,7 @@
         <toc-element topic="Utils.md">
             <toc-element topic="any.md"/>
             <toc-element topic="all.md"/>
+            <toc-element topic="none.md"/>
             <toc-element topic="chunked.md"/>
             <toc-element topic="shuffle.md"/>
         </toc-element>
