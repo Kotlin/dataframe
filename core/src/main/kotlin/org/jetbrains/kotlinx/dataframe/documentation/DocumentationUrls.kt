@@ -128,6 +128,15 @@ public interface DocumentationUrls {
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
     public typealias Add = Nothing
 
+    /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
+    public typealias All = Nothing
+
+    /** [See `all`/`allCols` on the documentation website.]({@include [Url]}/columnselectors.html#all-cols) */
+    public typealias AllCols = Nothing
+
+    /** [See all(Cols) After/Before/From/UpTo on the documentation website.]({@include [Url]}/columnselectors.html#all-cols-after-before-from-up-to) */
+    public typealias AllColsWithSuffix = Nothing
+
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     public typealias Gather = Nothing
 
