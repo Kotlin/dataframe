@@ -25,6 +25,9 @@ df.drop { it["weight"] == null || it["city"] == null }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html" width="100%"/>
 <!---END-->
 
+If called on a [`DataColumn`](DataColumn.md), removes all the values that match the predicate 
+and returns a [`DataColumn`](DataColumn.md) containing the values that do not match the predicate.
+
 ## dropNulls
 
 Remove rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
