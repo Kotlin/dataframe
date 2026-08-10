@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -14,6 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -23,6 +25,22 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns a [DataColumn] containing the first [n] values of this [DataColumn].
+ *
+ * If [n] is greater than or equal to the size of this [DataColumn], this [DataColumn] is returned as is.
+ *
+ * See also:
+ * - [takeLast][DataColumn.takeLast] — takes the last [n] values instead.
+ * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values.
+ * - [dropLast][DataColumn.dropLast] — drops the last [n] values.
+ * - [drop][DataColumn.drop]`{ predicate: Predicate<T> }` — drops every value that matches the predicate.
+ *
+ * @param [n] The number of values to take. Must not be negative.
+ * @return A [DataColumn] containing the first [n] values of this [DataColumn],
+ * or this [DataColumn] if [n] is greater than or equal to its size.
+ * @throws [IllegalArgumentException] if [n] is negative.
+ */
 public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
     when {
         n == 0 -> get(emptyList())
@@ -30,6 +48,22 @@ public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
         else -> get(0 until n)
     }
 
+/**
+ * Returns a [DataColumn] containing the last [n] values of this [DataColumn].
+ *
+ * If [n] is zero or negative, an empty [DataColumn] is returned.
+ *
+ * See also:
+ * - [take][DataColumn.take] — takes the first [n] values instead.
+ * - [dropLast][DataColumn.dropLast] — drops the last [n] values.
+ * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values.
+ * - [drop][DataColumn.drop]`{ predicate: Predicate<T> }` — drops every value that matches the predicate.
+ *
+ * @param [n] The number of values to take. Must not exceed the size of this [DataColumn].
+ * @return A [DataColumn] containing the last [n] values of this [DataColumn],
+ * or an empty [DataColumn] if [n] is zero or negative.
+ * @throws [IndexOutOfBoundsException] if [n] is greater than the size of this [DataColumn].
+ */
 public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
 // endregion
@@ -37,8 +71,19 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 // region DataFrame
 
 /**
- * Returns a DataFrame containing first [n] rows.
+ * Returns a [DataFrame] containing the first [n] rows.
  *
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ *
+ * See also:
+ * - [takeLast][DataFrame.takeLast] — takes the last [n] rows instead.
+ * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
+ * - [drop][DataFrame.drop]`(n: Int)` — drops the first [n] rows.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [n] The number of rows to take. Must not be negative.
+ * @return A [DataFrame] containing the first [n] rows,
+ * or the whole [DataFrame] if [n] is greater than or equal to the number of rows.
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
@@ -47,8 +92,19 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing last [n] rows.
+ * Returns a [DataFrame] containing the last [n] rows.
  *
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ *
+ * See also:
+ * - [take][DataFrame.take] — takes the first [n] rows instead.
+ * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
+ * - [dropLast][DataFrame.dropLast] — drops the last [n] rows.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [n] The number of rows to take. Must not be negative.
+ * @return A [DataFrame] containing the last [n] rows,
+ * or the whole [DataFrame] if [n] is greater than or equal to the number of rows.
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
@@ -57,7 +113,34 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing first rows that satisfy the given [predicate].
+ * Returns a [DataFrame] containing the first rows that satisfy the given [predicate].
+ *
+ * Rows are taken for as long as the [predicate] holds; the operation stops at the first row that
+ * does not satisfy it, and no later row is taken even if it satisfies the [predicate].
+ *
+ *
+ *
+ * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [Boolean] value.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
+ *
+ * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ *
+ *
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See also:
+ * - [take][DataFrame.take] — takes a fixed number of first rows.
+ * - [takeLast][DataFrame.takeLast] — takes a fixed number of last rows.
+ * - [dropWhile][DataFrame.dropWhile] — drops the first rows while the predicate holds.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [predicate] The [RowFilter] that the leading rows to take must satisfy.
+ * @return A [DataFrame] containing the first rows that satisfy the [predicate].
  */
 public inline fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
@@ -203,8 +286,14 @@ public interface TakeColumnsSelectionDsl {
      *
      *
      *
+     * See also:
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][ColumnsSelectionDsl.drop] — drops the first `n` columns.
+     *
      * @param [n] The number of columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     * @return A [ColumnSet] containing the first [n] columns.
      */
     private typealias CommonTakeFirstDocs = Nothing
 
@@ -236,6 +325,12 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[take][ColumnSet.take]`(2) }`
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[take][ColumnSet.take]`(2) }`
+     *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -270,6 +365,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[take][ColumnsSelectionDsl.take]`(5) }`
      *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
@@ -302,6 +403,12 @@ public interface TakeColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
+     *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -337,6 +444,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeCols][String.takeCols]`(1) }`
      *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
@@ -371,6 +484,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeCols][KProperty.takeCols]`(1) }`
      *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
@@ -404,6 +523,12 @@ public interface TakeColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeCols][ColumnPath.takeCols]`(1) }`
+     *
+     * See also:
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop] — drops the first `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
@@ -441,8 +566,14 @@ public interface TakeColumnsSelectionDsl {
      *
      *
      *
+     * See also:
+     * - [take][ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
+     *
      * @param [n] The number of columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     * @return A [ColumnSet] containing the last [n] columns.
      */
     private typealias CommonTakeLastDocs = Nothing
 
@@ -474,6 +605,12 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLast][ColumnSet.takeLast]`(2) }`
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLast][ColumnSet.takeLast]`(2) }`
+     *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -508,6 +645,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
@@ -540,6 +683,12 @@ public interface TakeColumnsSelectionDsl {
      * #### Examples for this overload:
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLast][SingleColumn.takeLastCols]`(1) }`
+     *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -575,6 +724,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastCols][String.takeLastCols]`(1) }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
@@ -608,6 +763,12 @@ public interface TakeColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeLastCols][KProperty.takeLastCols]`(1) }`
+     *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
      *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
@@ -643,6 +804,12 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastCols][ColumnPath.takeLastCols]`(1) }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
+     *
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
@@ -654,8 +821,9 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -665,7 +833,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -678,15 +846,23 @@ public interface TakeColumnsSelectionDsl {
      *
      *
      *
+     * See also:
+     * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     private typealias CommonTakeFirstWhileDocs = Nothing
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -696,7 +872,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -711,16 +887,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     public fun <C> ColumnSet<C>.takeWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -730,7 +914,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -743,16 +927,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeWhile][ColumnsSelectionDsl.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     public fun ColumnsSelectionDsl<*>.takeWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeColsWhile(predicate)
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -762,7 +954,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -775,16 +967,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeWhile(predicate) }
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -794,7 +994,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -807,16 +1007,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeColsWhile][String.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     public fun String.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -826,7 +1034,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -841,8 +1049,15 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeColsWhile][KProperty.takeColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -851,8 +1066,9 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take (Cols) While
-     * This function takes the first columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the first columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -862,7 +1078,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeWhile`][ColumnSet.takeWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -875,8 +1091,15 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeColsWhile][ColumnPath.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns
+     * adhering to the [predicate].
      */
     public fun ColumnPath.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
@@ -887,8 +1110,9 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -898,7 +1122,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -911,15 +1135,23 @@ public interface TakeColumnsSelectionDsl {
      *
      *
      *
+     * See also:
+     * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     private typealias CommonTakeLastWhileDocs = Nothing
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -929,7 +1161,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -944,16 +1176,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -963,7 +1203,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -976,16 +1216,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLastWhile][ColumnsSelectionDsl.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeLastColsWhile(predicate)
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -995,7 +1243,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1008,16 +1256,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLastColsWhile][SingleColumn.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     public fun SingleColumn<DataRow<*>>.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeLastWhile(predicate) }
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -1027,7 +1283,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1040,16 +1296,24 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastColsWhile][String.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     public fun String.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -1059,7 +1323,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1074,8 +1338,15 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[takeLastColsWhile][KProperty.takeLastColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -1084,8 +1355,9 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * ## Take Last (Cols) While
-     * This function takes the last columns from [this] adhering to the
-     * given [predicate] collecting the result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
+     * This function takes the last columns from [this] for as long as the
+     * given [predicate] holds, stopping as soon as a column does not adhere to it, and collects the
+     * result into a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet].
      *
      * This function operates solely on columns at the top-level.
      *
@@ -1095,7 +1367,7 @@ public interface TakeColumnsSelectionDsl {
      * `takeLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
-     * ### Check out: [Usage]
+     * ### Check out: [Grammar]
      *
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`takeLastWhile`][ColumnSet.takeLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
@@ -1108,8 +1380,15 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastColsWhile][ColumnPath.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
+     * See also:
+     * - [take][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns
+     * adhering to the [predicate].
      */
     public fun ColumnPath.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
