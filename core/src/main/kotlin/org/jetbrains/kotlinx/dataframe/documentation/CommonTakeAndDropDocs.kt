@@ -39,8 +39,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
  *
  * {@get [CommonTakeAndDropDocs.EXAMPLE]}
  *
+ * See also:
+ * {@get [SEE_ALSO]}
+ *
  * @param [n\] The number of columns to {@get [NOUN]}.
- * @return A [ColumnSet] containing the {@get [FIRST_OR_LAST]} [n\] columns.
+ * @return {@get [RETURN]}
  */
 internal interface CommonTakeAndDropDocs {
 
@@ -61,4 +64,10 @@ internal interface CommonTakeAndDropDocs {
 
     // Link to the corresponding page on the documentation website
     typealias URL = Nothing
+
+    // Related operations (the `See also` part)
+    typealias SEE_ALSO = Nothing
+
+    // Value returned by the operation (the `@return` part)
+    typealias RETURN = Nothing
 }
