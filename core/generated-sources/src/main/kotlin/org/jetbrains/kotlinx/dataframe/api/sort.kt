@@ -81,21 +81,21 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  *
  * #### For example
  *
- * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[sortWith][sortWith]` { a, b -> a - b }`
+ * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[`sortWith`][sortWith]` { a, b -> a - b }`
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * `df.`[select][DataFrame.select]` {`
+ * `df.`[`select`][DataFrame.select]` {`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][sortWith]`(myComparator) `[and][ColumnsSelectionDsl.and]` `[allAfter][ColumnsSelectionDsl.allAfter]`(name)`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[`sortWith`][sortWith]`(myComparator) `[`and`][ColumnsSelectionDsl.and]` `[`allAfter`][ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
  * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ *   a lambda of type `(`[`T`][T]`, `[`T`][T]`) -> `[`Int`][Int].
  * @return The sorted [DataColumn] [this] of the same type as the receiver.
  */
 private typealias CommonDataColumnSortWithDocs = Nothing
@@ -108,21 +108,21 @@ private typealias CommonDataColumnSortWithDocs = Nothing
  *
  * #### For example
  *
- * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
+ * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[`sortWith`][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+ * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[`sortWith`][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`allAfter`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
  * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ *   a lambda of type `(`[`T`][T]`, `[`T`][T]`) -> `[`Int`][Int].
  * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
     DataColumn.createByType(name, values().sortedWith(comparator), type) as C
@@ -135,21 +135,21 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
  *
  * #### For example
  *
- * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
+ * `df`[`[`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`"price"`[`]`][org.jetbrains.kotlinx.dataframe.DataFrame.get]`.`[`sortWith`][org.jetbrains.kotlinx.dataframe.api.sortWith]` { a, b -> a - b }`
  *
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+ * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[`sortWith`][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`allAfter`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
  * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
- *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
+ *   a lambda of type `(`[`T`][T]`, `[`T`][T]`) -> `[`Int`][Int].
  * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
 

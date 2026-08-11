@@ -19,18 +19,18 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * can occur in the following two types of operations:
  *
  * - Providing a new value for every selected cell given the row of that cell ([Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample]),
- * for instance in [map][DataFrame.map], [add][DataFrame.add], and [insert][DataFrame.insert]
+ * for instance in [`map`][DataFrame.map], [`add`][DataFrame.add], and [`insert`][DataFrame.insert]
  * (using [RowExpression][DfRowExpression]).
  *
  * - Providing a new value for every selected cell given the row of that cell and its previous value ([Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]),
- * for instance in [update.with][Update.with], and [convert.notNull][Convert.notNull]
+ * for instance in [`update.with`][Update.with], and [`convert.notNull`][Convert.notNull]
  * (using [RowValueExpression][DfRowValueExpression]).
  *
  * NOTE:
  *
  * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
  * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
- * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * and [`add`][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
  * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).

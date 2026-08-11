@@ -69,11 +69,11 @@ internal typealias Remove = Nothing
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`remove`][org.jetbrains.kotlinx.dataframe.api.remove]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`remove`][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`remove`][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -106,7 +106,7 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`("length", "age")`
+ * <code>`df`</code>`.`[`remove`][org.jetbrains.kotlinx.dataframe.api.remove]`("length", "age")`
  *
  *
  *

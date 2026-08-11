@@ -71,11 +71,11 @@ internal interface Select {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -90,7 +90,7 @@ internal interface Select {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`("length", "age")`
+     * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`("length", "age")`
      *
      *
      *
@@ -131,11 +131,11 @@ internal interface Select {
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -187,7 +187,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[select][org.jetbrains.kotlinx.dataframe.api.select]`("length", "age")`
+ * <code>`df`</code>`.`[`select`][org.jetbrains.kotlinx.dataframe.api.select]`("length", "age")`
  *
  *
  *
@@ -287,25 +287,25 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [ColumnGroup]. This is more powerful than the [cols][ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup]. This is more powerful than the [`cols`][ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup] you are selecting from.
      *
-     * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [`invoke`][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`select`][SingleColumn.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  { "myGroupCol"  `[{][String.select]`  "colA" and  `[expr][ColumnsSelectionDsl.expr]`  { 0 }  `[}][String.select]` }`
+     * `df.`[`select`][DataFrame.select]`  { "myGroupCol"  `[`{`][String.select]`  "colA" and  `[`expr`][ColumnsSelectionDsl.expr]`  { 0 }  `[`}`][String.select]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[select][ColumnPath.select]` { "colA" and "colB" } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`select`][ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][DataColumn.asColumnGroup]`()`[() {][SingleColumn.select]`  "colA" and "colB"  `[}][SingleColumn.select]` }`
+     * `df.`[`select`][DataFrame.select]` { it["myGroupCol"].`[`asColumnGroup`][DataColumn.asColumnGroup]`()`[`() {`][SingleColumn.select]`  "colA" and "colB"  `[`}`][SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
@@ -315,7 +315,7 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][ColumnsSelectionDsl.except]/[allExcept][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [`except`][ColumnsSelectionDsl.except]/[`allExcept`][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup] to select from.
@@ -332,37 +332,37 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
-     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [`invoke`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[`select`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[{][kotlin.String.select]`  "colA" and  `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[}][kotlin.String.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[`{`][kotlin.String.select]`  "colA" and  `[`expr`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[`}`][kotlin.String.select]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`select`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[`() {`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[`}`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`select`][SingleColumn.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  { myColGroup  `[`{`][SingleColumn.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][SingleColumn.select]` }`
+     * `df.`[`select`][DataFrame.select]`  { myColGroup  `[`{`][SingleColumn.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][SingleColumn.select]` }`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [`except`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[`allExcept`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -378,37 +378,37 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
-     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [`invoke`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[`select`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[{][kotlin.String.select]`  "colA" and  `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[}][kotlin.String.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[`{`][kotlin.String.select]`  "colA" and  `[`expr`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[`}`][kotlin.String.select]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`select`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[`() {`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[`}`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
+     * `df.`[`select`][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [`except`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[`allExcept`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -425,37 +425,37 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
-     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [`invoke`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[`select`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[{][kotlin.String.select]`  "colA" and  `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[}][kotlin.String.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[`{`][kotlin.String.select]`  "colA" and  `[`expr`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[`}`][kotlin.String.select]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`select`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[`() {`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[`}`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`select`][String.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
+     * `df.`[`select`][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [`except`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[`allExcept`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -470,41 +470,41 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *
      * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. This is more powerful than the [`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
-     * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [`invoke`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[`select`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  { someCol  `[`and`][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[{][kotlin.String.select]`  "colA" and  `[expr][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[}][kotlin.String.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "myGroupCol"  `[`{`][kotlin.String.select]`  "colA" and  `[`expr`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]`  { 0 }  `[`}`][kotlin.String.select]` }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[select][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`select`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.select]` { "colA" and "colB" } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[asColumnGroup][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[() {][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[}][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { it["myGroupCol"].`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.DataColumn.asColumnGroup]`()`[`() {`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]`  "colA" and "colB"  `[`}`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.select]` }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`select`][ColumnPath.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  { "pathTo"["myColGroup"]  `[`{`][ColumnPath.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][ColumnPath.select]` }`
+     * `df.`[`select`][DataFrame.select]`  { "pathTo"["myColGroup"]  `[`{`][ColumnPath.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][ColumnPath.select]` }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][ColumnPath.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup").`[`select`][ColumnPath.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[`}`][ColumnPath.select]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`}`][ColumnPath.select]` }`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [`except`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[`allExcept`][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
