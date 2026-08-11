@@ -275,6 +275,46 @@ as arguments and return simple value, `DataFrame`, `DataRow` or `DataColumn`.
    [special notation](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt).
    Add a reference to the operation Grammar in each related class and method KDoc.
 
+### Referring to code
+
+Whenever a KDoc refers to something that is code — a function, class, property, parameter, type,
+keyword, literal, or a snippet of an expression — write it in a code span.
+
+For linked references, this means putting the link label inside `` ` `` tags:
+
+```kotlin
+/** [`select`][DataFrame.select] */ // ✅
+/** [select][DataFrame.select] */   // ❌
+```
+
+References inside `[]` are currently rendered as `<code>` by IntelliJ, but that's an implementation
+detail that may change, and it doesn't hold for Dokka.
+Writing the code span explicitly keeps the rendering the same everywhere.
+
+Note that this only applies to labels that are actually code.
+Prose labels (those that are part of the flow of the sentence) stay as they are, even when they link to code:
+
+```kotlin
+/** ... takes the last [row][DataRow] of each group ... */              // ✅ "row" is prose here
+/** ... see the [Columns Selection DSL][ColumnsSelectionDsl] ... */     // ✅ prose label
+```
+
+Links to [KDoc-helpers](#kodex--kdoc-helpers) are prose too: they're KDoc holders, not code,
+even though they're written as Kotlin declarations.
+
+```kotlin
+/** ### Check out: [Grammar][ConvertDocs.Grammar] */                  // ✅ a KDoc-topic
+/** For the full list, see [SupportedTypes][ConvertDocs.SupportedTypes]. */ // ✅
+```
+
+This is about the *label*, not the target.
+A grammar definition reference like `` [`colSelector`][ColumnSelectorDef] `` keeps its code span:
+the label is a parameter name, the KDoc-helper just happens to be where it's described.
+
+Unlinked code, like `` `null` `` or `` `String` ``, gets a code span too.
+Single-reference links, like `[DataFrame]`, cannot be wrapped —
+`` [`DataFrame`] `` does not resolve — so leave those alone.
+
 ### General Template
     
 The generalized template for all operations:
@@ -613,8 +653,8 @@ But keep these things in mind:
   begins and ends with a space but does not consist entirely of whitespace, a single space is removed from the front
   and the back. So be careful writing things like `` ` { ` `` and add extra spaces if needed.
 - In IntelliJ, references inside `[]` are automatically formatted as `<code>` when rendered to HTML at the moment.
-  This may change in the future,
-  so if you want to be sure it looks like code, you can write it like: `` [`function`][ref.to.function]  ``
+  This may change in the future, so always write the code span yourself:
+  `` [`function`][ref.to.function] `` (see [Referring to code](#referring-to-code)).
 - Having multiple `[]` references and code spans in the same line breaks rendering in
   IntelliJ ([KT-55073](https://youtrack.jetbrains.com/issue/KT-55073/Improve-KDoc-experience#focus=Comments-27-6854785.0-0)).
   This can be avoided by providing aliases to each reference.
