@@ -15,7 +15,7 @@ import java.net.URL
 /**
  * ### Read $[FILE_TYPE_TITLE] $[DATA_TITLE] to [DataFrame]
  *
- * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
+ * Reads any $[FILE_TYPE] $[DATA] to a [`DataFrame`][DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
@@ -26,19 +26,19 @@ import java.net.URL
  * The integration is built upon {@include [DocumentationUrls.Deephaven]}.
  *
  * ##### Similar Functions
- * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, $[FUNCTION_LINK]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]")` or with some options:
  *
  * $[FUNCTION_LINK]`(`
  *
- * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]"),`
+ * {@include [Indent]}`file = `[`File`][File]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]"),`
  *
- * {@include [Indent]}`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * {@include [Indent]}`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * {@include [Indent]}`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ * {@include [Indent]}`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][ColType]`.`[`Int`][ColType.Int]`, `[`ColType`][ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][ColType]`.`[`String`][ColType.String]`),`
  *
  * {@include [Indent]}`readLines = 1000L,`
  *

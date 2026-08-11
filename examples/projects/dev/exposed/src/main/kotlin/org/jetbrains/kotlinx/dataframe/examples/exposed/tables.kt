@@ -45,7 +45,7 @@ object Customers : Table() {
  * provide type-safe access to your columns and data.
  *
  * While DataFrame can infer types at runtime, which is enough for Kotlin Notebook,
- * to get type safe access at compile time, we need to define a [@DataSchema][DataSchema].
+ * to get type safe access at compile time, we need to define a [`@DataSchema`][DataSchema].
  *
  * This is what we created the [toDataFrameSchema] function for!
  */
