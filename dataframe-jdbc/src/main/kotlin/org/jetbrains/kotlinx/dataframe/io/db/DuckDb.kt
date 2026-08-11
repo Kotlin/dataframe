@@ -402,8 +402,8 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
     /**
      * How to filter out system tables from user-created ones when using
-     * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
+     * [`DataFrame.readAllSqlTables`][DataFrame.Companion.readAllSqlTables] and
+     * [`DataFrameSchema.readAllSqlTables`][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
      *
      * The names of these can sometimes be found in the specific JDBC integration.
      */
@@ -414,8 +414,8 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
     /**
      * How to retrieve the correct table metadata when using
-     * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
+     * [`DataFrame.readAllSqlTables`][DataFrame.Companion.readAllSqlTables] and
+     * [`DataFrameSchema.readAllSqlTables`][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
      * The names of these can be found in the [DatabaseMetaData] implementation of the DuckDB JDBC integration.
      */
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =

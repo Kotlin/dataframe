@@ -35,6 +35,6 @@ internal typealias ColumnPathCreationSnippet = Nothing
  * If you need to provide a custom [java.util.Locale], we recommend parsing
  * to a [java.time]-based class first by adjusting the parser options before converting it to [kotlinx.datetime].
  *
- * See also: [ParserOptions], [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary]
+ * See also: [ParserOptions], [`DataFrame.parser.dateTimeLibrary`][GlobalParserOptions.dateTimeLibrary]
  */
 internal typealias KotlinxDateTimeLocaleSnippet = Nothing

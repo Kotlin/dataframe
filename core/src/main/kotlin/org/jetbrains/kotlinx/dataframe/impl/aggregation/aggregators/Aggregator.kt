@@ -159,7 +159,7 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(co
 /**
  * Gives the index of the aggregation result in the input [values], if it applies.
  * This is used for aggregators with an [AggregatorAggregationHandler] where
- * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+ * [`Value`][Value]`  ==  `[`Return`][Return], and where the result exists in the input.
  *
  * Like for [SelectingAggregationHandler].
  *
@@ -176,7 +176,7 @@ internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.ind
 /**
  * Gives the index of the aggregation result in the input [values], if it applies.
  * This is used for aggregators with an [AggregatorAggregationHandler] where
- * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+ * [`Value`][Value]`  ==  `[`Return`][Return], and where the result exists in the input.
  *
  * Like for [SelectingAggregationHandler].
  *
@@ -214,7 +214,7 @@ internal typealias Reducer<Value, Return> = Sequence<Value & Any>.(valueType: KT
 /**
  * Type alias for a selector function where the type of the values is provided as [KType].
  *
- * It is expected that [Value][Value]`  :  `[Return][Return]`  &  `[Any][Any], and [Return][Return]`  :  `[Any?][Any].
+ * It is expected that [`Value`][Value]`  :  `[`Return`][Return]`  &  `[`Any`][Any], and [`Return`][Return]`  :  `[`Any?`][Any].
  *
  * Nulls have already been filtered out when this function is called.
  */
