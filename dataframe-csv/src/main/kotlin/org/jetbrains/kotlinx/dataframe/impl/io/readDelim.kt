@@ -292,7 +292,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  *
  * - if no [colTypes] are given
  *     - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
- *     - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *     - subtract parsers of [`skipTypes`][ParserOptions.skipTypes] if those are supplied
  * - if [colTypes] are supplied
  *     - if [ColType.DEFAULT] is among the values
  *       - set the parser for each supplied column+colType
@@ -300,7 +300,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  *     - if [ColType.DEFAULT] is not among the values
  *       - set the parser for each supplied column+coltype
  *       - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
- *       - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *       - subtract parsers of [`skipTypes`][ParserOptions.skipTypes] if those are supplied
  *
  * We will not use [Deephaven's DateTime parser][Parsers.DATETIME].
  * This is done to avoid different behavior compared to [DataFrame.parse];

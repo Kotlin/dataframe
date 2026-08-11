@@ -21,7 +21,7 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
  *
  * @param J the type of the value coming from the JDBC driver, [expectedJdbcType].
  * @param D the type of the column values after preprocessing, [preprocessedValueType]. Will be equal to [J] if [valuePreprocessor] is `null`.
- * @param P the type of the column values after postprocessing, comparable to [DataColumn][DataColumn]`<`[P][P]`>` of [targetSchema].
+ * @param P the type of the column values after postprocessing, comparable to [`DataColumn`][DataColumn]`<`[`P`][P]`>` of [targetSchema].
  *   Will be equal to [D] if [columnBuilder] is `null`.
  *
  * @property targetSchema the target schema of the column after running the optional

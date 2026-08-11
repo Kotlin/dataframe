@@ -33,7 +33,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * `df.`{@get [OPERATION]}` { row, col ->`
          *
-         * {@include [Indent]}`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
+         * {@include [Indent]}`row.age / col.`[`mean`][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
          *

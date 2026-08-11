@@ -78,11 +78,11 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
@@ -105,11 +105,11 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") }.`[`valueCols`][ColumnSet.valueCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     @Interpretable("ValueCols0")
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
@@ -119,9 +119,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Interpretable("ValueCols1")
     public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
@@ -131,9 +131,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`valueCols`][SingleColumn.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`valueCols`][SingleColumn.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Interpretable("ValueCols2")
     public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
@@ -143,9 +143,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]`() }`
      */
     public fun String.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)
@@ -154,11 +154,11 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`valueCols`][KProperty.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`valueCols`][KProperty.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`valueCols`][KProperty.valueCols]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -169,7 +169,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`valueCols`][ColumnPath.valueCols]`() }`
      */
     public fun ColumnPath.valueCols(filter: Predicate<ValueColumn<*>> = { true }): ColumnSet<*> =
         columnGroup(this).valueCols(filter)

@@ -45,7 +45,7 @@ internal class SelectingAggregationHandler<in Value : Return & Any, out Return :
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [valueType] into account,
-     * filtering nulls (only if [valueType.type.isMarkedNullable][KType.isMarkedNullable]),
+     * filtering nulls (only if [`valueType.type.isMarkedNullable`][KType.isMarkedNullable]),
      * and computes a single resulting value.
      *
      * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].

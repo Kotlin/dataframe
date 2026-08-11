@@ -78,11 +78,11 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCols`][SingleColumn.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`().`[`frameCols`][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`frameCols`][String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
@@ -105,11 +105,11 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[frameCols][ColumnSet.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") }.`[`frameCols`][ColumnSet.frameCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCols`][ColumnsSelectionDsl.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols0")
     public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
@@ -119,9 +119,9 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCols`][ColumnsSelectionDsl.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCols`][ColumnsSelectionDsl.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
@@ -132,9 +132,9 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`frameCols`][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`frameCols`][SingleColumn.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
@@ -145,9 +145,9 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`frameCols`][String.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`frameCols`][String.frameCols]`() }`
      */
     public fun String.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)
@@ -156,11 +156,11 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colGroup`][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[`frameCols`][SingleColumn.frameCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColGroup.`[`frameCols`][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColGroup.`[`frameCols`][KProperty.frameCols]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -171,7 +171,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @include [CommonFrameColsDocs]
      * @set [CommonFrameColsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`frameCols`][ColumnPath.frameCols]`() }`
      */
     public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): ColumnSet<DataFrame<*>> =
         columnGroup(this).frameCols(filter)

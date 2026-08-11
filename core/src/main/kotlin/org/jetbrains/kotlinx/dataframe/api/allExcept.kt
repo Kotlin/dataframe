@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -113,16 +114,16 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * We can do:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]`  (age  `[and][ColumnsSelectionDsl.and]` height) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][colsOf]`<`[`Int`][Int]`>() `[`except`][ColumnSet.except]`  (age  `[`and`][ColumnsSelectionDsl.and]` height) }`
      *
-     * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
+     * which will 'subtract' the [ColumnSet] created by `age `[`and`][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [`colsOf`][colsOf]`<`[`Int`][Int]`>()`.
      *
      * {@include [LineBreak]}
      * This operation can also be used to exclude columns from [Column Groups][ColumnGroup].
      *
      * For instance:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "a"  `[in][String.contains]` it.`[name][DataColumn.name]`() } `[except][ColumnSet.except]` userData.age }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`  { "a"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]`() } `[`except`][ColumnSet.except]` userData.age }`
      * {@include [LineBreak]}
      *
      * Note that the selection of columns to exclude from [column sets][ColumnSet] is always done relative to the outer
@@ -132,17 +133,17 @@ public interface AllExceptColumnsSelectionDsl {
      * each time it is encountered (including inside [ColumnGroups][ColumnGroup]). You could say the receiver [ColumnSet]
      * is [simplified][ColumnsSelectionDsl.simplify] before the operation is performed:
      *
-     * [cols][ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][ColumnSet.except]`(a.b)`
+     * [`cols`][ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[`except`][ColumnSet.except]`(a.b)`
      *
-     * `== `[cols][ColumnsSelectionDsl.cols]`(a).`[except][ColumnSet.except]`(a.b)`
+     * `== `[`cols`][ColumnsSelectionDsl.cols]`(a).`[`except`][ColumnSet.except]`(a.b)`
      *
-     * ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]
-     * Instead of having to write [all][ColumnsSelectionDsl.all]`() `[except][ColumnsSelectionDsl.except]` { ... }` in the DSL,
-     * you can use [allExcept][ColumnsSelectionDsl.allExcept]` { ... }` to achieve the same result.
+     * ### In the [`ColumnsSelectionDsl`][ColumnsSelectionDsl]
+     * Instead of having to write [`all`][ColumnsSelectionDsl.all]`() `[`except`][ColumnsSelectionDsl.except]` { ... }` in the DSL,
+     * you can use [`allExcept`][ColumnsSelectionDsl.allExcept]` { ... }` to achieve the same result.
      *
      * For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][ColumnsSelectionDsl.and]` height } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`allExcept`][ColumnsSelectionDsl.allExcept]`  { userData.age  `[`and`][ColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][ColumnGroup]: All Cols Except
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
@@ -150,31 +151,31 @@ public interface AllExceptColumnsSelectionDsl {
      * {@include [LineBreak]}
      * In other words:
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[allColsExcept][SingleColumn.allColsExcept]`  { colA  `[and][ColumnsSelectionDsl.and]` colB } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`allColsExcept`][SingleColumn.allColsExcept]`  { colA  `[`and`][ColumnsSelectionDsl.and]` colB } }`
      *
      * is shorthand for
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[select][ColumnsSelectionDsl.select]`  {  `[all][ColumnsSelectionDsl.all]`() `[except][ColumnSet.except]`  { colA  `[and][ColumnsSelectionDsl.and]` colB } } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`select`][ColumnsSelectionDsl.select]`  {  `[`all`][ColumnsSelectionDsl.all]`() `[`except`][ColumnSet.except]`  { colA  `[`and`][ColumnsSelectionDsl.and]` colB } } }`
      *
      * or
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[allCols][ColumnsSelectionDsl.allCols]`() `[except][ColumnSet.except]`  { myColGroup.colA  `[and][ColumnsSelectionDsl.and]` myColGroup.colB } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`allCols`][ColumnsSelectionDsl.allCols]`() `[`except`][ColumnSet.except]`  { myColGroup.colA  `[`and`][ColumnsSelectionDsl.and]` myColGroup.colB } }`
      * {@include [LineBreak]}
-     * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
+     * Also note the name change, similar to [`allCols`][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
      *
      * ### On [ColumnGroups][ColumnGroup]: Except
      * This variant can be used to exclude some nested columns from a [ColumnGroup] in the selection.
-     * In contrast to [allColsExcept][ColumnsSelectionDsl.allColsExcept],
+     * In contrast to [`allColsExcept`][ColumnsSelectionDsl.allColsExcept],
      * this function does not 'lift' the columns out of the group, preserving the structure.
      *
      * So:
      *
-     * `df.`[select][DataFrame.select]` { colGroup.`[except][SingleColumn.except]` { col } }`
+     * `df.`[`select`][DataFrame.select]` { colGroup.`[`except`][SingleColumn.except]` { col } }`
      *
      * is shorthand for:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(colGroup) `[`except`][ColumnSet.except]` colGroup.col }`
      *
      * ### Examples for this overload
      * {@get [EXAMPLE]}
@@ -203,9 +204,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` {@get [ARGUMENT_1]} \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Number`][Number]`>() `[`except`][ColumnSet.except]` {@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(name, age) `[`except`][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
      * }
      */
     @ExcludeFromSources
@@ -221,9 +222,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]`{@get [ARGUMENT_1]} \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Number`][Number]`>().`[`except`][ColumnSet.except]`{@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(name, age).`[`except`][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
      * }
      */
     @ExcludeFromSources
@@ -240,7 +241,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *   excluded from the [ColumnSet]. The scope of the selector is the same as the outer scope.
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] { "age" `[and][ColumnsSelectionDsl.and]` height }
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] { "age" `[`and`][ColumnsSelectionDsl.and]` height }
      * @set [ColumnSetInfixDocs.ARGUMENT_2] { name.firstName }
      */
     @Interpretable("ColumnSetExceptSelector")
@@ -250,7 +251,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age" `[and][ColumnsSelectionDsl.and]` height
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age" `[`and`][ColumnsSelectionDsl.and]` height
      * @set [ColumnSetInfixDocs.ARGUMENT_2] name.firstName
      */
     @Interpretable("ColumnSetExceptColumnsResolver")
@@ -335,9 +336,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_1]}` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`allExcept`][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_1]}` \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_2]}` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `[`allExcept`][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_2]}` \}`
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslDocs {
@@ -353,7 +354,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnsSelectionDslDocs]
      * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *  excluded from the current selection. The scope of the selector is the same as the outer scope.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `  { "age"  `[`and`][ColumnsSelectionDsl.and]` height }`
      * @set [ColumnsSelectionDslDocs.ARGUMENT_2] ` { name.firstName }`
      */
     @Interpretable("CSDslAllExceptSelector")
@@ -414,9 +415,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_1]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[`allColsExcept`][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[`allColsExcept`][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
     @Suppress("ClassName")
     @ExcludeFromSources
@@ -469,7 +470,7 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
          *  excluded from the current selection in [this\] column group. The other columns will be included in the selection
          *  by default. The scope of the selector is relative to the column group.
-         * @set [ColumnGroupDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
+         * @set [ColumnGroupDocs.ARGUMENT_1] `  { "age"  `[`and`][ColumnsSelectionDsl.and]` height }`
          * @set [ColumnGroupDocs.ARGUMENT_2] ` { firstName }`
          */
         typealias SelectorArgs = Nothing
@@ -562,9 +563,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[`except`][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[`except`][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
     @ExcludeFromSources
     private interface ColumnGroupExceptDocs : ColumnGroupDocs
