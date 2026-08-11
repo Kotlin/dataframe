@@ -347,3 +347,8 @@
 <resource src="filter_properties.html"></resource>
 <resource src="filterColumn_properties.html"></resource>
 <resource src="noneDf.html"></resource>
+<resource src="firstOnColumnDf.html"></resource>
+<resource src="countDf.html"></resource>
+<resource src="countGroupBy_properties.html"></resource>
+<resource src="countPivot_properties.html"></resource>
+<resource src="countPivotGroupBy_properties.html"></resource>
