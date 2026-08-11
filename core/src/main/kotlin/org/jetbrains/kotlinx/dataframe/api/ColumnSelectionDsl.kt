@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -55,6 +56,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * ```kotlin
      * "myColumn"["myNestedColumn"]<NestedColumnType>()
      * ```
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      *
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [ColumnPath] points to.
@@ -173,6 +176,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"<MyColumnType>()` instead.
      *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
+     *
      * @throws [IllegalArgumentException] if there is no column with this name.
      * @return The [DataColumn] with this name.
      */
@@ -186,6 +191,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * both typed and untyped.
      * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"()` instead.
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      *
      * @throws [IllegalArgumentException] if there is no column with this name.
      * @return The [DataColumn] with this name.
@@ -205,6 +212,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * "myColumn"["myNestedColumn"]["myDoublyNestedColumn"]<NestedColumnType>()
      * ```
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      */
     @Interpretable("StringGetColumn")
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
@@ -213,6 +222,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * As extension to `"myColumn"["myNestedColumn"]`, this function enables
      * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
      * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
+     *
+     * For more information: {@include [DocumentationUrls.AccessApis.InvokedStringApi]}
      */
     @Interpretable("ColumnPathGetColumn")
     public operator fun ColumnPath.get(column: String): ColumnPath = this + column

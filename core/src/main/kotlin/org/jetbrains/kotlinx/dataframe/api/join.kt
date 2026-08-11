@@ -54,7 +54,7 @@ private typealias JoinBehavior = Nothing
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information: {@include [DocumentationUrls.Join]}
  *
  * ### This `join` overload
  */
@@ -77,6 +77,8 @@ private typealias JOIN_METHOD = Nothing
  * and [match][JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: {@include [DocumentationUrls.Join]}
  *
  * ### Examples
  * ```kotlin
@@ -161,7 +163,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information, {@include [DocumentationUrls.Join]}
  *
  * ### This `innerJoin` overload
  */
@@ -210,7 +212,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information, {@include [DocumentationUrls.Join]}
  *
  * ### This `leftJoin` overload
  */
@@ -259,7 +261,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information, {@include [DocumentationUrls.Join]}
  *
  * ### This `rightJoin` overload
  */
@@ -308,7 +310,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information, {@include [DocumentationUrls.Join]}
  *
  * ### This `fullJoin` overload
  */
@@ -357,7 +359,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information, {@include [DocumentationUrls.Join]}
  *
  * ### This `filterJoin` overload
  */
@@ -406,7 +408,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * See [Selecting Columns][SelectingColumns].
  *
- * For more information, {@include [DocumentationUrls.Join]}.
+ * For more information: {@include [DocumentationUrls.Join]}
  *
  * ### This `excludeJoin` overload
  */
@@ -445,6 +447,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, vararg columns: 
  * Sequentially applies the [join] operation to each [DataFrame] in order.
  * Returns `null` if the iterable is empty.
  *
+ * For more information: {@include [DocumentationUrls.Join]}
+ *
  * @param [joinType] [JoinType] defining how rows are matched and combined.
  * @param [selector] optional [JoinColumnsSelector] specifying key columns.
  * @return resulting [DataFrame], or `null` if the iterable is empty.
@@ -466,6 +470,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     /**
      * Provides access to columns of the right [DataFrame]
      * for further matching with left columns [match].
+     *
+     * For more information: {@include [DocumentationUrls.Join]}
      */
     public val right: DataFrame<B>
 
@@ -474,6 +480,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      *
      * The receiver column must belong to the left [DataFrame],
      * and the argument ([\other]) column must belong to the right [DataFrame].
+     *
+     * For more information: {@include [DocumentationUrls.Join]}
      *
      * @receiver column from the left [DataFrame].
      * @param [other] column from the right [DataFrame].
@@ -547,6 +555,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
 /**
  * A special [ColumnSet] that specifies a [column match][JoinDsl.match] for the [join] operation.
+ *
+ * For more information: {@include [DocumentationUrls.Join]}
  */
 public interface ColumnMatch<C> : ColumnSet<C> {
     public val left: ColumnReference<C>
@@ -625,6 +635,8 @@ internal typealias ExcludeJoinTypeDocs = Nothing
  * Represents the type of [join] operation.
  *
  * {@include [JoinTypeDescription]}
+ *
+ * For more information: {@include [DocumentationUrls.Join]}
  */
 public enum class JoinType {
 

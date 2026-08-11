@@ -22,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
  * NOTE: To avoid ambiguity, `{@get [CommonTakeAndDropDocs.OPERATION]}` is called `{@get [CommonTakeAndDropDocs.OPERATION]}Cols` when called on
  * a [ColumnGroup].
  *
+ * For more information: {@get [URL]}
+ *
  * ### Check out: [Grammar\]
  *
  * #### Examples:
@@ -56,4 +58,7 @@ internal interface CommonTakeAndDropDocs {
 
     // Example argument to use
     typealias EXAMPLE = Nothing
+
+    // Link to the corresponding page on the documentation website
+    typealias URL = Nothing
 }

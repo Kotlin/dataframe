@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
@@ -87,6 +88,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * an accessor for a column inside a [ColumnGroup].
      * {@include [LineBreak]}
      * $[CommonColDocs.NOTE]
+     *
+     * For more information: {@include [DocumentationUrls.Col]}
      *
      * ### Check out: [Grammar]
      *
