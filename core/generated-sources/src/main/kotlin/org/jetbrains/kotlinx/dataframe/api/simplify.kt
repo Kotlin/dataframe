@@ -40,7 +40,7 @@ public interface SimplifyColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -77,13 +77,13 @@ public interface SimplifyColumnsSelectionDsl {
      *
      * ## For example:
      *
-     * [cols][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() == `[cols][ColumnsSelectionDsl.cols]`(a, d.c)`
+     * [`cols`][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[`simplify`][SimplifyColumnsSelectionDsl.simplify]`() == `[`cols`][ColumnsSelectionDsl.cols]`(a, d.c)`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[`simplify`][ColumnSet.simplify]`() }`
      *
-     * @return A [ColumnSet][ColumnSet]`<`[C][C]`>` containing only the columns that are not inside any column group in [this].
+     * @return A [`ColumnSet`][ColumnSet]`<`[`C`][C]`>` containing only the columns that are not inside any column group in [this].
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.simplify(): ColumnSet<C> = simplifyInternal() as ColumnSet<C>

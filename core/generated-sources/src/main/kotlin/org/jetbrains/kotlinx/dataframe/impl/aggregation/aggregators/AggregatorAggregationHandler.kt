@@ -19,7 +19,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [valueType] into account,
-     * filtering nulls (only if [valueType.type.isMarkedNullable][KType.isMarkedNullable]),
+     * filtering nulls (only if [`valueType.type.isMarkedNullable`][KType.isMarkedNullable]),
      * and computes a single resulting value.
      *
      * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].
@@ -68,7 +68,7 @@ public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?>
     /**
      * Function that can give the index of the aggregation result in the input [values], if it applies.
      * This is used for [AggregatorAggregationHandlers][AggregatorAggregationHandler] where
-     * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+     * [`Value`][Value]`  ==  `[`Return`][Return], and where the result exists in the input.
      *
      * Like for [SelectingAggregationHandler].
      *

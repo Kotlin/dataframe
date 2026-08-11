@@ -23,7 +23,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * `df.`<code>`operation`</code>` { row, col ->`
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
+         * &nbsp;&nbsp;&nbsp;&nbsp;`row.age / col.`[`mean`][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
          *

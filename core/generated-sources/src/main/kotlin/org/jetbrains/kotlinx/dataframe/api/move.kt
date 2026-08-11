@@ -44,9 +44,9 @@ import kotlin.reflect.KProperty
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause],
  * which serves as an intermediate step. The [MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
- * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
- * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ * destination of the selected columns using methods such as [`to`][MoveClause.to], [`toStart`][MoveClause.toStart],
+ * [`toEnd`][MoveClause.toEnd], [`into`][MoveClause.into], [`intoIndexed`][MoveClause.intoIndexed], [`toTop`][MoveClause.toTop],
+ * [`after`][MoveClause.after] or [`under`][MoveClause.under], that return a new [DataFrame] with updated columns structure.
  *
  * Check out [Grammar].
  *
@@ -89,11 +89,11 @@ internal interface Move {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`move`][org.jetbrains.kotlinx.dataframe.api.move]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`move`][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`move`][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -108,7 +108,7 @@ internal interface Move {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`("length", "age")`
+     * <code>`df`</code>`.`[`move`][org.jetbrains.kotlinx.dataframe.api.move]`("length", "age")`
      *
      *
      *
@@ -160,9 +160,9 @@ internal interface Move {
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * destination of the selected columns using methods such as [`to`][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [`toStart`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [`toEnd`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [`into`][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [`intoIndexed`][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [`toTop`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [`after`][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [`under`][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
@@ -206,9 +206,9 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * destination of the selected columns using methods such as [`to`][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [`toStart`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [`toEnd`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [`into`][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [`intoIndexed`][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [`toTop`][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [`after`][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [`under`][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
@@ -290,11 +290,11 @@ internal interface MoveTo {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`moveTo`][org.jetbrains.kotlinx.dataframe.api.moveTo]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`moveTo`][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`moveTo`][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -309,7 +309,7 @@ internal interface MoveTo {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`("length", "age")`
+     * <code>`df`</code>`.`[`moveTo`][org.jetbrains.kotlinx.dataframe.api.moveTo]`("length", "age")`
      *
      *
      *
@@ -499,11 +499,11 @@ internal interface MoveToStart {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -518,7 +518,7 @@ internal interface MoveToStart {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
+     * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
      *
      *
      *
@@ -561,11 +561,11 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -607,11 +607,11 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -648,7 +648,7 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
+ * <code>`df`</code>`.`[`moveToStart`][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
  *
  *
  *
@@ -722,11 +722,11 @@ internal interface MoveToEnd {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -741,7 +741,7 @@ internal interface MoveToEnd {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
+     * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
      *
      *
      *
@@ -784,11 +784,11 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -830,11 +830,11 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -871,7 +871,7 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
+ * <code>`df`</code>`.`[`moveToEnd`][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
  *
  *
  *

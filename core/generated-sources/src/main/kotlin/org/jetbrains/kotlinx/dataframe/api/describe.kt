@@ -173,11 +173,11 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[`describe`][org.jetbrains.kotlinx.dataframe.api.describe]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[`describe`][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[`describe`][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -234,7 +234,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`("length", "age")`
+ * <code>`df`</code>`.`[`describe`][org.jetbrains.kotlinx.dataframe.api.describe]`("length", "age")`
  *
  *
  *

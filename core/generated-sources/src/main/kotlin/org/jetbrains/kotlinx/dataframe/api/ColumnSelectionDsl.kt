@@ -24,7 +24,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * Retrieves the value of this [ColumnReference] or [-Accessor][ColumnAccessor] from
      * the [DataFrame].
      *
-     * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [`get`][ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
     private typealias CommonColumnReferenceInvokeDocs = Nothing
@@ -33,7 +33,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
      * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
      */
@@ -43,7 +43,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
      * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
      */
@@ -53,7 +53,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
      * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
      */
@@ -61,7 +61,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     /**
      * Retrieves the value of this [ColumnPath] from the [DataFrame].
-     * This is a shorthand for [getColumn][ColumnsContainer.getColumn]`(myColumnPath)` and
+     * This is a shorthand for [`getColumn`][ColumnsContainer.getColumn]`(myColumnPath)` and
      * is most often used in combination with `operator fun String.get(column: String)`,
      * for instance:
      * ```kotlin
@@ -77,7 +77,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame].
      *
-     * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [`get`][ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
     private typealias CommonKPropertyInvokeDocs = Nothing
@@ -85,7 +85,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [KProperty Accessor][KProperty] points to.
      */
@@ -96,7 +96,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] this [KProperty Accessor][KProperty] points to.
      */
@@ -107,7 +107,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] this [KProperty Accessor][KProperty] points to.
      */
@@ -120,7 +120,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][asColumnGroup]`().`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][asColumnGroup]`().`[`get`][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -135,7 +135,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -155,7 +155,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -176,7 +176,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -197,7 +197,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -215,7 +215,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -234,7 +234,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[`asColumnGroup`][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[`get`][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
@@ -251,7 +251,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of the column with this name from the [DataFrame]. This can be
      * both typed and untyped.
-     * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
+     * This is a shorthand for [`get`][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"<MyColumnType>()` instead.
      *
      * @throws [IllegalArgumentException] if there is no column with this name.
@@ -265,7 +265,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of the column with this name from the [DataFrame]. This can be
      * both typed and untyped.
-     * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
+     * This is a shorthand for [`get`][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"()` instead.
      *
      * @throws [IllegalArgumentException] if there is no column with this name.

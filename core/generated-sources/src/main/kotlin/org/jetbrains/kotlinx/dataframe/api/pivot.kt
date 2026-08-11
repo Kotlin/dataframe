@@ -73,7 +73,7 @@ import kotlin.reflect.KProperty
 internal interface PivotDocs {
 
     /**
-     * ## [pivot][pivot] Operation Grammar
+     * ## [`pivot`][pivot] Operation Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -88,7 +88,7 @@ internal interface PivotDocs {
      *
      * ### Reduce [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
+     * [`Pivot`][Pivot]`.`[**`minBy`**][Pivot.minBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`maxBy`**][Pivot.maxBy]**`  {  `**`rowExpression: `[`RowExpression`][RowExpression]**` }`**
@@ -113,7 +113,7 @@ internal interface PivotDocs {
      *
      * ### Aggregate [Pivot] into [DataRow]
      *
-     * [Pivot][Pivot]`.`[**`count`**][Pivot.count]**`()`**
+     * [`Pivot`][Pivot]`.`[**`count`**][Pivot.count]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`frames`**][Pivot.frames]**`()`**
@@ -128,11 +128,11 @@ internal interface PivotDocs {
      * `| `__`.`__[**`aggregate`**][Pivot.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[<aggregation_statistic>][PivotDocs.AggregationStatistics]
+     * `| `__`.`__[`<aggregation_statistic>`][PivotDocs.AggregationStatistics]
      *
      * ### Group [Pivot] into [PivotGroupBy] and reduce / aggregate it
      *
-     * [Pivot][Pivot]`.`[**`groupBy`**][Pivot.groupBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * [`Pivot`][Pivot]`.`[**`groupBy`**][Pivot.groupBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`groupByOther`**][Pivot.groupByOther]**`()`**
@@ -141,10 +141,10 @@ internal interface PivotDocs {
      * `[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
+     * `| `__`.`__[`<pivot_groupBy_reducer>`][PivotGroupByDocs.Reducing]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[<pivot_groupBy_aggregator>][PivotGroupByDocs.Aggregation]
+     * `| `__`.`__[`<pivot_groupBy_aggregator>`][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
@@ -160,20 +160,20 @@ internal interface PivotDocs {
      * Reducing is a specific case of [aggregation][Aggregation].
      *
      * First, choose a [Pivot] reducing method:
-     * * [first][Pivot.first], [last][Pivot.last] — take the first or last row
+     * * [`first`][Pivot.first], [`last`][Pivot.last] — take the first or last row
      *   (optionally, the first or last one that satisfies a predicate) of each group;
-     * * [minBy][Pivot.minBy] / [maxBy][Pivot.maxBy] — take the row with the minimum or maximum value
+     * * [`minBy`][Pivot.minBy] / [`maxBy`][Pivot.maxBy] — take the row with the minimum or maximum value
      *   of the given [RowExpression] evaluated on rows within each group;
-     * * [medianBy][Pivot.medianBy] / [percentileBy][Pivot.percentileBy] — take the row at the position closest
+     * * [`medianBy`][Pivot.medianBy] / [`percentileBy`][Pivot.percentileBy] — take the row at the position closest
      *   to the estimated median/percentile index of the [RowExpression]'s results calculated on rows within each group.
      *
      * These functions return a [ReducedPivot], which can then be transformed into a new [DataFrame]
      * containing a single combined row (either using the original reduced rows or their transformed versions)
      * through one of the following methods:
-     * * [values][ReducedPivot.values] — creates a new row containing the values
+     * * [`values`][ReducedPivot.values] — creates a new row containing the values
      *   from the reduced rows in the selected columns and produces a [DataRow] of
      *   these values;
-     * * [with][ReducedPivot.with] — computes a new value for each reduced row using a [RowExpression],
+     * * [`with`][ReducedPivot.with] — computes a new value for each reduced row using a [RowExpression],
      *   and produces a [DataRow] containing these computed values.
      *
      * Each method returns a new [DataRow] with [pivot] keys as top-level columns
@@ -193,22 +193,22 @@ internal interface PivotDocs {
      * with [pivot] keys as top-level columns or as [column groups][ColumnGroup].
      *
      * The following aggregation methods are available:
-     * * [frames][Pivot.frames] — returns this [Pivot] as a [DataRow] with pivot keys as columns
+     * * [`frames`][Pivot.frames] — returns this [Pivot] as a [DataRow] with pivot keys as columns
      *   (or [column groups][ColumnGroup]) and corresponding groups stored as [FrameColumn]s;
-     * * [values][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
+     * * [`values`][Pivot.values] — creates a [DataRow] containing values collected into a single [List]
      *   from all rows of each group for the selected columns
      *   (values from [column groups][ColumnGroup] are collected into a [DataFrame]);
-     * * [count][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
+     * * [`count`][Pivot.count] — creates a [DataRow] containing the pivot key columns and an additional column
      *   with the number of rows in each corresponding group;
-     * * [with][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
+     * * [`with`][Pivot.with] — creates a [DataRow] containing values computed using a [RowExpression]
      *   across all rows of each group.
      *   Values of the [DataRow] type are collected into a [DataFrame], and the resulting column is a [FrameColumn].
      *   Values of other types are collected into a [List], and the resulting column is a [DataColumn] of [List];
-     * * [aggregate][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],
+     * * [`aggregate`][Pivot.aggregate] — performs a set of custom aggregations using [AggregateDsl],
      *   allowing computation of one or more derived values per group;
      * * [Various aggregation statistics][AggregationStatistics] — predefined shortcuts
-     *   for common statistical aggregations such as [sum][Pivot.sum], [mean][Pivot.mean],
-     *   [median][Pivot.median], and others.
+     *   for common statistical aggregations such as [`sum`][Pivot.sum], [`mean`][Pivot.mean],
+     *   [`median`][Pivot.median], and others.
      *
      * Each of these methods returns a new [DataRow] with [pivot] keys as top-level columns
      * (or as [column groups][ColumnGroup]) and values representing the aggregated results of each group.
@@ -222,7 +222,7 @@ internal interface PivotDocs {
     /**
      * ### [Pivot] grouping
      *
-     * [Pivot] can be grouped with [groupBy][Pivot.groupBy] method. It will produce a [PivotGroupBy].
+     * [Pivot] can be grouped with [`groupBy`][Pivot.groupBy] method. It will produce a [PivotGroupBy].
      *
      * [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy] is a dataframe-like structure that combines [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] and [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy],
      * representing a matrix table with vertical [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot] groups (as columns)
@@ -252,27 +252,27 @@ internal interface PivotDocs {
      * Each function computes a statistic across the rows of a group and returns the result as
      * a new row of computed values in the resulting [DataFrame].
      *
-     * * [count][Pivot.count] — calculate the number of rows in each group
+     * * [`count`][Pivot.count] — calculate the number of rows in each group
      *   (optionally counting only rows that satisfy the given predicate);
-     * * [max][Pivot.max] / [maxOf][Pivot.maxOf] / [maxFor][Pivot.maxFor] —
+     * * [`max`][Pivot.max] / [`maxOf`][Pivot.maxOf] / [`maxFor`][Pivot.maxFor] —
      *   calculate the maximum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [min][Pivot.min] / [minOf][Pivot.minOf] / [minFor][Pivot.minFor] —
+     * * [`min`][Pivot.min] / [`minOf`][Pivot.minOf] / [`minFor`][Pivot.minFor] —
      *   calculate the minimum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [sum][Pivot.sum] / [sumOf][Pivot.sumOf] / [sumFor][Pivot.sumFor] —
+     * * [`sum`][Pivot.sum] / [`sumOf`][Pivot.sumOf] / [`sumFor`][Pivot.sumFor] —
      *   calculate the sum of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [mean][Pivot.mean] / [meanOf][Pivot.meanOf] / [meanFor][Pivot.meanFor] —
+     * * [`mean`][Pivot.mean] / [`meanOf`][Pivot.meanOf] / [`meanFor`][Pivot.meanFor] —
      *   calculate the mean (average) of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [std][Pivot.std] / [stdOf][Pivot.stdOf] / [stdFor][Pivot.stdFor] —
+     * * [`std`][Pivot.std] / [`stdOf`][Pivot.stdOf] / [`stdFor`][Pivot.stdFor] —
      *   calculate the standard deviation of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [median][Pivot.median] / [medianOf][Pivot.medianOf] / [medianFor][Pivot.medianFor] —
+     * * [`median`][Pivot.median] / [`medianOf`][Pivot.medianOf] / [`medianFor`][Pivot.medianFor] —
      *   calculate the median of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group;
-     * * [percentile][Pivot.percentile] / [percentileOf][Pivot.percentileOf] / [percentileFor][Pivot.percentileFor] —
+     * * [`percentile`][Pivot.percentile] / [`percentileOf`][Pivot.percentileOf] / [`percentileFor`][Pivot.percentileFor] —
      *   calculate a specified percentile of all values on the selected columns / by a row expression /
      *   for each of the selected columns within each group.
      *
@@ -555,17 +555,17 @@ public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean?
  * specified [columns] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the remaining columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [`groupByOther`][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
  *
  *
@@ -630,17 +630,17 @@ public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: PivotC
  * specified [columns] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the remaining columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [`groupByOther`][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
  *
  *
@@ -701,17 +701,17 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * specified [columns] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the remaining columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][DataFrame.pivot], [groupByOther][Pivot.groupByOther],
- * and [count][PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][DataFrame.pivot], [`groupByOther`][Pivot.groupByOther],
+ * and [`count`][PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -734,17 +734,17 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  * specified [columns] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the remaining columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [`groupByOther`][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -811,17 +811,17 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * specified [columns] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the remaining columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [groupByOther][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [`groupByOther`][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -930,11 +930,11 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  *
  * #### For example:
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -1004,11 +1004,11 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
  *
  * #### For example:
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`gb`</code>`.`[pivot][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`gb`</code>`.`[`pivot`][org.jetbrains.kotlinx.dataframe.api.pivot]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -1039,17 +1039,17 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  * specified [columns] within each group of this [GroupBy], returning a new [DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][GroupBy.pivot]
- * and [matches][PivotGroupBy.matches] operations into a single call.
+ * This function combines [`pivot`][GroupBy.pivot]
+ * and [`matches`][PivotGroupBy.matches] operations into a single call.
  *
  *
  *
@@ -1059,7 +1059,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  *
  * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
  *
- * See also: [pivotCounts][GroupBy.pivotCounts], which performs a similar operation
+ * See also: [`pivotCounts`][GroupBy.pivotCounts], which performs a similar operation
  * but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
@@ -1073,17 +1073,17 @@ internal typealias GroupByPivotMatchesCommonDocs = Nothing
  * specified [columns] within each group of this [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
  *
  *
@@ -1093,7 +1093,7 @@ internal typealias GroupByPivotMatchesCommonDocs = Nothing
  *
  * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
  *
- * See also: [pivotCounts][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts], which performs a similar operation
+ * See also: [`pivotCounts`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts], which performs a similar operation
  * but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
@@ -1148,17 +1148,17 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  * specified [columns] within each group of this [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Boolean] value indicating whether a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches] operations into a single call.
  *
  *
  *
@@ -1168,7 +1168,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(inward: Boolean = true, columns: Pivot
  *
  * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
  *
- * See also: [pivotCounts][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts], which performs a similar operation
+ * See also: [`pivotCounts`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts], which performs a similar operation
  * but counts the number of matching rows instead of checking for their presence.
  *
  * ### This `pivotMatches` Overload
@@ -1214,17 +1214,17 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * specified [columns] within each group of this [GroupBy], returning a new [DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][GroupBy.pivot]
- * and [count][PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][GroupBy.pivot]
+ * and [`count`][PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -1234,7 +1234,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
- * See also: [pivotMatches][GroupBy.pivotMatches], which performs a similar operation
+ * See also: [`pivotMatches`][GroupBy.pivotMatches], which performs a similar operation
  * but check if there is any matching row instead of counting then.
  *
  * ### This `pivotCounts` Overload
@@ -1246,17 +1246,17 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  * specified [columns] within each group of this [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -1266,7 +1266,7 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  *
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
- * See also: [pivotMatches][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
+ * See also: [`pivotMatches`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
  * but check if there is any matching row instead of counting then.
  *
  * ### This `pivotCounts` Overload
@@ -1319,17 +1319,17 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * specified [columns] within each group of this [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy], returning a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] where:
  * * **Columns** represent all unique values from the selected [columns]
  *   (they become [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [then][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
+ *   corresponding to value combinations when using [`then`][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
  *   similar to [pivot][org.jetbrains.kotlinx.dataframe.api.pivot]);
  * * **Rows** correspond to all unique combinations of values from the grouping columns;
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
- *   (similar to [keys][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
+ *   (similar to [`keys`][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
  * * **Cells** contain a [Int] value indicating number a row with the corresponding
  *   combination of values (horizontal and vertical) exists in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function combines [pivot][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
+ * This function combines [`pivot`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
  *
  *
  *
@@ -1339,7 +1339,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  *
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
- * See also: [pivotMatches][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
+ * See also: [`pivotMatches`][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
  * but check if there is any matching row instead of counting then.
  *
  * ### This `pivotCounts` Overload
@@ -1388,10 +1388,10 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
  * Pivots the selected [columns] within each group for further
  * [pivot aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
  *
- * This function itself does not directly modify the result of [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate],
+ * This function itself does not directly modify the result of [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate],
  * but instead creates an intermediate [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy].
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns produced by its [aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] are then
- * inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate]
+ * inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate]
  * when those aggregation functions are executed (as usual aggregations).
  * Their structure depends on the specific
  * [PivotGroupBy aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] used.
@@ -1402,8 +1402,8 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
  *
  * Check out [`PivotGroupBy` Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
  *
- * See also [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
- * and [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
+ * See also [`pivotMatches`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
+ * and [`pivotCounts`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
  *
  * ### This `pivot` overload
  * Select or express pivot columns using the [PivotDsl].
@@ -1450,10 +1450,10 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
  * Pivots the selected [columns] within each group for further
  * [pivot aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation].
  *
- * This function itself does not directly modify the result of [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate],
+ * This function itself does not directly modify the result of [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate],
  * but instead creates an intermediate [PivotGroupBy][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy].
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns produced by its [aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] are then
- * inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate]
+ * inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate]
  * when those aggregation functions are executed (as usual aggregations).
  * Their structure depends on the specific
  * [PivotGroupBy aggregations][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Aggregation] used.
@@ -1464,8 +1464,8 @@ public fun <T> AggregateGroupedDsl<T>.pivot(
  *
  * Check out [`PivotGroupBy` Grammar][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
  *
- * See also [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
- * and [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
+ * See also [`pivotMatches`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
+ * and [`pivotCounts`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts] shortcuts.
  *
  * ### This `pivot` overload
  *
@@ -1525,21 +1525,21 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
 // region pivotMatches
 
 /**
- * Computes the [pivotMatches][org.jetbrains.kotlinx.dataframe.DataFrame.pivotMatches] statistic for the selected [columns]
- * within each group and adds it to the [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
+ * Computes the [`pivotMatches`][org.jetbrains.kotlinx.dataframe.DataFrame.pivotMatches] statistic for the selected [columns]
+ * within each group and adds it to the [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
  *
- * This is a shortcut for combining [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches].
+ * This is a shortcut for combining [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches].
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns are inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
+ * returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
  * The resulting column name can be specified using [into][org.jetbrains.kotlinx.dataframe.api.into].
  *
  * See [GroupBy.pivotMatches][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches] for more details.
  *
  * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
  *
- * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
+ * See also: [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [`pivotCounts`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
  *
  * ### This `pivotMatches` overload
  * Select or express pivot columns using the [PivotDsl].
@@ -1584,7 +1584,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  * pivot key values as columns, and `true`/`false` cells indicating existing combinations.
- * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
+ * This [DataFrame] is added to the [`aggregate`][Grouped.aggregate] result.
  */
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
     inward: Boolean = true,
@@ -1592,21 +1592,21 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
 ): DataFrame<T> = pivot(inward, columns).matches()
 
 /**
- * Computes the [pivotMatches][org.jetbrains.kotlinx.dataframe.DataFrame.pivotMatches] statistic for the selected [columns]
- * within each group and adds it to the [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
+ * Computes the [`pivotMatches`][org.jetbrains.kotlinx.dataframe.DataFrame.pivotMatches] statistic for the selected [columns]
+ * within each group and adds it to the [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
  *
- * This is a shortcut for combining [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
- * and [matches][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches].
+ * This is a shortcut for combining [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
+ * and [`matches`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.matches].
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns are inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
+ * returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
  * The resulting column name can be specified using [into][org.jetbrains.kotlinx.dataframe.api.into].
  *
  * See [GroupBy.pivotMatches][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches] for more details.
  *
  * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
  *
- * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
+ * See also: [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [`pivotCounts`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts].
  *
  * ### This `pivotMatches` overload
  *
@@ -1630,7 +1630,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a Boolean presence matrix — with grouping key columns as rows,
  * pivot key values as columns, and `true`/`false` cells indicating existing combinations.
- * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
+ * This [DataFrame] is added to the [`aggregate`][Grouped.aggregate] result.
  */
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
@@ -1652,21 +1652,21 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
 // region pivotCounts
 
 /**
- * Computes the [pivotCounts][org.jetbrains.kotlinx.dataframe.DataFrame.pivotCounts] statistic for the selected [columns]
- * within each group and adds it to the [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
+ * Computes the [`pivotCounts`][org.jetbrains.kotlinx.dataframe.DataFrame.pivotCounts] statistic for the selected [columns]
+ * within each group and adds it to the [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
  *
- * This is a shortcut for combining [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count].
+ * This is a shortcut for combining [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count].
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns are inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
+ * returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
  * The resulting column name can be specified using [into][org.jetbrains.kotlinx.dataframe.api.into].
  *
  * See [GroupBy.pivotCounts][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts] for more details.
  *
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
- * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
+ * See also: [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [`pivotMatches`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
  *
  * ### This `pivotCounts` overload
  * Select or express pivot columns using the [PivotDsl].
@@ -1711,7 +1711,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  * pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
- * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
+ * This [DataFrame] is added to the [`aggregate`][Grouped.aggregate] result.
  */
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
     inward: Boolean = true,
@@ -1719,21 +1719,21 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
 ): DataFrame<T> = pivot(inward, columns).count()
 
 /**
- * Computes the [pivotCounts][org.jetbrains.kotlinx.dataframe.DataFrame.pivotCounts] statistic for the selected [columns]
- * within each group and adds it to the [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
+ * Computes the [`pivotCounts`][org.jetbrains.kotlinx.dataframe.DataFrame.pivotCounts] statistic for the selected [columns]
+ * within each group and adds it to the [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] result.
  *
- * This is a shortcut for combining [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
- * and [count][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count].
+ * This is a shortcut for combining [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
+ * and [`count`][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count].
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] columns are inserted into the final [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * returned by [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
+ * returned by [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate].
  * The resulting column name can be specified using [into][org.jetbrains.kotlinx.dataframe.api.into].
  *
  * See [GroupBy.pivotCounts][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotCounts] for more details.
  *
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
- * See also: [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
+ * See also: [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot], [`pivotMatches`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches].
  *
  * ### This `pivotCounts` overload
  *
@@ -1757,7 +1757,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(
  * as keys for pivoting and in which order.
  * @return A new [DataFrame] representing a counting matrix — with grouping key columns as rows,
  * pivot key values as columns, and the number of rows with the corresponding combinations in the cells.
- * This [DataFrame] is added to the [aggregate][Grouped.aggregate] result.
+ * This [DataFrame] is added to the [`aggregate`][Grouped.aggregate] result.
  */
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> =
     pivotCounts(inward) { columns.toColumnSet() }
@@ -1803,7 +1803,7 @@ public interface Pivot<T> : Aggregatable<T>
  * Provides [PivotDsl] both as the receiver and the lambda parameter, and expects
  * a [ColumnsResolver] as the return value.
  *
- * Enables defining the hierarchy of pivot columns using [then][PivotDsl.then].
+ * Enables defining the hierarchy of pivot columns using [`then`][PivotDsl.then].
  */
 public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResolver<C>>
 
@@ -1815,10 +1815,10 @@ public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResol
  * in a resulting [DataRow].
  *
  * Available transformation methods:
- * * [values][ReducedPivot.values] — creates a new row containing the values
+ * * [`values`][ReducedPivot.values] — creates a new row containing the values
  *   from the reduced rows in the selected columns and produces a [DataRow] of
  *   these values;
- * * [with][ReducedPivot.with] — computes a new value for each reduced row using a [RowExpression],
+ * * [`with`][ReducedPivot.with] — computes a new value for each reduced row using a [RowExpression],
  *   and produces a [DataRow] containing these computed values.
  *
  * Each method returns a new [DataRow] with [pivot] keys as top-level columns
@@ -1853,12 +1853,12 @@ internal interface PivotGroupByDocs {
     /**
      * * **Columns** represent all unique values from the selected [columns]
      *   (they become [column groups][ColumnGroup]
-     *   corresponding to value combinations when using [then][PivotDsl.then],
+     *   corresponding to value combinations when using [`then`][PivotDsl.then],
      *   similar to [pivot]);
      * * **Rows** correspond to all unique combinations of values from the grouping columns;
      *   each combination is represented in dedicated key columns that store
      *   a distinct set of values for each row
-     *   (similar to [keys][GroupBy.keys] in [GroupBy]).
+     *   (similar to [`keys`][GroupBy.keys] in [GroupBy]).
      */
     typealias ResultingMatrixShortcutDescription = Nothing
 
@@ -1896,18 +1896,18 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * and the correspodning aggregated values in new nested columns.
      *
      * [AggregateDsl] allows to compute statistics on the columns within groups in [PivotGroupBy]
-     * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [expression][body] is applied to each group independently.
+     * and store the results as a new column using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [expression][body] is applied to each group independently.
      *
      *
      * The resulting [DataFrame] has the same structure as the original
      * [PivotGroupBy];
-     * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     * instead of the groups, there are new columns of aggregated values created with [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
      * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
      * or any custom aggregation function.
      *
      * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
-     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
      * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
      * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
      * in the resulting [DataFrame] while preserving the original structure at higher levels.

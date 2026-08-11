@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 /**
  * ### Read Delimiter-Separated Text String to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any delimiter-separated text [String] to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any delimiter-separated text [String] to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -38,19 +38,19 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readDelim][readDelim]`()`, you can read any delimiter-separated text by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readDelim][readDelim]`()`, you can read any delimiter-separated text by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readDelim][readDelim]`("input.txt")` or with some options:
  *
  * [DataFrame.readDelim][readDelim]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.txt"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.txt"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -93,8 +93,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -108,12 +108,12 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *

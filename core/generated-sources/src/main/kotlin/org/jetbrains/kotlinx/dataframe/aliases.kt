@@ -143,8 +143,8 @@ public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, Column
  * The lambda has access to the [`DataRow<T>`][DataRow] both as `this` and as `it`,
  * enabling concise and readable conditions.
  *
- * Commonly used in operations such as [filter][org.jetbrains.kotlinx.dataframe.api.filter],
- * [drop][org.jetbrains.kotlinx.dataframe.api.drop], and others.
+ * Commonly used in operations such as [`filter`][org.jetbrains.kotlinx.dataframe.api.filter],
+ * [`drop`][org.jetbrains.kotlinx.dataframe.api.drop], and others.
  *
  * Equivalent to:
  * ```kotlin

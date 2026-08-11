@@ -196,7 +196,7 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
  *   Note: this parameter is ignored if another [Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
+ *   a column group will be created instead of a [`DataColumn`][DataColumn]`<`[`AnyCol`][AnyCol]`>`.
  * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
  *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
  *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
@@ -235,7 +235,7 @@ internal fun <T> createColumnGuessingType(
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
  *   Note: this parameter is ignored if another [Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
+ *   a column group will be created instead of a [`DataColumn`][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[`AnyCol`][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
  * @param unifyNumbers if `true`, then all numbers encountered in [values][org.jetbrains.kotlinx.dataframe.values] will be converted to the smallest possible
  *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers].
  *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].

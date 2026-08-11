@@ -99,15 +99,15 @@ internal typealias SeeAlsoParse = Nothing
  * returns a [Convert],
  * which serves as an intermediate step.
  * The [Convert] object provides methods to transform selected columns using:
- * - [to][Convert.to]
- * - [with][Convert.with]
- * - [asFrame][Convert.asFrame]
- * - [perRowCol][Convert.perRowCol]
- * - [notNull][Convert.notNull]
- * - [toDataFrames][Convert.toDataFrames]
+ * - [`to`][Convert.to]
+ * - [`with`][Convert.with]
+ * - [`asFrame`][Convert.asFrame]
+ * - [`perRowCol`][Convert.perRowCol]
+ * - [`notNull`][Convert.notNull]
+ * - [`toDataFrames`][Convert.toDataFrames]
  *
  * Additionally, it offers a wide range of methods for converting to specific types,
- * such as [toStr][Convert.toStr], [toDouble][Convert.toDouble], and many others.
+ * such as [`toStr`][Convert.toStr], [`toDouble`][Convert.toDouble], and many others.
  *
  * For the full list of supported types, see [SupportedTypes].
  *
@@ -157,11 +157,11 @@ internal interface ConvertDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`convert`][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`convert`][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`convert`][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -176,7 +176,7 @@ internal interface ConvertDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`("length", "age")`
+     * <code>`df`</code>`.`[`convert`][org.jetbrains.kotlinx.dataframe.api.convert]`("length", "age")`
      *
      *
      *
@@ -191,11 +191,11 @@ internal interface ConvertDocs {
      * * [Int], [Long], [Float], [Double];
      * * [BigDecimal], [BigInteger];
      * * [LocalDateTime], [LocalDate], [LocalTime],
-     *   `Instant` ([kotlinx.datetime][DeprecatedInstant], [kotlin.time][StdlibInstant], and [java.time]),
+     *   `Instant` ([`kotlinx.datetime`][DeprecatedInstant], [`kotlin.time`][StdlibInstant], and [java.time]),
      * * [URL], [IMG], [IFRAME].
      *
      * __NOTE__: Conversion between [Int] and [Char] is done by UTF-16 [Char.code].
-     *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
+     *   To convert [Char]->[Int] the way it is written, use [`parse()`][parse] instead, or,
      *   in either case, use [String] as intermediary type.
      */
     typealias SupportedTypes = Nothing
@@ -316,15 +316,15 @@ internal interface ConvertDocs {
  * returns a [Convert][org.jetbrains.kotlinx.dataframe.api.Convert],
  * which serves as an intermediate step.
  * The [Convert][org.jetbrains.kotlinx.dataframe.api.Convert] object provides methods to transform selected columns using:
- * - [to][org.jetbrains.kotlinx.dataframe.api.Convert.to]
- * - [with][org.jetbrains.kotlinx.dataframe.api.Convert.with]
- * - [asFrame][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
- * - [perRowCol][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
- * - [notNull][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
- * - [toDataFrames][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
+ * - [`to`][org.jetbrains.kotlinx.dataframe.api.Convert.to]
+ * - [`with`][org.jetbrains.kotlinx.dataframe.api.Convert.with]
+ * - [`asFrame`][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
+ * - [`perRowCol`][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
+ * - [`notNull`][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
+ * - [`toDataFrames`][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
  *
  * Additionally, it offers a wide range of methods for converting to specific types,
- * such as [toStr][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [toDouble][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
+ * such as [`toStr`][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [`toDouble`][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
  *
  * For the full list of supported types, see [SupportedTypes][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.SupportedTypes].
  *
@@ -381,15 +381,15 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
  * returns a [Convert][org.jetbrains.kotlinx.dataframe.api.Convert],
  * which serves as an intermediate step.
  * The [Convert][org.jetbrains.kotlinx.dataframe.api.Convert] object provides methods to transform selected columns using:
- * - [to][org.jetbrains.kotlinx.dataframe.api.Convert.to]
- * - [with][org.jetbrains.kotlinx.dataframe.api.Convert.with]
- * - [asFrame][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
- * - [perRowCol][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
- * - [notNull][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
- * - [toDataFrames][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
+ * - [`to`][org.jetbrains.kotlinx.dataframe.api.Convert.to]
+ * - [`with`][org.jetbrains.kotlinx.dataframe.api.Convert.with]
+ * - [`asFrame`][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
+ * - [`perRowCol`][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
+ * - [`notNull`][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
+ * - [`toDataFrames`][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
  *
  * Additionally, it offers a wide range of methods for converting to specific types,
- * such as [toStr][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [toDouble][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
+ * such as [`toStr`][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [`toDouble`][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
  *
  * For the full list of supported types, see [SupportedTypes][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.SupportedTypes].
  *
@@ -456,7 +456,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * ## Note
  * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
  * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
- * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * and [`add`][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
  * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
@@ -505,12 +505,12 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * in the [DataFrame], but their values will be transformed.
  *
  * Use the following methods to perform the conversion:
- * - [to(kType)][to]/[to`<Type`>()][to] – converts columns to a specific type.
- * - [asColumn { columnConverter }][asColumn] - converts columns using column converter expression.
- * - [with][Convert.with] – applies a custom row-wise conversion expression.
- * - [notNull][Convert.notNull] – like [with], but only for non-null values.
- * - [perRowCol][Convert.perRowCol] – applies a conversion that uses both column and row information.
- * - [asFrame][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
+ * - [`to(kType)`][to]/[`to<Type>()`][to] – converts columns to a specific type.
+ * - [`asColumn { columnConverter }`][asColumn] - converts columns using column converter expression.
+ * - [`with`][Convert.with] – applies a custom row-wise conversion expression.
+ * - [`notNull`][Convert.notNull] – like [with], but only for non-null values.
+ * - [`perRowCol`][Convert.perRowCol] – applies a conversion that uses both column and row information.
+ * - [`asFrame`][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
  * - [toStr], [toInt], [toLong], [toDouble], [toFloat], [toBigDecimal],
  *   [toBigInteger], [toBoolean] – convert to standard types.
  * - [toLocalDateTime], [toLocalDate], [toLocalTime] – convert to kotlinx.datetime types.
@@ -526,7 +526,7 @@ public class Convert<T, out C>(
     @PublishedApi internal val columns: ColumnsSelector<T, C>,
 ) {
     /**
-     * Casts the type parameter of the columns previously selected with [convert][convert] to a new type [R],
+     * Casts the type parameter of the columns previously selected with [`convert`][convert] to a new type [R],
      * without performing any actual data transformation.
      *
      * This operation updates the static type of the selected columns for further type-safe conversions.
@@ -545,7 +545,7 @@ public class Convert<T, out C>(
      * The target type is provided as reified argument.
      * For the full list of supported types, see [SupportedTypes][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.SupportedTypes].
      *
-     * Converting from [String(?)][String] columns is considered "parsing".
+     * Converting from [`String(?)`][String] columns is considered "parsing".
      * You can also provide [parserOptions] to customize the [Locale], date-time options, etc.
      * See [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]. This argument is ignored for non-`String` columns.
      *
@@ -588,7 +588,7 @@ public class Convert<T, out C>(
  * The target type is provided as reified argument.
  * For the full list of supported types, see [SupportedTypes][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.SupportedTypes].
  *
- * Converting from [String(?)][String] columns is considered "parsing".
+ * Converting from [`String(?)`][String] columns is considered "parsing".
  * You can also provide [parserOptions] to customize the [Locale], date-time options, etc.
  * See [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]. This argument is ignored for non-`String` columns.
  *
@@ -634,7 +634,7 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
  * ## Note
  * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
  * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
- * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * and [`add`][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
  * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
@@ -650,7 +650,7 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
  * df.convert { colsOf<Int>() }.with { baseValue -> (baseValue * coeff).seconds }
  * ```
  *
- * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * @param infer [Infer] strategy that defines how the [`type`][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
  * @param [rowConverter] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
  * @return A new [DataFrame] with the converted values.
@@ -742,7 +742,7 @@ public inline fun <T, C, R> Convert<T, C>.asColumn(
  * }
  * ```
  *
- * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * @param infer [Infer] strategy that defines how the [`type`][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
  * @param [expression] The [RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
@@ -943,10 +943,10 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
 
 /** Converts values in this [String] column to [Double] considering locale (number format).
  *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ * If any of the parameters is `null`, the global default (in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   The default in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
  *
  * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values. */
@@ -957,17 +957,17 @@ public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColum
 /**
  * Converts values in this [String] column to [Double] considering locale (number format).
  *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ * If any of the parameters is `null`, the global default (in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   The default in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
  *
  * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values.
  * @param nullStrings a set of strings that should be treated as `null` values.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
@@ -979,10 +979,10 @@ public fun DataColumn<String>.convertToDouble(
 
 /** Converts values in this [String] column to [Double] considering locale (number format).
  *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ * If any of the parameters is `null`, the global default (in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   The default in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
  *
  * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values. */
@@ -993,17 +993,17 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
 /**
  * Converts values in this [String] column to [Double] considering locale (number format).
  *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ * If any of the parameters is `null`, the global default (in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   The default in [`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
  *
  * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values.
  * @param nullStrings a set of strings that should be treated as `null` values.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(

@@ -83,8 +83,8 @@ import kotlin.reflect.KProperty
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -220,8 +220,8 @@ public fun <A, B> DataFrame<A>.join(
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -328,8 +328,8 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -436,8 +436,8 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -544,8 +544,8 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -652,8 +652,8 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -760,8 +760,8 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -858,8 +858,8 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
  *
  * Provides the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
- * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.right] to access columns from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
+ * and [`match`][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
@@ -993,7 +993,7 @@ internal class ColumnMatchImpl<C>(override val left: ColumnReference<C>, overrid
 /**
  * Creates a [ColumnMatch].
  *
- * Not intended for public API consumption. Please use [match][JoinDsl.match] instead.
+ * Not intended for public API consumption. Please use [`match`][JoinDsl.match] instead.
  */
 public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>): ColumnMatch<C> =
     ColumnMatchImpl(left, right)
@@ -1005,7 +1005,7 @@ public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>):
  * a [ColumnsResolver] as the return value.
  *
  * Enables defining matching columns from left and right [DataFrame]s
- * using [right][JoinDsl.right] and [match][JoinDsl.match].
+ * using [`right`][JoinDsl.right] and [`match`][JoinDsl.match].
  */
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 

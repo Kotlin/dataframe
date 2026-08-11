@@ -67,11 +67,11 @@ internal interface UngroupDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`ungroup`][org.jetbrains.kotlinx.dataframe.api.ungroup]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`ungroup`][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`ungroup`][org.jetbrains.kotlinx.dataframe.api.ungroup]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -86,7 +86,7 @@ internal interface UngroupDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
+     * <code>`df`</code>`.`[`ungroup`][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
      *
      *
      *
@@ -165,7 +165,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
+ * <code>`df`</code>`.`[`ungroup`][org.jetbrains.kotlinx.dataframe.api.ungroup]`("length", "age")`
  *
  *
  *
