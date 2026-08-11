@@ -29,11 +29,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  * ### Check out: [Usage\]
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[\`{@get [OPERATION]}While\`][ColumnSet.{@get [OPERATION]}While]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
+ * `df.`[`select`][DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[\`{@get [OPERATION]}While\`][ColumnSet.{@get [OPERATION]}While]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[\`{@get [OPERATION]}While\`][SingleColumn.{@get [OPERATION]}ColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[\`{@get [OPERATION]}While\`][SingleColumn.{@get [OPERATION]}ColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[\`{@get [OPERATION]}ColsWhile\`][String.{@get [OPERATION]}ColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][ColumnKind.Value]` } }`
+ * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[\`{@get [OPERATION]}ColsWhile\`][String.{@get [OPERATION]}ColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][ColumnKind.Value]` } }`
  *
  * #### Examples for this overload:
  *

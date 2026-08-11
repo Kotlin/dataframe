@@ -31,9 +31,9 @@ internal interface ExpressionsGivenColumn {
          *
          * For example:
          *
-         * `df.`{@get [OPERATION]}` { `[mean][DataColumn.mean]`(skipNA = true) }`
+         * `df.`{@get [OPERATION]}` { `[`mean`][DataColumn.mean]`(skipNA = true) }`
          *
-         * `df.`{@get [OPERATION]}` { `[count][DataColumn.count]` { it > 10 } }`
+         * `df.`{@get [OPERATION]}` { `[`count`][DataColumn.count]` { it > 10 } }`
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing

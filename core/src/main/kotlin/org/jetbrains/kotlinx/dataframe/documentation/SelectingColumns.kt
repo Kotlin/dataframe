@@ -98,11 +98,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length `[`and`][ColumnsSelectionDsl.and]` age }`
          *
-         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]
@@ -153,9 +153,9 @@ internal interface SelectingColumns {
          *
          * {@get [RECEIVER]}`.`{@get [OPERATION]}` { length }`
          *
-         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[`col`][ColumnsSelectionDsl.col]`(1) }`
          *
-         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * {@get [RECEIVER]}`.`{@get [OPERATION]}`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>().`[`first`][ColumnsSelectionDsl.first]`() }`
          *
          * @include [SetDefaultOperationArg]
          * @include [SetDefaultReceiverArg]

@@ -54,7 +54,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `<code>{@get [CommonRangeOfColumnsDocs.Example]}</code>` }`
+     * `df.`[`select`][DataFrame.select]`  {  `<code>{@get [CommonRangeOfColumnsDocs.Example]}</code>` }`
      *
      * @param [endInclusive\] The last column in the subset.
      * @receiver The first column in the subset.

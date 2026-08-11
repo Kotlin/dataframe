@@ -93,20 +93,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCol][frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCol`][frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCol][frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCol`][frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[frameCol][frameCol]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`frameCol`][frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
      * {@get [CommonFrameColDocs.EXAMPLE]}
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][ColumnsSelectionDsl.col],
-     * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [valueCol][ColumnsSelectionDsl.valueCol].
+     * [`col`][ColumnsSelectionDsl.col],
+     * [`colGroup`][ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.
@@ -123,14 +123,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[`frameCol`][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[`frameCol`][frameCol]`({@get [CommonFrameColDocs.ARG]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[frameCol][frameCol]`<`[String][String]`>({@get [CommonFrameColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonFrameColDocs.RECEIVER]}`[`frameCol`][frameCol]`<`[`String`][String]`>({@get [CommonFrameColDocs.ARG]}) \}`
          */
         typealias DoubleExample = Nothing
 
@@ -551,7 +551,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     private typealias FrameColIndexDocs = Nothing
 
     /**
-     * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
      */
@@ -561,7 +561,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
         getAt(index).ensureIsFrameColumn()
 
     /**
-     * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [FrameColIndexDocs] {@set [CommonFrameColDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
      */

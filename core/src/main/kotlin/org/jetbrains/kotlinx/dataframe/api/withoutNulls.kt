@@ -70,11 +70,11 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.colsNameContains]`("middleName").`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`all`][ColumnsSelectionDsl.all]`().`[`nameContains`][ColumnsSelectionDsl.colsNameContains]`("middleName").`[`withoutNulls`][ColumnSet.withoutNulls]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.withoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`withoutNulls`][ColumnsSelectionDsl.withoutNulls]`() }`
      *
-     * `df.`[select][DataFrame.select]` { Type::userData.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::userData.`[`colsWithoutNulls`][SingleColumn.colsWithoutNulls]`() }`
      *
      * #### Examples for this overload:
      *
@@ -91,7 +91,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`withoutNulls`][ColumnSet.withoutNulls]`() }`
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("WithoutNulls0")
@@ -102,7 +102,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`withoutNulls`][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
     @Interpretable("WithoutNulls1")
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> = asSingleColumn().colsWithoutNulls()
@@ -111,7 +111,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsWithoutNulls`][SingleColumn.colsWithoutNulls]`() }`
      */
     @Interpretable("WithoutNulls2")
     public fun SingleColumn<DataRow<*>>.colsWithoutNulls(): ColumnSet<Any> =
@@ -121,7 +121,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsWithoutNulls][String.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsWithoutNulls`][String.colsWithoutNulls]`() }`
      */
     public fun String.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
@@ -129,7 +129,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsWithoutNulls][KProperty.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`colsWithoutNulls`][KProperty.colsWithoutNulls]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -139,7 +139,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[colsWithoutNulls][ColumnPath.colsWithoutNulls]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`colsWithoutNulls`][ColumnPath.colsWithoutNulls]`() }`
      */
     public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 }

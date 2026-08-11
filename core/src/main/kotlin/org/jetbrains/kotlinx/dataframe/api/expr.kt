@@ -49,12 +49,12 @@ public interface ExprColumnsSelectionDsl {
  *
  * #### For example:
  *
- * `df.`[groupBy][DataFrame.groupBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { firstName.`[`length`][String.length]` + lastName.`[`length`][String.length]`  }  `[`named`][named]` "nameLength" }`
+ * `df.`[`groupBy`][DataFrame.groupBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { firstName.`[`length`][String.length]` + lastName.`[`length`][String.length]`  }  `[`named`][named]` "nameLength" }`
  *
- * `df.`[sortBy][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
+ * `df.`[`sortBy`][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
  *
  * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
- * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
+ * @include [Infer.ParamDoc] By default: [`Nulls`][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
  */
 @Interpretable("Expr0")
