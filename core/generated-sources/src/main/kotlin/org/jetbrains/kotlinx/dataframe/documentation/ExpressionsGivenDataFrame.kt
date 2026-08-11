@@ -19,7 +19,7 @@ internal interface ExpressionsGivenDataFrame {
          *
          * For example:
          *
-         * ` { `[select][DataFrame.select]` { lastName } }`
+         * ` { `[`select`][DataFrame.select]` { lastName } }`
          */
         typealias WithExample = Nothing
     }

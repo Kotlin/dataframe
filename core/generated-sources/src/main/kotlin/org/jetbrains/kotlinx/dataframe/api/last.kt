@@ -132,11 +132,11 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * df.lastOrNull { amount > 100 }
  * ```
  *
- * See also [last][DataFrame.last],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * See also [`last`][DataFrame.last],
+ * [`first`][DataFrame.first],
+ * [`take`][DataFrame.take],
+ * [`takeLast`][DataFrame.takeLast],
+ * [`takeWhile`][DataFrame.takeWhile].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -172,11 +172,11 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * df.last { amount > 100 }
  * ```
  *
- * See also [lastOrNull][DataFrame.lastOrNull],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * See also [`lastOrNull`][DataFrame.lastOrNull],
+ * [`first`][DataFrame.first],
+ * [`take`][DataFrame.take],
+ * [`takeLast`][DataFrame.takeLast],
+ * [`takeWhile`][DataFrame.takeWhile].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -193,10 +193,10 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
 /**
  * Returns the last [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
- * See also [last][DataFrame.last],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * See also [`last`][DataFrame.last],
+ * [`first`][DataFrame.first],
+ * [`take`][DataFrame.take],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the last row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -205,10 +205,10 @@ public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow -
 /**
  * Returns the last [row][DataRow] in this [DataFrame].
  *
- * See also [lastOrNull][DataFrame.lastOrNull],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * See also [`lastOrNull`][DataFrame.lastOrNull],
+ * [`first`][DataFrame.first],
+ * [`take`][DataFrame.take],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the last row in this [DataFrame].
  *
@@ -242,7 +242,7 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
  * df.groupBy { orderId }.last().concat()
  * ```
  *
- * See also [first][GroupBy.first].
+ * See also [`first`][GroupBy.first].
  *
  * @return A [ReducedGroupBy] containing the last [row][DataRow]
  * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
@@ -282,7 +282,7 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * df.groupBy { orderId }.last { !isInternal }.concat()
  * ```
  *
- * See also [first][GroupBy.first].
+ * See also [`first`][GroupBy.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -310,7 +310,7 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
  * df.pivot { type }.last().values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ * See also [pivot], [`reduce`][Pivot.reduce], [`first`][Pivot.first].
  *
  * @return A [ReducedPivot] containing in each column the last [row][DataRow] from the corresponding group.
  */
@@ -346,7 +346,7 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * df.pivot { type }.last { price < 500_000 }.values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ * See also [pivot], [`reduce`][Pivot.reduce], [`first`][Pivot.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -377,10 +377,10 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * df.pivot { type }.groupBy { city }.last().values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [first][PivotGroupBy.first].
+ * See also [`groupBy`][Pivot.groupBy],
+ * [`pivot`][GroupBy.pivot],
+ * [`reduce`][PivotGroupBy.reduce],
+ * [`first`][PivotGroupBy.first].
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
  * the last [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
@@ -427,10 +427,10 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * df.pivot { type }.groupBy { city }.last { price < 500_000 }.values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [first][PivotGroupBy.first].
+ * See also [`groupBy`][Pivot.groupBy],
+ * [`pivot`][GroupBy.pivot],
+ * [`reduce`][PivotGroupBy.reduce],
+ * [`first`][PivotGroupBy.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -491,7 +491,7 @@ public interface LastColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -547,9 +547,9 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`last`][ColumnsSelectionDsl.last]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`lastCol`][String.lastCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
@@ -580,15 +580,15 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().`[`last`][ColumnSet.last]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`last`][ColumnSet.last]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
@@ -616,13 +616,13 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`last`][ColumnsSelectionDsl.last]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
@@ -647,13 +647,13 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`lastCol`][SingleColumn.lastCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
@@ -678,13 +678,13 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`lastCol`][String.lastCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
@@ -708,15 +708,15 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`lastCol`][SingleColumn.lastCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`lastCol`][KProperty.lastCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
@@ -742,13 +742,13 @@ public interface LastColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`last`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`lastCol`][kotlin.String.lastCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`lastCol`][ColumnPath.lastCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column

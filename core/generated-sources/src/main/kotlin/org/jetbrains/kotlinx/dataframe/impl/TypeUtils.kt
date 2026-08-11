@@ -408,7 +408,7 @@ internal fun guessValueType(
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
  *   Note: this parameter is ignored if another [Collection] is present in the values.
  * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
- *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
+ *   that a column group should be created instead of a [`DataColumn`][DataColumn]`<`[`AnyCol`][AnyCol]`>`,
  *   so the function will return [DataRow].
  * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
  *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
@@ -669,7 +669,7 @@ internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecim
  *
  * The [KClass] is determined by retrieving the runtime class of each element.
  *
- * [Nothing::class][Nothing] is used for elements that are `null`.
+ * [`Nothing::class`][Nothing] is used for elements that are `null`.
  *
  * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
  */
@@ -684,7 +684,7 @@ internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
  *
  * This can be a heavy operation!
  *
- * [typeOf<Nothing?>()][nullableNothingType] is used for elements that are `null`.
+ * [`typeOf<Nothing?>()`][nullableNothingType] is used for elements that are `null`.
  *
  * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
  */

@@ -81,7 +81,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -145,20 +145,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCol][frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCol`][frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCol][frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`frameCol`][frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[frameCol][frameCol]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`frameCol`][frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
      *
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][ColumnsSelectionDsl.col],
-     * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [valueCol][ColumnsSelectionDsl.valueCol].
+     * [`col`][ColumnsSelectionDsl.col],
+     * [`colGroup`][ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -175,14 +175,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { `[frameCol][frameCol]`() }`
+         * `df.`[`select`][DataFrame.select]` { `[`frameCol`][frameCol]`() }`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { `[frameCol][frameCol]`() }`
+         * `df.`[`select`][DataFrame.select]` { `[`frameCol`][frameCol]`() }`
          *
-         * `df.`[select][DataFrame.select]` { `[frameCol][frameCol]`<`[String][String]`>() }`
+         * `df.`[`select`][DataFrame.select]` { `[`frameCol`][frameCol]`<`[`String`][String]`>() }`
          */
         typealias DoubleExample = Nothing
 
@@ -222,20 +222,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -273,20 +273,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -327,20 +327,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -390,20 +390,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -445,20 +445,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -499,20 +499,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -553,20 +553,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -611,22 +611,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -663,22 +663,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -717,22 +717,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -770,22 +770,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -824,22 +824,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -883,22 +883,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -937,22 +937,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -991,22 +991,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1045,22 +1045,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1099,22 +1099,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1153,22 +1153,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1207,22 +1207,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1261,22 +1261,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("frameColumnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColumnName") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColumnName") }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1319,22 +1319,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1371,22 +1371,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1425,22 +1425,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1478,22 +1478,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1532,22 +1532,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1591,22 +1591,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1645,22 +1645,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1699,22 +1699,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1753,22 +1753,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1807,22 +1807,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1861,22 +1861,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1915,22 +1915,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -1969,22 +1969,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`("pathTo"["frameColumnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("pathTo"["frameColumnName"] ) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("pathTo"["frameColumnName"] ) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2027,20 +2027,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2078,20 +2078,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2134,20 +2134,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2188,20 +2188,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2244,20 +2244,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2298,20 +2298,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2354,20 +2354,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2408,20 +2408,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2464,20 +2464,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2518,20 +2518,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2574,20 +2574,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2628,20 +2628,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2684,20 +2684,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(Type::frameColumnA) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2742,22 +2742,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2795,20 +2795,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2851,20 +2851,20 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2905,22 +2905,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -2960,22 +2960,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3015,22 +3015,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3070,22 +3070,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3130,22 +3130,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3185,22 +3185,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3239,22 +3239,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3296,22 +3296,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3352,22 +3352,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
@@ -3407,22 +3407,22 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>("frameColA") }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>("frameColA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(SomeType::frameColB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[frameCol][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[String][String]`>(0) }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[`frameCol`][org.jetbrains.kotlinx.dataframe.api.FrameColColumnsSelectionDsl.frameCol]`<`[`String`][String]`>(0) }`
      *
      * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
+     * [`col`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
+     * [`colGroup`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [`valueCol`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol].
      *
      * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the frame column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.

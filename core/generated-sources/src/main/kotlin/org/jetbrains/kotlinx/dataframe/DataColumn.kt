@@ -140,7 +140,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * For instance, when there are other [DataFrames][DataFrame] present in [values], we'll convert:
          * - `null` -> [DataFrame.empty]`()`
          * - [DataRow] -> single-row [DataFrame]
-         * - [List][List]`<`[DataRow][DataRow]`<*>>` -> multi-row [DataFrame]
+         * - [`List`][List]`<`[`DataRow`][DataRow]`<*>>` -> multi-row [DataFrame]
          *
          * to be able to create a [FrameColumn].
          * There are more conversions for other types as well.

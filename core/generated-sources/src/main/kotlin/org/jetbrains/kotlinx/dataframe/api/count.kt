@@ -81,8 +81,8 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * See also:
- * - [filter][DataFrame.filter] — filters rows using a [RowFilter] condition.
- * - [countDistinct][DataFrame.countDistinct] — counts distinct rows or values.
+ * - [`filter`][DataFrame.filter] — filters rows using a [RowFilter] condition.
+ * - [`countDistinct`][DataFrame.countDistinct] — counts distinct rows or values.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -115,7 +115,7 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
  *
  * This is equivalent to applying `.aggregate { count() }`, but more efficient.
  *
- * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
+ * See also [DataFrame.groupBy] and common [`aggregate`][Grouped.aggregate].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -157,7 +157,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  *
  * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
  *
- * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
+ * See also [DataFrame.groupBy] and common [`aggregate`][Grouped.aggregate].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -193,7 +193,7 @@ public inline fun <T> Grouped<T>.count(
  *
  * The original [Pivot] column structure is preserved.
  * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * (e.g., via [`and`][PivotDsl.and] or [`then`][PivotDsl.then]),
  * the structure remains unchanged — only the contents of each group
  * are replaced with the number of rows in that group.
  *
@@ -201,8 +201,8 @@ public inline fun <T> Grouped<T>.count(
  *
  * See also:
  * - [pivot].
- * - common [aggregate][Pivot.aggregate].
- * - [pivotCounts][DataFrame.pivotCounts] shortcut.
+ * - common [`aggregate`][Pivot.aggregate].
+ * - [`pivotCounts`][DataFrame.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -240,7 +240,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  *
  * The original [Pivot] column structure is preserved.
  * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * (e.g., via [`and`][PivotDsl.and] or [`then`][PivotDsl.then]),
  * the structure remains unchanged — only the contents of each group
  * are replaced with the number of rows (matching the [predicate]) in that group.
  *
@@ -248,8 +248,8 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  *
  * See also:
  * - [pivot].
- * - common [aggregate][Pivot.aggregate].
- * - [pivotCounts][DataFrame.pivotCounts] shortcut.
+ * - common [`aggregate`][Pivot.aggregate].
+ * - [`pivotCounts`][DataFrame.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -279,7 +279,7 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  *
  * The original [Pivot] column structure is preserved.
  * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * (e.g., via [`and`][PivotDsl.and] or [`then`][PivotDsl.then]),
  * the result will contain nested column groups reflecting that key structure,
  * with each group containing columns for the values of the corresponding key.
  *
@@ -287,7 +287,7 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  *
  * See also:
  *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
- *  - common [aggregate][PivotGroupBy.aggregate];
+ *  - common [`aggregate`][PivotGroupBy.aggregate];
  *  - [GroupBy.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
@@ -315,7 +315,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  *
  * The original [Pivot] column structure is preserved.
  * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * (e.g., via [`and`][PivotDsl.and] or [`then`][PivotDsl.then]),
  * the result will contain nested column groups reflecting that key structure,
  * with each group containing columns for the values
  * (matching the [predicate]) of the corresponding key.
@@ -324,7 +324,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  *
  * See also:
  *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
- *  - common [aggregate][PivotGroupBy.aggregate];
+ *  - common [`aggregate`][PivotGroupBy.aggregate];
  *  - [GroupBy.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
