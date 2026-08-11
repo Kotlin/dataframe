@@ -45,7 +45,7 @@ internal interface UngroupDocs {
     typealias UngroupSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [ungroup][ungroup]} */
+/** {@set [SelectingColumns.OPERATION] [`ungroup`][ungroup]} */
 @ExcludeFromSources
 private typealias SetUngroupOperationArg = Nothing
 

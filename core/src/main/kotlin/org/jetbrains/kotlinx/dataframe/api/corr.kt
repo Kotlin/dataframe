@@ -36,14 +36,14 @@ import kotlin.reflect.typeOf
  * it will be unpacked into suitable nested columns.
  *
  * The [Corr] object provides two methods to perform correlation calculations:
- * - [with][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
- * - [withItself][Corr.withItself] — computes pairwise correlations within the initially selected columns.
+ * - [`with`][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
+ * - [`withItself`][Corr.withItself] — computes pairwise correlations within the initially selected columns.
  *
  * Each method returns a square or rectangular correlation matrix represented by a [DataFrame],
  * where rows and columns correspond to the selected column sets,
  * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
- * To compute correlations between all suitable columns in the [DataFrame], use [DataFrame.corr()][DataFrame.corr].
+ * To compute correlations between all suitable columns in the [DataFrame], use [`DataFrame.corr()`][DataFrame.corr].
  *
  * Check out [Grammar].
  *
@@ -78,7 +78,7 @@ internal interface CorrDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [corr][corr]} */
+/** {@set [SelectingColumns.OPERATION] [`corr`][corr]} */
 @ExcludeFromSources
 private typealias SetCorrOperationArg = Nothing
 

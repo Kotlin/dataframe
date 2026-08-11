@@ -99,15 +99,15 @@ internal typealias SeeAlsoParse = Nothing
  * returns a [Convert],
  * which serves as an intermediate step.
  * The [Convert] object provides methods to transform selected columns using:
- * - [to][Convert.to]
- * - [with][Convert.with]
- * - [asFrame][Convert.asFrame]
- * - [perRowCol][Convert.perRowCol]
- * - [notNull][Convert.notNull]
- * - [toDataFrames][Convert.toDataFrames]
+ * - [`to`][Convert.to]
+ * - [`with`][Convert.with]
+ * - [`asFrame`][Convert.asFrame]
+ * - [`perRowCol`][Convert.perRowCol]
+ * - [`notNull`][Convert.notNull]
+ * - [`toDataFrames`][Convert.toDataFrames]
  *
  * Additionally, it offers a wide range of methods for converting to specific types,
- * such as [toStr][Convert.toStr], [toDouble][Convert.toDouble], and many others.
+ * such as [`toStr`][Convert.toStr], [`toDouble`][Convert.toDouble], and many others.
  *
  * For the full list of supported types, see [SupportedTypes].
  *
@@ -139,11 +139,11 @@ internal interface ConvertDocs {
      * * [Int], [Long], [Float], [Double];
      * * [BigDecimal], [BigInteger];
      * * [LocalDateTime], [LocalDate], [LocalTime],
-     *   `Instant` ([kotlinx.datetime][DeprecatedInstant], [kotlin.time][StdlibInstant], and [java.time]),
+     *   `Instant` ([`kotlinx.datetime`][DeprecatedInstant], [`kotlin.time`][StdlibInstant], and [java.time]),
      * * [URL], [IMG], [IFRAME].
      *
      * __NOTE__: Conversion between [Int] and [Char] is done by UTF-16 [Char.code].
-     *   To convert [Char]->[Int] the way it is written, use [parse()][parse] instead, or,
+     *   To convert [Char]->[Int] the way it is written, use [`parse()`][parse] instead, or,
      *   in either case, use [String] as intermediary type.
      */
     typealias SupportedTypes = Nothing
@@ -252,7 +252,7 @@ internal interface ConvertDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [convert][convert]} */
+/** {@set [SelectingColumns.OPERATION] [`convert`][convert]} */
 @ExcludeFromSources
 private typealias SetConvertOperationArg = Nothing
 
@@ -369,12 +369,12 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * in the [DataFrame], but their values will be transformed.
  *
  * Use the following methods to perform the conversion:
- * - [to(kType)][to]/[to`<Type`>()][to] – converts columns to a specific type.
- * - [asColumn { columnConverter }][asColumn] - converts columns using column converter expression.
- * - [with][Convert.with] – applies a custom row-wise conversion expression.
- * - [notNull][Convert.notNull] – like [with], but only for non-null values.
- * - [perRowCol][Convert.perRowCol] – applies a conversion that uses both column and row information.
- * - [asFrame][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
+ * - [`to(kType)`][to]/[`to<Type>()`][to] – converts columns to a specific type.
+ * - [`asColumn { columnConverter }`][asColumn] - converts columns using column converter expression.
+ * - [`with`][Convert.with] – applies a custom row-wise conversion expression.
+ * - [`notNull`][Convert.notNull] – like [with], but only for non-null values.
+ * - [`perRowCol`][Convert.perRowCol] – applies a conversion that uses both column and row information.
+ * - [`asFrame`][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
  * - [toStr], [toInt], [toLong], [toDouble], [toFloat], [toBigDecimal],
  *   [toBigInteger], [toBoolean] – convert to standard types.
  * - [toLocalDateTime], [toLocalDate], [toLocalTime] – convert to kotlinx.datetime types.
@@ -390,7 +390,7 @@ public class Convert<T, out C>(
     @PublishedApi internal val columns: ColumnsSelector<T, C>,
 ) {
     /**
-     * Casts the type parameter of the columns previously selected with [convert][convert] to a new type [R],
+     * Casts the type parameter of the columns previously selected with [`convert`][convert] to a new type [R],
      * without performing any actual data transformation.
      *
      * This operation updates the static type of the selected columns for further type-safe conversions.
@@ -512,7 +512,7 @@ private typealias SeeAlsoConvertAsColumn = Nothing
  * df.convert { colsOf<Int>() }.with { baseValue -> (baseValue * coeff).seconds }
  * ```
  *
- * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * @param infer [Infer] strategy that defines how the [`type`][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
  * @param [rowConverter] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
  * @return A new [DataFrame] with the converted values.
@@ -607,7 +607,7 @@ private typealias SeeAlsoConvertWith = Nothing
  * }
  * ```
  *
- * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * @param infer [Infer] strategy that defines how the [`type`][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
  * @param [expression] The [RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
@@ -807,10 +807,10 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
 /**
  * Converts values in this [String] column to [Double] considering locale (number format).
  *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][DataFrame.Companion.parser]) is used.
+ * If any of the parameters is `null`, the global default (in [`DataFrame.parser`][DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is the system locale.
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
  *
  * @return A new [DataColumn] with the [Double] values.
@@ -826,9 +826,9 @@ public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColum
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
  * @param nullStrings a set of strings that should be treated as `null` values.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
@@ -846,9 +846,9 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
  * @param nullStrings a set of strings that should be treated as `null` values.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
+ *   The default in [`DataFrame.parser`][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(
