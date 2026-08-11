@@ -36,9 +36,9 @@ internal interface SelectingRows {
          *
          * For example:
          *
-         * `df.`operation` { `[index][index]`() % 2 == 0 }`
+         * `df.`operation` { `[`index`][index]`() % 2 == 0 }`
          *
-         * `df.`operation` { `[diff][diff]` { age } == 0 }`
+         * `df.`operation` { `[`diff`][diff]` { age } == 0 }`
          *
          */
         typealias WithExample = Nothing
@@ -57,7 +57,7 @@ internal interface SelectingRows {
          *
          * `df.`operation` { length }.`where` { it > 10.0 }`
          *
-         * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`operation` { `[`cols`][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[`index`][index]`() > 4 && city != "Paris" }`
          *
          */
         typealias WithExample = Nothing

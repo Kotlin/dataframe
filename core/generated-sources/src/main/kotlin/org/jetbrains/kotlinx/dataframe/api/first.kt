@@ -107,11 +107,11 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 /**
  * Returns the first [row][DataRow] in this [DataFrame].
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [`firstOrNull`][DataFrame.firstOrNull],
+ * [`last`][DataFrame.last],
+ * [`take`][DataFrame.take],
+ * [`takeWhile`][DataFrame.takeWhile],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the first row in this [DataFrame].
  *
@@ -127,11 +127,11 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 /**
  * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [`first`][DataFrame.first],
+ * [`last`][DataFrame.last],
+ * [`take`][DataFrame.take],
+ * [`takeWhile`][DataFrame.takeWhile],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -162,11 +162,11 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * df.first { amount > 100 }
  * ```
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [`firstOrNull`][DataFrame.firstOrNull],
+ * [`last`][DataFrame.last],
+ * [`take`][DataFrame.take],
+ * [`takeWhile`][DataFrame.takeWhile],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -208,11 +208,11 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * df.firstOrNull { amount > 100 }
  * ```
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [`first`][DataFrame.first],
+ * [`last`][DataFrame.last],
+ * [`take`][DataFrame.take],
+ * [`takeWhile`][DataFrame.takeWhile],
+ * [`takeLast`][DataFrame.takeLast].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -246,7 +246,7 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  * df.groupBy { customerId }.first().concat()
  * ```
  *
- * See also [last][GroupBy.last].
+ * See also [`last`][GroupBy.last].
  *
  * @return A [ReducedGroupBy] containing the first [row][DataRow]
  * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
@@ -286,7 +286,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * df.groupBy { customerId }.first { total > 100 }.concat()
  * ```
  *
- * See also [last][GroupBy.last].
+ * See also [`last`][GroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -314,7 +314,7 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  * df.pivot { type }.first().values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
+ * See also [pivot], [`reduce`][Pivot.reduce], [`last`][Pivot.last].
  *
  * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the corresponding group.
  */
@@ -350,7 +350,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * df.pivot { type }.first { !soldOut }.values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
+ * See also [pivot], [`reduce`][Pivot.reduce], [`last`][Pivot.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -381,10 +381,10 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * df.pivot { type }.groupBy { city }.first().values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [last][PivotGroupBy.last].
+ * See also [`groupBy`][Pivot.groupBy],
+ * [`pivot`][GroupBy.pivot],
+ * [`reduce`][PivotGroupBy.reduce],
+ * [`last`][PivotGroupBy.last].
  *
  * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
  * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
@@ -430,10 +430,10 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * df.pivot { type }.groupBy { city }.first { !soldOut }.values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [last][PivotGroupBy.last].
+ * See also [`groupBy`][Pivot.groupBy],
+ * [`pivot`][GroupBy.pivot],
+ * [`reduce`][PivotGroupBy.reduce],
+ * [`last`][PivotGroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -495,7 +495,7 @@ public interface FirstColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -552,9 +552,9 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`first`][ColumnsSelectionDsl.first]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`firstCol`][String.firstCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
@@ -586,15 +586,15 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().`[`first`][ColumnSet.first]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`first`][ColumnSet.first]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
@@ -623,13 +623,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`first`][ColumnsSelectionDsl.first]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
@@ -655,13 +655,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`firstCol`][SingleColumn.firstCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
@@ -688,13 +688,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`firstCol`][String.firstCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
@@ -719,15 +719,15 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`firstCol`][SingleColumn.firstCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`firstCol`][KProperty.firstCol]`() }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
@@ -754,13 +754,13 @@ public interface FirstColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`first`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`firstCol`][kotlin.String.firstCol]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`firstCol`][ColumnPath.firstCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column

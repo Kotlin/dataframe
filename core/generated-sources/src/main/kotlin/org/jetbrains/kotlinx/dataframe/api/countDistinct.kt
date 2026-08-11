@@ -29,8 +29,8 @@ import kotlin.reflect.KProperty
  * the number of unique row combinations.
  *
  * See also:
- * - [distinct][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
- * - [count][DataFrame.count], which counts the number of rows satisfying a given predicate.
+ * - [`distinct`][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
+ * - [`count`][DataFrame.count], which counts the number of rows satisfying a given predicate.
  *
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
  *
@@ -45,8 +45,8 @@ public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
  * the number of unique values combinations.
  *
  * See also:
- * - [distinct][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [count][org.jetbrains.kotlinx.dataframe.DataFrame.count], which counts the number of rows satisfying a given predicate.
+ * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [`count`][org.jetbrains.kotlinx.dataframe.DataFrame.count], which counts the number of rows satisfying a given predicate.
  *
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
  *
@@ -89,8 +89,8 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
  * the number of unique values combinations.
  *
  * See also:
- * - [distinct][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [count][org.jetbrains.kotlinx.dataframe.DataFrame.count], which counts the number of rows satisfying a given predicate.
+ * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [`count`][org.jetbrains.kotlinx.dataframe.DataFrame.count], which counts the number of rows satisfying a given predicate.
  *
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
  *
@@ -137,10 +137,10 @@ public fun <T> DataFrame<T>.countDistinct(vararg columns: AnyColumnReference): I
  * that contains the number of distinct rows in each group.
  *
  * See also:
- * - [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate], which aggregates a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] using the provided statistics.
- * - [count][org.jetbrains.kotlinx.dataframe.api.Grouped.count], which counts the number of rows in each group.
- * - [distinct][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy], which groups the rows of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * - [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate], which aggregates a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] using the provided statistics.
+ * - [`count`][org.jetbrains.kotlinx.dataframe.api.Grouped.count], which counts the number of rows in each group.
+ * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy], which groups the rows of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  * based on the values in one or more specified cols.
  *
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)
@@ -174,10 +174,10 @@ public fun <T> Grouped<T>.countDistinct(resultName: String = "countDistinct"): D
  * that contains the number of distinct combinations of values in the selected [columns] in each group.
  *
  * See also:
- * - [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate], which aggregates a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] using the provided statistics.
- * - [count][org.jetbrains.kotlinx.dataframe.api.Grouped.count], which counts the number of rows in each group.
- * - [distinct][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy], which groups the rows of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * - [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate], which aggregates a [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy] using the provided statistics.
+ * - [`count`][org.jetbrains.kotlinx.dataframe.api.Grouped.count], which counts the number of rows in each group.
+ * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy], which groups the rows of a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  * based on the values in one or more specified cols.
  *
  * For more information: [See `countDistinct` on the documentation website.](https://kotlin.github.io/dataframe/countdistinct.html)

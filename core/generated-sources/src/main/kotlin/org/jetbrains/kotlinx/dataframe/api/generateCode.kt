@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
 // region DataFrame
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
  * for the given [DataFrame's][this] [schema][DataFrameSchema]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -41,7 +41,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -58,8 +58,8 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
@@ -82,7 +82,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
         nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
-/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
+/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
  * for the given [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -93,7 +93,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -110,8 +110,8 @@ public fun <T> DataFrame<T>.generateInterfaces(
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
@@ -133,7 +133,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
     )
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
  * for the given [DataFrame's][this] [schema][DataFrameSchema]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -147,7 +147,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -164,8 +164,8 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
@@ -188,7 +188,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
         nestedMarkerNameProvider = nestedMarkerNameProvider,
     )
 
-/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
+/** Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
  * for the given [DataFrame's][this] [schema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -202,7 +202,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -219,8 +219,8 @@ public fun <T> DataFrame<T>.generateDataClasses(
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  * - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
@@ -246,7 +246,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
 // region DataFrameSchema
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] interfaces
  * for the given [DataFrameSchema][this]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -257,7 +257,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -274,8 +274,8 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
@@ -300,7 +300,7 @@ public fun DataFrameSchema.generateInterfaces(
     )
 
 /**
- * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [@DataSchema][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
+ * Generates a [CodeString][org.jetbrains.kotlinx.dataframe.api.CodeString] containing generated [`@DataSchema`][org.jetbrains.kotlinx.dataframe.annotations.DataSchema] data classes
  * for the given [DataFrameSchema][this]
  * (including all nested [frame columns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] and [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]).
  *
@@ -314,7 +314,7 @@ public fun DataFrameSchema.generateInterfaces(
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator][org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: [See `Data Schemas/Data Classes Generation` on the documentation website.](https://kotlin.github.io/dataframe/dataschemagenerationmethods.html)
  *
@@ -333,8 +333,8 @@ public fun DataFrameSchema.generateInterfaces(
  * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
  *  to Kotlin-style identifiers.
  *  Generated properties will still refer to columns by their actual name
- *  using the [@ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
- *  Default is [NameNormalizer.default][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
+ *  using the [`@ColumnName`][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation.
+ *  Default is [`NameNormalizer.default`][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
  *  - [MarkerNameProvider.PredefinedName][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
@@ -401,7 +401,7 @@ public value class CodeString(public val value: String) {
 internal fun String.toCodeString(): CodeString = CodeString(this)
 
 /**
- * Generates a [CodeString] containing generated [@DataSchema][DataSchema] declarations (markers).
+ * Generates a [CodeString] containing generated [`@DataSchema`][DataSchema] declarations (markers).
  */
 @PublishedApi
 internal fun DataFrameSchema.generateCodeImpl(

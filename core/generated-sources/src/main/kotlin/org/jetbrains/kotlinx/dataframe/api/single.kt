@@ -99,7 +99,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -156,9 +156,9 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  { `[`nameStartsWith`][ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][String.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
@@ -188,15 +188,15 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().`[`single`][ColumnSet.single]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`single`][ColumnSet.single]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -225,15 +225,15 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().nameStartsWith("year").`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().nameStartsWith("year").`[`single`][ColumnSet.single]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`single`][ColumnSet.single]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -256,13 +256,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`single`][ColumnsSelectionDsl.single]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -291,13 +291,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  { nameStartsWith("year").`[`single`][ColumnsSelectionDsl.single]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -320,13 +320,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`singleCol`][SingleColumn.singleCol]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -356,13 +356,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`singleCol`][SingleColumn.singleCol]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -385,13 +385,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`singleCol`][String.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -419,13 +419,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[`singleCol`][String.singleCol]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -447,15 +447,15 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[singleCol][SingleColumn.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`singleCol`][SingleColumn.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleCol][KProperty.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`singleCol`][KProperty.singleCol]`() }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].
@@ -480,13 +480,13 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[nameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { `[`nameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][kotlin.String.singleCol]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][kotlin.String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`singleCol`][ColumnPath.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
      * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the single column.
      * @throws [NoSuchElementException] if there are no columns in [this].

@@ -448,11 +448,11 @@ override fun getTargetColumnSchema(
  * adhering to [targetColumnSchema].
  *
  * @param [D] the type of the values after preprocessing
- * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+ * @param [P] the type of the resulting [`DataColumn`][DataColumn]`<`[`P`][P]`>`, [targetColumnSchema]
  * @param [name] the name of the column
  * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
  * @param [tableColumnMetadata] all information we have about the column
- * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
+ * @param [targetColumnSchema] the schema of the column [`DataColumn`][DataColumn]`<`[`P`][P]`>`,
  *   as determined by [getTargetColumnSchema]
  * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
  *   as opposed to using the nullability information from the [targetColumnSchema]
