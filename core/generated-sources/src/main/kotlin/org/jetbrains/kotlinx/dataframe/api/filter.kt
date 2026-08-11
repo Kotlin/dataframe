@@ -66,8 +66,8 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  * For more information, see: [See `filter` on the documentation website.](https://kotlin.github.io/dataframe/filter.html)
  *
  * See also:
- *  - [drop][DataFrame.drop], which drops rows based on values within the row.
- *  - [distinct][DataFrame.distinct], which filters out rows with duplicated values.
+ *  - [`drop`][DataFrame.drop], which drops rows based on values within the row.
+ *  - [`distinct`][DataFrame.distinct], which filters out rows with duplicated values.
  *
  * ### Example
  * ```kotlin
@@ -143,7 +143,7 @@ public interface FilterColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -174,8 +174,8 @@ public interface FilterColumnsSelectionDsl {
      * Creates a subset of columns ([ColumnSet]) from the current [ColumnSet] that
      * adhere to the given [predicate].
      *
-     * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
-     * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
+     * Aside from calling [`filter`][ColumnSet.filter] directly, you can also use the [`get`][ColumnsSelectionDsl.get] operator
+     * in most cases. This function belongs to [`cols`][ColumnsSelectionDsl.cols] but operates identically.
      *
      * ### Check out: [Grammar]
      *

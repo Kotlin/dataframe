@@ -31,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * |---------|---------|---------|
  * | `"a"` | `"b"` | `"c"` |
  *
- * It is recommended to [rename][org.jetbrains.kotlinx.dataframe.api.rename] them
+ * It is recommended to [`rename`][org.jetbrains.kotlinx.dataframe.api.rename] them
  * to maintain clarity and improve code readability.
  */
 internal typealias AutoRenamingColumnsInDataFrame = Nothing

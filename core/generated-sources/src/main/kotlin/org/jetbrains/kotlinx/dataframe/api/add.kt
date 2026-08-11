@@ -173,7 +173,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
+ * [`newValue`][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  *
  * Returns a new [DataFrame] with the new column appended to the original list of [DataFrame.columns].
@@ -199,7 +199,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
  * Otherwise, it should be unique for original [DataFrame].
- * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
+ * @param infer a value of [Infer] that specifies how to compute column [`type`][BaseColumn.type] for a new column.
  * Defaults to [Infer.Nulls].
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [DataFrame] with added column.
@@ -237,7 +237,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
+ * [`newValue`][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  *
  * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
@@ -259,7 +259,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * @param path Target [ColumnPath] for the new column.
  * If it points to a nested location,
  * intermediate columns will be created if necessary.
- * @param infer A value of [Infer] that specifies how to compute the column [type][BaseColumn.type] for the new column.
+ * @param infer A value of [Infer] that specifies how to compute the column [`type`][BaseColumn.type] for the new column.
  * Defaults to [Infer.Nulls].
  * @param expression An [AddExpression] that computes the column value for every [DataRow] of the new column.
  * @return A new [DataFrame] with the added column.
@@ -430,7 +430,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
+ * [`newValue`][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  *
  * Returns a new [GroupBy] with the new column
@@ -457,7 +457,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
  * Otherwise, it should be unique for original group [DataFrame]s.
- * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column.
+ * @param infer a value of [Infer] that specifies how to compute column [`type`][BaseColumn.type] for a new column.
  * Defaults to [Infer.Nulls].
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [GroupBy] with added column.

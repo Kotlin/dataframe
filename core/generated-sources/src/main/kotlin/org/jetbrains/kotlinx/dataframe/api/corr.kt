@@ -36,14 +36,14 @@ import kotlin.reflect.typeOf
  * it will be unpacked into suitable nested columns.
  *
  * The [Corr] object provides two methods to perform correlation calculations:
- * - [with][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
- * - [withItself][Corr.withItself] — computes pairwise correlations within the initially selected columns.
+ * - [`with`][Corr.with] — computes correlations between the initially selected columns and a second set of columns.
+ * - [`withItself`][Corr.withItself] — computes pairwise correlations within the initially selected columns.
  *
  * Each method returns a square or rectangular correlation matrix represented by a [DataFrame],
  * where rows and columns correspond to the selected column sets,
  * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
- * To compute correlations between all suitable columns in the [DataFrame], use [DataFrame.corr()][DataFrame.corr].
+ * To compute correlations between all suitable columns in the [DataFrame], use [`DataFrame.corr()`][DataFrame.corr].
  *
  * Check out [Grammar].
  *
@@ -86,11 +86,11 @@ internal interface CorrDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[corr][org.jetbrains.kotlinx.dataframe.api.corr]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`corr`][org.jetbrains.kotlinx.dataframe.api.corr]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[corr][org.jetbrains.kotlinx.dataframe.api.corr]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`corr`][org.jetbrains.kotlinx.dataframe.api.corr]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[corr][org.jetbrains.kotlinx.dataframe.api.corr]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`corr`][org.jetbrains.kotlinx.dataframe.api.corr]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -105,7 +105,7 @@ internal interface CorrDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[corr][org.jetbrains.kotlinx.dataframe.api.corr]`("length", "age")`
+     * <code>`df`</code>`.`[`corr`][org.jetbrains.kotlinx.dataframe.api.corr]`("length", "age")`
      *
      *
      *
@@ -196,14 +196,14 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  * it will be unpacked into suitable nested columns.
  *
  * The [Corr][org.jetbrains.kotlinx.dataframe.api.Corr] object provides two methods to perform correlation calculations:
- * - [with][org.jetbrains.kotlinx.dataframe.api.Corr.with] — computes correlations between the initially selected columns and a second set of columns.
- * - [withItself][org.jetbrains.kotlinx.dataframe.api.Corr.withItself] — computes pairwise correlations within the initially selected columns.
+ * - [`with`][org.jetbrains.kotlinx.dataframe.api.Corr.with] — computes correlations between the initially selected columns and a second set of columns.
+ * - [`withItself`][org.jetbrains.kotlinx.dataframe.api.Corr.withItself] — computes pairwise correlations within the initially selected columns.
  *
  * Each method returns a square or rectangular correlation matrix represented by a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * where rows and columns correspond to the selected column sets,
  * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
- * To compute correlations between all suitable columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], use [DataFrame.corr()][org.jetbrains.kotlinx.dataframe.DataFrame.corr].
+ * To compute correlations between all suitable columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], use [`DataFrame.corr()`][org.jetbrains.kotlinx.dataframe.DataFrame.corr].
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *
@@ -265,14 +265,14 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  * it will be unpacked into suitable nested columns.
  *
  * The [Corr][org.jetbrains.kotlinx.dataframe.api.Corr] object provides two methods to perform correlation calculations:
- * - [with][org.jetbrains.kotlinx.dataframe.api.Corr.with] — computes correlations between the initially selected columns and a second set of columns.
- * - [withItself][org.jetbrains.kotlinx.dataframe.api.Corr.withItself] — computes pairwise correlations within the initially selected columns.
+ * - [`with`][org.jetbrains.kotlinx.dataframe.api.Corr.with] — computes correlations between the initially selected columns and a second set of columns.
+ * - [`withItself`][org.jetbrains.kotlinx.dataframe.api.Corr.withItself] — computes pairwise correlations within the initially selected columns.
  *
  * Each method returns a square or rectangular correlation matrix represented by a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
  * where rows and columns correspond to the selected column sets,
  * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
  *
- * To compute correlations between all suitable columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], use [DataFrame.corr()][org.jetbrains.kotlinx.dataframe.DataFrame.corr].
+ * To compute correlations between all suitable columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], use [`DataFrame.corr()`][org.jetbrains.kotlinx.dataframe.DataFrame.corr].
  *
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.CorrDocs.Grammar].
  *

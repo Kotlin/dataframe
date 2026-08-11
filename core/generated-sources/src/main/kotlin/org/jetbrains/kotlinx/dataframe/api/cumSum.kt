@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -59,7 +59,7 @@ public fun DataColumn<Short>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Data
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -88,7 +88,7 @@ public fun DataColumn<Short?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -117,7 +117,7 @@ public fun DataColumn<Byte>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataC
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -146,7 +146,7 @@ public fun DataColumn<Byte?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Data
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -175,7 +175,7 @@ public fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -204,7 +204,7 @@ public fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -236,7 +236,7 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -269,7 +269,7 @@ public fun <T, C : Number?> DataFrame<T>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -298,7 +298,7 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -331,7 +331,7 @@ public fun <T> DataFrame<T>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -364,7 +364,7 @@ public fun <T> DataFrame<T>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *
@@ -400,7 +400,7 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -433,7 +433,7 @@ public fun <T, G, C : Number?> GroupBy<T, G>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -462,7 +462,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -495,7 +495,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * @param [columns] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth].
@@ -528,7 +528,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][org.jetbrains.kotlinx.dataframe.api.sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][org.jetbrains.kotlinx.dataframe.api.sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  *
  *

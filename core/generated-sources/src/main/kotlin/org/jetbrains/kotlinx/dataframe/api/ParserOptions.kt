@@ -32,12 +32,12 @@ import java.time.LocalTime as JavaLocalTime
 /**
  * Global counterpart of [ParserOptions].
  *
- * These options are used to configure how [DataColumns][DataColumn] of type [String] or [String?][String]
+ * These options are used to configure how [DataColumns][DataColumn] of type [String] or [`String?`][String]
  * should be parsed.
  *
  * Settings changed here will affect the defaults for all parsing operations.
  * You can always pass a [ParserOptions] object to functions that perform parsing, like [tryParse], [parse], [convert],
- * or even [DataFrame.readCsv][DataFrame.Companion.readCsv] to override these options.
+ * or even [`DataFrame.readCsv`][DataFrame.Companion.readCsv] to override these options.
  *
  * The default values are set by [Parsers.resetToDefault].
  *
@@ -257,8 +257,8 @@ public interface GlobalParserOptions {
      * This is marked "stable" from Kotlin 2.4.0+, so, by default this is `true`.
      *
      * NOTE: If you are using an older Kotlin version,
-     * interacting with a [Uuid][Uuid] in your code might require
-     * `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+     * interacting with a [`Uuid`][Uuid] in your code might require
+     * `@`[`OptIn`][OptIn]`(`[`ExperimentalUuidApi`][ExperimentalUuidApi]`::class)`.
      * In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
      */
     public var parseExperimentalUuid: Boolean
@@ -270,8 +270,8 @@ public interface GlobalParserOptions {
      * If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
      *
      * NOTE: If you are using an older Kotlin version,
-     * interacting with an [Instant][kotlin.time.Instant] in your code might require
-     * `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+     * interacting with an [`Instant`][kotlin.time.Instant] in your code might require
+     * `@`[`OptIn`][OptIn]`(`[`ExperimentalTime`][kotlin.time.ExperimentalTime]`::class)`.
      * In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
      */
     public var parseExperimentalInstant: Boolean
@@ -289,7 +289,7 @@ public interface GlobalParserOptions {
      * If you need to provide a custom [java.util.Locale], we recommend parsing
      * to a [java.time]-based class first by adjusting the parser options before converting it to [kotlinx.datetime].
      *
-     * See also: [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions], [DataFrame.parser.dateTimeLibrary][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.dateTimeLibrary]
+     * See also: [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions], [`DataFrame.parser.dateTimeLibrary`][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.dateTimeLibrary]
      *
      * This setting is overridden in any function where a given [ParserOptions.dateTime] is not null.
      *
@@ -301,12 +301,12 @@ public interface GlobalParserOptions {
 
 /** Global counterpart of [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions].
  *
- * These options are used to configure how [DataColumns][org.jetbrains.kotlinx.dataframe.DataColumn] of type [String] or [String?][String]
+ * These options are used to configure how [DataColumns][org.jetbrains.kotlinx.dataframe.DataColumn] of type [String] or [`String?`][String]
  * should be parsed.
  *
  * Settings changed here will affect the defaults for all parsing operations.
  * You can always pass a [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions] object to functions that perform parsing, like [tryParse][org.jetbrains.kotlinx.dataframe.api.tryParse], [parse][org.jetbrains.kotlinx.dataframe.api.parse], [convert][org.jetbrains.kotlinx.dataframe.api.convert],
- * or even [DataFrame.readCsv][DataFrame.Companion.readCsv] to override these options.
+ * or even [`DataFrame.readCsv`][DataFrame.Companion.readCsv] to override these options.
  *
  * The default values are set by [Parsers.resetToDefault][org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault].
  *
@@ -346,7 +346,7 @@ public val DataFrame.Companion.parser: GlobalParserOptions
  * If you need to provide a custom [java.util.Locale], we recommend parsing
  * to a [java.time]-based class first by adjusting the parser options before converting it to [kotlinx.datetime].
  *
- * See also: [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions], [DataFrame.parser.dateTimeLibrary][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.dateTimeLibrary]
+ * See also: [ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions], [`DataFrame.parser.dateTimeLibrary`][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.dateTimeLibrary]
  */
 public enum class ParseDateTimeLibrary {
 
@@ -490,10 +490,10 @@ public typealias DateTimeComponentsFallback = Nothing
 /**
  * ### Options for parsing [String]`?` columns
  *
- * These options are used to configure how [DataColumn]s of type [String] or [String?][String] should be parsed.
+ * These options are used to configure how [DataColumn]s of type [String] or [`String?`][String] should be parsed.
  * They can be passed to [tryParse] and [parse] functions.
  *
- * You can also use the [DataFrame.parser][DataFrame.Companion.parser] property to access and modify
+ * You can also use the [`DataFrame.parser`][DataFrame.Companion.parser] property to access and modify
  * the global parser configuration.
  *
  * If any of the arguments in [ParserOptions] are `null` (or [ParserOptions] itself is `null`),
@@ -546,15 +546,15 @@ public typealias DateTimeComponentsFallback = Nothing
  * @param parseExperimentalUuid whether to allow parsing UUIDs to the [Uuid] type.
  *   This is marked "stable" from Kotlin 2.4.0+, so, by default this is `true`.
  *   NOTE: If you are using an older Kotlin version,
- *   interacting with a [Uuid][Uuid] in your code might require
- *   `@`[OptIn][OptIn]`(`[ExperimentalUuidApi][ExperimentalUuidApi]`::class)`.
+ *   interacting with a [`Uuid`][Uuid] in your code might require
+ *   `@`[`OptIn`][OptIn]`(`[`ExperimentalUuidApi`][ExperimentalUuidApi]`::class)`.
  *   In notebooks, add `-opt-in=kotlin.uuid.ExperimentalUuidApi` to the compiler arguments.
  * @param parseExperimentalInstant whether to allow parsing to the [kotlin.time.Instant] type.
  *    This is marked "stable" from Kotlin 2.3.0+, so, by default this is `true`.
  *    If false, instants are recognized as the deprecated [kotlinx.datetime.Instant] type (#1350).
  *   NOTE: If you are using an older Kotlin version,
- *   interacting with an [Instant][kotlin.time.Instant] in your code might require
- *   `@`[OptIn][OptIn]`(`[ExperimentalTime][kotlin.time.ExperimentalTime]`::class)`.
+ *   interacting with an [`Instant`][kotlin.time.Instant] in your code might require
+ *   `@`[`OptIn`][OptIn]`(`[`ExperimentalTime`][kotlin.time.ExperimentalTime]`::class)`.
  *   In notebooks, add `-opt-in=kotlin.time.ExperimentalTime` to the compiler arguments.
  */
 public class ParserOptions(
@@ -737,7 +737,7 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
      *
      * If supplied to [ParserOptions.dateTime],
      * parsing will run in Kotlin time mode (similar to setting
-     * [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN]).
+     * [`DataFrame.parser.dateTimeLibrary`][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.KOTLIN]).
      *
      * Additionally, if [dateTimeFormats] is not `null`, a.k.a. any format or pattern is provided,
      * parsing will use the provided formats __ONLY__. Default formats and those in the
@@ -820,7 +820,7 @@ public sealed class DateTimeParserOptions<T>(public open val dateTimeFormats: Se
      *
      * If supplied to [ParserOptions.dateTime],
      * parsing will run in Java time mode (similar to setting
-     * [DataFrame.parser.dateTimeLibrary][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.JAVA]).
+     * [`DataFrame.parser.dateTimeLibrary`][GlobalParserOptions.dateTimeLibrary] to [ParseDateTimeLibrary.JAVA]).
      *
      * Additionally, if [dateTimeFormats] is not `null`, a.k.a. any formatter or pattern is provided,
      * parsing will use the provided formatters __ONLY__. Default formatters and those in the

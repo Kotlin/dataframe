@@ -224,7 +224,7 @@ public interface DistinctColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -255,7 +255,7 @@ public interface DistinctColumnsSelectionDsl {
      * This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
      *
-     * See also [Grammar], [named][ColumnsSelectionDsl.named], [simplify][ColumnsSelectionDsl.simplify].
+     * See also [Grammar], [`named`][ColumnsSelectionDsl.named], [`simplify`][ColumnsSelectionDsl.simplify].
      *
      * ### Examples
      * ```kotlin

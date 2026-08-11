@@ -68,7 +68,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -124,11 +124,11 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
@@ -160,19 +160,19 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") }.`[`valueCols`][ColumnSet.valueCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -198,17 +198,17 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCols`][ColumnsSelectionDsl.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -234,17 +234,17 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`valueCols`][SingleColumn.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { myColGroup.`[`valueCols`][SingleColumn.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -270,17 +270,17 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`valueCols`][String.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -305,19 +305,19 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`valueCols`][KProperty.valueCols]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`valueCols`][KProperty.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`valueCols`][KProperty.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
@@ -344,15 +344,15 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]` { it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[`valueCols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[valueCols][kotlin.String.valueCols]`() }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[`valueCols`][kotlin.String.valueCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`valueCols`][ColumnPath.valueCols]`() }`
      *
      * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the value columns by.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [ValueColumns][org.jetbrains.kotlinx.dataframe.columns.ValueColumn].
