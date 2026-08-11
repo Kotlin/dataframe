@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 // region DataColumn
 
 /**
- * Returns `true` if none of the [values] match the given [predicate]
+ * Returns `true` if none of the [values] match the given [predicate].
  *
  * For more information: {@include [DocumentationUrls.None]}
  * */
