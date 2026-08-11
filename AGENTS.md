@@ -36,6 +36,8 @@ Dependency graph is rooted at `core`, with I/O and integration split into option
   integrations that now live in dedicated modules.
 - **I/O modules** (each depends on `core`): `dataframe-csv`, `dataframe-json`, `dataframe-excel`,
   `dataframe-arrow`, `dataframe-jdbc`. The root `dataframe` artifact re-exports Arrow/Excel/JDBC/CSV/JSON as `api`.
+  `dataframe-jdbc` ships built-in `DbType` support for **H2, MariaDB, MySQL, MS SQL Server, PostgreSQL, SQLite, and
+  DuckDB** (any other JDBC database works via a user-supplied `DbType`); see `dataframe-jdbc/AGENTS.md`.
 - **Integrations**: `dataframe-jupyter`, `dataframe-geo` → `dataframe-geo-jupyter`, `dataframe-openapi` →
   `dataframe-openapi-generator`.
 - **Compiler/build tooling**:
@@ -52,6 +54,11 @@ Dependency graph is rooted at `core`, with I/O and integration split into option
     separate build with its own Kotlin version).
 - **Build logic** lives in `build-logic/` and `build-settings-logic/` as convention plugins
   (e.g. `conventions.plugins.dfbuild.*`), not inline in the module build files.
+
+Most modules ship their own `AGENTS.md` (`core`, `dataframe-csv`, `dataframe-json`, `dataframe-excel`,
+`dataframe-arrow`, `dataframe-jdbc`, `dataframe-geo`, `dataframe-compiler-plugin-core`, `samples`,
+`docs/StardustDocs`) with module-specific details. **Read the relevant module's `AGENTS.md` before working in
+it** — it usually answers structure/pattern questions directly, so you can skip broad code exploration.
 
 The public operations API is organized as one file per operation under
 `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/` (e.g. `filter.kt`, `groupBy.kt`, `join.kt`). When adding
