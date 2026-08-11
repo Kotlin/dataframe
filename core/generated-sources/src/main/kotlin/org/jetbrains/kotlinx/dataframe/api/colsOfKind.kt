@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -124,6 +125,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -161,6 +164,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -208,6 +213,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -249,6 +256,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -292,6 +301,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -329,6 +340,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -369,6 +382,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *

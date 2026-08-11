@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -117,6 +118,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -168,6 +171,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
@@ -225,6 +230,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -272,6 +279,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
@@ -329,6 +338,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -376,6 +387,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
@@ -434,6 +447,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -482,6 +497,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
@@ -537,6 +554,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -584,6 +603,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
@@ -638,6 +659,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
      *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -691,6 +714,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * NOTE: This function should not be confused with [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols], which operates on all
      * columns directly in [this], or with [colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this] at any depth.
+     *
+     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar]
      *

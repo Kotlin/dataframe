@@ -989,6 +989,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
  * ## The Drop Nulls Operation
  *
  * Removes `null` values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  */
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
     (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
@@ -1156,6 +1158,8 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = 
  * ## The Drop `NA` Operation
  *
  * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
@@ -1310,6 +1314,8 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T>
  * ## The Drop `NaN` Operation
  *
  * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  */
 public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
     when (typeClass) {

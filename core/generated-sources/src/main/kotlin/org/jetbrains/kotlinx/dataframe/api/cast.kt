@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import kotlin.reflect.typeOf
 
@@ -63,6 +64,8 @@ public inline fun <reified T> DataFrame<*>.castTo(
  *      df.part1.print()
  * }
  * ```
+ *
+ * For more information: [See `cast` on the documentation website.](https://kotlin.github.io/dataframe//cast.html)
  */
 public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: Function<DataFrame<T>>,

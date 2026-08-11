@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.typeOf
@@ -72,6 +73,8 @@ public interface ExprColumnsSelectionDsl {
  * Creates a temporary new column by defining an expression to fill up each row.
  *
  * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
+ *
+ * For more information: [See `expr` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#expr-column-expression)
  *
  * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
  *
