@@ -96,34 +96,34 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
-     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
+     * __NOTE:__ Null-filled columns of type [`Nothing?`][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
+     *   This is because [`Nothing`][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[`filter`][ColumnsSelectionDsl.filter]` { !it.`[`allNulls`][DataColumn.allNulls]`() }`
      *   after it.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`> { it.`[`size`][DataColumn.size]` > 10 } }`
      * {@include [LineBreak]}
      * Alternatively, [colsOf] can also be called on existing columns:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup"<Type>().`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`> { it.`[`size`][DataColumn.size]` > 10 } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      * {@include [LineBreak]}
      * Finally, [colsOf] can also take a [KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      * {@comment TODO: [Issue: #325, context receiver support](https://github.com/Kotlin/dataframe/issues/325) }
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
      *
      * #### Examples for this overload:
      */
@@ -139,9 +139,9 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * @include [CommonColsOfDocs]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][String.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsOf`][String.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][String.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsOf`][String.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
      *
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
@@ -152,9 +152,9 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * @include [CommonColsOfDocs]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsOf][KProperty.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`colsOf`][KProperty.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][KProperty.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`colsOf`][KProperty.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
      *
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
@@ -167,9 +167,9 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * @include [CommonColsOfDocs]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][ColumnPath.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`colsOf`][ColumnPath.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][ColumnPath.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`colsOf`][ColumnPath.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
      *
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
@@ -181,9 +181,9 @@ public interface ColsOfColumnsSelectionDsl {
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`colsOf`][ColumnSet.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`colsOf`][ColumnSet.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
@@ -194,9 +194,9 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> B
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`colsOf`][ColumnSet.colsOf]`<`[`Int`][Int]`>() }`
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`colsOf`][ColumnSet.colsOf]`<`[`Int`][Int]`> { it.`[`size`][DataColumn.size]` > 10 } }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
@@ -209,7 +209,7 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
@@ -222,7 +222,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>() }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
@@ -235,9 +235,9 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) { it: `[`DataColumn`][DataColumn]`<`[`Int`][Int]`> -> it.`[`size`][DataColumn.size]` > 10 } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>(`[`typeOf`][typeOf]`<`[`Int`][Int]`>()) }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
@@ -250,9 +250,9 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`> { it.`[`size`][DataColumn.size]` > 10 } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>() }`
  *
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]

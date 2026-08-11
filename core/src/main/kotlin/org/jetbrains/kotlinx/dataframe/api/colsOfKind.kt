@@ -80,11 +80,11 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOfKind`][ColumnsSelectionDsl.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      *
-     *  `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Group][ColumnKind.Group]`) }`
+     *  `df.`[`select`][DataFrame.select]`  {  `[`colsOfKind`][ColumnsSelectionDsl.colsOfKind]`(`[`Group`][ColumnKind.Group]`) }`
      *
-     *  `df.`[select][DataFrame.select]` { "myColGroup".`[colsOfKind][String.colsOfKind]`(`[Frame][ColumnKind.Frame]`) }`
+     *  `df.`[`select`][DataFrame.select]` { "myColGroup".`[`colsOfKind`][String.colsOfKind]`(`[`Frame`][ColumnKind.Frame]`) }`
      *
      * #### Examples for this overload:
      *
@@ -109,11 +109,11 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colsOfKind][ColumnSet.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") }.`[`colsOfKind`][ColumnSet.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOfKind`][ColumnsSelectionDsl.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     public fun ColumnSet<*>.colsOfKind(
         kind: ColumnKind,
@@ -129,7 +129,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOfKind`][ColumnsSelectionDsl.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) { it.`[`name`][ColumnReference.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     public fun ColumnsSelectionDsl<*>.colsOfKind(
         kind: ColumnKind,
@@ -145,7 +145,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsOfKind`][SingleColumn.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) }`
      */
     public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
@@ -161,7 +161,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsOfKind`][SingleColumn.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) }`
      */
     public fun String.colsOfKind(
         kind: ColumnKind,
@@ -173,7 +173,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`colsOfKind`][KProperty.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -187,7 +187,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @include [CommonColsOfKindDocs]
      * @set [CommonColsOfKindDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOfKind][ColumnPath.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`colsOfKind`][ColumnPath.colsOfKind]`(`[`Value`][ColumnKind.Value]`, `[`Frame`][ColumnKind.Frame]`) }`
      */
     public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
