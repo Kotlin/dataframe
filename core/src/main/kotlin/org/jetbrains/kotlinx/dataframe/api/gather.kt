@@ -427,7 +427,7 @@ public class Gather<T, C, K, R>(
      * without modifying the values themselves.
      *
      * This is useful when the type cannot be automatically inferred and needs to be explicitly specified
-     * for further [Gather] operations such as [filter][Gather.where], [`notNull`][Gather.notNull],
+     * for further [Gather] operations such as [`filter`][Gather.where], [`notNull`][Gather.notNull],
      * or [`mapValues`][Gather.mapValues].
      * It does not affect the actual content of the values —
      * only the type used for compile-time safety and transformation configuration.
