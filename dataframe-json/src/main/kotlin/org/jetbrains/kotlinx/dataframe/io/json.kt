@@ -495,7 +495,7 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
  *   The default is empty list, which indicates that the image is not encoded as Base64.
  * @param isFormatted Specifies whether the DataFrame should be formatted,
  *   a.k.a. it comes from [FormattedFrame.df] or it contains a
- *   [DataColumn][DataColumn]`<`[FormattedFrame][FormattedFrame]`<*>>` at any depth.
+ *   [`DataColumn`][DataColumn]`<`[`FormattedFrame`][FormattedFrame]`<*>>` at any depth.
  *   This is just a marker; formatting is applied by the renderer. Defaults to `false`.
  *
  * @return The DataFrame converted to a JSON string with metadata.

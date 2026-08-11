@@ -112,9 +112,9 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  { `[`nameStartsWith`][ColumnsSelectionDsl.nameStartsWith]`("order").`[`single`][ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][String.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[`singleCol`][String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
@@ -133,9 +133,9 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().`[`single`][ColumnSet.single]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`single`][ColumnSet.single]`() }`
      */
     @Interpretable("Single0")
     @Deprecated(
@@ -149,9 +149,9 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().nameStartsWith("year").`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>().nameStartsWith("year").`[`single`][ColumnSet.single]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`single`][ColumnSet.single]`() }`
      */
     @Interpretable("Single0")
     public fun <C> ColumnSet<C>.single(): SingleColumn<C> = singleInternal { true }
@@ -160,7 +160,7 @@ public interface SingleColumnsSelectionDsl {
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`single`][ColumnsSelectionDsl.single]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      */
     @Interpretable("Single1")
     @Deprecated(
@@ -175,7 +175,7 @@ public interface SingleColumnsSelectionDsl {
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  { nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
+     * `df.`[`select`][DataFrame.select]`  { nameStartsWith("year").`[`single`][ColumnsSelectionDsl.single]`() }`
      */
     @Interpretable("Single1")
     public fun ColumnsSelectionDsl<*>.single(): SingleColumn<*> = asSingleColumn().singleCol { true }
@@ -184,7 +184,7 @@ public interface SingleColumnsSelectionDsl {
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`singleCol`][SingleColumn.singleCol]`() }`
      */
     @Interpretable("Single2")
     @Deprecated(
@@ -200,7 +200,7 @@ public interface SingleColumnsSelectionDsl {
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`singleCol`][SingleColumn.singleCol]`() }`
      */
     @Interpretable("Single2")
     public fun SingleColumn<DataRow<*>>.singleCol(): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().single()
@@ -208,7 +208,7 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`singleCol`][String.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      */
     @Deprecated(
         message = SINGLE,
@@ -221,16 +221,16 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsNameStartsWith`][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[`singleCol`][String.singleCol]`() }`
      */
     public fun String.singleCol(): SingleColumn<*> = columnGroup(this).singleCol()
 
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[singleCol][SingleColumn.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`singleCol`][SingleColumn.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[singleCol][KProperty.singleCol]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`singleCol`][KProperty.singleCol]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -240,7 +240,7 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[singleCol][ColumnPath.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`singleCol`][ColumnPath.singleCol]` { it.`[`name`][ColumnReference.name]`().`[`startsWith`][String.startsWith]`("year") } }`
      */
     public fun ColumnPath.singleCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).singleCol(condition)

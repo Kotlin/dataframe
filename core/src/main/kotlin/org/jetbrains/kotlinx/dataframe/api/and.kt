@@ -106,7 +106,7 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
      */
     private interface ColumnsResolverAndDocs {
 
@@ -136,7 +136,7 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
+     * `df.`[`select`][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
      */
     private interface StringAndDocs {
 
@@ -165,7 +165,7 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
+     * `df.`[`select`][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
      */
     private interface KPropertyAndDocs {
 
@@ -177,7 +177,7 @@ public interface AndColumnsSelectionDsl {
     @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
-    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =

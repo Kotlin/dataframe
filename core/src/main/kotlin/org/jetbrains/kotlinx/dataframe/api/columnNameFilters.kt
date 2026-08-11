@@ -91,17 +91,17 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]`  {  `{@get [ARGUMENT]}{@get [ARGUMENT]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     * This function is a shorthand for [`cols`][ColumnsSelectionDsl.cols]`  {  `{@get [ARGUMENT]}{@get [ARGUMENT]}` `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }`.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[nameContains][SingleColumn.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameContains`][SingleColumn.colsNameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.colsNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`nameContains`][String.colsNameContains]`(`[`Regex`][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[nameContains][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
+     * `df.`[`select`][DataFrame.select]` { Type::someGroupCol.`[`nameContains`][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *
@@ -143,9 +143,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`nameContains`][ColumnSet.nameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my", ignoreCase = true) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`nameContains`][ColumnSet.nameContains]`("my", ignoreCase = true) }`
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameContains0")
@@ -156,7 +156,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[nameContains][ColumnsSelectionDsl.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameContains`][ColumnsSelectionDsl.colsNameContains]`("my") }`
      */
     @Interpretable("NameContains1")
     public fun ColumnsSelectionDsl<*>.nameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
@@ -166,7 +166,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameContains][SingleColumn.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]` { someGroupCol.`[`colsNameContains`][SingleColumn.colsNameContains]`("my") }`
      */
     @Interpretable("NameContains2")
     public fun SingleColumn<DataRow<*>>.colsNameContains(
@@ -178,7 +178,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`colsNameContains`][String.colsNameContains]`("my") }`
      */
     public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
@@ -187,7 +187,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::someGroupCol.`[`colsNameContains`][KProperty.colsNameContains]`("my") }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -198,7 +198,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameContains][ColumnPath.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["someGroupCol"].`[`colsNameContains`][ColumnPath.colsNameContains]`("my") }`
      */
     public fun ColumnPath.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
@@ -212,9 +212,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`nameContains`][ColumnSet.nameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`nameContains`][ColumnSet.nameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): ColumnSet<C> =
@@ -224,7 +224,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[nameContains][ColumnsSelectionDsl.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameContains`][ColumnsSelectionDsl.nameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     public fun ColumnsSelectionDsl<*>.nameContains(regex: Regex): ColumnSet<*> =
         asSingleColumn().colsNameContains(regex)
@@ -233,7 +233,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameContains][SingleColumn.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]` { someGroupCol.`[`colsNameContains`][SingleColumn.colsNameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     public fun SingleColumn<DataRow<*>>.colsNameContains(regex: Regex): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal { it.name.contains(regex) }
@@ -242,7 +242,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`colsNameContains`][String.colsNameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     public fun String.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
@@ -250,7 +250,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameContains][KProperty.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::someGroupCol.`[`colsNameContains`][KProperty.colsNameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -260,7 +260,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameContains][ColumnPath.colsNameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["someGroupCol"].`[`colsNameContains`][ColumnPath.colsNameContains]`(`[`Regex`][Regex]`("order-[0-9]+")) }`
      */
     public fun ColumnPath.colsNameContains(regex: Regex): ColumnSet<*> = columnGroup(this).colsNameContains(regex)
 
@@ -275,17 +275,17 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], the function is named `{@get [CommonNameStartsEndsDocs.COLS_NAME_OPERATION_NAME]}` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[{@get [OPERATION_NAME]}][String.{@get [OPERATION_NAME]}]`(`{@get [ARGUMENT]}{@get [ARGUMENT]}`) }`.
+     * This function is a shorthand for [`cols`][ColumnsSelectionDsl.cols]` { it.`[`name`][DataColumn.name]`.`[{@get [OPERATION_NAME]}][String.{@get [OPERATION_NAME]}]`(`{@get [ARGUMENT]}{@get [ARGUMENT]}`) }`.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[{@get [NAME_OPERATION_NAME]}][ColumnsSelectionDsl.{@get [NAME_OPERATION_NAME]}]`("order") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[{@get [NAME_OPERATION_NAME]}][ColumnsSelectionDsl.{@get [NAME_OPERATION_NAME]}]`("order") }`
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@get [COLS_NAME_OPERATION_NAME]}][String.{@get [COLS_NAME_OPERATION_NAME]}]`("b") }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[{@get [COLS_NAME_OPERATION_NAME]}][String.{@get [COLS_NAME_OPERATION_NAME]}]`("b") }`
      *
-     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[{@get [COLS_NAME_OPERATION_NAME]}][SingleColumn.{@get [COLS_NAME_OPERATION_NAME]}]`("a", ignoreCase = true) }`
+     * `df.`[`select`][DataFrame.select]` { Type::someGroupCol.`[{@get [COLS_NAME_OPERATION_NAME]}][SingleColumn.{@get [COLS_NAME_OPERATION_NAME]}]`("a", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *
@@ -342,7 +342,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`nameStartsWith`][ColumnSet.nameStartsWith]`("order-") }`
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameStartsWith0")
@@ -353,7 +353,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameStartsWith`][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
      */
     @Interpretable("NameStartsWith1")
     public fun ColumnsSelectionDsl<*>.nameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
@@ -363,7 +363,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameStartsWith][SingleColumn.colsNameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]` { someGroupCol.`[`colsNameStartsWith`][SingleColumn.colsNameStartsWith]`("order-") }`
      */
     @Interpretable("NameStartsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
@@ -375,7 +375,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameStartsWith][String.colsNameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`colsNameStartsWith`][String.colsNameStartsWith]`("order-") }`
      */
     public fun String.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
@@ -384,7 +384,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameStartsWith][KProperty.colsNameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::someGroupCol.`[`colsNameStartsWith`][KProperty.colsNameStartsWith]`("order-") }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -395,7 +395,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameStartsWith][ColumnPath.colsNameStartsWith]`("order-") }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["someGroupCol"].`[`colsNameStartsWith`][ColumnPath.colsNameStartsWith]`("order-") }`
      */
     public fun ColumnPath.colsNameStartsWith(prefix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
@@ -423,7 +423,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`nameEndsWith`][ColumnSet.nameEndsWith]`("-order") }`
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("NameEndsWith0")
@@ -434,7 +434,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameEndsWith`][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
     @Interpretable("NameEndsWith")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
@@ -444,7 +444,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameEndsWith][SingleColumn.colsNameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]` { someGroupCol.`[`colsNameEndsWith`][SingleColumn.colsNameEndsWith]`("-order") }`
      */
     @Interpretable("NameEndsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
@@ -456,7 +456,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameEndsWith][String.colsNameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`colsNameEndsWith`][String.colsNameEndsWith]`("-order") }`
      */
     public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
@@ -465,7 +465,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::someGroupCol.`[colsNameEndsWith][KProperty.colsNameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::someGroupCol.`[`colsNameEndsWith`][KProperty.colsNameEndsWith]`("-order") }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -476,7 +476,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["someGroupCol"].`[colsNameEndsWith][ColumnPath.colsNameEndsWith]`("-order") }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["someGroupCol"].`[`colsNameEndsWith`][ColumnPath.colsNameEndsWith]`("-order") }`
      */
     public fun ColumnPath.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameEndsWith(suffix, ignoreCase)

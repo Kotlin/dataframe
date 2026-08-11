@@ -23,11 +23,11 @@ import java.io.Serializable
 
 /**
  * For Spark, Kotlin data classes are supported if we:
- * - Add [@JvmOverloads][JvmOverloads] to the constructor
+ * - Add [`@JvmOverloads`][JvmOverloads] to the constructor
  * - Make all parameter arguments mutable and with defaults
  * - Make them [Serializable]
  *
- * But by adding [@DataSchema][DataSchema] we can reuse the same class for Spark and DataFrame!
+ * But by adding [`@DataSchema`][DataSchema] we can reuse the same class for Spark and DataFrame!
  *
  * See [Person] and [Name] for an example.
  *

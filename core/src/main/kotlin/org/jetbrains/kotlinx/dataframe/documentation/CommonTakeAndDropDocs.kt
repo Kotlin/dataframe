@@ -25,13 +25,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
  * ### Check out: [Grammar\]
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@get [OPERATION]}][ColumnSet.{@get [OPERATION]}]`(5) }`
+ * `df.`[`select`][DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[{@get [OPERATION]}][ColumnSet.{@get [OPERATION]}]`(5) }`
  *
- * `df.`[select][DataFrame.select]` { `[{@get [OPERATION]}][ColumnsSelectionDsl.{@get [OPERATION]}]`(1) }`
+ * `df.`[`select`][DataFrame.select]` { `[{@get [OPERATION]}][ColumnsSelectionDsl.{@get [OPERATION]}]`(1) }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@get [OPERATION]}Cols][SingleColumn.{@get [OPERATION]}Cols]`(2) }`
+ * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[{@get [OPERATION]}Cols][SingleColumn.{@get [OPERATION]}Cols]`(2) }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@get [OPERATION]}Cols][String.{@get [OPERATION]}Cols]`(3) }`
+ * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[{@get [OPERATION]}Cols][String.{@get [OPERATION]}Cols]`(3) }`
  *
  * #### Examples for this overload:
  *

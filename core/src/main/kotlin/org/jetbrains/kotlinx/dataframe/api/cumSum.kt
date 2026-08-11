@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
  *
  * `cumSum` only works on columns that contain solely primitive numbers.
  *
- * Similar to [sum][sum], [Byte][Byte]- and [Short][Short]-columns are converted to [Int][Int].
+ * Similar to [`sum`][sum], [`Byte`][Byte]- and [`Short`][Short]-columns are converted to [`Int`][Int].
  *
  * {@get [CumSumDocs.CUMSUM_PARAM] @param [columns\] The selection of the columns to apply the `cumSum` operation to.
  *   If not provided, `cumSum` will be applied to all primitive columns [at any depth][ColumnsSelectionDsl.colsAtAnyDepth].

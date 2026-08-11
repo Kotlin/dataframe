@@ -65,12 +65,12 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][colsInGroups] is a function that returns all columns at the top-levels of
+     * [`colsInGroups`][colsInGroups] is a function that returns all columns at the top-levels of
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
      * "one level deeper".
      *
-     * NOTE: This function should not be confused with [cols][ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this\], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
+     * NOTE: This function should not be confused with [`cols`][ColumnsSelectionDsl.cols], which operates on all
+     * columns directly in [this\], or with [`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this\] at any depth.
      *
      * ### Check out: [Grammar]
@@ -79,19 +79,19 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * To get only the columns inside all column groups in a [DataFrame], instead of having to write:
      *
-     * `df.`[select][DataFrame.select]` { colGroupA.`[cols][ColumnsSelectionDsl.cols]`() `[and][ColumnsSelectionDsl.and]` colGroupB.`[cols][ColumnsSelectionDsl.cols]`() ...  }`
+     * `df.`[`select`][DataFrame.select]` { colGroupA.`[`cols`][ColumnsSelectionDsl.cols]`() `[`and`][ColumnsSelectionDsl.and]` colGroupB.`[`cols`][ColumnsSelectionDsl.cols]`() ...  }`
      *
      * you can use:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsInGroups`][ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("user") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsInGroups`][ColumnsSelectionDsl.colsInGroups]`().`[`nameContains`][ColumnsSelectionDsl.nameContains]`("user") }`
      * {@include [LineBreak]}
      * Similarly, you can take the columns inside all [column groups][ColumnGroup] in a [ColumnSet]:
      * {@include [LineBreak]}
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colGroups`][ColumnsSelectionDsl.colGroups]`().`[`nameContains`][ColumnsSelectionDsl.nameContains]`("my").`[`colsInGroups`][ColumnSet.colsInGroups]`() }`
      * {@include [LineBreak]}
      *
      * #### Examples of this overload:
@@ -112,9 +112,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { .. }.`[`colsInGroups`][ColumnSet.colsInGroups]`  { "my"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`DataRow`][DataRow]`<MyGroupType>>().`[`colsInGroups`][ColumnSet.colsInGroups]`() }`
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -128,7 +128,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`DataRow`][DataRow]`<MyGroupType>>().`[`colsInGroups`][ColumnSet.colsInGroups]`() }`
      */
     public fun ColumnSet<*>.colsInGroups(): ColumnSet<*> = transform { it.flatMap { it.cols() } }
 
@@ -136,9 +136,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsInGroups`][ColumnSet.colsInGroups]`  { "my"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsInGroups`][ColumnSet.colsInGroups]`() }`
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -152,7 +152,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsInGroups`][ColumnSet.colsInGroups]`() }`
      */
     public fun ColumnsSelectionDsl<*>.colsInGroups(): ColumnSet<*> = asSingleColumn().colsInGroups()
 
@@ -160,9 +160,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsInGroups`][SingleColumn.colsInGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsInGroups`][SingleColumn.colsInGroups]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -177,7 +177,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colsInGroups`][SingleColumn.colsInGroups]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun SingleColumn<DataRow<*>>.colsInGroups(): ColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups()
@@ -186,7 +186,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsInGroups`][String.colsInGroups]`() }`
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -200,7 +200,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`colsInGroups`][String.colsInGroups]`() }`
      */
     public fun String.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 
@@ -208,9 +208,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`colsInGroups`][KProperty.colsInGroups]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup.`[`colsInGroups`][KProperty.colsInGroups]`() }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -221,7 +221,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`colsInGroups`][ColumnPath.colsInGroups]`() }`
      */
     @Deprecated(
         message = COLS_IN_GROUPS,
@@ -235,7 +235,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColumnGroup"].`[`colsInGroups`][ColumnPath.colsInGroups]`() }`
      */
     public fun ColumnPath.colsInGroups(): ColumnSet<*> = columnGroup(this).colsInGroups()
 }
