@@ -435,7 +435,7 @@ public class Convert<T, out C>(
      * The target type is provided as reified argument.
      * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
      *
-     * Converting from [String(?)][String] columns is considered "parsing".
+     * Converting from [`String(?)`][String] columns is considered "parsing".
      * You can also provide [parserOptions\] to customize the [Locale], date-time options, etc.
      * See [ParserOptions]. This argument is ignored for non-`String` columns.
      *

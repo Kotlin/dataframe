@@ -39,8 +39,8 @@ import kotlin.reflect.KProperty
  * returns a [RenameClause],
  * which serves as an intermediate step.
  * The [RenameClause] object provides methods to rename selected columns using:
- * - [to(name)][RenameClause.to] - renames selected columns to the specified names.
- * - [to { nameExpression }][RenameClause.to] - renames selected columns using a provided
+ * - [`to(name)`][RenameClause.to] - renames selected columns to the specified names.
+ * - [`to { nameExpression }`][RenameClause.to] - renames selected columns using a provided
  * expression assuming column with its path and returning a new name.
  * - [`toCamelCase()`][RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
@@ -173,8 +173,8 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
  * in the [DataFrame], but their names will be changed.
  *
  * Use the following methods to perform the conversion:
- * - [to(name)][RenameClause.to] — renames selected columns to the specified names.
- * - [to { nameExpression }][RenameClause.to] — renames selected columns using a custom expression,
+ * - [`to(name)`][RenameClause.to] — renames selected columns to the specified names.
+ * - [`to { nameExpression }`][RenameClause.to] — renames selected columns using a custom expression,
  *   which takes the column and its path and returns a new name.
  * - [`toCamelCase()`][RenameClause.toCamelCase] — renames all selected columns to `camelCase`.
  *

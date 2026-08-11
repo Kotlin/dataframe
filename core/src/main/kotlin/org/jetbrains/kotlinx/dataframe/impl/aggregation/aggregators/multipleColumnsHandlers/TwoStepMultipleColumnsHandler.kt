@@ -54,8 +54,8 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      *
-     * This function calls [`aggregator`][aggregator] [.aggregateSingleColumn()][Aggregator.aggregateSingleColumn]
-     * on each column and then [stepTwo] [.aggregateSequence()][Aggregator.aggregateSequence] on the results.
+     * This function calls [`aggregator`][aggregator] [`.aggregateSingleColumn()`][Aggregator.aggregateSingleColumn]
+     * on each column and then [stepTwo] [`.aggregateSequence()`][Aggregator.aggregateSequence] on the results.
      */
     override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
         val (values, types) = columns.map { col ->

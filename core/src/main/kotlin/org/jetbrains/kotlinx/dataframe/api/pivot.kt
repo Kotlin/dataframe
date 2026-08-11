@@ -115,7 +115,7 @@ internal interface PivotDocs {
      * `| `__`.`__[**`aggregate`**][Pivot.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[<aggregation_statistic>][PivotDocs.AggregationStatistics]
+     * `| `__`.`__[`<aggregation_statistic>`][PivotDocs.AggregationStatistics]
      *
      * ### Group [Pivot] into [PivotGroupBy] and reduce / aggregate it
      *
@@ -128,10 +128,10 @@ internal interface PivotDocs {
      * `\[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
+     * `| `__`.`__[`<pivot_groupBy_reducer>`][PivotGroupByDocs.Reducing]
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_groupBy_aggregator>][PivotGroupByDocs.Aggregation]
+     * `| `__`.`__[`<pivot_groupBy_aggregator>`][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */

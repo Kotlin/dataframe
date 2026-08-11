@@ -13,9 +13,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  * This type of [ColumnsResolver] can be [transformed][transformResolve] before being resolved.
  *
  * This is especially useful for calls like
- * [colsInternal { }][ColumnsResolver.colsInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
+ * [`colsInternal { }`][ColumnsResolver.colsInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
  * where [`atAnyDepthImpl`][atAnyDepthImpl] modifies the [`ColumnSet`][ColumnsResolver]
- * that [colsInternal { }][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
+ * that [`colsInternal { }`][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [ColumnsResolver]
@@ -35,9 +35,9 @@ internal interface TransformableColumnSet<out C> : ColumnSet<C> {
  * This type of [SingleColumn] can be [transformed][transformResolveSingle] before being resolved.
  *
  * This is especially useful for calls like
- * [singleInternal { }][ColumnsResolver.singleInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
+ * [`singleInternal { }`][ColumnsResolver.singleInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
  * where [`atAnyDepthImpl`][atAnyDepthImpl] modifies the [SingleColumn]
- * that [singleInternal { }][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
+ * that [`singleInternal { }`][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [SingleColumn]

@@ -162,7 +162,7 @@ internal interface GroupByDocs {
      * `| `__`.`__[**`aggregate`**][Grouped.aggregate]**`  {  `**`aggregations: `[`AggregateDsl`][AggregateDsl]**` }`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[<aggregation_statistic>][AggregationStatistics]
+     * `| `__`.`__[`<aggregation_statistic>`][AggregationStatistics]
      *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
@@ -173,10 +173,10 @@ internal interface GroupByDocs {
      * `    \[ `__`.`__[**`default`**][PivotGroupBy.default]**`(`**`defaultValue`**`) `**`]`
      *
      * {@include [Indent]}
-     * __`.`__[<pivot_groupBy_reducer>][PivotGroupByDocs.Reducing]
+     * __`.`__[`<pivot_groupBy_reducer>`][PivotGroupByDocs.Reducing]
      *
      * {@include [Indent]}
-     * `| `__`.`__[<pivot_groupBy_groupBy>][PivotGroupByDocs.Aggregation]
+     * `| `__`.`__[`<pivot_groupBy_groupBy>`][PivotGroupByDocs.Aggregation]
      *
      * Check out [PivotGroupBy Grammar][PivotGroupByDocs.Grammar] for more information.
      */
