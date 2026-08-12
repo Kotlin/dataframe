@@ -67,7 +67,7 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
- * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html) [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
  *
  * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
  */

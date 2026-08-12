@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -42,6 +43,8 @@ public fun <T> DataColumn<T>.dropLast(n: Int = 1): DataColumn<T> = take(size - n
 /**
  * Returns a DataFrame containing all rows except first [n] rows.
  *
+ * For more information: [See `drop` on the documentation website.](https://kotlin.github.io/dataframe/slicerows.html#drop)
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
@@ -52,6 +55,8 @@ public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except last [n] rows.
  *
+ * For more information: [See `dropLast` on the documentation website.](https://kotlin.github.io/dataframe/slicerows.html#droplast)
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
@@ -61,11 +66,15 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
+ *
+ * For more information: [See `drop` on the documentation website.](https://kotlin.github.io/dataframe/drop.html)
  */
 public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
+ *
+ * For more information: [See `dropWhile` on the documentation website.](https://kotlin.github.io/dataframe/slicerows.html#dropwhile)
  */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
@@ -196,6 +205,8 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -213,6 +224,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     private typealias CommonDropFirstDocs = Nothing
 
@@ -227,6 +239,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -247,6 +261,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     @Interpretable("Drop0")
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
@@ -262,6 +277,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -280,6 +297,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     @Interpretable("Drop1")
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
@@ -295,6 +313,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -313,6 +333,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     @Interpretable("Drop2")
     public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
@@ -329,6 +350,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -347,6 +370,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     public fun String.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
@@ -361,6 +385,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -379,6 +405,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -395,6 +422,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `drop` is called `dropCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -413,6 +442,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
+     *
      */
     public fun ColumnPath.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
@@ -432,6 +462,8 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -449,6 +481,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     private typealias CommonDropLastDocs = Nothing
 
@@ -463,6 +496,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -483,6 +518,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     @Interpretable("DropLast0")
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
@@ -498,6 +534,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -516,6 +554,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     @Interpretable("DropLast1")
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
@@ -531,6 +570,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -549,6 +590,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     @Interpretable("DropLast2")
     public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
@@ -565,6 +607,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -583,6 +627,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     public fun String.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
@@ -597,6 +642,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -615,6 +662,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -631,6 +679,8 @@ public interface DropColumnsSelectionDsl {
      *
      * NOTE: To avoid ambiguity, `dropLast` is called `dropLastCols` when called on
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Grammar]
      *
@@ -649,6 +699,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
+     *
      */
     public fun ColumnPath.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
@@ -669,6 +720,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -684,6 +737,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     private typealias CommonDropWhileDocs = Nothing
 
@@ -699,6 +753,8 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropWhile` is called
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Usage]
      *
@@ -717,6 +773,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     public fun <C> ColumnSet<C>.dropWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropWhile(predicate) }
@@ -734,6 +791,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -749,6 +808,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     public fun ColumnsSelectionDsl<*>.dropWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropColsWhile(predicate)
@@ -766,6 +826,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -781,6 +843,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
@@ -798,6 +861,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -813,6 +878,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     public fun String.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
@@ -830,6 +896,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -845,6 +913,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -864,6 +933,8 @@ public interface DropColumnsSelectionDsl {
      * `dropColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -879,6 +950,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
+     *
      */
     public fun ColumnPath.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
@@ -900,6 +972,8 @@ public interface DropColumnsSelectionDsl {
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -915,6 +989,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     private typealias CommonDropLastWhileDocs = Nothing
 
@@ -930,6 +1005,8 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Usage]
      *
@@ -948,6 +1025,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     public fun <C> ColumnSet<C>.dropLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropLastWhile(predicate) }
@@ -965,6 +1043,8 @@ public interface DropColumnsSelectionDsl {
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -980,6 +1060,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropLastColsWhile(predicate)
@@ -997,6 +1078,8 @@ public interface DropColumnsSelectionDsl {
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -1012,6 +1095,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
@@ -1029,6 +1113,8 @@ public interface DropColumnsSelectionDsl {
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -1044,6 +1130,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     public fun String.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
@@ -1060,6 +1147,8 @@ public interface DropColumnsSelectionDsl {
      * NOTE: To avoid ambiguity, `dropLastWhile` is called
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
      *
      * ### Check out: [Usage]
      *
@@ -1078,6 +1167,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -1097,6 +1187,8 @@ public interface DropColumnsSelectionDsl {
      * `dropLastColsWhile` when called on a [String] or [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] resembling
      * a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
+     * For more information: [See drop(Last)(Cols)(While) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#drop-last-cols-while)
+     *
      * ### Check out: [Usage]
      *
      * #### Examples:
@@ -1112,6 +1204,7 @@ public interface DropColumnsSelectionDsl {
      *
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
+     *
      */
     public fun ColumnPath.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)

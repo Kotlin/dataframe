@@ -430,6 +430,8 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -474,6 +476,8 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
@@ -522,6 +526,8 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -565,6 +571,8 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
