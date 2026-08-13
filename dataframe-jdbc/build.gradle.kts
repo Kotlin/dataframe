@@ -37,6 +37,7 @@ dependencies {
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.mysql)
     testImplementation(libs.testcontainers.mariadb)
+    testImplementation(libs.testcontainers.mssqlserver)
 }
 
 buildConfig {
@@ -46,6 +47,7 @@ buildConfig {
         buildConfigField("MARIADB_IMAGE", "mariadb:${libs.versions.dockerImage.mariadb.get()}")
         buildConfigField("MYSQL_IMAGE", "mysql:${libs.versions.dockerImage.mysql.get()}")
         buildConfigField("POSTGRES_IMAGE", "postgres:${libs.versions.dockerImage.postgres.get()}")
+        buildConfigField("MSSQL_IMAGE", "mcr.microsoft.com/mssql/server:${libs.versions.dockerImage.mssql.get()}")
     }
 }
 
