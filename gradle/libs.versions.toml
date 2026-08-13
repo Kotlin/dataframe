@@ -68,6 +68,7 @@ testcontainers = "2.0.5"
 dockerImage-mariadb = "12.3.2" # available tags: https://hub.docker.com/_/mariadb/tags
 dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
 dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
+dockerImage-mssql = "2022-CU22-ubuntu-22.04" # available tags: https://mcr.microsoft.com/en-us/artifact/mar/mssql/server
 
 buildconfig = "6.0.10"
 benchmark = "0.4.17"
@@ -131,6 +132,7 @@ testcontainers = { group = "org.testcontainers", name = "testcontainers", versio
 testcontainers-postgresql = { group = "org.testcontainers", name = "testcontainers-postgresql", version.ref = "testcontainers" }
 testcontainers-mysql = { group = "org.testcontainers", name = "testcontainers-mysql", version.ref = "testcontainers" }
 testcontainers-mariadb = { group = "org.testcontainers", name = "testcontainers-mariadb", version.ref = "testcontainers" }
+testcontainers-mssqlserver = { group = "org.testcontainers", name = "testcontainers-mssqlserver", version.ref = "testcontainers" }
 
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-geo = { group = "org.jetbrains.kotlinx", name = "kandy-geo", version.ref = "kandy" }

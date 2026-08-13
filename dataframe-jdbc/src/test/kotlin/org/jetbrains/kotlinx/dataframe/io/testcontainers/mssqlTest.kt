@@ -1,34 +1,43 @@
-package org.jetbrains.kotlinx.dataframe.io.local
+package org.jetbrains.kotlinx.dataframe.io.testcontainers
 
 import org.jetbrains.kotlinx.dataframe.io.MsSqlTestBase
 import org.jetbrains.kotlinx.dataframe.io.setUpMsSqlTestData
 import org.jetbrains.kotlinx.dataframe.io.tearDownMsSqlTestData
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.testcontainers.mssqlserver.MSSQLServerContainer
 import java.sql.Connection
 import java.sql.DriverManager
 
-private const val URL = "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true"
-private const val USER_NAME = "root"
-private const val PASSWORD = "pass"
+private const val USER_NAME = "sa"
+private const val PASSWORD = "A_Str0ng_Required_Password"
 
-class MsSqlLocalTest : MsSqlTestBase() {
+class MsSqlContainerTest : MsSqlTestBase() {
     override val connection: Connection get() = Companion.connection
 
     override fun connect(database: String?): Connection =
         DriverManager.getConnection(
-            if (database == null) URL else "$URL;databaseName=$database",
+            if (database == null) rootUrl else "$rootUrl;databaseName=$database",
             USER_NAME,
             PASSWORD,
         )
 
     companion object {
+        private val mssql: MSSQLServerContainer = MSSQLServerContainer(BuildConfig.MSSQL_IMAGE).apply {
+            acceptLicense()
+            withPassword(PASSWORD)
+        }
+
         private lateinit var connection: Connection
+
+        private val rootUrl: String
+            get() = "jdbc:sqlserver://${mssql.host}:${mssql.firstMappedPort};encrypt=true;trustServerCertificate=true"
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
+            mssql.start()
+            connection = DriverManager.getConnection(rootUrl, USER_NAME, PASSWORD)
             setUpMsSqlTestData(connection)
         }
 
@@ -36,6 +45,7 @@ class MsSqlLocalTest : MsSqlTestBase() {
         @JvmStatic
         fun tearDownClass() {
             tearDownMsSqlTestData(connection)
+            mssql.stop()
         }
     }
 }
