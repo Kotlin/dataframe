@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.NA
+import org.jetbrains.kotlinx.dataframe.documentation.NALink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -27,7 +27,7 @@ import kotlin.reflect.typeOf
  * Otherwise, the counted values keep the order of their first occurrence.
  * @param [ascending\] The sorting direction. If `false` (default), the most frequent values come first.
  * Only used when [sort\] is `true`.
- * @param [dropNA\] If `true` (default), [`NA`][NA] values (`null`s and `NaN`s) are not counted
+ * @param [dropNA\] If `true` (default), {@include [NALink]} values (`null`s and `NaN`s) are not counted
  * and are excluded from the result.
  * @param [resultColumn\] The name of the resulting count column. Default — `"count"`.
  * If a column with this name is already present, the name is made unique by appending
@@ -37,7 +37,7 @@ import kotlin.reflect.typeOf
 private typealias ValueCountsParams = Nothing
 
 /**
- * Returns a [DataFrame] containing counts of unique rows (or combinations of selected values) in this [DataFrame].
+ * Returns a [DataFrame] containing the counts of unique rows (or combinations of selected values) in this [DataFrame].
  *
  * Rows are compared by the values in the selected [columns\]. If no columns are selected, values from
  * all columns are used.
@@ -49,19 +49,20 @@ private typealias ValueCountsParams = Nothing
  * - a new [Int] column (named [resultColumn\], default is `"count"`) with the number of occurrences of each combination.
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
- * and a row is not counted at all if any of its selected values is [`NA`][NA].
+ * and a row is not counted at all if any of its selected values is {@include [NALink]}.
  *
  * See also:
- * - [valueCounts][DataColumn.valueCounts] — counts of unique values in a single [DataColumn].
- * - [countDistinct][DataFrame.countDistinct] — the number of distinct rows, without their counts.
- * - [distinct][DataFrame.distinct] — the distinct rows themselves, without their counts.
- * - [count][DataFrame.count] — the total number of rows in this [DataFrame].
+ * - [`valueCounts`][DataColumn.valueCounts] — counts of unique values in a single [DataColumn].
+ * - [`countDistinct`][DataFrame.countDistinct] — the number of distinct rows or selected value combinations,
+ * without their counts.
+ * - [`distinct`][DataFrame.distinct] — the distinct rows themselves, without their counts.
+ * - [`count`][DataFrame.count] — the total number of rows in this [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.ValueCounts]}
  *
  * All summary statistics: {@include [DocumentationUrls.Statistics]}
  *
- * ### This ValueCounts Overload
+ * ### This `valueCounts` Overload
  */
 @ExcludeFromSources
 private typealias CommonValueCountsDocs = Nothing
@@ -97,13 +98,14 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  * - a new [Int] column ([resultColumn]) with the number of occurrences of each value.
  *
  * By default, the result is sorted by count in descending order (the most frequent value first),
- * and [`NA`][NA] values (`null`s and `NaN`s) are not counted.
+ * and {@include [NALink]} values (`null`s and `NaN`s) are not counted.
  *
  * See also:
- * - [valueCounts][DataFrame.valueCounts] — counts of unique rows in a [DataFrame].
- * - [countDistinct][DataFrame.countDistinct] — the number of distinct values, without their counts.
- * - [distinct][DataColumn.distinct] — the distinct values themselves, without their counts.
- * - [count][DataColumn.count] — the total number of elements in this [DataColumn].
+ * - [`valueCounts`][DataFrame.valueCounts] — counts of unique rows in a [DataFrame].
+ * - [`countDistinct`][DataFrame.countDistinct] — the number of distinct rows
+ * or selected value combinations in a [DataFrame].
+ * - [`distinct`][DataColumn.distinct] — the distinct values themselves, without their counts.
+ * - [`count`][DataColumn.count] — the total number of elements in this [DataColumn].
  *
  * For more information: {@include [DocumentationUrls.ValueCounts]}
  *
@@ -168,8 +170,8 @@ public fun <T> DataColumn<T>.valueCounts(
  * ```
  *
  * @include [ValueCountsParams]
- * @param [columns] The [ColumnsSelector] used to select the columns whose distinct value combinations
- * are counted.
+ * @param [columns] The optional [ColumnsSelector] that selects the columns whose distinct value combinations
+ * are counted. If `null` or omitted, all columns are used.
  * @return A [DataFrame] with the distinct value combinations and their counts.
  */
 @Refine
@@ -206,8 +208,9 @@ public fun <T> DataFrame<T>.valueCounts(
  * df.valueCounts("name", "city")
  * ```
  *
+ * @param [columns] (optional) The names of the columns whose distinct value combinations are counted. If not supplied,
+ * all columns are selected.
  * @include [ValueCountsParams]
- * @param [columns] The names of the columns whose distinct value combinations are counted.
  * @return A [DataFrame] with the distinct value combinations and their counts.
  */
 public fun <T> DataFrame<T>.valueCounts(

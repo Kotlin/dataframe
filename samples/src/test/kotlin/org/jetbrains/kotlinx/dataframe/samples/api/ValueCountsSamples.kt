@@ -25,7 +25,15 @@ class ValueCountsSamples : DataFrameSampleHelper("valueCounts", "api") {
         "age" to listOf(15, 20, 25, 15, null),
     ).cast()
 
-    private val aliceColor = RgbColor(189, 206, 233)
+    private val alice15Color = RgbColor(189, 206, 233)
+    private val aliceNullColor = RgbColor(233, 199, 220)
+
+    private fun aliceColor(name: String, age: Int?): RgbColor? =
+        when (name to age) {
+            "Alice" to 15 -> alice15Color
+            "Alice" to null -> aliceNullColor
+            else -> null
+        }
 
     @Test
     fun valueCountsDf() {
@@ -33,7 +41,9 @@ class ValueCountsSamples : DataFrameSampleHelper("valueCounts", "api") {
         df
             // SampleEnd
             .format().perRowCol { row, _ ->
-                if (row.name == "Alice" && row.age == 15) background(aliceColor) and textColor(black) else null
+                aliceColor(row.name, row.age)?.let {
+                    background(it) and textColor(black)
+                }
             }
             .saveDfHtmlSample()
     }
@@ -44,7 +54,9 @@ class ValueCountsSamples : DataFrameSampleHelper("valueCounts", "api") {
         df.valueCounts()
             // SampleEnd
             .format().perRowCol { row, _ ->
-                if (row.name == "Alice") background(aliceColor) and textColor(black) else null
+                aliceColor(row.name, row.age)?.let {
+                    background(it) and textColor(black)
+                }
             }
             .saveDfHtmlSample()
     }
@@ -55,7 +67,9 @@ class ValueCountsSamples : DataFrameSampleHelper("valueCounts", "api") {
         df.valueCounts(dropNA = false)
             // SampleEnd
             .format().perRowCol { row, _ ->
-                if (row.name == "Alice" && row.age == null) background(aliceColor) and textColor(black) else null
+                aliceColor(row.name, row.age)?.let {
+                    background(it) and textColor(black)
+                }
             }
             .saveDfHtmlSample()
     }

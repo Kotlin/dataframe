@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ValueCountsSamples-->
 
-Return [`DataFrame`](DataFrame.md) containing counts of unique values in [`DataFrame`](DataFrame.md) 
+Returns a [`DataFrame`](DataFrame.md) containing the counts of the unique values in a [`DataFrame`](DataFrame.md)
 or [`DataColumn`](DataColumn.md).
 
 ```kotlin
@@ -15,9 +15,11 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 **Parameters:**
 * `sort: Boolean = true` — whether to sort by count
 * `ascending: Boolean = false` — sort direction (by default most frequent first)
-* `dropNA: Boolean = true` — doesn't include counts of [`NA`](nanAndNa.md) values 
+* `dropNA: Boolean = true` — whether to exclude [`NA`](nanAndNa.md) values from counting (excluded by default)
 * `resultColumn: String = "count"` — name of the column with counts
 * `columns = all` — columns to use when counting unique combinations
+
+The following dataframe will be used in the examples below:
 
 <!---FUN valueCountsDf-->
 
@@ -28,7 +30,7 @@ df
 <!---END-->
 <inline-frame src="./resources/valueCountsDf.html" width="100%" height="500px"></inline-frame>
 
-For a [`DataFrame`](DataFrame.md), `dropNA = true` (default) excludes the entire row if any selected column contains 
+For a [`DataFrame`](DataFrame.md), `dropNA = true` (default) excludes the entire row if any selected column contains
 an [`NA`](nanAndNa.md) value. [`NA`](nanAndNa.md) values in columns that are not selected do not affect the result.
 
 <!---FUN valueCounts-->
