@@ -323,6 +323,7 @@ file("examples/projects").listFiles()?.forEach {
 }
 file("examples/projects/dev").listFiles()?.forEach {
     if (!it.isDirectory) return@forEach
+    if (it.name == "kotlin-dataframe-plugin-kotlin-toolchain-example") return@forEach // TODO
     setupExampleProjectFolderSyncTask(folder = it, isDev = true)
     setupGenerateAndRunTestTasks(folder = it, isDev = true)
 }

@@ -1,0 +1,43 @@
+product: jvm/app
+
+dependencies:
+  - $libs.kandy
+  - $libs.dataframe
+
+# Alternatively, if you don't use libs.versions.toml,
+# and you just want to enable specific IO modules (core is included by default when enabling the compiler plugin):
+#  - $kotlin.dataframe.csv
+#  - $kotlin.dataframe.json
+#  - $kotlin.dataframe.geo
+#  - $kotlin.dataframe.arrow
+#  - $kotlin.dataframe.excel
+#  - $kotlin.dataframe.jdbc
+
+repositories:
+  # Required for dataframe-geo
+  - https://repo.osgeo.org/repository/release
+
+settings:
+  kotlin:
+    version: 2.4.10
+    dataframe:
+      enabled: true
+      # If you don't use libs.versions.toml, you can specify the library version like this:
+      # version: 1.0.0-rc1
+
+# Run Ktlint format like:
+# `./kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:exec-maven-plugin.exec`
+# or through the maven hook:
+# `./kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:maven:verify:after`
+mavenPlugins:
+  exec-maven-plugin.exec:
+    enabled: true
+    configuration:
+      includePluginDependencies: true
+      executable: java
+      # Format and autocorrect lint errors when possible. This helps in committing autocorrect
+      # changes in the same commit as where the original code changes were made.
+      commandlineArgs: "-classpath %classpath com.pinterest.ktlint.Main --format --relative"
+    dependencies:
+      - com.pinterest.ktlint:ktlint-cli:1.8.0
+
