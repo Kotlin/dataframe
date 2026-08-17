@@ -1,0 +1,2 @@
+mavenPlugins:
+  - org.codehaus.mojo:exec-maven-plugin:3.6.3
