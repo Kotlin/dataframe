@@ -212,6 +212,16 @@ public interface DocumentationUrls {
     /** [See "Row statistics" on the documentation website.]({@include [Url]}/rowstats.html) */
     public typealias RowStatistics = Nothing
 
+    /** [See "Number Unification" on the documentation website.]({@include [Url]}/numberunification.html) */
+    public typealias NumberUnification = Nothing
+
+    /** [See `sum` on the documentation website.]({@include [Url]}/sum.html) */
+    public interface Sum {
+
+        /** [See "`sum` Type Conversion" on the documentation website.]({@include [Url]}/sum.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
     public interface MinMax {
 
