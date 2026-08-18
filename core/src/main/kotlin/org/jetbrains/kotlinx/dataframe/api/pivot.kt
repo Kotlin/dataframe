@@ -1262,7 +1262,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      *
      * Returns a new [DataFrame] with the [groupBy] key columns
      * and the [pivot] keys as top-level columns on top level,
-     * and the correspodning aggregated values in new nested columns.
+     * and the corresponding aggregated values in new nested columns.
      *
      * @include [AggregateDslDocs]
      * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}

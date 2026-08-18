@@ -87,7 +87,7 @@ internal interface StringParser<out T> {
     /**
      * Applies [ParserOptions] and optionally supplied previously [attemptedParsers]
      * to get the actual [string parser function][ParserFunction] that
-     * can parse [String] to [T] (or `null` if unsucessful).
+     * can parse [String] to [T] (or `null` if unsuccessful).
      *
      * If the returned [ParserFunction][ParserFunction]` == `[SKIP_PARSER][SKIP_PARSER], the function
      * will always return `null` for the current [global parser options][Parsers] and given arguments
@@ -158,7 +158,7 @@ internal fun <T> ParserFunction<T>.withFallback(fallbackFunction: ParserFunction
 internal fun <T> parseBy(body: ParserFunction<T>): ParserFunction<T> = body
 
 /**
- * [ParserFunction] that aways returns `null`.
+ * [ParserFunction] that always returns `null`.
  * Useful if a parser needs to be skipped based on the provided [ParserOptions].
  */
 internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
