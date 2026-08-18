@@ -36,7 +36,7 @@ See [](read.md#read-from-csv).
 |-------------------------------------------------|-------------------------------------------------|
 | `CSV`/`TSV`                                     | `CsvDeephaven`/`TsvDeephaven`                   |
 | `DataFrame.readCSV(..)`/`DataFrame.readTSV(..)` | `DataFrame.readCsv(..)`/`DataFrame.readTsv(..)` |
-| `DataFrame.read(delimeter=.., ..)`              | `DataFrame.readCsv(delimeter=.., ..)`           |
+| `DataFrame.read(delimiter=.., ..)`              | `DataFrame.readCsv(delimiter=.., ..)`           |
 | `df.writeCSV(..)`/`df.writeTSV(..)`             | `df.writeCsv(..)`/`df.writeTsv(..)`             |
 | `df.toCSV(..)`                                  | `df.toCsvStr(..)`                               |
 
