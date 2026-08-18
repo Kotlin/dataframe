@@ -60,16 +60,7 @@ internal fun Project.setupGradleSyncVersionsTask(
             gradleProperties.writeText(gradlePropertiesContent.joinToString("\n"))
 
             // overwrite libs.versions.toml
-            val libsVersionsToml = folder.resolve("gradle/libs.versions.toml")
-            val versionRegex = """([a-zA-Z0-9-]+)\s*=\s*".+"""".toRegex()
-            val newLibsVersionsTomlContent = libsVersionsToml.readText().lines().joinToString("\n") {
-                val match = versionRegex.matchEntire(it) ?: return@joinToString it
-                val name = match.groupValues[1]
-                if (name !in versions) return@joinToString it
-
-                """$name = "${versions[name]}""""
-            }
-            libsVersionsToml.writeText(newLibsVersionsTomlContent)
+            syncLibsVersionsToml(folder, versions)
 
             // overwrite settings.gradle.kts
 
@@ -130,3 +121,16 @@ internal fun Project.setupGradleSyncVersionsTask(
             folder.resolve(".editorconfig").writeText(sourceEditorConfig.readText())
         }
     }
+
+internal fun syncLibsVersionsToml(folder: File, versions: Map<String, String>) {
+    val libsVersionsToml = folder.resolve("gradle/libs.versions.toml")
+    val versionRegex = """([a-zA-Z0-9-]+)\s*=\s*".+"""".toRegex()
+    val newLibsVersionsTomlContent = libsVersionsToml.readText().lines().joinToString("\n") {
+        val match = versionRegex.matchEntire(it) ?: return@joinToString it
+        val name = match.groupValues[1]
+        if (name !in versions) return@joinToString it
+
+        """$name = "${versions[name]}""""
+    }
+    libsVersionsToml.writeText(newLibsVersionsTomlContent)
+}

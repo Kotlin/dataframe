@@ -44,6 +44,9 @@ abstract class TestBuildingExampleProjects {
 
             BuildSystem.MAVEN ->
                 buildMavenProject(name = name, folder = folder)
+
+            BuildSystem.KOTLIN_TOOLCHAIN ->
+                buildKotlinToolchainProject(name = name, folder = folder)
         }
     }
 
@@ -99,5 +102,14 @@ abstract class TestBuildingExampleProjects {
                     )
                 }
             }
+    }
+
+    protected fun buildKotlinToolchainProject(name: String, folder: File) {
+        TODO()
+        if (OsFamily.current.isWindows) {
+            // run bat
+        } else {
+            // run non bat
+        }
     }
 }
