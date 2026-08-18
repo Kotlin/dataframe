@@ -3,6 +3,7 @@ import dfbuild.buildExampleProjects.detectBuildSystem
 import dfbuild.buildExampleProjects.generateTestCase
 import dfbuild.buildExampleProjects.isAndroid
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
+import dfbuild.buildExampleProjects.setupKotlinToolchainSyncVersionsTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
 import dfbuild.getVersionName
 import org.gradle.internal.extensions.stdlib.capitalized
@@ -97,6 +98,15 @@ private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
                     versionCatalog = libs,
                     versionsToSync = versionsToSync,
                 )
+
+            BuildSystem.KOTLIN_TOOLCHAIN ->
+                setupKotlinToolchainSyncVersionsTask(
+                    name = name,
+                    folder = folder,
+                    isDev = isDev,
+                    versionCatalog = libs,
+                    versionsToSync = versionsToSync,
+                )
         }
     syncTask { group = buildExampleProjectsGroup }
     syncAllExampleFolders {
@@ -174,6 +184,10 @@ val runBuildMavenExampleFolders = tasks.register<Test>("runBuildMavenExampleFold
 val runBuildGradleExampleFolders = tasks.register<Test>("runBuildGradleExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
+}
+val runBuildKotlinToolchainExampleFolders = tasks.register<Test>("runBuildKotlinToolchainExampleFolders") {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested Kotlin Toolchain builds in /examples/projects to verify they compile correctly."
 }
 val runBuildAndroidExampleFolders = tasks.register<Test>("runBuildAndroidExampleFolders") {
     group = buildExampleProjectsGroup
@@ -260,6 +274,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
     when (buildSystem) {
         BuildSystem.MAVEN -> runBuildMavenExampleFolders { dependsOn(runTestBuildTask) }
         BuildSystem.GRADLE -> runBuildGradleExampleFolders { dependsOn(runTestBuildTask) }
+        BuildSystem.KOTLIN_TOOLCHAIN -> runBuildKotlinToolchainExampleFolders { dependsOn(runTestBuildTask) }
     }
     when (isAndroid) {
         true -> runBuildAndroidExampleFolders { dependsOn(runTestBuildTask) }
@@ -323,7 +338,6 @@ file("examples/projects").listFiles()?.forEach {
 }
 file("examples/projects/dev").listFiles()?.forEach {
     if (!it.isDirectory) return@forEach
-    if (it.name == "kotlin-dataframe-plugin-kotlin-toolchain-example") return@forEach // TODO
     setupExampleProjectFolderSyncTask(folder = it, isDev = true)
     setupGenerateAndRunTestTasks(folder = it, isDev = true)
 }

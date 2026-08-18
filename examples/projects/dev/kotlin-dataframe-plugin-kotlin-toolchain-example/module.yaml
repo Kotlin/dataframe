@@ -16,6 +16,7 @@ dependencies:
 repositories:
   # Required for dataframe-geo
   - https://repo.osgeo.org/repository/release
+  - mavenLocal
 
 settings:
   kotlin:
