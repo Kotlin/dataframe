@@ -3145,7 +3145,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *   Only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivotGroupBy] holding, per group,
- *   the first row where the [rowExpression] produced the minumum result.
+ *   the first row where the [rowExpression] produced the minimum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,

@@ -155,7 +155,7 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
     }.toDataFrameFromPairs<Unit>()
 
 /**
- * [DslMarker] to prevent fucntions from [CreateDataFrameDsl] being used inside [TraversePropertiesDsl].
+ * [DslMarker] to prevent functions from [CreateDataFrameDsl] being used inside [TraversePropertiesDsl].
  * This prevents notations like:
  * ```kt
  * list.toDataFrame {
