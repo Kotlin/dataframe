@@ -14,7 +14,8 @@ Overview and index of the per-database SQL to Kotlin type mapping used by `dataf
 </link-summary>
 
 When reading from a JDBC database, DataFrame determines the Kotlin type of each column in
-two steps:
+two steps using `DbType` — a class responsible for handling column metadata and creating
+[`DataFrame`](DataFrame.md) columns based on it:
 
 1. **Type resolution** — the SQL/JDBC type reported by the driver is mapped to a JDBC-side
    Kotlin type (`DbType.getExpectedJdbcType`).
@@ -22,14 +23,19 @@ two steps:
    before being placed into the DataFrame (`DbType.preprocessValue`). For example,
    `java.sql.Timestamp` is turned into `kotlin.time.Instant`.
 
-Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
+Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).`
+
+For some databases (such as [DuckDB](readSqlTypeMapping_DuckDB.md) and [SQLite](readSqlTypeMapping_SQLite.md)),
+this logic is overridden with custom dialect-specific converters based on column metadata —
+`JdbcToDataFrameConverter`. See [`AdvancedDbType`](readSqlFromCustomDatabase.md#advanceddbtype-new-in-1-0-0-beta5)
+for more information.
 
 ## Type alias handling
 
 Most SQL dialects define **type aliases** (e.g. `INT8` for `BIGINT` in MariaDB/MySQL/PostgreSQL,
 `BOOL` for `BOOLEAN`, `INTEGER` for `INT`, ...). Every database supported by DataFrame — **except
-SQLite** — canonicalises the declared type name at `CREATE TABLE` time, so the JDBC driver reports
-only the canonical form in `ResultSetMetaData.getColumnTypeName`. That means DataFrame never sees
+SQLite** — canonicalizes the declared type name at `CREATE TABLE` time, so the JDBC driver reports
+only the canonical form while getting a column metadata. That means DataFrame never sees
 the alias, only its canonical mapping. Each per-database page lists the aliases in the same row as
 the canonical type.
 
@@ -38,15 +44,17 @@ the canonical type.
 
 ## Per-database type mapping pages
 
-| Database                                                     | How it uses `DbType`                                                       |
-|--------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [MariaDB](readSqlTypeMapping_MariaDB.md)                     | Default `DbType` + overrides for unsigned integer types.                    |
-| [MySQL](readSqlTypeMapping_MySQL.md)                         | Default `DbType` + overrides for unsigned integer types.                    |
-| [PostgreSQL](readSqlTypeMapping_PostgreSQL.md)               | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).     |
-| [MS SQL Server](readSqlTypeMapping_MsSql.md)                 | Default `DbType`, no overrides.                                             |
-| [H2](readSqlTypeMapping_H2.md)                               | Default `DbType` in `Regular` mode; other modes delegate to another dialect.|
-| [SQLite](readSqlTypeMapping_SQLite.md)                       | Custom: type affinity + per-storage-class conversion for `BOOLEAN`/`DATE`/`DATETIME`/`TIME`/`TIMESTAMP`. |
-| [DuckDB](readSqlTypeMapping_DuckDB.md)                       | Bypasses `getExpectedJdbcType`; uses its own converter.                     |
+Here is a list of links for each database supported in Kotlin DataFrame:
+
+| Database                                       | How it uses `DbType`                                                                                                   |
+|------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| [MariaDB](readSqlTypeMapping_MariaDB.md)       | Default `DbType` + overrides for unsigned integer types.                                                               |
+| [MySQL](readSqlTypeMapping_MySQL.md)           | Default `DbType` + overrides for unsigned integer types.                                                               |
+| [PostgreSQL](readSqlTypeMapping_PostgreSQL.md) | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).                                                |
+| [MS SQL Server](readSqlTypeMapping_MsSql.md)   | Default `DbType`, no overrides.                                                                                        |
+| [H2](readSqlTypeMapping_H2.md)                 | Default `DbType` in `Regular` mode; other modes delegate to another dialect.                                           |
+| [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Allows to provide custom converters. |
+| [DuckDB](readSqlTypeMapping_DuckDB.md)         | `AdvancedDbType` with its own converters.                                                                              |
 
 ## Extending the mapping
 

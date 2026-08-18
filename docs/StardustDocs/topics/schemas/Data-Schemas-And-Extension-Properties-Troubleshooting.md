@@ -115,10 +115,10 @@ You can explicitly specify the resulting Kotlin type using the `Sqlite.withCusto
 
 For example:
 - You have a `LONGVARCHAR` column containing text (i.e., `String` or `String?` values).
-  However, SQLite type affinity assigns it the `INTEGER` basic type, so the JDBC driver expects
+  However, SQLite type affinity assigns it the `NUMERIC` basic type, so the JDBC driver expects
   `Int` or `Long` values. Use `forType<String?>("LONGVARCHAR")` to explicitly specify the expected column type.
 - You have several columns of the `DATETIME` type. They are stored as `TEXT`, and Kotlin DataFrame
-  can automatically parse their values into date-time types. However, suppose the `time_stamp` column
+  can automatically parse their values into date-time types. However, suppose the `time_stamp` column of the `DATETIME` type
   contains date-time values in an unusual format. Automatic parsing fails and causes an exception.
   Use `forColumn("time_stamp") { ... }` to provide a custom converter specifically for this column.
 
