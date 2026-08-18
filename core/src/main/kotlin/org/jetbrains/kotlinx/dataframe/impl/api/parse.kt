@@ -89,7 +89,7 @@ internal interface StringParser<out T> {
      * to get the actual [string parser function][ParserFunction] that
      * can parse [String] to [T] (or `null` if unsuccessful).
      *
-     * If the returned [ParserFunction][ParserFunction]` == `[SKIP_PARSER][SKIP_PARSER], the function
+     * If the returned [`ParserFunction`][ParserFunction]` == `[`SKIP_PARSER`][SKIP_PARSER], the function
      * will always return `null` for the current [global parser options][Parsers] and given arguments
      * and can thus be skipped.
      */
@@ -166,7 +166,7 @@ internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
 /**
  * Central implementation for [GlobalParserOptions].
  *
- * Can be obtained by a user by calling [DataFrame.parser][DataFrame.Companion.parser].
+ * Can be obtained by a user by calling [`DataFrame.parser`][DataFrame.Companion.parser].
  *
  * Defaults are set by [resetToDefault].
  */

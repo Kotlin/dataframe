@@ -89,8 +89,8 @@ internal interface CommonMinMaxDocs {
      *
      * The columns are selected with the [ColumnsForAggregateSelectionDsl] — an extension of the
      * Columns Selection DSL which lets you rename the result of a column with
-     * [into][ColumnsForAggregateSelectionDsl.into] and supply a
-     * [default][ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+     * [`into`][ColumnsForAggregateSelectionDsl.into] and supply a
+     * [`default`][ColumnsForAggregateSelectionDsl.default] value for columns without any values.
      */
     @ExcludeFromSources
     typealias AggregateColumnsSelectorSnippet = Nothing
@@ -100,8 +100,8 @@ internal interface CommonMinMaxDocs {
      *
      * This operation does not produce a result right away.
      * Instead, it returns a [ReducedGroupBy] — an intermediate step which can be finished with
-     * [concat][ReducedGroupBy.concat] (to get a [DataFrame] with the selected rows),
-     * [values][ReducedGroupBy.values], or [into][ReducedGroupBy.into].
+     * [`concat`][ReducedGroupBy.concat] (to get a [DataFrame] with the selected rows),
+     * [`values`][ReducedGroupBy.values], or [`into`][ReducedGroupBy.into].
      *
      * See [GroupBy reducing][GroupByDocs.Reducing] for more details.
      */
@@ -113,7 +113,7 @@ internal interface CommonMinMaxDocs {
      *
      * This operation does not produce a result right away.
      * Instead, it returns a [ReducedPivot] — an intermediate step which can be finished with
-     * [values][ReducedPivot.values] or [with][ReducedPivot.with].
+     * [`values`][ReducedPivot.values] or [`with`][ReducedPivot.with].
      */
     @ExcludeFromSources
     typealias ReducedPivotSnippet = Nothing
@@ -123,7 +123,7 @@ internal interface CommonMinMaxDocs {
      *
      * This operation does not produce a result right away.
      * Instead, it returns a [ReducedPivotGroupBy] — an intermediate step which can be finished with
-     * [values][ReducedPivotGroupBy.values] or [with][ReducedPivotGroupBy.with].
+     * [`values`][ReducedPivotGroupBy.values] or [`with`][ReducedPivotGroupBy.with].
      */
     @ExcludeFromSources
     typealias ReducedPivotGroupBySnippet = Nothing

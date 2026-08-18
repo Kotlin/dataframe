@@ -81,19 +81,19 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  *
  * #### For example
  *
- * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[sortWith][sortWith]` { a, b -> a - b }`
+ * `df`[`[`][DataFrame.get]`"price"`[`]`][DataFrame.get]`.`[`sortWith`][sortWith]` { a, b -> a - b }`
  *
  * {@include [LineBreak]}
- * `df.`[select][DataFrame.select]` {`
+ * `df.`[`select`][DataFrame.select]` {`
  *
- * {@include [Indent]}`name.`[sortWith][sortWith]`(myComparator) `[and][ColumnsSelectionDsl.and]` `[allAfter][ColumnsSelectionDsl.allAfter]`(name)`
+ * {@include [Indent]}`name.`[`sortWith`][sortWith]`(myComparator) `[`and`][ColumnsSelectionDsl.and]` `[`allAfter`][ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
  *
  * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator\] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T\]> or
- *   a lambda of type `(`[T][T\]`, `[T][T\]`) -> `[Int][Int].
+ *   a lambda of type `(`[`T`][T\]`, `[`T`][T\]`) -> `[`Int`][Int].
  * @return The sorted [DataColumn] [this\] of the same type as the receiver.
  */
 private typealias CommonDataColumnSortWithDocs = Nothing

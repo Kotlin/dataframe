@@ -92,20 +92,20 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`<`[String][String]`>("colGroupA") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colGroup`][colGroup]`<`[`String`][String]`>("colGroupA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`(SomeType::colGroupB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colGroup`][colGroup]`(SomeType::colGroupB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colGroup][colGroup]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`colGroup`][colGroup]`(1) }`
      *
      * #### Examples for this overload:
      *
      * $[CommonColGroupDocs.EXAMPLE]
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][ColumnsSelectionDsl.col],
-     * [valueCol][ColumnsSelectionDsl.valueCol],
-     * and [frameCol][ColumnsSelectionDsl.frameCol].
+     * [`col`][ColumnsSelectionDsl.col],
+     * [`valueCol`][ColumnsSelectionDsl.valueCol],
+     * and [`frameCol`][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column group with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.
@@ -123,14 +123,14 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[`colGroup`][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[`colGroup`][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          *
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[`colGroup`][colGroup]`<`[`String`][String]`>($[CommonColGroupDocs.ARG]) \}`
          */
         typealias DoubleExample = Nothing
 
@@ -557,7 +557,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     private typealias ColGroupIndexDocs = Nothing
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      */
@@ -567,7 +567,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
         getAt(index).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      */

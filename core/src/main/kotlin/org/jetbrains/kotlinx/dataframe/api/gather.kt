@@ -38,15 +38,15 @@ import kotlin.reflect.typeOf
  * This function does not perform the reshaping immediately — it returns
  * a [Gather] object, which serves as an intermediate step.
  * Before applying the final transformation, you may:
- * - filter values ([where][Gather.where], [notNull][Gather.notNull]);
- * - explode list-columns ([explodeLists][Gather.explodeLists]);
- * - transform keys ([mapKeys][Gather.mapKeys]) or values ([mapValues][Gather.mapValues]);
- * - cast the value type ([cast][Gather.cast]).
+ * - filter values ([`where`][Gather.where], [`notNull`][Gather.notNull]);
+ * - explode list-columns ([`explodeLists`][Gather.explodeLists]);
+ * - transform keys ([`mapKeys`][Gather.mapKeys]) or values ([`mapValues`][Gather.mapValues]);
+ * - cast the value type ([`cast`][Gather.cast]).
  *
  * Finally, reshape the DataFrame using one of the following methods:
- * - [into][Gather.into]
- * - [keysInto][Gather.keysInto]
- * - [valuesInto][Gather.valuesInto]
+ * - [`into`][Gather.into]
+ * - [`keysInto`][Gather.keysInto]
+ * - [`valuesInto`][Gather.valuesInto]
  *
  * Each of these methods returns a new reshaped [DataFrame].
  *
@@ -61,7 +61,7 @@ import kotlin.reflect.typeOf
 internal interface GatherDocs {
 
     /**
-     * ## [gather][gather] Operation Grammar
+     * ## [`gather`][gather] Operation Grammar
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
@@ -98,7 +98,7 @@ internal interface GatherDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [gather][gather]} */
+/** {@set [SelectingColumns.OPERATION] [`gather`][gather]} */
 @ExcludeFromSources
 private typealias SetGatherOperationArg = Nothing
 
@@ -427,8 +427,8 @@ public class Gather<T, C, K, R>(
      * without modifying the values themselves.
      *
      * This is useful when the type cannot be automatically inferred and needs to be explicitly specified
-     * for further [Gather] operations such as [filter][Gather.where], [notNull][Gather.notNull],
-     * or [mapValues][Gather.mapValues].
+     * for further [Gather] operations such as [`where`][Gather.where], [`notNull`][Gather.notNull],
+     * or [`mapValues`][Gather.mapValues].
      * It does not affect the actual content of the values —
      * only the type used for compile-time safety and transformation configuration.
      *

@@ -92,20 +92,20 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[col][col]`<`[String][String]`>("colA") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`col`][col]`<`[`String`][String]`>("colA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[col][col]`(SomeType::colB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`col`][col]`(SomeType::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[col][col]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`col`][col]`(1) }`
      *
      * #### Examples for this overload:
      *
      * $[CommonColDocs.EXAMPLE]
      *
      * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
-     * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [frameCol][ColumnsSelectionDsl.frameCol].
+     * [`valueCol`][ColumnsSelectionDsl.valueCol],
+     * [`colGroup`][ColumnsSelectionDsl.colGroup],
+     * and [`frameCol`][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.
@@ -122,14 +122,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`($[CommonColDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[`col`][col]`($[CommonColDocs.ARG]) \}`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`($[CommonColDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[`col`][col]`($[CommonColDocs.ARG]) \}`
          *
-         * `df.`[select][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[col][col]`<`[String][String]`>($[CommonColDocs.ARG]) \}`
+         * `df.`[`select`][DataFrame.select]` { $[CommonColDocs.RECEIVER]`[`col`][col]`<`[`String`][String]`>($[CommonColDocs.ARG]) \}`
          */
         typealias DoubleExample = Nothing
 
@@ -497,24 +497,24 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     private typealias ColIndexDocs = Nothing
 
     /**
-     * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonColDocs.ColumnTypeParam]
      * {@set [CommonColDocs.EXAMPLE]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      * {@set [CommonColDocs.NOTE] NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!}
      */
     public fun <C> ColumnSet<C>.col(index: Int): SingleColumn<C> = getAt(index)
 
     /**
-     * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColIndexDocs] {@set [CommonColDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonColDocs.ColumnTypeParam]
      * {@set [CommonColDocs.EXAMPLE]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)

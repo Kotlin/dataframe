@@ -22,28 +22,28 @@ internal object DelimParams {
     /**
      * @param path The file path to read.
      *   Use [charset\] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][Compression].
      */
     typealias PATH_READ = Nothing
 
     /**
      * @param file The file to read.
      *   Use [charset\] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][Compression].
      */
     typealias FILE_READ = Nothing
 
     /**
      * @param url The URL from which to fetch the data.
      *   Use [charset\] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][Compression].
      */
     typealias URL_READ = Nothing
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
      *   Use [charset\] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][Compression].
      */
     typealias FILE_OR_URL_READ = Nothing
 
@@ -136,8 +136,8 @@ internal object DelimParams {
      *   If supplied for a certain column name (inferred from data or given by \[header\]),
      *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
      *
-     *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
-     *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
+     *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][ColType]`.`[`Int`][ColType.Int]`)`.
+     *   You can also set [`ColType`][ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][ColType]`.X`
      *   to set a _default_ column type, like [ColType.String].
      */
     val COL_TYPES: Map<String, ColType> = emptyMap()
@@ -163,12 +163,12 @@ internal object DelimParams {
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
      *   If [parserOptions\] or any of the arguments are `null`, the global parser configuration
-     *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+     *   ([`DataFrame.parser`][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
-     *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+     *   - [`nullStrings`][ParserOptions.nullStrings], which, if `null`,
      *   will take the global setting + {@include [DefaultNullStringsContentLink]}.
-     *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
+     *   - [`skipTypes`][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
      *   the given types or the global setting.
      */
     val PARSER_OPTIONS: ParserOptions? = null

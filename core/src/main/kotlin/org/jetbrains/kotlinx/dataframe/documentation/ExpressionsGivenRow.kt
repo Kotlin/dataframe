@@ -19,11 +19,11 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * can occur in the following two types of operations:
  *
  * - Providing a new value for every selected cell given the row of that cell ({@include [RowExpressionLink]}),
- * for instance in [map][DataFrame.map], [add][DataFrame.add], and [insert][DataFrame.insert]
+ * for instance in [`map`][DataFrame.map], [`add`][DataFrame.add], and [`insert`][DataFrame.insert]
  * (using [RowExpression][DfRowExpression]).
  *
  * - Providing a new value for every selected cell given the row of that cell and its previous value ({@include [RowValueExpressionLink]}),
- * for instance in [update.with][Update.with], and [convert.notNull][Convert.notNull]
+ * for instance in [`update.with`][Update.with], and [`convert.notNull`][Convert.notNull]
  * (using [RowValueExpression][DfRowValueExpression]).
  *
  * NOTE:
@@ -49,7 +49,7 @@ internal interface ExpressionsGivenRow {
     /**
      * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
      * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
-     * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow] instead of [DataRow] as the DSL's receiver type.
+     * and [`add`][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow] instead of [DataRow] as the DSL's receiver type.
      * This is an extension to [RowValueExpression][DfRowValueExpression] and
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).

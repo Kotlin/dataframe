@@ -26,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
 // region Docs
 
 /**
- * Generates a [CodeString] containing generated [@DataSchema][DataSchema] $[TYPES]
+ * Generates a [CodeString] containing generated [`@DataSchema`][DataSchema] $[TYPES]
  * for the given $[RECEIVER]
  * (including all nested [frame columns][FrameColumn] and [column groups][ColumnGroup]).
  *
@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  *
  * This function is a simplified wrapper for the more advanced and customizable
  * [CodeGenerator] API.
- * For more customizability, have a look at [CodeGenerator.create()][CodeGenerator.create].
+ * For more customizability, have a look at [`CodeGenerator.create()`][CodeGenerator.create].
  *
  * For more information: {@include [DocumentationUrls.DataSchemaGeneration]}
  *
@@ -85,8 +85,8 @@ private interface Params {
      * @param nameNormalizer Strategy for converting column names (with spaces, underscores, etc.)
      *  to Kotlin-style identifiers.
      *  Generated properties will still refer to columns by their actual name
-     *  using the [@ColumnName][ColumnName] annotation.
-     *  Default is [NameNormalizer.default][NameNormalizer.Companion.default].
+     *  using the [`@ColumnName`][ColumnName] annotation.
+     *  Default is [`NameNormalizer.default`][NameNormalizer.Companion.default].
      */
     typealias NameNormalizer = Nothing
 
@@ -317,7 +317,7 @@ public value class CodeString(public val value: String) {
 internal fun String.toCodeString(): CodeString = CodeString(this)
 
 /**
- * Generates a [CodeString] containing generated [@DataSchema][DataSchema] declarations (markers).
+ * Generates a [CodeString] containing generated [`@DataSchema`][DataSchema] declarations (markers).
  */
 @PublishedApi
 internal fun DataFrameSchema.generateCodeImpl(

@@ -73,8 +73,8 @@ private typealias JOIN_METHOD = Nothing
  *
  * Provides the left [DataFrame] both as the receiver (`this`) and as the argument (`it`),
  * allowing you to reference its columns directly.
- * Use [right][JoinDsl.right] to access columns from the right [DataFrame],
- * and [match][JoinDsl.match] to explicitly pair columns with different names.
+ * Use [`right`][JoinDsl.right] to access columns from the right [DataFrame],
+ * and [`match`][JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][SelectingColumns.ColumnsSelectionDsl].
  *
@@ -563,7 +563,7 @@ internal class ColumnMatchImpl<C>(override val left: ColumnReference<C>, overrid
 /**
  * Creates a [ColumnMatch].
  *
- * Not intended for public API consumption. Please use [match][JoinDsl.match] instead.
+ * Not intended for public API consumption. Please use [`match`][JoinDsl.match] instead.
  */
 public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>): ColumnMatch<C> =
     ColumnMatchImpl(left, right)
@@ -575,7 +575,7 @@ public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>):
  * a [ColumnsResolver] as the return value.
  *
  * Enables defining matching columns from left and right [DataFrame]s
- * using [right][JoinDsl.right] and [match][JoinDsl.match].
+ * using [`right`][JoinDsl.right] and [`match`][JoinDsl.match].
  */
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 

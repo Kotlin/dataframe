@@ -453,11 +453,11 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * adhering to [targetColumnSchema].
      *
      * @param [D] the type of the values after preprocessing
-     * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+     * @param [P] the type of the resulting [`DataColumn`][DataColumn]`<`[`P`][P]`>`, [targetColumnSchema]
      * @param [name] the name of the column
      * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
+     * @param [targetColumnSchema] the schema of the column [`DataColumn`][DataColumn]`<`[`P`][P]`>`,
      *   as determined by [getTargetColumnSchema]
      * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
      *   as opposed to using the nullability information from the [targetColumnSchema]
@@ -484,16 +484,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Helper function to convert [this] list of values to a [DataColumn][DataColumn]`<`[P][P]`>`.
+     * Helper function to convert [this] list of values to a [`DataColumn`][DataColumn]`<`[`P`][P]`>`.
      *
      * **NOTE:** While this function can handle
-     * [targetColumnSchema][targetColumnSchema]`  =  `[ColumnSchema.Group][ColumnSchema.Group],
-     * and [this] being a [List][List]`<`[`DataRow<*>`][DataRow]`>`,
+     * [`targetColumnSchema`][targetColumnSchema]`  =  `[`ColumnSchema.Group`][ColumnSchema.Group],
+     * and [this] being a [`List`][List]`<`[`DataRow<*>`][DataRow]`>`,
      * this should generally be avoided to circumvent creating `n` [data rows][DataRow],
      * (which essentially are `n` single-row [dataframes][DataFrame]).
      *
-     * Instead, use [preprocessValue][preprocessValue] to convert to [Map][Map]`<`[String][String]`, `[Any?][Any]`>`
-     * and then use the more efficient [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
+     * Instead, use [`preprocessValue`][preprocessValue] to convert to [`Map`][Map]`<`[`String`][String]`, `[`Any?`][Any]`>`
+     * and then use the more efficient [`Iterable<Map<String, Any?>>.toDataFrame()`][Iterable.toDataFrame] in [buildDataColumn]:
      * ```kt
      * (values as List<Map<String, Any?>>)
      *     .toDataFrame()

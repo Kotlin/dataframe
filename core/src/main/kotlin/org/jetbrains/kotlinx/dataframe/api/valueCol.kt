@@ -93,20 +93,20 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCol][valueCol]`<`[String][String]`>("valueColA") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCol`][valueCol]`<`[`String`][String]`>("valueColA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[valueCol][valueCol]`(SomeType::valueColB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`valueCol`][valueCol]`(SomeType::valueColB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[valueCol][valueCol]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`valueCol`][valueCol]`(1) }`
      *
      * #### Examples for this overload:
      *
      * {@get [CommonValueColDocs.EXAMPLE]}
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
-     * [col][ColumnsSelectionDsl.col],
-     * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [frameCol][ColumnsSelectionDsl.frameCol].
+     * [`col`][ColumnsSelectionDsl.col],
+     * [`colGroup`][ColumnsSelectionDsl.colGroup],
+     * and [`frameCol`][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the value column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.
@@ -123,14 +123,14 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[`valueCol`][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[`valueCol`][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.ARG]}) \}`
+         * `df.`[`select`][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[`valueCol`][valueCol]`<`[`String`][String]`>({@get [CommonValueColDocs.ARG]}) \}`
          */
         typealias DoubleExample = Nothing
 
@@ -486,7 +486,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     private typealias ValueColIndexDocs = Nothing
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>().}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
      */
