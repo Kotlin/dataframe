@@ -89,6 +89,8 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  * a number to it (for example, `"count"` becomes `"count1"`).
  * @return A [DataFrame] with the distinct values of this [DataColumn] and their counts.
  */
+@Refine
+@Interpretable("DataColumnValueCounts")
 @RequiredByIntellijPlugin
 public fun <T> DataColumn<T>.valueCounts(
     sort: Boolean = true,
