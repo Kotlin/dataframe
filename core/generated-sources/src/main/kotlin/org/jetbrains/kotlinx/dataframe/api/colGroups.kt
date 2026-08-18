@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -116,6 +117,8 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -151,6 +154,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
@@ -190,6 +195,8 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -225,6 +232,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
@@ -262,6 +271,8 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -297,6 +308,8 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -331,6 +344,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * [colGroups][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.colGroups] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar]
      *
