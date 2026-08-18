@@ -140,6 +140,9 @@ public interface DocumentationUrls {
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
     public typealias CountDistinct = Nothing
 
+    /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
+    public typealias ValueCounts = Nothing
+
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
