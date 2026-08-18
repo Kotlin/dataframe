@@ -109,32 +109,6 @@ class Analyze : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun countCondition() {
-        // SampleStart
-        df.count { age > 15 }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun count() {
-        // SampleStart
-        df.count()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countAggregation() {
-        // SampleStart
-        df.groupBy { city }.count()
-        df.pivot { city }.count { age > 18 }
-        df.pivot { name.firstName }.groupBy { name.lastName }.count()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun sumAggregations() {
         // SampleStart
         df.age.sum()

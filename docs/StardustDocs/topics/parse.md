@@ -80,9 +80,11 @@ df.parse { date and value }
 
 You can get this list by accessing `availableParserTypes` on the [](#global-parser-options) as well.
 
-When `.parse()` is called on a single column and the input (`String`/`Char`) type is the same as the output type,
-(a.k.a., it cannot be parsed further) an `IllegalStateException` is thrown.
-To avoid this, use `col.tryParse()` instead.
+### On a DataColumn
+
+When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Char`, `parse()` attempts to convert the column
+to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type,
+(a.k.a., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
 
 ### Parser Options
 
