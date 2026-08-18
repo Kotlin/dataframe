@@ -55,8 +55,8 @@ public val DataRow<KeyValueProperty<*>?>.key: String?
     get() = this["key"] as String?
 
 /**
- * Accesses the 'key' column of this [KeyValueProperty][KeyValueProperty]
- * [ColumnsContainer][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
+ * Accesses the 'key' column of this [`KeyValueProperty`][KeyValueProperty]
+ * [`ColumnsContainer`][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
  *
  * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
  * to [NameValueProperty].
@@ -66,8 +66,8 @@ public val ColumnsScope<KeyValueProperty<*>>.name: DataColumn<String>
     get() = key
 
 /**
- * Accesses the 'key' column of this [KeyValueProperty][KeyValueProperty]
- * [ColumnsContainer][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
+ * Accesses the 'key' column of this [`KeyValueProperty`][KeyValueProperty]
+ * [`ColumnsContainer`][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
  *
  * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
  * to [NameValueProperty].
@@ -77,8 +77,8 @@ public val ColumnsScope<KeyValueProperty<*>?>.name: DataColumn<String?>
     get() = key
 
 /**
- * Accesses the 'key' value of this [KeyValueProperty][KeyValueProperty]
- * [DataRow][DataRow].
+ * Accesses the 'key' value of this [`KeyValueProperty`][KeyValueProperty]
+ * [`DataRow`][DataRow].
  *
  * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
  * to [NameValueProperty].
@@ -88,8 +88,8 @@ public val DataRow<KeyValueProperty<*>>.name: String
     get() = key
 
 /**
- * Accesses the 'key' value of this [KeyValueProperty][KeyValueProperty]
- * [DataRow][DataRow].
+ * Accesses the 'key' value of this [`KeyValueProperty`][KeyValueProperty]
+ * [`DataRow`][DataRow].
  *
  * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
  * to [NameValueProperty].

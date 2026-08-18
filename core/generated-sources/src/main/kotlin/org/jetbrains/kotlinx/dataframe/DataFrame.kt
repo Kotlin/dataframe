@@ -90,18 +90,18 @@ public interface DataFrame<out T> :
      * Returns a new [DataRow] with the aggregated values.
      *
      * [AggregateDsl] allows to compute statistics on the columns of this [DataFrame]
-     * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     * and store the results as a new column using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
      *
      * The resulting [DataRow] has the same structure as the original
      * [DataFrame];
-     * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     * instead of the groups, there are new columns of aggregated values created with [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
      * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
      * or any custom aggregation function.
      *
      * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
-     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
      * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
      * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
      * in the resulting [DataRow] while preserving the original structure at higher levels.

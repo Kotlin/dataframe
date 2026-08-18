@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 /**
  * ### Convert [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text String
  *
- * Converts [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [String].
+ * Converts [this][this] [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [String].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -25,12 +25,12 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeDelim][writeDelim]`()`, you can write delimiter-separated text to [File][File], [Path][java.nio.file.Path],
+ * With overloads of [DataFrame.writeDelim][writeDelim]`()`, you can write delimiter-separated text to [`File`][File], [`Path`][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, [DataFrame.writeDelim][writeDelim]`("output.txt")`
  *
- * or [DataFrame.writeDelim][writeDelim]`(`[File][File]`("output.txt"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeDelim][writeDelim]`(`[`File`][File]`("output.txt"), quoteMode = `[`QuoteMode.ALL`][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *

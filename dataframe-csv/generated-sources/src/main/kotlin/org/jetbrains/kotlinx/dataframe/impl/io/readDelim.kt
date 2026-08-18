@@ -92,8 +92,8 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -119,12 +119,12 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -353,7 +353,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  *
  * - if no [colTypes] are given
  *     - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
- *     - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *     - subtract parsers of [`skipTypes`][ParserOptions.skipTypes] if those are supplied
  * - if [colTypes] are supplied
  *     - if [ColType.DEFAULT] is among the values
  *       - set the parser for each supplied column+colType
@@ -361,7 +361,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  *     - if [ColType.DEFAULT] is not among the values
  *       - set the parser for each supplied column+coltype
  *       - let deephaven use all its [default parsers][Parsers.DEFAULT] minus [Parsers.DATETIME]
- *       - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *       - subtract parsers of [`skipTypes`][ParserOptions.skipTypes] if those are supplied
  *
  * We will not use [Deephaven's DateTime parser][Parsers.DATETIME].
  * This is done to avoid different behavior compared to [DataFrame.parse];

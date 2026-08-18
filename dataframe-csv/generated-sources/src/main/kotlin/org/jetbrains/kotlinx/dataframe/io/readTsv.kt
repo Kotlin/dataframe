@@ -41,7 +41,7 @@ import kotlin.io.path.inputStream
 /**
  * ### Read TSV File to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any TSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any TSV file to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -54,19 +54,19 @@ import kotlin.io.path.inputStream
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readTsv][readTsv]`("input.tsv")` or with some options:
  *
  * [DataFrame.readTsv][readTsv]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.tsv"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.tsv"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -80,7 +80,7 @@ import kotlin.io.path.inputStream
  *
  * @param path The file path to read.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -113,8 +113,8 @@ import kotlin.io.path.inputStream
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -128,12 +128,12 @@ import kotlin.io.path.inputStream
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -205,7 +205,7 @@ public fun DataFrame.Companion.readTsv(
 /**
  * ### Read TSV File to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any TSV file to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any TSV file to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -218,19 +218,19 @@ public fun DataFrame.Companion.readTsv(
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readTsv][readTsv]`("input.tsv")` or with some options:
  *
  * [DataFrame.readTsv][readTsv]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.tsv"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.tsv"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -244,7 +244,7 @@ public fun DataFrame.Companion.readTsv(
  *
  * @param file The file to read.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -277,8 +277,8 @@ public fun DataFrame.Companion.readTsv(
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -292,12 +292,12 @@ public fun DataFrame.Companion.readTsv(
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -369,7 +369,7 @@ public fun DataFrame.Companion.readTsv(
 /**
  * ### Read TSV Url to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any TSV url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any TSV url to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -382,19 +382,19 @@ public fun DataFrame.Companion.readTsv(
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readTsv][readTsv]`("input.tsv")` or with some options:
  *
  * [DataFrame.readTsv][readTsv]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.tsv"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.tsv"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -408,7 +408,7 @@ public fun DataFrame.Companion.readTsv(
  *
  * @param url The URL from which to fetch the data.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -441,8 +441,8 @@ public fun DataFrame.Companion.readTsv(
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -456,12 +456,12 @@ public fun DataFrame.Companion.readTsv(
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -533,7 +533,7 @@ public fun DataFrame.Companion.readTsv(
 /**
  * ### Read TSV File or URL to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any TSV file or url to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any TSV file or url to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -546,19 +546,19 @@ public fun DataFrame.Companion.readTsv(
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readTsv][readTsv]`("input.tsv")` or with some options:
  *
  * [DataFrame.readTsv][readTsv]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.tsv"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.tsv"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -572,7 +572,7 @@ public fun DataFrame.Companion.readTsv(
  *
  * @param fileOrUrl The file path or URL to read the data from.
  *   Use [charset] to specify the encoding.
- *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ *   Can also be compressed as `.gz` or `.zip`, see [`Compression`][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -605,8 +605,8 @@ public fun DataFrame.Companion.readTsv(
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -620,12 +620,12 @@ public fun DataFrame.Companion.readTsv(
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
@@ -698,7 +698,7 @@ public fun DataFrame.Companion.readTsv(
  *
  * ### Read TSV InputStream to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
  *
- * Reads any TSV input stream to a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads any TSV input stream to a [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -711,19 +711,19 @@ public fun DataFrame.Companion.readTsv(
  * The integration is built upon [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
  *
  * ##### Similar Functions
- * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [File][File],
- * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
+ * With the overloads of [DataFrame.readTsv][readTsv]`()`, you can read any TSV by [`File`][File],
+ * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, [DataFrame.readTsv][readTsv]`("input.tsv")` or with some options:
  *
  * [DataFrame.readTsv][readTsv]`(`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[File][File]`("input.tsv"),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`file = `[`File`][File]`("input.tsv"),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`parserOptions = `[`ParserOptions`][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[`Locale`][java.util.Locale]`.`[`US`][java.util.Locale.US]`),`
  *
- * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[String][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
+ * &nbsp;&nbsp;&nbsp;&nbsp;`colTypes = `[`mapOf`][mapOf]`("a" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`, `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`String`][org.jetbrains.kotlinx.dataframe.io.ColType.String]`),`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;`readLines = 1000L,`
  *
@@ -769,8 +769,8 @@ public fun DataFrame.Companion.readTsv(
  *   If supplied for a certain column name (inferred from data or given by [header]),
  *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
  *
- *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[Int][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
- *   You can also set [ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
+ *   e.g. `colTypes = `[`mapOf`][mapOf]`("colName" `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`Int`][org.jetbrains.kotlinx.dataframe.io.ColType.Int]`)`.
+ *   You can also set [`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.`[`DEFAULT`][ColType.DEFAULT]` `[`to`][to]` `[`ColType`][org.jetbrains.kotlinx.dataframe.io.ColType]`.X`
  *   to set a _default_ column type, like [ColType.String][org.jetbrains.kotlinx.dataframe.io.ColType.String].
  * @param skipLines The number of lines to skip before reading the header and data. Default: `0`.
  *
@@ -784,12 +784,12 @@ public fun DataFrame.Companion.readTsv(
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([`DataFrame.parser`][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [nullStrings][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
+ *   - [`nullStrings`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
- *   - [skipTypes][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
+ *   - [`skipTypes`][org.jetbrains.kotlinx.dataframe.api.ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
  *   the given types or the global setting.
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *

@@ -39,11 +39,11 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  *
  * #### For example:
  *
- * <code>`df`</code>`.`<code>`operation`</code>` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`<code>`operation`</code>` { length `[`and`][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`<code>`operation`</code>`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
  *
  *
  *
@@ -107,11 +107,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * <code>`df`</code>`.`<code>`operation`</code>` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * <code>`df`</code>`.`<code>`operation`</code>` { length `[`and`][ColumnsSelectionDsl.and]` age }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
          *
          *
          *
@@ -163,9 +163,9 @@ internal interface SelectingColumns {
          *
          * <code>`df`</code>`.`<code>`operation`</code>` { length }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`col`][ColumnsSelectionDsl.col]`(1) }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>().`[`first`][ColumnsSelectionDsl.first]`() }`
          *
          *
          *

@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  * which serves as an intermediate step.
  * The [GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][GroupClause.into] and,
+ * as [`into`][GroupClause.into] and,
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
@@ -82,11 +82,11 @@ internal interface GroupDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[`group`][org.jetbrains.kotlinx.dataframe.api.group]` { length `[`and`][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[`group`][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * <code>`df`</code>`.`[`group`][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`Double`][Double]`>() }`
      *
      *
      *
@@ -101,7 +101,7 @@ internal interface GroupDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`("length", "age")`
+     * <code>`df`</code>`.`[`group`][org.jetbrains.kotlinx.dataframe.api.group]`("length", "age")`
      *
      *
      *
@@ -142,7 +142,7 @@ internal interface GroupDocs {
  * which serves as an intermediate step.
  * The [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [`into`][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
  * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
@@ -195,7 +195,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * which serves as an intermediate step.
  * The [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [`into`][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
  * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
@@ -249,8 +249,8 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
  * to produce a new [DataFrame] with the updated column structure.
  *
  * Use the following methods to finalize the move:
- * - [into(groupName)][GroupClause.into] – groups selected columns into a one column group.
- * - [into { groupNameExpression }][GroupClause.into] – groups each column into a group
+ * - [`into(groupName)`][GroupClause.into] – groups selected columns into a one column group.
+ * - [`into { groupNameExpression }`][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *
  * See [Grammar][GroupDocs.Grammar] for more details.

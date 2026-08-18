@@ -23,18 +23,18 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * and the corresponding aggregated values in new nested columns.
  *
  * [AggregateDsl] allows to compute statistics on the columns within groups in [Pivot]
- * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
+ * and store the results as a new column using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
  *
  *
  * The resulting [DataRow] has the same structure as the original
  * [Pivot];
- * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+ * instead of the groups, there are new columns of aggregated values created with [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
  *
  * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
  * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
- * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+ * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
  * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
  * in the resulting [DataRow] while preserving the original structure at higher levels.
@@ -79,18 +79,18 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * and the corresponding aggregated values in new columns.
  *
  * [AggregateGroupedDsl][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows to compute statistics on the columns within groups in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
- * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
+ * and store the results as a new column using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
  *
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] has the same structure as the original
  * [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy];
- * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+ * instead of the groups, there are new columns of aggregated values created with [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
  *
  * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
  * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
- * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+ * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [`into`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
  * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
  * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] while preserving the original structure at higher levels.
@@ -100,12 +100,12 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  *
  *
  *
- * It allows [pivoting][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] inside [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] via corresponding methods:
- * * [pivot][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
- * * [pivotCounts][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts]
- * * [pivotMatches][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
+ * It allows [pivoting][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] inside [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] via corresponding methods:
+ * * [`pivot`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivot]
+ * * [`pivotCounts`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotCounts]
+ * * [`pivotMatches`][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl.pivotMatches]
  *
- * Pivoting inside [aggregate][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] is useful for counting
+ * Pivoting inside [`aggregate`][org.jetbrains.kotlinx.dataframe.api.Grouped.aggregate] is useful for counting
  * cross-group matrix-like statistics.
  *
  *

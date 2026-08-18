@@ -25,7 +25,7 @@ import kotlin.io.path.writer
 /**
  * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
+ * Writes [this][this] [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -34,12 +34,12 @@ import kotlin.io.path.writer
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [File][File], [Path][java.nio.file.Path],
+ * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [`File`][File], [`Path`][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, [DataFrame.writeTsv][writeTsv]`("output.tsv")`
  *
- * or [DataFrame.writeTsv][writeTsv]`(`[File][File]`("output.tsv"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeTsv][writeTsv]`(`[`File`][File]`("output.tsv"), quoteMode = `[`QuoteMode.ALL`][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *
@@ -94,7 +94,7 @@ public fun AnyFrame.writeTsv(
 /**
  * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
+ * Writes [this][this] [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -103,12 +103,12 @@ public fun AnyFrame.writeTsv(
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [File][File], [Path][java.nio.file.Path],
+ * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [`File`][File], [`Path`][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, [DataFrame.writeTsv][writeTsv]`("output.tsv")`
  *
- * or [DataFrame.writeTsv][writeTsv]`(`[File][File]`("output.tsv"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeTsv][writeTsv]`(`[`File`][File]`("output.tsv"), quoteMode = `[`QuoteMode.ALL`][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *
@@ -163,7 +163,7 @@ public fun AnyFrame.writeTsv(
 /**
  * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV File
  *
- * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
+ * Writes [this][this] [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV file.
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -172,12 +172,12 @@ public fun AnyFrame.writeTsv(
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [File][File], [Path][java.nio.file.Path],
+ * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [`File`][File], [`Path`][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, [DataFrame.writeTsv][writeTsv]`("output.tsv")`
  *
- * or [DataFrame.writeTsv][writeTsv]`(`[File][File]`("output.tsv"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeTsv][writeTsv]`(`[`File`][File]`("output.tsv"), quoteMode = `[`QuoteMode.ALL`][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *
@@ -233,7 +233,7 @@ public fun AnyFrame.writeTsv(
  *
  * ### Write [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to TSV Appendable
  *
- * Writes [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV [Appendable].
+ * Writes [this][this] [`DataFrame`][org.jetbrains.kotlinx.dataframe.DataFrame] to a TSV [Appendable].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -242,12 +242,12 @@ public fun AnyFrame.writeTsv(
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [File][File], [Path][java.nio.file.Path],
+ * With overloads of [DataFrame.writeTsv][writeTsv]`()`, you can write TSV to [`File`][File], [`Path`][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, [DataFrame.writeTsv][writeTsv]`("output.tsv")`
  *
- * or [DataFrame.writeTsv][writeTsv]`(`[File][File]`("output.tsv"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeTsv][writeTsv]`(`[`File`][File]`("output.tsv"), quoteMode = `[`QuoteMode.ALL`][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *
