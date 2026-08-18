@@ -5371,6 +5371,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Do
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$AccessApis {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$ColumnArithmetics {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$DataRow {
 }
 
