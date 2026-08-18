@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.between
 
 // region DataColumn
@@ -10,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.impl.between
  * in this column lies between [left] and [right].
  *
  * If [includeBoundaries] is `true` (default), values equal to [left] or [right] are also considered in range.
+ *
+ * For more information: {@include [DocumentationUrls.Between]}
  *
  * @param left The lower boundary of the range.
  * @param right The upper boundary of the range.

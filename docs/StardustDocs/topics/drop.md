@@ -44,6 +44,9 @@ df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null v
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNulls.html" width="100%"/>
 <!---END-->
 
+If called on a [`DataColumn`](DataColumn.md), removes `null` values from this [`DataColumn`](DataColumn.md), 
+adjusting the type accordingly.
+
 ## dropNaNs
 
 Remove rows with [`NaN` values](nanAndNa.md#nan) (`Double.NaN` or `Float.NaN`).
@@ -63,6 +66,9 @@ df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'ag
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNaNs.html" width="100%"/>
 <!---END-->
 
+If called on a [`DataColumn`](DataColumn.md), removes [`NaN` values](nanAndNa.md#nan) from this [`DataColumn`](DataColumn.md),
+adjusting the type accordingly.
+
 ## dropNA
 
 Remove rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
@@ -81,3 +87,6 @@ df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' 
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html" width="100%"/>
 <!---END-->
+
+If called on a [`DataColumn`](DataColumn.md), removes [`NA` values](nanAndNa.md#na) from this [`DataColumn`](DataColumn.md),
+adjusting the type accordingly.

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -69,6 +70,8 @@ public interface AndColumnsSelectionDsl {
      * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any {@include [AccessApiLink]}!
+     *
+     * For more information: {@include [DocumentationUrls.And]}
      *
      * ### Check out: [Grammar]
      *

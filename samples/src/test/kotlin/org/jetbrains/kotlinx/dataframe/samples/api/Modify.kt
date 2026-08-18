@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.eq
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -325,6 +326,36 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
 
         // SampleStart
         orders.groupBy { expr("status") { status + " orders" } }
+        // SampleEnd
+    }
+
+    @Test
+    fun filter_properties() {
+        // SampleStart
+        df.filter { age > 18 && name.firstName.startsWith("A") }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun filter_strings() {
+        // SampleStart
+        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
+        // SampleEnd
+    }
+
+    @Test
+    fun filterColumn_properties() {
+        // SampleStart
+        df.age.filter { it > 17 }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun filterColumn_strings() {
+        // SampleStart
+        df.age.filter { it > 17 }
         // SampleEnd
     }
 }

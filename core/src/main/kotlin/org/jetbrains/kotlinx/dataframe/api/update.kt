@@ -203,6 +203,8 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  * {@set [SelectingRows.FIRST_OPERATION] [update][update]}
  * {@set [SelectingRows.SECOND_OPERATION] [where][where]}
  *
+ * For more information: {@include [DocumentationUrls.Update]}
+ *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
 @Interpretable("UpdateWhere")
@@ -219,6 +221,8 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  * `df.`[update][update]` { city }.`[at][at]`(5..10).`[with][with]` { "Paris" }`
  *
  * `df.`[update][update]` { name }.`[at][at]`(1, 2, 3, 4).`[with][with]` { "Empty" }`
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
  *
  * ### This At Overload
  */
@@ -263,6 +267,8 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  * @include [ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]
  * {@set [ExpressionsGivenRowAndColumn.OPERATION] [update][update]` { age \}.`[perRowCol][perRowCol]}
  *
+ * For more information: {@include [DocumentationUrls.Update]}
+ *
  * ## See Also
  *  - {@include [SeeAlsoUpdateWith]}
  *  - {@include [SeeAlsoUpdatePerCol]}
@@ -290,6 +296,9 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  *
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
+ *
  * ## See Also
  * - {@include [SeeAlsoUpdatePerCol]}
  * - {@include [SeeAlsoUpdatePerRowCol]}
@@ -313,6 +322,9 @@ private typealias SeeAlsoUpdateWith = Nothing
  *
  * {@include [ExpressionsGivenDataFrame.DataFrameExpression.WithExample]}
  * {@set [ExpressionsGivenDataFrame.OPERATION] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
+ *
  * @param [expression] The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
@@ -323,6 +335,8 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
  * Per Col can be used for two different types of operations:
  *  - {@include [ExpressionsGivenColumn.ColumnExpression]}
  *  - {@include [UpdatePerColMap]}
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
  *
  * ### See Also
  *  - {@include [SeeAlsoUpdateWith]}
@@ -418,6 +432,8 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
  * {@include [Indent]}`row\[col\] / col.`[mean][DataColumn.mean]`(skipNA = true)`
  *
  * `}`
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
  */
 @Suppress("UNCHECKED_CAST")
 @Interpretable("UpdateNotNullDefault")
@@ -441,6 +457,8 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  * For example:
  *
  * `df.`[update][update]` { city }.`[notNull][Update.notNull]` { it.`[toUpperCase][String.toUpperCase]`() }`
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
  * {@comment No brackets around `expression` because this doc is copied to [Update.notNull]}
  * @param expression Optional {@include [ExpressionsGivenRow.RowExpressionLink]} to update the rows with.
  */
@@ -509,6 +527,8 @@ public fun <T> DataFrame<T>.update(
  * For example:
  *
  * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@get [SECOND]}`
+ *
+ * For more information: {@include [DocumentationUrls.Update]}
  */
 @ExcludeFromSources
 private interface CommonSpecificWithDoc {

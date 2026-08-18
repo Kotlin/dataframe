@@ -26,6 +26,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  * `{@get [CommonTakeAndDropWhileDocs.OPERATION]}ColsWhile` when called on a [String] or [ColumnPath] resembling
  * a [ColumnGroup].
  *
+ * For more information: {@get [URL]}
+ *
  * ### Check out: [Usage\]
  *
  * #### Examples:
@@ -58,4 +60,7 @@ internal interface CommonTakeAndDropWhileDocs {
 
     // Example argument to use
     typealias EXAMPLE = Nothing
+
+    // Link to the corresponding page on the documentation website
+    typealias URL = Nothing
 }
