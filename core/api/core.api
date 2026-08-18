@@ -5386,6 +5386,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Do
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$NanAndNa {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Sum {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl {
 }
 

@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs
 import org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
@@ -17,11 +15,13 @@ import org.jetbrains.kotlinx.dataframe.api.with
  *    Holds all KDoc-snippets that the `min` and `max` operations have in common.
  *    Both `MinDocs` and `MaxDocs` inherit from this interface, so the snippets can be
  *    included from either of them, like `{@include [MaxDocs.SkipNaNParam]}`.
+ *    The snippets that all summary statistics have in common are inherited from
+ *    [CommonStatisticsDocs] and can be included in the same way.
  *
  *    NOTE: this cannot be @ExcludedFromSources because `MinDocs` and `MaxDocs` use it as supertype.
  * }
  */
-internal interface CommonMinMaxDocs {
+internal interface CommonMinMaxDocs : CommonStatisticsDocs {
 
     /**
      * {@comment Note about the self-comparability requirement and how `null` and `NaN` values
@@ -31,10 +31,7 @@ internal interface CommonMinMaxDocs {
      * that are mutually comparable (like strings, primitive numbers, or dates).
      * This includes all primitive number types, but no mix of different number types.
      *
-     * `null` values in the input are always ignored.
-     *
-     * If the input contains {@include [NaNLink]} values, the result will be `NaN`,
-     * unless [skipNaN\] is set to `true`.
+     * {@include [CommonStatisticsDocs.NullAndNaNHandlingSnippet]}
      */
     @ExcludeFromSources
     typealias InputValuesSnippet = Nothing
@@ -73,29 +70,6 @@ internal interface CommonMinMaxDocs {
     typealias NullCellOnEmptySnippet = Nothing
 
     /**
-     * {@comment Note about the row expression argument. KDoc-snippet.}
-     *
-     * The given [RowExpression] is evaluated for each row of the dataframe.
-     * The row is both the receiver and the argument (`it`) of the expression,
-     * so the values in it can be accessed directly.
-     *
-     * For more information: {@include [DocumentationUrls.DataRow.RowExpression]}
-     */
-    @ExcludeFromSources
-    typealias RowExpressionSnippet = Nothing
-
-    /**
-     * {@comment Note about the aggregate columns selector of the `-For` modes. KDoc-snippet.}
-     *
-     * The columns are selected with the [ColumnsForAggregateSelectionDsl] — an extension of the
-     * Columns Selection DSL which lets you rename the result of a column with
-     * [into][ColumnsForAggregateSelectionDsl.into] and supply a
-     * [default][ColumnsForAggregateSelectionDsl.default] value for columns without any values.
-     */
-    @ExcludeFromSources
-    typealias AggregateColumnsSelectorSnippet = Nothing
-
-    /**
      * {@comment Note about [ReducedGroupBy] being an intermediate step. KDoc-snippet.}
      *
      * This operation does not produce a result right away.
@@ -127,24 +101,4 @@ internal interface CommonMinMaxDocs {
      */
     @ExcludeFromSources
     typealias ReducedPivotGroupBySnippet = Nothing
-
-    /**
-     * {@comment The shared `skipNaN` parameter documentation. KDoc-snippet.}
-     *
-     * @param [skipNaN\] If `true`, {@include [NaNLink]} values are ignored, just like `null` values.
-     *   If `false` (the default), a {@include [NaNLink]} in the input is propagated to the result.
-     *   Only has an effect on [Double] and [Float] values.
-     */
-    @ExcludeFromSources
-    typealias SkipNaNParam = Nothing
-
-    /**
-     * {@comment The shared `separate` parameter documentation. KDoc-snippet.}
-     *
-     * @param [separate\] If `false` (the default), the resulting columns are indexed
-     *   first by the pivot key(s) and then by the names of the aggregated columns.
-     *   If `true`, this order is reversed: the results are grouped by aggregated column first.
-     */
-    @ExcludeFromSources
-    typealias SeparateParam = Nothing
 }
