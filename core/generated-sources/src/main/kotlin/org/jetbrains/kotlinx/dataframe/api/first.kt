@@ -34,6 +34,8 @@ import kotlin.reflect.KProperty
 /**
  * Returns the first value in this [DataColumn].
  *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
+ *
  * See also [firstOrNull], [last], [take], [takeLast].
  *
  * @return The first value in this [DataColumn].
@@ -44,6 +46,8 @@ public fun <T> DataColumn<T>.first(): T = get(0)
 
 /**
  * Returns the first value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ *
+ * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
  *
  * See also [first], [last], [take], [takeLast].
  *
@@ -60,6 +64,8 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  * // find the amount of the first transaction over 100 euros
  * df.amount.first { it > 100 }
  * ```
+ *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
  *
  * See also [firstOrNull], [last], [take], [takeLast].
  *
@@ -88,6 +94,8 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  * df.amount.firstOrNull { it > 100 }
  * ```
  *
+ * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
+ *
  * See also [first], [last], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
@@ -106,6 +114,8 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame].
+ *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
  * See also [firstOrNull][DataFrame.firstOrNull],
  * [last][DataFrame.last],
@@ -126,6 +136,8 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ *
+ * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/first.html#firstornull)
  *
  * See also [first][DataFrame.first],
  * [last][DataFrame.last],
@@ -161,6 +173,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * // find the first transaction with amount over 100 euros
  * df.first { amount > 100 }
  * ```
+ *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
  * See also [firstOrNull][DataFrame.firstOrNull],
  * [last][DataFrame.last],
@@ -208,6 +222,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * df.firstOrNull { amount > 100 }
  * ```
  *
+ * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/first.html#firstornull)
+ *
  * See also [first][DataFrame.first],
  * [last][DataFrame.last],
  * [take][DataFrame.take],
@@ -245,6 +261,10 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  * // find the first order placed by each customer
  * df.groupBy { customerId }.first().concat()
  * ```
+ *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
+ *
+ * For more information about [GroupBy] and [first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
  * See also [last][GroupBy.last].
  *
@@ -286,6 +306,10 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * df.groupBy { customerId }.first { total > 100 }.concat()
  * ```
  *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
+ *
+ * For more information about [GroupBy] and [first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ *
  * See also [last][GroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
@@ -305,7 +329,9 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the first [row][DataRow] from each group,
  * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
+ *
+ * For more information about [Pivot] and [first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  * ### Example
  * ```kotlin
@@ -325,7 +351,9 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row, matching the [predicate],
  * from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
+ *
+ * For more information about [Pivot] and [first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  *
  *
@@ -371,6 +399,8 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
  * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
  *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
+ *
  * For more information about [PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * ### Example
@@ -399,6 +429,8 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
  * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
  * (except the grouping key).
+ *
+ * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
  * [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
@@ -548,6 +580,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -581,6 +615,8 @@ public interface FirstColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
@@ -619,6 +655,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -650,6 +688,8 @@ public interface FirstColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
@@ -684,6 +724,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -714,6 +756,8 @@ public interface FirstColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
@@ -749,6 +793,8 @@ public interface FirstColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
