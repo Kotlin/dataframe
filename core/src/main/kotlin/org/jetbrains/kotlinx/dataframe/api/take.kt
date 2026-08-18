@@ -205,7 +205,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeLastDocs]
      * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
-     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`takeLast`][SingleColumn.takeLastCols]`(1) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`takeLastCols`][SingleColumn.takeLastCols]`(1) }`
      */
     @Interpretable("TakeLast2")
     public fun SingleColumn<DataRow<*>>.takeLastCols(n: Int): ColumnSet<*> =
@@ -276,7 +276,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeFirstWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
-     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`takeWhile`][SingleColumn.takeColsWhile]` { it.`[`name`][ColumnWithPath.name]`.`[`startsWith`][String.startsWith]`("my") } }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`takeColsWhile`][SingleColumn.takeColsWhile]` { it.`[`name`][ColumnWithPath.name]`.`[`startsWith`][String.startsWith]`("my") } }`
      */
     public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeWhile(predicate) }

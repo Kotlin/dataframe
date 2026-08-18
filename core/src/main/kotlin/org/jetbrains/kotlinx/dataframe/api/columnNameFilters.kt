@@ -97,11 +97,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[`select`][DataFrame.select]`  {  `[`nameContains`][SingleColumn.colsNameContains]`("my") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`nameContains`][ColumnsSelectionDsl.nameContains]`("my") }`
      *
-     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`nameContains`][String.colsNameContains]`(`[`Regex`][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
+     * `df.`[`select`][DataFrame.select]` { "someGroupCol".`[`colsNameContains`][String.colsNameContains]`(`[`Regex`][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
-     * `df.`[`select`][DataFrame.select]` { Type::someGroupCol.`[`nameContains`][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
+     * `df.`[`select`][DataFrame.select]` { Type::someGroupCol.`[`colsNameContains`][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
      *
      * #### Examples for this overload:
      *

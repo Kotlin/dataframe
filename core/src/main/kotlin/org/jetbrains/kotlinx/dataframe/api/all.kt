@@ -761,7 +761,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.EXAMPLE]
      *
-     * `df.`[`select`][DataFrame.select]` { "pathTo"["someColGroup"].`[`allFrom`][ColumnPath.allColsFrom]`{@get [ColumnPathAllFromDocs.Arg]} }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["someColGroup"].`[`allColsFrom`][ColumnPath.allColsFrom]`{@get [ColumnPathAllFromDocs.Arg]} }`
      */
     @ExcludeFromSources
     private interface ColumnPathAllFromDocs {
