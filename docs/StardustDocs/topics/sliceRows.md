@@ -160,7 +160,7 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that
 <!---FUN dropWhile-->
 
 ```kotlin
-df.dropWhile { !isHappy }
+df.dropWhile { isHappy }
 ```
 
 <!---END-->
