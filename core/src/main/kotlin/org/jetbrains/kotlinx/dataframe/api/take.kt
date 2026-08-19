@@ -30,6 +30,8 @@ import kotlin.reflect.KProperty
  *
  * If [n] is greater than or equal to the size of this [DataColumn], this [DataColumn] is returned as is.
  *
+ * For more information: {@include [DocumentationUrls.TakeFirst]}
+ *
  * See also:
  * - [takeLast][DataColumn.takeLast] — takes the last [n] values instead.
  * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values.
@@ -52,6 +54,8 @@ public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
  * Returns a [DataColumn] containing the last [n] values of this [DataColumn].
  *
  * If [n] is zero or negative, an empty [DataColumn] is returned.
+ *
+ * For more information: {@include [DocumentationUrls.TakeLast]}
  *
  * See also:
  * - [take][DataColumn.take] — takes the first [n] values instead.
