@@ -103,9 +103,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * $[CommonColGroupDocs.EXAMPLE]
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
-     * [`col`][ColumnsSelectionDsl.col],
-     * [`valueCol`][ColumnsSelectionDsl.valueCol],
-     * and [`frameCol`][ColumnsSelectionDsl.frameCol].
+     * [col][ColumnsSelectionDsl.col],
+     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column group with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.

@@ -17,7 +17,7 @@ import java.io.File
  * Each folder needs to have its own test class so the tests can run in parallel.
  *
  * This class, as well as the generated tests, are automatically registered as
- * the 'testBuildingExamples' [`SourceSet`][org.gradle.api.tasks.SourceSet] by the
+ * the 'testBuildingExamples' [SourceSet][org.gradle.api.tasks.SourceSet] by the
  * `dfbuild.buildExampleProjects` convention plugin.
  */
 @Suppress("unused")

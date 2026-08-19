@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *
  * At the bottom of the graph is [Nothing].
  * This can be interpreted as "no type" and can have no instance,
- * while [`Nothing?`][Nothing] can only be `null`.
+ * while [Nothing?][Nothing] can only be `null`.
  */
 public interface UnifyingNumbers {
 

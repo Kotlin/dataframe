@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  */
 internal typealias Remove = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`remove`][remove]} */
+/** {@set [SelectingColumns.OPERATION] [remove][remove]} */
 @ExcludeFromSources
 private typealias SetRemoveOperationArg = Nothing
 

@@ -22,7 +22,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.typeOf
 
 /**
- * Retrieves all columns of any [`Iterable`][Iterable]`<`[`ResultRow`][ResultRow]`>`, like [`Query`][Query],
+ * Retrieves all columns of any [`Iterable`][Iterable]`<`[`ResultRow`][ResultRow]`>`, like [Query][Query],
  * from Exposed row by row and converts the resulting [Map] into a [DataFrame], cast to type [T].
  *
  * In notebooks, the untyped version works just as well due to runtime inference :)
@@ -31,7 +31,7 @@ inline fun <reified T : Any> Iterable<ResultRow>.convertToDataFrame(): DataFrame
     convertToDataFrame().convertTo<T>()
 
 /**
- * Retrieves all columns of an [`Iterable`][Iterable]`<`[`ResultRow`][ResultRow]`>` from Exposed, like [`Query`][Query],
+ * Retrieves all columns of an [`Iterable`][Iterable]`<`[`ResultRow`][ResultRow]`>` from Exposed, like [Query][Query],
  * row by row and converts the resulting [Map] of lists into a [DataFrame] by calling
  * [Map.toDataFrame].
  */
@@ -62,7 +62,7 @@ val Expression<*>.readableName: String
 /**
  * Creates a [DataFrameSchema] from the declared [Table] instance.
  *
- * This is not needed for conversion, but it can be useful to create a DataFrame [`@DataSchema`][DataSchema] instance.
+ * This is not needed for conversion, but it can be useful to create a DataFrame [@DataSchema][DataSchema] instance.
  *
  * @param columnNameToAccessor Optional [MutableMap] which will be filled with entries mapping
  *   the SQL column name to the accessor name from the [Table].
@@ -95,7 +95,7 @@ fun Table.toDataFrameSchema(columnNameToAccessor: MutableMap<String, String> = m
  * Creates a [DataFrameSchema] from the declared [Table] instance with a [NameNormalizer] to
  * convert the SQL column names to the corresponding Kotlin property names.
  *
- * This is not needed for conversion, but it can be useful to create a DataFrame [`@DataSchema`][DataSchema] instance.
+ * This is not needed for conversion, but it can be useful to create a DataFrame [@DataSchema][DataSchema] instance.
  *
  * @see toDataFrameSchema
  */

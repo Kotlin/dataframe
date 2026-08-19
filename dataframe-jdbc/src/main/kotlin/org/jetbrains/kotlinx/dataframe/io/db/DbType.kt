@@ -492,8 +492,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * this should generally be avoided to circumvent creating `n` [data rows][DataRow],
      * (which essentially are `n` single-row [dataframes][DataFrame]).
      *
-     * Instead, use [`preprocessValue`][preprocessValue] to convert to [`Map`][Map]`<`[`String`][String]`, `[`Any?`][Any]`>`
-     * and then use the more efficient [`Iterable<Map<String, Any?>>.toDataFrame()`][Iterable.toDataFrame] in [buildDataColumn]:
+     * Instead, use [preprocessValue][preprocessValue] to convert to [`Map`][Map]`<`[`String`][String]`, `[`Any?`][Any]`>`
+     * and then use the more efficient [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
      * ```kt
      * (values as List<Map<String, Any?>>)
      *     .toDataFrame()

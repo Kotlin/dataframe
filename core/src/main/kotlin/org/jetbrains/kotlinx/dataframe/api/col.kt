@@ -103,9 +103,9 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * $[CommonColDocs.EXAMPLE]
      *
      * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [`valueCol`][ColumnsSelectionDsl.valueCol],
-     * [`colGroup`][ColumnsSelectionDsl.colGroup],
-     * and [`frameCol`][ColumnsSelectionDsl.frameCol].
+     * [valueCol][ColumnsSelectionDsl.valueCol],
+     * [colGroup][ColumnsSelectionDsl.colGroup],
+     * and [frameCol][ColumnsSelectionDsl.frameCol].
      *
      * @return A [ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn].
      * @throws [IllegalStateException\] if the column with the given argument does not exist.

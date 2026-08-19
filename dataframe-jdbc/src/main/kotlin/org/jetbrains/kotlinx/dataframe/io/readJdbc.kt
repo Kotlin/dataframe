@@ -534,26 +534,26 @@ public fun DataSource.readDataFrame(
 }
 
 /**
- * Reads the data from a [`ResultSet`][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
- * A [`ResultSet`][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [`ResultSet`][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
  *
- * NOTE: Reading from the [`ResultSet`][java.sql.ResultSet] could potentially change its state.
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [`ResultSet`][java.sql.ResultSet] containing the data to read.
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
  *   Its state may be altered after the read operation.
  * @param [dbType] the type of database that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [`ResultSet`][java.sql.ResultSet].
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [`ResultSet`][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -569,24 +569,24 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads the data from a [`ResultSet`][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
- * A [`ResultSet`][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [`ResultSet`][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
  *
- * NOTE: Reading from the [`ResultSet`][java.sql.ResultSet] could potentially change its state.
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
  * @param [dbType] the type of database that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [`ResultSet`][java.sql.ResultSet].
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [`ResultSet`][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -596,29 +596,29 @@ public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNull
 }
 
 /**
- * Reads the data from a [`ResultSet`][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
- * A [`ResultSet`][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [`ResultSet`][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
  *
- * __NOTE:__ Reading from the [`ResultSet`][java.sql.ResultSet] could potentially change its state.
+ * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [`ResultSet`][java.sql.ResultSet] containing the data to read.
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
  *   Its state may be altered after the read operation.
  * @param [connection] the connection to the database (it's required to extract the database type)
  * that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [`ResultSet`][java.sql.ResultSet].
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  *   in that case the [dbType] will be recognized from the [resultSet].
- * @return the DataFrame generated from the [`ResultSet`][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -636,27 +636,27 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads the data from a [`ResultSet`][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
- * A [`ResultSet`][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [`ResultSet`][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
  *
- * __NOTE:__ Reading from the [`ResultSet`][java.sql.ResultSet] could potentially change its state.
+ * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
  * @param [connection] the connection to the database (it's required to extract the database type)
  * that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [`ResultSet`][java.sql.ResultSet].
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  *   in that case the [dbType] will be recognized from the [ResultSet].
- * @return the DataFrame generated from the [`ResultSet`][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */

@@ -138,7 +138,7 @@ public class Update<T, C>(
 
 // region update
 
-/** {@set [SelectingColumns.OPERATION] [`update`][update]} */
+/** {@set [SelectingColumns.OPERATION] [update][update]} */
 @ExcludeFromSources
 private typealias SetSelectingColumnsOperationArg = Nothing
 
@@ -200,8 +200,8 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 
 /** ## Where
  * @include [SelectingRows.RowValueCondition.WithExample]
- * {@set [SelectingRows.FIRST_OPERATION] [`update`][update]}
- * {@set [SelectingRows.SECOND_OPERATION] [`where`][where]}
+ * {@set [SelectingRows.FIRST_OPERATION] [update][update]}
+ * {@set [SelectingRows.SECOND_OPERATION] [where][where]}
  *
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
@@ -333,7 +333,7 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
 private typealias CommonUpdatePerColDoc = Nothing
 
 /** Provide a new value for every selected cell per column using a [`Map`][Map]`<`[`colName: String`][String]`, value: C>`
- *  or [`DataRow`][DataRow] as Map. */
+ *  or [DataRow][DataRow] as Map. */
 @ExcludeFromSources
 private typealias UpdatePerColMap = Nothing
 
@@ -436,7 +436,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } a
  *
  * ### Optional
  * Provide an [expression] to update the rows with.
- * This combines [`with`][Update.with] with [notNull].
+ * This combines [with][Update.with] with [notNull].
  *
  * For example:
  *
@@ -451,10 +451,10 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * This overload is a combination of [update] and [`with`][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OPERATION] [`update`][update]<code>`("city")`</code>}
+ * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -469,10 +469,10 @@ public fun <T, C> DataFrame<T>.update(
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * This overload is a combination of [update] and [`with`][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OPERATION] [`update`][update]<code>`("city")`</code>}
+ * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -487,12 +487,12 @@ public fun <T, C> DataFrame<T>.update(
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * This overload is a combination of [update] and [`with`][Update.with].
+ * This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnNamesApi]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OPERATION] [`update`][update]<code>`("city")`</code>}
+ * {@set [ExpressionsGivenRow.OPERATION] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.ColumnNamesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.

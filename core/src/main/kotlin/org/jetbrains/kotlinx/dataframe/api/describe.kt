@@ -88,7 +88,7 @@ internal typealias Describe = Nothing
 @ExcludeFromSources
 internal typealias DescribeWithSelection = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`describe`][describe]} */
+/** {@set [SelectingColumns.OPERATION] [describe][describe]} */
 @ExcludeFromSources
 private typealias SetDescribeOperationArg = Nothing
 // endregion

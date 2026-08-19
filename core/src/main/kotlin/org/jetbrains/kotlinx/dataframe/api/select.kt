@@ -47,7 +47,7 @@ internal interface Select {
     typealias SelectSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`select`][select]} */
+/** {@set [SelectingColumns.OPERATION] [select][select]} */
 @ExcludeFromSources
 private typealias SetSelectOperationArg = Nothing
 
@@ -136,13 +136,13 @@ public interface SelectColumnsSelectionDsl {
      * ## Select from [ColumnGroup]
      *
      * Perform a selection of columns using the {@include [ColumnsSelectionDslLink]} on
-     * any [ColumnGroup]. This is more powerful than the [`cols`][ColumnsSelectionDsl.cols] filter, because now all
+     * any [ColumnGroup]. This is more powerful than the [cols][ColumnsSelectionDsl.cols] filter, because now all
      * operations of the DSL are at your disposal.
      *
      * The scope of the new DSL instance is relative to
      * the [ColumnGroup] you are selecting from.
      *
-     * The [`invoke`][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
      * ### Check out: [Grammar]
      *
@@ -162,7 +162,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * {@include [LineBreak]}
      *
-     * See also [`except`][ColumnsSelectionDsl.except]/[`allExcept`][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [except][ColumnsSelectionDsl.except]/[allExcept][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector\] The [ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup] to select from.

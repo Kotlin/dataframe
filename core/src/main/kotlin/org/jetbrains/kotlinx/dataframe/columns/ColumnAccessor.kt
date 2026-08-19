@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
  *
  * Can be created by [column], [columnGroup] or [frameColumn] delegates.
  *
- * @param T Expected [`type`][DataColumn.type] of values in the column
+ * @param T Expected [type][DataColumn.type] of values in the column
  */
 public interface ColumnAccessor<out T> : ColumnReference<T> {
 

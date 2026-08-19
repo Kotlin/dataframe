@@ -166,7 +166,7 @@ internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
 /**
  * Central implementation for [GlobalParserOptions].
  *
- * Can be obtained by a user by calling [`DataFrame.parser`][DataFrame.Companion.parser].
+ * Can be obtained by a user by calling [DataFrame.parser][DataFrame.Companion.parser].
  *
  * Defaults are set by [resetToDefault].
  */

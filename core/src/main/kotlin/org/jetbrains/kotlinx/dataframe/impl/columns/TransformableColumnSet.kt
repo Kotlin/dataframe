@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  *
  * This is especially useful for calls like
  * [`colsInternal { }`][ColumnsResolver.colsInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
- * where [`atAnyDepthImpl`][atAnyDepthImpl] modifies the [`ColumnSet`][ColumnsResolver]
+ * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [ColumnSet][ColumnsResolver]
  * that [`colsInternal { }`][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
@@ -36,7 +36,7 @@ internal interface TransformableColumnSet<out C> : ColumnSet<C> {
  *
  * This is especially useful for calls like
  * [`singleInternal { }`][ColumnsResolver.singleInternal].[`atAnyDepthImpl()`][atAnyDepthImpl],
- * where [`atAnyDepthImpl`][atAnyDepthImpl] modifies the [SingleColumn]
+ * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [SingleColumn]
  * that [`singleInternal { }`][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
@@ -53,8 +53,8 @@ internal interface TransformableSingleColumn<out C> : SingleColumn<C> {
 
 /**
  * ## Columns Resolver Transformer.
- * This contains implementations for both [`transform`][ColumnSet.transform] and
- * [`transformSingle`][SingleColumn.transformSingle] and can be passed around.
+ * This contains implementations for both [transform][ColumnSet.transform] and
+ * [transformSingle][SingleColumn.transformSingle] and can be passed around.
  */
 @PublishedApi
 internal interface ColumnsResolverTransformer {

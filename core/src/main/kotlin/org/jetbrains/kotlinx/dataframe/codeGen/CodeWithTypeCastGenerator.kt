@@ -43,7 +43,7 @@ public typealias Expression = String
  * A [TypeCastGenerator] can generate [Code] given an [Expression] that casts or converts
  * it to a predefined target type.
  *
- * To create a [TypeCastGenerator] that, for instance, casts everything you pass to [`Any?`][Any]:
+ * To create a [TypeCastGenerator] that, for instance, casts everything you pass to [Any?][Any]:
  * ```kt
  * val myCastGenerator = TypeCastGenerator { expression -> "(\$expression as Any?)" }
  *

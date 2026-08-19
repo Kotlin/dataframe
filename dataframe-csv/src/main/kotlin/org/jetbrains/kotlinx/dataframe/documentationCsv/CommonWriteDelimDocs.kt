@@ -11,7 +11,7 @@ import java.io.File
 /**
  * ### $[WRITE_OR_CONVERT] [DataFrame] to $[FILE_TYPE_TITLE] $[DATA_TITLE]
  *
- * ${[WRITE_OR_CONVERT]}s \[this\]\[this\] [`DataFrame`][DataFrame] to a $[FILE_TYPE] $[DATA].
+ * ${[WRITE_OR_CONVERT]}s \[this\]\[this\] [DataFrame][DataFrame] to a $[FILE_TYPE] $[DATA].
  *
  * Parameters you can use to customize the process include, for instance, \[delimiter\],
  * \[includeHeader\], \[quoteMode\], and \[headerComments\].
@@ -20,7 +20,7 @@ import java.io.File
  * The integration is built upon {@include [DocumentationUrls.ApacheCsv]}.
  *
  * ##### Similar Functions
- * With overloads of $[FUNCTION_LINK]`()`, you can write $[FILE_TYPE] to [`File`][File], [`Path`][java.nio.file.Path],
+ * With overloads of $[FUNCTION_LINK]`()`, you can write $[FILE_TYPE] to [File][File], [Path][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, $[FUNCTION_LINK]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]")`

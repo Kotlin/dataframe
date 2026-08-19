@@ -18,12 +18,12 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * {@set [AggregateDslDocs.RESULT_TYPE] [DataFrame]}
  * {@set [AggregateDslDocs.OPERATING_COLUMNS] columns within groups in [GroupBy]}
  *
- * It allows [pivoting][DataFrame.pivot] inside [`aggregate`][Grouped.aggregate] via corresponding methods:
- * * [`pivot`][AggregateGroupedDsl.pivot]
- * * [`pivotCounts`][AggregateGroupedDsl.pivotCounts]
- * * [`pivotMatches`][AggregateGroupedDsl.pivotMatches]
+ * It allows [pivoting][DataFrame.pivot] inside [aggregate][Grouped.aggregate] via corresponding methods:
+ * * [pivot][AggregateGroupedDsl.pivot]
+ * * [pivotCounts][AggregateGroupedDsl.pivotCounts]
+ * * [pivotMatches][AggregateGroupedDsl.pivotMatches]
  *
- * Pivoting inside [`aggregate`][Grouped.aggregate] is useful for counting
+ * Pivoting inside [aggregate][Grouped.aggregate] is useful for counting
  * cross-group matrix-like statistics.
  */
 @ExcludeFromSources
@@ -31,7 +31,7 @@ internal typealias AggregateGroupedDslDocsSnippet = Nothing
 
 /**
  * A specialized [AggregateDsl]
- * used in [`GroupBy.aggregate`][Grouped.aggregate] method; allows
+ * used in [GroupBy.aggregate][Grouped.aggregate] method; allows
  * [pivoting][DataFrame.pivot] inside its body.
  *
  * {@include [AggregateGroupedDslDocsSnippet]}

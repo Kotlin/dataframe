@@ -15,7 +15,7 @@ import java.net.URL
 /**
  * ### Read $[FILE_TYPE_TITLE] $[DATA_TITLE] to [DataFrame]
  *
- * Reads any $[FILE_TYPE] $[DATA] to a [`DataFrame`][DataFrame].
+ * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
@@ -26,8 +26,8 @@ import java.net.URL
  * The integration is built upon {@include [DocumentationUrls.Deephaven]}.
  *
  * ##### Similar Functions
- * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [`File`][File],
- * [`Path`][java.nio.file.Path], [`URL`][URL], or [`InputStream`][InputStream].
+ * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [File][File],
+ * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, $[FUNCTION_LINK]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]")` or with some options:

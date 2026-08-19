@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
  * Entity that can retrieve [DataColumn] from [DataFrame] or value from [DataRow].
  *
  * Base interface for [DataColumn] and [ColumnAccessor].
- * @param C Expected [`type`][DataColumn.type] of values in the column
+ * @param C Expected [type][DataColumn.type] of values in the column
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
 

@@ -29,8 +29,8 @@ import kotlin.reflect.KProperty
  * the number of unique row combinations.
  *
  * See also:
- * - [`distinct`][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
- * - [`count`][DataFrame.count], which counts the number of rows satisfying a given predicate.
+ * - [distinct][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
+ * - [count][DataFrame.count], which counts the number of rows satisfying a given predicate.
  *
  * For more information: {@include [DocumentationUrls.CountDistinct]}
  *
@@ -45,8 +45,8 @@ public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
  * the number of unique values combinations.
  *
  * See also:
- * - [`distinct`][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
- * - [`count`][DataFrame.count], which counts the number of rows satisfying a given predicate.
+ * - [distinct][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
+ * - [count][DataFrame.count], which counts the number of rows satisfying a given predicate.
  *
  * For more information: {@include [DocumentationUrls.CountDistinct]}
  *
@@ -115,10 +115,10 @@ public fun <T> DataFrame<T>.countDistinct(vararg columns: AnyColumnReference): I
  * that contains the number of distinct {@get [COMPARISON_OBJECT] rows} in each group.
  *
  * See also:
- * - [`aggregate`][Grouped.aggregate], which aggregates a [GroupBy] using the provided statistics.
- * - [`count`][Grouped.count], which counts the number of rows in each group.
- * - [`distinct`][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
- * - [`groupBy`][DataFrame.groupBy], which groups the rows of a [DataFrame]
+ * - [aggregate][Grouped.aggregate], which aggregates a [GroupBy] using the provided statistics.
+ * - [count][Grouped.count], which counts the number of rows in each group.
+ * - [distinct][DataFrame.distinct], which removes duplicate rows and returns a new [DataFrame].
+ * - [groupBy][DataFrame.groupBy], which groups the rows of a [DataFrame]
  * based on the values in one or more specified cols.
  *
  * For more information: {@include [DocumentationUrls.CountDistinct]}

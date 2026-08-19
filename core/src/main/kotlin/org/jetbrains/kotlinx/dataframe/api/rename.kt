@@ -84,7 +84,7 @@ internal interface RenameDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`rename`][rename]} */
+/** {@set [SelectingColumns.OPERATION] [rename][rename]} */
 @ExcludeFromSources
 private typealias SetRenameOperationArg = Nothing
 
@@ -230,7 +230,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
     to(*newColumns.map { it.name() }.toTypedArray())
 
 /**
- * __NOTE:__ While you can keep using 'into', we recommend using [`to`][RenameClause.to] for
+ * __NOTE:__ While you can keep using 'into', we recommend using [to][RenameClause.to] for
  * better readability and more natural English.
  *
  * Renames the columns selected with [rename] to the specified [newNames],
@@ -295,7 +295,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
     to(*newNames.map { it.name }.toTypedArray())
 
 /**
- * __NOTE:__ While you can keep using 'into', we recommend using [`to`][RenameClause.to] for
+ * __NOTE:__ While you can keep using 'into', we recommend using [to][RenameClause.to] for
  * better readability and more natural English.
  *
  * Renames the columns selected with [rename] by applying the [transform] expression
@@ -507,7 +507,7 @@ public interface RenameColumnsSelectionDsl {
     /**
      * ## Rename: `named` / `into`
      * Renaming a column in the [ColumnsSelectionDsl] is done by calling the `infix` functions
-     * [`named`][ColumnReference.named] or [`into`][ColumnReference.into]. They behave exactly the same,
+     * [named][ColumnReference.named] or [into][ColumnReference.into]. They behave exactly the same,
      * so it's up to contextual preference which one to use. Any combination of {@include [AccessApiLink]} can be
      * used to specify the column to rename and which name should be used instead.
      *

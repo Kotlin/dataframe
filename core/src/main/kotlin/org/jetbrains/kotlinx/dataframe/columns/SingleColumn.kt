@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
  * ## SingleColumn
  * Entity that can be [resolved][resolveSingle] into a single [DataColumn].
  *
- * @param C Column [`type`][BaseColumn.type] of resolved column.
+ * @param C Column [type][BaseColumn.type] of resolved column.
  * @see [ColumnsResolver]
  * @see [TransformableColumnSet]
  * @see [TransformableSingleColumn]

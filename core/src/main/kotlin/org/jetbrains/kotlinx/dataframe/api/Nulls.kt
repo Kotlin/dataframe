@@ -51,7 +51,7 @@ internal interface FillNulls {
     typealias FillNullsSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`fillNulls`][fillNulls]} */
+/** {@set [SelectingColumns.OPERATION] [fillNulls][fillNulls]} */
 private typealias SetFillNullsOperationArg = Nothing
 
 /**
@@ -171,7 +171,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [`fillNaNs`][fillNaNs]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNaNs][fillNaNs]} */
     typealias Grammar = Nothing
 
     /**
@@ -181,7 +181,7 @@ internal interface FillNaNs {
     typealias FillNaNsSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`fillNaNs`][fillNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [fillNaNs][fillNaNs]} */
 @ExcludeFromSources
 internal typealias SetFillNaNsOperationArg = Nothing
 
@@ -246,7 +246,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  */
 internal interface FillNA {
 
-    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [`fillNA`][fillNA]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNA][fillNA]} */
     typealias Grammar = Nothing
 
     /**
@@ -256,7 +256,7 @@ internal interface FillNA {
     typealias FillNASelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`fillNA`][fillNA]} */
+/** {@set [SelectingColumns.OPERATION] [fillNA][fillNA]} */
 @ExcludeFromSources
 internal typealias SetFillNAOperationArg = Nothing
 
@@ -327,7 +327,7 @@ private typealias DropColumnAccessorsParam = Nothing
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [`drop`][DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNullsSelectingOptions]).
  *
@@ -353,7 +353,7 @@ internal interface DropNulls {
     typealias DropNullsSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`dropNulls`][dropNulls]} */
+/** {@set [SelectingColumns.OPERATION] [dropNulls][dropNulls]} */
 @ExcludeFromSources
 private typealias SetDropNullsOperationArg = Nothing
 
@@ -449,7 +449,7 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][NA] values. Specific case of [`drop`][DataFrame.drop].
+ * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNASelectingOptions]).
  * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
@@ -474,7 +474,7 @@ internal interface DropNA {
     typealias DropNASelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`dropNA`][dropNA]} */
+/** {@set [SelectingColumns.OPERATION] [dropNA][dropNA]} */
 @ExcludeFromSources
 private typealias SetDropNAOperationArg = Nothing
 
@@ -564,7 +564,7 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [`drop`][DataFrame.drop].
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][DropNaNsSelectingOptions]).
  * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
@@ -589,7 +589,7 @@ internal interface DropNaNs {
     typealias DropNaNsSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`dropNaNs`][dropNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [dropNaNs][dropNaNs]} */
 @ExcludeFromSources
 private typealias SetDropNaNsOperationArg = Nothing
 

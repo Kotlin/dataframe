@@ -22,7 +22,7 @@ private val logger = KotlinLogging.logger {}
  * fast double parser library, [FastDoubleParser](https://github.com/wrandelshofer/FastDoubleParser).
  * If not, or if it fails, it will use [NumberFormat] to parse the input.
  *
- * The [`locale`][locale] used by the double parser is defined like:
+ * The [locale][locale] used by the double parser is defined like:
  *
  *   [`parserOptions`][parserOptions]`?.`[`locale`][ParserOptions.locale]`  ?:  `[`Parsers.locale`][Parsers.locale]`  :?  `[`Locale.getDefault()`][Locale.getDefault]
  *
@@ -36,7 +36,7 @@ private val logger = KotlinLogging.logger {}
  * Public, so it can be used in other modules.
  *
  * @param parserOptions can be supplied to configure the parser.
- *   If `null`, the global parser options ([`DataFrame.parser`][DataFrame.Companion.parser]) will be used.
+ *   If `null`, the global parser options ([DataFrame.parser][DataFrame.Companion.parser]) will be used.
  *   We'll only use [ParserOptions.locale] and [ParserOptions.useFastDoubleParser].
  */
 @Suppress("ktlint:standard:comment-wrapping")

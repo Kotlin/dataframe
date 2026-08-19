@@ -21,8 +21,8 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  *
  * A [DataFrame] is considered `NA` if it has no rows or columns, so if it's empty.
  *
- * You can also use [`fillNA`][fillNA] to replace `NAs` in certain columns with a given value or expression
- * or [`dropNA`][dropNA] to drop rows with `NAs` in them.
+ * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression
+ * or [dropNA][dropNA] to drop rows with `NAs` in them.
  *
  * For more information: {@include [DocumentationUrls.NanAndNa.NA]}
  *

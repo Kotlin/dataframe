@@ -58,10 +58,10 @@ import kotlin.reflect.KProperty
  * - [`maxBy`][DataFrame.maxBy]` { expression }` — the first row for which the given expression returns
  *   the maximum value.
  *
- * [`max`][DataFrame.max], [`maxOf`][DataFrame.maxOf], and [`maxBy`][DataFrame.maxBy] all have an `-OrNull`
+ * [max][DataFrame.max], [maxOf][DataFrame.maxOf], and [maxBy][DataFrame.maxBy] all have an `-OrNull`
  * counterpart which returns `null` instead of throwing an exception when there's nothing to compare.
  *
- * Mirror operation: [`min`][DataFrame.min].
+ * Mirror operation: [min][DataFrame.min].
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -86,15 +86,15 @@ internal interface MaxDocs : CommonMinMaxDocs {
 @ExcludeFromSources
 private typealias MaxDocsLink = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`max`][max]} */
+/** {@set [SelectingColumns.OPERATION] [max][max]} */
 @ExcludeFromSources
 private typealias SetMaxOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`maxFor`][maxFor]} */
+/** {@set [SelectingColumns.OPERATION] [maxFor][maxFor]} */
 @ExcludeFromSources
 private typealias SetMaxForOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`maxOrNull`][maxOrNull]} */
+/** {@set [SelectingColumns.OPERATION] [maxOrNull][maxOrNull]} */
 @ExcludeFromSources
 private typealias SetMaxOrNullOperationArg = Nothing
 
@@ -110,10 +110,10 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
  * See also:
- * - [`maxOrNull`][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`maxOf`][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
- * - [`maxBy`][DataColumn.maxBy] — the element for which a selector returns the maximum value.
- * - [`min`][DataColumn.min] — the mirror operation.
+ * - [maxOrNull][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [maxOf][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
+ * - [maxBy][DataColumn.maxBy] — the element for which a selector returns the maximum value.
+ * - [min][DataColumn.min] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -141,12 +141,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
  * See also:
- * - [`max`][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
- * - [`maxOfOrNull`][DataColumn.maxOfOrNull] — the maximum of the values a selector returns
+ * - [max][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
+ * - [maxOfOrNull][DataColumn.maxOfOrNull] — the maximum of the values a selector returns
  *   for each element.
- * - [`maxByOrNull`][DataColumn.maxByOrNull] — the element for which a selector returns
+ * - [maxByOrNull][DataColumn.maxByOrNull] — the element for which a selector returns
  *   the maximum value.
- * - [`minOrNull`][DataColumn.minOrNull] — the mirror operation.
+ * - [minOrNull][DataColumn.minOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -172,12 +172,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  *
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][DataColumn.maxOf], which returns the maximum [selector] value itself
+ * Don't confuse [maxBy] with [maxOf][DataColumn.maxOf], which returns the maximum [selector] value itself
  * instead of the element it belongs to.
  *
  * See also:
- * - [`maxByOrNull`][DataColumn.maxByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`minBy`][DataColumn.minBy] — the mirror operation.
+ * - [maxByOrNull][DataColumn.maxByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [minBy][DataColumn.minBy] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -206,12 +206,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  *
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [maxByOrNull] with [`maxOfOrNull`][DataColumn.maxOfOrNull], which returns the maximum
+ * Don't confuse [maxByOrNull] with [maxOfOrNull][DataColumn.maxOfOrNull], which returns the maximum
  * [selector] value itself instead of the element it belongs to.
  *
  * See also:
- * - [`maxBy`][DataColumn.maxBy] — throws instead of returning `null` for a column with nothing to compare.
- * - [`minByOrNull`][DataColumn.minByOrNull] — the mirror operation.
+ * - [maxBy][DataColumn.maxBy] — throws instead of returning `null` for a column with nothing to compare.
+ * - [minByOrNull][DataColumn.minByOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -241,12 +241,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  *
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [maxOf] with [`maxBy`][DataColumn.maxBy], which returns the element the maximum
+ * Don't confuse [maxOf] with [maxBy][DataColumn.maxBy], which returns the element the maximum
  * [selector] value belongs to instead of that value.
  *
  * See also:
- * - [`maxOfOrNull`][DataColumn.maxOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`minOf`][DataColumn.minOf] — the mirror operation.
+ * - [maxOfOrNull][DataColumn.maxOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [minOf][DataColumn.minOf] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -275,12 +275,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  *
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [maxOfOrNull] with [`maxByOrNull`][DataColumn.maxByOrNull], which returns the element
+ * Don't confuse [maxOfOrNull] with [maxByOrNull][DataColumn.maxByOrNull], which returns the element
  * the maximum [selector] value belongs to instead of that value.
  *
  * See also:
- * - [`maxOf`][DataColumn.maxOf] — throws instead of returning `null` for a column with nothing to compare.
- * - [`minOfOrNull`][DataColumn.minOfOrNull] — the mirror operation.
+ * - [maxOf][DataColumn.maxOf] — throws instead of returning `null` for a column with nothing to compare.
+ * - [minOfOrNull][DataColumn.minOfOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -324,9 +324,9 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
  * See also:
- * - [`rowMaxOf`][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
- * - [`rowMinOfOrNull`][DataRow.rowMinOfOrNull] — the mirror operation.
- * - [`maxOrNull`][DataFrame.maxOrNull] — the maximum of the values in specific columns of a [DataFrame].
+ * - [rowMaxOf][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — the mirror operation.
+ * - [maxOrNull][DataFrame.maxOrNull] — the maximum of the values in specific columns of a [DataFrame].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
@@ -355,10 +355,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
  * See also:
- * - [`rowMaxOfOrNull`][DataRow.rowMaxOfOrNull] — returns `null` instead of throwing
+ * - [rowMaxOfOrNull][DataRow.rowMaxOfOrNull] — returns `null` instead of throwing
  *   when there's nothing to compare.
- * - [`rowMinOf`][DataRow.rowMinOf] — the mirror operation.
- * - [`max`][DataFrame.max] — the maximum of the values in specific columns of a [DataFrame].
+ * - [rowMinOf][DataRow.rowMinOf] — the mirror operation.
+ * - [max][DataFrame.max] — the maximum of the values in specific columns of a [DataFrame].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
@@ -392,9 +392,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
  * See also:
- * - [`maxFor`][DataFrame.maxFor] — the same, but for an explicit selection of columns.
+ * - [maxFor][DataFrame.maxFor] — the same, but for an explicit selection of columns.
  * - [`max`][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [`min`][DataFrame.min] — the mirror operation.
+ * - [min][DataFrame.min] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -430,7 +430,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * See also:
  * - [`max`][DataFrame.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [`minFor`][DataFrame.minFor] — the mirror operation.
+ * - [minFor][DataFrame.minFor] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -469,7 +469,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * See also:
  * - [`max`][DataFrame.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [`minFor`][DataFrame.minFor] — the mirror operation.
+ * - [minFor][DataFrame.minFor] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -511,11 +511,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`maxOrNull`][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
+ * - [maxOrNull][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`maxFor`][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [`maxOf`][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
- * - [`min`][DataFrame.min] — the mirror operation.
+ * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
+ * - [min][DataFrame.min] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -549,11 +549,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`maxOrNull`][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
+ * - [maxOrNull][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`maxFor`][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [`maxOf`][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
- * - [`min`][DataFrame.min] — the mirror operation.
+ * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
+ * - [min][DataFrame.min] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -599,11 +599,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`max`][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
- * - [`maxFor`][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [`maxOfOrNull`][DataFrame.maxOfOrNull] — the maximum of the values a row expression
+ * - [max][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
+ * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
- * - [`minOrNull`][DataFrame.minOrNull] — the mirror operation.
+ * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -639,11 +639,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`max`][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
- * - [`maxFor`][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [`maxOfOrNull`][DataFrame.maxOfOrNull] — the maximum of the values a row expression
+ * - [max][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
+ * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
- * - [`minOrNull`][DataFrame.minOrNull] — the mirror operation.
+ * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -689,14 +689,14 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [maxOf] with [`maxBy`][DataFrame.maxBy], which returns the row the maximum
+ * Don't confuse [maxOf] with [maxBy][DataFrame.maxBy], which returns the row the maximum
  * [expression] value belongs to instead of that value.
  *
  * See also:
- * - [`maxOfOrNull`][DataFrame.maxOfOrNull] — returns `null` instead of throwing when there's
+ * - [maxOfOrNull][DataFrame.maxOfOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`max`][DataFrame.max] — a single maximum of all values in the selected columns.
- * - [`minOf`][DataFrame.minOf] — the mirror operation.
+ * - [max][DataFrame.max] — a single maximum of all values in the selected columns.
+ * - [minOf][DataFrame.minOf] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -727,13 +727,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [maxOfOrNull] with [`maxByOrNull`][DataFrame.maxByOrNull], which returns the row the
+ * Don't confuse [maxOfOrNull] with [maxByOrNull][DataFrame.maxByOrNull], which returns the row the
  * maximum [expression] value belongs to instead of that value.
  *
  * See also:
- * - [`maxOf`][DataFrame.maxOf] — throws instead of returning `null` when there's nothing to compare.
- * - [`maxOrNull`][DataFrame.maxOrNull] — a single maximum of all values in the selected columns.
- * - [`minOfOrNull`][DataFrame.minOfOrNull] — the mirror operation.
+ * - [maxOf][DataFrame.maxOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [maxOrNull][DataFrame.maxOrNull] — a single maximum of all values in the selected columns.
+ * - [minOfOrNull][DataFrame.minOfOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -765,14 +765,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][DataFrame.maxOf], which returns the maximum [expression] value
+ * Don't confuse [maxBy] with [maxOf][DataFrame.maxOf], which returns the maximum [expression] value
  * itself instead of the row it belongs to.
  *
  * See also:
- * - [`maxByOrNull`][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
+ * - [maxByOrNull][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`minBy`][DataFrame.minBy] — the mirror operation.
- * - [`sortByDesc`][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
+ * - [minBy][DataFrame.minBy] — the mirror operation.
+ * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -803,15 +803,15 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  * {@include [MaxDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][DataFrame.maxOf], which returns the maximum value a row
+ * Don't confuse [maxBy] with [maxOf][DataFrame.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`maxByOrNull`][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
+ * - [maxByOrNull][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`max`][DataFrame.max] — returns the largest value itself instead of the row it belongs to.
- * - [`minBy`][DataFrame.minBy] — the mirror operation.
- * - [`sortByDesc`][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
+ * - [max][DataFrame.max] — returns the largest value itself instead of the row it belongs to.
+ * - [minBy][DataFrame.minBy] — the mirror operation.
+ * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -854,12 +854,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [maxByOrNull] with [`maxOfOrNull`][DataFrame.maxOfOrNull], which returns the maximum
+ * Don't confuse [maxByOrNull] with [maxOfOrNull][DataFrame.maxOfOrNull], which returns the maximum
  * [expression] value itself instead of the row it belongs to.
  *
  * See also:
- * - [`maxBy`][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
- * - [`minByOrNull`][DataFrame.minByOrNull] — the mirror operation.
+ * - [maxBy][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -888,14 +888,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  * {@include [MaxDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [maxByOrNull] with [`maxOfOrNull`][DataFrame.maxOfOrNull], which returns the maximum
+ * Don't confuse [maxByOrNull] with [maxOfOrNull][DataFrame.maxOfOrNull], which returns the maximum
  * value a row expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`maxBy`][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
- * - [`maxOrNull`][DataFrame.maxOrNull] — returns the largest value itself instead of
+ * - [maxBy][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [maxOrNull][DataFrame.maxOrNull] — returns the largest value itself instead of
  *   the row it belongs to.
- * - [`minByOrNull`][DataFrame.minByOrNull] — the mirror operation.
+ * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -946,11 +946,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
  * See also:
- * - [`maxFor`][Grouped.maxFor] — the same, but for an explicit selection of columns.
+ * - [maxFor][Grouped.maxFor] — the same, but for an explicit selection of columns.
  * - [`max`][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`min`][Grouped.min] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [min][Grouped.min] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -991,8 +991,8 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - [`max`][Grouped.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][Grouped.minFor] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [minFor][Grouped.minFor] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1035,8 +1035,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * - [`max`][Grouped.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][Grouped.minFor] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [minFor][Grouped.minFor] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1087,11 +1087,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
  *
  * See also:
- * - [`maxFor`][Grouped.maxFor] — the maximum of each selected column separately, per group.
- * - [`maxOf`][Grouped.maxOf] — the maximum of the values a row expression returns
+ * - [maxFor][Grouped.maxFor] — the maximum of each selected column separately, per group.
+ * - [maxOf][Grouped.maxOf] — the maximum of the values a row expression returns
  *   for each row of a group.
- * - [`min`][Grouped.min] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [min][Grouped.min] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1137,11 +1137,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
  *
  * See also:
- * - [`maxFor`][Grouped.maxFor] — the maximum of each selected column separately, per group.
- * - [`maxOf`][Grouped.maxOf] — the maximum of the values a row expression returns
+ * - [maxFor][Grouped.maxFor] — the maximum of each selected column separately, per group.
+ * - [maxOf][Grouped.maxOf] — the maximum of the values a row expression returns
  *   for each row of a group.
- * - [`min`][Grouped.min] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [min][Grouped.min] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1196,13 +1196,13 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [maxOf] with [`maxBy`][GroupBy.maxBy], which returns the row of each group for which
+ * Don't confuse [maxOf] with [maxBy][GroupBy.maxBy], which returns the row of each group for which
  * the expression returns the maximum value, instead of that value.
  *
  * See also:
- * - [`max`][Grouped.max] — a single maximum of all values in the selected columns, per group.
- * - [`minOf`][Grouped.minOf] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [max][Grouped.max] — a single maximum of all values in the selected columns, per group.
+ * - [minOf][Grouped.minOf] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1239,11 +1239,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [maxBy] with [`maxOf`][Grouped.maxOf], which returns the maximum value itself
+ * Don't confuse [maxBy] with [maxOf][Grouped.maxOf], which returns the maximum value itself
  * instead of the row it belongs to.
  *
  * See also:
- * - [`minBy`][GroupBy.minBy] — the mirror operation.
+ * - [minBy][GroupBy.minBy] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -1282,12 +1282,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [maxBy] with [`maxOf`][Grouped.maxOf], which returns the maximum value a row
+ * Don't confuse [maxBy] with [maxOf][Grouped.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`max`][Grouped.max] — the maximum value itself instead of the row it belongs to.
- * - [`minBy`][GroupBy.minBy] — the mirror operation.
+ * - [max][Grouped.max] — the maximum value itself instead of the row it belongs to.
+ * - [minBy][GroupBy.minBy] — the mirror operation.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
  * For more information: {@include [DocumentationUrls.MaxBy]}
@@ -1333,10 +1333,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
- * - [`maxFor`][Pivot.maxFor] — the same, but for an explicit selection of columns.
+ * - [maxFor][Pivot.maxFor] — the same, but for an explicit selection of columns.
  * - [`max`][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`min`][Pivot.min] — the mirror operation.
+ * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1377,7 +1377,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [`max`][Pivot.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][Pivot.minFor] — the mirror operation.
+ * - [minFor][Pivot.minFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1423,7 +1423,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [`max`][Pivot.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][Pivot.minFor] — the mirror operation.
+ * - [minFor][Pivot.minFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1480,8 +1480,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * See also:
  * - [`max`][Pivot.max]`()` — the maximum of each suitable column separately, per group.
- * - [`maxFor`][Pivot.maxFor] — the maximum of each selected column separately, per group.
- * - [`min`][Pivot.min] — the mirror operation.
+ * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
+ * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1521,8 +1521,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * See also:
  * - [`max`][Pivot.max]`()` — the maximum of each suitable column separately, per group.
- * - [`maxFor`][Pivot.maxFor] — the maximum of each selected column separately, per group.
- * - [`min`][Pivot.min] — the mirror operation.
+ * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
+ * - [min][Pivot.min] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1570,7 +1570,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [maxOf] with [`maxBy`][Pivot.maxBy], which returns the first row of each group for
+ * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
@@ -1578,7 +1578,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * See also:
  * - [`max`][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minOf`][Pivot.minOf] — the mirror operation.
+ * - [minOf][Pivot.minOf] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1612,13 +1612,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  * {@include [MaxDocs.ReducedPivotSnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][Pivot.maxOf], which returns the maximum value the expression
+ * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value the expression
  * returns itself, instead of the row.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
- * - [`minBy`][Pivot.minBy] — the mirror operation.
+ * - [minBy][Pivot.minBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1657,14 +1657,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * {@include [MaxDocs.ReducedPivotSnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][Pivot.maxOf], which returns the maximum value a row expression
+ * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value a row expression
  * returns itself, instead of the row.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [`max`][Pivot.max]` { columns }` — the maximum value itself, instead of the row.
- * - [`minBy`][Pivot.minBy] — the mirror operation.
+ * - [minBy][Pivot.minBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
@@ -1711,10 +1711,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [`maxFor`][PivotGroupBy.maxFor] — the same, but for an explicit selection of columns.
+ * - [maxFor][PivotGroupBy.maxFor] — the same, but for an explicit selection of columns.
  * - [`max`][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`min`][PivotGroupBy.min] — the mirror operation.
+ * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -1757,7 +1757,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * - [`max`][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][PivotGroupBy.minFor] — the mirror operation.
+ * - [minFor][PivotGroupBy.minFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -1803,7 +1803,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * - [`max`][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
  * - [`max`][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minFor`][PivotGroupBy.minFor] — the mirror operation.
+ * - [minFor][PivotGroupBy.minFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -1863,8 +1863,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * See also:
  * - [`max`][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
- * - [`maxFor`][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
- * - [`min`][PivotGroupBy.min] — the mirror operation.
+ * - [maxFor][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
+ * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -1907,8 +1907,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * See also:
  * - [`max`][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
- * - [`maxFor`][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
- * - [`min`][PivotGroupBy.min] — the mirror operation.
+ * - [maxFor][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
+ * - [min][PivotGroupBy.min] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -1957,7 +1957,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * {@include [MaxDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [maxOf] with [`maxBy`][PivotGroupBy.maxBy], which returns the first row of each group
+ * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1965,7 +1965,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * See also:
  * - [`max`][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [`minOf`][PivotGroupBy.minOf] — the mirror operation.
+ * - [minOf][PivotGroupBy.minOf] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -2000,13 +2000,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  * {@include [MaxDocs.ReducedPivotGroupBySnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][PivotGroupBy.maxOf], which returns the maximum value the
+ * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value the
  * expression returns itself, instead of the row.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [`minBy`][PivotGroupBy.minBy] — the mirror operation.
+ * - [minBy][PivotGroupBy.minBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
@@ -2046,14 +2046,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  *
  * {@include [MaxDocs.ReducedPivotGroupBySnippet]}
  *
- * Don't confuse [maxBy] with [`maxOf`][PivotGroupBy.maxOf], which returns the maximum value a row
+ * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [`max`][PivotGroupBy.max]` { columns }` — the maximum value itself, instead of the row.
- * - [`minBy`][PivotGroupBy.minBy] — the mirror operation.
+ * - [minBy][PivotGroupBy.minBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.

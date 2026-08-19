@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  * which serves as an intermediate step.
  * The [GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [`into`][GroupClause.into] and,
+ * as [into][GroupClause.into] and,
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
@@ -78,7 +78,7 @@ internal interface GroupDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`group`][group]} */
+/** {@set [SelectingColumns.OPERATION] [group][group]} */
 @ExcludeFromSources
 private typealias SetGroupOperationArg = Nothing
 

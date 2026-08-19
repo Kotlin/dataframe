@@ -72,7 +72,7 @@ public interface NoneColumnsSelectionDsl {
      *
      * Creates an empty [ColumnsResolver] / [ColumnSet], essentially selecting no columns at all.
      *
-     * This is the opposite of [`all`][ColumnsSelectionDsl.all].
+     * This is the opposite of [all][ColumnsSelectionDsl.all].
      *
      * ### Check out: [Grammar]
      *

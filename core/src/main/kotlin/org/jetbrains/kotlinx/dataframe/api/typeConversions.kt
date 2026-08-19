@@ -163,10 +163,10 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 /**
  * ## As ColumnGroup
  *
- * Creates a [`ColumnAccessor`][ColumnAccessor]`<`[`DataRow`][DataRow]`<`[`C`][C\]`>>` from [`this`][this\].
+ * Creates a [`ColumnAccessor`][ColumnAccessor]`<`[`DataRow`][DataRow]`<`[`C`][C\]`>>` from [this][this\].
  * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
  * type is not recognized as a [ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [`asColumnGroup`][asColumnGroup\]
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
  * and it will return the same type if it is already a [ColumnGroup].
  *
  * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.

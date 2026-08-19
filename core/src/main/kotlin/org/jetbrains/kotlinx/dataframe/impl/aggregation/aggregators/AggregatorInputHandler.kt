@@ -27,8 +27,8 @@ public interface AggregatorInputHandler<in Value : Any, out Return : Any?> : Agg
 
     /**
      * Preprocesses the input values before aggregation.
-     * It's expected that this function converts [values] to the right [`valueType.kType`][ValueType.kType]
-     * if [`valueType.needsFullConversion`][ValueType.needsFullConversion].
+     * It's expected that this function converts [values] to the right [valueType.kType][ValueType.kType]
+     * if [valueType.needsFullConversion][ValueType.needsFullConversion].
      *
      * @return A pair of the preprocessed values and the (potentially new) type of the values.
      */

@@ -51,27 +51,27 @@ import kotlin.reflect.typeOf
  *
  * Predefined shortcuts for the most common statistical aggregation operations on [DataFrame].
  *
- * * [`count`][DataFrame.count] — calculate the number of rows
+ * * [count][DataFrame.count] — calculate the number of rows
  *   (optionally counting only rows that satisfy the given predicate);
- * * [`max`][DataFrame.max] / [`maxOf`][DataFrame.maxOf] / [`maxFor`][DataFrame.maxFor] —
+ * * [max][DataFrame.max] / [maxOf][DataFrame.maxOf] / [maxFor][DataFrame.maxFor] —
  *   calculate the maximum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`min`][DataFrame.min] / [`minOf`][DataFrame.minOf] / [`minFor`][DataFrame.minFor] —
+ * * [min][DataFrame.min] / [minOf][DataFrame.minOf] / [minFor][DataFrame.minFor] —
  *   calculate the minimum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`sum`][DataFrame.sum] / [`sumOf`][DataFrame.sumOf] / [`sumFor`][DataFrame.sumFor] —
+ * * [sum][DataFrame.sum] / [sumOf][DataFrame.sumOf] / [sumFor][DataFrame.sumFor] —
  *   calculate the sum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`mean`][DataFrame.mean] / [`meanOf`][DataFrame.meanOf] / [`meanFor`][DataFrame.meanFor] —
+ * * [mean][DataFrame.mean] / [meanOf][DataFrame.meanOf] / [meanFor][DataFrame.meanFor] —
  *   calculate the mean (average) of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`std`][DataFrame.std] / [`stdOf`][DataFrame.stdOf] / [`stdFor`][DataFrame.stdFor] —
+ * * [std][DataFrame.std] / [stdOf][DataFrame.stdOf] / [stdFor][DataFrame.stdFor] —
  *   calculate the standard deviation of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`median`][DataFrame.median] / [`medianOf`][DataFrame.medianOf] / [`medianFor`][DataFrame.medianFor] —
+ * * [median][DataFrame.median] / [medianOf][DataFrame.medianOf] / [medianFor][DataFrame.medianFor] —
  *   calculate the median of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [`percentile`][DataFrame.percentile] / [`percentileOf`][DataFrame.percentileOf] / [`percentileFor`][DataFrame.percentileFor] —
+ * * [percentile][DataFrame.percentile] / [percentileOf][DataFrame.percentileOf] / [percentileFor][DataFrame.percentileFor] —
  *   calculate a specified percentile of all values on the selected columns / by a row expression /
  *   for each of the selected columns.
  *
@@ -81,12 +81,12 @@ internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
  * {@get [AGGREGATE_DSL_TYPE]} allows to compute statistics on the {@get [OPERATING_COLUMNS]}
- * and store the results as a new column using [`into`][AggregateDsl.into]. {@get [APPLY_NOTE]}
+ * and store the results as a new column using [into][AggregateDsl.into]. {@get [APPLY_NOTE]}
  *
  *
  * The resulting {@get [RESULT_TYPE]} has the same structure as the original
  * {@get [RECEIVER]};
- * instead of the groups, there are new columns of aggregated values created with [`into`][AggregateDsl.into].
+ * instead of the groups, there are new columns of aggregated values created with [into][AggregateDsl.into].
  *
  * You can use any of [DataFrame Aggregation Statistics][DataFrameAggregationStatistics]
  * or any custom aggregation function.
@@ -97,7 +97,7 @@ internal interface AggregateDslDocs {
 
     /**
      * Aggregated values can be either simple values, [data rows][DataRow] or even
-     * [data frames][DataFrame]. Including them in the result using [`into`][AggregateDsl.into] will lead
+     * [data frames][DataFrame]. Including them in the result using [into][AggregateDsl.into] will lead
      * to creating [value column][ValueColumn],
      * [column group][ColumnGroup] or [frame column][FrameColumn] respectively
      * in the resulting {@get [RESULT_TYPE]} while preserving the original structure at higher levels.

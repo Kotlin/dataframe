@@ -70,7 +70,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * Returns all columns in [this\] at any depth (so also inside [Column Groups][ColumnGroup])
      *
      * This function can also be followed by another [ColumnSet] filter function like
-     * [`colsOf`][ColumnsSelectionDsl.colsOf], [`single`][ColumnsSelectionDsl.single], or [`valueCols`][ColumnsSelectionDsl.valueCols].
+     * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], or [valueCols][ColumnsSelectionDsl.valueCols].
      * ### Check out: [Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`

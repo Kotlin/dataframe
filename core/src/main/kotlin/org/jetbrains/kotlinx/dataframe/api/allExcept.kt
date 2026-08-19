@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -137,7 +136,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * `== `[`cols`][ColumnsSelectionDsl.cols]`(a).`[`except`][ColumnSet.except]`(a.b)`
      *
-     * ### In the [`ColumnsSelectionDsl`][ColumnsSelectionDsl]
+     * ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]
      * Instead of having to write [`all`][ColumnsSelectionDsl.all]`() `[`except`][ColumnsSelectionDsl.except]` { ... }` in the DSL,
      * you can use [`allExcept`][ColumnsSelectionDsl.allExcept]` { ... }` to achieve the same result.
      *
@@ -161,12 +160,12 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * `df.`[`select`][DataFrame.select]` { myColGroup.`[`allCols`][ColumnsSelectionDsl.allCols]`() `[`except`][ColumnSet.except]`  { myColGroup.colA  `[`and`][ColumnsSelectionDsl.and]` myColGroup.colB } }`
      * {@include [LineBreak]}
-     * Also note the name change, similar to [`allCols`][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
+     * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
      *
      * ### On [ColumnGroups][ColumnGroup]: Except
      * This variant can be used to exclude some nested columns from a [ColumnGroup] in the selection.
-     * In contrast to [`allColsExcept`][ColumnsSelectionDsl.allColsExcept],
+     * In contrast to [allColsExcept][ColumnsSelectionDsl.allColsExcept],
      * this function does not 'lift' the columns out of the group, preserving the structure.
      *
      * So:
@@ -415,9 +414,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
-     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[`allColsExcept`][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_1]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[`allColsExcept`][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
     @Suppress("ClassName")
     @ExcludeFromSources
@@ -563,9 +562,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
-     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[`except`][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[`except`][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
+     *  `df.`[`select`][ColumnsSelectionDsl.select]`  { city  `[`and`][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
     @ExcludeFromSources
     private interface ColumnGroupExceptDocs : ColumnGroupDocs

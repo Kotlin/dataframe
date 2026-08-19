@@ -131,7 +131,7 @@ public class ConvertType<T>(
 /**
  * Converts values in [DataFrame] to match given column schema [T].
  *
- * Original columns are mapped to destination columns by column [`path`][DataColumn.path].
+ * Original columns are mapped to destination columns by column [path][DataColumn.path].
  *
  * Type converters for every column are selected automatically. See [convert] operation for details.
  *
@@ -166,7 +166,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
 /**
  * Converts values in [DataFrame] to match given column schema [T].
  *
- * Original columns are mapped to destination columns by column [`path`][DataColumn.path].
+ * Original columns are mapped to destination columns by column [path][DataColumn.path].
  *
  * Type converters for every column are selected automatically. See [convert] operation for details.
  *
@@ -203,7 +203,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
 /**
  * Converts values in [DataFrame] to match given column schema [schemaType].
  *
- * Original columns are mapped to destination columns by column [`path`][DataColumn.path].
+ * Original columns are mapped to destination columns by column [path][DataColumn.path].
  *
  * Type converters for every column are selected automatically. See [convert] operation for details.
  *

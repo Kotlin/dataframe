@@ -38,9 +38,9 @@ import kotlin.reflect.KProperty
  * returns an [InsertClause],
  * which serves as an intermediate step.
  * The [InsertClause] object provides methods to insert a new column using:
- * - [`under`][InsertClause.under] - inserts a new column under the specified column group.
- * - [`after`][InsertClause.after] - inserts a new column after the specified column.
- * - [`at`][InsertClause.at]- inserts a new column at the specified position.
+ * - [under][InsertClause.under] - inserts a new column under the specified column group.
+ * - [after][InsertClause.after] - inserts a new column after the specified column.
+ * - [at][InsertClause.at]- inserts a new column at the specified position.
  *
  * Each method returns a new [DataFrame] with the inserted column.
  *
@@ -53,8 +53,8 @@ import kotlin.reflect.KProperty
  * For more information: {@include [DocumentationUrls.Insert]}
  *
  * See also:
- * - [`move`][DataFrame.move] - move columns to a new position within the [DataFrame].
- * - [`add`][DataFrame.add] - add new columns to the [DataFrame]
+ * - [move][DataFrame.move] - move columns to a new position within the [DataFrame].
+ * - [add][DataFrame.add] - add new columns to the [DataFrame]
  * (without specifying a position, to the end of the [DataFrame]).
  */
 internal interface InsertDocs {
@@ -87,7 +87,7 @@ internal interface InsertDocs {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`insert`][insert]} */
+/** {@set [SelectingColumns.OPERATION] [insert][insert]} */
 @ExcludeFromSources
 private typealias SetInsertOperationArg = Nothing
 
@@ -172,9 +172,9 @@ public inline fun <T, reified R> DataFrame<T>.insert(
  * to produce a new [DataFrame] with an inserted column.
  *
  * Use the following methods to perform the insertion:
- * - [`under`][InsertClause.under] - inserts a new column under the specified column group.
- * - [`after`][InsertClause.after] - inserts a new column after the specified column.
- * - [`at`][InsertClause.at]- inserts a new column at the specified position.
+ * - [under][InsertClause.under] - inserts a new column under the specified column group.
+ * - [after][InsertClause.after] - inserts a new column after the specified column.
+ * - [at][InsertClause.at]- inserts a new column at the specified position.
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  */

@@ -224,7 +224,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * ## All (Cols)
      *
      * Creates a new [ColumnSet] that contains all columns from [this\],
-     * the opposite of [`none`][ColumnsSelectionDsl.none].
+     * the opposite of [none][ColumnsSelectionDsl.none].
      *
      * This makes the function equivalent to [`cols()`][ColumnsSelectionDsl.cols] without filter.
      *
@@ -326,7 +326,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.FUNCTION] allAfter
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsAfter
      * @set [CommonAllSubsetDocs.BEHAVIOR] after [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [`ColumnSet`][ColumnSet]
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -563,7 +563,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.FUNCTION] allFrom
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsFrom
      * @set [CommonAllSubsetDocs.BEHAVIOR] from [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [`ColumnSet`][ColumnSet]
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -798,7 +798,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.FUNCTION] allBefore
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsBefore
      * @set [CommonAllSubsetDocs.BEHAVIOR] before [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [`ColumnSet`][ColumnSet] containing all columns
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -1034,7 +1034,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.FUNCTION] allUpTo
      * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsUpTo
      * @set [CommonAllSubsetDocs.BEHAVIOR] up to [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [`ColumnSet`][ColumnSet] containing all columns
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -1264,7 +1264,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * If [this] is a [SingleColumn] containing a single [ColumnGroup]
- * (like [`SingleColumn`][SingleColumn]`<`[`AnyRow`][AnyRow]`>` or [`ColumnsSelectionDsl`][ColumnsSelectionDsl]), it
+ * (like [`SingleColumn`][SingleColumn]`<`[`AnyRow`][AnyRow]`>` or [ColumnsSelectionDsl][ColumnsSelectionDsl]), it
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this]
  * (like when [this] is a [ColumnSet]).

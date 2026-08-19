@@ -46,7 +46,7 @@ private interface FlattenDocs {
     typealias GROUPS = Nothing
 
     /**
-     * @include [SelectingColumns] {@set [SelectingColumns.OPERATION] [`flatten`][flatten]}
+     * @include [SelectingColumns] {@set [SelectingColumns.OPERATION] [flatten][flatten]}
      */
     typealias FlattenSelectingOptions = Nothing
 }

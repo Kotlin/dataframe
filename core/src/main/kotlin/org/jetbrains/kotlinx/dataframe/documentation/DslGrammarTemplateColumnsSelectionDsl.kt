@@ -37,7 +37,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * {@comment -------------------------------------------------------------------------------------------- }
      * {@get [DslGrammarTemplate.COLUMN_SET_PART]
      *  {@include [LineBreak]}
-     *  ### What can be called on a [`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  {@include [LineBreak]}
      *  {@include [ColumnSetRef]}

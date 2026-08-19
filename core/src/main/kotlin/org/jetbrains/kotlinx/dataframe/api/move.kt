@@ -44,9 +44,9 @@ import kotlin.reflect.KProperty
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause],
  * which serves as an intermediate step. The [MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [`to`][MoveClause.to], [`toStart`][MoveClause.toStart],
- * [`toEnd`][MoveClause.toEnd], [`into`][MoveClause.into], [`intoIndexed`][MoveClause.intoIndexed], [`toTop`][MoveClause.toTop],
- * [`after`][MoveClause.after] or [`under`][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
+ * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
+ * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
  *
  * Check out [Grammar].
  *
@@ -99,7 +99,7 @@ internal interface Move {
     typealias Grammar = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`move`][move]} */
+/** {@set [SelectingColumns.OPERATION] [move][move]} */
 @ExcludeFromSources
 private typealias SetMoveOperationArg = Nothing
 
@@ -169,7 +169,7 @@ internal interface MoveTo {
     typealias MoveToSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`moveTo`][moveTo]} */
+/** {@set [SelectingColumns.OPERATION] [moveTo][moveTo]} */
 @ExcludeFromSources
 private typealias SetMoveToOperationArg = Nothing
 
@@ -271,7 +271,7 @@ internal interface MoveToStart {
     typealias MoveToStartSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`moveToStart`][moveToStart]} */
+/** {@set [SelectingColumns.OPERATION] [moveToStart][moveToStart]} */
 @ExcludeFromSources
 private typealias SetMoveToStartOperationArg = Nothing
 
@@ -358,7 +358,7 @@ internal interface MoveToEnd {
     typealias MoveToEndSelectingOptions = Nothing
 }
 
-/** {@set [SelectingColumns.OPERATION] [`moveToEnd`][moveToEnd]} */
+/** {@set [SelectingColumns.OPERATION] [moveToEnd][moveToEnd]} */
 @ExcludeFromSources
 private typealias SetMoveToEndOperationArg = Nothing
 

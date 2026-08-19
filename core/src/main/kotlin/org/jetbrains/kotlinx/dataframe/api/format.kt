@@ -65,11 +65,11 @@ import kotlin.reflect.KProperty
  * See [Selecting Columns][FormatSelectingColumns].
  *
  * The [FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [`where`][FormatClause.where],
+ * by selecting only certain rows, using [where][FormatClause.where],
  * and then finally specify how to format the cells using
- * [`with`][FormatClause.with], [`perRowCol`][FormatClause.perRowCol], or [`linearBg`][FormatClause.linearBg].
+ * [with][FormatClause.with], [perRowCol][FormatClause.perRowCol], or [linearBg][FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame] by calling [`format`][FormattedFrame.format] on it again.
+ * You can continue formatting the [FormattedFrame] by calling [format][FormattedFrame.format] on it again.
  *
  * Specifying a [column group][ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
@@ -155,7 +155,7 @@ internal interface FormatDocs {
          * {@include [RgbColorDef]}
          *
          * ### Notation:
-         * _- Returning [`CellAttributes`][CellAttributes]_:
+         * _- Returning [CellAttributes][CellAttributes]_:
          *
          * {@include [CellAttributesRef]}` `[**`and`**][CellAttributes.and]` `{@include [CellAttributesRef]}
          *
@@ -173,7 +173,7 @@ internal interface FormatDocs {
          *
          * `| `[**`attr`**][attr]**`(`**`name: `[`String`][String]**`,`**` value: `[`String`][String]**`)`**
          *
-         * _- Returning [`RgbColor`][RgbColor]:_
+         * _- Returning [RgbColor][RgbColor]:_
          *
          * [**`black`**][FormattingDsl.black]`  |  `[**`white`**][FormattingDsl.white]`  |  `[**`green`**][FormattingDsl.green]`  |  `[**`red`**][FormattingDsl.red]`  |  `[**`blue`**][FormattingDsl.blue]`  |  `[**`gray`**][FormattingDsl.gray]`  |  `[**`darkGray`**][FormattingDsl.darkGray]`  |  `[**`lightGray`**][FormattingDsl.lightGray]
          *
@@ -203,29 +203,29 @@ internal interface FormatDocs {
          */
         typealias RgbColorDef = Nothing
 
-        /** [`cellFormatter`][CellFormatterDef] */
+        /** [cellFormatter][CellFormatterDef] */
         @ExcludeFromSources
         typealias CellFormatterRef = Nothing
 
-        /** [`rowColFormatter`][RowColFormatterDef] */
+        /** [rowColFormatter][RowColFormatterDef] */
         @ExcludeFromSources
         typealias RowColFormatterRef = Nothing
 
-        /** [`FormattingDsl`][FormattingDslGrammarDef] */
+        /** [FormattingDsl][FormattingDslGrammarDef] */
         @ExcludeFromSources
         typealias FormattingDslGrammarRef = Nothing
 
-        /** [`cellAttributes`][CellAttributesDef] */
+        /** [cellAttributes][CellAttributesDef] */
         @ExcludeFromSources
         typealias CellAttributesRef = Nothing
 
-        /** [`color`][RgbColorDef] */
+        /** [color][RgbColorDef] */
         @ExcludeFromSources
         typealias RgbColorRef = Nothing
     }
 }
 
-/** {@set [SelectingColumns.OPERATION] [`format`][format]} */
+/** {@set [SelectingColumns.OPERATION] [format][format]} */
 @ExcludeFromSources
 private typealias SetFormatOperationArg = Nothing
 
@@ -527,7 +527,7 @@ public fun <T, C> FormatClause<T, C?>.notNull(formatter: CellFormatter<C>): Form
  *
  * `.`[`with`][FormatClause.with]`  {  `[`background`][FormattingDsl.background]`(`[`linear`][FormattingDsl.linear]`(it, `[`from`][from]`, `[`to`][to]`)) }`
  *
- * See also [`with`][FormatClause.with], [`background`][FormattingDsl.background], and [`linear`][FormattingDsl.linear].
+ * See also [with][FormatClause.with], [background][FormattingDsl.background], and [linear][FormattingDsl.linear].
  *
  * ### Examples using [linearBg]:
  * ```kt
@@ -566,8 +566,8 @@ public fun <T, C : Number?> FormatClause<T, C>.linearBg(
  *
  * Any color can be represented in terms of [r] (red), [g] (green), and [b] (blue) values from `0..255`.
  *
- * Inside [FormattingDsl], there are shortcuts for common colors, like [`white`][FormattingDsl.white],
- * [`green`][FormattingDsl.green], and [`gray`][FormattingDsl.gray].
+ * Inside [FormattingDsl], there are shortcuts for common colors, like [white][FormattingDsl.white],
+ * [green][FormattingDsl.green], and [gray][FormattingDsl.gray].
  */
 public data class RgbColor(val r: Short, val g: Short, val b: Short) {
 
@@ -618,10 +618,10 @@ public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? =
  *
  * [`background`][FormattingDsl.background]`(`[`white`][FormattingDsl.white]`) `[`and`][CellAttributes.and]` `
  * [`textColor`][FormattingDsl.textColor]`(`[`black`][FormattingDsl.black]`) `[`and`][CellAttributes.and]` `
- * [`bold`][FormattingDsl.bold]
+ * [bold][FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [`rgb`][FormattingDsl.rgb] or interpolate
- * colors using [`linear`][FormattingDsl.linear].
+ * It's also possible to define your own colors using [rgb][FormattingDsl.rgb] or interpolate
+ * colors using [linear][FormattingDsl.linear].
  *
  * Use [attr] if you want to specify a custom CSS attribute.
  */
@@ -778,7 +778,7 @@ public typealias RowColFormatter<T, C> = FormattingDsl.(row: DataRow<T>, col: Co
 public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
 
 /**
- * A wrapper around a [`DataFrame`][df] with CSS attributes that can be
+ * A wrapper around a [DataFrame][df] with CSS attributes that can be
  * converted to a formatted HTML table in the form of [DataFrameHtmlData].
  *
  * Call [toHtml] or [toStandaloneHtml] to get the HTML representation of the [DataFrame].
@@ -802,7 +802,7 @@ public class FormattedFrame<T>(
      * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
      *
      * By default, cell content is formatted as text
-     * Use [`RenderedContent.media`][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
      *
      * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
      *   Default: [DisplayConfiguration.DEFAULT].
@@ -828,7 +828,7 @@ public class FormattedFrame<T>(
      * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
      *
      * By default, cell content is formatted as text
-     * Use [`RenderedContent.media`][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
      *
      * __NOTE:__ In Kotlin Notebook, output [FormattedFrame] directly, or use [toHtml],
      * as that environment already has CSS- and script definitions for DataFrame.
@@ -865,17 +865,17 @@ public class FormattedFrame<T>(
  * to produce a new [FormattedFrame]; a [DataFrame] with HTML formatting data.
  *
  * Use the following function to filter the rows to format:
- * - [`where`][FormatClause.where] – filters the rows to format using a [RowValueFilter].
- * - [`at`][FormatClause.at] – Only format in rows with certain indices.
- * - [`notNull`][FormatClause.notNull] – Only format cells that have non-null values.
+ * - [where][FormatClause.where] – filters the rows to format using a [RowValueFilter].
+ * - [at][FormatClause.at] – Only format in rows with certain indices.
+ * - [notNull][FormatClause.notNull] – Only format cells that have non-null values.
  *
  * Use the following functions to finalize this formatting round:
- * - [`with`][FormatClause.with] – Specifies how to format the cells using a [CellFormatter].
- * - [`perRowCol`][FormatClause.perRowCol] – Specifies how to format each cell individually using a [RowColFormatter].
- * - [`linearBg`][FormatClause.linearBg] –
+ * - [with][FormatClause.with] – Specifies how to format the cells using a [CellFormatter].
+ * - [perRowCol][FormatClause.perRowCol] – Specifies how to format each cell individually using a [RowColFormatter].
+ * - [linearBg][FormatClause.linearBg] –
  *   Interpolates between two colors to set the background color of each numeric cell based on its value.
  *   Shorthand for `.`[`with`][FormatClause.with]`  {  `[`background`][FormattingDsl.background]`(`[`linear`][FormattingDsl.linear]`(it, from, to)) }`
- * - [`notNull`][FormatClause.notNull] – Specifies how to format non-null cells using a [CellFormatter].
+ * - [notNull][FormatClause.notNull] – Specifies how to format non-null cells using a [CellFormatter].
  *   Shorthand for `.`[`notNull()`][FormatClause.notNull]`.`[`with { }`][FormatClause.with].
  *
  * See [Grammar][FormatDocs.Grammar] for more details.

@@ -29,7 +29,7 @@ import java.time.LocalTime as JavaLocalTime
  *
  * The type parameter [T] (and [expectedType] — this type as [KType]) is the **storage-class type** of the column
  * — the actual class of
- * values returned by [`java.sql.ResultSet.getObject`][ResultSet.getObject] for that column.
+ * values returned by [java.sql.ResultSet.getObject][ResultSet.getObject] for that column.
  * Used as a result of [DbType.getExpectedJdbcType].
  * The Xerial SQLite JDBC driver's `getObject(int)` returns exactly one of the following, chosen
  * from the runtime storage class of the value (not the declared column type):
@@ -585,10 +585,10 @@ public class Sqlite(
         /**
          * Builds a [Sqlite] with custom type converters registered via a [SqliteCustomConvertersBuilder] DSL block.
          *
-         * * use [`forType`][SqliteCustomConvertersBuilder.forType] to register a converter
+         * * use [forType][SqliteCustomConvertersBuilder.forType] to register a converter
          * keyed by the declared SQL type name (as written in `CREATE TABLE`);
-         * * use [`forColumn`][SqliteCustomConvertersBuilder.forColumn] to register a converter keyed by column name
-         * (takes precedence over [`forType`][SqliteCustomConvertersBuilder.forType] for the named column).
+         * * use [forColumn][SqliteCustomConvertersBuilder.forColumn] to register a converter keyed by column name
+         * (takes precedence over [forType][SqliteCustomConvertersBuilder.forType] for the named column).
          *
          * Both DSL functions accept two generic type parameters:
          *  - `T` — the storage class of the raw stored value [String], [Int], [Long], [Double],

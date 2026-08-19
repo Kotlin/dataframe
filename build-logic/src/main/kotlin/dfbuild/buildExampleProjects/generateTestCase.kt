@@ -14,7 +14,7 @@ typealias Code = String
  *
  * This implementation of [dfbuild.buildExampleProjects.TestBuildingExampleProjects]
  * should be written into 'build/generated/testBuildingExamples' and included in the
- * 'testBuildingExamples' [`SourceSet`][org.gradle.api.tasks.SourceSet].
+ * 'testBuildingExamples' [SourceSet][org.gradle.api.tasks.SourceSet].
  */
 @Language("kt")
 fun generateTestCase(

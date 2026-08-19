@@ -58,10 +58,10 @@ import kotlin.reflect.KProperty
  * - [`minBy`][DataFrame.minBy]` { expression }` — the first row for which the given expression returns
  *   the minimum value.
  *
- * [`min`][DataFrame.min], [`minOf`][DataFrame.minOf], and [`minBy`][DataFrame.minBy] all have an `-OrNull`
+ * [min][DataFrame.min], [minOf][DataFrame.minOf], and [minBy][DataFrame.minBy] all have an `-OrNull`
  * counterpart which returns `null` instead of throwing an exception when there's nothing to compare.
  *
- * Mirror operation: [`max`][DataFrame.max].
+ * Mirror operation: [max][DataFrame.max].
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
  *
@@ -86,15 +86,15 @@ internal interface MinDocs : CommonMinMaxDocs {
 @ExcludeFromSources
 private typealias MinDocsLink = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`min`][min]} */
+/** {@set [SelectingColumns.OPERATION] [min][min]} */
 @ExcludeFromSources
 private typealias SetMinOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`minFor`][minFor]} */
+/** {@set [SelectingColumns.OPERATION] [minFor][minFor]} */
 @ExcludeFromSources
 private typealias SetMinForOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [`minOrNull`][minOrNull]} */
+/** {@set [SelectingColumns.OPERATION] [minOrNull][minOrNull]} */
 @ExcludeFromSources
 private typealias SetMinOrNullOperationArg = Nothing
 
@@ -110,10 +110,10 @@ private typealias SetMinOrNullOperationArg = Nothing
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
  * See also:
- * - [`minOrNull`][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`minOf`][DataColumn.minOf] — the minimum of the values a selector returns for each element.
- * - [`minBy`][DataColumn.minBy] — the element for which a selector returns the minimum value.
- * - [`max`][DataColumn.max] — the mirror operation.
+ * - [minOrNull][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [minOf][DataColumn.minOf] — the minimum of the values a selector returns for each element.
+ * - [minBy][DataColumn.minBy] — the element for which a selector returns the minimum value.
+ * - [max][DataColumn.max] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -141,12 +141,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
  * See also:
- * - [`min`][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
- * - [`minOfOrNull`][DataColumn.minOfOrNull] — the minimum of the values a selector returns
+ * - [min][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
+ * - [minOfOrNull][DataColumn.minOfOrNull] — the minimum of the values a selector returns
  *   for each element.
- * - [`minByOrNull`][DataColumn.minByOrNull] — the element for which a selector returns
+ * - [minByOrNull][DataColumn.minByOrNull] — the element for which a selector returns
  *   the minimum value.
- * - [`maxOrNull`][DataColumn.maxOrNull] — the mirror operation.
+ * - [maxOrNull][DataColumn.maxOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -172,12 +172,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][DataColumn.minOf], which returns the minimum [selector] value itself
+ * Don't confuse [minBy] with [minOf][DataColumn.minOf], which returns the minimum [selector] value itself
  * instead of the element it belongs to.
  *
  * See also:
- * - [`minByOrNull`][DataColumn.minByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`maxBy`][DataColumn.maxBy] — the mirror operation.
+ * - [minByOrNull][DataColumn.minByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [maxBy][DataColumn.maxBy] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -206,12 +206,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [minByOrNull] with [`minOfOrNull`][DataColumn.minOfOrNull], which returns the minimum
+ * Don't confuse [minByOrNull] with [minOfOrNull][DataColumn.minOfOrNull], which returns the minimum
  * [selector] value itself instead of the element it belongs to.
  *
  * See also:
- * - [`minBy`][DataColumn.minBy] — throws instead of returning `null` for a column with nothing to compare.
- * - [`maxByOrNull`][DataColumn.maxByOrNull] — the mirror operation.
+ * - [minBy][DataColumn.minBy] — throws instead of returning `null` for a column with nothing to compare.
+ * - [maxByOrNull][DataColumn.maxByOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -241,12 +241,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [minOf] with [`minBy`][DataColumn.minBy], which returns the element the minimum
+ * Don't confuse [minOf] with [minBy][DataColumn.minBy], which returns the element the minimum
  * [selector] value belongs to instead of that value.
  *
  * See also:
- * - [`minOfOrNull`][DataColumn.minOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [`maxOf`][DataColumn.maxOf] — the mirror operation.
+ * - [minOfOrNull][DataColumn.minOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [maxOf][DataColumn.maxOf] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -275,12 +275,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [minOfOrNull] with [`minByOrNull`][DataColumn.minByOrNull], which returns the element
+ * Don't confuse [minOfOrNull] with [minByOrNull][DataColumn.minByOrNull], which returns the element
  * the minimum [selector] value belongs to instead of that value.
  *
  * See also:
- * - [`minOf`][DataColumn.minOf] — throws instead of returning `null` for a column with nothing to compare.
- * - [`maxOfOrNull`][DataColumn.maxOfOrNull] — the mirror operation.
+ * - [minOf][DataColumn.minOf] — throws instead of returning `null` for a column with nothing to compare.
+ * - [maxOfOrNull][DataColumn.maxOfOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -324,9 +324,9 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
  * See also:
- * - [`rowMinOf`][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
- * - [`rowMaxOfOrNull`][DataRow.rowMaxOfOrNull] — the mirror operation.
- * - [`minOrNull`][DataFrame.minOrNull] — the minimum of the values in specific columns of a [DataFrame].
+ * - [rowMinOf][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [rowMaxOfOrNull][DataRow.rowMaxOfOrNull] — the mirror operation.
+ * - [minOrNull][DataFrame.minOrNull] — the minimum of the values in specific columns of a [DataFrame].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
@@ -355,10 +355,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
  * See also:
- * - [`rowMinOfOrNull`][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
+ * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
  *   when there's nothing to compare.
- * - [`rowMaxOf`][DataRow.rowMaxOf] — the mirror operation.
- * - [`min`][DataFrame.min] — the minimum of the values in specific columns of a [DataFrame].
+ * - [rowMaxOf][DataRow.rowMaxOf] — the mirror operation.
+ * - [min][DataFrame.min] — the minimum of the values in specific columns of a [DataFrame].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.RowStatistics]}
@@ -392,9 +392,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
  * See also:
- * - [`minFor`][DataFrame.minFor] — the same, but for an explicit selection of columns.
+ * - [minFor][DataFrame.minFor] — the same, but for an explicit selection of columns.
  * - [`min`][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [`max`][DataFrame.max] — the mirror operation.
+ * - [max][DataFrame.max] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -430,7 +430,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * See also:
  * - [`min`][DataFrame.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [`maxFor`][DataFrame.maxFor] — the mirror operation.
+ * - [maxFor][DataFrame.maxFor] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -469,7 +469,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * See also:
  * - [`min`][DataFrame.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [`maxFor`][DataFrame.maxFor] — the mirror operation.
+ * - [maxFor][DataFrame.maxFor] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -511,11 +511,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`minOrNull`][DataFrame.minOrNull] — returns `null` instead of throwing when there's
+ * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`minFor`][DataFrame.minFor] — the minimum of each selected column separately.
- * - [`minOf`][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
- * - [`max`][DataFrame.max] — the mirror operation.
+ * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [minOf][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
+ * - [max][DataFrame.max] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -549,11 +549,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`minOrNull`][DataFrame.minOrNull] — returns `null` instead of throwing when there's
+ * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`minFor`][DataFrame.minFor] — the minimum of each selected column separately.
- * - [`minOf`][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
- * - [`max`][DataFrame.max] — the mirror operation.
+ * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [minOf][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
+ * - [max][DataFrame.max] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -599,11 +599,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`min`][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
- * - [`minFor`][DataFrame.minFor] — the minimum of each selected column separately.
- * - [`minOfOrNull`][DataFrame.minOfOrNull] — the minimum of the values a row expression
+ * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
+ * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [minOfOrNull][DataFrame.minOfOrNull] — the minimum of the values a row expression
  *   returns for each row.
- * - [`maxOrNull`][DataFrame.maxOrNull] — the mirror operation.
+ * - [maxOrNull][DataFrame.maxOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -639,11 +639,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
  *
  * See also:
- * - [`min`][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
- * - [`minFor`][DataFrame.minFor] — the minimum of each selected column separately.
- * - [`minOfOrNull`][DataFrame.minOfOrNull] — the minimum of the values a row expression
+ * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
+ * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [minOfOrNull][DataFrame.minOfOrNull] — the minimum of the values a row expression
  *   returns for each row.
- * - [`maxOrNull`][DataFrame.maxOrNull] — the mirror operation.
+ * - [maxOrNull][DataFrame.maxOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -689,14 +689,14 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [minOf] with [`minBy`][DataFrame.minBy], which returns the row the minimum
+ * Don't confuse [minOf] with [minBy][DataFrame.minBy], which returns the row the minimum
  * [expression] value belongs to instead of that value.
  *
  * See also:
- * - [`minOfOrNull`][DataFrame.minOfOrNull] — returns `null` instead of throwing when there's
+ * - [minOfOrNull][DataFrame.minOfOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`min`][DataFrame.min] — a single minimum of all values in the selected columns.
- * - [`maxOf`][DataFrame.maxOf] — the mirror operation.
+ * - [min][DataFrame.min] — a single minimum of all values in the selected columns.
+ * - [maxOf][DataFrame.maxOf] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -727,13 +727,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [minOfOrNull] with [`minByOrNull`][DataFrame.minByOrNull], which returns the row the
+ * Don't confuse [minOfOrNull] with [minByOrNull][DataFrame.minByOrNull], which returns the row the
  * minimum [expression] value belongs to instead of that value.
  *
  * See also:
- * - [`minOf`][DataFrame.minOf] — throws instead of returning `null` when there's nothing to compare.
- * - [`minOrNull`][DataFrame.minOrNull] — a single minimum of all values in the selected columns.
- * - [`maxOfOrNull`][DataFrame.maxOfOrNull] — the mirror operation.
+ * - [minOf][DataFrame.minOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [minOrNull][DataFrame.minOrNull] — a single minimum of all values in the selected columns.
+ * - [maxOfOrNull][DataFrame.maxOfOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinMax]}
@@ -765,14 +765,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][DataFrame.minOf], which returns the minimum [expression] value
+ * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum [expression] value
  * itself instead of the row it belongs to.
  *
  * See also:
- * - [`minByOrNull`][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
+ * - [minByOrNull][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`maxBy`][DataFrame.maxBy] — the mirror operation.
- * - [`sortBy`][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
+ * - [maxBy][DataFrame.maxBy] — the mirror operation.
+ * - [sortBy][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -803,15 +803,15 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * {@include [MinDocs.ThrowsOnEmptySnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][DataFrame.minOf], which returns the minimum value a row
+ * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`minByOrNull`][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
+ * - [minByOrNull][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [`min`][DataFrame.min] — returns the smallest value itself instead of the row it belongs to.
- * - [`maxBy`][DataFrame.maxBy] — the mirror operation.
- * - [`sortBy`][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
+ * - [min][DataFrame.min] — returns the smallest value itself instead of the row it belongs to.
+ * - [maxBy][DataFrame.maxBy] — the mirror operation.
+ * - [sortBy][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -854,12 +854,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [minByOrNull] with [`minOfOrNull`][DataFrame.minOfOrNull], which returns the minimum
+ * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
  * [expression] value itself instead of the row it belongs to.
  *
  * See also:
- * - [`minBy`][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
- * - [`maxByOrNull`][DataFrame.maxByOrNull] — the mirror operation.
+ * - [minBy][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [maxByOrNull][DataFrame.maxByOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -888,14 +888,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  * {@include [MinDocs.NullOnEmptySnippet]}
  *
- * Don't confuse [minByOrNull] with [`minOfOrNull`][DataFrame.minOfOrNull], which returns the minimum
+ * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
  * value a row expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`minBy`][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
- * - [`minOrNull`][DataFrame.minOrNull] — returns the smallest value itself instead of
+ * - [minBy][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [minOrNull][DataFrame.minOrNull] — returns the smallest value itself instead of
  *   the row it belongs to.
- * - [`maxByOrNull`][DataFrame.maxByOrNull] — the mirror operation.
+ * - [maxByOrNull][DataFrame.maxByOrNull] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -946,11 +946,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
  * See also:
- * - [`minFor`][Grouped.minFor] — the same, but for an explicit selection of columns.
+ * - [minFor][Grouped.minFor] — the same, but for an explicit selection of columns.
  * - [`min`][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`max`][Grouped.max] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [max][Grouped.max] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -991,8 +991,8 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - [`min`][Grouped.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][Grouped.maxFor] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [maxFor][Grouped.maxFor] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1035,8 +1035,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * - [`min`][Grouped.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][Grouped.maxFor] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [maxFor][Grouped.maxFor] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1087,11 +1087,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * See [Selecting Columns][MinDocs.MinSelectingOptions].
  *
  * See also:
- * - [`minFor`][Grouped.minFor] — the minimum of each selected column separately, per group.
- * - [`minOf`][Grouped.minOf] — the minimum of the values a row expression returns
+ * - [minFor][Grouped.minFor] — the minimum of each selected column separately, per group.
+ * - [minOf][Grouped.minOf] — the minimum of the values a row expression returns
  *   for each row of a group.
- * - [`max`][Grouped.max] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [max][Grouped.max] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1137,11 +1137,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * See [Selecting Columns][MinDocs.MinSelectingOptions].
  *
  * See also:
- * - [`minFor`][Grouped.minFor] — the minimum of each selected column separately, per group.
- * - [`minOf`][Grouped.minOf] — the minimum of the values a row expression returns
+ * - [minFor][Grouped.minFor] — the minimum of each selected column separately, per group.
+ * - [minOf][Grouped.minOf] — the minimum of the values a row expression returns
  *   for each row of a group.
- * - [`max`][Grouped.max] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [max][Grouped.max] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1196,13 +1196,13 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [minOf] with [`minBy`][GroupBy.minBy], which returns the row of each group for which
+ * Don't confuse [minOf] with [minBy][GroupBy.minBy], which returns the row of each group for which
  * the expression returns the minimum value, instead of that value.
  *
  * See also:
- * - [`min`][Grouped.min] — a single minimum of all values in the selected columns, per group.
- * - [`maxOf`][Grouped.maxOf] — the mirror operation.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+ * - [min][Grouped.min] — a single minimum of all values in the selected columns, per group.
+ * - [maxOf][Grouped.maxOf] — the mirror operation.
+ * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
@@ -1239,11 +1239,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [minBy] with [`minOf`][Grouped.minOf], which returns the minimum value itself
+ * Don't confuse [minBy] with [minOf][Grouped.minOf], which returns the minimum value itself
  * instead of the row it belongs to.
  *
  * See also:
- * - [`maxBy`][GroupBy.maxBy] — the mirror operation.
+ * - [maxBy][GroupBy.maxBy] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -1282,12 +1282,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [minBy] with [`minOf`][Grouped.minOf], which returns the minimum value a row
+ * Don't confuse [minBy] with [minOf][Grouped.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [`min`][Grouped.min] — the minimum value itself instead of the row it belongs to.
- * - [`maxBy`][GroupBy.maxBy] — the mirror operation.
+ * - [min][Grouped.min] — the minimum value itself instead of the row it belongs to.
+ * - [maxBy][GroupBy.maxBy] — the mirror operation.
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.MinBy]}
@@ -1333,10 +1333,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
- * - [`minFor`][Pivot.minFor] — the same, but for an explicit selection of columns.
+ * - [minFor][Pivot.minFor] — the same, but for an explicit selection of columns.
  * - [`min`][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`max`][Pivot.max] — the mirror operation.
+ * - [max][Pivot.max] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1377,7 +1377,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [`min`][Pivot.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][Pivot.maxFor] — the mirror operation.
+ * - [maxFor][Pivot.maxFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1423,7 +1423,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - [`min`][Pivot.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][Pivot.maxFor] — the mirror operation.
+ * - [maxFor][Pivot.maxFor] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1480,8 +1480,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * See also:
  * - [`min`][Pivot.min]`()` — the minimum of each suitable column separately, per group.
- * - [`minFor`][Pivot.minFor] — the minimum of each selected column separately, per group.
- * - [`max`][Pivot.max] — the mirror operation.
+ * - [minFor][Pivot.minFor] — the minimum of each selected column separately, per group.
+ * - [max][Pivot.max] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1521,8 +1521,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * See also:
  * - [`min`][Pivot.min]`()` — the minimum of each suitable column separately, per group.
- * - [`minFor`][Pivot.minFor] — the minimum of each selected column separately, per group.
- * - [`max`][Pivot.max] — the mirror operation.
+ * - [minFor][Pivot.minFor] — the minimum of each selected column separately, per group.
+ * - [max][Pivot.max] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1570,7 +1570,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [minOf] with [`minBy`][Pivot.minBy], which returns the first row of each group for
+ * Don't confuse [minOf] with [minBy][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
@@ -1578,7 +1578,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * See also:
  * - [`min`][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxOf`][Pivot.maxOf] — the mirror operation.
+ * - [maxOf][Pivot.maxOf] — the mirror operation.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1612,13 +1612,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * {@include [MinDocs.ReducedPivotSnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][Pivot.minOf], which returns the minimum value the expression
+ * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value the expression
  * returns itself, instead of the row.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
- * - [`maxBy`][Pivot.maxBy] — the mirror operation.
+ * - [maxBy][Pivot.maxBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1657,14 +1657,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * {@include [MinDocs.ReducedPivotSnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][Pivot.minOf], which returns the minimum value a row expression
+ * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value a row expression
  * returns itself, instead of the row.
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
  * - [`min`][Pivot.min]` { columns }` — the minimum value itself, instead of the row.
- * - [`maxBy`][Pivot.maxBy] — the mirror operation.
+ * - [maxBy][Pivot.maxBy] — the mirror operation.
  * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
@@ -1711,10 +1711,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [`minFor`][PivotGroupBy.minFor] — the same, but for an explicit selection of columns.
+ * - [minFor][PivotGroupBy.minFor] — the same, but for an explicit selection of columns.
  * - [`min`][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`max`][PivotGroupBy.max] — the mirror operation.
+ * - [max][PivotGroupBy.max] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -1757,7 +1757,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * - [`min`][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][PivotGroupBy.maxFor] — the mirror operation.
+ * - [maxFor][PivotGroupBy.maxFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -1803,7 +1803,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * - [`min`][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
  * - [`min`][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxFor`][PivotGroupBy.maxFor] — the mirror operation.
+ * - [maxFor][PivotGroupBy.maxFor] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -1863,8 +1863,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * See also:
  * - [`min`][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
- * - [`minFor`][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
- * - [`max`][PivotGroupBy.max] — the mirror operation.
+ * - [minFor][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
+ * - [max][PivotGroupBy.max] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -1907,8 +1907,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * See also:
  * - [`min`][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
- * - [`minFor`][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
- * - [`max`][PivotGroupBy.max] — the mirror operation.
+ * - [minFor][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
+ * - [max][PivotGroupBy.max] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -1957,7 +1957,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * {@include [MinDocs.NullCellOnEmptySnippet]}
  *
- * Don't confuse [minOf] with [`minBy`][PivotGroupBy.minBy], which returns the first row of each group
+ * Don't confuse [minOf] with [minBy][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1965,7 +1965,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * See also:
  * - [`min`][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [`maxOf`][PivotGroupBy.maxOf] — the mirror operation.
+ * - [maxOf][PivotGroupBy.maxOf] — the mirror operation.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -2000,13 +2000,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * {@include [MinDocs.ReducedPivotGroupBySnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][PivotGroupBy.minOf], which returns the minimum value the
+ * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value the
  * expression returns itself, instead of the row.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [`maxBy`][PivotGroupBy.maxBy] — the mirror operation.
+ * - [maxBy][PivotGroupBy.maxBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
@@ -2046,14 +2046,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  * {@include [MinDocs.ReducedPivotGroupBySnippet]}
  *
- * Don't confuse [minBy] with [`minOf`][PivotGroupBy.minOf], which returns the minimum value a row
+ * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row.
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
  * - [`min`][PivotGroupBy.min]` { columns }` — the minimum value itself, instead of the row.
- * - [`maxBy`][PivotGroupBy.maxBy] — the mirror operation.
+ * - [maxBy][PivotGroupBy.maxBy] — the mirror operation.
  * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
  *   a [PivotGroupBy].
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
