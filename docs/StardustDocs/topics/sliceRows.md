@@ -1,6 +1,6 @@
 [//]: # (title: Slice rows)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SliceRowsSamples-->
 
 Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
@@ -10,20 +10,28 @@ Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 df[0, 3, 4]
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByIndices.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/getSeveralRowsByIndices.html" width="100%" height="500px"></inline-frame>
 
 Returns a [`DataFrame`](DataFrame.md) with rows inside given index ranges (including boundary indices):
 
-<!---FUN getSeveralRowsByRanges-->
+<!---FUN getSeveralRowsByRanges1-->
 
 ```kotlin
 df[1..2]
+```
+
+<!---END-->
+<inline-frame src="./resources/getSeveralRowsByRanges1.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN getSeveralRowsByRanges2-->
+
+```kotlin
 df[0..2, 4..5]
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getSeveralRowsByRanges.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/getSeveralRowsByRanges2.html" width="100%" height="500px"></inline-frame>
 
 ## take
 
@@ -35,8 +43,8 @@ Returns a [`DataFrame`](DataFrame.md) containing first `n` rows
 df.take(5)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.take.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/take.html" width="100%" height="500px"></inline-frame>
 
 ## takeLast
 
@@ -48,8 +56,8 @@ Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
 df.takeLast(5)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.takeLast.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/takeLast.html" width="100%" height="500px"></inline-frame>
 
 ## takeWhile
 
@@ -61,8 +69,8 @@ Returns a [`DataFrame`](DataFrame.md) containing first rows that satisfy the giv
 df.takeWhile { isHappy }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.takeWhile.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/takeWhile.html" width="100%" height="500px"></inline-frame>
 
 ## drop
 
@@ -74,22 +82,30 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except first `n` rows
 df.drop(5)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.drop.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/drop.html" width="100%" height="500px"></inline-frame>
 
 ## dropLast
 
 Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
 
-<!---FUN dropLast-->
+<!---FUN dropLast1-->
 
 ```kotlin
 df.dropLast() // default 1
+```
+
+<!---END-->
+<inline-frame src="./resources/dropLast1.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN dropLast2-->
+
+```kotlin
 df.dropLast(5)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropLast.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/dropLast2.html" width="100%" height="500px"></inline-frame>
 
 ## dropWhile
 
@@ -101,5 +117,5 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that
 df.dropWhile { !isHappy }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhile.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/dropWhile.html" width="100%" height="500px"></inline-frame>
