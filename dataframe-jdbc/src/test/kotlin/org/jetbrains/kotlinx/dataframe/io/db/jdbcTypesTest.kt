@@ -564,9 +564,7 @@ internal val sqliteTextAffinityMappings: List<TypeMapping> = listOf(
     TypeMapping("NVARCHAR", Types.VARCHAR, "java.lang.String", typeOf<String>()),
     TypeMapping("CHAR", Types.CHAR, "java.lang.String", typeOf<String>()),
     TypeMapping("NCHAR", Types.CHAR, "java.lang.String", typeOf<String>()),
-    // CLOB falls through to `defaultJdbcTypeToKTypeMapping[Types.CLOB]` (= java.sql.Clob),
-    // regardless of the reported javaClassName.
-    TypeMapping("CLOB", Types.CLOB, "java.lang.String", typeOf<java.sql.Clob>()),
+    TypeMapping("CLOB", Types.CLOB, "java.lang.String", typeOf<String>()),
 )
 
 /** BLOB affinity — declared BLOB storing binary bytes. */

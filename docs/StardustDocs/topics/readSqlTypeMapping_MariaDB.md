@@ -71,13 +71,13 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## JSON and UUID
 
-| Canonical  | Aliases | DataFrame column type | Notes                                                                                      |
-|------------|---------|-----------------------|--------------------------------------------------------------------------------------------|
-| `JSON`     | *none*  | `String`              | Physically stored as `LONGTEXT` in MariaDB; JDBC reports `LONGVARCHAR` → `String`.         |
-| `UUID`     | *none*  | `String`              | Available in MariaDB 10.7+. Read as text.                                                  |
-| `INET4`    | *none*  | `String`              | Available in MariaDB 10.10+.                                                               |
-| `INET6`    | *none*  | `String`              | Available in MariaDB 10.10+.                                                               |
-| `ROW(...)` | *none*  | *unsupported*         | Anonymous row types are not currently mapped; see [Unsupported types](#unsupported-types). |
+| Canonical  | Aliases | DataFrame column type | Notes                                                                                        |
+|------------|---------|-----------------------|----------------------------------------------------------------------------------------------|
+| `JSON`     | *none*  | `String`              | Physically stored as `LONGTEXT` in MariaDB; JDBC reports `LONGVARCHAR` → `String`.           |
+| `UUID`     | *none*  | `String`              | Available in MariaDB 10.7+. Read as text. Use [`parse`](parse.md) to get `kotlin.uuid.Uuid`. |
+| `INET4`    | *none*  | `String`              | Available in MariaDB 10.10+.                                                                 |
+| `INET6`    | *none*  | `String`              | Available in MariaDB 10.10+.                                                                 |
+| `ROW(...)` | *none*  | *unsupported*         | Anonymous row types are not currently mapped; see [Unsupported types](#unsupported-types).   |
 
 ## Spatial types
 
@@ -115,5 +115,4 @@ All spatial types are read as `ByteArray` (WKB / EWKB binary as reported by the 
   as `String`.
 - [`VECTOR`](https://mariadb.com/kb/en/vector-overview/) (MariaDB 11.7+); read as `ByteArray`
   (raw binary storage).
-- Native representations of spatial types; read as raw WKB `ByteArray`. Parse with a
-  client-side geometry library.
+- Native representations of spatial types; read as raw WKB `ByteArray`.

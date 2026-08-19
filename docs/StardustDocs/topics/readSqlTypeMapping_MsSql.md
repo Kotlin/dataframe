@@ -103,8 +103,6 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 - [`float(n)`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql)
   with `n <= 24` returns `Float`; `n >= 25` returns `Double`. `float` alone means `float(53)`
   and returns `Double`. `real` is `float(24)` and returns `Float`.
-- MS SQL Server does not need any DB-specific overrides in DataFrame — the default `DbType`
-  mapping is used as-is (see the "common SQL types" case in `JdbcTypesTest`).
 
 ## Unsupported types
 

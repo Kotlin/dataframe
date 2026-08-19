@@ -79,7 +79,6 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 ## Spatial types
 
 All spatial types are read as `ByteArray` (WKB / EWKB binary as reported by the driver).
-Parse them with a client-side geometry library.
 
 | Canonical            | Aliases | DataFrame column type | Notes |
 |----------------------|---------|-----------------------|-------|
@@ -106,13 +105,9 @@ Parse them with a client-side geometry library.
 - `TINYINT(1)` is a special case: MySQL Connector/J reports it as `Types.BIT` (→ `Boolean`) by
   default because of the driver's [`tinyInt1isBit`](https://dev.mysql.com/doc/connector-j/en/connector-j-connp-props-datatypes.html)
   property. Set `tinyInt1isBit=false` in the JDBC URL to read it as `Int` instead.
-- MySQL 8.0 does **not** have native `UUID` / `INET4` / `INET6` types (unlike MariaDB); use
-  `CHAR(36)` or `BINARY(16)` and convert client-side — see
-  [MySQL 8.0 Data Types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html).
 
 ## Unsupported types
 
-- Spatial types have no native Kotlin representation — read as raw WKB `ByteArray`. Parse
-  with a client-side geometry library.
+- Spatial types have no native Kotlin representation — read as raw WKB `ByteArray`.
 - [`VECTOR`](https://dev.mysql.com/doc/refman/9.0/en/vector.html) (MySQL 9.0+); the driver
   reports it as a binary type, so DataFrame reads it as `ByteArray`.
