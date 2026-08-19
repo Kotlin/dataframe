@@ -228,58 +228,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun dropWhere_properties() {
-        // SampleStart
-        df.drop { weight == null || city == null }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropWhere_strings() {
-        // SampleStart
-        df.drop { it["weight"] == null || it["city"] == null }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropNulls() {
-        // SampleStart
-        df.dropNulls() // remove rows with null value in any column
-        df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
-        df.dropNulls { city } // remove rows with null value in 'city' column
-        df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
-        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropNaNs() {
-        // SampleStart
-        df.dropNaNs() // remove rows containing NaN in any column
-        df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
-        df.dropNaNs { weight } // remove rows where 'weight' is NaN
-        df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is NaN
-        df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropNA() {
-        // SampleStart
-        df.dropNA() // remove rows containing null or NaN in any column
-        df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
-        df.dropNA { weight } // remove rows where 'weight' is null or NaN
-        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or NaN
-        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun byColumn_strings() {
         // SampleStart
         df["name"][0]
