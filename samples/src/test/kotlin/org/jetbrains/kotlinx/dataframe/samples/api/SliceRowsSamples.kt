@@ -119,9 +119,7 @@ class SliceRowsSamples : DataFrameSampleHelper("sliceRows", "api") {
     @Test
     fun dropWhile() {
         // SampleStart
-        df.dropWhile { !isHappy }
-        // SampleEnd
-        .saveDfHtmlSample()
+        df.dropWhile { isHappy }
             // SampleEnd
             .saveDfHtmlSample()
     }
