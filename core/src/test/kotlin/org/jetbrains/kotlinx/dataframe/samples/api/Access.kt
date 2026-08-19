@@ -218,77 +218,11 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getSeveralRowsByIndices() {
-        // SampleStart
-        df[0, 3, 4]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getSeveralRowsByRanges() {
-        // SampleStart
-        df[1..2]
-        df[0..2, 4..5]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getRowsColumns() {
         // SampleStart
         df.columns() // List<DataColumn>
         df.rows() // Iterable<DataRow>
         df.values() // Sequence<Any?>
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun take() {
-        // SampleStart
-        df.take(5)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun takeLast() {
-        // SampleStart
-        df.takeLast(5)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun takeWhile() {
-        // SampleStart
-        df.takeWhile { isHappy }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun drop() {
-        // SampleStart
-        df.drop(5)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropLast() {
-        // SampleStart
-        df.dropLast() // default 1
-        df.dropLast(5)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun dropWhile() {
-        // SampleStart
-        df.dropWhile { !isHappy }
         // SampleEnd
     }
 
