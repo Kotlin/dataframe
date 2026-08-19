@@ -305,6 +305,8 @@ public val NameNormalizer.Companion.default: NameNormalizer
  * A value class wrapper for [String], containing
  * generated Kotlin code of data schema declarations (markers) and optionally extension properties.
  *
+ * For more information: {@include [DocumentationUrls.DataSchemaGeneration]}
+ *
  * @see CodeString.print
  */
 @JvmInline

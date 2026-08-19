@@ -41,11 +41,7 @@ import kotlin.reflect.KProperty
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
- * For more information:
- *
- * @include [DocumentationUrls.Distinct]
- *
- * @include [DocumentationUrls.DistinctBy]
+ * For more information: {@include [DocumentationUrls.Distinct]} {@include [DocumentationUrls.DistinctBy]}
  *
  * @get [DISTINCT_PARAM]
  *
@@ -181,6 +177,8 @@ public interface DistinctColumnsSelectionDsl {
      *
      * This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
+     *
+     * For more information: {@include [DocumentationUrls.DistinctCols]}
      *
      * See also [Grammar], [named][ColumnsSelectionDsl.named], [simplify][ColumnsSelectionDsl.simplify].
      *

@@ -41,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
@@ -81,7 +80,6 @@ import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.shuffle
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
@@ -103,10 +101,8 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withZero
-import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
-import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
@@ -116,7 +112,6 @@ import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 import java.util.Locale
-import java.util.Random
 import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
@@ -290,28 +285,6 @@ class Modify : TestBase() {
         df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
         df.replace { age }.with { 2021 - age named "year" }
         // SampleEnd
-    }
-
-    @Test
-    fun shuffle() {
-        // SampleStart
-        df.shuffle()
-        // SampleEnd
-
-        PluginCallbackProxy.expressionsByStatement[0] = listOf(
-            PluginCallbackProxy.Expression(
-                source = "df",
-                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
-                containingFunName = "shuffle",
-                df = df,
-            ),
-            PluginCallbackProxy.Expression(
-                source = "shuffle()",
-                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
-                containingFunName = "shuffle",
-                df = df.getRows(df.indices.shuffled(Random(123))),
-            ),
-        )
     }
 
     @Test

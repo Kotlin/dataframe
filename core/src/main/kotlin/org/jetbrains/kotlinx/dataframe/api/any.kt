@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 
 // region DataColumn
 
@@ -13,6 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.values
  * Returns `true` if at least one element in this [DataColumn] satisfies the given [predicate].
  *
  * This is a convenience alias that delegates to [Iterable.any] on the column's [values].
+ *
+ * For more information: {@include [DocumentationUrls.Any]}
  *
  * @param predicate A lambda function that takes a value from the column
  * and returns `true` if it matches the condition.
@@ -31,6 +34,7 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
  * Returns `true` if at least one row in this [DataFrame] satisfies the given [predicate].
  *
  * {@include [org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowFilterSnippet]}
+ * {@include [DocumentationUrls.Any]}
  *
  * ### Example
  * ```kotlin

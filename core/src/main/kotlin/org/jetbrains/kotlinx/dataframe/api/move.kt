@@ -464,7 +464,7 @@ public fun <T, C> MoveClause<T, C>.into(
  * Moves the selected column, previously specified with [move],
  * to the top level of the [DataFrame] and assigns it a new name.
  *
- * For more information, see {@include [DocumentationUrls.Move]}.
+ * For more information: {@include [DocumentationUrls.Move]}
  *
  * ### Example:
  * ```kotlin

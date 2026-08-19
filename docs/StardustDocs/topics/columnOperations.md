@@ -5,3 +5,5 @@
 * [`asIterable`](asIterable.md) — returns values of [`DataColumn`](DataColumn.md) as [`Iterable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-iterable/)
 * [`asSequence`](asSequenceColumn.md) — returns values of [`DataColumn`](DataColumn.md) as [`Sequence`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/)
 * [`between`](between.md) — returns a Boolean [`DataColumn`](DataColumn.md) indicating whether each value lies between two bounds
+* [`first`](firstOnColumn.md) — Returns the first value in this [`DataColumn`](DataColumn.md)
+* [`last`](lastOnColumn.md) — Returns the last value in this [`DataColumn`](DataColumn.md)
