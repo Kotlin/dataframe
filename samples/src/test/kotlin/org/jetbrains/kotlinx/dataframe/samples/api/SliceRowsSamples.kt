@@ -13,6 +13,14 @@ class SliceRowsSamples : DataFrameSampleHelper("sliceRows", "api") {
     val df = peopleDf
 
     @Test
+    fun sliceRowsDf() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun getSeveralRowsByIndices() {
         // SampleStart
         df[0, 3, 4]
