@@ -189,11 +189,14 @@
             <toc-element topic="asIterable.md"/>
             <toc-element topic="asSequenceColumn.md" toc-title="asSequence"/>
             <toc-element topic="between.md"/>
+            <toc-element topic="firstOnColumn.md"/>
+            <toc-element topic="lastOnColumn.md"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="Utils.md">
             <toc-element topic="any.md"/>
             <toc-element topic="all.md"/>
+            <toc-element topic="none.md"/>
             <toc-element topic="chunked.md"/>
             <toc-element topic="shuffle.md"/>
         </toc-element>

@@ -16,6 +16,8 @@ of a [row expression](DataRow.md#row-expressions) calculated for the current and
 * `values(): List<Any?>` — list of all cell values from the current row;
 * `valuesOf<T>(): List<T>` — list of values of the given type ;
 * `columnsCount(): Int` — number of columns;
+* `count(): Int` — equivalent to `columnsCount()`;
+* `count(predicate): Int` — number of values in the row satisfying the given predicate;
 * `columnNames(): List<String>` — list of all column names;
 * `columnTypes(): List<KType>` — list of all column types;
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name 

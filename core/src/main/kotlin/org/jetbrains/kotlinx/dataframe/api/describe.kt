@@ -103,6 +103,8 @@ private typealias SetDescribeOperationArg = Nothing
  *
  * {@include [SummaryMetrics]}
  *
+ * For more information: {@include [DocumentationUrls.Describe]}
+ *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
  *         The output contains one row per described column with the summary metrics as columns.
  */
@@ -114,6 +116,8 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 
 /**
  * {@include [Describe]}
+ *
+ * For more information: {@include [DocumentationUrls.Describe]}
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
  *         The output contains one row per described column with the summary metrics as columns.

@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.splitDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.splitImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
@@ -163,6 +164,8 @@ internal inline fun <T, C, R> Split<T, C>.by(
  * ```
  * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in original column
  * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ *
+ * For more information: {@include [DocumentationUrls.Split]}
  */
 @Interpretable("MatchStringRegex")
 public fun <T, C : String?> Split<T, C>.match(
