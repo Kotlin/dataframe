@@ -108,8 +108,8 @@ DuckDB supports nested / composite types, which the DataFrame converter resolves
 - [Nested types](https://duckdb.org/docs/sql/data_types/overview#nested--composite-types)
   (`LIST`, `ARRAY`, `MAP`, `STRUCT`) are resolved recursively: `INTEGER[]` becomes
   `List<Int>`, `MAP(VARCHAR, INTEGER)` becomes `Map<String, Int>`, and so on.
-- [`STRUCT(...)`](https://duckdb.org/docs/sql/data_types/struct) becomes a **column group**
-  (`DataRow`); arrays of `STRUCT` become **frame columns** (`DataFrame`).
+- [`STRUCT(...)`](https://duckdb.org/docs/sql/data_types/struct) becomes a [**column group**](DataColumn.md#columngroup)
+  (`DataRow`); arrays of `STRUCT` become [**frame columns**](DataColumn.md#framecolumn) (`DataFrame`).
 - Reading a DuckDB [`JSON`](https://duckdb.org/docs/data/json/overview) column
   [parses](parse.md) the JSON text:
   - JSON array is read as `DataFrame` into the [frame column](DataColumn.md#framecolumn);
