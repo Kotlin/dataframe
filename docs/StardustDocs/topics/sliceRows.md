@@ -46,6 +46,17 @@ df.take(5)
 <!---END-->
 <inline-frame src="./resources/take.html" width="100%" height="500px"></inline-frame>
 
+If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) containing its first `n` values.
+
+<!---FUN takeDataColumn-->
+
+```kotlin
+df.age.take(5)
+```
+
+<!---END-->
+<inline-frame src="./resources/takeDataColumn.html" width="100%" height="500px"></inline-frame>
+
 ## takeLast
 
 Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
@@ -58,6 +69,17 @@ df.takeLast(5)
 
 <!---END-->
 <inline-frame src="./resources/takeLast.html" width="100%" height="500px"></inline-frame>
+
+If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) containing its last `n` values.
+
+<!---FUN takeLastDataColumn-->
+
+```kotlin
+df.age.takeLast(5)
+```
+
+<!---END-->
+<inline-frame src="./resources/takeLastDataColumn.html" width="100%" height="500px"></inline-frame>
 
 ## takeWhile
 
@@ -85,6 +107,18 @@ df.drop(5)
 <!---END-->
 <inline-frame src="./resources/drop.html" width="100%" height="500px"></inline-frame>
 
+If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) 
+containing all values of this [`DataColumn`](DataColumn.md) except the first `n` values.
+
+<!---FUN dropDataColumn-->
+
+```kotlin
+df.age.drop(5)
+```
+
+<!---END-->
+<inline-frame src="./resources/dropDataColumn.html" width="100%" height="500px"></inline-frame>
+
 ## dropLast
 
 Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
@@ -106,6 +140,18 @@ df.dropLast(5)
 
 <!---END-->
 <inline-frame src="./resources/dropLast2.html" width="100%" height="500px"></inline-frame>
+
+If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) 
+containing all values of this [`DataColumn`](DataColumn.md) except the last `n` values.
+
+<!---FUN dropLastDataColumn-->
+
+```kotlin
+df.age.dropLast(5)
+```
+
+<!---END-->
+<inline-frame src="./resources/dropLastDataColumn.html" width="100%" height="500px"></inline-frame>
 
 ## dropWhile
 

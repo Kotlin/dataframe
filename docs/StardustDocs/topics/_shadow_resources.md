@@ -358,3 +358,7 @@
 <resource src="dropLast1.html"></resource>
 <resource src="dropLast2.html"></resource>
 <resource src="dropWhile.html"></resource>
+<resource src="takeDataColumn.html"></resource>
+<resource src="takeLastDataColumn.html"></resource>
+<resource src="dropDataColumn.html"></resource>
+<resource src="dropLastDataColumn.html"></resource>
