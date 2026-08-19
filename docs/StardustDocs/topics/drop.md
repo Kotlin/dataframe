@@ -1,6 +1,18 @@
 [//]: # (title: drop / dropNulls / dropNaNs / dropNA)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DropNullsNansNa-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DropNullsNansNaSamples-->
+
+The examples on this page use the following dataframe:
+<!---FUN dropDf-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/dropDf.html" width="100%" height="500px"></inline-frame>
+
+## drop
 
 Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
 
@@ -27,6 +39,15 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 If called on a [`DataColumn`](DataColumn.md), removes all the values that match the predicate 
 and returns a [`DataColumn`](DataColumn.md) containing the values that do not match the predicate.
+
+<!---FUN dropDataColumnByPredicate-->
+
+```kotlin
+df.age.drop { it < 20 }
+```
+
+<!---END-->
+<inline-frame src="./resources/dropDataColumnByPredicate.html" width="100%" height="500px"></inline-frame>
 
 ## dropNulls
 
@@ -73,7 +94,7 @@ df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'we
 <!---FUN dropNullsWhereAllNullSelector-->
 
 ```kotlin
-df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+df.dropNulls(whereAllNull = true) { city and weight } // remove rows with nulls in both columns
 ```
 
 <!---END-->
@@ -81,6 +102,15 @@ df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null v
 
 If called on a [`DataColumn`](DataColumn.md), removes `null` values from this [`DataColumn`](DataColumn.md), 
 adjusting the type accordingly.
+
+<!---FUN dropNullsDataColumn-->
+
+```kotlin
+df.weight.dropNulls()
+```
+
+<!---END-->
+<inline-frame src="./resources/dropNullsDataColumn.html" width="100%" height="500px"></inline-frame>
 
 ## dropNaNs
 
@@ -136,6 +166,16 @@ df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'ag
 If called on a [`DataColumn`](DataColumn.md), removes [`NaN` values](nanAndNa.md#nan) from this [`DataColumn`](DataColumn.md),
 adjusting the type accordingly.
 
+<!---FUN dropNaNsDataColumn-->
+
+```kotlin
+val values by columnOf(1.0, Double.NaN, 2.0, Double.NaN)
+values.dropNaNs()
+```
+
+<!---END-->
+<inline-frame src="./resources/dropNaNsDataColumn.html" width="100%" height="500px"></inline-frame>
+
 ## dropNA
 
 Remove rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
@@ -189,3 +229,13 @@ df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' 
 
 If called on a [`DataColumn`](DataColumn.md), removes [`NA` values](nanAndNa.md#na) from this [`DataColumn`](DataColumn.md),
 adjusting the type accordingly.
+
+<!---FUN dropNADataColumn-->
+
+```kotlin
+val values by columnOf(1.0, null, Double.NaN, 2.0)
+values.dropNA()
+```
+
+<!---END-->
+<inline-frame src="./resources/dropNADataColumn.html" width="100%" height="500px"></inline-frame>
