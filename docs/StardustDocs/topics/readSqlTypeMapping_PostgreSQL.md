@@ -16,14 +16,14 @@ and driver caveats.
 
 The tables below list every PostgreSQL column type ([PostgreSQL Data Types](https://www.postgresql.org/docs/current/datatype.html))
 and the Kotlin type produced when the column is read into a DataFrame. Aliases are
-canonicalised by PostgreSQL at `CREATE TABLE` time, so DataFrame only ever sees the canonical
+canonicalized by PostgreSQL at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
 Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Numeric types
 
-| Canonical           | Aliases            | DataFrame type          | Notes                                                                                     |
+| Canonical           | Aliases            | DataFrame column type          | Notes                                                                                     |
 |---------------------|--------------------|-------------------------|-------------------------------------------------------------------------------------------|
 | `smallint`          | `int2`             | `Int`                   | 2-byte signed integer.                                                                    |
 | `integer`           | `int`, `int4`      | `Int`                   | 4-byte signed integer.                                                                    |
@@ -38,13 +38,13 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Boolean
 
-| Canonical | Aliases | DataFrame type | Notes |
+| Canonical | Aliases | DataFrame column type | Notes |
 |-----------|---------|----------------|-------|
 | `boolean` | `bool`  | `Boolean`      |       |
 
 ## Character types
 
-| Canonical            | Aliases                   | DataFrame type | Notes                          |
+| Canonical            | Aliases                   | DataFrame column type | Notes                          |
 |----------------------|---------------------------|----------------|--------------------------------|
 | `character(n)`       | `char(n)`                 | `String`       | Fixed-length text.             |
 | `character varying(n)` | `varchar(n)`            | `String`       | Variable-length text.          |
@@ -52,13 +52,13 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Binary
 
-| Canonical | Aliases | DataFrame type | Notes                                                                       |
+| Canonical | Aliases | DataFrame column type | Notes                                                                       |
 |-----------|---------|----------------|-----------------------------------------------------------------------------|
 | `bytea`   | *none*  | `ByteArray`    | Raw binary. Driver reports it as `[B` (`byte[]`).                           |
 
 ## Date and time types
 
-| Canonical                             | Aliases          | DataFrame type              | Notes                                                                     |
+| Canonical                             | Aliases          | DataFrame column type              | Notes                                                                     |
 |---------------------------------------|------------------|-----------------------------|---------------------------------------------------------------------------|
 | `date`                                | *none*           | `java.util.Date`            |                                                                           |
 | `time [without time zone] [(p)]`      | *none*           | `java.sql.Time`             | `p` is fractional-second precision (0–6).                                 |
@@ -71,7 +71,7 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wrapper.
 
-| Canonical | Aliases | DataFrame type                              | Notes            |
+| Canonical | Aliases | DataFrame column type                              | Notes            |
 |-----------|---------|---------------------------------------------|------------------|
 | `box`     | *none*  | `org.postgresql.geometric.PGbox`            | Rectangle        |
 | `circle`  | *none*  | `org.postgresql.geometric.PGcircle`         | Circle           |
@@ -83,14 +83,14 @@ Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wra
 
 ## Bit strings
 
-| Canonical         | Aliases   | DataFrame type | Notes                                                                    |
+| Canonical         | Aliases   | DataFrame column type | Notes                                                                    |
 |-------------------|-----------|----------------|--------------------------------------------------------------------------|
 | `bit(n)`          | *none*    | `String`       | Reported by the driver as `String` — `"0"` and `"1"` characters.         |
 | `bit varying(n)`  | `varbit`  | `String`       |                                                                          |
 
 ## UUID, XML, JSON
 
-| Canonical | Aliases | DataFrame type | Notes                                                                             |
+| Canonical | Aliases | DataFrame column type | Notes                                                                             |
 |-----------|---------|----------------|-----------------------------------------------------------------------------------|
 | `uuid`    | *none*  | `String`       | Read as text by default. Use a client-side parser to get `kotlin.uuid.Uuid`.      |
 | `xml`     | *none*  | `String`       |                                                                                   |
@@ -99,7 +99,7 @@ Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wra
 
 ## Network address types
 
-| Canonical    | Aliases | DataFrame type | Notes                                        |
+| Canonical    | Aliases | DataFrame column type | Notes                                        |
 |--------------|---------|----------------|----------------------------------------------|
 | `inet`       | *none*  | `String`       | IPv4 or IPv6 host / network.                 |
 | `cidr`       | *none*  | `String`       | IPv4 or IPv6 network.                        |
@@ -110,7 +110,7 @@ Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wra
 
 Range types are read as `String` (their canonical `[lo,hi)` text form). Parse client-side.
 
-| Canonical      | Aliases | DataFrame type | Notes                                                             |
+| Canonical      | Aliases | DataFrame column type | Notes                                                             |
 |----------------|---------|----------------|-------------------------------------------------------------------|
 | `int4range`    | *none*  | `String`       |                                                                   |
 | `int8range`    | *none*  | `String`       |                                                                   |
@@ -122,14 +122,14 @@ Range types are read as `String` (their canonical `[lo,hi)` text form). Parse cl
 
 ## Full-text search
 
-| Canonical  | Aliases | DataFrame type | Notes                          |
+| Canonical  | Aliases | DataFrame column type | Notes                          |
 |------------|---------|----------------|--------------------------------|
 | `tsvector` | *none*  | `String`       | Text search document.          |
 | `tsquery`  | *none*  | `String`       | Text search query.             |
 
 ## Object identifiers
 
-| Canonical          | Aliases | DataFrame type | Notes                                              |
+| Canonical          | Aliases | DataFrame column type | Notes                                              |
 |--------------------|---------|----------------|----------------------------------------------------|
 | `oid`              | *none*  | `Long`         | Underlying storage is 32-bit unsigned integer.     |
 | `regclass`         | *none*  | `String`       | Reported as text alias.                            |
@@ -137,7 +137,7 @@ Range types are read as `String` (their canonical `[lo,hi)` text form). Parse cl
 
 ## Other
 
-| Canonical            | Aliases   | DataFrame type          | Notes                                                                                                               |
+| Canonical            | Aliases   | DataFrame column type          | Notes                                                                                                               |
 |----------------------|-----------|-------------------------|---------------------------------------------------------------------------------------------------------------------|
 | `pg_lsn`             | *none*    | `String`                | Write-Ahead Log sequence number.                                                                                    |
 | `pg_snapshot`, `txid_snapshot` | *none* | `String`             | Snapshot info.                                                                                                      |
@@ -146,26 +146,31 @@ Range types are read as `String` (their canonical `[lo,hi)` text form). Parse cl
 
 ## PostgreSQL specifics
 
-- Type name lookup for PGobject types (`box`, `point`, `money`, ...) is
-  case-insensitive.
-- Composite (row) types like `ROW(a INTEGER, b VARCHAR(10))` are not mapped and read as raw
-  `String` (their canonical text form). See [Unsupported types](#unsupported-types).
-- User-defined `DOMAIN` types are transparent to the driver — the underlying primitive's
-  mapping applies.
-- Auto-incrementing `SERIAL` variants are `INTEGER` / `BIGINT` in the metadata; they are not
-  reported as a separate JDBC type.
+- Type name lookup for PGobject types (`box`, `point`, `money`, ...) is case-insensitive.
+- User-defined [`DOMAIN`](https://www.postgresql.org/docs/current/domains.html) types are
+  transparent at the JDBC layer — the underlying primitive's mapping applies.
+- Auto-incrementing [`SERIAL` variants](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)
+  are `INTEGER` / `BIGINT` in the metadata — the sequence is a server-side default, not a
+  separate JDBC type.
+- Composite / anonymous [`ROW(...)`](https://www.postgresql.org/docs/current/rowtypes.html)
+  values come through the driver as a `PGobject` with `Types.OTHER` and fall through to the
+  default handler → column type is `Any`. Cast to text in your query
+  (e.g. `SELECT (row_col)::text`) or supply a [custom converter](readSqlFromCustomDatabase.md).
 
 ## Unsupported types
 
 The following types are not currently mapped to a dedicated Kotlin type; they are read as
-`String` (default fallback) or as the driver's raw form. Explicit support may be added
-later; for now, either cast in your query (e.g. `SELECT ST_AsText(geom)` / `field::text`)
-or supply a custom converter via [a custom DbType](readSqlFromCustomDatabase.md).
+`Any` / `String` or as the driver's raw form. Explicit support may be added later; for now,
+cast in your query (e.g. `SELECT ST_AsText(geom)` / `field::text`) or supply a custom
+converter via [a custom DbType](readSqlFromCustomDatabase.md).
 
-- Composite (`ROW(...)`) and user-defined composite types.
-- Array types (`type[]`) — currently read as SQL `ARRAY` and post-processed to `Array<*>`,
-  but element types beyond the primitives listed here are not resolved.
-- `hstore` extension type.
-- PostGIS types (`geometry`, `geography`, ...) from the PostGIS extension.
-- Range / multi-range internal representation (read as text).
-- `bit(n)` / `bit varying(n)` (read as text).
+- Composite (`ROW(...)`) and user-defined composite types — driver returns `PGobject`,
+  DataFrame column type is `Any`.
+- Array types (`type[]`) — read as SQL `ARRAY` and post-processed to `Array<*>`; element
+  types beyond the primitives listed here are not resolved.
+- [`hstore`](https://www.postgresql.org/docs/current/hstore.html) extension — driver returns
+  a `Map<String, String>` wrapped in `PGobject`; column type is `Any`.
+- [PostGIS](https://postgis.net/documentation/) types (`geometry`, `geography`, ...) —
+  driver returns `PGobject`; column type is `Any`.
+- Range / multi-range internal representation — read as text.
+- `bit(n)` / `bit varying(n)` — driver returns the string form `"0"`/`"1"`.

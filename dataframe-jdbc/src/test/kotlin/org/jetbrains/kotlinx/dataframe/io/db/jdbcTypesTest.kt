@@ -38,13 +38,15 @@ import kotlinx.datetime.LocalDateTime as KotlinLocalDateTime
 import kotlinx.datetime.LocalTime as KotlinLocalTime
 
 /**
- * Tests for [DbType.getExpectedJdbcType] and related type-mapping logic.
+ * Non-integraion tests for [DbType.getExpectedJdbcType] and related type-mapping logic.
  *
- * For each DB type implemented in Kotlin Dataframe, checks mapping between the SQL type and the expected type
- * for a [org.jetbrains.kotlinx.dataframe.DataFrame] [column][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * For each DB type implemented in Kotlin Dataframe, checks mapping between the all of SQL types and their
+ * expected types for a [column][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  * Each DB owns a [TypeMapping] list that acts as the source of truth for its SQL → Kotlin type
  * mapping. The list is exercised for both nullable and non-nullable columns.
+ *
+ * Note that for all DBs (except SQLite), drivers report canonical name, erasing type aliases.
  */
 @RunWith(Enclosed::class)
 class JdbcTypesTest {
@@ -270,6 +272,32 @@ class JdbcTypesTest {
         }
 
         @Test
+        fun `unrecognised PGobject types fall back to Any`() {
+            // Composite / hstore / PostGIS types come through the driver as generic PGobject
+            // with Types.OTHER. Because they are not in PostgreSql's pgObjectTypes lookup
+            // table, the mapping falls through to the default DbType handler, which returns
+            // Any for Types.OTHER + non-`[B` javaClassName.
+            listOf(
+                // Anonymous composite / user-defined ROW.
+                "record",
+                // hstore extension.
+                "hstore",
+                // PostGIS types.
+                "geometry",
+                "geography",
+            ).forEach { typeName ->
+                PostgreSql.getExpectedJdbcType(
+                    createColumnMetadata(
+                        sqlTypeName = typeName,
+                        jdbcType = Types.OTHER,
+                        javaClassName = "org.postgresql.util.PGobject",
+                        isNullable = false,
+                    ),
+                ) shouldBe typeOf<Any>()
+            }
+        }
+
+        @Test
         fun `unknown jdbcType falls back to String`() {
             assertUnknownMapsToString(PostgreSql)
         }
@@ -315,10 +343,11 @@ class JdbcTypesTest {
 // -------------------- Type mapping model & helpers --------------------
 
 /**
- * A single row in the JDBC → Kotlin type mapping table.
+ * JDBC column metadata → Kotlin type mapping.
+ * Nullability is omitted ([expectedType] should be non-nullable).
  *
- * @property sqlTypeName the human-readable SQL type name (e.g. "BIGINT")
- * @property jdbcType a constant from [java.sql.Types]
+ * @property sqlTypeName the jdbc reported SQL type name (e.g. "BIGINT")
+ * @property jdbcType the jdbc reported SQL type constant from [java.sql.Types]
  * @property javaClassName the JDBC-reported class name for this column (as returned by
  *   [java.sql.ResultSetMetaData.getColumnClassName])
  * @property expectedType the expected non-nullable Kotlin type

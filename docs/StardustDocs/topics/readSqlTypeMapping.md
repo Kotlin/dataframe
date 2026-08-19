@@ -1,4 +1,4 @@
-[//]: # (title: SQL to DataFrame type mapping)
+[//]: # (title: SQL to DataFrame column type mapping)
 
 <web-summary>
 Overview of how SQL column types are mapped to Kotlin types when reading a DataFrame

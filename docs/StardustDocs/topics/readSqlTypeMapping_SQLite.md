@@ -63,7 +63,7 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 Declared type contains `INT`.
 
-| Declared type                                     | DataFrame type | Notes                                                                                     |
+| Declared type                                     | DataFrame column type | Notes                                                                                     |
 |---------------------------------------------------|----------------|-------------------------------------------------------------------------------------------|
 | `INT`                                             | `Int`          |                                                                                           |
 | `INTEGER`                                         | `Int`          | Also used implicitly for `INTEGER PRIMARY KEY` (rowid alias).                             |
@@ -76,7 +76,7 @@ Declared type contains `INT`.
 
 Declared type contains `REAL`, `FLOA`, or `DOUB`.
 
-| Declared type                       | DataFrame type | Notes                                                                                       |
+| Declared type                       | DataFrame column type | Notes                                                                                       |
 |-------------------------------------|----------------|---------------------------------------------------------------------------------------------|
 | `REAL`, `FLOAT`                     | `Double`       | Note: not `Float`. Driver reports `java.lang.Double` for the stored value, which triggers the `Types.REAL/FLOAT if java.lang.Double -> Double` override. |
 | `DOUBLE`, `DOUBLE PRECISION`        | `Double`       |                                                                                             |
@@ -85,7 +85,7 @@ Declared type contains `REAL`, `FLOA`, or `DOUB`.
 
 Declared type contains `CHAR`, `CLOB`, or `TEXT`.
 
-| Declared type                       | DataFrame type   | Notes                                                                                    |
+| Declared type                       | DataFrame column type   | Notes                                                                                    |
 |-------------------------------------|------------------|------------------------------------------------------------------------------------------|
 | `TEXT`, `VARCHAR(n)`, `NVARCHAR(n)` | `String`         |                                                                                          |
 | `CHAR(n)`, `NCHAR(n)`               | `String`         |                                                                                          |
@@ -96,7 +96,7 @@ Declared type contains `CHAR`, `CLOB`, or `TEXT`.
 
 Declared type contains `BLOB` or the column has no declared type.
 
-| Declared type | DataFrame type | Notes                                              |
+| Declared type | DataFrame column type | Notes                                              |
 |---------------|----------------|----------------------------------------------------|
 | `BLOB`        | `ByteArray`    |                                                    |
 | *(none)*      | `ByteArray`    | Column with no declared type falls back to BLOB.   |
@@ -108,7 +108,7 @@ Declared type contains `BLOB` or the column has no declared type.
 The DataFrame column type is an idiomatic Kotlin date-time type; each row's value is
 converted from its storage class during preprocessing.
 
-| Declared type          | DataFrame type                       | Storage class → conversion                                                                                    |
+| Declared type          | DataFrame column type                       | Storage class → conversion                                                                                    |
 |------------------------|--------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | `DATE`                 | `kotlinx.datetime.LocalDate`         | TEXT (ISO `YYYY-MM-DD`) → `LocalDate.parse`; INTEGER → date at Unix-seconds UTC; REAL → date at Julian day. |
 | `DATETIME`             | `kotlinx.datetime.LocalDateTime`     | TEXT (`YYYY-MM-DD HH:MM:SS` or `YYYY-MM-DDTHH:MM:SS`) → `LocalDateTime.parse`; INTEGER → date-time at Unix-seconds UTC; REAL → date-time at Julian day. |
@@ -134,7 +134,7 @@ val sqlite = Sqlite.withCustomConverters {
 
 ### BOOLEAN — INTEGER 0/1 converted to Boolean
 
-| Declared type    | Storage class     | DataFrame type | Notes                                                                                                                              |
+| Declared type    | Storage class     | DataFrame column type | Notes                                                                                                                              |
 |------------------|-------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------|
 | `BOOLEAN`, `BIT` | INTEGER (0/1)     | `Boolean`      | The preprocessor treats non-zero as `true`, zero as `false`.                                                                        |
 | `BOOLEAN`, `BIT` | REAL              | `Boolean`      | Same convention (non-zero → `true`).                                                                                                |
@@ -147,7 +147,7 @@ val sqlite = Sqlite.withCustomConverters {
 `DECIMAL` and `NUMERIC` columns have no canonical numeric type; DataFrame reads the raw stored
 value as-is (`Int`, `Long`, or `Double` depending on how each row was inserted).
 
-| Declared type    | Storage class | DataFrame type          | Notes                                            |
+| Declared type    | Storage class | DataFrame column type          | Notes                                            |
 |------------------|---------------|-------------------------|--------------------------------------------------|
 | `NUMERIC`        | INTEGER       | `Int` / `Long`          | Follows the actual value's class.                |
 | `NUMERIC`        | REAL          | `Double`                |                                                  |
@@ -207,12 +207,13 @@ val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
 
 ## SQLite specifics
 
-- **No canonicalisation** — the driver preserves the declared type verbatim in
-  `sqlTypeName`. Two columns declared `INTEGER` and `TINYINT` both have INTEGER affinity but
-  distinct `sqlTypeName` values in metadata.
-- **Xerial's `rs.getObject(int)` returns exactly one of `Integer` / `Long` / `Double` /
-  `String` / `byte[]` / `null`.** No `Timestamp` / `LocalDate` / `Boolean` / `Blob` ever
-  reaches DataFrame from a SQLite driver — hence the SQLite adapter needs to translate.
+- **No canonicalisation** — the [Xerial JDBC driver](https://github.com/xerial/sqlite-jdbc)
+  preserves the declared type verbatim in `sqlTypeName`. Two columns declared `INTEGER` and
+  `TINYINT` both have INTEGER affinity but distinct `sqlTypeName` values in metadata.
+- **`rs.getObject(int)` returns exactly one of `Integer` / `Long` / `Double` / `String` /
+  `byte[]` / `null`.** No `Timestamp` / `LocalDate` / `Boolean` / `Blob` ever reaches
+  DataFrame from a SQLite driver — hence the SQLite adapter needs to translate. See
+  Xerial's [datatype mapping](https://github.com/xerial/sqlite-jdbc/wiki#datatype-mapping).
 - **`DATE` / `DATETIME` / `TIME` / `TIMESTAMP` are converted from storage class to an idiomatic
   Kotlin date-time type.** ISO strings, Unix epoch integers, and Julian days are all normalised
   to `kotlinx.datetime.LocalDate` / `LocalDateTime` / `LocalTime` / `kotlin.time.Instant` in

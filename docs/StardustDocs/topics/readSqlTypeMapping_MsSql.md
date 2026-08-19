@@ -23,7 +23,7 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Exact numeric types
 
-| Canonical           | Aliases                | DataFrame type          | Notes                                                                                     |
+| Canonical           | Aliases                | DataFrame column type          | Notes                                                                                     |
 |---------------------|------------------------|-------------------------|-------------------------------------------------------------------------------------------|
 | `bit`               | *none*                 | `Boolean`               | Single-bit integer (`0`/`1`/`NULL`).                                                      |
 | `tinyint`           | *none*                 | `Int`                   | 1-byte **unsigned** integer (`0..255`) — unusual: SQL Server's `tinyint` is unsigned.     |
@@ -36,14 +36,14 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Approximate numeric types
 
-| Canonical             | Aliases                            | DataFrame type | Notes                                                    |
+| Canonical             | Aliases                            | DataFrame column type | Notes                                                    |
 |-----------------------|------------------------------------|----------------|----------------------------------------------------------|
 | `float(n)`            | `double precision` (n = 53)        | `Double`       | Default `n = 53`. `float(1..24)` maps to `Float`.        |
 | `real`                | *(alias)* `float(24)`              | `Float`        | Explicit 4-byte float; equivalent to `float(24)`.        |
 
 ## Date and time types
 
-| Canonical               | Aliases | DataFrame type              | Notes                                                                     |
+| Canonical               | Aliases | DataFrame column type              | Notes                                                                     |
 |-------------------------|---------|-----------------------------|---------------------------------------------------------------------------|
 | `date`                  | *none*  | `java.util.Date`            | Date only (`0001-01-01 .. 9999-12-31`).                                   |
 | `time(n)`               | *none*  | `java.sql.Time`             | Time only with fractional-second precision (0–7).                         |
@@ -54,7 +54,7 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Character strings
 
-| Canonical             | Aliases                                   | DataFrame type | Notes                                                              |
+| Canonical             | Aliases                                   | DataFrame column type | Notes                                                              |
 |-----------------------|-------------------------------------------|----------------|--------------------------------------------------------------------|
 | `char(n)`             | `character(n)`                            | `String`       | Fixed-length non-Unicode text (max `n = 8000`).                    |
 | `varchar(n | max)`    | `character varying(n)`                    | `String`       | Variable-length non-Unicode text.                                  |
@@ -65,7 +65,7 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Binary strings
 
-| Canonical             | Aliases                          | DataFrame type | Notes                                              |
+| Canonical             | Aliases                          | DataFrame column type | Notes                                              |
 |-----------------------|----------------------------------|----------------|----------------------------------------------------|
 | `binary(n)`           | *none*                           | `ByteArray`    | Fixed-length binary (max `n = 8000`).              |
 | `varbinary(n | max)`  | `binary varying(n)`              | `ByteArray`    | Variable-length binary.                            |
@@ -73,41 +73,47 @@ Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
 
 ## Row-version and identity
 
-| Canonical         | Aliases       | DataFrame type | Notes                                                                                                     |
+| Canonical         | Aliases       | DataFrame column type | Notes                                                                                                     |
 |-------------------|---------------|----------------|-----------------------------------------------------------------------------------------------------------|
 | `rowversion`      | `timestamp`   | `ByteArray`    | 8-byte row-version. **Note:** SQL Server's `timestamp` is *not* a date/time type. Use `datetime2` instead. |
 | `uniqueidentifier`| *none*        | `String`       | 16-byte GUID, read as its 36-character string form.                                                       |
 
 ## Other types
 
-| Canonical      | Aliases | DataFrame type    | Notes                                                                                              |
-|----------------|---------|-------------------|----------------------------------------------------------------------------------------------------|
-| `xml`          | *none*  | `String`          | XML document text.                                                                                 |
-| `sql_variant`  | *none*  | `Any`             | Column holds a value of any base type; driver returns as generic `Object`.                         |
-| `hierarchyid`  | *none*  | `ByteArray`       | Hierarchical position (raw binary).                                                                |
-| `geometry`     | *none*  | `ByteArray`       | Planar spatial (WKB / EWKB).                                                                       |
-| `geography`    | *none*  | `ByteArray`       | Geodetic spatial (WKB / EWKB).                                                                     |
+| Canonical     | Aliases | DataFrame column type | Notes                                                                      |
+|---------------|---------|-----------------------|----------------------------------------------------------------------------|
+| `xml`         | *none*  | `String`              | XML document text.                                                         |
+| `sql_variant` | *none*  | `Any`                 | Column holds a value of any base type; driver returns as generic `Object`. |
+| `hierarchyid` | *none*  | `ByteArray`           | Hierarchical position (raw binary).                                        |
+| `geometry`    | *none*  | `ByteArray`           | Planar spatial (WKB / EWKB).                                               |
+| `geography`   | *none*  | `ByteArray`           | Geodetic spatial (WKB / EWKB).                                             |
 
 ## MS SQL Server specifics
 
-- Unlike most databases, SQL Server's `tinyint` is **unsigned** (`0..255`), not signed.
-- The keyword `TIMESTAMP` in T-SQL is a synonym for `rowversion` (a row-version stamp), **not**
-  a date/time type. Use `datetime2` for wall-clock timestamps.
-- `text`, `ntext`, and `image` are deprecated; SQL Server documentation recommends
-  `varchar(max)` / `nvarchar(max)` / `varbinary(max)` respectively.
-- `float(n)` with `n <= 24` returns `Float`; `n >= 25` returns `Double`. `float` alone means
-  `float(53)` and returns `Double`. `real` is `float(24)` and returns `Float`.
+- Unlike most databases, SQL Server's [`tinyint`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/int-bigint-smallint-and-tinyint-transact-sql)
+  is **unsigned** (`0..255`), not signed.
+- The keyword `TIMESTAMP` in T-SQL is a synonym for
+  [`rowversion`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/rowversion-transact-sql)
+  (a row-version stamp), **not** a date/time type. Use
+  [`datetime2`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime2-transact-sql)
+  for wall-clock timestamps.
+- [`text`, `ntext`, and `image`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/ntext-text-and-image-transact-sql)
+  are deprecated; SQL Server documentation recommends `varchar(max)` / `nvarchar(max)` /
+  `varbinary(max)` respectively.
+- [`float(n)`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql)
+  with `n <= 24` returns `Float`; `n >= 25` returns `Double`. `float` alone means `float(53)`
+  and returns `Double`. `real` is `float(24)` and returns `Float`.
 - MS SQL Server does not need any DB-specific overrides in DataFrame — the default `DbType`
-  mapping is used as-is.
+  mapping is used as-is (see the "common SQL types" case in `JdbcTypesTest`).
 
 ## Unsupported types
 
-Types below are read as best effort (usually `ByteArray` or `String`). Explicit typed
-support may be added later; for now, cast in your query (`geom.STAsText()`,
-`CAST(v AS NVARCHAR)`) or supply a custom converter via
-[a custom DbType](readSqlFromCustomDatabase.md).
-
-- `geometry`, `geography` (read as raw WKB `ByteArray`).
-- `hierarchyid` (read as raw `ByteArray`).
-- `sql_variant` (read as generic `Any`).
-- `cursor` and `table` types cannot be columns; they only occur as procedure parameters.
+- [`geometry`, `geography`](https://learn.microsoft.com/en-us/sql/t-sql/spatial-geometry/spatial-types-geometry-transact-sql);
+  read as raw WKB `ByteArray`.
+- [`hierarchyid`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/hierarchyid-data-type-method-reference);
+  read as raw `ByteArray`.
+- [`sql_variant`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/sql-variant-transact-sql);
+  read as generic `Any`.
+- [`cursor`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/cursor-transact-sql) and
+  [`table`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/table-transact-sql) types
+  cannot be columns; they only occur as procedure parameters.
