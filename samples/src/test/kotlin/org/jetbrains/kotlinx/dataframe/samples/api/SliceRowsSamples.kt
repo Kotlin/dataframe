@@ -9,14 +9,14 @@ import org.jetbrains.kotlinx.dataframe.api.takeWhile
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
-class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
+class SliceRowsSamples : DataFrameSampleHelper("sliceRows", "api") {
     val df = peopleDf
 
     @Test
     fun getSeveralRowsByIndices() {
         // SampleStart
         df[0, 3, 4]
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -24,7 +24,7 @@ class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
     fun getSeveralRowsByRanges1() {
         // SampleStart
         df[1..2]
-        // SampleEnd
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -32,15 +32,23 @@ class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
     fun getSeveralRowsByRanges2() {
         // SampleStart
         df[0..2, 4..5]
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test
     fun take() {
         // SampleStart
         df.take(5)
-        // SampleEnd
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun takeDataColumn() {
+        // SampleStart
+        df.age.take(5)
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -48,23 +56,39 @@ class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
     fun takeLast() {
         // SampleStart
         df.takeLast(5)
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun takeLastDataColumn() {
+        // SampleStart
+        df.age.takeLast(5)
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test
     fun takeWhile() {
         // SampleStart
         df.takeWhile { isHappy }
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test
     fun drop() {
         // SampleStart
         df.drop(5)
-        // SampleEnd
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun dropDataColumn() {
+        // SampleStart
+        df.age.drop(5)
+            // SampleEnd
             .saveDfHtmlSample()
     }
 
@@ -72,8 +96,8 @@ class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
     fun dropLast1() {
         // SampleStart
         df.dropLast() // default 1
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test
@@ -85,10 +109,20 @@ class SliceRowsSamples: DataFrameSampleHelper("sliceRows", "api") {
     }
 
     @Test
+    fun dropLastDataColumn() {
+        // SampleStart
+        df.age.dropLast(5)
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun dropWhile() {
         // SampleStart
         df.dropWhile { !isHappy }
         // SampleEnd
         .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 }
