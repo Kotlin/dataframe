@@ -46,6 +46,8 @@ public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T>
  *
  * If [n] is greater than or equal to the size of this [DataColumn], an empty [DataColumn] is returned.
  *
+ * For more information: {@include [DocumentationUrls.DropFirst]}
+ *
  * See also:
  * - [dropLast][DataColumn.dropLast] — drops the last [n] values instead.
  * - [take][DataColumn.take] — keeps only the first [n] values.
@@ -68,6 +70,8 @@ public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
  * Returns a [DataColumn] containing all values of this [DataColumn] except the last [n] values.
  *
  * If [n] is zero or negative, this [DataColumn] is returned as is.
+ *
+ * For more information: {@include [DocumentationUrls.DropLast]}
  *
  * See also:
  * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values instead.
