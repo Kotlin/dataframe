@@ -67,6 +67,8 @@ public interface ColumnDescription {
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
+ * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
+ *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
  *         The output contains one row per described column with the summary metrics as columns.
  */
@@ -107,6 +109,8 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  * For non-numeric columns, statistical metrics
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
+ *
+ * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
  *         The output contains one row per described column with the summary metrics as columns.

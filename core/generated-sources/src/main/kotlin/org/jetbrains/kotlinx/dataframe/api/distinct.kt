@@ -43,11 +43,7 @@ import kotlin.reflect.KProperty
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
- * For more information:
- *
- * [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html)
- *
- * [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
  *
  * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] containing only distinct rows.
  */
@@ -68,11 +64,7 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
- * For more information:
- *
- * [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html)
- *
- * [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
  *
  * @param [columns] The [ColumnsSelector] used to select columns
  * that will be included in the resulting [DataFrame] and considered for evaluating distinct rows.
@@ -105,11 +97,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
- * For more information:
- *
- * [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html)
- *
- * [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
  *
  * @param [columns] The names of the columns to select
  * and to consider for evaluating distinct rows.
@@ -143,11 +131,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
- * For more information:
- *
- * [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html)
- *
- * [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
  *
  * @param [columns]
  * The names of the columns to consider for evaluating distinct rows.
@@ -177,11 +161,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): Data
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
- * For more information:
- *
- * [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html)
- *
- * [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
+ * For more information: [See `distinct` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html) [See `distinctBy` on the documentation website.](https://kotlin.github.io/dataframe/distinct.html#distinctby)
  *
  * @param [columns] The [ColumnsSelector] used to select columns
  * that will be considered for evaluating distinct rows.
@@ -254,6 +234,8 @@ public interface DistinctColumnsSelectionDsl {
      *
      * This doesn't solve [DuplicateColumnNamesException] if you've selected two columns with the same name.
      * For this, you'll need to [rename][ColumnsSelectionDsl.named] one of the columns.
+     *
+     * For more information: [See `distinct` in the Columns Selection DSL on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#distinct)
      *
      * See also [Grammar], [named][ColumnsSelectionDsl.named], [simplify][ColumnsSelectionDsl.simplify].
      *

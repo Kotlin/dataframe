@@ -84,7 +84,7 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -142,7 +142,7 @@ public fun <A, B> DataFrame<A>.joinWith(
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -196,7 +196,7 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -250,7 +250,7 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -304,7 +304,7 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -358,7 +358,7 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin
@@ -412,7 +412,7 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinWith.html).
+ * For more information, [See `joinWith` on the documentation website.](https://kotlin.github.io/dataframe/joinwith.html).
  *
  * ### Examples
  * ```kotlin

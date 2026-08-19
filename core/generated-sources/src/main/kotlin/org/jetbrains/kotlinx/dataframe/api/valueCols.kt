@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -120,6 +121,8 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -155,6 +158,8 @@ public interface ValueColsColumnsSelectionDsl {
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *
@@ -194,6 +199,8 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -229,6 +236,8 @@ public interface ValueColsColumnsSelectionDsl {
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *
@@ -266,6 +275,8 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -300,6 +311,8 @@ public interface ValueColsColumnsSelectionDsl {
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *
@@ -339,6 +352,8 @@ public interface ValueColsColumnsSelectionDsl {
      * [valueCols][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.valueCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar]
      *

@@ -71,7 +71,7 @@ import kotlin.reflect.KProperty
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `join` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -87,6 +87,8 @@ import kotlin.reflect.KProperty
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -161,7 +163,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `join` overload
  *
@@ -208,7 +210,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `innerJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -224,6 +226,8 @@ public fun <A, B> DataFrame<A>.join(
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -273,7 +277,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `innerJoin` overload
  *
@@ -316,7 +320,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `leftJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -332,6 +336,8 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -381,7 +387,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `leftJoin` overload
  *
@@ -424,7 +430,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `rightJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -440,6 +446,8 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -489,7 +497,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `rightJoin` overload
  *
@@ -532,7 +540,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `fullJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -548,6 +556,8 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -597,7 +607,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `fullJoin` overload
  *
@@ -640,7 +650,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `filterJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -656,6 +666,8 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -705,7 +717,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `filterJoin` overload
  *
@@ -748,7 +760,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `excludeJoin` overload
  * Select join columns (including those that have different names in different [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]s)
@@ -764,6 +776,8 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * and [match][org.jetbrains.kotlinx.dataframe.api.JoinDsl.match] to explicitly pair columns with different names.
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### Examples
  * ```kotlin
@@ -813,7 +827,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
- * For more information, [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html).
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * ### This `excludeJoin` overload
  *
@@ -837,6 +851,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, vararg columns: 
  *
  * Sequentially applies the [join] operation to each [DataFrame] in order.
  * Returns `null` if the iterable is empty.
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  *
  * @param [joinType] [JoinType] defining how rows are matched and combined.
  * @param [selector] optional [JoinColumnsSelector] specifying key columns.
@@ -863,6 +879,8 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
  *
  * See also [Columns selection via DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
+ *
  * ### Examples
  * ```kotlin
  * // Join by two columns with the same names in both dataframes
@@ -881,6 +899,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     /**
      * Provides access to columns of the right [DataFrame]
      * for further matching with left columns [match].
+     *
+     * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
      */
     public val right: DataFrame<B>
 
@@ -888,6 +908,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      *
      * The receiver column must belong to the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
      * and the argument ([other]) column must belong to the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     *
+     * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
      *
      * @receiver column from the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @param [other] column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -900,6 +922,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      * The receiver column must belong to the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
      * and the argument ([other]) column must belong to the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
+     * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
+     *
      * @receiver column from the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @param [other] column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @return [ColumnMatch][org.jetbrains.kotlinx.dataframe.api.ColumnMatch] representing the column pair used for joining. */
@@ -910,6 +934,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      * The receiver column must belong to the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
      * and the argument ([other]) column must belong to the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
+     * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
+     *
      * @receiver column from the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @param [other] column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @return [ColumnMatch][org.jetbrains.kotlinx.dataframe.api.ColumnMatch] representing the column pair used for joining. */
@@ -919,6 +945,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
      *
      * The receiver column must belong to the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame],
      * and the argument ([other]) column must belong to the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     *
+     * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
      *
      * @receiver column from the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
      * @param [other] column from the right [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -977,6 +1005,8 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
 /**
  * A special [ColumnSet] that specifies a [column match][JoinDsl.match] for the [join] operation.
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  */
 public interface ColumnMatch<C> : ColumnSet<C> {
     public val left: ColumnReference<C>
@@ -1034,6 +1064,8 @@ public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>)
  * right-side columns are not merged.
  * * [JoinType.Exclude][org.jetbrains.kotlinx.dataframe.api.JoinType.Exclude] — Includes only rows from the left [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] that do *not* have a match in the right one;
  * right-side columns are not merged.
+ *
+ * For more information: [See `join` on the documentation website.](https://kotlin.github.io/dataframe/join.html)
  */
 public enum class JoinType {
 
