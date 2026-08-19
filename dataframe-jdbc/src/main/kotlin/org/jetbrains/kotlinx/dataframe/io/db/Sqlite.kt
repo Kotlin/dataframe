@@ -357,6 +357,11 @@ public class Sqlite(
             Types.DECIMAL, Types.NUMERIC -> return jdbcToDfConverterFor<Any>(expectedKType)
         }
 
+        // 5) CLOB — stored as String.
+        if ("CLOB" in declaredUpper) {
+            return jdbcToDfConverterFor<String?>(expectedKType)
+        }
+
         // 5) Fallback — delegate to the base [DbType] end-to-end pipeline.
         return fallbackConverter(tableColumnMetadata)
     }
