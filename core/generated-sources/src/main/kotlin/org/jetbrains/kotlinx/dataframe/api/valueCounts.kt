@@ -50,7 +50,8 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  *
  * The resulting [DataFrame] contains:
  * - the column with the distinct values of the original [DataColumn]
- * - a new [Int] column ([resultColumn]) with the number of occurrences of each value.
+ * - a new [Int] column with the number of occurrences of each value.
+ * This column is called `"count"` by default unless it is overridden by [resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent value first),
  * and [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted.
@@ -130,7 +131,8 @@ public fun <T> DataColumn<T>.valueCounts(
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
  * - the distinct combinations of these values,
- * - a new [Int] column (named [resultColumn], default is `"count"`) with the number of occurrences of each combination.
+ * - a new [Int] column with the number of occurrences of each combination.
+ * This column is called `"count"` by default unless it is overridden by [resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
  * and a row is not counted at all if any of its selected values is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
@@ -222,7 +224,8 @@ public fun <T> DataFrame<T>.valueCounts(
  *
  * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
  * - the distinct combinations of these values,
- * - a new [Int] column (named [resultColumn], default is `"count"`) with the number of occurrences of each combination.
+ * - a new [Int] column with the number of occurrences of each combination.
+ * This column is called `"count"` by default unless it is overridden by [resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
  * and a row is not counted at all if any of its selected values is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
