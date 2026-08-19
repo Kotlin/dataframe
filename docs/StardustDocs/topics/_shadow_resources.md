@@ -379,3 +379,4 @@
 <resource src="dropNADataColumn.html"></resource>
 <resource src="dropDataColumnByPredicate.html"></resource>
 <resource src="dropDf.html"></resource>
+<resource src="sliceRowsDf.html"></resource>

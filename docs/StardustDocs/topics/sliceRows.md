@@ -4,6 +4,15 @@
 
 Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
+<!---FUN sliceRowsDf-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/sliceRowsDf.html" width="100%" height="500px"></inline-frame>
+
 <!---FUN getSeveralRowsByIndices-->
 
 ```kotlin
