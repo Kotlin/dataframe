@@ -957,7 +957,7 @@ public fun <T, C> MoveClause<T, C>.into(
  * Moves the selected column, previously specified with [move],
  * to the top level of the [DataFrame] and assigns it a new name.
  *
- * For more information, see [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html).
+ * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### Example:
  * ```kotlin

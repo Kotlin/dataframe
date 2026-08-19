@@ -32,6 +32,8 @@ import kotlin.reflect.KProperty
 /**
  * Returns a new [DataColumn] containing only the elements that match the given [predicate].
  *
+ * For more information: [See `filter` on the documentation website.](https://kotlin.github.io/dataframe/filter.html#filter-on-a-datacolumn)
+ *
  * @param predicate the condition used to filter the elements in the DataColumn.
  * @return a new DataColumn containing elements that satisfy the predicate.
  */
@@ -176,6 +178,8 @@ public interface FilterColumnsSelectionDsl {
      *
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
      * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
+     *
+     * For more information: [See `filter` in the Columns Selection DSL on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#filter)
      *
      * ### Check out: [Grammar]
      *

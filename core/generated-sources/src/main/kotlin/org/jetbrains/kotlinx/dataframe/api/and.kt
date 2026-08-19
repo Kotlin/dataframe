@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -118,6 +119,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -156,6 +159,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -191,6 +196,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -224,6 +231,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -256,6 +265,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -287,6 +298,8 @@ public interface AndColumnsSelectionDsl {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
@@ -327,6 +340,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -362,6 +377,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -393,6 +410,8 @@ public interface AndColumnsSelectionDsl {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
@@ -426,6 +445,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -457,6 +478,8 @@ public interface AndColumnsSelectionDsl {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
@@ -497,6 +520,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -532,6 +557,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -565,6 +592,8 @@ public interface AndColumnsSelectionDsl {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
@@ -601,6 +630,8 @@ public interface AndColumnsSelectionDsl {
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -634,6 +665,8 @@ public interface AndColumnsSelectionDsl {
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
      * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     *
+     * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *

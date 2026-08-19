@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -159,6 +160,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -263,6 +266,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -369,6 +374,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -473,6 +480,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -579,6 +588,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -683,6 +694,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -790,6 +803,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -896,6 +911,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -1000,6 +1017,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -1110,6 +1129,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -1216,6 +1237,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -1320,6 +1343,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -1426,6 +1451,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -1531,6 +1558,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -1641,6 +1670,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -1764,6 +1795,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -1869,6 +1902,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -1976,6 +2011,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -2086,6 +2123,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -2201,6 +2240,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -2306,6 +2347,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -2414,6 +2457,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -2519,6 +2564,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -2642,6 +2689,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -2747,6 +2796,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -2855,6 +2906,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -2960,6 +3013,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -3086,6 +3141,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -3192,6 +3249,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -3302,6 +3361,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -3408,6 +3469,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -3518,6 +3581,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -3624,6 +3689,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -3733,6 +3800,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -3856,6 +3925,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -3961,6 +4032,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4068,6 +4141,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4179,6 +4254,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4302,6 +4379,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -4407,6 +4486,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4514,6 +4595,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4624,6 +4707,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -4750,6 +4835,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -4857,6 +4944,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -4963,6 +5052,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -5074,6 +5165,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -5197,6 +5290,8 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
@@ -5302,6 +5397,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
@@ -5409,6 +5506,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * For more information: [See (All) (Cols) Except on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-except)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
      *
