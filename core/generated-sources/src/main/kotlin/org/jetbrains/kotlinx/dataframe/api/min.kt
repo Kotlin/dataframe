@@ -46,6 +46,8 @@ import kotlin.reflect.KProperty
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -199,6 +201,8 @@ internal interface MinDocs : CommonMinMaxDocs {
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -231,7 +235,7 @@ internal interface MinDocs : CommonMinMaxDocs {
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -246,6 +250,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -280,7 +286,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -295,6 +301,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -327,7 +335,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -346,6 +354,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -379,7 +389,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the minimum value,
  *   or `null` if there are no values to compare.
@@ -398,6 +408,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -430,7 +442,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The minimum of the values [selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -449,6 +461,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -482,7 +496,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The minimum of the values [selector] returns,
  *   or `null` if there are no values to compare.
@@ -515,6 +529,8 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -545,7 +561,7 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value of type [T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -562,6 +578,8 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -594,7 +612,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value of type [T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -616,6 +634,8 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -650,7 +670,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A single [DataRow] with the minimum of each suitable column of this [DataFrame].
  */
 @Refine
@@ -666,6 +686,8 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -685,8 +707,8 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [`into`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [`default`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -714,7 +736,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return A single [DataRow] with the minimum of each selected column.
@@ -734,6 +756,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -774,7 +798,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A single [DataRow] with the minimum of each selected column.
  */
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -802,6 +826,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -867,7 +893,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns.
@@ -886,6 +912,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -937,7 +965,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -967,6 +995,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1033,7 +1063,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns,
@@ -1053,6 +1083,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1105,7 +1137,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -1144,6 +1176,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1177,7 +1211,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The minimum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -1204,6 +1238,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1238,7 +1274,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The minimum of the values [expression] returns,
  *   or `null` if there are no values to compare.
@@ -1265,6 +1301,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1301,7 +1339,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -1320,6 +1358,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1356,7 +1396,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The first [DataRow] with the smallest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -1395,6 +1435,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1426,7 +1468,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the minimum value,
  *   or `null` if there are no values to compare.
@@ -1445,6 +1487,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1480,7 +1524,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return The first [DataRow] with the smallest value in the given column,
  *   or `null` if there are no values to compare.
  */
@@ -1520,6 +1564,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1555,7 +1601,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A new [DataFrame] with the group keys and the minimum of each suitable column per group.
  */
 @Refine
@@ -1576,6 +1622,8 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1594,8 +1642,8 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [`into`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [`default`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -1624,7 +1672,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
@@ -1648,6 +1696,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1691,7 +1741,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
  */
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -1725,6 +1775,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1771,7 +1823,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
@@ -1797,6 +1849,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -1844,7 +1898,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
 public fun <T> Grouped<T>.min(
@@ -1890,6 +1944,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1927,7 +1983,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
@@ -1966,6 +2022,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -1992,7 +2050,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to compute the value to compare for each row.
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   for which [rowExpression] returns the minimum value.
@@ -2029,6 +2087,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -2057,7 +2117,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   that has the smallest value in the given column.
  */
@@ -2089,6 +2149,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2132,7 +2194,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A single [DataRow] with the minimum of each suitable column per [pivot] group.
  */
 public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -2150,6 +2212,8 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2169,8 +2233,8 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [`into`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [`default`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -2206,7 +2270,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
@@ -2229,6 +2293,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2277,7 +2343,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
  */
 public fun <T> Pivot<T>.minFor(
@@ -2314,6 +2380,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2355,7 +2423,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
  *   in the selected columns.
@@ -2377,6 +2445,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2419,7 +2489,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -2461,6 +2531,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -2500,7 +2572,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A single [DataRow] with, per [pivot] group, the minimum of the expression's results.
  */
@@ -2526,6 +2598,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2562,7 +2636,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivot] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
@@ -2588,6 +2662,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2626,7 +2702,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [ReducedPivot] holding, per group, the first row with the smallest value
  *   in the given column.
  */
@@ -2658,6 +2734,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2702,7 +2780,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [DataFrame] with the minimum of each suitable column per group.
  */
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -2720,6 +2798,8 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2739,8 +2819,8 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [`into`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [`default`][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -2776,7 +2856,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A [DataFrame] with the minimum of each selected column per group.
@@ -2799,6 +2879,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2849,7 +2931,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [DataFrame] with the minimum of each selected column per group.
  */
 public fun <T> PivotGroupBy<T>.minFor(
@@ -2887,6 +2969,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2930,7 +3014,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
@@ -2953,6 +3037,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -2997,7 +3083,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -3039,6 +3125,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
  *
  * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
@@ -3079,7 +3167,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the minimum of the expression's results.
  */
@@ -3105,6 +3193,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -3142,7 +3232,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
@@ -3168,6 +3258,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
+ *
+ *
  *
  * `null` values in the input are always ignored.
  *
@@ -3207,7 +3299,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ *   This only has an effect on [Double] and [Float] values.
  * @return A [ReducedPivotGroupBy] holding, per group, the first row with the smallest value
  *   in the given column.
  */
