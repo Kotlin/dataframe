@@ -286,22 +286,13 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
         ?.let { valueCol ->
-            // check that value in this column is not null only when other values are null
             if (valueCol.kind() != ColumnKind.Value) {
                 null
             } else {
-                // check that value in this column is not null only when other values are null
+                // Check that no other column contains data when this frame represents scalar values.
                 val isValidValueColumn = rows().all { row ->
-                    if (valueCol[row] != null) {
-                        allColumns.all { col ->
-                            if (col.name != valueCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
+                    allColumns.all { col ->
+                        col.name == valueCol.name || col[row] == null
                     }
                 }
                 if (isValidValueColumn) {
