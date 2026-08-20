@@ -512,6 +512,85 @@ class JsonTests {
     }
 
     @Test
+    fun `serialize multi-column frame with all-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize multi-column frame with partially-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", 1, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":1,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize generated scalar value column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},1,2,3]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..3]
+
+        scalarRows.toJson() shouldBe "[1,2,3]"
+    }
+
+    @Test
+    fun `serialize generated all-null scalar value column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},0,null,null]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[2..3]
+
+        scalarRows.toJson() shouldBe "[null,null]"
+    }
+
+    @Test
+    fun `serialize value1 columns according to their structure`() {
+        val businessFrame = dataFrameOf("time", "value", "value1")(
+            "2026-01-01", "business value", null,
+            "2026-01-02", "business value", null,
+        )
+
+        @Language("json")
+        val expectedBusinessJson =
+            """
+            [
+                {"time":"2026-01-01","value":"business value","value1":null},
+                {"time":"2026-01-02","value":"business value","value1":null}
+            ]
+            """.trimIndent()
+        Json.parseToJsonElement(businessFrame.toJson()) shouldBe Json.parseToJsonElement(expectedBusinessJson)
+
+        @Language("json")
+        val mixedJson = """[{"value":"record"},1,null]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..2]
+        scalarRows.toJson() shouldBe "[1,null]"
+    }
+
+    @Test
     fun `literal json field named 'value'`() {
         @Language("json")
         val json =
