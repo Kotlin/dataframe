@@ -70,9 +70,10 @@ import kotlin.reflect.typeOf
  * For more information: {@include [DocumentationUrls.Sum]}
  *
  * For more information about [unifying numbers][UnifyingNumbers]:
- * {@include [DocumentationUrls.NumberUnification]}
+ * @include [DocumentationUrls.NumberUnification]
  *
- * See all summary statistics: {@include [DocumentationUrls.Statistics]}
+ * See all summary statistics:
+ * @include [DocumentationUrls.Statistics]
  */
 internal interface SumDocs : CommonStatisticsDocs {
 
@@ -87,12 +88,13 @@ internal interface SumDocs : CommonStatisticsDocs {
      * Big numbers ([`BigInteger`][java.math.BigInteger], [`BigDecimal`][java.math.BigDecimal]) are not
      * supported; [`convert`][DataFrame.convert] them to a primitive number type first.
      *
-     * {@include [CommonStatisticsDocs.NullAndNaNHandlingSnippet]}
+     * @include [CommonStatisticsDocs.NullAndNaNHandlingSnippet]
      *
      * The result is never `null` and has the same type as the input, except for [Byte] and [Short],
      * which sum to [Int], and "mixed" [Number] input, which sums to the common type of its values.
      *
-     * For more information about the resulting types: {@include [DocumentationUrls.Sum.TypeConversion]}
+     * For more information about the resulting types:
+     * @include [DocumentationUrls.Sum.TypeConversion]
      */
     @ExcludeFromSources
     typealias SupportedTypesSnippet = Nothing
@@ -113,7 +115,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      * (for instance, because the input was empty or contained only `null` values)
      * simply become `0` in the result type (defaulting to [Double] if there is no number type to speak of).
      *
-     * For more information about the resulting types: {@include [DocumentationUrls.Sum.TypeConversion]}
+     * For more information about the resulting types:
+     * @include [DocumentationUrls.Sum.TypeConversion]
      */
     @ExcludeFromSources
     typealias ZeroCellOnEmptySnippet = Nothing
@@ -139,7 +142,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      * - [`cumSum`][DataColumn.cumSum] — the running sum of the values in this column.
      * - {@include [SumDocsLink]} — an overview of all `sum` modes.
      *
-     * For more information: {@include [DocumentationUrls.Sum]}
+     * For more information:
+     * @include [DocumentationUrls.Sum]
      *
      * ### Example
      */
@@ -158,7 +162,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      * - [`meanOf`][DataColumn.meanOf] — the sum of those values divided by the number of values.
      * - {@include [SumDocsLink]} — an overview of all `sum` modes.
      *
-     * For more information: {@include [DocumentationUrls.Sum]}
+     * For more information:
+     * @include [DocumentationUrls.Sum]
      *
      * ### Example
      * $[EXAMPLE]
@@ -175,38 +180,39 @@ internal interface SumDocs : CommonStatisticsDocs {
     /**
      * {@comment The parts all [DataRow.rowSumOf] overloads have in common. KDoc-snippet.}
      *
-     * {@include [SumDocs.SupportedTypesSnippet]}
+     * @include [SumDocs.SupportedTypesSnippet]
      *
-     * {@include [SumDocs.ZeroOnEmptySnippet]}
+     * @include [SumDocs.ZeroOnEmptySnippet]
      *
      * See also:
      * - [`rowSum`][DataRow.rowSum] — the sum of all the numbers in this row, of any number type.
      * - [`sum`][DataFrame.sum] — the sum of the values in specific columns of a [DataFrame].
      * - {@include [SumDocsLink]} — an overview of all `sum` modes.
      *
-     * For more information: {@include [DocumentationUrls.RowStatistics]}
+     * For more information:
+     * @include [DocumentationUrls.RowStatistics]
+     *
+     * ### Example
      */
     @ExcludeFromSources
     typealias RowSumOfSnippet = Nothing
 
     /**
-     * {@comment The shared `T` parameter documentation of the reified [DataRow.rowSumOf] overloads.
-     *    KDoc-snippet.}
+     * {@comment [RowSumOfSnippet] plus the parameters that all reified [DataRow.rowSumOf] overloads
+     *    have in common. KDoc-snippet.}
      *
+     * @include [SumDocs.RowSumOfSnippet]
+     * $[EXAMPLE]
      * @param [T\] The type of the values to sum. Only columns of this type are taken into account.
-     */
-    @ExcludeFromSources
-    typealias RowSumOfTypeParam = Nothing
-
-    /**
-     * {@comment The shared `_kClass` parameter documentation of the reified [DataRow.rowSumOf] overloads.
-     *    KDoc-snippet.}
-     *
      * @param [_kClass\] Technical parameter to distinguish this overload from the others;
      *   you never need to supply it.
      */
     @ExcludeFromSources
-    typealias RowSumOfKClassParam = Nothing
+    interface ReifiedRowSumOfSnippet {
+
+        // The example to render for this rowSumOf overload
+        typealias EXAMPLE = Nothing
+    }
 }
 
 /** [The Sum Operation][SumDocs] */
@@ -371,16 +377,12 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  * Only the values in the columns of type [Short] (or `Short?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Short` values in the first row, as an `Int`
  * df[0].rowSumOf<Short>()
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Short] values in this row, as an [Int].
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -394,16 +396,12 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  * Only the values in the columns of type [Byte] (or `Byte?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Byte` values in the first row, as an `Int`
  * df[0].rowSumOf<Byte>()
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Byte] values in this row, as an [Int].
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -417,16 +415,12 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  * Only the values in the columns of type [Int] (or `Int?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Int` values ("age" and "weight") in the first row
  * df[0].rowSumOf<Int>()
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Int] values in this row.
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -440,16 +434,12 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  * Only the values in the columns of type [Long] (or `Long?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Long` values in the first row
  * df[0].rowSumOf<Long>()
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Long] values in this row.
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -463,17 +453,13 @@ public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> =
  * Only the values in the columns of type [Float] (or `Float?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Float` values in the first row, ignoring `NaN` values
  * df[0].rowSumOf<Float>(skipNaN = true)
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
  * @include [SumDocs.SkipNanParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Float] values in this row.
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -489,17 +475,13 @@ public inline fun <reified T : Float> DataRow<*>.rowSumOf(
  * Only the values in the columns of type [Double] (or `Double?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Double` values in the first row, ignoring `NaN` values
  * df[0].rowSumOf<Double>(skipNaN = true)
  * ```
- *
- * @include [SumDocs.RowSumOfTypeParam]
  * @include [SumDocs.SkipNanParam]
- * @include [SumDocs.RowSumOfKClassParam]
  * @return The sum of the [Double] values in this row.
  */
 @Suppress("FINAL_UPPER_BOUND")
@@ -520,14 +502,11 @@ public inline fun <reified T : Double> DataRow<*>.rowSumOf(
  * This overload takes the type as a [KType] argument; prefer the `reified` overloads, like
  * [`rowSumOf`][DataRow.rowSumOf]`<`[`Int`][Int]`>()`, whenever the type is known at compile time.
  *
- * {@include [SumDocs.RowSumOfSnippet]}
- *
- * ### Example
+ * @include [SumDocs.RowSumOfSnippet]
  * ```kotlin
  * // The sum of all `Int` values ("age" and "weight") in the first row
  * df[0].rowSumOf(typeOf<Int>())
  * ```
- *
  * @param [type] The type of the values to sum. Only columns of this type are taken into account.
  * @include [SumDocs.SkipNanParam]
  * @return The sum of the values of the given [type] in this row.
