@@ -55,6 +55,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.impl.io.extractArrayColumn
+import org.jetbrains.kotlinx.dataframe.impl.io.extractValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
@@ -559,6 +561,15 @@ class JsonTests {
     }
 
     @Test
+    fun `recognize generated value column in mixed json`() {
+        @Language("json")
+        val mixedJson = """[1,{"label":"record"},null]"""
+        val df = DataFrame.readJsonStr(mixedJson)
+
+        df.extractValueColumn() shouldBe df["value"]
+    }
+
+    @Test
     fun `serialize generated all-null scalar value column`() {
         @Language("json")
         val mixedJson = """[{"label":"record"},0,null,null]"""
@@ -588,6 +599,61 @@ class JsonTests {
         val mixedJson = """[{"value":"record"},1,null]"""
         val scalarRows = DataFrame.readJsonStr(mixedJson)[1..2]
         scalarRows.toJson() shouldBe "[1,null]"
+    }
+
+    @Test
+    fun `serialize multi-column frame with all-null array column`() {
+        val df = dataFrameOf("time", "array", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","array":null,"is_forecast_row":true},
+                {"time":"2026-01-02","array":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+
+        val array1Frame = dataFrameOf("time", "array", "array1")(
+            "2026-01-01", listOf(1), null,
+            "2026-01-02", listOf(2), null,
+        )
+
+        @Language("json")
+        val expectedArray1Json =
+            """
+            [
+                {"time":"2026-01-01","array":[1],"array1":null},
+                {"time":"2026-01-02","array":[2],"array1":null}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(array1Frame.toJson()) shouldBe Json.parseToJsonElement(expectedArray1Json)
+    }
+
+    @Test
+    fun `recognize non-null array1 column`() {
+        val df = dataFrameOf("array", "array1")(
+            null, listOf(1),
+            null, listOf(2),
+        )
+
+        df.extractArrayColumn() shouldBe df["array1"]
+    }
+
+    @Test
+    fun `serialize all-null array column without other data`() {
+        val df = dataFrameOf("array", "placeholder")(
+            null, null,
+            null, null,
+        )
+
+        df.toJson() shouldBe "[null,null]"
     }
 
     @Test

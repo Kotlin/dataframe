@@ -289,10 +289,14 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
             if (valueCol.kind() != ColumnKind.Value) {
                 null
             } else {
-                // Check that no other column contains data when this frame represents scalar values.
+                val hasNonNullValues = rows().any { valueCol[it] != null }
                 val isValidValueColumn = rows().all { row ->
-                    allColumns.all { col ->
-                        col.name == valueCol.name || col[row] == null
+                    if (valueCol[row] != null || !hasNonNullValues) {
+                        allColumns.all { col ->
+                            col.name == valueCol.name || col[row] == null
+                        }
+                    } else {
+                        true
                     }
                 }
                 if (isValidValueColumn) {
@@ -320,15 +324,11 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
             if (arrayCol.kind() == ColumnKind.Group) {
                 null
             } else {
-                // check that value in this column is not null only when other values are null
+                val hasNonNullValues = rows().any { arrayCol[it] != null }
                 val isValidArrayColumn = rows().all { row ->
-                    if (arrayCol[row] != null) {
+                    if (arrayCol[row] != null || !hasNonNullValues) {
                         allColumns.all { col ->
-                            if (col.name != arrayCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
+                            col.name == arrayCol.name || col[row] == null
                         }
                     } else {
                         true
