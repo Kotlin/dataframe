@@ -127,7 +127,6 @@ class MatchSchemeTests {
 
     @Test
     fun `simple data schema comparison`() {
-
         val scheme1 = dataFrameOf(
             "a" to columnOf(1, 2, 3, null),
             "b" to columnOf(1.0, 2.0, 3.0, 4.0),

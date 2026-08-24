@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.schema.plus
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
-
         require(other is DataFrameSchemaImpl)
         if (this === other) return Matches
 
