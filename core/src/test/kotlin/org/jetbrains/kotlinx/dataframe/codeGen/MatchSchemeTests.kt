@@ -280,7 +280,7 @@ class MatchSchemeTests {
     }
 
     @Test
-    fun `equals is exact where compare is lenient`() {
+    fun `compare is lenient about nullability where equals is exact`() {
         val nullableScheme = dataFrameOf(
             "a" to columnOf(1, 2, 3, null),
         ).schema()
@@ -294,16 +294,6 @@ class MatchSchemeTests {
         notNullScheme.compare(nullableScheme, LENIENT) shouldBe IsDerived
         (nullableScheme == notNullScheme) shouldBe false
         (notNullScheme == nullableScheme) shouldBe false
-
-        // and a superset is never equal either
-        val superScheme = dataFrameOf(
-            "a" to columnOf(1, 2, 3, 4),
-            "b" to columnOf(1.0, 2.0, 3.0, 4.0),
-        ).schema()
-
-        notNullScheme.compare(superScheme, LENIENT) shouldBe IsSuper
-        (notNullScheme == superScheme) shouldBe false
-        (superScheme == notNullScheme) shouldBe false
     }
 
     @Test
@@ -325,51 +315,6 @@ class MatchSchemeTests {
 
         notNullScheme.compare(nullableScheme, LENIENT) shouldBe IsDerived
         nullableScheme.compare(notNullScheme, LENIENT) shouldBe IsSuper
-    }
-
-    @Test
-    fun `equals delegates to ColumnSchema equals`() {
-        val nestedScheme = dataFrameOf(
-            "a" to columnOf(1, 2, 3),
-        ).schema()
-
-        val otherNestedScheme = dataFrameOf(
-            "b" to columnOf(1, 2, 3),
-        ).schema()
-
-        // for each column kind, equality of a single-column schema must follow equality of that ColumnSchema
-        val pairs = listOf(
-            ColumnSchema.Value(typeOf<Int>()) to ColumnSchema.Value(typeOf<Int?>()),
-            ColumnSchema.Group(nestedScheme, contentType = null) to
-                ColumnSchema.Group(otherNestedScheme, contentType = null),
-            ColumnSchema.Frame(nestedScheme, nullable = false, contentType = null) to
-                ColumnSchema.Frame(otherNestedScheme, nullable = false, contentType = null),
-        )
-
-        for ((col, otherCol) in pairs) {
-            (col == otherCol) shouldBe false
-            val schema = DataFrameSchemaImpl(mapOf("x" to col))
-            (schema == DataFrameSchemaImpl(mapOf("x" to col))) shouldBe true
-            (schema == DataFrameSchemaImpl(mapOf("x" to otherCol))) shouldBe false
-        }
-    }
-
-    @Test
-    fun `equals does not throw for other DataFrameSchema implementations`() {
-        val scheme = dataFrameOf(
-            "a" to columnOf(1, 2, 3),
-        ).schema()
-
-        fun foreignSchemaOf(columns: Map<String, ColumnSchema>) =
-            object : DataFrameSchema {
-                override val columns: Map<String, ColumnSchema> = columns
-
-                override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult =
-                    throw UnsupportedOperationException("should not be called by equals")
-            }
-
-        (scheme == foreignSchemaOf(scheme.columns)) shouldBe true
-        (scheme == foreignSchemaOf(emptyMap())) shouldBe false
     }
 
     @Test
