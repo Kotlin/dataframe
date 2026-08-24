@@ -11,8 +11,14 @@ import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchemaDoc
 import org.jetbrains.kotlinx.dataframe.schema.plus
 
+/**
+ * [DataFrameSchema] implementation.
+ *
+ * @include [DataFrameSchemaDoc]
+ */
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
@@ -56,18 +62,20 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
 
     /**
      * Returns `true` if, and only if,
-     * [this schema][this] has the same columns **in the same order** as the [other schema][other].
+     * this schema has the same columns **in the same order** as the [other schema][other].
      * The types must also match exactly.
      *
      * Each column is compared by [ColumnSchema.equals], so nested schemas of
-     * [ColumnSchema.Group] and [ColumnSchema.Frame] columns are compared by these same rules, recursively.
+     * [column group schemas][ColumnSchema.Group] and [frame column schemas][ColumnSchema.Frame]
+     * are compared by these same rules, recursively.
      *
-     * Note that this is deliberately independent of [compare][DataFrameSchema.compare]:
-     * [compare][DataFrameSchema.compare] is the API for lenient/semantic matching (and neglects column order),
-     * while [equals] is exact equality.
+     * Note that [equals] and [compare][DataFrameSchema.compare] behave differently:
+     * [equals] requires schemas to match exactly, including column order,
+     * while [compare][DataFrameSchema.compare] ignores column order and provides additional comparison options
+     * (see [ComparisonMode]).
      *
-     * Use [compare][DataFrameSchema.compare] if the order does not matter and
-     * for other comparison options.
+     * Use [compare][DataFrameSchema.compare] when column order does not matter or
+     * when you need additional [comparison options][ComparisonMode].
      *
      * @see [DataFrameSchema.compare]
      * @see [CompareResult.matches]
@@ -77,15 +85,12 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         if (other !is DataFrameSchema) return false
         if (columns.size != other.columns.size) return false
 
-        // compare both schemas' columns pairwise, in order, delegating to ColumnSchema.equals
-        val otherColumns = other.columns.entries.iterator()
-        for ((name, columnSchema) in columns) {
-            val (otherName, otherColumnSchema) = otherColumns.next()
-            if (name != otherName) return false
-            if (columnSchema != otherColumnSchema) return false
-        }
+        val otherColumnsIterator = other.columns.entries.iterator()
 
-        return true
+        return columns.all { (name, schema) ->
+            val (otherName, otherSchema) = otherColumnsIterator.next()
+            name == otherName && schema == otherSchema
+        }
     }
 
     override fun toString(): String = render()

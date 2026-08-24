@@ -11,9 +11,10 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.generateCode
+import org.jetbrains.kotlinx.dataframe.api.generateInterfaces
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
@@ -120,12 +121,13 @@ class MatchSchemeTests {
 
     @Test
     fun printSchema() {
-        val res = df.generateCode(false, true)
+        val res = df.generateInterfaces(extensionProperties = true)
         println(res)
     }
 
     @Test
     fun `simple data schema comparison`() {
+
         val scheme1 = dataFrameOf(
             "a" to columnOf(1, 2, 3, null),
             "b" to columnOf(1.0, 2.0, 3.0, 4.0),
@@ -383,5 +385,6 @@ class MatchSchemeTests {
 
         (scheme == reordered) shouldBe false
         scheme.compare(reordered, LENIENT) shouldBe Matches
+        same.hashCode() shouldNotBe reordered.hashCode()
     }
 }
