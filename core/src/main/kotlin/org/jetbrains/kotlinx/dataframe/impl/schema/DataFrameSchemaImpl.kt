@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.schema.plus
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
     override fun compare(other: DataFrameSchema, comparisonMode: ComparisonMode): CompareResult {
+
         require(other is DataFrameSchemaImpl)
         if (this === other) return Matches
 
@@ -58,7 +59,14 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
      * [this schema][this] has the same columns **in the same order** as the [other schema][other].
      * The types must also match exactly.
      *
-     * Use [compare][DataFrameSchema.compare] it the order does not matter and
+     * Each column is compared by [ColumnSchema.equals], so nested schemas of
+     * [ColumnSchema.Group] and [ColumnSchema.Frame] columns are compared by these same rules, recursively.
+     *
+     * Note that this is deliberately independent of [compare][DataFrameSchema.compare]:
+     * [compare][DataFrameSchema.compare] is the API for lenient/semantic matching (and neglects column order),
+     * while [equals] is exact equality.
+     *
+     * Use [compare][DataFrameSchema.compare] if the order does not matter and
      * for other comparison options.
      *
      * @see [DataFrameSchema.compare]
@@ -67,25 +75,14 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is DataFrameSchema) return false
-        if (this.compare(other) != Matches) return false
-        if (columns.keys.toList() != other.columns.keys.toList()) return false
+        if (columns.size != other.columns.size) return false
 
-        for ((name, col) in columns) {
-            val other = other.columns[name]!!
-            when (col) {
-                is ColumnSchema.Group -> {
-                    other as ColumnSchema.Group // safe to cast because of compare
-                    if (col.schema != other.schema) return false
-                }
-
-                is ColumnSchema.Frame -> {
-                    other as ColumnSchema.Frame // safe to cast because of compare
-                    if (col.schema != other.schema) return false
-                }
-
-                // already checked by compare
-                is ColumnSchema.Value -> Unit
-            }
+        // compare both schemas' columns pairwise, in order, delegating to ColumnSchema.equals
+        val otherColumns = other.columns.entries.iterator()
+        for ((name, columnSchema) in columns) {
+            val (otherName, otherColumnSchema) = otherColumns.next()
+            if (name != otherName) return false
+            if (columnSchema != otherColumnSchema) return false
         }
 
         return true
