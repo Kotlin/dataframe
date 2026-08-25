@@ -69,6 +69,9 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.math.BigDecimal
@@ -222,11 +225,6 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
-    range.map {
-        getObject(it)
-    }
-
 private fun NullVector.values(range: IntRange): List<Nothing?> =
     range.map {
         getObject(it) as Nothing?
@@ -311,6 +309,50 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
+/**
+ * Returns a copy of this column with the cells at the positions marked `true` in [isNull] set to `null`.
+ * Used to propagate an Arrow struct's parent-level null down into its children, since a [ColumnGroup] has
+ * no per-row null mask ("a column group is never null, instead, make the columns inside nullable").
+ *
+ * - [ColumnKind.Group]: recurse so that a null parent nulls out **all** descendant leaves.
+ * - [ColumnKind.Frame] (a struct containing a list): a [FrameColumn] cannot hold `null`, so null rows
+ *   become an empty [DataFrame] — the nested list genuinely does not exist for that row.
+ * - [ColumnKind.Value]: null the cell and widen the type to nullable directly (do **not** re-run
+ *   [applyNullability] — the null is structurally mandated by the parent and must not throw under
+ *   [NullabilityOptions.Checking]).
+ *
+ * Dispatch is on `kind()` (defined on the base column type) and casts to the public [ColumnGroup] /
+ * [FrameColumn] interfaces the column actually implements, so it does not rely on any impl detail.
+ * When the [isNull] slice contains no `true`, the column is returned unchanged — nothing is reallocated
+ * (e.g. for a non-null struct element inside a list).
+ */
+private fun AnyBaseCol.injectNullsAt(isNull: BooleanArray): AnyBaseCol {
+    if (isNull.none { it }) return this
+    return when (kind()) {
+        ColumnKind.Group ->
+            DataColumn.createColumnGroup(
+                name = name(),
+                df = (this as ColumnGroup<*>).columns().map { it.injectNullsAt(isNull) }.toDataFrame(),
+            )
+
+        ColumnKind.Frame ->
+            DataColumn.createFrameColumn(
+                name = name(),
+                groups = (this as FrameColumn<*>).toList().mapIndexed { i, frame ->
+                    if (isNull[i]) DataFrame.empty() else frame
+                },
+            )
+
+        ColumnKind.Value ->
+            DataColumn.createValueColumn(
+                name = name(),
+                values = toList().mapIndexed { i, value -> if (isNull[i]) null else value },
+                type = type().withNullability(true),
+                infer = Infer.None,
+            )
+    }
+}
+
 private fun readField(
     vector: FieldVector,
     field: Field,
@@ -319,8 +361,26 @@ private fun readField(
 ): AnyBaseCol {
     try {
         if (vector is StructVector) {
+            // An Arrow struct has its own validity buffer, independent of the child vectors. Under a
+            // null-parent slot the physical child values are unspecified (zeros, or values leaked from
+            // other rows), so they must not be read as-is. A ColumnGroup cannot be null per-row
+            // (ColumnSchema.Group.nullable == false — "a column group is never null, instead, make the
+            // columns inside nullable"), so we push the parent-null down into the children: their cells
+            // become null at the null-parent rows and their types widen to nullable. Gated on nullCount so
+            // required groups (no struct-level nulls) are read exactly as before.
+            val nullMask: BooleanArray? =
+                if (vector.nullCount > 0) {
+                    BooleanArray(range.count()).also { mask ->
+                        range.forEachIndexed { positionInRange, rowIndex ->
+                            mask[positionInRange] = vector.isNull(rowIndex)
+                        }
+                    }
+                } else {
+                    null
+                }
             val columns = field.children.map { childField ->
-                readField(vector.getChild(childField.name), childField, nullability, range)
+                val child = readField(vector.getChild(childField.name), childField, nullability, range)
+                if (nullMask != null) child.injectNullsAt(nullMask) else child
             }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
         }
@@ -412,6 +472,9 @@ private fun readListVector(
     val dataVector = accessor.dataVector
     return if (dataVector is StructVector) {
         val structField = field.children.single()
+        // A struct *element* can itself be null inside the list; like the top-level struct path we honor
+        // its own validity buffer so null elements don't materialize phantom child values.
+        val elementHasNulls = dataVector.nullCount > 0
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
@@ -423,7 +486,12 @@ private fun readListVector(
                     start until end,
                 )
             }
-            columns.toDataFrame()
+            if (elementHasNulls) {
+                val nullMask = BooleanArray(end - start) { dataVector.isNull(start + it) }
+                columns.map { it.injectNullsAt(nullMask) }.toDataFrame()
+            } else {
+                columns.toDataFrame()
+            }
         }
         DataColumn.createFrameColumn(field.name, frames)
     } else {

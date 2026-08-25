@@ -215,6 +215,12 @@ public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = Nullability
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [urls] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ *
+ * Nested Arrow `Struct` columns are read as
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. A nullable (optional) struct is read
+ * as a column group whose child columns are nullable and hold `null` in the rows where the struct is absent —
+ * a column group itself is never `null`, so an absent struct and a present struct with all-`null` children are
+ * represented the same way.
  */
 public fun DataFrame.Companion.readParquet(
     vararg urls: URL,
@@ -232,6 +238,12 @@ public fun DataFrame.Companion.readParquet(
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [strUrls] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ *
+ * Nested Arrow `Struct` columns are read as
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. A nullable (optional) struct is read
+ * as a column group whose child columns are nullable and hold `null` in the rows where the struct is absent —
+ * a column group itself is never `null`, so an absent struct and a present struct with all-`null` children are
+ * represented the same way.
  */
 public fun DataFrame.Companion.readParquet(
     vararg strUrls: String,
@@ -241,6 +253,12 @@ public fun DataFrame.Companion.readParquet(
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [paths] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ *
+ * Nested Arrow `Struct` columns are read as
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. A nullable (optional) struct is read
+ * as a column group whose child columns are nullable and hold `null` in the rows where the struct is absent —
+ * a column group itself is never `null`, so an absent struct and a present struct with all-`null` children are
+ * represented the same way.
  */
 public fun DataFrame.Companion.readParquet(
     vararg paths: Path,
@@ -258,6 +276,12 @@ public fun DataFrame.Companion.readParquet(
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [files] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
+ *
+ * Nested Arrow `Struct` columns are read as
+ * [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]. A nullable (optional) struct is read
+ * as a column group whose child columns are nullable and hold `null` in the rows where the struct is absent —
+ * a column group itself is never `null`, so an absent struct and a present struct with all-`null` children are
+ * represented the same way.
  */
 public fun DataFrame.Companion.readParquet(
     vararg files: File,

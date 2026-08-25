@@ -24,9 +24,13 @@ Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is in
 > Apache Arrow is not supported on Android, so reading Parquet files on Android is not available.
 > {style="warning"}
 
-> Structured (nested) Arrow types such as Struct are not supported yet in Kotlin DataFrame.
-> See the issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
-> {style="warning"}
+> Nested Arrow `Struct` types are read as a [`ColumnGroup`](DataColumn.md#columngroup). An **optional (nullable)**
+> group is read as a `ColumnGroup` whose child columns become nullable, holding `null` in the rows where the group is
+> absent. This is a deliberate limitation: a `ColumnGroup` is never `null` per row, so Kotlin DataFrame cannot
+> represent a whole nullable group cell (a type like `{x: Int, y: Int}?`) — instead the nullability is pushed down to
+> the leaf columns. As a consequence, an absent group and a present group whose children are all `null` are
+> represented the same way. The same applies to nested `Struct`s read from Arrow IPC/Feather.
+> {style="note"}
 
 ## Reading Parquet Files
 
