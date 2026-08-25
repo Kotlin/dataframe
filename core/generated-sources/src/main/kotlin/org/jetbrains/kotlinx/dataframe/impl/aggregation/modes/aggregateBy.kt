@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.indexOfAggre
 import kotlin.reflect.typeOf
 
 /**
- * Selects the best matching value in the [sequence][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>sequence</code>][values]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -31,8 +31,8 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
     )
 
 /**
- * Selects the best matching value in the [iterable][values]
- * using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>iterable</code>][values]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * Faster implementation than for sequences.
  *
@@ -52,7 +52,7 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
     )
 
 /**
- * Selects the best matching value in the [column] using the provided [Aggregator] `by` the provided [selector].
+ * Selects the best matching value in the [<code>column</code>][column] using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -63,8 +63,8 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
 ): T? = aggregateByOrNull(column.values(), selector)
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [rowExpression].
+ * Selects the best matching value in the [<code>dataframe</code>][data]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>rowExpression</code>][rowExpression].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
@@ -81,8 +81,8 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
     )
 
 /**
- * Selects the best matching value in the [dataframe][data]
- * using the provided [Aggregator] `by` the provided [column].
+ * Selects the best matching value in the [<code>dataframe</code>][data]
+ * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>column</code>][column].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */

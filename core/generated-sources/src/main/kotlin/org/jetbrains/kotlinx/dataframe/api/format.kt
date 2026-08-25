@@ -57,38 +57,38 @@ import kotlin.reflect.KProperty
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][FormatSelectingColumns].
  *
- * The [FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][FormatClause.where],
+ * The [<code>FormatClause</code>][FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][FormatClause.with], [perRowCol][FormatClause.perRowCol], or [linearBg][FormatClause.linearBg].
+ * [<code>with</code>][FormatClause.with], [<code>perRowCol</code>][FormatClause.perRowCol], or [<code>linearBg</code>][FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame] by calling [format][FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][FormattedFrame] by calling [<code>format</code>][FormattedFrame.format] on it again.
  *
- * Specifying a [column group][ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame] to a [FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][DataFrame] to a [<code>FormattedFrame</code>][FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar].
+ * Check out the [<code>Grammar</code>][Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
@@ -100,25 +100,25 @@ internal interface FormatDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -126,26 +126,26 @@ internal interface FormatDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[format][org.jetbrains.kotlinx.dataframe.api.format]`("length", "age")`
+     * <code>`df`</code>`.`[<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format]`("length", "age")`
      *
      *
      *
@@ -157,79 +157,79 @@ internal interface FormatDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * ### Definitions:
-     * `cellFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
+     * `cellFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<T>, col: `[ColumnWithPath][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<C>) -> `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
+     * `rowColFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<T>, col: `[<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<C>) -> `[<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]`?`
      *
      * ### Notation:
      *
-     * [**format**][org.jetbrains.kotlinx.dataframe.DataFrame.format]**`  {  `**[`columns`][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
+     * [<code>**format**</code>][org.jetbrains.kotlinx.dataframe.DataFrame.format]**`  {  `**[<code>`columns`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`where`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.where]**`  {  `**[`filter`][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition]`: `[`RowValueFilter`][org.jetbrains.kotlinx.dataframe.RowValueFilter]**`  }  `**`]`
+     * `[ `__`.`__[<code>**`where`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where]**`  {  `**[<code>`filter`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition]`: `[<code>`RowValueFilter`</code>][org.jetbrains.kotlinx.dataframe.RowValueFilter]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`at`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.at]**`(`**`rowIndices: `[Collection][Collection]`<`[Int][Int]`> | `[IntRange][IntRange]` | `**`vararg`**` `[Int][Int]**`)`**` ]`
+     * `[ `__`.`__[<code>**`at`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.at]**`(`**`rowIndices: `[<code>Collection</code>][Collection]`<`[<code>Int</code>][Int]`> | `[<code>IntRange</code>][IntRange]` | `**`vararg`**` `[<code>Int</code>][Int]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.notNull]**`()`**` ]`
+     * `[ `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`with`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.with]**`  {  `**[cellFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
+     * __`.`__[<code>**`with`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with]**`  {  `**[<code>cellFormatter</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.notNull]**`  {  `**[cellFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
+     * `| `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.notNull]**`  {  `**[<code>cellFormatter</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellFormatterDef]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perRowCol`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol]**`  {  `**[rowColFormatter][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RowColFormatterDef]**` }`**
+     * `| `__`.`__[<code>**`perRowCol`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol]**`  {  `**[<code>rowColFormatter</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RowColFormatterDef]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`linearBg`**][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg]**`(`**`from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
+     * `| `__`.`__[<code>**`linearBg`**</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg]**`(`**`from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
      *
-     * `[ `__`.`__[**format**][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format]` ↺ ]`
+     * `[ `__`.`__[<code>**format**</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format]` ↺ ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * ## Formatting DSL Grammar
      *
      * ### Definitions:
-     * `cellAttributes: `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
+     * `cellAttributes: `[<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `color: `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]
+     * `color: `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]
      *
      * ### Notation:
-     * _- Returning [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]_:
+     * _- Returning [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]_:
      *
-     * [cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `[cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
+     * [<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `[<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
      *
-     * `| `[**`italic`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.italic]`  |  `[**`bold`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]`  |  `[**`underline`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.underline]
+     * `| `[<code>**`italic`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.italic]`  |  `[<code>**`bold`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]`  |  `[<code>**`underline`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.underline]
      *
-     * `| `[**`background`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
+     * `| `[<code>**`background`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
      *
-     * `| `[**`background`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+     * `| `[<code>**`background`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
      *
-     * `| `[**`linearBg`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linearBg]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
+     * `| `[<code>**`linearBg`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linearBg]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
      *
-     * `| `[**`textColor`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
+     * `| `[<code>**`textColor`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
      *
-     * `| `[**`textColor`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+     * `| `[<code>**`textColor`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
      *
-     * `| `[**`attr`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr]**`(`**`name: `[String][String]**`,`**` value: `[String][String]**`)`**
+     * `| `[<code>**`attr`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr]**`(`**`name: `[<code>String</code>][String]**`,`**` value: `[<code>String</code>][String]**`)`**
      *
-     * _- Returning [RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]:_
+     * _- Returning [<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]:_
      *
-     * [**`black`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`  |  `[**`white`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`  |  `[**`green`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.green]`  |  `[**`red`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red]`  |  `[**`blue`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue]`  |  `[**`gray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.gray]`  |  `[**`darkGray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.darkGray]`  |  `[**`lightGray`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.lightGray]
+     * [<code>**`black`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`  |  `[<code>**`white`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`  |  `[<code>**`green`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.green]`  |  `[<code>**`red`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.red]`  |  `[<code>**`blue`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.blue]`  |  `[<code>**`gray`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.gray]`  |  `[<code>**`darkGray`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.darkGray]`  |  `[<code>**`lightGray`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.lightGray]
      *
-     * `| `[**`rgb`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+     * `| `[<code>**`rgb`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
      *
-     * `| `[**`linear`**][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
+     * `| `[<code>**`linear`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
      */
     interface Grammar {
 
@@ -237,58 +237,58 @@ internal interface FormatDocs {
          * ## Formatting DSL Grammar
          *
          * ### Definitions:
-         * `cellAttributes: `[CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
+         * `cellAttributes: `[<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;
          *
-         * `color: `[RgbColor][org.jetbrains.kotlinx.dataframe.api.RgbColor]
+         * `color: `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]
          *
          * ### Notation:
-         * _- Returning [CellAttributes][CellAttributes]_:
+         * _- Returning [<code>CellAttributes</code>][CellAttributes]_:
          *
-         * [cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[**`and`**][CellAttributes.and]` `[cellAttributes][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
+         * [<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[<code>**`and`**</code>][CellAttributes.and]` `[<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
          *
-         * `| `[**`italic`**][FormattingDsl.italic]`  |  `[**`bold`**][FormattingDsl.bold]`  |  `[**`underline`**][FormattingDsl.underline]
+         * `| `[<code>**`italic`**</code>][FormattingDsl.italic]`  |  `[<code>**`bold`**</code>][FormattingDsl.bold]`  |  `[<code>**`underline`**</code>][FormattingDsl.underline]
          *
-         * `| `[**`background`**][FormattingDsl.background]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
+         * `| `[<code>**`background`**</code>][FormattingDsl.background]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
          *
-         * `| `[**`background`**][FormattingDsl.background]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+         * `| `[<code>**`background`**</code>][FormattingDsl.background]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
          *
-         * `| `[**`linearBg`**][FormattingDsl.linearBg]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
+         * `| `[<code>**`linearBg`**</code>][FormattingDsl.linearBg]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`)`**
          *
-         * `| `[**`textColor`**][FormattingDsl.textColor]**`(`**[color][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
+         * `| `[<code>**`textColor`**</code>][FormattingDsl.textColor]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
          *
-         * `| `[**`textColor`**][FormattingDsl.textColor]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+         * `| `[<code>**`textColor`**</code>][FormattingDsl.textColor]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
          *
-         * `| `[**`attr`**][attr]**`(`**`name: `[String][String]**`,`**` value: `[String][String]**`)`**
+         * `| `[<code>**`attr`**</code>][attr]**`(`**`name: `[<code>String</code>][String]**`,`**` value: `[<code>String</code>][String]**`)`**
          *
-         * _- Returning [RgbColor][RgbColor]:_
+         * _- Returning [<code>RgbColor</code>][RgbColor]:_
          *
-         * [**`black`**][FormattingDsl.black]`  |  `[**`white`**][FormattingDsl.white]`  |  `[**`green`**][FormattingDsl.green]`  |  `[**`red`**][FormattingDsl.red]`  |  `[**`blue`**][FormattingDsl.blue]`  |  `[**`gray`**][FormattingDsl.gray]`  |  `[**`darkGray`**][FormattingDsl.darkGray]`  |  `[**`lightGray`**][FormattingDsl.lightGray]
+         * [<code>**`black`**</code>][FormattingDsl.black]`  |  `[<code>**`white`**</code>][FormattingDsl.white]`  |  `[<code>**`green`**</code>][FormattingDsl.green]`  |  `[<code>**`red`**</code>][FormattingDsl.red]`  |  `[<code>**`blue`**</code>][FormattingDsl.blue]`  |  `[<code>**`gray`**</code>][FormattingDsl.gray]`  |  `[<code>**`darkGray`**</code>][FormattingDsl.darkGray]`  |  `[<code>**`lightGray`**</code>][FormattingDsl.lightGray]
          *
-         * `| `[**`rgb`**][FormattingDsl.rgb]**`(`**`r: `[Short][Short]**`,`**` g: `[Short][Short]**`,`**` b: `[Short][Short]**`)`**
+         * `| `[<code>**`rgb`**</code>][FormattingDsl.rgb]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
          *
-         * `| `[**`linear`**][FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
+         * `| `[<code>**`linear`**</code>][FormattingDsl.linear]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`)`**
          */
         typealias FormattingDslGrammarDef = Nothing
 
         /**
-         * `cellFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[CellAttributes][CellAttributes]`?`
+         * `cellFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[<code>CellAttributes</code>][CellAttributes]`?`
          */
         typealias CellFormatterDef = Nothing
 
         /**
-         * `rowColFormatter: `[FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
+         * `rowColFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[<code>DataRow</code>][DataRow]`<T>, col: `[<code>ColumnWithPath</code>][ColumnWithPath]`<C>) -> `[<code>CellAttributes</code>][CellAttributes]`?`
          */
         typealias RowColFormatterDef = Nothing
 
         /**
-         * `cellAttributes: `[CellAttributes][CellAttributes]
+         * `cellAttributes: `[<code>CellAttributes</code>][CellAttributes]
          */
         typealias CellAttributesDef = Nothing
 
         /**
-         * `color: `[RgbColor][RgbColor]
+         * `color: `[<code>RgbColor</code>][RgbColor]
          */
         typealias RgbColorDef = Nothing
     }
@@ -302,55 +302,55 @@ internal interface FormatDocs {
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -365,7 +365,7 @@ internal interface FormatDocs {
  *   }.toStandaloneHtml().openInBrowser()
  * ```
  *
- * @param [columns] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
+ * @param [columns] The [<code>columns-selector</code>][ColumnsSelector] used to select the columns to be formatted.
  *   If unspecified, all columns will be formatted.
  */
 public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
@@ -374,45 +374,45 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -433,44 +433,44 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  * This simply formats all columns. Optionally, you can specify which columns to format using a
- * [columns-selector][ColumnsSelector] or by [column names][String].
+ * [<code>columns-selector</code>][ColumnsSelector] or by [<code>column names</code>][String].
  *
  * ### Examples:
  * ```kt
@@ -503,55 +503,55 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -567,7 +567,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *   }.toStandaloneHtml().openInBrowser()
  * ```
  *
- * @param [columns] The [columns-selector][ColumnsSelector] used to select the columns to be formatted.
+ * @param [columns] The [<code>columns-selector</code>][ColumnsSelector] used to select the columns to be formatted.
  *   If unspecified, all columns will be formatted.
  */
 public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> =
@@ -577,45 +577,45 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Examples:
  * ```kt
  * df.format("temperature").with { linearBg(it as Number, -20 to blue, 50 to red) }
@@ -637,44 +637,44 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  * Formats the specified [columns] or cells within this dataframe such that
  * they have specific CSS attributes applied to them when rendering the dataframe to HTML.
  *
- * This function does not immediately produce a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
- * and returns a [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
+ * This function does not immediately produce a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame], but instead it selects the columns to be formatted
+ * and returns a [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] which serves as an intermediate step.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
- * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
+ * The [<code>FormatClause</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * by selecting only certain rows, using [<code>where</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
- * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
+ * [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [<code>perRowCol</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [<code>linearBg</code>][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
  *
- * You can continue formatting the [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [format][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
+ * You can continue formatting the [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] by calling [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame.format] on it again.
  *
- * Specifying a [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
+ * Specifying a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] makes all of its inner columns be formatted in the same way unless
  * overridden.
  *
  * Formatting is done additively, meaning you can add more formatting to a cell that's already formatted or
  * override certain attributes inherited from its outer group.
  *
- * Specifying a [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
+ * Specifying a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] at the moment does nothing
  * ([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
- * convert each nested [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a [FormattedFrame][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
+ * convert each nested [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a [<code>FormattedFrame</code>][org.jetbrains.kotlinx.dataframe.api.FormattedFrame] instead:
  * ```kt
  * df.convert { myFrameCol }.with {
  *     it.format { someCol }.with { background(green) }
  * }.toStandaloneHtml()
  * ```
  *
- * Check out the [Grammar][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
+ * Check out the [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  * ### This Format Overload
  *
  * This simply formats all columns. Optionally, you can specify which columns to format using a
- * [columns-selector][ColumnsSelector] or by [column names][String].
+ * [<code>columns-selector</code>][ColumnsSelector] or by [<code>column names</code>][String].
  *
  * ### Examples:
  * ```kt
@@ -695,24 +695,24 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
 // region intermediate operations
 
 /**
- * Filters the rows to format using a [RowValueFilter].
+ * Filters the rows to format using a [<code>RowValueFilter</code>][RowValueFilter].
  *
- * See [Row Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows].
+ * See [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows].
  *
- * You need to specify [filter]: A lambda function expecting a `true` result for each
+ * You need to specify [<code>filter</code>][filter]: A lambda function expecting a `true` result for each
  * cell that should be included in the formatting selection.
- * Both the cell value (`it: `[C][C]) and its row (`this: `[DataRow][DataRow]`<`[T][T]`>`) are available.
+ * Both the cell value (`it: `[<code>C</code>][C]) and its row (`this: `[<code>DataRow</code>][DataRow]`<`[<code>T</code>][T]`>`) are available.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [where]:
+ * ### Examples using [<code>where</code>][where]:
  * ```kt
  * df.format { temperature }
  *   .where { it !in -10..40 }
  *   .with { background(red) }
  * ```
  *
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
     FormatClause(
@@ -726,62 +726,62 @@ public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): Format
 /**
  * Only format the selected columns at given row indices.
  *
- * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ * Accepts either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg `[<code>Int</code>][Int] indices.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ### Examples using [<code>at</code>][org.jetbrains.kotlinx.dataframe.api.at]
  * ```kt
  * df.format()
  *   .at(df.indices().step(2).toList())
  *   .with { background(lightGray) }
  * ```
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.at(rowIndices: Collection<Int>): FormatClause<T, C> = where { index in rowIndices }
 
 /**
  * Only format the selected columns at given row indices.
  *
- * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ * Accepts either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg `[<code>Int</code>][Int] indices.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ### Examples using [<code>at</code>][org.jetbrains.kotlinx.dataframe.api.at]
  * ```kt
  * df.format { colsOf<String?>() }
  *   .at(0, 3, 4)
  *   .with { background(lightGray) }
  * ```
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.at(vararg rowIndices: Int): FormatClause<T, C> = at(rowIndices.toSet())
 
 /**
  * Only format the selected columns at given row indices.
  *
- * Accepts either a [Collection]<[Int]>, an [IntRange], or just `vararg `[Int] indices.
+ * Accepts either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg `[<code>Int</code>][Int] indices.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [at][org.jetbrains.kotlinx.dataframe.api.at]
+ * ### Examples using [<code>at</code>][org.jetbrains.kotlinx.dataframe.api.at]
  * ```kt
  * df.format { cols(2..7) }
  *   .at(2..7)
  *   .with { background(lightGray) }
  * ```
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.at(rowRange: IntRange): FormatClause<T, C> = where { index in rowRange }
 
 /**
  * Filters the format-selection to only include cells where the value is not null.
  *
- * This is shorthand for `.`[where][FormatClause.where]` { it != null }`.
+ * This is shorthand for `.`[<code>where</code>][FormatClause.where]` { it != null }`.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [notNull]:
+ * ### Examples using [<code>notNull</code>][notNull]:
  * ```kt
  * df.format { colsOf<Int?>() }.notNull().perRowCol { row, col ->
  *     linearBg(col[row], col.min() to red, col.max() to green)
@@ -796,134 +796,134 @@ public fun <T, C> FormatClause<T, C?>.notNull(): FormatClause<T, C> = where { it
 // region terminal operations
 
 /**
- * Creates a new [FormattedFrame] that uses the specified [RowColFormatter] to format the selected cells of the dataframe.
+ * Creates a new [<code>FormattedFrame</code>][FormattedFrame] that uses the specified [<code>RowColFormatter</code>][RowColFormatter] to format the selected cells of the dataframe.
  *
- * You need to specify [formatter]: A lambda function expecting a [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of
- * [DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[T][T]`>` and [ColumnWithPath][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<`[C][C]`>`.
+ * You need to specify [<code>formatter</code>][formatter]: A lambda function expecting a [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of
+ * [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>T</code>][T]`>` and [<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]`<`[<code>C</code>][C]`>`.
  *
- * This is similar to a [RowColumnExpression][org.jetbrains.kotlinx.dataframe.RowColumnExpression], except that you also have access
- * to the [FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
+ * This is similar to a [<code>RowColumnExpression</code>][org.jetbrains.kotlinx.dataframe.RowColumnExpression], except that you also have access
+ * to the [<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
  *
- * The formatting DSL allows you to create and combine [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[white][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [textColor][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[black][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [bold][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
+ * [<code>background</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[<code>white</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>textColor</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[<code>black</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>bold</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
- * colors using [linear][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
  *
- * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [perRowCol]:
+ * ### Examples using [<code>perRowCol</code>][perRowCol]:
  * ```kt
  * df.format { colsOf<Int>() }.perRowCol { row, col ->
  *     linearBg(col[row], col.min() to red, col.max() to green)
  * }
  * ```
  *
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> =
     formatImpl(formatter)
 
 /**
- * Creates a new [FormattedFrame] that uses the specified [CellFormatter] to format the selected cells of the dataframe.
+ * Creates a new [<code>FormattedFrame</code>][FormattedFrame] that uses the specified [<code>CellFormatter</code>][CellFormatter] to format the selected cells of the dataframe.
  *
- * You need to specify [formatter]: A lambda function expecting a [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of a cell: [C] of the dataframe.
+ * You need to specify [<code>formatter</code>][formatter]: A lambda function expecting a [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of a cell: [<code>C</code>][C] of the dataframe.
  *
- * You have access to the [FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
+ * You have access to the [<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
  *
- * The formatting DSL allows you to create and combine [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[white][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [textColor][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[black][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [bold][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
+ * [<code>background</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[<code>white</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>textColor</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[<code>black</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>bold</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
- * colors using [linear][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
  *
- * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [with]:
+ * ### Examples using [<code>with</code>][with]:
  * ```kt
  * df.format()
  *   .at(df.indices().step(2).toList())
  *   .with { background(lightGray) and bold and textColor(black) }
  * ```
  *
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
     formatImpl { row, col -> formatter(col[row] as C) }
 
 /**
- * Creates a new [FormattedFrame] that uses the specified [CellFormatter] to format selected non-null cells of the dataframe.
+ * Creates a new [<code>FormattedFrame</code>][FormattedFrame] that uses the specified [<code>CellFormatter</code>][CellFormatter] to format selected non-null cells of the dataframe.
  *
- * This function is shorthand for `.`[notNull()][FormatClause.notNull]`.`[with { }][FormatClause.with].
+ * This function is shorthand for `.`[<code>notNull()</code>][FormatClause.notNull]`.`[<code>with { }</code>][FormatClause.with].
  *
- * You need to specify [formatter]: A lambda function expecting a [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of a cell: [C] of the dataframe.
+ * You need to specify [<code>formatter</code>][formatter]: A lambda function expecting a [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] or `null` given an instance of a cell: [<code>C</code>][C] of the dataframe.
  *
- * You have access to the [FormattingDsl][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
+ * You have access to the [<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl] in the context.
  *
- * The formatting DSL allows you to create and combine [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[white][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [textColor][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[black][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [bold][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
+ * [<code>background</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[<code>white</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>textColor</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[<code>black</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>bold</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
- * colors using [linear][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
  *
- * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * ### Examples using [notNull]:
+ * ### Examples using [<code>notNull</code>][notNull]:
  * ```kt
  * df.format().notNull { bold and textColor(black) }
  * ```
  *
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  */
 public fun <T, C> FormatClause<T, C?>.notNull(formatter: CellFormatter<C>): FormattedFrame<T> =
     notNull().with(formatter)
 
 /**
- * Creates a new [FormattedFrame] by just changing the background colors of the selected cells.
+ * Creates a new [<code>FormattedFrame</code>][FormattedFrame] by just changing the background colors of the selected cells.
  *
- * The background color of each selected cell is calculated by interpolating between [from] and [to],
+ * The background color of each selected cell is calculated by interpolating between [<code>from</code>][from] and [<code>to</code>][to],
  * given the numeric value of that cell.
  * The interpolation is linear.
  *
- * If the numeric cell value falls outside the range [from]..[to], the colors at the bounds will be used.
+ * If the numeric cell value falls outside the range [<code>from</code>][from]..[<code>to</code>][to], the colors at the bounds will be used.
  *
  * This function is shorthand for:
  *
- * `.`[with][FormatClause.with]`  {  `[background][FormattingDsl.background]`(`[linear][FormattingDsl.linear]`(it, `[from][from]`, `[to][to]`)) }`
+ * `.`[<code>with</code>][FormatClause.with]`  {  `[<code>background</code>][FormattingDsl.background]`(`[<code>linear</code>][FormattingDsl.linear]`(it, `[<code>from</code>][from]`, `[<code>to</code>][to]`)) }`
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * See also [with][FormatClause.with], [background][FormattingDsl.background], and [linear][FormattingDsl.linear].
+ * See also [<code>with</code>][FormatClause.with], [<code>background</code>][FormattingDsl.background], and [<code>linear</code>][FormattingDsl.linear].
  *
- * ### Examples using [linearBg]:
+ * ### Examples using [<code>linearBg</code>][linearBg]:
  * ```kt
  * df.format { temperature }.linearBg(-20 to FormattingDsl.blue, 50 to FormattingDsl.red)
  *   .format { age }.notNull().perRowCol { row, col ->
@@ -933,7 +933,7 @@ public fun <T, C> FormatClause<T, C?>.notNull(formatter: CellFormatter<C>): Form
  *   }.toStandaloneHtml().openInBrowser()
  * ```
  *
- * Check out the full [Grammar][FormatDocs.Grammar].
+ * Check out the full [<code>Grammar</code>][FormatDocs.Grammar].
  *
  * @param [from] The lower bound of the interpolation range and the color that will be returned when the cell value touches this bound.
  * @param [to] The upper bound of the interpolation range and the color that will be returned when the cell value touches this bound.
@@ -956,32 +956,32 @@ public fun <T, C : Number?> FormatClause<T, C>.linearBg(
 
 /**
  * Represents a color in the RGB color space.
- * To be used in the [DataFrame.format]; [FormattingDsl].
+ * To be used in the [<code>DataFrame.format</code>][DataFrame.format]; [<code>FormattingDsl</code>][FormattingDsl].
  *
- * Any color can be represented in terms of [r] (red), [g] (green), and [b] (blue) values from `0..255`.
+ * Any color can be represented in terms of [<code>r</code>][r] (red), [<code>g</code>][g] (green), and [<code>b</code>][b] (blue) values from `0..255`.
  *
- * Inside [FormattingDsl], there are shortcuts for common colors, like [white][FormattingDsl.white],
- * [green][FormattingDsl.green], and [gray][FormattingDsl.gray].
+ * Inside [<code>FormattingDsl</code>][FormattingDsl], there are shortcuts for common colors, like [<code>white</code>][FormattingDsl.white],
+ * [<code>green</code>][FormattingDsl.green], and [<code>gray</code>][FormattingDsl.gray].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
 public data class RgbColor(val r: Short, val g: Short, val b: Short) {
 
-    /** Encodes the color as a [String] such that it can be used as the value of an attribute in CSS. */
+    /** Encodes the color as a [<code>String</code>][String] such that it can be used as the value of an attribute in CSS. */
     override fun toString(): String = encode()
 }
 
 /**
  * This represents a collection of CSS cell attributes that can be applied to a cell in an HTML-rendered dataframe.
  *
- * [Cell attributes][CellAttributes] are created inside the [FormattingDsl] by calling
- * [FormatClause.with] or [FormatClause.perRowCol].
+ * [<code>Cell attributes</code>][CellAttributes] are created inside the [<code>FormattingDsl</code>][FormattingDsl] by calling
+ * [<code>FormatClause.with</code>][FormatClause.with] or [<code>FormatClause.perRowCol</code>][FormatClause.perRowCol].
  *
- * Multiple attributes can be combined using the [and] operator.
+ * Multiple attributes can be combined using the [<code>and</code>][and] operator.
  *
  * For instance:
  *
- * `df.`[format()][DataFrame.format]`.`[`with {`][FormatClause.with]` `[background][FormattingDsl.background]`(`[white][FormattingDsl.white]`) `[and][CellAttributes.and]` `[textColor][FormattingDsl.textColor]`(`[black][FormattingDsl.black]`) `[`}`][FormatClause.with]
+ * `df.`[<code>format()</code>][DataFrame.format]`.`[<code>`with {`</code>][FormatClause.with]` `[<code>background</code>][FormattingDsl.background]`(`[<code>white</code>][FormattingDsl.white]`) `[<code>and</code>][CellAttributes.and]` `[<code>textColor</code>][FormattingDsl.textColor]`(`[<code>black</code>][FormattingDsl.black]`) `[<code>`}`</code>][FormatClause.with]
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
@@ -998,11 +998,11 @@ public interface CellAttributes {
 }
 
 /**
- * Combines two [CellAttributes] instances into a new one that combines their attributes.
+ * Combines two [<code>CellAttributes</code>][CellAttributes] instances into a new one that combines their attributes.
  *
  * For instance:
  *
- * `df.`[format()][DataFrame.format]`.`[`with {`][FormatClause.with]` `[background][FormattingDsl.background]`(`[white][FormattingDsl.white]`) `[and][CellAttributes.and]` `[textColor][FormattingDsl.textColor]`(`[black][FormattingDsl.black]`) `[`}`][FormatClause.with]
+ * `df.`[<code>format()</code>][DataFrame.format]`.`[<code>`with {`</code>][FormatClause.with]` `[<code>background</code>][FormattingDsl.background]`(`[<code>white</code>][FormattingDsl.white]`) `[<code>and</code>][CellAttributes.and]` `[<code>textColor</code>][FormattingDsl.textColor]`(`[<code>black</code>][FormattingDsl.black]`) `[<code>`}`</code>][FormatClause.with]
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
@@ -1014,27 +1014,27 @@ public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? =
     }
 
 /**
- * The formatting DSL allows you to create and combine [CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][FormattingDsl.background]`(`[white][FormattingDsl.white]`) `[and][CellAttributes.and]` `
- * [textColor][FormattingDsl.textColor]`(`[black][FormattingDsl.black]`) `[and][CellAttributes.and]` `
- * [bold][FormattingDsl.bold]
+ * [<code>background</code>][FormattingDsl.background]`(`[<code>white</code>][FormattingDsl.white]`) `[<code>and</code>][CellAttributes.and]` `
+ * [<code>textColor</code>][FormattingDsl.textColor]`(`[<code>black</code>][FormattingDsl.black]`) `[<code>and</code>][CellAttributes.and]` `
+ * [<code>bold</code>][FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][FormattingDsl.rgb] or interpolate
- * colors using [linear][FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][FormattingDsl.linear].
  *
- * Use [attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
 public object FormattingDsl {
 
     /**
-     * Creates a new [RgbColor] instance with [r] (red), [g] (green), and [b] (blue) values from `0..255`.
+     * Creates a new [<code>RgbColor</code>][RgbColor] instance with [<code>r</code>][r] (red), [<code>g</code>][g] (green), and [<code>b</code>][b] (blue) values from `0..255`.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      */
@@ -1057,8 +1057,8 @@ public object FormattingDsl {
     public val lightGray: RgbColor = rgb(211, 211, 211)
 
     /**
-     * A custom [cell attribute][CellAttributes]
-     * that allows you to specify any custom CSS attribute by [name] and [value].
+     * A custom [<code>cell attribute</code>][CellAttributes]
+     * that allows you to specify any custom CSS attribute by [<code>name</code>][name] and [<code>value</code>][value].
      *
      * For example:
      * ```kt
@@ -1071,17 +1071,17 @@ public object FormattingDsl {
     public fun attr(name: String, value: String): CellAttributes = SingleAttribute(name, value)
 
     /**
-     * A [cell attribute][CellAttributes] that sets the background color of a cell.
+     * A [<code>cell attribute</code>][CellAttributes] that sets the background color of a cell.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
-     * @param color Either one of the predefined colors, like [black], or [green], or a custom color using [rgb()][rgb].
+     * @param color Either one of the predefined colors, like [<code>black</code>][black], or [<code>green</code>][green], or a custom color using [<code>rgb()</code>][rgb].
      */
     public fun background(color: RgbColor): CellAttributes = attr("background-color", color.toString())
 
     /**
-     * A [cell attribute][CellAttributes] that sets the background color of a cell.
-     * A shortcut for [background][background]`(`[rgb(...)][rgb]`)`.
+     * A [<code>cell attribute</code>][CellAttributes] that sets the background color of a cell.
+     * A shortcut for [<code>background</code>][background]`(`[<code>rgb(...)</code>][rgb]`)`.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
@@ -1090,17 +1090,17 @@ public object FormattingDsl {
     public fun background(r: Short, g: Short, b: Short): CellAttributes = background(RgbColor(r, g, b))
 
     /**
-     * A [cell attribute][CellAttributes] that sets the text color of a cell.
+     * A [<code>cell attribute</code>][CellAttributes] that sets the text color of a cell.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
-     * @param color Either one of the predefined colors, like [black], or [green], or a custom color using [rgb()][rgb].
+     * @param color Either one of the predefined colors, like [<code>black</code>][black], or [<code>green</code>][green], or a custom color using [<code>rgb()</code>][rgb].
      */
     public fun textColor(color: RgbColor): CellAttributes = attr("color", color.toString())
 
     /**
-     * A [cell attribute][CellAttributes] that sets the text color of a cell.
-     * A shortcut for [textColor][textColor]`(`[rgb(...)][rgb]`)`.
+     * A [<code>cell attribute</code>][CellAttributes] that sets the text color of a cell.
+     * A shortcut for [<code>textColor</code>][textColor]`(`[<code>rgb(...)</code>][rgb]`)`.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
@@ -1109,33 +1109,33 @@ public object FormattingDsl {
     public fun textColor(r: Short, g: Short, b: Short): CellAttributes = textColor(RgbColor(r, g, b))
 
     /**
-     * A [cell attribute][CellAttributes] that makes the text inside the cell *italic*.
+     * A [<code>cell attribute</code>][CellAttributes] that makes the text inside the cell *italic*.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      */
     public val italic: CellAttributes = attr("font-style", "italic")
 
     /**
-     * A [cell attribute][CellAttributes] that makes the text inside the cell **bold**.
+     * A [<code>cell attribute</code>][CellAttributes] that makes the text inside the cell **bold**.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      */
     public val bold: CellAttributes = attr("font-weight", "bold")
 
     /**
-     * A [cell attribute][CellAttributes] that u͟n͟d͟e͟r͟l͟i͟n͟e͟s͟ the text inside the cell.
+     * A [<code>cell attribute</code>][CellAttributes] that u͟n͟d͟e͟r͟l͟i͟n͟e͟s͟ the text inside the cell.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      */
     public val underline: CellAttributes = attr("text-decoration", "underline")
 
     /**
-     * Shorthand for [background][background]`(`[linear][linear]`(...))`
+     * Shorthand for [<code>background</code>][background]`(`[<code>linear</code>][linear]`(...))`
      *
-     * Creates a [cell attribute][CellAttributes] that applies a background color calculated
-     * by interpolating between [from] and [to], given [value].
+     * Creates a [<code>cell attribute</code>][CellAttributes] that applies a background color calculated
+     * by interpolating between [<code>from</code>][from] and [<code>to</code>][to], given [<code>value</code>][value].
      *
-     * See [linear] for more information.
+     * See [<code>linear</code>][linear] for more information.
      *
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
@@ -1148,9 +1148,9 @@ public object FormattingDsl {
         )
 
     /**
-     * Calculates an [RgbColor] by interpolating between [from] and [to], given [value].
+     * Calculates an [<code>RgbColor</code>][RgbColor] by interpolating between [<code>from</code>][from] and [<code>to</code>][to], given [<code>value</code>][value].
      * The interpolation is linear.
-     * If [value] falls outside the range [from]..[to], the colors at the bounds will be used.
+     * If [<code>value</code>][value] falls outside the range [<code>from</code>][from]..[<code>to</code>][to], the colors at the bounds will be used.
      *
      * Very useful if you want the text-, or background color to correspond to the value of a cell, for instance.
      *
@@ -1165,9 +1165,9 @@ public object FormattingDsl {
      * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
      *
      * @param [value] The value to interpolate the color for.
-     * @param [from] The lower bound of the interpolation range and the color that will be returned when [value] touches this bound.
-     * @param [to] The upper bound of the interpolation range and the color that will be returned when [value] touches this bound.
-     * @return An [RgbColor] that corresponds to the interpolation.
+     * @param [from] The lower bound of the interpolation range and the color that will be returned when [<code>value</code>][value] touches this bound.
+     * @param [to] The upper bound of the interpolation range and the color that will be returned when [<code>value</code>][value] touches this bound.
+     * @return An [<code>RgbColor</code>][RgbColor] that corresponds to the interpolation.
      * @see linearBg
      */
     public fun linear(value: Number, from: Pair<Number, RgbColor>, to: Pair<Number, RgbColor>): RgbColor {
@@ -1198,65 +1198,65 @@ public object FormattingDsl {
 // region types and classes
 
 /**
- * A lambda function expecting a [CellAttributes] or `null` given an instance of
- * [DataRow][DataRow]`<`[T][T]`>` and [ColumnWithPath][ColumnWithPath]`<`[C][C]`>`.
+ * A lambda function expecting a [<code>CellAttributes</code>][CellAttributes] or `null` given an instance of
+ * [<code>DataRow</code>][DataRow]`<`[<code>T</code>][T]`>` and [<code>ColumnWithPath</code>][ColumnWithPath]`<`[<code>C</code>][C]`>`.
  *
- * This is similar to a [RowColumnExpression], except that you also have access
- * to the [FormattingDsl] in the context.
+ * This is similar to a [<code>RowColumnExpression</code>][RowColumnExpression], except that you also have access
+ * to the [<code>FormattingDsl</code>][FormattingDsl] in the context.
  *
- * The formatting DSL allows you to create and combine [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[white][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [textColor][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[black][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [bold][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
+ * [<code>background</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[<code>white</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>textColor</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[<code>black</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>bold</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
- * colors using [linear][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
  *
- * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
 public typealias RowColFormatter<T, C> = FormattingDsl.(row: DataRow<T>, col: ColumnWithPath<C>) -> CellAttributes?
 
 /**
- * A lambda function expecting a [CellAttributes] or `null` given an instance of a cell: [C] of the dataframe.
+ * A lambda function expecting a [<code>CellAttributes</code>][CellAttributes] or `null` given an instance of a cell: [<code>C</code>][C] of the dataframe.
  *
- * You have access to the [FormattingDsl] in the context.
+ * You have access to the [<code>FormattingDsl</code>][FormattingDsl] in the context.
  *
- * The formatting DSL allows you to create and combine [CellAttributes][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
+ * The formatting DSL allows you to create and combine [<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes] to apply to one
  * or multiple cells of a dataframe such that they have specific CSS attributes applied to them
  * when rendered to HTML.
  *
  * For instance, to specify black, bold text on a white background, you could write:
  *
- * [background][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[white][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [textColor][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[black][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[and][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
- * [bold][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
+ * [<code>background</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.background]`(`[<code>white</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.white]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>textColor</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.textColor]`(`[<code>black</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.black]`) `[<code>and</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes.and]` `
+ * [<code>bold</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.bold]
  *
- * It's also possible to define your own colors using [rgb][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
- * colors using [linear][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
+ * It's also possible to define your own colors using [<code>rgb</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.rgb] or interpolate
+ * colors using [<code>linear</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear].
  *
- * Use [attr][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
+ * Use [<code>attr</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.attr] if you want to specify a custom CSS attribute.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  */
 public typealias CellFormatter<C> = FormattingDsl.(cell: C) -> CellAttributes?
 
 /**
- * A wrapper around a [DataFrame][df] with CSS attributes that can be
- * converted to a formatted HTML table in the form of [DataFrameHtmlData].
+ * A wrapper around a [<code>DataFrame</code>][df] with CSS attributes that can be
+ * converted to a formatted HTML table in the form of [<code>DataFrameHtmlData</code>][DataFrameHtmlData].
  *
- * Call [toHtml] or [toStandaloneHtml] to get the HTML representation of the [DataFrame].
+ * Call [<code>toHtml</code>][toHtml] or [<code>toStandaloneHtml</code>][toStandaloneHtml] to get the HTML representation of the [<code>DataFrame</code>][DataFrame].
  *
  * In Jupyter kernel (Kotlin Notebook) environments, you can often output this class directly.
- * Use [toHtml] or [toStandaloneHtml] when this produces unexpected results.
+ * Use [<code>toHtml</code>][toHtml] or [<code>toStandaloneHtml</code>][toStandaloneHtml] when this produces unexpected results.
  *
- * You can apply further formatting to this [FormattedFrame] by calling [format()][FormattedFrame.format] once again.
+ * You can apply further formatting to this [<code>FormattedFrame</code>][FormattedFrame] by calling [<code>format()</code>][FormattedFrame.format] once again.
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html) [See `toHtml` on the documentation website.](https://kotlin.github.io/dataframe/tohtml.html)
  */
@@ -1267,20 +1267,20 @@ public class FormattedFrame<T>(
 ) {
 
     /**
-     * Returns a [DataFrameHtmlData] without additional definitions.
+     * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] without additional definitions.
      * Can be rendered in Jupyter kernel (Kotlin Notebook) environments or other environments that already have
      * CSS- and script definitions for DataFrame.
      *
-     * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
+     * Use [<code>toStandaloneHtml</code>][toStandaloneHtml] if you need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
      *
      * By default, cell content is formatted as text
-     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     * Use [<code>RenderedContent.media</code>][media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
      *
      * For more information: [See `toHtml` on the documentation website.](https://kotlin.github.io/dataframe/tohtml.html)
      *
-     * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
-     *   Default: [DisplayConfiguration.DEFAULT].
-     * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+     * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use as a base for this [<code>FormattedFrame</code>][FormattedFrame].
+     *   Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+     * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
      * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
      *   Default: `"DataFrame [rows x cols]"`
      * @see toStandaloneHtml
@@ -1292,27 +1292,27 @@ public class FormattedFrame<T>(
     ): DataFrameHtmlData = df.toHtml(getDisplayConfiguration(configuration), cellRenderer, getFooter)
 
     /**
-     * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
+     * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] with CSS- and script definitions for DataFrame.
      *
-     * Use [toHtml] if you don't need the [DataFrameHtmlData] to include CSS- and script definitions.
+     * Use [<code>toHtml</code>][toHtml] if you don't need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
      *
-     * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
+     * The [<code>DataFrameHtmlData</code>][DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
      * If you save it as a file and find it in the project tree,
      * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
      * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
      *
      * By default, cell content is formatted as text
-     * Use [RenderedContent.media][media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+     * Use [<code>RenderedContent.media</code>][media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
      *
-     * __NOTE:__ In Kotlin Notebook, output [FormattedFrame] directly, or use [toHtml],
+     * __NOTE:__ In Kotlin Notebook, output [<code>FormattedFrame</code>][FormattedFrame] directly, or use [<code>toHtml</code>][toHtml],
      * as that environment already has CSS- and script definitions for DataFrame.
-     * Using [toStandaloneHtml] might produce unexpected results.
+     * Using [<code>toStandaloneHtml</code>][toStandaloneHtml] might produce unexpected results.
      *
      * For more information: [See `toHtml` on the documentation website.](https://kotlin.github.io/dataframe/tohtml.html)
      *
-     * @param [configuration] The [DisplayConfiguration] to use as a base for this [FormattedFrame].
-     *   Default: [DisplayConfiguration.DEFAULT].
-     * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+     * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use as a base for this [<code>FormattedFrame</code>][FormattedFrame].
+     *   Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+     * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
      * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
      *   Default: `"DataFrame [rows x cols]"`
      * @see toHtml
@@ -1324,7 +1324,7 @@ public class FormattedFrame<T>(
     ): DataFrameHtmlData = df.toStandaloneHtml(getDisplayConfiguration(configuration), cellRenderer, getFooter)
 
     /**
-     * Applies this formatter to the given [configuration] and returns a new instance.
+     * Applies this formatter to the given [<code>configuration</code>][configuration] and returns a new instance.
      *
      * For more information: [See `toHtml` on the documentation website.](https://kotlin.github.io/dataframe/tohtml.html)
      */
@@ -1337,30 +1337,30 @@ public class FormattedFrame<T>(
 }
 
 /**
- * An intermediate class used in the [format] operation.
+ * An intermediate class used in the [<code>format</code>][format] operation.
  *
  * This class itself does nothing—it is just a transitional step before specifying
  * how to format the selected columns.
  * It must be followed by one of the positioning methods
- * to produce a new [FormattedFrame]; a [DataFrame] with HTML formatting data.
+ * to produce a new [<code>FormattedFrame</code>][FormattedFrame]; a [<code>DataFrame</code>][DataFrame] with HTML formatting data.
  *
  * Use the following function to filter the rows to format:
- * - [where][FormatClause.where] – filters the rows to format using a [RowValueFilter].
- * - [at][FormatClause.at] – Only format in rows with certain indices.
- * - [notNull][FormatClause.notNull] – Only format cells that have non-null values.
+ * - [<code>where</code>][FormatClause.where] – filters the rows to format using a [<code>RowValueFilter</code>][RowValueFilter].
+ * - [<code>at</code>][FormatClause.at] – Only format in rows with certain indices.
+ * - [<code>notNull</code>][FormatClause.notNull] – Only format cells that have non-null values.
  *
  * Use the following functions to finalize this formatting round:
- * - [with][FormatClause.with] – Specifies how to format the cells using a [CellFormatter].
- * - [perRowCol][FormatClause.perRowCol] – Specifies how to format each cell individually using a [RowColFormatter].
- * - [linearBg][FormatClause.linearBg] –
+ * - [<code>with</code>][FormatClause.with] – Specifies how to format the cells using a [<code>CellFormatter</code>][CellFormatter].
+ * - [<code>perRowCol</code>][FormatClause.perRowCol] – Specifies how to format each cell individually using a [<code>RowColFormatter</code>][RowColFormatter].
+ * - [<code>linearBg</code>][FormatClause.linearBg] –
  *   Interpolates between two colors to set the background color of each numeric cell based on its value.
- *   Shorthand for `.`[with][FormatClause.with]`  {  `[background][FormattingDsl.background]`(`[linear][FormattingDsl.linear]`(it, from, to)) }`
- * - [notNull][FormatClause.notNull] – Specifies how to format non-null cells using a [CellFormatter].
- *   Shorthand for `.`[notNull()][FormatClause.notNull]`.`[with { }][FormatClause.with].
+ *   Shorthand for `.`[<code>with</code>][FormatClause.with]`  {  `[<code>background</code>][FormattingDsl.background]`(`[<code>linear</code>][FormattingDsl.linear]`(it, from, to)) }`
+ * - [<code>notNull</code>][FormatClause.notNull] – Specifies how to format non-null cells using a [<code>CellFormatter</code>][CellFormatter].
+ *   Shorthand for `.`[<code>notNull()</code>][FormatClause.notNull]`.`[<code>with { }</code>][FormatClause.with].
  *
  * For more information: [See `format` on the documentation website.](https://kotlin.github.io/dataframe/format.html)
  *
- * See [Grammar][FormatDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][FormatDocs.Grammar] for more details.
  */
 public class FormatClause<T, C>(
     internal val df: DataFrame<T>,

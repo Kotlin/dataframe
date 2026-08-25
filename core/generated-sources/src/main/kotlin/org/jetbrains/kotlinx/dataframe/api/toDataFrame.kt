@@ -156,7 +156,7 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
     }.toDataFrameFromPairs<Unit>()
 
 /**
- * [DslMarker] to prevent functions from [CreateDataFrameDsl] being used inside [TraversePropertiesDsl].
+ * [<code>DslMarker</code>][DslMarker] to prevent functions from [<code>CreateDataFrameDsl</code>][CreateDataFrameDsl] being used inside [<code>TraversePropertiesDsl</code>][TraversePropertiesDsl].
  * This prevents notations like:
  * ```kt
  * list.toDataFrame {
@@ -176,7 +176,7 @@ public annotation class CreateDataFrameDslMarker
 public interface TraversePropertiesDsl {
 
     /**
-     * Skip given [classes] during recursive (dfs) traversal.
+     * Skip given [<code>classes</code>][classes] during recursive (dfs) traversal.
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
      */
@@ -184,7 +184,7 @@ public interface TraversePropertiesDsl {
     public fun exclude(vararg classes: KClass<*>)
 
     /**
-     * Skip given [properties] during recursive (dfs) traversal.
+     * Skip given [<code>properties</code>][properties] during recursive (dfs) traversal.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
@@ -193,7 +193,7 @@ public interface TraversePropertiesDsl {
     public fun exclude(vararg properties: KCallable<*>)
 
     /**
-     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+     * Store given [<code>classes</code>][classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
      */
@@ -201,7 +201,7 @@ public interface TraversePropertiesDsl {
     public fun preserve(vararg classes: KClass<*>)
 
     /**
-     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+     * Store given [<code>properties</code>][properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      *
      * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
@@ -211,7 +211,7 @@ public interface TraversePropertiesDsl {
 }
 
 /**
- * Store values of given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ * Store values of given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
  */
@@ -322,12 +322,12 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
 // endregion
 
 /**
- * Converts a list of lists into a [DataFrame].
+ * Converts a list of lists into a [<code>DataFrame</code>][DataFrame].
  *
- * By default, treats lists as row values. If [header] is not provided, the first inner list becomes a header (column names), and the remaining lists are treated as data.
+ * By default, treats lists as row values. If [<code>header</code>][header] is not provided, the first inner list becomes a header (column names), and the remaining lists are treated as data.
  *
- * With [containsColumns] = `true`, interprets each inner list as a column.
- * If [header] is not provided, the first element will be used as the column name, and the remaining elements as values.
+ * With [<code>containsColumns</code>][containsColumns] = `true`, interprets each inner list as a column.
+ * If [<code>header</code>][header] is not provided, the first element will be used as the column name, and the remaining elements as values.
  *
  * For more information: [See DataFrame from List<List<T>> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-list-list-t)
  *
@@ -336,7 +336,7 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
  *                        Otherwise, each nested list is a row.
  *                        Defaults to `false`.
  * @param header overrides extraction of column names from lists - all values are treated as data instead.
- * @return A [DataFrame] containing the data from the nested list structure.
+ * @return A [<code>DataFrame</code>][DataFrame] containing the data from the nested list structure.
  *         Returns an empty [DataFrame] if the input is empty or invalid.
  */
 @Refine

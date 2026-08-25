@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.NA
  *
  * This means that if `this` and `other` are considered equally "good", `false` should be returned.
  *
- * You add additional constraints to an [IsBetterThan] function in the following fashion:
+ * You add additional constraints to an [<code>IsBetterThan</code>][IsBetterThan] function in the following fashion:
  *
  * Let's say you want a value to álways be returned when it satisfies the condition `isPreferred(it)`,
  * but in all other cases, you just want the best.
@@ -36,7 +36,7 @@ internal typealias IsBetterThan<C> = C.(other: C) -> Boolean
 /**
  * Returns the index of the first element in this sequence that is not null and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`null` elements in [this].
+ * Returns -1 if there are no elements non-`null` elements in [<code>this</code>][this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
@@ -48,9 +48,9 @@ internal inline fun <C> Sequence<C>.indexOfBestNotNullBy(isBetterThan: IsBetterT
 
 /**
  * Returns the index of the first element in this sequence
- * that is not [NA (null or NaN)][NA] and is better than all previous elements.
+ * that is not [<code>NA (null or NaN)</code>][NA] and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`NA` elements in [this].
+ * Returns -1 if there are no elements non-`NA` elements in [<code>this</code>][this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
@@ -63,9 +63,9 @@ internal inline fun <C> Sequence<C>.indexOfBestNotNaBy(isBetterThan: IsBetterTha
 /**
  * Returns the index of the first element in this sequence that is better than all previous elements.
  *
- * Returns -1 if there are no elements in [this].
+ * Returns -1 if there are no elements in [<code>this</code>][this].
  *
- * Considers the first element in [this] the best if [isBetterThan] only returns `false`.
+ * Considers the first element in [<code>this</code>][this] the best if [<code>isBetterThan</code>][isBetterThan] only returns `false`.
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */

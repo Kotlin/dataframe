@@ -48,26 +48,26 @@ import kotlin.reflect.KProperty
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * ### Min Modes
  *
  * Depending on what exactly you want the minimum of, there are several modes.
- * They are shown here for [DataFrame], but they exist for the other receivers too:
+ * They are shown here for [<code>DataFrame</code>][DataFrame], but they exist for the other receivers too:
  *
- * - [min][DataFrame.min]`()` — the minimum of each suitable column separately.
- * - [min][DataFrame.min]` { columns }` — a single minimum of all values in all selected columns.
- * - [minFor][DataFrame.minFor]` { columns }` — the minimum of each selected column separately.
- * - [minOf][DataFrame.minOf]` { expression }` — the minimum of the values that the given expression
+ * - [<code>min</code>][DataFrame.min]`()` — the minimum of each suitable column separately.
+ * - [<code>min</code>][DataFrame.min]` { columns }` — a single minimum of all values in all selected columns.
+ * - [<code>minFor</code>][DataFrame.minFor]` { columns }` — the minimum of each selected column separately.
+ * - [<code>minOf</code>][DataFrame.minOf]` { expression }` — the minimum of the values that the given expression
  *   returns for each row.
- * - [minBy][DataFrame.minBy]` { expression }` — the first row for which the given expression returns
+ * - [<code>minBy</code>][DataFrame.minBy]` { expression }` — the first row for which the given expression returns
  *   the minimum value.
  *
- * [min][DataFrame.min], [minOf][DataFrame.minOf], and [minBy][DataFrame.minBy] all have an `-OrNull`
+ * [<code>min</code>][DataFrame.min], [<code>minOf</code>][DataFrame.minOf], and [<code>minBy</code>][DataFrame.minBy] all have an `-OrNull`
  * counterpart which returns `null` instead of throwing an exception when there's nothing to compare.
  *
- * Mirror operation: [max][DataFrame.max].
+ * Mirror operation: [<code>max</code>][DataFrame.max].
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -81,25 +81,25 @@ internal interface MinDocs : CommonMinMaxDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -107,26 +107,26 @@ internal interface MinDocs : CommonMinMaxDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`("length", "age")`
+     * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`("length", "age")`
      *
      *
      *
@@ -139,25 +139,25 @@ internal interface MinDocs : CommonMinMaxDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -165,26 +165,26 @@ internal interface MinDocs : CommonMinMaxDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[minFor][org.jetbrains.kotlinx.dataframe.api.minFor]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>minFor</code>][org.jetbrains.kotlinx.dataframe.api.minFor]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[minFor][org.jetbrains.kotlinx.dataframe.api.minFor]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>minFor</code>][org.jetbrains.kotlinx.dataframe.api.minFor]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[minFor][org.jetbrains.kotlinx.dataframe.api.minFor]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>minFor</code>][org.jetbrains.kotlinx.dataframe.api.minFor]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[minFor][org.jetbrains.kotlinx.dataframe.api.minFor]`("length", "age")`
+     * <code>`df`</code>`.`[<code>minFor</code>][org.jetbrains.kotlinx.dataframe.api.minFor]`("length", "age")`
      *
      *
      *
@@ -197,7 +197,7 @@ internal interface MinDocs : CommonMinMaxDocs {
 // region DataColumn
 
 /**
- * Returns the minimum of the values in this [DataColumn].
+ * Returns the minimum of the values in this [<code>DataColumn</code>][DataColumn].
  *
  *
  *
@@ -207,21 +207,21 @@ internal interface MinDocs : CommonMinMaxDocs {
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [minOrNull][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [minOf][DataColumn.minOf] — the minimum of the values a selector returns for each element.
- * - [minBy][DataColumn.minBy] — the element for which a selector returns the minimum value.
- * - [max][DataColumn.max] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minOrNull</code>][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>minOf</code>][DataColumn.minOf] — the minimum of the values a selector returns for each element.
+ * - [<code>minBy</code>][DataColumn.minBy] — the element for which a selector returns the minimum value.
+ * - [<code>max</code>][DataColumn.max] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -235,9 +235,9 @@ internal interface MinDocs : CommonMinMaxDocs {
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The smallest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -245,7 +245,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
     minOrNull(skipNaN).suggestIfNull("min")
 
 /**
- * Returns the minimum of the values in this [DataColumn], or `null` if there is nothing to compare.
+ * Returns the minimum of the values in this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
@@ -255,23 +255,23 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [min][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
- * - [minOfOrNull][DataColumn.minOfOrNull] — the minimum of the values a selector returns
+ * - [<code>min</code>][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>minOfOrNull</code>][DataColumn.minOfOrNull] — the minimum of the values a selector returns
  *   for each element.
- * - [minByOrNull][DataColumn.minByOrNull] — the element for which a selector returns
+ * - [<code>minByOrNull</code>][DataColumn.minByOrNull] — the element for which a selector returns
  *   the minimum value.
- * - [maxOrNull][DataColumn.maxOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxOrNull</code>][DataColumn.maxOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -284,16 +284,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The smallest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.min<T>(skipNaN).aggregateSingleColumn(this)
 
 /**
- * Returns the first element of this [DataColumn] for which the given [selector]
+ * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
  * returns the minimum value.
  *
  *
@@ -304,22 +304,22 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minBy] with [minOf][DataColumn.minOf], which returns the minimum [selector] value itself
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][DataColumn.minOf], which returns the minimum [<code>selector</code>][selector] value itself
  * instead of the element it belongs to.
  *
  * See also:
- * - [minByOrNull][DataColumn.minByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [maxBy][DataColumn.maxBy] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minByOrNull</code>][DataColumn.minByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>maxBy</code>][DataColumn.maxBy] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -331,11 +331,11 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The first element for which [selector] returns the minimum value.
+ * @return The first element for which [<code>selector</code>][selector] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
@@ -344,7 +344,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
 ): T & Any = minByOrNull(skipNaN, selector).suggestIfNull("minBy")
 
 /**
- * Returns the first element of this [DataColumn] for which the given [selector]
+ * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
  * returns the minimum value, or `null` if there is nothing to compare.
  *
  *
@@ -355,22 +355,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minByOrNull] with [minOfOrNull][DataColumn.minOfOrNull], which returns the minimum
- * [selector] value itself instead of the element it belongs to.
+ * Don't confuse [<code>minByOrNull</code>][minByOrNull] with [<code>minOfOrNull</code>][DataColumn.minOfOrNull], which returns the minimum
+ * [<code>selector</code>][selector] value itself instead of the element it belongs to.
  *
  * See also:
- * - [minBy][DataColumn.minBy] — throws instead of returning `null` for a column with nothing to compare.
- * - [maxByOrNull][DataColumn.maxByOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minBy</code>][DataColumn.minBy] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>maxByOrNull</code>][DataColumn.maxByOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -383,11 +383,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The first element for which [selector] returns the minimum value,
+ * @return The first element for which [<code>selector</code>][selector] returns the minimum value,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(
@@ -396,8 +396,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
 ): T? = Aggregators.min<R>(skipNaN).aggregateByOrNull(this, selector)
 
 /**
- * Returns the minimum of the values that the given [selector] returns
- * for each element of this [DataColumn].
+ * Returns the minimum of the values that the given [<code>selector</code>][selector] returns
+ * for each element of this [<code>DataColumn</code>][DataColumn].
  *
  *
  *
@@ -407,22 +407,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minOf] with [minBy][DataColumn.minBy], which returns the element the minimum
- * [selector] value belongs to instead of that value.
+ * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][DataColumn.minBy], which returns the element the minimum
+ * [<code>selector</code>][selector] value belongs to instead of that value.
  *
  * See also:
- * - [minOfOrNull][DataColumn.minOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [maxOf][DataColumn.maxOf] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minOfOrNull</code>][DataColumn.minOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>maxOf</code>][DataColumn.maxOf] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -434,11 +434,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The minimum of the values [selector] returns.
+ * @return The minimum of the values [<code>selector</code>][selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
@@ -447,8 +447,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
 ): R & Any = minOfOrNull(skipNaN, selector).suggestIfNull("minOf")
 
 /**
- * Returns the minimum of the values that the given [selector] returns
- * for each element of this [DataColumn], or `null` if there is nothing to compare.
+ * Returns the minimum of the values that the given [<code>selector</code>][selector] returns
+ * for each element of this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
@@ -458,22 +458,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minOfOrNull] with [minByOrNull][DataColumn.minByOrNull], which returns the element
- * the minimum [selector] value belongs to instead of that value.
+ * Don't confuse [<code>minOfOrNull</code>][minOfOrNull] with [<code>minByOrNull</code>][DataColumn.minByOrNull], which returns the element
+ * the minimum [<code>selector</code>][selector] value belongs to instead of that value.
  *
  * See also:
- * - [minOf][DataColumn.minOf] — throws instead of returning `null` for a column with nothing to compare.
- * - [maxOfOrNull][DataColumn.maxOfOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minOf</code>][DataColumn.minOf] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>maxOfOrNull</code>][DataColumn.maxOfOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -486,11 +486,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The minimum of the values [selector] returns,
+ * @return The minimum of the values [<code>selector</code>][selector] returns,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNull(
@@ -509,10 +509,10 @@ public fun DataRow<*>.rowMinOrNull(): Nothing? = error(ROW_MIN_OR_NULL)
 public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
 
 /**
- * Returns the minimum of the values of type [T] in this [DataRow],
+ * Returns the minimum of the values of type [<code>T</code>][T] in this [<code>DataRow</code>][DataRow],
  * or `null` if there is nothing to compare.
  *
- * Only the values in the columns of type [T] (or `T?`) are taken into account;
+ * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
  *
@@ -523,20 +523,20 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [rowMinOf][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
- * - [rowMaxOfOrNull][DataRow.rowMaxOfOrNull] — the mirror operation.
- * - [minOrNull][DataFrame.minOrNull] — the minimum of the values in specific columns of a [DataFrame].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>rowMinOf</code>][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>rowMaxOfOrNull</code>][DataRow.rowMaxOfOrNull] — the mirror operation.
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — the minimum of the values in specific columns of a [<code>DataFrame</code>][DataFrame].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "Row statistics" on the documentation website.](https://kotlin.github.io/dataframe/rowstats.html)
  *
@@ -549,18 +549,18 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The smallest value of type [T] in this row, or `null` if there are no values to compare.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The smallest value of type [<code>T</code>][T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
 /**
- * Returns the minimum of the values of type [T] in this [DataRow].
+ * Returns the minimum of the values of type [<code>T</code>][T] in this [<code>DataRow</code>][DataRow].
  *
- * Only the values in the columns of type [T] (or `T?`) are taken into account;
+ * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
  *
@@ -571,21 +571,21 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
+ * - [<code>rowMinOfOrNull</code>][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
  *   when there's nothing to compare.
- * - [rowMaxOf][DataRow.rowMaxOf] — the mirror operation.
- * - [min][DataFrame.min] — the minimum of the values in specific columns of a [DataFrame].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>rowMaxOf</code>][DataRow.rowMaxOf] — the mirror operation.
+ * - [<code>min</code>][DataFrame.min] — the minimum of the values in specific columns of a [<code>DataFrame</code>][DataFrame].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "Row statistics" on the documentation website.](https://kotlin.github.io/dataframe/rowstats.html)
  *
@@ -598,10 +598,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The smallest value of type [T] in this row.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The smallest value of type [<code>T</code>][T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boolean = skipNaNDefault): T =
@@ -612,7 +612,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
 // region DataFrame
 
 /**
- * Returns the minimum of the values of each suitable column of this [DataFrame] separately.
+ * Returns the minimum of the values of each suitable column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -625,7 +625,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -638,10 +638,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * See also:
- * - [minFor][DataFrame.minFor] — the same, but for an explicit selection of columns.
- * - [min][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [max][DataFrame.max] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minFor</code>][DataFrame.minFor] — the same, but for an explicit selection of columns.
+ * - [<code>min</code>][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
+ * - [<code>max</code>][DataFrame.max] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -654,10 +654,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the minimum of each suitable column of this [DataFrame].
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each suitable column of this [<code>DataFrame</code>][DataFrame].
  */
 @Refine
 @Interpretable("Min0")
@@ -665,7 +665,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN, intraComparableColumns())
 
 /**
- * Returns the minimum of the values of each selected column of this [DataFrame] separately.
+ * Returns the minimum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  *
  *
@@ -675,7 +675,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -689,22 +689,22 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions].
  *
  * See also:
- * - [min][DataFrame.min]`()` — the same, but for all suitable columns at once.
- * - [min][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [maxFor][DataFrame.maxFor] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][DataFrame.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -718,12 +718,12 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the minimum of.
- * @return A single [DataRow] with the minimum of each selected column.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column.
  */
 @Refine
 @Interpretable("Min1")
@@ -733,7 +733,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 ): DataRow<T> = Aggregators.min.invoke(skipNaN).aggregateFor(this, columns)
 
 /**
- * Returns the minimum of the values of each selected column of this [DataFrame] separately.
+ * Returns the minimum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  *
  *
@@ -743,7 +743,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -757,15 +757,15 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions].
  *
  * See also:
- * - [min][DataFrame.min]`()` — the same, but for all suitable columns at once.
- * - [min][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
- * - [maxFor][DataFrame.maxFor] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][DataFrame.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][DataFrame.min]` { columns }` — a single minimum of all values in the selected columns.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -775,13 +775,13 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * df.minFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the minimum of each selected column.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column.
  */
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
@@ -801,7 +801,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 ): DataRow<T> = minFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns a single minimum of all the values in the selected columns of this [DataFrame].
+ * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
@@ -811,26 +811,26 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
- * - [minOf][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
- * - [max][DataFrame.max] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minFor</code>][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [<code>minOf</code>][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
+ * - [<code>max</code>][DataFrame.max] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -838,18 +838,18 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -857,11 +857,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
@@ -874,10 +874,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -888,7 +888,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
 ): C & Any = minOrNull(skipNaN, columns).suggestIfNull("min")
 
 /**
- * Returns a single minimum of all the values in the selected columns of this [DataFrame].
+ * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
@@ -898,26 +898,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
- * - [minOf][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
- * - [max][DataFrame.max] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minFor</code>][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [<code>minOf</code>][DataFrame.minOf] — the minimum of the values a row expression returns for each row.
+ * - [<code>max</code>][DataFrame.max] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -925,12 +925,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[min][org.jetbrains.kotlinx.dataframe.api.min]`("length", "age")`
+ * <code>`df`</code>`.`[<code>min</code>][org.jetbrains.kotlinx.dataframe.api.min]`("length", "age")`
  *
  *
  *
@@ -941,12 +941,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * df.min("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -968,7 +968,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
 ): C & Any = minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
 
 /**
- * Returns a single minimum of all the values in the selected columns of this [DataFrame],
+ * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
  *
  *
@@ -979,26 +979,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
- * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
- * - [minOfOrNull][DataFrame.minOfOrNull] — the minimum of the values a row expression
+ * - [<code>min</code>][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>minFor</code>][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [<code>minOfOrNull</code>][DataFrame.minOfOrNull] — the minimum of the values a row expression
  *   returns for each row.
- * - [maxOrNull][DataFrame.maxOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1006,18 +1006,18 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1025,11 +1025,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[minOrNull][org.jetbrains.kotlinx.dataframe.api.minOrNull]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>minOrNull</code>][org.jetbrains.kotlinx.dataframe.api.minOrNull]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[minOrNull][org.jetbrains.kotlinx.dataframe.api.minOrNull]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>minOrNull</code>][org.jetbrains.kotlinx.dataframe.api.minOrNull]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[minOrNull][org.jetbrains.kotlinx.dataframe.api.minOrNull]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>minOrNull</code>][org.jetbrains.kotlinx.dataframe.api.minOrNull]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
@@ -1043,10 +1043,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
@@ -1057,7 +1057,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
 ): C? = Aggregators.min<C>(skipNaN).aggregateAll(this, columns)
 
 /**
- * Returns a single minimum of all the values in the selected columns of this [DataFrame],
+ * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
  *
  *
@@ -1068,26 +1068,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
- * - [minFor][DataFrame.minFor] — the minimum of each selected column separately.
- * - [minOfOrNull][DataFrame.minOfOrNull] — the minimum of the values a row expression
+ * - [<code>min</code>][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>minFor</code>][DataFrame.minFor] — the minimum of each selected column separately.
+ * - [<code>minOfOrNull</code>][DataFrame.minOfOrNull] — the minimum of the values a row expression
  *   returns for each row.
- * - [maxOrNull][DataFrame.maxOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1095,12 +1095,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[minOrNull][org.jetbrains.kotlinx.dataframe.api.minOrNull]`("length", "age")`
+ * <code>`df`</code>`.`[<code>minOrNull</code>][org.jetbrains.kotlinx.dataframe.api.minOrNull]`("length", "age")`
  *
  *
  *
@@ -1112,12 +1112,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * df.minOrNull("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -1139,12 +1139,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
 ): C? = minOrNull(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns the minimum of the values that the given [expression] returns
- * for each row of this [DataFrame].
+ * Returns the minimum of the values that the given [<code>expression</code>][expression] returns
+ * for each row of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1158,24 +1158,24 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minOf] with [minBy][DataFrame.minBy], which returns the row the minimum
- * [expression] value belongs to instead of that value.
+ * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][DataFrame.minBy], which returns the row the minimum
+ * [<code>expression</code>][expression] value belongs to instead of that value.
  *
  * See also:
- * - [minOfOrNull][DataFrame.minOfOrNull] — returns `null` instead of throwing when there's
+ * - [<code>minOfOrNull</code>][DataFrame.minOfOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [min][DataFrame.min] — a single minimum of all values in the selected columns.
- * - [maxOf][DataFrame.maxOf] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][DataFrame.min] — a single minimum of all values in the selected columns.
+ * - [<code>maxOf</code>][DataFrame.maxOf] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1187,11 +1187,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The minimum of the values [expression] returns.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The minimum of the values [<code>expression</code>][expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
@@ -1200,12 +1200,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
 ): C & Any = minOfOrNull(skipNaN, expression).suggestIfNull("minOf")
 
 /**
- * Returns the minimum of the values that the given [expression] returns
- * for each row of this [DataFrame], or `null` if there is nothing to compare.
+ * Returns the minimum of the values that the given [<code>expression</code>][expression] returns
+ * for each row of this [<code>DataFrame</code>][DataFrame], or `null` if there is nothing to compare.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1219,23 +1219,23 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minOfOrNull] with [minByOrNull][DataFrame.minByOrNull], which returns the row the
- * minimum [expression] value belongs to instead of that value.
+ * Don't confuse [<code>minOfOrNull</code>][minOfOrNull] with [<code>minByOrNull</code>][DataFrame.minByOrNull], which returns the row the
+ * minimum [<code>expression</code>][expression] value belongs to instead of that value.
  *
  * See also:
- * - [minOf][DataFrame.minOf] — throws instead of returning `null` when there's nothing to compare.
- * - [minOrNull][DataFrame.minOrNull] — a single minimum of all values in the selected columns.
- * - [maxOfOrNull][DataFrame.maxOfOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minOf</code>][DataFrame.minOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — a single minimum of all values in the selected columns.
+ * - [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1248,11 +1248,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The minimum of the values [expression] returns,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The minimum of the values [<code>expression</code>][expression] returns,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull(
@@ -1261,12 +1261,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
 ): C? = Aggregators.min<C>(skipNaN).aggregateOf(this, expression)
 
 /**
- * Returns the first row of this [DataFrame] for which the given [expression]
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression]
  * returns the minimum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1280,24 +1280,24 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum [expression] value
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][DataFrame.minOf], which returns the minimum [<code>expression</code>][expression] value
  * itself instead of the row it belongs to.
  *
  * See also:
- * - [minByOrNull][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
+ * - [<code>minByOrNull</code>][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [maxBy][DataFrame.maxBy] — the mirror operation.
- * - [sortBy][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxBy</code>][DataFrame.maxBy] — the mirror operation.
+ * - [<code>sortBy</code>][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -1311,11 +1311,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The first [DataRow] for which [expression] returns the minimum value.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
@@ -1324,7 +1324,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
 ): DataRow<T> = minByOrNull(skipNaN, expression).suggestIfNull("minBy")
 
 /**
- * Returns the first row of this [DataFrame] that has the smallest value
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the smallest value
  * in the column with the given name.
  *
  *
@@ -1335,25 +1335,25 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum value a row
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][DataFrame.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [minByOrNull][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
+ * - [<code>minByOrNull</code>][DataFrame.minByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [min][DataFrame.min] — returns the smallest value itself instead of the row it belongs to.
- * - [maxBy][DataFrame.maxBy] — the mirror operation.
- * - [sortBy][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][DataFrame.min] — returns the smallest value itself instead of the row it belongs to.
+ * - [<code>maxBy</code>][DataFrame.maxBy] — the mirror operation.
+ * - [<code>sortBy</code>][DataFrame.sortBy] — orders all rows instead of taking just the smallest one.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -1363,13 +1363,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * df.minBy("age")
  * ```
  *
- * @param [column] The name of the column of this [DataFrame] to compare the rows by.
+ * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The first [DataRow] with the smallest value in the given column.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The first [<code>DataRow</code>][DataRow] with the smallest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -1390,12 +1390,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
 ): DataRow<T> = minByOrNull(column, skipNaN).suggestIfNull("minBy")
 
 /**
- * Returns the first row of this [DataFrame] for which the given [expression] returns
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression] returns
  * the minimum value, or `null` if there is nothing to compare.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1409,22 +1409,22 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
- * [expression] value itself instead of the row it belongs to.
+ * Don't confuse [<code>minByOrNull</code>][minByOrNull] with [<code>minOfOrNull</code>][DataFrame.minOfOrNull], which returns the minimum
+ * [<code>expression</code>][expression] value itself instead of the row it belongs to.
  *
  * See also:
- * - [minBy][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
- * - [maxByOrNull][DataFrame.maxByOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>minBy</code>][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>maxByOrNull</code>][DataFrame.maxByOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -1436,11 +1436,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The first [DataRow] for which [expression] returns the minimum value,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the minimum value,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull(
@@ -1449,7 +1449,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
 ): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, expression)
 
 /**
- * Returns the first row of this [DataFrame] that has the smallest value in the column with
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the smallest value in the column with
  * the given name, or `null` if there is nothing to compare.
  *
  *
@@ -1460,24 +1460,24 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
+ * Don't confuse [<code>minByOrNull</code>][minByOrNull] with [<code>minOfOrNull</code>][DataFrame.minOfOrNull], which returns the minimum
  * value a row expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [minBy][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
- * - [minOrNull][DataFrame.minOrNull] — returns the smallest value itself instead of
+ * - [<code>minBy</code>][DataFrame.minBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — returns the smallest value itself instead of
  *   the row it belongs to.
- * - [maxByOrNull][DataFrame.maxByOrNull] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxByOrNull</code>][DataFrame.maxByOrNull] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -1487,13 +1487,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * df.minByOrNull("age")
  * ```
  *
- * @param [column] The name of the column of this [DataFrame] to compare the rows by.
+ * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The first [DataRow] with the smallest value in the given column,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The first [<code>DataRow</code>][DataRow] with the smallest value in the given column,
  *   or `null` if there are no values to compare.
  */
 public fun <T> DataFrame<T>.minByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
@@ -1518,10 +1518,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
 // region GroupBy
 
 /**
- * Aggregates this [GroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the minimum of the values of
  * each suitable column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each suitable column.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -1534,7 +1534,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1547,12 +1547,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * See also:
- * - [minFor][Grouped.minFor] — the same, but for an explicit selection of columns.
- * - [min][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>minFor</code>][Grouped.minFor] — the same, but for an explicit selection of columns.
+ * - [<code>min</code>][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [max][Grouped.max] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>max</code>][Grouped.max] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1565,10 +1565,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and the minimum of each suitable column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each suitable column per group.
  */
 @Refine
 @Interpretable("GroupByMin1")
@@ -1576,10 +1576,10 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN, intraComparableColumns())
 
 /**
- * Aggregates this [GroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
  *
@@ -1590,7 +1590,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1604,24 +1604,24 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions].
  *
  * See also:
- * - [min][Grouped.min]`()` — the same, but for all suitable columns at once.
- * - [min][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][Grouped.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][Grouped.maxFor] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][Grouped.maxFor] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1634,12 +1634,12 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
- * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each selected column per group.
  */
 @Refine
 @Interpretable("GroupByMin0")
@@ -1649,10 +1649,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
 ): DataFrame<T> = Aggregators.min.invoke(skipNaN).aggregateFor(this, columns)
 
 /**
- * Aggregates this [GroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
  *
@@ -1663,7 +1663,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1677,17 +1677,17 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions].
  *
  * See also:
- * - [min][Grouped.min]`()` — the same, but for all suitable columns at once.
- * - [min][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][Grouped.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][Grouped.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][Grouped.maxFor] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][Grouped.maxFor] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1701,10 +1701,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * @param [columns] The names of the columns to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each selected column per group.
  */
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
@@ -1724,12 +1724,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
 ): DataFrame<T> = minFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [GroupBy] by computing a single minimum of all the values
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
  * a single column with the minimum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
+ * That column is named [<code>name</code>][name], or, if [<code>name</code>][name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
  *
@@ -1740,7 +1740,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1754,17 +1754,17 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions].
  *
  * See also:
- * - [minFor][Grouped.minFor] — the minimum of each selected column separately, per group.
- * - [minOf][Grouped.minOf] — the minimum of the values a row expression returns
+ * - [<code>minFor</code>][Grouped.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>minOf</code>][Grouped.minOf] — the minimum of the values a row expression returns
  *   for each row of a group.
- * - [max][Grouped.max] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>max</code>][Grouped.max] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1781,11 +1781,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *   is selected, and `"min"` otherwise.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
- * @return A new [DataFrame] with the group keys and a single minimum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
 @Refine
 @Interpretable("GroupByMin2")
@@ -1796,12 +1796,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
 ): DataFrame<T> = Aggregators.min<C>(skipNaN).aggregateAll(this, name, columns)
 
 /**
- * Aggregates this [GroupBy] by computing a single minimum of all the values
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
  * a single column with the minimum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
+ * That column is named [<code>name</code>][name], or, if [<code>name</code>][name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
  *
@@ -1812,7 +1812,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1826,17 +1826,17 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions].
  *
  * See also:
- * - [minFor][Grouped.minFor] — the minimum of each selected column separately, per group.
- * - [minOf][Grouped.minOf] — the minimum of the values a row expression returns
+ * - [<code>minFor</code>][Grouped.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>minOf</code>][Grouped.minOf] — the minimum of the values a row expression returns
  *   for each row of a group.
- * - [max][Grouped.max] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>max</code>][Grouped.max] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1854,10 +1854,10 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *   is selected, and `"min"` otherwise.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and a single minimum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
 public fun <T> Grouped<T>.min(
     vararg columns: String,
@@ -1882,15 +1882,15 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
 ): DataFrame<T> = min(name, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [GroupBy] by computing the minimum of the values that the given [expression]
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the minimum of the values that the given [<code>expression</code>][expression]
  * returns for each row of a group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
- * a single column with the minimum per group, named [name] (or `"min"` if [name] is `null`).
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
+ * a single column with the minimum per group, named [<code>name</code>][name] (or `"min"` if [<code>name</code>][name] is `null`).
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1904,7 +1904,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1916,14 +1916,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [minOf] with [minBy][GroupBy.minBy], which returns the row of each group for which
+ * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][GroupBy.minBy], which returns the row of each group for which
  * the expression returns the minimum value, instead of that value.
  *
  * See also:
- * - [min][Grouped.min] — a single minimum of all values in the selected columns, per group.
- * - [maxOf][Grouped.maxOf] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][Grouped.min] — a single minimum of all values in the selected columns, per group.
+ * - [<code>maxOf</code>][Grouped.maxOf] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1937,11 +1937,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * @param [name] The name of the resulting column. If `null` (the default), `"min"` is used.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return A new [DataFrame] with the group keys and a single minimum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
 @Refine
 @Interpretable("GroupByMinOf")
@@ -1952,21 +1952,21 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
 ): DataFrame<T> = Aggregators.min<C>(skipNaN).aggregateOf(this, name, expression)
 
 /**
- * Reduces each group of this [GroupBy] to the first row for which the given [rowExpression]
+ * Reduces each group of this [<code>GroupBy</code>][GroupBy] to the first row for which the given [<code>rowExpression</code>][rowExpression]
  * returns the minimum value.
  *
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
- * [concat][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [into][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
+ * Instead, it returns a [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
+ * [<code>concat</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
  *
- * See [GroupBy reducing][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
+ * See [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1980,17 +1980,17 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [minBy] with [minOf][Grouped.minOf], which returns the minimum value itself
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][Grouped.minOf], which returns the minimum value itself
  * instead of the row it belongs to.
  *
  * See also:
- * - [maxBy][GroupBy.maxBy] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxBy</code>][GroupBy.maxBy] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -2002,12 +2002,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to compute the value to compare for each row.
- * @return A [ReducedGroupBy] with, for each group, the first row
- *   for which [rowExpression] returns the minimum value.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
+ *   for which [<code>rowExpression</code>][rowExpression] returns the minimum value.
  */
 @Interpretable("GroupByReduceExpression")
 public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.minBy(
@@ -2023,17 +2023,17 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
 ): ReducedGroupBy<T, G> = reduce { minByOrNull(column, skipNaN) }
 
 /**
- * Reduces each group of this [GroupBy] to the first row that has the smallest value
+ * Reduces each group of this [<code>GroupBy</code>][GroupBy] to the first row that has the smallest value
  * in the column with the given name.
  *
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
- * [concat][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [into][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
+ * Instead, it returns a [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
+ * [<code>concat</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
  *
- * See [GroupBy reducing][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
+ * See [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
  *
  *
  *
@@ -2043,18 +2043,18 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [minBy] with [minOf][Grouped.minOf], which returns the minimum value a row
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][Grouped.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [min][Grouped.min] — the minimum value itself instead of the row it belongs to.
- * - [maxBy][GroupBy.maxBy] — the mirror operation.
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][Grouped.min] — the minimum value itself instead of the row it belongs to.
+ * - [<code>maxBy</code>][GroupBy.maxBy] — the mirror operation.
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -2067,10 +2067,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedGroupBy] with, for each group, the first row
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
  *   that has the smallest value in the given column.
  */
 public fun <T, G> GroupBy<T, G>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
@@ -2088,10 +2088,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
 // region Pivot
 
 /**
- * Aggregates this [Pivot] by computing the minimum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the minimum of the values of
  * each suitable column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the minimum
  * of each suitable column of the corresponding group.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -2104,7 +2104,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2116,15 +2116,15 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [minFor][Pivot.minFor] — the same, but for an explicit selection of columns.
- * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>minFor</code>][Pivot.minFor] — the same, but for an explicit selection of columns.
+ * - [<code>min</code>][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [max][Pivot.max] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>max</code>][Pivot.max] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2151,10 +2151,10 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
     delegate { min(separate, skipNaN) }
 
 /**
- * Aggregates this [Pivot] by computing the minimum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
  *
@@ -2165,7 +2165,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2179,24 +2179,24 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]`()` — the same, but for all suitable columns at once.
- * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][Pivot.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][Pivot.maxFor] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][Pivot.maxFor] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2230,10 +2230,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
 ): DataRow<T> = delegate { minFor(separate, skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing the minimum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
  *
@@ -2244,7 +2244,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2258,17 +2258,17 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]`()` — the same, but for all suitable columns at once.
- * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][Pivot.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][Pivot.maxFor] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][Pivot.maxFor] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2315,10 +2315,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
 ): DataRow<T> = minFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [Pivot] by computing a single minimum of all the values
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
  *
@@ -2329,7 +2329,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2343,16 +2343,16 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]`()` — the minimum of each suitable column separately, per group.
- * - [minFor][Pivot.minFor] — the minimum of each selected column separately, per group.
- * - [max][Pivot.max] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][Pivot.min]`()` — the minimum of each suitable column separately, per group.
+ * - [<code>minFor</code>][Pivot.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>max</code>][Pivot.max] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2378,10 +2378,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
 ): DataRow<T> = delegate { min(skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing a single minimum of all the values
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
  *
@@ -2392,7 +2392,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2406,16 +2406,16 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]`()` — the minimum of each suitable column separately, per group.
- * - [minFor][Pivot.minFor] — the minimum of each selected column separately, per group.
- * - [max][Pivot.max] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][Pivot.min]`()` — the minimum of each suitable column separately, per group.
+ * - [<code>minFor</code>][Pivot.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>max</code>][Pivot.max] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2453,15 +2453,15 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
 ): DataRow<T> = min(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [Pivot] by computing the minimum of the values that the given [rowExpression]
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the minimum of the values that the given [<code>rowExpression</code>][rowExpression]
  * returns for each row, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the minimum
  * of the expression's results for the rows of the corresponding group.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -2475,7 +2475,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2487,17 +2487,17 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [minOf] with [minBy][Pivot.minBy], which returns the first row of each group for
+ * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][Pivot.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxOf][Pivot.maxOf] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxOf</code>][Pivot.maxOf] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2522,12 +2522,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
 ): DataRow<T> = delegate { minOf(skipNaN, rowExpression) }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * for which the given [rowExpression] returns the minimum value.
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
+ * for which the given [<code>rowExpression</code>][rowExpression] returns the minimum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -2541,7 +2541,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -2549,18 +2549,18 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivot][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
+ * Instead, it returns a [<code>ReducedPivot</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
  *
- * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value the expression
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][Pivot.minOf], which returns the minimum value the expression
  * returns itself, instead of the row.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [maxBy][Pivot.maxBy] — the mirror operation.
- * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxBy</code>][Pivot.maxBy] — the mirror operation.
+ * - [<code>Pivot reducing</code>][PivotDocs.Reducing] — all other ways to reduce a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -2572,12 +2572,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivot] holding, per group,
- *   the first row where the [rowExpression] produced the minimum result.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group,
+ *   the first row where the [<code>rowExpression</code>][rowExpression] produced the minimum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -2592,8 +2592,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
 ): ReducedPivot<T> = reduce { minByOrNull(column, skipNaN) }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * that has the smallest value in the given [column].
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
+ * that has the smallest value in the given [<code>column</code>][column].
  *
  *
  *
@@ -2603,7 +2603,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -2611,19 +2611,19 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivot][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
+ * Instead, it returns a [<code>ReducedPivot</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
  *
- * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value a row expression
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][Pivot.minOf], which returns the minimum value a row expression
  * returns itself, instead of the row.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [min][Pivot.min]` { columns }` — the minimum value itself, instead of the row.
- * - [maxBy][Pivot.maxBy] — the mirror operation.
- * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][Pivot.min]` { columns }` — the minimum value itself, instead of the row.
+ * - [<code>maxBy</code>][Pivot.maxBy] — the mirror operation.
+ * - [<code>Pivot reducing</code>][PivotDocs.Reducing] — all other ways to reduce a [<code>Pivot</code>][Pivot].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -2636,10 +2636,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedPivot] holding, per group, the first row with the smallest value
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group, the first row with the smallest value
  *   in the given column.
  */
 public fun <T> Pivot<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
@@ -2657,11 +2657,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
 // region PivotGroupBy
 
 /**
- * Aggregates this [PivotGroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the minimum of the values of
  * each suitable column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the minimum of each suitable column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the minimum of each suitable column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
@@ -2673,7 +2673,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2685,16 +2685,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [minFor][PivotGroupBy.minFor] — the same, but for an explicit selection of columns.
- * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>minFor</code>][PivotGroupBy.minFor] — the same, but for an explicit selection of columns.
+ * - [<code>min</code>][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [max][PivotGroupBy.max] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>max</code>][PivotGroupBy.max] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2721,11 +2721,11 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
     minFor(separate, skipNaN, intraComparableColumns())
 
 /**
- * Aggregates this [PivotGroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the minimum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the minimum of each selected column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2735,7 +2735,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2749,26 +2749,26 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
- * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][PivotGroupBy.maxFor] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][PivotGroupBy.maxFor] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2800,11 +2800,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
 ): DataFrame<T> = Aggregators.min.invoke(skipNaN).aggregateFor(this, separate, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing the minimum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the minimum of the values of
  * each selected column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the minimum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the minimum of each selected column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2814,7 +2814,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2828,19 +2828,19 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinForSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
- * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][PivotGroupBy.min]`()` — the same, but for all suitable columns at once.
+ * - [<code>min</code>][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxFor][PivotGroupBy.maxFor] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxFor</code>][PivotGroupBy.maxFor] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2887,12 +2887,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
 ): DataFrame<T> = minFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single minimum of all the values
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a [DataFrame] where each cell contains the smallest value among all the values in the
- * selected columns of the group corresponding to that [pivot] key (column)
- * and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the smallest value among all the values in the
+ * selected columns of the group corresponding to that [<code>pivot</code>][pivot] key (column)
+ * and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2902,7 +2902,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2916,18 +2916,18 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
- * - [minFor][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
- * - [max][PivotGroupBy.max] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
+ * - [<code>minFor</code>][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>max</code>][PivotGroupBy.max] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2953,12 +2953,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
 ): DataFrame<T> = Aggregators.min<R>(skipNaN).aggregateAll(this, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single minimum of all the values
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing a single minimum of all the values
  * in the selected columns, per group.
  *
- * Returns a [DataFrame] where each cell contains the smallest value among all the values in the
- * selected columns of the group corresponding to that [pivot] key (column)
- * and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the smallest value among all the values in the
+ * selected columns of the group corresponding to that [<code>pivot</code>][pivot] key (column)
+ * and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2968,7 +2968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2982,18 +2982,18 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MinDocs.MinSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
- * - [minFor][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
- * - [max][PivotGroupBy.max] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][PivotGroupBy.min]`()` — the minimum of each suitable column separately, per group.
+ * - [<code>minFor</code>][PivotGroupBy.minFor] — the minimum of each selected column separately, per group.
+ * - [<code>max</code>][PivotGroupBy.max] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -3031,15 +3031,15 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
 ): DataFrame<T> = min(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [PivotGroupBy] by computing the minimum of the values that the given
- * [rowExpression] returns for each row, per group.
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the minimum of the values that the given
+ * [<code>rowExpression</code>][rowExpression] returns for each row, per group.
  *
- * Returns a [DataFrame] where each cell contains the minimum of the expression's results for the
- * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the minimum of the expression's results for the
+ * rows of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -3053,7 +3053,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -3065,18 +3065,18 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [minOf] with [minBy][PivotGroupBy.minBy], which returns the first row of each group
+ * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
+ * - [<code>min</code>][PivotGroupBy.min]` { columns }` — a single minimum of all values in the selected columns,
  *   per group.
- * - [maxOf][PivotGroupBy.maxOf] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxOf</code>][PivotGroupBy.maxOf] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -3101,12 +3101,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
 ): DataFrame<T> = aggregate { minOfOrNull(skipNaN, rowExpression) }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
- * the first [row][DataRow] for which the given [rowExpression] returns the minimum value.
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
+ * the first [<code>row</code>][DataRow] for which the given [<code>rowExpression</code>][rowExpression] returns the minimum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -3120,7 +3120,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -3128,19 +3128,19 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivotGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
+ * Instead, it returns a [<code>ReducedPivotGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
  *
- * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value the
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][PivotGroupBy.minOf], which returns the minimum value the
  * expression returns itself, instead of the row.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [maxBy][PivotGroupBy.maxBy] — the mirror operation.
- * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>maxBy</code>][PivotGroupBy.maxBy] — the mirror operation.
+ * - [<code>PivotGroupBy reducing</code>][PivotGroupByDocs.Reducing] — all other ways to reduce
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -3152,12 +3152,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivotGroupBy] holding, per group,
- *   the first row where the [rowExpression] produced the minimum result.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group,
+ *   the first row where the [<code>rowExpression</code>][rowExpression] produced the minimum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -3172,8 +3172,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
 ): ReducedPivotGroupBy<T> = reduce { minByOrNull(column, skipNaN) }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
- * the first [row][DataRow] that has the smallest value in the given [column].
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
+ * the first [<code>row</code>][DataRow] that has the smallest value in the given [<code>column</code>][column].
  *
  *
  *
@@ -3183,7 +3183,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -3191,20 +3191,20 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivotGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
+ * Instead, it returns a [<code>ReducedPivotGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
  *
- * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value a row
+ * Don't confuse [<code>minBy</code>][minBy] with [<code>minOf</code>][PivotGroupBy.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [min][PivotGroupBy.min]` { columns }` — the minimum value itself, instead of the row.
- * - [maxBy][PivotGroupBy.maxBy] — the mirror operation.
- * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
- *   a [PivotGroupBy].
- * - [The Min Operation][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
+ * - [<code>min</code>][PivotGroupBy.min]` { columns }` — the minimum value itself, instead of the row.
+ * - [<code>maxBy</code>][PivotGroupBy.maxBy] — the mirror operation.
+ * - [<code>PivotGroupBy reducing</code>][PivotGroupByDocs.Reducing] — all other ways to reduce
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See `minBy` on the documentation website.](https://kotlin.github.io/dataframe/minby.html)
  *
@@ -3217,10 +3217,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedPivotGroupBy] holding, per group, the first row with the smallest value
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group, the first row with the smallest value
  *   in the given column.
  */
 public fun <T> PivotGroupBy<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =

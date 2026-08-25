@@ -291,15 +291,15 @@ internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
         .toRegex()
 
 /**
- * Converts a string into lowerCamelCase using [delimiters].
+ * Converts a string into lowerCamelCase using [<code>delimiters</code>][delimiters].
  *
- * - Splits this string matching given [delimiters] regular expression
- * (by default, via [CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
+ * - Splits this string matching given [<code>delimiters</code>][delimiters] regular expression
+ * (by default, via [<code>CAMEL_DEFAULT_DELIMITERS_REGEX</code>][CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
  * - If the string does not contain any letters or numbers, it remains unchanged.
  * - Places underscore ("_") between consecutive numbers (that were split before).
  * - The first word remains in lowercase, and subsequent words are capitalized.
  *
- * Default behavior (with [CAMEL_DEFAULT_DELIMITERS_REGEX]):
+ * Default behavior (with [<code>CAMEL_DEFAULT_DELIMITERS_REGEX</code>][CAMEL_DEFAULT_DELIMITERS_REGEX]):
  *
  * ```
  * "hello_world" -> "helloWorld"
@@ -348,8 +348,8 @@ public fun String.toCamelCaseByDelimiters(
     }
 
 /**
- * Joins consecutive numbers in a list with the given [separator].
- * Assumes that all numbers and strings are separated (after splitting via [CAMEL_DEFAULT_DELIMITERS_REGEX]).
+ * Joins consecutive numbers in a list with the given [<code>separator</code>][separator].
+ * Assumes that all numbers and strings are separated (after splitting via [<code>CAMEL_DEFAULT_DELIMITERS_REGEX</code>][CAMEL_DEFAULT_DELIMITERS_REGEX]).
  */
 private fun List<String>.joinNumbers(separator: CharSequence): List<String> {
     val result = mutableListOf<String>()
@@ -474,7 +474,7 @@ internal val KClass<*>.recordComponentNames: Set<String>
     }
 
 /** Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+ * The name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction]. */
 internal val KFunction<*>.getterName: String
     get() = name
         .removePrefix("get")
@@ -482,13 +482,13 @@ internal val KFunction<*>.getterName: String
         .replaceFirstChar { it.lowercase() }
 
 /** Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+ * The name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction]. */
 internal val KProperty<*>.getterName: String
     get() = name
 
 /**
  * Returns the getter name for this callable.
- * The name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ * The name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction].
  */
 internal val KCallable<*>.getterName: String
     get() = when (this) {
@@ -498,23 +498,23 @@ internal val KCallable<*>.getterName: String
     }
 
 /** Returns the column name for this callable.
- * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+ * If the callable contains the [<code>ColumnName</code>][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [<code>ColumnName.name</code>][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction]. */
 @PublishedApi
 internal val KFunction<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /** Returns the column name for this callable.
- * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+ * If the callable contains the [<code>ColumnName</code>][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [<code>ColumnName.name</code>][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction]. */
 @PublishedApi
 internal val KProperty<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /**
  * Returns the column name for this callable.
- * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ * If the callable contains the [<code>ColumnName</code>][ColumnName] annotation, its [<code>ColumnName.name</code>][ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [<code>KFunction</code>][KFunction].
  */
 @PublishedApi
 internal val KCallable<*>.columnName: String

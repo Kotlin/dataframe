@@ -31,9 +31,9 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KType
 
 /**
- * Readonly interface for an ordered list of [columns][DataColumn].
+ * Readonly interface for an ordered list of [<code>columns</code>][DataColumn].
  *
- * Columns in `DataFrame` have distinct non-empty [names][DataColumn.name] and equal [sizes][DataColumn.size].
+ * Columns in `DataFrame` have distinct non-empty [<code>names</code>][DataColumn.name] and equal [<code>sizes</code>][DataColumn.size].
  *
  * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
@@ -72,9 +72,9 @@ public interface DataFrame<out T> :
     // region rows
 
     /**
-     * Returns the total number of rows of this [DataFrame].
+     * Returns the total number of rows of this [<code>DataFrame</code>][DataFrame].
      *
-     * @return The number of rows in the [DataFrame].
+     * @return The number of rows in the [<code>DataFrame</code>][DataFrame].
      */
     @RequiredByIntellijPlugin
     public fun rowsCount(): Int
@@ -84,27 +84,27 @@ public interface DataFrame<out T> :
     // endregion
 
     /**
-     * Aggregates this [DataFrame] using the provided statistics
-     * inside the [AggregateDsl].
+     * Aggregates this [<code>DataFrame</code>][DataFrame] using the provided statistics
+     * inside the [<code>AggregateDsl</code>][AggregateDsl].
      *
-     * Returns a new [DataRow] with the aggregated values.
+     * Returns a new [<code>DataRow</code>][DataRow] with the aggregated values.
      *
-     * [AggregateDsl] allows to compute statistics on the columns of this [DataFrame]
-     * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     * [<code>AggregateDsl</code>][AggregateDsl] allows to compute statistics on the columns of this [<code>DataFrame</code>][DataFrame]
+     * and store the results as a new column using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
      *
-     * The resulting [DataRow] has the same structure as the original
-     * [DataFrame];
-     * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+     * The resulting [<code>DataRow</code>][DataRow] has the same structure as the original
+     * [<code>DataFrame</code>][DataFrame];
+     * instead of the groups, there are new columns of aggregated values created with [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
-     * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
+     * You can use any of [<code>DataFrame Aggregation Statistics</code>][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
      * or any custom aggregation function.
      *
-     * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
-     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
-     * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
-     * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
-     * in the resulting [DataRow] while preserving the original structure at higher levels.
+     * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
+     * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+     * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+     * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+     * in the resulting [<code>DataRow</code>][DataRow] while preserving the original structure at higher levels.
      *
      *
      *
@@ -123,8 +123,8 @@ public interface DataFrame<out T> :
      * }
      * ```
      *
-     * @param body The aggregation logic defined using [AggregateDsl].
-     * @return A new [DataRow] with the results of the aggregation.
+     * @param body The aggregation logic defined using [<code>AggregateDsl</code>][AggregateDsl].
+     * @return A new [<code>DataRow</code>][DataRow] with the results of the aggregation.
      */
     @Refine
     @Interpretable("AggregateRow")
@@ -133,9 +133,9 @@ public interface DataFrame<out T> :
     // region get columns
 
     /**
-     * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
+     * Returns a list of columns selected by [<code>columns</code>][columns], a [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl].
      *
-     * NOTE: This doesn't work in [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by predicate.
+     * NOTE: This doesn't work in [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by predicate.
      */
     override fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
         getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
@@ -173,7 +173,7 @@ public interface DataFrame<out T> :
 // region get columns
 
 /**
- * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
+ * Returns a list of columns selected by [<code>columns</code>][columns], a [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl].
  */
 public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
 

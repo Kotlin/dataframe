@@ -24,9 +24,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * ## Frame Columns [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Frame Columns [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface FrameColsColumnsSelectionDsl {
 
@@ -36,61 +36,61 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -102,43 +102,43 @@ public interface FrameColsColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`frameCols`**][ColumnsSelectionDsl.colGroups] */
+        /** [<code>**`frameCols`**</code>][ColumnsSelectionDsl.colGroups] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[<code>**`frameCols`**</code>][ColumnsSelectionDsl.colGroups] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[<code>**`frameCols`**</code>][ColumnsSelectionDsl.colGroups] */
         public typealias ColumnGroupName = Nothing
     }
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols] can be called using any of the supported [APIs][AccessApis] (+ [ColumnPath]).
+     * [<code>frameCols</code>][frameCols] can be called using any of the supported [<code>APIs</code>][AccessApis] (+ [<code>ColumnPath</code>][ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>frameCols</code>][SingleColumn.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
      *
      *
-     * @param [filter] An optional [predicate][Predicate] to filter the frame columns by.
-     * @return A [ColumnSet] of [FrameColumns][FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][ColumnSet] of [<code>FrameColumns</code>][FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -152,35 +152,35 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[frameCols][ColumnSet.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") }.`[<code>frameCols</code>][ColumnSet.frameCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>frameCols</code>][ColumnsSelectionDsl.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -192,33 +192,33 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>frameCols</code>][ColumnsSelectionDsl.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>frameCols</code>][ColumnsSelectionDsl.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -231,33 +231,33 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>frameCols</code>][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>frameCols</code>][SingleColumn.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -270,33 +270,33 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][String.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][String.frameCols]`() }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -307,35 +307,35 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroup</code>][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[<code>frameCols</code>][SingleColumn.frameCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColGroup.`[<code>frameCols</code>][SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { DataSchemaType::myColGroup.`[<code>frameCols</code>][KProperty.frameCols]`() }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -348,31 +348,31 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * ## Frame Columns
-     * Creates a subset of columns from [this] that are [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * Creates a subset of columns from [this] that are [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      *
      * You can optionally use a [filter] to only include certain columns.
-     * [frameCols][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
+     * [<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.frameCols] can be called using any of the supported [<code>APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
      *
      * For more information: [See `frameCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[frameCols][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>frameCols</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.frameCols]`() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[frameCols][kotlin.String.frameCols]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColGroup".`[<code>frameCols</code>][kotlin.String.frameCols]`() }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>frameCols</code>][ColumnPath.frameCols]`() }`
      *
-     * @param [filter] An optional [predicate][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [FrameColumns][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
+     * @param [filter] An optional [<code>predicate</code>][org.jetbrains.kotlinx.dataframe.Predicate] to filter the frame columns by.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of [<code>FrameColumns</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn].
      * @see [ColumnsSelectionDsl.colsOfKind]
      * @see [ColumnsSelectionDsl.valueCols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -386,7 +386,7 @@ public interface FrameColsColumnsSelectionDsl {
  * Returns a TransformableColumnSet containing the frame columns that satisfy the given filter.
  *
  * @param filter The filter function to apply on each frame column. Must accept a FrameColumn object and return a Boolean.
- * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
+ * @return A [<code>TransformableColumnSet</code>][TransformableColumnSet] containing the frame columns that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun ColumnsResolver<*>.frameColumnsInternal(

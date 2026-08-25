@@ -43,7 +43,7 @@ public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: Pars
     parse(options) { columns.toColumnSet() }
 
 /** Tries to parse a column of strings into a column of a different type.
- * Each parser in [Parsers][org.jetbrains.kotlinx.dataframe.impl.api.Parsers] is run in order until a valid parser is found,
+ * Each parser in [<code>Parsers</code>][org.jetbrains.kotlinx.dataframe.impl.api.Parsers] is run in order until a valid parser is found,
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.
@@ -57,7 +57,7 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
 
 /**
  * Tries to parse a column of chars into a column of a different type.
- * Each parser in [Parsers] is run in order until a valid parser is found,
+ * Each parser in [<code>Parsers</code>][Parsers] is run in order until a valid parser is found,
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * returns strings.
@@ -74,12 +74,12 @@ public fun DataColumn<Char?>.tryParse(options: ParserOptions? = null): DataColum
 
 /**
  * Tries to parse a column of strings into a column of a different type.
- * Each parser in [Parsers] is run in order until a valid parser is found,
+ * Each parser in [<code>Parsers</code>][Parsers] is run in order until a valid parser is found,
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried.
  *
- * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
- * use [tryParse] instead.
+ * If all fail [<code>IllegalStateException</code>][IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [<code>tryParse</code>][tryParse] instead.
  *
  * For more information: [See `parse` on a DataColumn on the documentation website.](https://kotlin.github.io/dataframe/parse.html#on-a-datacolumn)
  *
@@ -92,12 +92,12 @@ public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn
 
 /**
  * Tries to parse a column of chars as strings into a column of a different type.
- * Each parser in [Parsers] is run in order until a valid parser is found,
+ * Each parser in [<code>Parsers</code>][Parsers] is run in order until a valid parser is found,
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried.
  *
- * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
- * use [tryParse] instead.
+ * If all fail [<code>IllegalStateException</code>][IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [<code>tryParse</code>][tryParse] instead.
  *
  * For more information: [See `parse` on a DataColumn on the documentation website.](https://kotlin.github.io/dataframe/parse.html#on-a-datacolumn)
  *

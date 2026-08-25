@@ -18,38 +18,38 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * Expressing values using a "Row Expression" ([See Row Expressions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-expressions))
  * can occur in the following two types of operations:
  *
- * - Providing a new value for every selected cell given the row of that cell ([Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample]),
- * for instance in [map][DataFrame.map], [add][DataFrame.add], and [insert][DataFrame.insert]
- * (using [RowExpression][DfRowExpression]).
+ * - Providing a new value for every selected cell given the row of that cell ([<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample]),
+ * for instance in [<code>map</code>][DataFrame.map], [<code>add</code>][DataFrame.add], and [<code>insert</code>][DataFrame.insert]
+ * (using [<code>RowExpression</code>][DfRowExpression]).
  *
- * - Providing a new value for every selected cell given the row of that cell and its previous value ([Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]),
- * for instance in [update.with][Update.with], and [convert.notNull][Convert.notNull]
- * (using [RowValueExpression][DfRowValueExpression]).
+ * - Providing a new value for every selected cell given the row of that cell and its previous value ([<code>Row Value Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]),
+ * for instance in [<code>update.with</code>][Update.with], and [<code>convert.notNull</code>][Convert.notNull]
+ * (using [<code>RowValueExpression</code>][DfRowValueExpression]).
  *
  * NOTE:
  *
- * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
- * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
- * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
- * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
- * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
- * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ * [<code>update with</code>][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
+ * [<code>convert with</code>][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
+ * and [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [<code>AddDataRow</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * This is an extension to [<code>RowValueExpression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
+ * [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
+ * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
  *
- * A [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [Row Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but that expects a [Boolean] as result.
+ * A [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but that expects a [<code>Boolean</code>][Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 
     // Using <code>` notation to not create double `` when including
 
     /**
-     * Provide a new value for every selected cell given its row using a [row expression][DfRowExpression].
+     * Provide a new value for every selected cell given its row using a [<code>row expression</code>][DfRowExpression].
      *
      * Fore more information, [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
      */
     interface RowExpression {
 
         /**
-         * Provide a new value for every selected cell given its row using a [row expression][org.jetbrains.kotlinx.dataframe.RowExpression].
+         * Provide a new value for every selected cell given its row using a [<code>row expression</code>][org.jetbrains.kotlinx.dataframe.RowExpression].
          *
          * Fore more information, [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
          *
@@ -64,7 +64,7 @@ internal interface ExpressionsGivenRow {
     }
 
     /** Provide a new value for every selected cell given its row and its previous value using a
-     * [row value expression][DfRowValueExpression].
+     * [<code>row value expression</code>][DfRowValueExpression].
      *
      * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
      */
@@ -72,7 +72,7 @@ internal interface ExpressionsGivenRow {
 
         /**
          * Provide a new value for every selected cell given its row and its previous value using a
-         * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
+         * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
          *
          * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
          *

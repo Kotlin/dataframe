@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.impl
 import kotlin.experimental.ExperimentalTypeInference
 
 /**
- * Represents a directed acyclic graph (DAG) of generic type [T].
+ * Represents a directed acyclic graph (DAG) of generic type [<code>T</code>][T].
  *
  * This class is immutable and guarantees that the graph does not contain any cycles.
  * It provides functionality to find the nearest common ancestor of two vertices
- * in the graph ([findNearestCommonVertex]).
+ * in the graph ([<code>findNearestCommonVertex</code>][findNearestCommonVertex]).
  *
- * Use the [Builder] class or [buildDag] function to create a new instance of this class.
+ * Use the [<code>Builder</code>][Builder] class or [<code>buildDag</code>][buildDag] function to create a new instance of this class.
  *
  * @param T The type of items in the graph.
  * @property adjacencyList A map representing directed edges, where the keys are source vertices
@@ -159,7 +159,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
 }
 
 /**
- * Builds a new [DirectedAcyclicGraph] using the provided [builder] function.
+ * Builds a new [<code>DirectedAcyclicGraph</code>][DirectedAcyclicGraph] using the provided [<code>builder</code>][builder] function.
  *
  * @see DirectedAcyclicGraph
  */
@@ -169,7 +169,7 @@ internal fun <T> buildDag(
 ): DirectedAcyclicGraph<T> = DirectedAcyclicGraph.builder<T>().apply(builder).build()
 
 /**
- * Builds a new [DirectedAcyclicGraph] using the provided [edges].
+ * Builds a new [<code>DirectedAcyclicGraph</code>][DirectedAcyclicGraph] using the provided [<code>edges</code>][edges].
  *
  * @see DirectedAcyclicGraph
  */

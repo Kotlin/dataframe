@@ -23,8 +23,8 @@ internal interface ValueColumnInternal<T> : ValueColumn<T> {
     fun getStatisticCacheOrNull(statName: String, arguments: Map<String, Any>): StatisticResult?
 
     /**
-     * Tiny wrapper for [ValueColumn]s that are not [ValueColumnImpl],
-     * which can occur in case a user implements the [ValueColumn] interface.
+     * Tiny wrapper for [<code>ValueColumn</code>][ValueColumn]s that are not [<code>ValueColumnImpl</code>][ValueColumnImpl],
+     * which can occur in case a user implements the [<code>ValueColumn</code>][ValueColumn] interface.
      */
     class Wrapper<T>(val source: ValueColumn<T>) :
         ValueColumn<T> by source,

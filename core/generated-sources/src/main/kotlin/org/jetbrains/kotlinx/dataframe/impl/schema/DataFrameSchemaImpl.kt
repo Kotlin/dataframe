@@ -55,10 +55,10 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
 
     /**
      * Returns `true` if, and only if,
-     * [this schema][this] has the same columns **in the same order** as the [other schema][other].
+     * [<code>this schema</code>][this] has the same columns **in the same order** as the [<code>other schema</code>][other].
      * The types must also match exactly.
      *
-     * Use [compare][DataFrameSchema.compare] it the order does not matter and
+     * Use [<code>compare</code>][DataFrameSchema.compare] it the order does not matter and
      * for other comparison options.
      *
      * @see [DataFrameSchema.compare]

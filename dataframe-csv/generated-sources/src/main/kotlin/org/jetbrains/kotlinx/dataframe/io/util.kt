@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 /**
  * Default strings that are considered null when reading CSV / TSV / delim files:
  *
- * [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS]
+ * [<code>["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]</code>][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS]
  */
 public val DEFAULT_DELIM_NULL_STRINGS: Set<String> =
     setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")

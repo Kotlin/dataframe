@@ -4,7 +4,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
  * Represents a table metadata to store information about a database table,
  * including its name, schema name, and catalogue name.
  *
- * NOTE: we need to extract both, [schemaName] and [catalogue]
+ * NOTE: we need to extract both, [<code>schemaName</code>][schemaName] and [<code>catalogue</code>][catalogue]
  * because the different databases have different implementations of metadata.
  *
  * @property [name] the name of the table.

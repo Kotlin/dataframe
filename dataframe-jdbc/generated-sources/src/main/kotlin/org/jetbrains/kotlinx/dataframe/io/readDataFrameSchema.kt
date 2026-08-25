@@ -21,19 +21,19 @@ import kotlin.reflect.typeOf
  * Retrieves the schema for an SQL table using the provided database configuration.
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return the [DataFrameSchema] object representing the schema of the SQL table
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @return the [<code>DataFrameSchema</code>][DataFrameSchema] object representing the schema of the SQL table
  */
 public fun DataFrameSchema.Companion.readSqlTable(
     dbConfig: DbConnectionConfig,
@@ -45,7 +45,7 @@ public fun DataFrameSchema.Companion.readSqlTable(
     }
 
 /**
- * Retrieves the schema for an SQL table using the provided [DataSource].
+ * Retrieves the schema for an SQL table using the provided [<code>DataSource</code>][DataSource].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -66,11 +66,11 @@ public fun DataFrameSchema.Companion.readSqlTable(
  * println(customersSchema.columns)
  * ```
  *
- * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [dataSource] the [<code>DataSource</code>][DataSource] to get a database connection from.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @return the schema of the SQL table as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @return the schema of the SQL table as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  * @see [DataSource.getConnection]
  */
 public fun DataFrameSchema.Companion.readSqlTable(
@@ -89,8 +89,8 @@ public fun DataFrameSchema.Companion.readSqlTable(
  * @param [connection] the database connection.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return the schema of the SQL table as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @return the schema of the SQL table as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  *
  * @see DriverManager.getConnection
  */
@@ -119,19 +119,19 @@ public fun DataFrameSchema.Companion.readSqlTable(
  * Retrieves the schema of an SQL query result using the provided database configuration.
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  */
 public fun DataFrameSchema.Companion.readSqlQuery(
     dbConfig: DbConnectionConfig,
@@ -143,7 +143,7 @@ public fun DataFrameSchema.Companion.readSqlQuery(
     }
 
 /**
- * Retrieves the schema of an SQL query result using the provided [DataSource].
+ * Retrieves the schema of an SQL query result using the provided [<code>DataSource</code>][DataSource].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -167,11 +167,11 @@ public fun DataFrameSchema.Companion.readSqlQuery(
  * println(querySchema.columns)
  * ```
  *
- * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [dataSource] the [<code>DataSource</code>][DataSource] to get a database connection from.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  *
  * @see [DataSource.getConnection]
  */
@@ -191,8 +191,8 @@ public fun DataFrameSchema.Companion.readSqlQuery(
  * @param [connection] the database connection.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  *
  * @see DriverManager.getConnection
  */
@@ -219,18 +219,18 @@ public fun DataFrameSchema.Companion.readSqlQuery(
  * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [DbConnectionConfig].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>DbConnectionConfig</code>][DbConnectionConfig].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  */
 public fun DbConnectionConfig.readDataFrameSchema(
     sqlQueryOrTableName: String,
@@ -247,7 +247,7 @@ public fun DbConnectionConfig.readDataFrameSchema(
     }
 
 /**
- * Retrieves the schema of an SQL query result or the SQL table using the provided [DataSource].
+ * Retrieves the schema of an SQL query result or the SQL table using the provided [<code>DataSource</code>][DataSource].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -276,8 +276,8 @@ public fun DbConnectionConfig.readDataFrameSchema(
  * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [DataSource].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>DataSource</code>][DataSource].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  *
  * @see [DataSource.getConnection]
  */
@@ -300,8 +300,8 @@ public fun DataSource.readDataFrameSchema(sqlQueryOrTableName: String, dbType: D
  *
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [Connection].
- * @return the schema of the SQL query as a [DataFrameSchema] object.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>Connection</code>][Connection].
+ * @return the schema of the SQL query as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  */
 public fun Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null): DataFrameSchema =
     when {
@@ -315,13 +315,13 @@ public fun Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: D
     }
 
 /**
- * Retrieves the schema from [ResultSet].
+ * Retrieves the schema from [<code>ResultSet</code>][ResultSet].
  *
  * NOTE: This function will not close connection and result set and not retrieve data from the result set.
  *
- * @param [resultSet] the [ResultSet] obtained from executing a database query.
- * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ * @param [resultSet] the [<code>ResultSet</code>][ResultSet] obtained from executing a database query.
+ * @param [dbType] the type of database that the [<code>ResultSet</code>][ResultSet] belongs to, could be a custom object, provided by user.
+ * @return the schema of the [<code>ResultSet</code>][ResultSet] as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  */
 public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
@@ -337,12 +337,12 @@ public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType:
 }
 
 /**
- * Retrieves the schema from [ResultSet].
+ * Retrieves the schema from [<code>ResultSet</code>][ResultSet].
  *
  * NOTE: This function will not close connection and result set and not retrieve data from the result set.
  *
- * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ * @param [dbType] the type of database that the [<code>ResultSet</code>][ResultSet] belongs to, could be a custom object, provided by user.
+ * @return the schema of the [<code>ResultSet</code>][ResultSet] as a [<code>DataFrameSchema</code>][DataFrameSchema] object.
  */
 public fun ResultSet.readDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrameSchema.readResultSet(this, dbType)
 
@@ -350,18 +350,18 @@ public fun ResultSet.readDataFrameSchema(dbType: DbType): DataFrameSchema = Data
  * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dbConfig].
- * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @return a map of [<code>String, DataFrameSchema</code>][String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
 public fun DataFrameSchema.Companion.readAllSqlTables(
     dbConfig: DbConnectionConfig,
@@ -372,7 +372,7 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
     }
 
 /**
- * Retrieves the schemas of all non-system tables in the database using the provided [DataSource].
+ * Retrieves the schemas of all non-system tables in the database using the provided [<code>DataSource</code>][DataSource].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -401,8 +401,8 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
  *
  * @param [dataSource] the DataSource to get a database connection from.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [dataSource].
- * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @return a map of [<code>String, DataFrameSchema</code>][String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  *
  * @see [DataSource.getConnection]
  */
@@ -420,8 +420,8 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
  *
  * @param [connection] the database connection.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- * in that case the [dbType] will be recognized from the [connection].
- * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
+ * in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @return a map of [<code>String, DataFrameSchema</code>][String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
 public fun DataFrameSchema.Companion.readAllSqlTables(
     connection: Connection,

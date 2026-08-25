@@ -108,7 +108,7 @@ internal fun AnyCol.extractSchema(): ColumnSchema =
 internal fun getSchema(kClass: KClass<*>): DataFrameSchema = MarkersExtractor.get(kClass).schema
 
 /**
- * Create "empty" column based on the toplevel of [this] [ColumnSchema].
+ * Create "empty" column based on the toplevel of [<code>this</code>][this] [<code>ColumnSchema</code>][ColumnSchema].
  */
 internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
     when (this) {
@@ -118,8 +118,8 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
     }
 
 /**
- * Creates a column based on [this] [ColumnSchema] filled with `null` or empty dataframes.
- * @throws IllegalStateException if the column is not nullable and [numberOfRows]` > 0`.
+ * Creates a column based on [<code>this</code>][this] [<code>ColumnSchema</code>][ColumnSchema] filled with `null` or empty dataframes.
+ * @throws IllegalStateException if the column is not nullable and [<code>numberOfRows</code>][numberOfRows]` > 0`.
  */
 internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int): AnyCol =
     when (this) {
@@ -183,7 +183,7 @@ internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<Strin
     }
 
 /**
- * Sorts [this] according to the order of their [columnName] in the primary/single constructor of [klass]
+ * Sorts [<code>this</code>][this] according to the order of their [<code>columnName</code>][columnName] in the primary/single constructor of [<code>klass</code>][klass]
  * if it exists, else, it falls back to lexicographical sorting.
  */
 internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): List<KCallable<T>> {

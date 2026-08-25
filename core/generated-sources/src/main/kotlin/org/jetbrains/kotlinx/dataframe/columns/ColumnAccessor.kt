@@ -9,13 +9,13 @@ import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import kotlin.reflect.KProperty
 
 /**
- * Combination of [column path][path] and [column type][T].
+ * Combination of [<code>column path</code>][path] and [<code>column type</code>][T].
  *
- * Used to retrieve [DataColumn] from [DataFrame] or value from [DataRow].
+ * Used to retrieve [<code>DataColumn</code>][DataColumn] from [<code>DataFrame</code>][DataFrame] or value from [<code>DataRow</code>][DataRow].
  *
- * Can be created by [column], [columnGroup] or [frameColumn] delegates.
+ * Can be created by [<code>column</code>][column], [<code>columnGroup</code>][columnGroup] or [<code>frameColumn</code>][frameColumn] delegates.
  *
- * @param T Expected [type][DataColumn.type] of values in the column
+ * @param T Expected [<code>type</code>][DataColumn.type] of values in the column
  */
 public interface ColumnAccessor<out T> : ColumnReference<T> {
 

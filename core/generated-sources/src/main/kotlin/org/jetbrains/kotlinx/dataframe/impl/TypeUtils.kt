@@ -395,25 +395,25 @@ internal fun guessValueType(
     )
 
 /**
- * Returns the guessed value type of the given [values] sequence.
+ * Returns the guessed value type of the given [<code>values</code>][values] sequence.
  *
- * This function analyzes all [values] once and returns the expected column type.
+ * This function analyzes all [<code>values</code>][values] once and returns the expected column type.
  *
- * The resulting column type may need [values] to be converted to the expected type.
- * See [createColumnGuessingType] for how to create a column with the guessed type.
+ * The resulting column type may need [<code>values</code>][values] to be converted to the expected type.
+ * See [<code>createColumnGuessingType</code>][createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
  * @param upperBound the upper bound of the type to guess
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
- *   Note: this parameter is ignored if another [Collection] is present in the values.
+ *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.
  * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
- *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
- *   so the function will return [DataRow].
+ *   that a column group should be created instead of a [<code>DataColumn</code>][DataColumn]`<`[<code>AnyCol</code>][AnyCol]`>`,
+ *   so the function will return [<code>DataRow</code>][DataRow].
  * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
- *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
+ *   number-type that can hold all number values lossless in [<code>values</code>][values]. See [<code>commonNumberClass</code>][commonNumberClass].
  *   Unsigned numbers are not supported.
- *   If false, the result of encountering multiple number types would be [Number].
+ *   If false, the result of encountering multiple number types would be [<code>Number</code>][Number].
  */
 @PublishedApi
 internal fun guessValueType(
@@ -592,7 +592,7 @@ private val primitiveArrayClasses = setOf(
 /**
  * Returns `true` if this class is a primitive array class like `XArray`.
  *
- * Use [KClass.isArray] to also check for `Array<>`.
+ * Use [<code>KClass.isArray</code>][KClass.isArray] to also check for `Array<>`.
  */
 internal val KClass<*>.isPrimitiveArray: Boolean
     get() = this in primitiveArrayClasses
@@ -600,7 +600,7 @@ internal val KClass<*>.isPrimitiveArray: Boolean
 /**
  * Returns `true` if this class is an array, either a primitive array like `XArray` or `Array<>`.
  *
- * Use [KClass.isPrimitiveArray] to only check for primitive arrays.
+ * Use [<code>KClass.isPrimitiveArray</code>][KClass.isPrimitiveArray] to only check for primitive arrays.
  */
 internal val KClass<*>.isArray: Boolean
     get() = this in primitiveArrayClasses ||
@@ -609,7 +609,7 @@ internal val KClass<*>.isArray: Boolean
 /**
  * Returns `true` if this type is of a primitive array like `XArray`.
  *
- * Use [KType.isArray] to also check for `Array<>`.
+ * Use [<code>KType.isArray</code>][KType.isArray] to also check for `Array<>`.
  */
 internal val KType.isPrimitiveArray: Boolean
     get() = (classifier as? KClass<*>)?.isPrimitiveArray == true
@@ -617,7 +617,7 @@ internal val KType.isPrimitiveArray: Boolean
 /**
  * Returns `true` if this type is of an array, either a primitive array like `XArray` or `Array<>`.
  *
- * Use [KType.isPrimitiveArray] to only check for primitive arrays.
+ * Use [<code>KType.isPrimitiveArray</code>][KType.isPrimitiveArray] to only check for primitive arrays.
  */
 internal val KType.isArray: Boolean
     get() = (classifier as? KClass<*>)?.isArray == true
@@ -625,7 +625,7 @@ internal val KType.isArray: Boolean
 /**
  * Returns `true` if this object is a primitive array like `XArray`.
  *
- * Use [Any.isArray] to also check for the `Array<>` object.
+ * Use [<code>Any.isArray</code>][Any.isArray] to also check for the `Array<>` object.
  */
 internal val Any.isPrimitiveArray: Boolean
     get() = this::class.isPrimitiveArray
@@ -633,13 +633,13 @@ internal val Any.isPrimitiveArray: Boolean
 /**
  * Returns `true` if this object is an array, either a primitive array like `XArray` or `Array<>`.
  *
- * Use [Any.isPrimitiveArray] to only check for primitive arrays.
+ * Use [<code>Any.isPrimitiveArray</code>][Any.isPrimitiveArray] to only check for primitive arrays.
  */
 internal val Any.isArray: Boolean
     get() = this::class.isArray
 
 /**
- * If [this] is an array of any kind, the function returns it as a list of values,
+ * If [<code>this</code>][this] is an array of any kind, the function returns it as a list of values,
  * else it returns `null`.
  */
 internal fun Any.asArrayAsListOrNull(): List<*>? =
@@ -663,15 +663,15 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
 internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecimal
 
 /**
- * Returns a set containing the [KClass] of each element in the iterable.
+ * Returns a set containing the [<code>KClass</code>][KClass] of each element in the iterable.
  *
  * This can be a heavy operation!
  *
- * The [KClass] is determined by retrieving the runtime class of each element.
+ * The [<code>KClass</code>][KClass] is determined by retrieving the runtime class of each element.
  *
- * [Nothing::class][Nothing] is used for elements that are `null`.
+ * [<code>Nothing::class</code>][Nothing] is used for elements that are `null`.
  *
- * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
+ * @return A set of [<code>KClass</code>][KClass] objects representing the runtime types of elements in the iterable.
  */
 internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
     mapTo(mutableSetOf()) {
@@ -679,14 +679,14 @@ internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
     }
 
 /**
- * Returns a set of [KType] objects representing the star-projected types of the runtime classes
+ * Returns a set of [<code>KType</code>][KType] objects representing the star-projected types of the runtime classes
  * of all unique elements in the iterable.
  *
  * This can be a heavy operation!
  *
- * [typeOf<Nothing?>()][nullableNothingType] is used for elements that are `null`.
+ * [<code>typeOf<Nothing?>()</code>][nullableNothingType] is used for elements that are `null`.
  *
- * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
+ * @return A set of [<code>KType</code>][KType] objects corresponding to the star-projected runtime types of elements in the iterable.
  */
 internal fun Iterable<Any?>.types(): Set<KType> =
     mapTo(mutableSetOf()) {

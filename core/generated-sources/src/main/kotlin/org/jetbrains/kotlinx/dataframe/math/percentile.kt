@@ -12,7 +12,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
- * Uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3]
+ * Uses [<code>QuantileEstimationMethod.R8</code>][QuantileEstimationMethod.R8] for primitive numbers, else [<code>QuantileEstimationMethod.R3</code>][QuantileEstimationMethod.R3]
  */
 internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double, type: KType, skipNaN: Boolean): Any? {
     when {
@@ -70,8 +70,8 @@ internal val percentileConversion: CalculateReturnType = { type, isEmpty ->
 }
 
 /**
- * Returns the index of the [percentile] in the unsorted sequence [this].
- * If `!`[skipNaN] and the sequence [this] contains NaN, the index of the first NaN will be returned.
+ * Returns the index of the [<code>percentile</code>][percentile] in the unsorted sequence [<code>this</code>][this].
+ * If `!`[<code>skipNaN</code>][skipNaN] and the sequence [<code>this</code>][this] contains NaN, the index of the first NaN will be returned.
  * Returns -1 if the sequence is empty.
  */
 internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(

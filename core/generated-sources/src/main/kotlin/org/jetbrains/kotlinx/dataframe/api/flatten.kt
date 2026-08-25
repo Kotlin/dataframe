@@ -19,13 +19,13 @@ import kotlin.reflect.KProperty
 /**
  * ## The Flatten Operation
  *
- * Removes all column groups in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
+ * Removes all column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
  *
  * @param [keepParentNameForColumns] If true, retains the parent column name as a prefix for the flattened columns.
  * The prefix is separated from the original column names using the provided separator.
@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  * Defaults to `"_"`.
  *
  *
- * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the all column groups flattened.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the all column groups flattened.
  *
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
@@ -48,13 +48,13 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
 /**
  * ## The Flatten Operation
  *
- * Removes specified column groups in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
+ * Removes specified column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
  *
  * @param [keepParentNameForColumns] If true, retains the parent column name as a prefix for the flattened columns.
  * The prefix is separated from the original column names using the provided separator.
@@ -64,7 +64,7 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
  * @param [columns]
  * The names of the columns or selector determining which column groups should be flattened.
  *
- * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the specified column groups flattened.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the specified column groups flattened.
  *
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
@@ -80,13 +80,13 @@ public fun <T, C> DataFrame<T>.flatten(
 /**
  * ## The Flatten Operation
  *
- * Removes selected column groups in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
+ * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
  *
  * @param [keepParentNameForColumns] If true, retains the parent column name as a prefix for the flattened columns.
  * The prefix is separated from the original column names using the provided separator.
@@ -96,7 +96,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * @param [columns]
  * The names of the columns or selector determining which column groups should be flattened.
  *
- * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
  *
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
@@ -110,13 +110,13 @@ public fun <T> DataFrame<T>.flatten(
 /**
  * ## The Flatten Operation
  *
- * Removes selected column groups in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
+ * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
  *
  * @param [keepParentNameForColumns] If true, retains the parent column name as a prefix for the flattened columns.
  * The prefix is separated from the original column names using the provided separator.
@@ -126,7 +126,7 @@ public fun <T> DataFrame<T>.flatten(
  * @param [columns]
  * The names of the columns or selector determining which column groups should be flattened.
  *
- * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
  *
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *
@@ -142,13 +142,13 @@ public fun <T, C> DataFrame<T>.flatten(
 /**
  * ## The Flatten Operation
  *
- * Removes selected column groups in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
+ * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
  *
  * @param [keepParentNameForColumns] If true, retains the parent column name as a prefix for the flattened columns.
  * The prefix is separated from the original column names using the provided separator.
@@ -158,7 +158,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * @param [columns]
  * The names of the columns or selector determining which column groups should be flattened.
  *
- * @return A new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected column groups flattened.
  *
  * @see <a href="https://kotlin.github.io/dataframe/flatten.html">See `flatten` on the documentation website.</a>
  *

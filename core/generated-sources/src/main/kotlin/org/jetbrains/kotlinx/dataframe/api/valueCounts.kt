@@ -27,7 +27,7 @@ import kotlin.reflect.typeOf
 // region DataSchema
 
 /**
- * A [DataSchema] of the [valueCounts] result. It declares the [count] column
+ * A [<code>DataSchema</code>][DataSchema] of the [<code>valueCounts</code>][valueCounts] result. It declares the [<code>count</code>][count] column
  * with the number of occurrences of each counted value.
  *
  * For more information: [See `valueCounts` on the documentation website.](https://kotlin.github.io/dataframe/valuecounts.html)
@@ -46,22 +46,22 @@ public interface ValueCount {
 internal val defaultCountColumnName: String = ValueCount::count.name
 
 /**
- * Returns a [DataFrame] containing counts of unique values in this [DataColumn].
+ * Returns a [<code>DataFrame</code>][DataFrame] containing counts of unique values in this [<code>DataColumn</code>][DataColumn].
  *
- * The resulting [DataFrame] contains:
- * - the column with the distinct values of the original [DataColumn]
- * - a new [Int] column with the number of occurrences of each value.
- * This column is called `"count"` by default unless it is overridden by [resultColumn].
+ * The resulting [<code>DataFrame</code>][DataFrame] contains:
+ * - the column with the distinct values of the original [<code>DataColumn</code>][DataColumn]
+ * - a new [<code>Int</code>][Int] column with the number of occurrences of each value.
+ * This column is called `"count"` by default unless it is overridden by [<code>resultColumn</code>][resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent value first),
- * and [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted.
+ * and [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted.
  *
  * See also:
- * - [`valueCounts`][DataFrame.valueCounts] — counts of unique rows in a [DataFrame].
- * - [`countDistinct`][DataFrame.countDistinct] — the number of distinct rows
- * or selected value combinations in a [DataFrame].
- * - [`distinct`][DataColumn.distinct] — the distinct values themselves, without their counts.
- * - [`count`][DataColumn.count] — the total number of elements in this [DataColumn].
+ * - [<code>`valueCounts`</code>][DataFrame.valueCounts] — counts of unique rows in a [<code>DataFrame</code>][DataFrame].
+ * - [<code>`countDistinct`</code>][DataFrame.countDistinct] — the number of distinct rows
+ * or selected value combinations in a [<code>DataFrame</code>][DataFrame].
+ * - [<code>`distinct`</code>][DataColumn.distinct] — the distinct values themselves, without their counts.
+ * - [<code>`count`</code>][DataColumn.count] — the total number of elements in this [<code>DataColumn</code>][DataColumn].
  *
  * For more information: [See `valueCounts` on the documentation website.](https://kotlin.github.io/dataframe/valuecounts.html)
  *
@@ -83,12 +83,12 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  * Otherwise, the counted values keep the order of their first occurrence.
  * @param [ascending] The sorting direction. If `false` (default), the most frequent values come first.
  * Only used when [sort] is `true`.
- * @param [dropNA] If `true` (default), [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
+ * @param [dropNA] If `true` (default), [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
  * and are excluded from the result.
  * @param [resultColumn] The name of the resulting count column. Default — `"count"`.
  * If a column with this name is already present, the name is made unique by appending
  * a number to it (for example, `"count"` becomes `"count1"`).
- * @return A [DataFrame] with the distinct values of this [DataColumn] and their counts.
+ * @return A [<code>DataFrame</code>][DataFrame] with the distinct values of this [<code>DataColumn</code>][DataColumn] and their counts.
  */
 @Refine
 @Interpretable("DataColumnValueCounts")
@@ -120,29 +120,29 @@ public fun <T> DataColumn<T>.valueCounts(
 // region DataFrame
 
 /**
- * Returns a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] containing the counts of unique rows (or combinations of selected values) in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] containing the counts of unique rows (or combinations of selected values) in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Rows are compared by the values in the selected [columns]. If no columns are selected, values from
  * all columns are used.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
+ * The resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
  * - the distinct combinations of these values,
- * - a new [Int] column with the number of occurrences of each combination.
+ * - a new [<code>Int</code>][Int] column with the number of occurrences of each combination.
  * This column is called `"count"` by default unless it is overridden by [resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
- * and a row is not counted at all if any of its selected values is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * and a row is not counted at all if any of its selected values is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * See also:
- * - [`valueCounts`][org.jetbrains.kotlinx.dataframe.DataColumn.valueCounts] — counts of unique values in a single [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
- * - [`countDistinct`][org.jetbrains.kotlinx.dataframe.DataFrame.countDistinct] — the number of distinct rows or selected value combinations,
+ * - [<code>`valueCounts`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.valueCounts] — counts of unique values in a single [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * - [<code>`countDistinct`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.countDistinct] — the number of distinct rows or selected value combinations,
  * without their counts.
- * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct] — the distinct rows themselves, without their counts.
- * - [`count`][org.jetbrains.kotlinx.dataframe.DataFrame.count] — the total number of rows in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [<code>`distinct`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.distinct] — the distinct rows themselves, without their counts.
+ * - [<code>`count`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.count] — the total number of rows in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * For more information: [See `valueCounts` on the documentation website.](https://kotlin.github.io/dataframe/valuecounts.html)
  *
@@ -151,18 +151,18 @@ public fun <T> DataColumn<T>.valueCounts(
  * ### This `valueCounts` Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -184,14 +184,14 @@ public fun <T> DataColumn<T>.valueCounts(
  * Otherwise, the counted values keep the order of their first occurrence.
  * @param [ascending] The sorting direction. If `false` (default), the most frequent values come first.
  * Only used when [sort] is `true`.
- * @param [dropNA] If `true` (default), [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
+ * @param [dropNA] If `true` (default), [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
  * and are excluded from the result.
  * @param [resultColumn] The name of the resulting count column. Default — `"count"`.
  * If a column with this name is already present, the name is made unique by appending
  * a number to it (for example, `"count"` becomes `"count1"`).
- * @param [columns] The optional [ColumnsSelector] that selects the columns whose distinct value combinations
+ * @param [columns] The optional [<code>ColumnsSelector</code>][ColumnsSelector] that selects the columns whose distinct value combinations
  * are counted. If `null` or omitted, all columns are used.
- * @return A [DataFrame] with the distinct value combinations and their counts.
+ * @return A [<code>DataFrame</code>][DataFrame] with the distinct value combinations and their counts.
  */
 @Refine
 @Interpretable("ValueCounts")
@@ -216,29 +216,29 @@ public fun <T> DataFrame<T>.valueCounts(
 }
 
 /**
- * Returns a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] containing the counts of unique rows (or combinations of selected values) in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] containing the counts of unique rows (or combinations of selected values) in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Rows are compared by the values in the selected [columns]. If no columns are selected, values from
  * all columns are used.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * The resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
+ * The resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] contains:
  * - the distinct combinations of these values,
- * - a new [Int] column with the number of occurrences of each combination.
+ * - a new [<code>Int</code>][Int] column with the number of occurrences of each combination.
  * This column is called `"count"` by default unless it is overridden by [resultColumn].
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
- * and a row is not counted at all if any of its selected values is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * and a row is not counted at all if any of its selected values is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * See also:
- * - [`valueCounts`][org.jetbrains.kotlinx.dataframe.DataColumn.valueCounts] — counts of unique values in a single [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
- * - [`countDistinct`][org.jetbrains.kotlinx.dataframe.DataFrame.countDistinct] — the number of distinct rows or selected value combinations,
+ * - [<code>`valueCounts`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.valueCounts] — counts of unique values in a single [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * - [<code>`countDistinct`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.countDistinct] — the number of distinct rows or selected value combinations,
  * without their counts.
- * - [`distinct`][org.jetbrains.kotlinx.dataframe.DataFrame.distinct] — the distinct rows themselves, without their counts.
- * - [`count`][org.jetbrains.kotlinx.dataframe.DataFrame.count] — the total number of rows in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [<code>`distinct`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.distinct] — the distinct rows themselves, without their counts.
+ * - [<code>`count`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.count] — the total number of rows in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * For more information: [See `valueCounts` on the documentation website.](https://kotlin.github.io/dataframe/valuecounts.html)
  *
@@ -247,8 +247,8 @@ public fun <T> DataFrame<T>.valueCounts(
  * ### This `valueCounts` Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### Example
  *
@@ -264,12 +264,12 @@ public fun <T> DataFrame<T>.valueCounts(
  * Otherwise, the counted values keep the order of their first occurrence.
  * @param [ascending] The sorting direction. If `false` (default), the most frequent values come first.
  * Only used when [sort] is `true`.
- * @param [dropNA] If `true` (default), [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
+ * @param [dropNA] If `true` (default), [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values (`null`s and `NaN`s) are not counted
  * and are excluded from the result.
  * @param [resultColumn] The name of the resulting count column. Default — `"count"`.
  * If a column with this name is already present, the name is made unique by appending
  * a number to it (for example, `"count"` becomes `"count1"`).
- * @return A [DataFrame] with the distinct value combinations and their counts.
+ * @return A [<code>DataFrame</code>][DataFrame] with the distinct value combinations and their counts.
  */
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: String,

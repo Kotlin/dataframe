@@ -16,53 +16,53 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-/** [Column Selection DSL][ColumnSelectionDsl] */
+/** [<code>Column Selection DSL</code>][ColumnSelectionDsl] */
 internal typealias ColumnSelectionDslLink = Nothing
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     /**
-     * Retrieves the value of this [ColumnReference] or [-Accessor][ColumnAccessor] from
-     * the [DataFrame].
+     * Retrieves the value of this [<code>ColumnReference</code>][ColumnReference] or [<code>-Accessor</code>][ColumnAccessor] from
+     * the [<code>DataFrame</code>][DataFrame].
      *
-     * This is a shorthand for [get][ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [<code>get</code>][ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
     private typealias CommonColumnReferenceInvokeDocs = Nothing
 
     /**
-     * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
-     * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>ColumnReference</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [<code>-Accessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
+     * the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [DataColumn] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
+     * @return The [<code>DataColumn</code>][DataColumn] this [<code>Column Reference</code>][ColumnReference] or [<code>-Accessor</code>][ColumnAccessor] points to.
      */
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
 
     /**
-     * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
-     * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>ColumnReference</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [<code>-Accessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
+     * the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [ColumnGroup] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
+     * @return The [<code>ColumnGroup</code>][ColumnGroup] this [<code>Column Reference</code>][ColumnReference] or [<code>-Accessor</code>][ColumnAccessor] points to.
      */
     public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
 
     /**
-     * Retrieves the value of this [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [-Accessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
-     * the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>ColumnReference</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] or [<code>-Accessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] from
+     * the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [FrameColumn] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
+     * @return The [<code>FrameColumn</code>][FrameColumn] this [<code>Column Reference</code>][ColumnReference] or [<code>-Accessor</code>][ColumnAccessor] points to.
      */
     public operator fun <T> ColumnReference<DataFrame<T>>.invoke(): FrameColumn<T> = get(this)
 
     /**
-     * Retrieves the value of this [ColumnPath] from the [DataFrame].
-     * This is a shorthand for [getColumn][ColumnsContainer.getColumn]`(myColumnPath)` and
+     * Retrieves the value of this [<code>ColumnPath</code>][ColumnPath] from the [<code>DataFrame</code>][DataFrame].
+     * This is a shorthand for [<code>getColumn</code>][ColumnsContainer.getColumn]`(myColumnPath)` and
      * is most often used in combination with `operator fun String.get(column: String)`,
      * for instance:
      * ```kotlin
@@ -72,80 +72,80 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * For more information: [See Invoked String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html#invoked-string-api)
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [DataColumn] this [ColumnPath] points to.
+     * @return The [<code>DataColumn</code>][DataColumn] this [<code>ColumnPath</code>][ColumnPath] points to.
      */
     @Interpretable("ColumnPathInvokeTyped")
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][DataFrame].
      *
-     * This is a shorthand for [get][ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [<code>get</code>][ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
      */
     private typealias CommonKPropertyInvokeDocs = Nothing
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [DataColumn] this [KProperty Accessor][KProperty] points to.
+     * @return The [<code>DataColumn</code>][DataColumn] this [<code>KProperty Accessor</code>][KProperty] points to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <T> KProperty<T>.invoke(): DataColumn<T> = this@ColumnSelectionDsl[this]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [ColumnGroup] this [KProperty Accessor][KProperty] points to.
+     * @return The [<code>ColumnGroup</code>][ColumnGroup] this [<code>KProperty Accessor</code>][KProperty] points to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <T> KProperty<DataRow<T>>.invoke(): ColumnGroup<T> = this@ColumnSelectionDsl[this]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
-     * This is a shorthand for [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
+     * This is a shorthand for [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumn)`.
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [FrameColumn] this [KProperty Accessor][KProperty] points to.
+     * @return The [<code>FrameColumn</code>][FrameColumn] this [<code>KProperty Accessor</code>][KProperty] points to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <T> KProperty<DataFrame<T>>.invoke(): FrameColumn<T> = this@ColumnSelectionDsl[this]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][asColumnGroup]`().`[get][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][asColumnGroup]`().`[<code>get</code>][ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][KProperty.get]`MyOtherType::myOtherColumn`[`]`][KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
      */
     private typealias CommonKPropertyGetDocs = Nothing
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>DataColumn</code>][DataColumn] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
@@ -154,18 +154,18 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<R>): DataColumn<R> = invoke()[column]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>ColumnGroup</code>][ColumnGroup] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
@@ -175,18 +175,18 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
         invoke()[column]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>FrameColumn</code>][FrameColumn] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
@@ -196,36 +196,36 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
         invoke()[column]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>DataColumn</code>][DataColumn] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public operator fun <T, R> KProperty<T>.get(column: KProperty<R>): DataColumn<R> = invoke().asColumnGroup()[column]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>ColumnGroup</code>][ColumnGroup] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -233,18 +233,18 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
         invoke().asColumnGroup()[column]
 
     /**
-     * Retrieves the value of this [KProperty Accessor][KProperty] from the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+     * Retrieves the value of this [<code>KProperty Accessor</code>][KProperty] from the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
      *
      * This is a shorthand for
      *
-     * [get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[asColumnGroup][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[get][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
+     * [<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyType::myColumnGroup).`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.asColumnGroup]`().`[<code>get</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer.get]`(MyOtherType::myOtherColumn)`
      *
      * and can instead be written as
      *
-     * `MyType::myColumnGroup`[`[`][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[`]`][kotlin.reflect.KProperty.get].
+     * `MyType::myColumnGroup`[<code>`[`</code>][kotlin.reflect.KProperty.get]`MyOtherType::myOtherColumn`[<code>`]`</code>][kotlin.reflect.KProperty.get].
      *
      * @throws [IllegalArgumentException] if the column is not found.
-     * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
+     * @return The [<code>FrameColumn</code>][FrameColumn] these [<code>KProperty Accessors</code>][KProperty] point to.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -252,15 +252,15 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
         invoke().asColumnGroup()[column]
 
     /**
-     * Retrieves the value of the column with this name from the [DataFrame]. This can be
+     * Retrieves the value of the column with this name from the [<code>DataFrame</code>][DataFrame]. This can be
      * both typed and untyped.
-     * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
+     * This is a shorthand for [<code>get</code>][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"<MyColumnType>()` instead.
      *
      * For more information: [See Invoked String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html#invoked-string-api)
      *
      * @throws [IllegalArgumentException] if there is no column with this name.
-     * @return The [DataColumn] with this name.
+     * @return The [<code>DataColumn</code>][DataColumn] with this name.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeTyped")
@@ -268,15 +268,15 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     /**
-     * Retrieves the value of the column with this name from the [DataFrame]. This can be
+     * Retrieves the value of the column with this name from the [<code>DataFrame</code>][DataFrame]. This can be
      * both typed and untyped.
-     * This is a shorthand for [get][ColumnsContainer.get]`("myColumnName")` and can be
+     * This is a shorthand for [<code>get</code>][ColumnsContainer.get]`("myColumnName")` and can be
      * written as `"myColumnName"()` instead.
      *
      * For more information: [See Invoked String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html#invoked-string-api)
      *
      * @throws [IllegalArgumentException] if there is no column with this name.
-     * @return The [DataColumn] with this name.
+     * @return The [<code>DataColumn</code>][DataColumn] with this name.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("stringInvokeUntyped")
@@ -284,9 +284,9 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     public operator fun String.invoke(): DataColumn<*> = getColumn(this)
 
     /**
-     * Creates a [ColumnPath] from the receiver and the given column name [column].
-     * This is a shorthand for [pathOf]`("myColumnName", "myNestedColumnName")` and is often used
-     * in combination with [ColumnPath.invoke] to retrieve the value of a nested column.
+     * Creates a [<code>ColumnPath</code>][ColumnPath] from the receiver and the given column name [<code>column</code>][column].
+     * This is a shorthand for [<code>pathOf</code>][pathOf]`("myColumnName", "myNestedColumnName")` and is often used
+     * in combination with [<code>ColumnPath.invoke</code>][ColumnPath.invoke] to retrieve the value of a nested column.
      * For instance:
      * ```kotlin
      * "myColumn"["myNestedColumn"]<NestedColumnType>()
@@ -302,7 +302,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * As extension to `"myColumn"["myNestedColumn"]`, this function enables
      * `"myColumn"["myNestedColumn"]["myDoublyNestedColumn"]` as alternative to
-     * [pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
+     * [<code>pathOf</code>][pathOf]`("myColumn", "myNestedColumn", "myDoublyNestedColumn")`
      *
      * For more information: [See Invoked String API on the documentation website.](https://kotlin.github.io/dataframe/stringapi.html#invoked-string-api)
      */

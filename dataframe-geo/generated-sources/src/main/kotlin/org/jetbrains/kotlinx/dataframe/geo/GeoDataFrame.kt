@@ -18,16 +18,16 @@ import org.jetbrains.kotlinx.dataframe.api.with
 public class GeoDataFrame<T : WithGeometry>(public val df: DataFrame<T>, public val crs: CoordinateReferenceSystem?) {
 
     /**
-     * Creates a new [GeoDataFrame] by applying transformations to the underlying [DataFrame].
+     * Creates a new [<code>GeoDataFrame</code>][GeoDataFrame] by applying transformations to the underlying [<code>DataFrame</code>][DataFrame].
      *
-     * This function opens a modification scope where the current [DataFrame] can be transformed using
+     * This function opens a modification scope where the current [<code>DataFrame</code>][DataFrame] can be transformed using
      * [Kotlin DataFrame operations](https://kotlin.github.io/dataframe/operations.html). The transformation block
-     * receives the original [DataFrame] both as a receiver and as an explicit argument, allowing flexible modifications.
+     * receives the original [<code>DataFrame</code>][DataFrame] both as a receiver and as an explicit argument, allowing flexible modifications.
      *
      * The Coordinate Reference System (CRS) remains unchanged.
      *
      * @param block A lambda defining the transformations to apply to the DataFrame.
-     * @return A new [GeoDataFrame] instance with the modified DataFrame while preserving the original CRS.
+     * @return A new [<code>GeoDataFrame</code>][GeoDataFrame] instance with the modified DataFrame while preserving the original CRS.
      */
     public inline fun modify(block: DataFrame<T>.(DataFrame<T>) -> DataFrame<T>): GeoDataFrame<T> =
         GeoDataFrame(df.block(df), crs)

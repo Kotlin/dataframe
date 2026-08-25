@@ -9,8 +9,8 @@ import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 public sealed interface MarkerNameProvider {
     public companion object {
         /**
-         * [MarkerNameProvider] that generates a name from the column name.
-         * It uses the last component of the [ColumnPath], converts it to camel case and capitalizes it.
+         * [<code>MarkerNameProvider</code>][MarkerNameProvider] that generates a name from the column name.
+         * It uses the last component of the [<code>ColumnPath</code>][ColumnPath], converts it to camel case and capitalizes it.
          * This provider is useful for generating descriptive names for nested markers that reflect the structure they represent.
          */
         public val fromColumnName: MarkerNameProvider = GeneratedName { columnPath ->
