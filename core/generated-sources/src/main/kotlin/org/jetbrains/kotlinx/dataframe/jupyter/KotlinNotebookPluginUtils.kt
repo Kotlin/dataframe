@@ -47,7 +47,7 @@ import java.util.Arrays
  * Kotlin Notebook Plugin acts as a client of Kotlin Jupyter kernel and uses this functionality
  * for dynamic pagination when rendering dataframes.
  * The plugin sends the following code to the kernel to evaluate:
- * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[...], 0, 20), "")
+ * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[<code>...</code>][...], 0, 20), "")
  */
 public object KotlinNotebookPluginUtils {
     private const val KTNB_IDE_BUILD_PROP = "KTNB_IDE_BUILD_NUMBER"
@@ -240,9 +240,9 @@ public object KotlinNotebookPluginUtils {
         }
 
     /**
-     * Converts [dataframeLike] to [AnyFrame].
-     * If [dataframeLike] is already [AnyFrame] then it is returned as is.
-     * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
+     * Converts [<code>dataframeLike</code>][dataframeLike] to [<code>AnyFrame</code>][AnyFrame].
+     * If [<code>dataframeLike</code>][dataframeLike] is already [<code>AnyFrame</code>][AnyFrame] then it is returned as is.
+     * If it's not possible to convert [<code>dataframeLike</code>][dataframeLike] to [<code>AnyFrame</code>][AnyFrame] then [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
      */
     public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
         when (dataframeLike) {
@@ -330,7 +330,7 @@ public object KotlinNotebookPluginUtils {
     /**
      * Retrieves the build number of the Kotlin Notebook IDE.
      *
-     * @return The build number of the Kotlin Notebook IDE as an instance of [IdeBuildNumber],
+     * @return The build number of the Kotlin Notebook IDE as an instance of [<code>IdeBuildNumber</code>][IdeBuildNumber],
      * or null if the build number is not available.
      */
     public fun getKotlinNotebookIDEBuildNumber(): IdeBuildNumber? {

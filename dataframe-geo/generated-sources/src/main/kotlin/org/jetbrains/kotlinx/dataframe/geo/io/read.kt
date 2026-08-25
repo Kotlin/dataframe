@@ -18,9 +18,9 @@ import java.net.URL
 /**
  *
  *
- * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * Reads a [GeoJSON](https://geojson.org/) file into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
  * from the input file :
  * * `"geometry"` value is stored in the `geometry` column.
@@ -28,23 +28,23 @@ import java.net.URL
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
  *
  * > Uses the [GeoTools](https://geotools.org/) GeoJSON parser.
- * > Nested properties are not supported and parsed as [`LinkedHashMap<*, *>`][java.util.LinkedHashMap].
+ * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
  * > deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
- * @param [path] a [String] path to GeoJSON file
- * @return a new [GeoDataFrame] with the data from the GeoJSON file
+ * @param [path] a [<code>String</code>][String] path to GeoJSON file
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the GeoJSON file
  */
 public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
 
 /**
  *
  *
- * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * Reads a [GeoJSON](https://geojson.org/) file into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
  * from the input file :
  * * `"geometry"` value is stored in the `geometry` column.
@@ -52,14 +52,14 @@ public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = r
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
  *
  * > Uses the [GeoTools](https://geotools.org/) GeoJSON parser.
- * > Nested properties are not supported and parsed as [`LinkedHashMap<*, *>`][java.util.LinkedHashMap].
+ * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
  * > deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
- * @param [url] a [URL] of GeoJSON file
- * @return a new [GeoDataFrame] with the data from the GeoJSON file
+ * @param [url] a [<code>URL</code>][URL] of GeoJSON file
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the GeoJSON file
  */
 public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
     url.openStream().use { inputStream ->
@@ -70,9 +70,9 @@ public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
 /**
  *
  *
- * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * Reads a [GeoJSON](https://geojson.org/) file into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
  * from the input file :
  * * `"geometry"` value is stored in the `geometry` column.
@@ -80,23 +80,23 @@ public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
  *
  * > Uses the [GeoTools](https://geotools.org/) GeoJSON parser.
- * > Nested properties are not supported and parsed as [`LinkedHashMap<*, *>`][java.util.LinkedHashMap].
+ * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
  * > deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
- * @param [path] a [String] path to GeoJSON file
- * @return a new [GeoDataFrame] with the data from the GeoJSON file
+ * @param [path] a [<code>String</code>][String] path to GeoJSON file
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the GeoJSON file
  */
 public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFrame.readGeoJson(path)
 
 /**
  *
  *
- * Reads a [GeoJSON](https://geojson.org/) file into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * Reads a [GeoJSON](https://geojson.org/) file into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
  * from the input file :
  * * `"geometry"` value is stored in the `geometry` column.
@@ -104,14 +104,14 @@ public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoD
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
  *
  * > Uses the [GeoTools](https://geotools.org/) GeoJSON parser.
- * > Nested properties are not supported and parsed as [`LinkedHashMap<*, *>`][java.util.LinkedHashMap].
+ * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
  * > deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
- * @param [url] a [URL] of GeoJSON file
- * @return a new [GeoDataFrame] with the data from the GeoJSON file
+ * @param [url] a [<code>URL</code>][URL] of GeoJSON file
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the GeoJSON file
  */
 public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
 
@@ -119,9 +119,9 @@ public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataF
  *
  *
  * Reads a [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm) file
- * into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
  * from the shapefile:
  * * `Geometry` is stored in the `geometry` column.
  * * Attribute data from the `.dbf` file is stored in separate columns.
@@ -142,7 +142,7 @@ public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataF
  * ```
  *
  * @param path path to a Shapefile (*.shp or *.shp.gz file), or to a directory containing such a file
- * @return a new [GeoDataFrame] with the data from the Shapefile
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the Shapefile
  */
 public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
     val url = if (isUrl(path)) resolveRemoteShapefileUrl(URI(path).toURL()) else resolveShapefileUrl(path)
@@ -153,9 +153,9 @@ public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
  *
  *
  * Reads a [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm) file
- * into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
  * from the shapefile:
  * * `Geometry` is stored in the `geometry` column.
  * * Attribute data from the `.dbf` file is stored in separate columns.
@@ -169,7 +169,7 @@ public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
  * Requires `.shx` and `.dbf` files with the same name to be present in the same directory as the `.shp` file.
  *
  * @param url URL of a Shapefile (*.shp or *.shp.gz file) or of a directory containing such a file
- * @return a new [GeoDataFrame] with the data from the Shapefile
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the Shapefile
  */
 public fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
     val resolvedUrl = if (url.protocol == "file") {
@@ -217,9 +217,9 @@ private fun findShapefileInDirectory(dir: File): File =
  *
  *
  * Reads a [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm) file
- * into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
  * from the shapefile:
  * * `Geometry` is stored in the `geometry` column.
  * * Attribute data from the `.dbf` file is stored in separate columns.
@@ -240,7 +240,7 @@ private fun findShapefileInDirectory(dir: File): File =
  * ```
  *
  * @param path path to a Shapefile (*.shp or *.shp.gz file), or to a directory containing such a file
- * @return a new [GeoDataFrame] with the data from the Shapefile
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the Shapefile
  */
 public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
 
@@ -248,9 +248,9 @@ public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = Ge
  *
  *
  * Reads a [Shapefile](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm) file
- * into a [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
+ * into a [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame].
  *
- * Each row in the resulting [GeoDataFrame][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
+ * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single feature
  * from the shapefile:
  * * `Geometry` is stored in the `geometry` column.
  * * Attribute data from the `.dbf` file is stored in separate columns.
@@ -264,6 +264,6 @@ public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = Ge
  * Requires `.shx` and `.dbf` files with the same name to be present in the same directory as the `.shp` file.
  *
  * @param url URL of a Shapefile (*.shp or *.shp.gz file) or of a directory containing such a file
- * @return a new [GeoDataFrame] with the data from the Shapefile
+ * @return a new [<code>GeoDataFrame</code>][GeoDataFrame] with the data from the Shapefile
  */
 public fun DataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> = GeoDataFrame.readShapefile(url)

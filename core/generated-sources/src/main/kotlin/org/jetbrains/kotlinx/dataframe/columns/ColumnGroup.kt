@@ -12,19 +12,19 @@ import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import kotlin.reflect.KProperty
 
 /**
- * Group of columns. Used to create column hierarchy in [DataFrame].
+ * Group of columns. Used to create column hierarchy in [<code>DataFrame</code>][DataFrame].
  *
- * ColumnGroup is a mix of [DataFrame] and [DataColumn] that supports all [DataFrame] operations but also has [column name][name] and [column type][type].
- * It derives not from [DataColumn], but from [BaseColumn] to avoid API clashes between [DataFrame] and [DataColumn].
+ * ColumnGroup is a mix of [<code>DataFrame</code>][DataFrame] and [<code>DataColumn</code>][DataColumn] that supports all [<code>DataFrame</code>][DataFrame] operations but also has [<code>column name</code>][name] and [<code>column type</code>][type].
+ * It derives not from [<code>DataColumn</code>][DataColumn], but from [<code>BaseColumn</code>][BaseColumn] to avoid API clashes between [<code>DataFrame</code>][DataFrame] and [<code>DataColumn</code>][DataColumn].
  *
  * ColumnGroup interface can be returned by:
- * - extension property generated for [DataSchema]
- * - [ColumnAccessor] created by [columnGroup] delegate
- * - explicit cast using [asColumnGroup]
+ * - extension property generated for [<code>DataSchema</code>][DataSchema]
+ * - [<code>ColumnAccessor</code>][ColumnAccessor] created by [<code>columnGroup</code>][columnGroup] delegate
+ * - explicit cast using [<code>asColumnGroup</code>][asColumnGroup]
  *
- * Can be instantiated by [DataColumn.createColumnGroup].
+ * Can be instantiated by [<code>DataColumn.createColumnGroup</code>][DataColumn.createColumnGroup].
  *
- * @param T Schema marker. See [DataFrame] for details.
+ * @param T Schema marker. See [<code>DataFrame</code>][DataFrame] for details.
  */
 @HasSchema(schemaArg = 0)
 public interface ColumnGroup<out T> :
@@ -34,7 +34,7 @@ public interface ColumnGroup<out T> :
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     override fun get(indices: Iterable<Int>): ColumnGroup<T>
 
@@ -47,14 +47,14 @@ public interface ColumnGroup<out T> :
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T>
 
     /**
      * Gets the rows at given range of indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by range.
      */
     override fun get(range: IntRange): ColumnGroup<T>
 

@@ -101,10 +101,10 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
 }
 
 /**
- * Helper function to perform runtime checks on a [SingleColumn].
+ * Helper function to perform runtime checks on a [<code>SingleColumn</code>][SingleColumn].
  *
- * One use case is to check that a column is actually a [ColumnGroup], which is handled by
- * [org.jetbrains.kotlinx.dataframe.api.ensureIsColumnGroup].
+ * One use case is to check that a column is actually a [<code>ColumnGroup</code>][ColumnGroup], which is handled by
+ * [<code>org.jetbrains.kotlinx.dataframe.api.ensureIsColumnGroup</code>][org.jetbrains.kotlinx.dataframe.api.ensureIsColumnGroup].
  */
 internal fun <A> SingleColumn<A>.onResolve(check: (ColumnWithPath<A>?) -> Unit): SingleColumn<A> =
     object : SingleColumn<A> {
@@ -113,10 +113,10 @@ internal fun <A> SingleColumn<A>.onResolve(check: (ColumnWithPath<A>?) -> Unit):
     }
 
 /**
- * Helper function to perform runtime checks on a [ColumnAccessor].
+ * Helper function to perform runtime checks on a [<code>ColumnAccessor</code>][ColumnAccessor].
  *
- * One use case is to check that a column is actually a [ValueColumn], which is handled by
- * [org.jetbrains.kotlinx.dataframe.api.ensureIsValueColumn].
+ * One use case is to check that a column is actually a [<code>ValueColumn</code>][ValueColumn], which is handled by
+ * [<code>org.jetbrains.kotlinx.dataframe.api.ensureIsValueColumn</code>][org.jetbrains.kotlinx.dataframe.api.ensureIsValueColumn].
  */
 internal fun <A> ColumnAccessor<A>.onResolve(check: (ColumnWithPath<*>?) -> Unit): ColumnAccessor<A> =
     object : ColumnAccessor<A> {
@@ -166,9 +166,9 @@ internal fun <A> TransformableColumnSet<A>.onResolve(
     }
 
 /**
- * Applies a transformation on [this] [SingleColumn] by converting its
- * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter].
- * Since [converter] allows you to return multiple columns, the result is turned into a [ColumnSet]<[B]>.
+ * Applies a transformation on [<code>this</code>][this] [<code>SingleColumn</code>][SingleColumn] by converting its
+ * single [<code>ColumnWithPath</code>][ColumnWithPath]<[<code>A</code>][A]> to [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>B</code>][B]>] using [<code>converter</code>][converter].
+ * Since [<code>converter</code>][converter] allows you to return multiple columns, the result is turned into a [<code>ColumnSet</code>][ColumnSet]<[<code>B</code>][B]>.
  */
 internal fun <A, B> SingleColumn<A>.transformSingle(
     converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>,
@@ -182,14 +182,14 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
     }
 
 /**
- * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
- * using [converter].
+ * Applies a transformation on [<code>this</code>][this] by converting its [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>A</code>][A]>] to [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>B</code>][B]>]
+ * using [<code>converter</code>][converter].
  *
- * The result can either be used as a normal [ColumnSet]<[B]>,
- * which resolves [this] and then applies [converter] on the result,
+ * The result can either be used as a normal [<code>ColumnSet</code>][ColumnSet]<[<code>B</code>][B]>,
+ * which resolves [<code>this</code>][this] and then applies [<code>converter</code>][converter] on the result,
  *
- * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
- * the [converter] is applied.
+ * or it can be used as a [<code>TransformableColumnSet</code>][TransformableColumnSet]<[<code>B</code>][B]>, where a [<code>ColumnsResolverTransformer</code>][ColumnsResolverTransformer] can be injected before
+ * the [<code>converter</code>][converter] is applied.
  */
 @PublishedApi
 internal inline fun <A, B> ColumnsResolver<A>.transform(
@@ -212,14 +212,14 @@ internal inline fun <A, B> ColumnsResolver<A>.transform(
     }
 
 /**
- * Applies a transformation on [this] [SingleColumn] by converting its
- * single [ColumnWithPath]<[A]> to [List]<[ColumnWithPath]<[B]>] using [converter] but
- * also providing the [ColumnResolutionContext] to the converter.
+ * Applies a transformation on [<code>this</code>][this] [<code>SingleColumn</code>][SingleColumn] by converting its
+ * single [<code>ColumnWithPath</code>][ColumnWithPath]<[<code>A</code>][A]> to [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>B</code>][B]>] using [<code>converter</code>][converter] but
+ * also providing the [<code>ColumnResolutionContext</code>][ColumnResolutionContext] to the converter.
  *
- *  Since [converter] allows you to return multiple columns, the result is turned into a [ColumnSet]<[B]>.
+ *  Since [<code>converter</code>][converter] allows you to return multiple columns, the result is turned into a [<code>ColumnSet</code>][ColumnSet]<[<code>B</code>][B]>.
  *
- * The result can either be used as a normal [ColumnSet]<[B]>,
- * which resolves [this] and then applies [converter] on the result,
+ * The result can either be used as a normal [<code>ColumnSet</code>][ColumnSet]<[<code>B</code>][B]>,
+ * which resolves [<code>this</code>][this] and then applies [<code>converter</code>][converter] on the result,
  */
 internal fun <A, B> SingleColumn<A>.transformSingleWithContext(
     converter: ColumnResolutionContext.(ColumnWithPath<A>) -> List<ColumnWithPath<B>>,
@@ -234,14 +234,14 @@ internal fun <A, B> SingleColumn<A>.transformSingleWithContext(
     }
 
 /**
- * Applies a transformation on [this] by converting its [List]<[ColumnWithPath]<[A]>] to [List]<[ColumnWithPath]<[B]>]
- * using [converter], but also providing the [ColumnResolutionContext] to the converter.
+ * Applies a transformation on [<code>this</code>][this] by converting its [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>A</code>][A]>] to [<code>List</code>][List]<[<code>ColumnWithPath</code>][ColumnWithPath]<[<code>B</code>][B]>]
+ * using [<code>converter</code>][converter], but also providing the [<code>ColumnResolutionContext</code>][ColumnResolutionContext] to the converter.
  *
- * The result can either be used as a normal [ColumnSet]<[B]>,
- * which resolves [this] and then applies [converter] on the result,
+ * The result can either be used as a normal [<code>ColumnSet</code>][ColumnSet]<[<code>B</code>][B]>,
+ * which resolves [<code>this</code>][this] and then applies [<code>converter</code>][converter] on the result,
  *
- * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
- * the [converter] is applied.
+ * or it can be used as a [<code>TransformableColumnSet</code>][TransformableColumnSet]<[<code>B</code>][B]>, where a [<code>ColumnsResolverTransformer</code>][ColumnsResolverTransformer] can be injected before
+ * the [<code>converter</code>][converter] is applied.
  */
 internal fun <A, B> ColumnsResolver<A>.transformWithContext(
     converter: ColumnResolutionContext.(List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
@@ -261,7 +261,7 @@ internal fun <A, B> ColumnsResolver<A>.transformWithContext(
                 .let { converter(context, it as List<ColumnWithPath<A>>) }
     }
 
-/** Makes sure the right error messages appear when running [List.single] */
+/** Makes sure the right error messages appear when running [<code>List.single</code>][List.single] */
 private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
     try {
         single()
@@ -272,11 +272,11 @@ private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
     }
 
 /**
- * Converts [this] [ColumnsResolver] to a [SingleColumn].
- * [resolveSingle] will return the single column of [this] if there is only one, else it will return throw an exception:
- * In case of an empty [ColumnsResolver], a [NoSuchElementException] will be thrown.
- * In case of more than one column, a [IllegalArgumentException] will be thrown.
- * If the result is used as a [ColumnSet], `null` will be converted to an empty list.
+ * Converts [<code>this</code>][this] [<code>ColumnsResolver</code>][ColumnsResolver] to a [<code>SingleColumn</code>][SingleColumn].
+ * [<code>resolveSingle</code>][resolveSingle] will return the single column of [<code>this</code>][this] if there is only one, else it will return throw an exception:
+ * In case of an empty [<code>ColumnsResolver</code>][ColumnsResolver], a [<code>NoSuchElementException</code>][NoSuchElementException] will be thrown.
+ * In case of more than one column, a [<code>IllegalArgumentException</code>][IllegalArgumentException] will be thrown.
+ * If the result is used as a [<code>ColumnSet</code>][ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnsResolver<T>.singleImpl(): SingleColumn<T> =
     object : SingleColumn<T> {
@@ -285,7 +285,7 @@ internal fun <T> ColumnsResolver<T>.singleImpl(): SingleColumn<T> =
     }
 
 /**
- * Same as [singleImpl], however, it passes any [ColumnsResolverTransformer] back to [this] if it is supplied.
+ * Same as [<code>singleImpl</code>][singleImpl], however, it passes any [<code>ColumnsResolverTransformer</code>][ColumnsResolverTransformer] back to [<code>this</code>][this] if it is supplied.
  */
 internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
@@ -303,9 +303,9 @@ internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): Transfor
     }
 
 /**
- * Converts [this] [ColumnsResolver] to a [SingleColumn].
- * [resolveSingle] will return the single column of [this] if there is only one, else it will return `null`.
- * If the result used as a [ColumnSet], `null` will be converted to an empty list.
+ * Converts [<code>this</code>][this] [<code>ColumnsResolver</code>][ColumnsResolver] to a [<code>SingleColumn</code>][SingleColumn].
+ * [<code>resolveSingle</code>][resolveSingle] will return the single column of [<code>this</code>][this] if there is only one, else it will return `null`.
+ * If the result used as a [<code>ColumnSet</code>][ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnsResolver<T>.singleOrNullImpl(): SingleColumn<T> =
     object : SingleColumn<T> {
@@ -314,7 +314,7 @@ internal fun <T> ColumnsResolver<T>.singleOrNullImpl(): SingleColumn<T> =
     }
 
 /**
- * Same as [singleOrNullImpl], however, it passes any [ColumnsResolverTransformer] back to [this] if it is supplied.
+ * Same as [<code>singleOrNullImpl</code>][singleOrNullImpl], however, it passes any [<code>ColumnsResolverTransformer</code>][ColumnsResolverTransformer] back to [<code>this</code>][this] if it is supplied.
  */
 internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): TransformableSingleColumn<T> =
     object : TransformableSingleColumn<T> {
@@ -377,7 +377,7 @@ internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: Unresol
 
 /**
  * Simplifies structure by removing columns that are already present in
- * column groups in [this].
+ * column groups in [<code>this</code>][this].
  *
  * A.k.a. it gets a sub-list of columns that are roots of the trees of columns.
  *
@@ -391,10 +391,10 @@ internal fun <T> List<ColumnWithPath<T>>.simplify(): List<ColumnWithPath<T>> {
 }
 
 /**
- * Returns a new list of column paths, except the ones inside [columns].
+ * Returns a new list of column paths, except the ones inside [<code>columns</code>][columns].
  * NOTE: The structure is not kept the same; if a column is removed, its parent will be removed as well, and
  * all its siblings will be lifted out of the group. This also happens if a column is "removed" that does
- * not exist in [this].
+ * not exist in [<code>this</code>][this].
  */
 internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(
     columns: Iterable<ColumnWithPath<*>>,
@@ -414,10 +414,10 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(
 }
 
 /**
- * Returns a new list of column paths, except the ones inside [columns].
+ * Returns a new list of column paths, except the ones inside [<code>columns</code>][columns].
  * NOTE: ColumnGroups are adapted to keep their structure. If a column inside a column group is excepted, it will
  * be removed from the group.
- * Empty groups will be removed if [removeEmptyGroups]` == true`
+ * Empty groups will be removed if [<code>removeEmptyGroups</code>][removeEmptyGroups]` == true`
  */
 internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
     columns: Set<ColumnWithPath<*>>,
@@ -483,10 +483,10 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
 }
 
 /**
- * Retrieves the correct [ColumnKind] based on the [type][KType] of the values in the column.
+ * Retrieves the correct [<code>ColumnKind</code>][ColumnKind] based on the [<code>type</code>][KType] of the values in the column.
  *
- * NOTE: nullable DataFrames cannot become a [FrameColumns][FrameColumn],
- * so they become [ValueColumns][ValueColumn] instead.
+ * NOTE: nullable DataFrames cannot become a [<code>FrameColumns</code>][FrameColumn],
+ * so they become [<code>ValueColumns</code>][ValueColumn] instead.
  */
 internal fun KType.toColumnKind(): ColumnKind =
     when {

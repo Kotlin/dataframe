@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.asSingleColumn
 /**
  * ## ColumnSet
  *
- * Entity that can be resolved into a list of [columns][DataColumn].
- * Just like [SingleColumn], this is a [ColumnsResolver].
+ * Entity that can be resolved into a list of [<code>columns</code>][DataColumn].
+ * Just like [<code>SingleColumn</code>][SingleColumn], this is a [<code>ColumnsResolver</code>][ColumnsResolver].
  *
  * @see [SingleColumn]
  * @see [ColumnsResolver]

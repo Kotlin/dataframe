@@ -112,11 +112,11 @@ public fun DataFrame.Companion.readExcel(
     readExcel(url, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -125,7 +125,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -198,11 +198,11 @@ public fun DataFrame.Companion.readExcel(
 ): AnyFrame = readExcel(file, sheetName, skipRows, columns, stringColumns, rowsCount, firstRowIsHeader)
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -211,7 +211,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -263,11 +263,11 @@ public fun DataFrame.Companion.readExcel(
     )
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -276,7 +276,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -357,11 +357,11 @@ public fun DataFrame.Companion.readExcel(
     readExcel(fileOrUrl, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -370,7 +370,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -435,11 +435,11 @@ public fun DataFrame.Companion.readExcel(
     readExcel(inputStream, sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -448,7 +448,7 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -523,21 +523,21 @@ public fun DataFrame.Companion.readExcel(
     readExcel(wb, sheetName, skipRows, columns, formattingOptions, rowsCount, nameRepairStrategy, firstRowIsHeader)
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param formattingOptions range of columns to read as String regardless of a cell type.
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
- * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
+ * See also [<code>FormattingOptions.formatter</code>][FormattingOptions.formatter] and [<code>DataFormatter.formatCellValue</code>][DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  * @param parseEmptyAsNull when set to true, empty strings in cells are parsed as null (default true).
@@ -612,21 +612,21 @@ public class FormattingOptions(range: String, public val formatter: DataFormatte
 }
 
 /**
- * Reads an Excel sheet to [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Reads an Excel sheet to [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param sheet sheet to read.
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param formattingOptions range of columns to read as String regardless of a cell's type.
  * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
- * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
+ * See also [<code>FormattingOptions.formatter</code>][FormattingOptions.formatter] and [<code>DataFormatter.formatCellValue</code>][DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param firstRowIsHeader when set to true, it will take the first row (after skipRows) as the header.
- * when set to false, it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * when set to false, it operates as [<code>NameRepairStrategy.MAKE_UNIQUE</code>][NameRepairStrategy.MAKE_UNIQUE],
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  */
@@ -778,15 +778,15 @@ public enum class WorkBookType {
  * `XSSFWorkbook` for standard XLSX files, and `SXSSFWorkbook` for memory-efficient streaming when creating new XLSX files.
  *
  * @param path The path to the file where the data will be written.
- * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param columnsSelector A [<code>selector</code>][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
  * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
- * @param workBookType The [type of workbook][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
+ * @param workBookType The [<code>type of workbook</code>][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
  * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
@@ -805,15 +805,15 @@ public fun <T> DataFrame<T>.writeExcel(
  * and `SXSSFWorkbook` for memory-efficient streaming when creating new XLSX files.
  *
  * @param file The file where the data will be written.
- * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param columnsSelector A [<code>selector</code>][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
  * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
- * @param workBookType The [type of workbook][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
+ * @param workBookType The [<code>type of workbook</code>][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
  * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
@@ -840,15 +840,15 @@ public fun <T> DataFrame<T>.writeExcel(
  * and `SXSSFWorkbook` for memory-efficient streaming when creating new XLSX files.
  *
  * @param path The path to a file where the data will be written.
- * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param columnsSelector A [<code>selector</code>][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
  * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
- * @param workBookType The [type of workbook][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
+ * @param workBookType The [<code>type of workbook</code>][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
  * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: Path,
@@ -877,19 +877,19 @@ public fun <T> DataFrame<T>.writeExcel(
 }
 
 /**
- * Writes this DataFrame to an Excel file using an existing [Workbook] instance into given [OutputStream].
+ * Writes this DataFrame to an Excel file using an existing [<code>Workbook</code>][Workbook] instance into given [<code>OutputStream</code>][OutputStream].
  *
  * Uses [Apache POI](https://poi.apache.org).
- * Supports [XSSFWorkbook] and [SXSSFWorkbook] for XLSX and [HSSFWorkbook] for XLS,
+ * Supports [<code>XSSFWorkbook</code>][XSSFWorkbook] and [<code>SXSSFWorkbook</code>][SXSSFWorkbook] for XLSX and [<code>HSSFWorkbook</code>][HSSFWorkbook] for XLS,
  * and allows users to manage the workbook externally.
  *
  * @param outputStream The output stream where the Excel data will be written.
- * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param columnsSelector A [<code>selector</code>][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
  * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
- * @param factory The [Workbook] instance, allowing integration with an existing workbook.
+ * @param factory The [<code>Workbook</code>][Workbook] instance, allowing integration with an existing workbook.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     outputStream: OutputStream,
@@ -905,23 +905,23 @@ public fun <T> DataFrame<T>.writeExcel(
 }
 
 /**
- * Creates a new [Sheet] in the given [Workbook] and writes this DataFrame content into it.
+ * Creates a new [<code>Sheet</code>][Sheet] in the given [<code>Workbook</code>][Workbook] and writes this DataFrame content into it.
  *
  * Uses [Apache POI](https://poi.apache.org).
- * Supports [XSSFWorkbook] and [SXSSFWorkbook] for XLSX and [HSSFWorkbook] for XLS,
+ * Supports [<code>XSSFWorkbook</code>][XSSFWorkbook] and [<code>SXSSFWorkbook</code>][SXSSFWorkbook] for XLSX and [<code>HSSFWorkbook</code>][HSSFWorkbook] for XLS,
  * and allows users to manage the workbook externally.
  *
  * Automatically handles datetime types.
  * Skips null values to prevent Apache POI from treating empty cells incorrectly.
  *
- * @param wb The [Workbook] where the sheet will be created.
- * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include. Defaults to all columns.
+ * @param wb The [<code>Workbook</code>][Workbook] where the sheet will be created.
+ * @param columnsSelector A [<code>selector</code>][ColumnsSelector] to determine which columns to include. Defaults to all columns.
  * @param sheetName The name of the sheet. If null, a default sheet name is used.
  * @param writeHeader Whether to include a header row with column names. Defaults to true.
  *
- * @return The created [Sheet] instance containing the DataFrame data.
+ * @return The created [<code>Sheet</code>][Sheet] instance containing the DataFrame data.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,

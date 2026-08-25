@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
 // region DataColumn
 
 /**
- * Returns a new [DataColumn] containing only the elements that match the given [predicate].
+ * Returns a new [<code>DataColumn</code>][DataColumn] containing only the elements that match the given [<code>predicate</code>][predicate].
  *
  * For more information: [See `filter` on the documentation website.](https://kotlin.github.io/dataframe/filter.html#filter-on-a-datacolumn)
  *
@@ -47,29 +47,29 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
 // region DataFrame
 
 /**
- * Filters the rows of this [DataFrame] based on the provided [RowFilter].
- * Returns a new [DataFrame] containing only the rows that satisfy the given [predicate].
+ * Filters the rows of this [<code>DataFrame</code>][DataFrame] based on the provided [<code>RowFilter</code>][RowFilter].
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing only the rows that satisfy the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * For more information, see: [See `filter` on the documentation website.](https://kotlin.github.io/dataframe/filter.html)
  *
  * See also:
- *  - [drop][DataFrame.drop], which drops rows based on values within the row.
- *  - [distinct][DataFrame.distinct], which filters out rows with duplicated values.
+ *  - [<code>drop</code>][DataFrame.drop], which drops rows based on values within the row.
+ *  - [<code>distinct</code>][DataFrame.distinct], which filters out rows with duplicated values.
  *
  * ### Example
  * ```kotlin
@@ -80,7 +80,7 @@ public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<
  *
  * @param predicate A lambda that takes a row (twice for compatibility) and returns `true`
  * if the row should be included in the result.
- * @return A new [DataFrame] containing only the rows that satisfy the predicate.
+ * @return A new [<code>DataFrame</code>][DataFrame] containing only the rows that satisfy the predicate.
  */
 public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     indices().filter {
@@ -114,45 +114,45 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 // region ColumnsSelectionDsl
 
 /**
- * ## Filter [ColumnSet] [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Filter [<code>ColumnSet</code>][ColumnSet] [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface FilterColumnsSelectionDsl {
 
     /**
-     * ## Filter [ColumnSet] Grammar
+     * ## Filter [<code>ColumnSet</code>][ColumnSet] Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
      *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`filter`**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` { `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`filter`**</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` { `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
      *
      *
@@ -166,35 +166,35 @@ public interface FilterColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** __`.`__[**`filter`**][ColumnsSelectionDsl.filter] */
+        /** __`.`__[<code>**`filter`**</code>][ColumnsSelectionDsl.filter] */
         public typealias ColumnSetName = Nothing
     }
 
     /**
-     * ## Filter [ColumnSet]
+     * ## Filter [<code>ColumnSet</code>][ColumnSet]
      *
-     * Creates a subset of columns ([ColumnSet]) from the current [ColumnSet] that
-     * adhere to the given [predicate].
+     * Creates a subset of columns ([<code>ColumnSet</code>][ColumnSet]) from the current [<code>ColumnSet</code>][ColumnSet] that
+     * adhere to the given [<code>predicate</code>][predicate].
      *
-     * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
-     * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
+     * Aside from calling [<code>filter</code>][ColumnSet.filter] directly, you can also use the [<code>get</code>][ColumnsSelectionDsl.get] operator
+     * in most cases. This function belongs to [<code>cols</code>][ColumnsSelectionDsl.cols] but operates identically.
      *
      * For more information: [See `filter` in the Columns Selection DSL on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#filter)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### For example:
      *
-     * `df.`[`remove`][DataFrame.remove]`  {  `[`all`][ColumnsSelectionDsl.all]`().`[`filter`][ColumnSet.filter]` { it.`[`hasNulls`][DataColumn.hasNulls]`() } }`
+     * `df.`[<code>`remove`</code>][DataFrame.remove]`  {  `[<code>`all`</code>][ColumnsSelectionDsl.all]`().`[<code>`filter`</code>][ColumnSet.filter]` { it.`[<code>`hasNulls`</code>][DataColumn.hasNulls]`() } }`
      *
-     * `// and although this can be shortened to just the `[`colsOf`][colsOf]` call:`
+     * `// and although this can be shortened to just the `[<code>`colsOf`</code>][colsOf]` call:`
      *
-     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][colsOf]`<`[`String`][String]`>().`[`filter`][ColumnSet.filter]`  { "e"  `[`in`][String.contains]` it.`[`name`][ColumnPath.name]`() } }`
+     * `df.`[<code>`select`</code>][DataFrame.select]`  {  `[<code>`colsOf`</code>][colsOf]`<`[<code>`String`</code>][String]`>().`[<code>`filter`</code>][ColumnSet.filter]`  { "e"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>()`[`[`][ColumnsSelectionDsl.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[<code>`select`</code>][DataFrame.select]`  {  `[<code>`colsOf`</code>][SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>()`[<code>`[`</code>][ColumnsSelectionDsl.cols]`{ it.`[<code>`any`</code>][ColumnWithPath.any]` { it == "Alice" } }`[<code>`]`</code>][ColumnsSelectionDsl.cols]` }`
      *
-     * @param [predicate] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
-     * @return A [ColumnSet] containing the columns that match the given [predicate].
+     * @param [predicate] A [<code>ColumnFilter function</code>][ColumnFilter] that takes a [<code>ColumnReference</code>][ColumnReference] and returns a [<code>Boolean</code>][Boolean].
+     * @return A [<code>ColumnSet</code>][ColumnSet] containing the columns that match the given [<code>predicate</code>][predicate].
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")

@@ -28,9 +28,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * ## Col [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Col [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  * @param _UNUSED [#KT-68546](https://youtrack.jetbrains.com/issue/KT-68546/Conflicting-overloads-in-non-generic-interface-K2-2.0.0)
  */
 public interface ColColumnsSelectionDsl<out _UNUSED> {
@@ -41,25 +41,25 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[<code>`ColumnAccessor`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `index: `[`Int`][Int]
+     *  `index: `[<code>`Int`</code>][Int]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -70,40 +70,40 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**`  |  `[**`[`**][ColumnsSelectionDsl.col][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][ColumnsSelectionDsl.col]
+     *  [<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]**`(`**[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**`  |  `[<code>**`[`**</code>][ColumnsSelectionDsl.col][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][ColumnsSelectionDsl.col]
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      *
      *
@@ -115,27 +115,27 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     public interface Grammar {
 
-        /** [**`col`**][ColumnsSelectionDsl.col] */
+        /** [<code>**`col`**</code>][ColumnsSelectionDsl.col] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        /** __`.`__[<code>**`col`**</code>][ColumnsSelectionDsl.col] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        /** __`.`__[<code>**`col`**</code>][ColumnsSelectionDsl.col] */
         public typealias ColumnGroupName = Nothing
     }
 
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor] (or [SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath], [KProperty], or [ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][ColumnAccessor] (or [<code>SingleColumn</code>][SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -143,26 +143,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[col][col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>col</code>][col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[col][col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>col</code>][col]`(SomeType::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[col][col]`(1) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>col</code>][col]`(1) }`
      *
      * #### Examples for this overload:
      *
      *
      *
-     * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][ColumnsSelectionDsl.valueCol],
-     * [colGroup][ColumnsSelectionDsl.colGroup],
-     * and [frameCol][ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -177,14 +177,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
         typealias EXAMPLE = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { `[col][col]`() }`
+         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>col</code>][col]`() }`
          */
         typealias SingleExample = Nothing
 
         /**
-         * `df.`[select][DataFrame.select]` { `[col][col]`() }`
+         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>col</code>][col]`() }`
          *
-         * `df.`[select][DataFrame.select]` { `[col][col]`<`[String][String]`>() }`
+         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>col</code>][col]`<`[<code>String</code>][String]`>() }`
          */
         typealias DoubleExample = Nothing
 
@@ -206,14 +206,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -221,26 +221,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -250,7 +250,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     private typealias ColReferenceDocs = Nothing
@@ -258,14 +258,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -273,26 +273,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -302,7 +302,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      *
      */
@@ -313,14 +313,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -328,26 +328,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -357,7 +357,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -372,14 +372,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -387,26 +387,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -416,7 +416,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -427,14 +427,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -442,26 +442,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -471,7 +471,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -482,14 +482,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -497,26 +497,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -526,7 +526,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -537,14 +537,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -552,26 +552,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -581,7 +581,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -596,14 +596,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -611,28 +611,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -649,14 +649,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -664,28 +664,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -705,14 +705,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -720,28 +720,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -760,14 +760,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -775,28 +775,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -816,14 +816,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -831,28 +831,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -876,14 +876,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -891,28 +891,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -931,14 +931,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -946,28 +946,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -985,14 +985,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1000,28 +1000,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1041,14 +1041,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1056,28 +1056,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1099,14 +1099,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1114,28 +1114,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1156,14 +1156,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1171,28 +1171,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1213,14 +1213,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1228,28 +1228,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1269,14 +1269,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1284,28 +1284,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("columnName") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("columnName") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("columnName") }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1329,14 +1329,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1344,28 +1344,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1382,14 +1382,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1397,28 +1397,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1437,14 +1437,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1452,28 +1452,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1491,14 +1491,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1506,28 +1506,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1546,14 +1546,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1561,28 +1561,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1605,14 +1605,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1620,28 +1620,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1660,14 +1660,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1675,28 +1675,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1715,14 +1715,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1730,28 +1730,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1770,14 +1770,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1785,28 +1785,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1825,14 +1825,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1840,28 +1840,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1882,14 +1882,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1897,28 +1897,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1939,14 +1939,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -1954,28 +1954,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -1994,14 +1994,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2009,28 +2009,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`("pathTo"["columnName"] ) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("pathTo"["columnName"] ) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("pathTo"["columnName"] ) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2053,14 +2053,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2068,26 +2068,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2097,7 +2097,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     private typealias ColKPropertyDocs = Nothing
@@ -2105,14 +2105,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2120,26 +2120,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2149,7 +2149,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2159,14 +2159,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2174,26 +2174,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2203,7 +2203,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2213,14 +2213,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2228,26 +2228,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2257,7 +2257,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2268,14 +2268,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2283,26 +2283,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2312,7 +2312,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2323,14 +2323,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2338,26 +2338,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2367,7 +2367,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2378,14 +2378,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2393,26 +2393,26 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(Type::columnA) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2422,7 +2422,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [KProperty] reference to the column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column.
      * @param [C] The type of the column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2437,14 +2437,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2452,28 +2452,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2491,43 +2491,43 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!
+     * NOTE: You can use the get-[<code></code>][] operator on [<code>ColumnSets</code>][ColumnSet] as well!
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>().`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>String</code>][String]`>()`[<code>`[`</code>][col]`1`[<code>`]`</code>][col]` }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2548,14 +2548,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2563,28 +2563,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>().`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>String</code>][String]`>()`[<code>`[`</code>][col]`1`[<code>`]`</code>][col]` }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2604,14 +2604,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2619,28 +2619,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2661,14 +2661,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2676,28 +2676,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2717,14 +2717,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2732,28 +2732,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2773,14 +2773,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2788,28 +2788,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2832,14 +2832,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2847,28 +2847,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2888,14 +2888,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2903,28 +2903,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -2943,14 +2943,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -2958,28 +2958,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -3001,14 +3001,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3016,28 +3016,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -3058,14 +3058,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3073,28 +3073,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]
@@ -3114,14 +3114,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     /**
      * ## Col
      *
-     * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
-     * an index ([Int]) or a reference to a column
-     * ([String], [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [KProperty], or [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column with the given argument which can be either
+     * an index ([<code>Int</code>][Int]) or a reference to a column
+     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This is a DSL-shorthand for [column][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
+     * This is a DSL-shorthand for [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] and can be both typed and untyped (in case you're supplying
      * a column name, -path, or index).
-     * The function can also be called on [ColumnGroups][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column inside a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
+     * an accessor for a column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -3129,28 +3129,28 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>("colA") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>("colA") }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(SomeType::colB) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`(0) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[col][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[String][String]`>(0) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.col]`<`[<code>String</code>][String]`>(0) }`
      *
-     * To create a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
-     * [valueCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * [colGroup][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [frameCol][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
+     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
+     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
+     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
+     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
      *
-     * @return A [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
      * @throws [IllegalStateException] if the column with the given argument does not exist.
      *
      * @see [column]

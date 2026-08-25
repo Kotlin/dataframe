@@ -13,10 +13,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
 import kotlin.reflect.KProperty
 
 /**
- * Entity that can retrieve [DataColumn] from [DataFrame] or value from [DataRow].
+ * Entity that can retrieve [<code>DataColumn</code>][DataColumn] from [<code>DataFrame</code>][DataFrame] or value from [<code>DataRow</code>][DataRow].
  *
- * Base interface for [DataColumn] and [ColumnAccessor].
- * @param C Expected [type][DataColumn.type] of values in the column
+ * Base interface for [<code>DataColumn</code>][DataColumn] and [<code>ColumnAccessor</code>][ColumnAccessor].
+ * @param C Expected [<code>type</code>][DataColumn.type] of values in the column
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
 

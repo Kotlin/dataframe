@@ -35,29 +35,29 @@ import kotlin.reflect.KProperty
 
 /**
  * This function does not immediately insert the new column but instead specify a column to insert and
- * returns an [InsertClause],
+ * returns an [<code>InsertClause</code>][InsertClause],
  * which serves as an intermediate step.
- * The [InsertClause] object provides methods to insert a new column using:
- * - [under][InsertClause.under] - inserts a new column under the specified column group.
- * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * The [<code>InsertClause</code>][InsertClause] object provides methods to insert a new column using:
+ * - [<code>under</code>][InsertClause.under] - inserts a new column under the specified column group.
+ * - [<code>after</code>][InsertClause.after] - inserts a new column after the specified column.
+ * - [<code>at</code>][InsertClause.at]- inserts a new column at the specified position.
  *
- * Each method returns a new [DataFrame] with the inserted column.
+ * Each method returns a new [<code>DataFrame</code>][DataFrame] with the inserted column.
  *
- * Check out [Grammar].
+ * Check out [<code>Grammar</code>][Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][InsertSelectingOptions].
+ * See [<code>Selecting Columns</code>][InsertSelectingOptions].
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
  * See also:
- * - [move][DataFrame.move] - move columns to a new position within the [DataFrame].
- * - [add][DataFrame.add] - add new columns to the [DataFrame]
- * (without specifying a position, to the end of the [DataFrame]).
+ * - [<code>move</code>][DataFrame.move] - move columns to a new position within the [<code>DataFrame</code>][DataFrame].
+ * - [<code>add</code>][DataFrame.add] - add new columns to the [<code>DataFrame</code>][DataFrame]
+ * (without specifying a position, to the end of the [<code>DataFrame</code>][DataFrame]).
  */
 internal interface InsertDocs {
 
@@ -67,25 +67,25 @@ internal interface InsertDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -93,26 +93,26 @@ internal interface InsertDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>insert</code>][org.jetbrains.kotlinx.dataframe.api.insert]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>insert</code>][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>insert</code>][org.jetbrains.kotlinx.dataframe.api.insert]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[insert][org.jetbrains.kotlinx.dataframe.api.insert]`("length", "age")`
+     * <code>`df`</code>`.`[<code>insert</code>][org.jetbrains.kotlinx.dataframe.api.insert]`("length", "age")`
      *
      *
      *
@@ -124,54 +124,54 @@ internal interface InsertDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * [**`insert`**][insert]**`(`**`column: `[`DataColumn`][DataColumn]**`)`**` /`
+     * [<code>**`insert`**</code>][insert]**`(`**`column: `[<code>`DataColumn`</code>][DataColumn]**`)`**` /`
      *
-     * [**`insert`**][insert]**`(`**`name: `[`String`][String]**`, `**`infer: `[`Infer`][Infer]**`) { `**`rowExpression: `[`RowExpression`][RowExpression]**`  }`**
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`under`**][InsertClause.under]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * [<code>**`insert`**</code>][insert]**`(`**`name: `[<code>`String`</code>][String]**`, `**`infer: `[<code>`Infer`</code>][Infer]**`) { `**`rowExpression: `[<code>`RowExpression`</code>][RowExpression]**`  }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`after`**][InsertClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * __`.`__[<code>**`under`**</code>][InsertClause.under]**`  {  `**`column: `[<code>`ColumnSelector`</code>][ColumnSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`at`**][InsertClause.at]**`(`**`position: `[`Int`][Int]**`)`**
+     * `| `__`.`__[<code>**`after`**</code>][InsertClause.after]**`  {  `**`column: `[<code>`ColumnSelector`</code>][ColumnSelector]**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[<code>**`at`**</code>][InsertClause.at]**`(`**`position: `[<code>`Int`</code>][Int]**`)`**
      */
     typealias Grammar = Nothing
 }
 
 /**
- * Inserts the given [column] into this [DataFrame].
+ * Inserts the given [<code>column</code>][column] into this [<code>DataFrame</code>][DataFrame].
  *
  * This function does not immediately insert the new column but instead specify a column to insert and
- * returns an [InsertClause][org.jetbrains.kotlinx.dataframe.api.InsertClause],
+ * returns an [<code>InsertClause</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause],
  * which serves as an intermediate step.
- * The [InsertClause][org.jetbrains.kotlinx.dataframe.api.InsertClause] object provides methods to insert a new column using:
- * - [under][org.jetbrains.kotlinx.dataframe.api.InsertClause.under] - inserts a new column under the specified column group.
- * - [after][org.jetbrains.kotlinx.dataframe.api.InsertClause.after] - inserts a new column after the specified column.
- * - [at][org.jetbrains.kotlinx.dataframe.api.InsertClause.at]- inserts a new column at the specified position.
+ * The [<code>InsertClause</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause] object provides methods to insert a new column using:
+ * - [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.under] - inserts a new column under the specified column group.
+ * - [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.after] - inserts a new column after the specified column.
+ * - [<code>at</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.at]- inserts a new column at the specified position.
  *
- * Each method returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the inserted column.
+ * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the inserted column.
  *
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.InsertDocs.InsertSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.InsertDocs.InsertSelectingOptions].
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
  * See also:
- * - [move][org.jetbrains.kotlinx.dataframe.DataFrame.move] - move columns to a new position within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [add][org.jetbrains.kotlinx.dataframe.DataFrame.add] - add new columns to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * (without specifying a position, to the end of the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]).
+ * - [<code>move</code>][org.jetbrains.kotlinx.dataframe.DataFrame.move] - move columns to a new position within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [<code>add</code>][org.jetbrains.kotlinx.dataframe.DataFrame.add] - add new columns to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * (without specifying a position, to the end of the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]).
  *
  * ### Examples:
  * ```kotlin
@@ -182,45 +182,45 @@ internal interface InsertDocs {
  * df.insert(count).after { url }
  * ```
  *
- * @param [column] A single [DataColumn] to insert into the [DataFrame].
- * @return An [InsertClause] for specifying the placement of the new column.
+ * @param [column] A single [<code>DataColumn</code>][DataColumn] to insert into the [<code>DataFrame</code>][DataFrame].
+ * @return An [<code>InsertClause</code>][InsertClause] for specifying the placement of the new column.
  */
 public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
 
 /**
- * Creates a new column using the provided [expression][AddExpression] and inserts it into this [DataFrame].
+ * Creates a new column using the provided [<code>expression</code>][AddExpression] and inserts it into this [<code>DataFrame</code>][DataFrame].
  *
- * With an [AddExpression][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value that each row in the new column should have.
- * This can be based on values from the same row in the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * With an [<code>AddExpression</code>][org.jetbrains.kotlinx.dataframe.api.AddExpression], you define the value that each row in the new column should have.
+ * This can be based on values from the same row in the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * You can also use functions like [prev][org.jetbrains.kotlinx.dataframe.api.prev] and [next][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
- * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
+ * You can also use functions like [<code>prev</code>][org.jetbrains.kotlinx.dataframe.api.prev] and [<code>next</code>][org.jetbrains.kotlinx.dataframe.api.next] to access other rows, and combine them with
+ * [<code>newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  *
  * This function does not immediately insert the new column but instead specify a column to insert and
- * returns an [InsertClause][org.jetbrains.kotlinx.dataframe.api.InsertClause],
+ * returns an [<code>InsertClause</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause],
  * which serves as an intermediate step.
- * The [InsertClause][org.jetbrains.kotlinx.dataframe.api.InsertClause] object provides methods to insert a new column using:
- * - [under][org.jetbrains.kotlinx.dataframe.api.InsertClause.under] - inserts a new column under the specified column group.
- * - [after][org.jetbrains.kotlinx.dataframe.api.InsertClause.after] - inserts a new column after the specified column.
- * - [at][org.jetbrains.kotlinx.dataframe.api.InsertClause.at]- inserts a new column at the specified position.
+ * The [<code>InsertClause</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause] object provides methods to insert a new column using:
+ * - [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.under] - inserts a new column under the specified column group.
+ * - [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.after] - inserts a new column after the specified column.
+ * - [<code>at</code>][org.jetbrains.kotlinx.dataframe.api.InsertClause.at]- inserts a new column at the specified position.
  *
- * Each method returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the inserted column.
+ * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the inserted column.
  *
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.InsertDocs.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.InsertDocs.InsertSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.InsertDocs.InsertSelectingOptions].
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
  * See also:
- * - [move][org.jetbrains.kotlinx.dataframe.DataFrame.move] - move columns to a new position within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
- * - [add][org.jetbrains.kotlinx.dataframe.DataFrame.add] - add new columns to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]
- * (without specifying a position, to the end of the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame]).
+ * - [<code>move</code>][org.jetbrains.kotlinx.dataframe.DataFrame.move] - move columns to a new position within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * - [<code>add</code>][org.jetbrains.kotlinx.dataframe.DataFrame.add] - add new columns to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * (without specifying a position, to the end of the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]).
  *
  * ## Examples
  *
@@ -239,9 +239,9 @@ public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = 
  * ```
  *
  * @param [name] The name of the new column to be created and inserted.
- * @param [infer] Controls how values are inferred when building the new column. Defaults to [Infer.Nulls].
- * @param [expression] An [AddExpression] that computes the value for each row of the new column.
- * @return An [InsertClause] for specifying the placement of the newly created column.
+ * @param [infer] Controls how values are inferred when building the new column. Defaults to [<code>Infer.Nulls</code>][Infer.Nulls].
+ * @param [expression] An [<code>AddExpression</code>][AddExpression] that computes the value for each row of the new column.
+ * @return An [<code>InsertClause</code>][InsertClause] for specifying the placement of the newly created column.
  */
 @Interpretable("Insert1")
 public inline fun <T, reified R> DataFrame<T>.insert(
@@ -269,19 +269,19 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 // endregion
 
 /**
- * An intermediate class used in the [insert] operation.
+ * An intermediate class used in the [<code>insert</code>][insert] operation.
  *
  * This class itself does not perform any insertions — it is a transitional step
  * before specifying how to insert the selected columns.
  * It must be followed by one of the inserting methods
- * to produce a new [DataFrame] with an inserted column.
+ * to produce a new [<code>DataFrame</code>][DataFrame] with an inserted column.
  *
  * Use the following methods to perform the insertion:
- * - [under][InsertClause.under] - inserts a new column under the specified column group.
- * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [<code>under</code>][InsertClause.under] - inserts a new column under the specified column group.
+ * - [<code>after</code>][InsertClause.after] - inserts a new column after the specified column.
+ * - [<code>at</code>][InsertClause.at]- inserts a new column at the specified position.
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  */
 public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: AnyCol) {
     override fun toString(): String = "InsertClause(df=$df, column=$column)"
@@ -290,17 +290,17 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
 // region under
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the selected [column group][column].
+ * Inserts the new column previously specified with [<code>insert</code>][insert] under
+ * the selected [<code>column group</code>][column].
  *
  * This works for existing column groups, as well as for ones that don't exist yet;
  * in that case, they will be created.
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
- * See [SelectingColumns.ColumnsSelectionDsl].
+ * See [<code>SelectingColumns.ColumnsSelectionDsl</code>][SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples
  * ```kotlin
@@ -314,9 +314,9 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
  * val dfWithSum = df.insert("sum") { a + b }.under { colGroups().single() }
  * ```
  *
- * @param column The [ColumnSelector] used to choose a new or existing column group in this [DataFrame]
+ * @param column The [<code>ColumnSelector</code>][ColumnSelector] used to choose a new or existing column group in this [<code>DataFrame</code>][DataFrame]
  * under which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed under the selected group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed under the selected group.
  */
 @Refine
 @Interpretable("Under0")
@@ -333,7 +333,7 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
  *
  * Use `insert {}.under { columnPath }` instead.
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  */
 @Deprecated(
     message = INSERT_UNDER,
@@ -353,14 +353,14 @@ public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = 
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
 /**
- * Inserts the new column previously specified with [insert] under
- * the given column group by its [name][column].
+ * Inserts the new column previously specified with [<code>insert</code>][insert] under
+ * the given column group by its [<code>name</code>][column].
  *
- * If the column group with the provided [name][column] does not exist, it will be created automatically.
+ * If the column group with the provided [<code>name</code>][column] does not exist, it will be created automatically.
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
  * ### Example
  * ```kotlin
@@ -368,9 +368,9 @@ public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under
  * df.insert(age).under("info")
  * ```
  *
- * @param [column] The [name][String] of the column group in this [DataFrame].
+ * @param [column] The [<code>name</code>][String] of the column group in this [<code>DataFrame</code>][DataFrame].
  * If the group does not exist, it will be created.
- * @return A new [DataFrame] with the inserted column placed under the specified column group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed under the specified column group.
  */
 @Refine
 @Interpretable("Under4")
@@ -381,14 +381,14 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pat
 // region after
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately after the selected [column] (on the same level).
+ * Inserts the new column previously specified with [<code>insert</code>][insert]
+ * at the position immediately after the selected [<code>column</code>][column] (on the same level).
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
- * See [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl].
+ * See [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl].
  *
  * ### Examples:
  * ```kotlin
@@ -399,23 +399,23 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under { pat
  * val dfWithSum = df.insert("sum") { a + b }.after { stats.min }
  * ```
  *
- * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
+ * @param [column] The [<code>ColumnSelector</code>][ColumnSelector] used to choose an existing column in this [<code>DataFrame</code>][DataFrame],
  * after which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed after the selected column.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed after the selected column.
  */
 @Refine
 @Interpretable("InsertAfter0")
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterImpl(df.getColumnPath(column))
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately after the column with the given [name][column].
+ * Inserts the new column previously specified with [<code>insert</code>][insert]
+ * at the position immediately after the column with the given [<code>name</code>][column].
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNamesApi].
+ * See also: [<code>SelectingColumns.ColumnNamesApi</code>][SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin
@@ -423,9 +423,9 @@ public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T>
  * df.insert(age).after("name")
  * ```
  *
- * @param [column] The [String] name of the column in this [DataFrame]
+ * @param [column] The [<code>String</code>][String] name of the column in this [<code>DataFrame</code>][DataFrame]
  * after which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed after the specified column.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed after the specified column.
  */
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
 
@@ -448,14 +448,14 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
 // region before
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately before the selected [column] (on the same level).
+ * Inserts the new column previously specified with [<code>insert</code>][insert]
+ * at the position immediately before the selected [<code>column</code>][column] (on the same level).
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnsSelectionDsl].
+ * See also: [<code>SelectingColumns.ColumnsSelectionDsl</code>][SelectingColumns.ColumnsSelectionDsl].
  *
  * ### Examples:
  * ```kotlin
@@ -466,23 +466,23 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
  * val dfWithSum = df.insert("sum") { a + b }.before { stats.min }
  * ```
  *
- * @param [column] The [ColumnSelector] used to choose an existing column in this [DataFrame],
+ * @param [column] The [<code>ColumnSelector</code>][ColumnSelector] used to choose an existing column in this [<code>DataFrame</code>][DataFrame],
  * before which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed before the selected column.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed before the selected column.
  */
 @Refine
 @Interpretable("InsertBefore0")
 public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T> = beforeImpl(df.getColumnPath(column))
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the position immediately before the column with the given [name][column].
+ * Inserts the new column previously specified with [<code>insert</code>][insert]
+ * at the position immediately before the column with the given [<code>name</code>][column].
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
- * See also: [SelectingColumns.ColumnNamesApi].
+ * See also: [<code>SelectingColumns.ColumnNamesApi</code>][SelectingColumns.ColumnNamesApi].
  *
  * ### Example
  * ```kotlin
@@ -490,9 +490,9 @@ public fun <T> InsertClause<T>.before(column: ColumnSelector<T, *>): DataFrame<T
  * df.insert(age).before("name")
  * ```
  *
- * @param [column] The [String] name of the column in this [DataFrame]
+ * @param [column] The [<code>String</code>][String] name of the column in this [<code>DataFrame</code>][DataFrame]
  * before which the new column will be inserted.
- * @return A new [DataFrame] with the inserted column placed before the specified column.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed before the specified column.
  */
 public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
     df.add(this.column).move(this.column).before(column)
@@ -502,14 +502,14 @@ public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
 // region at
 
 /**
- * Inserts the new column previously specified with [insert]
- * at the given [position] in the [DataFrame].
+ * Inserts the new column previously specified with [<code>insert</code>][insert]
+ * at the given [<code>position</code>][position] in the [<code>DataFrame</code>][DataFrame].
  *
  * The new column will be placed at the specified index, shifting existing columns to the right.
  *
  * For more information: [See `insert` on the documentation website.](https://kotlin.github.io/dataframe/insert.html)
  *
- * See [Grammar][InsertDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  *
  * ### Example
  * ```kotlin
@@ -517,9 +517,9 @@ public fun <T> InsertClause<T>.before(column: String): DataFrame<T> =
  * df.insert(age).at(3)
  * ```
  *
- * @param [position] The [Int] index where the new column should be inserted.
+ * @param [position] The [<code>Int</code>][Int] index where the new column should be inserted.
  *                 Columns currently at this index and after will be shifted right.
- * @return A new [DataFrame] with the inserted column placed at the specified position.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the inserted column placed at the specified position.
  */
 @Refine
 @Interpretable("InsertAt")
@@ -530,14 +530,14 @@ public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).
 // endregion
 
 /**
- * The [insert] operation can throw two types of [InsertException]:
- * - [NotAColumnGroupInsertException] - when trying to insert a column group into a non-column group.
- * - [DuplicateColumnPathInsertException] - when trying to insert a column with a path that already exists in the DataFrame.
+ * The [<code>insert</code>][insert] operation can throw two types of [<code>InsertException</code>][InsertException]:
+ * - [<code>NotAColumnGroupInsertException</code>][NotAColumnGroupInsertException] - when trying to insert a column group into a non-column group.
+ * - [<code>DuplicateColumnPathInsertException</code>][DuplicateColumnPathInsertException] - when trying to insert a column with a path that already exists in the DataFrame.
  */
 public sealed class InsertException(message: String) : IllegalStateException(message)
 
-/** The [InsertException] thrown when trying to insert a column group into a non-column group. */
+/** The [<code>InsertException</code>][InsertException] thrown when trying to insert a column group into a non-column group. */
 public class NotAColumnGroupInsertException(message: String) : InsertException(message)
 
-/** The [InsertException] thrown when trying to insert a column with a path that already exists in the DataFrame. */
+/** The [<code>InsertException</code>][InsertException] thrown when trying to insert a column with a path that already exists in the DataFrame. */
 public class DuplicateColumnPathInsertException(message: String) : InsertException(message)

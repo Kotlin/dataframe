@@ -39,22 +39,22 @@ import kotlin.reflect.KProperty
 // region move
 
 /**
- * Moves the specified [columns] within the [DataFrame].
+ * Moves the specified [columns] within the [<code>DataFrame</code>][DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
- * returns a [MoveClause],
- * which serves as an intermediate step. The [MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
- * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
- * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ * returns a [<code>MoveClause</code>][MoveClause],
+ * which serves as an intermediate step. The [<code>MoveClause</code>][MoveClause] allows specifying the final
+ * destination of the selected columns using methods such as [<code>to</code>][MoveClause.to], [<code>toStart</code>][MoveClause.toStart],
+ * [<code>toEnd</code>][MoveClause.toEnd], [<code>into</code>][MoveClause.into], [<code>intoIndexed</code>][MoveClause.intoIndexed], [<code>toTop</code>][MoveClause.toTop],
+ * [<code>after</code>][MoveClause.after] or [<code>under</code>][MoveClause.under], that return a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
- * Check out [Grammar].
+ * Check out [<code>Grammar</code>][Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MoveSelectingOptions].
+ * See [<code>Selecting Columns</code>][MoveSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  */
@@ -66,25 +66,25 @@ internal interface Move {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -92,26 +92,26 @@ internal interface Move {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[move][org.jetbrains.kotlinx.dataframe.api.move]`("length", "age")`
+     * <code>`df`</code>`.`[<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move]`("length", "age")`
      *
      *
      *
@@ -123,74 +123,74 @@ internal interface Move {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * **[`move`][move]****`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * **[<code>`move`</code>][move]****`  {  `**`columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`into`**][MoveClause.into]**`  {  `**`targetColumnPaths: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**
+     * __`.`__[<code>**`into`**</code>][MoveClause.into]**`  {  `**`targetColumnPaths: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**`  }  `**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`intoIndexed`**][MoveClause.intoIndexed]**`  {  `**`targetColumnPaths: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * `| `__`.`__[<code>**`intoIndexed`**</code>][MoveClause.intoIndexed]**`  {  `**`targetColumnPaths: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`under`**][MoveClause.under]**`  {  `**`parentColumnGroupPath: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * `| `__`.`__[<code>**`under`**</code>][MoveClause.under]**`  {  `**`parentColumnGroupPath: `[<code>`ColumnSelector`</code>][ColumnSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`after`**][MoveClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
+     * `| `__`.`__[<code>**`after`**</code>][MoveClause.after]**`  {  `**`column: `[<code>`ColumnSelector`</code>][ColumnSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`to`**][MoveClause.to]**`(`**`position: `[`Int`][Int]**`)`**
+     * `| `__`.`__[<code>**`to`**</code>][MoveClause.to]**`(`**`position: `[<code>`Int`</code>][Int]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`toTop`**][MoveClause.toTop]**`()`**
+     * `| `__`.`__[<code>**`toTop`**</code>][MoveClause.toTop]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`toStart`**][MoveClause.toStart]**`()`**
+     * `| `__`.`__[<code>**`toStart`**</code>][MoveClause.toStart]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`toEnd`**][MoveClause.toEnd]**`()`**
+     * `| `__`.`__[<code>**`toEnd`**</code>][MoveClause.toEnd]**`()`**
      */
     typealias Grammar = Nothing
 }
 
 /**
- * Moves the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
- * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
- * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * returns a [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause],
+ * which serves as an intermediate step. The [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
+ * destination of the selected columns using methods such as [<code>to</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [<code>toStart</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [<code>toEnd</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [<code>intoIndexed</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [<code>toTop</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Move.MoveSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Move.MoveSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This Move Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -201,41 +201,41 @@ internal interface Move {
  * df.move { cols(0..3) }.under("info")
  * df.move { colsOf<String>() }.to(5)
  * ```
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 @Interpretable("Move0")
 public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)
 
 /**
- * Moves the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
- * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
- * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * returns a [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause],
+ * which serves as an intermediate step. The [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
+ * destination of the selected columns using methods such as [<code>to</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [<code>toStart</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [<code>toEnd</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [<code>intoIndexed</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [<code>toTop</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Move.MoveSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Move.MoveSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This Move Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Examples:
  * ```kotlin
  * df.move("columnA", "columnB").after("columnC")
  * df.move("age").under("info")
  * ```
- * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 public fun <T> DataFrame<T>.move(vararg columns: String): MoveClause<T, Any?> = move { columns.toColumnSet() }
 
@@ -254,15 +254,15 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
 
 /**
  * Moves the specified [columns] to a new position specified by
- * [newColumnIndex] within the [DataFrame].
+ * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][DataFrame].
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MoveToSelectingOptions].
+ * See [<code>Selecting Columns</code>][MoveToSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  */
@@ -273,25 +273,25 @@ internal interface MoveTo {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -299,26 +299,26 @@ internal interface MoveTo {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>moveTo</code>][org.jetbrains.kotlinx.dataframe.api.moveTo]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>moveTo</code>][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>moveTo</code>][org.jetbrains.kotlinx.dataframe.api.moveTo]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveTo][org.jetbrains.kotlinx.dataframe.api.moveTo]`("length", "age")`
+     * <code>`df`</code>`.`[<code>moveTo</code>][org.jetbrains.kotlinx.dataframe.api.moveTo]`("length", "age")`
      *
      *
      *
@@ -328,32 +328,32 @@ internal interface MoveTo {
 
 /**
  * Moves the specified [columns] to a new position specified by
- * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveTo Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -363,9 +363,9 @@ internal interface MoveTo {
  * df.moveTo(0) { length and age }
  * df.moveTo(2) { cols(1..5) }
  * ```
- * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * @param [newColumnIndex] The index specifying the position in the [<code>DataFrame</code>][DataFrame] columns
  * where the selected columns will be moved.
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 @Refine
 @Interpretable("MoveTo1")
@@ -374,30 +374,30 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
 
 /**
  * Moves the specified [columns] to a new position specified by
- * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveTo Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Examples:
  * ```kotlin
  * df.moveTo(0) { length and age }
  * df.moveTo(2) { cols(1..5) }
  * ```
- * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * @param [newColumnIndex] The index specifying the position in the [<code>DataFrame</code>][DataFrame] columns
  * where the selected columns will be moved.
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
@@ -414,37 +414,37 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
 
 /**
  * Moves the specified [columns] to a new position specified
- * by [newColumnIndex]. If [insideGroup] is true selected columns
- * will be moved remaining within their [ColumnGroup],
+ * by [<code>newColumnIndex</code>][newColumnIndex]. If [<code>insideGroup</code>][insideGroup] is true selected columns
+ * will be moved remaining within their [<code>ColumnGroup</code>][ColumnGroup],
  * else they will be moved to the top level.
  *
  * Moves the specified [columns] to a new position specified by
- * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveTo.MoveToSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveTo Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -454,11 +454,11 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
  * df.moveTo(0, true) { length and age }
  * df.moveTo(2, false) { cols(1..5) }
  * ```
- * @param [newColumnIndex] The index specifying the position in the [DataFrame] columns
+ * @param [newColumnIndex] The index specifying the position in the [<code>DataFrame</code>][DataFrame] columns
  * where the selected columns will be moved.
  * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
  * else they will be moved to the top level.
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 @Refine
 @Interpretable("MoveTo1")
@@ -473,14 +473,14 @@ public fun <T> DataFrame<T>.moveTo(
 // region moveToStart
 
 /**
- * Moves the specified [columns] to the [DataFrame] start (on top-level).
- * Returns a new [DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][DataFrame] start (on top-level).
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MoveToStartSelectingOptions].
+ * See [<code>Selecting Columns</code>][MoveToStartSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  */
@@ -491,25 +491,25 @@ internal interface MoveToStart {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -517,26 +517,26 @@ internal interface MoveToStart {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
+     * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
      *
      *
      *
@@ -548,14 +548,14 @@ internal interface MoveToStart {
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToStart Overload
@@ -563,18 +563,18 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -582,29 +582,29 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 @Refine
 @Interpretable("MoveToStart1")
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToStart Overload
@@ -612,18 +612,18 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -631,15 +631,15 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the start remaining inside their group,
  * else they will be moved to the start of the top level.
  */
@@ -652,14 +652,14 @@ public fun <T> DataFrame<T>.moveToStart(insideGroup: Boolean, columns: ColumnsSe
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToStart.MoveToStartSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToStart Overload
@@ -667,16 +667,16 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToStart][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
+ * <code>`df`</code>`.`[<code>moveToStart</code>][org.jetbrains.kotlinx.dataframe.api.moveToStart]`("length", "age")`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
@@ -705,14 +705,14 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
 // region moveToEnd
 
 /**
- * Moves the specified [columns] to the [DataFrame] end.
- * Returns a new [DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][DataFrame] end.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MoveToEndSelectingOptions].
+ * See [<code>Selecting Columns</code>][MoveToEndSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  */
@@ -723,25 +723,25 @@ internal interface MoveToEnd {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -749,26 +749,26 @@ internal interface MoveToEnd {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
+     * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
      *
      *
      *
@@ -780,14 +780,14 @@ internal interface MoveToEnd {
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToEnd Overload
@@ -795,18 +795,18 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -814,29 +814,29 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 @Refine
 @Interpretable("MoveToEnd1")
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToEnd Overload
@@ -844,18 +844,18 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -863,15 +863,15 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  * @param [insideGroup] If true, selected columns will be moved to the end remaining inside their group,
  * else they will be moved to the end of the top level.
  */
@@ -884,14 +884,14 @@ public fun <T> DataFrame<T>.moveToEnd(insideGroup: Boolean, columns: ColumnsSele
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
 /**
- * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MoveToEnd.MoveToEndSelectingOptions].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  * ### This MoveToEnd Overload
@@ -899,16 +899,16 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[moveToEnd][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
+ * <code>`df`</code>`.`[<code>moveToEnd</code>][org.jetbrains.kotlinx.dataframe.api.moveToEnd]`("length", "age")`
  *
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to move.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to move.
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
@@ -940,32 +940,32 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
 // region into
 
 /**
- * Moves columns, previously selected with [move] into a new position specified by a
- * given column path within the [DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][move] into a new position specified by a
+ * given column path within the [<code>DataFrame</code>][DataFrame].
  *
  *
  *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -978,8 +978,8 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name().dropLast(4)) }
  * ```
  *
- * @param [column] The [Column With Path Selector][ColumnsSelector] used to specify
- * a path in the [DataFrame] to move columns.
+ * @param [column] The [<code>Column With Path Selector</code>][ColumnsSelector] used to specify
+ * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.into(
     column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
@@ -990,8 +990,8 @@ public fun <T, C> MoveClause<T, C>.into(
     )
 
 /**
- * Moves the selected column, previously specified with [move],
- * to the top level of the [DataFrame] and assigns it a new name.
+ * Moves the selected column, previously specified with [<code>move</code>][move],
+ * to the top level of the [<code>DataFrame</code>][DataFrame] and assigns it a new name.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1001,16 +1001,16 @@ public fun <T, C> MoveClause<T, C>.into(
  * df.move { info.salary }.into("income")
  * ```
  *
- * @param column The new [String] name of the column after the move.
- * @return A new [DataFrame] with the column moved and renamed.
+ * @param column The new [<code>String</code>][String] name of the column after the move.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the column moved and renamed.
  */
 @Refine
 @Interpretable("MoveInto0")
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 /**
- * Moves columns, previously selected with [move] into a new position specified by a
- * given column path within the [DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][move] into a new position specified by a
+ * given column path within the [<code>DataFrame</code>][DataFrame].
  * Provides selected column indices.
  *
  *
@@ -1018,24 +1018,24 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1047,8 +1047,8 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  *    .intoIndexed { it, index -> "allUsers"["user$index"] }
  * ```
  *
- * @param [column] The [Column With Path Selector And Indices][ColumnsSelector] used to specify
- * a path in the [DataFrame] to move columns.
+ * @param [column] The [<code>Column With Path Selector And Indices</code>][ColumnsSelector] used to specify
+ * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.intoIndexed(
     newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference,
@@ -1064,18 +1064,18 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 // region under
 
 /**
- * Moves columns, previously selected with [move] under a new or
- * an existing column group within the [DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][move] under a new or
+ * an existing column group within the [<code>DataFrame</code>][DataFrame].
  * If the column group doesn't exist, it will be created.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * ### Examples:
  * ```kotlin
@@ -1083,8 +1083,8 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  * df.move { age and weight }.under("info")
  * ```
  *
- * @param [column] A [ColumnsSelector] that defines the path to a [ColumnGroup]
- * in the [DataFrame], where the selected columns will be moved.
+ * @param [column] A [<code>ColumnsSelector</code>][ColumnsSelector] that defines the path to a [<code>ColumnGroup</code>][ColumnGroup]
+ * in the [<code>DataFrame</code>][DataFrame], where the selected columns will be moved.
  */
 @Refine
 @Interpretable("MoveUnder0")
@@ -1095,33 +1095,33 @@ public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = under {
 public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = under { column.path() }
 
 /**
- * Moves columns, previously selected with [move] under a new or
+ * Moves columns, previously selected with [<code>move</code>][move] under a new or
  * an existing column group specified by a
- * column path within the [DataFrame].
+ * column path within the [<code>DataFrame</code>][DataFrame].
  *
  *
  *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1135,8 +1135,8 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * df.move { age and weight }.under { columnGroup(info) }
  * ```
  *
- * @param [column] The [ColumnsSelector] that defines the path to a [ColumnGroup]
- * in the [DataFrame], where the selected columns will be moved.
+ * @param [column] The [<code>ColumnsSelector</code>][ColumnsSelector] that defines the path to a [<code>ColumnGroup</code>][ColumnGroup]
+ * in the [<code>DataFrame</code>][DataFrame], where the selected columns will be moved.
  */
 @Refine
 @Interpretable("MoveUnder1")
@@ -1153,10 +1153,10 @@ public fun <T, C> MoveClause<T, C>.under(
 // region to
 
 /**
- * Moves columns, previously selected with [move] to a new position specified
- * by [columnIndex] within the [DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][move] to a new position specified
+ * by [<code>columnIndex</code>][columnIndex] within the [<code>DataFrame</code>][DataFrame].
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1166,7 +1166,7 @@ public fun <T, C> MoveClause<T, C>.under(
  * df.move("age", "weight").to(2)
  * ```
  *
- * @param [columnIndex] The index specifying the position in the [DataFrame] columns
+ * @param [columnIndex] The index specifying the position in the [<code>DataFrame</code>][DataFrame] columns
  *  * where the selected columns will be moved.
  */
 @Refine
@@ -1174,11 +1174,11 @@ public fun <T, C> MoveClause<T, C>.under(
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
 /**
- * Moves columns, previously selected with [move] to a new position specified
- * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
+ * Moves columns, previously selected with [<code>move</code>][move] to a new position specified
+ * by [<code>columnIndex</code>][columnIndex]. If [<code>insideGroup</code>][insideGroup] is true, selected columns will be moved remaining within their [<code>ColumnGroup</code>][ColumnGroup],
  * else they will be moved to the top level.
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1188,7 +1188,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * df.move("age", "weight").to(2, false)
  * ```
  *
- * @param [columnIndex] The index specifying the position in the [ColumnGroup] columns
+ * @param [columnIndex] The index specifying the position in the [<code>ColumnGroup</code>][ColumnGroup] columns
  * where the selected columns will be moved.
  *
  * @param [insideGroup] If true, selected columns will be moved remaining inside their group,
@@ -1200,12 +1200,12 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): D
     moveToImpl(columnIndex, insideGroup)
 
 /**
- * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][move] to the top-level within the [<code>DataFrame</code>][DataFrame].
  * Moved columns name can be specified via special ColumnSelectionDsl.
  *
- * Returns a new [DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1215,7 +1215,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): D
  * df.move { colsAtAnyDepth { it.name() == "number" } }.toTop { it.parentName + it.name() }
  * ```
  *
- * @param [newColumnName] The special [ColumnsSelector] for define name of moved column.
+ * @param [newColumnName] The special [<code>ColumnsSelector</code>][ColumnsSelector] for define name of moved column.
  * Optional, the original name is used by default
  */
 @Refine
@@ -1229,30 +1229,30 @@ public fun <T, C> MoveClause<T, C>.toTop(
 // region after
 
 /**
- * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
- * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
+ * specified [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### This After Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1264,7 +1264,7 @@ public fun <T, C> MoveClause<T, C>.toTop(
  * df.move { cols(0..2) }.after { col(3) }
  * ```
  *
- * @param [column] A [ColumnSelector] specifying the column
+ * @param [column] A [<code>ColumnSelector</code>][ColumnSelector] specifying the column
  * after which the selected columns will be placed.
  */
 @Refine
@@ -1272,26 +1272,26 @@ public fun <T, C> MoveClause<T, C>.toTop(
 public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 /**
- * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
- * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
+ * specified [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### This After Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * ### Examples:
  * ```kotlin
  * df.move("age", "weight").after("surname")
  * ```
- * @param [column] The [Column Name][String] specifying the column
+ * @param [column] The [<code>Column Name</code>][String] specifying the column
  * after which the selected columns will be placed.
  */
 public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
@@ -1309,30 +1309,30 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 // region before
 
 /**
- * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
- * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
+ * specified [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### This Before Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1344,7 +1344,7 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
  * df.move { cols(3..5) }.before { col(2) }
  * ```
  *
- * @param [column] A [ColumnSelector] specifying the column
+ * @param [column] A [<code>ColumnSelector</code>][ColumnSelector] specifying the column
  * before which the selected columns will be placed.
  */
 @Refine
@@ -1352,26 +1352,26 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 public fun <T, C> MoveClause<T, C>.before(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, false)
 
 /**
- * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
- * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves columns, previously selected with [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] to the position before the
+ * specified [<code>column</code>][org.jetbrains.kotlinx.dataframe.api.column] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns].
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### This Before Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * ### Examples:
  * ```kotlin
  * df.move("age", "weight").before("surname")
  * ```
- * @param [column] The [Column Name][String] specifying the column
+ * @param [column] The [<code>Column Name</code>][String] specifying the column
  * before which the selected columns will be placed.
  */
 public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before { column.toColumnAccessor() }
@@ -1382,9 +1382,9 @@ public fun <T, C> MoveClause<T, C>.before(column: String): DataFrame<T> = before
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 
 /**
- * Moves columns, previously selected with [move] to the [DataFrame] start (on top-level).
+ * Moves columns, previously selected with [<code>move</code>][move] to the [<code>DataFrame</code>][DataFrame] start (on top-level).
  *
- * Returns a new [DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1400,10 +1400,10 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 
 /**
- * If insideGroup is true, moves columns previously selected with [move] to the start of their [ColumnGroup].
- * Else, selected columns will be moved to the start of their [DataFrame] (to the top-level).
+ * If insideGroup is true, moves columns previously selected with [<code>move</code>][move] to the start of their [<code>ColumnGroup</code>][ColumnGroup].
+ * Else, selected columns will be moved to the start of their [<code>DataFrame</code>][DataFrame] (to the top-level).
  *
- * Returns a new [DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1425,9 +1425,9 @@ public fun <T, C> MoveClause<T, C>.toStart(insideGroup: Boolean): DataFrame<T> =
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 /**
- * Moves columns, previously selected with [move] to the [DataFrame] end.
+ * Moves columns, previously selected with [<code>move</code>][move] to the [<code>DataFrame</code>][DataFrame] end.
  *
- * Returns a new [DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1443,10 +1443,10 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
 
 /**
- * If insideGroup is true, moves columns previously selected with [move] to the end of their [ColumnGroup].
- * Else, selected columns will be moved to the end of their [DataFrame] (to the top-level).
+ * If insideGroup is true, moves columns previously selected with [<code>move</code>][move] to the end of their [<code>ColumnGroup</code>][ColumnGroup].
+ * Else, selected columns will be moved to the end of their [<code>DataFrame</code>][DataFrame] (to the top-level).
  *
- * Returns a new [DataFrame] with updated columns.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1465,23 +1465,23 @@ public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
 public fun <T, C> MoveClause<T, C>.toEnd(insideGroup: Boolean): DataFrame<T> = to(df.ncol, insideGroup)
 
 /**
- * An intermediate class used in the [move] operation.
+ * An intermediate class used in the [<code>move</code>][move] operation.
  *
  * This class itself does nothing—it is just a transitional step before specifying
  * where to move the selected columns.
  * It must be followed by one of the positioning methods
- * to produce a new [DataFrame] with the updated column structure.
+ * to produce a new [<code>DataFrame</code>][DataFrame] with the updated column structure.
  *
  * Use the following methods to finalize the move:
- * - [to] – moves columns to a specific index.
- * - [toStart] – moves columns to the beginning.
- * - [toEnd] – moves columns to the end.
- * - [into] / [intoIndexed] – moves columns to a new position.
- * - [toTop] – moves columns to the top-level.
- * - [after] – places columns after a specific column.
- * - [under] – nests columns under a column group.
+ * - [<code>to</code>][to] – moves columns to a specific index.
+ * - [<code>toStart</code>][toStart] – moves columns to the beginning.
+ * - [<code>toEnd</code>][toEnd] – moves columns to the end.
+ * - [<code>into</code>][into] / [<code>intoIndexed</code>][intoIndexed] – moves columns to a new position.
+ * - [<code>toTop</code>][toTop] – moves columns to the top-level.
+ * - [<code>after</code>][after] – places columns after a specific column.
+ * - [<code>under</code>][under] – nests columns under a column group.
  *
- * See [Grammar][Move.Grammar] for more details.
+ * See [<code>Grammar</code>][Move.Grammar] for more details.
  */
 public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "MoveClause(df=$df, columns=$columns)"

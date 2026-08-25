@@ -110,7 +110,7 @@ public object Aggregators {
         statisticsParameters = statisticsParameters,
     )
 
-    /** Wrapper around an [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require a single parameter.
+    /** Wrapper around an [<code>aggregator factory</code>][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require a single parameter.
      *
      * Aggregators are cached by their parameter value.
      * @see AggregatorOptionSwitch2 */
@@ -118,7 +118,7 @@ public object Aggregators {
         getAggregator: (Param1) -> AggregatorProvider<Value, Return>,
     ) = AggregatorOptionSwitch1.Factory(getAggregator)
 
-    /** Wrapper around an [aggregator factory][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require two parameters.
+    /** Wrapper around an [<code>aggregator factory</code>][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorProvider] for aggregators that require two parameters.
      *
      * Aggregators are cached by their parameter values.
      * @see AggregatorOptionSwitch1 */

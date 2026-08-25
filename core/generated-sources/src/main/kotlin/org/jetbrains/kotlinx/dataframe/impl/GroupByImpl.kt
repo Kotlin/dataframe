@@ -33,7 +33,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.values
 
 /**
- * @property df DataFrame containing [groups] column and key columns. Represents GroupBy.
+ * @property df DataFrame containing [<code>groups</code>][groups] column and key columns. Represents GroupBy.
  */
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,

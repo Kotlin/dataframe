@@ -44,7 +44,7 @@ internal class LazyMap<K, out V>(private val actualMap: Map<K, Lazy<V>>) : Map<K
 }
 
 /**
- * Creates a [Map] that resolves values lazily.
+ * Creates a [<code>Map</code>][Map] that resolves values lazily.
  */
 internal fun <K, V> lazyMapOf(vararg entries: Pair<K, () -> V>): LazyMap<K, V> =
     LazyMap(mapOf(*entries).mapValues { lazy(it.value) })

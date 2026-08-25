@@ -86,8 +86,8 @@ private val logger = KotlinLogging.logger {}
 /**
  * Represents the [DuckDB](http://duckdb.org/) database type.
  *
- * This class provides methods to convert data from a [ResultSet] to the appropriate type for DuckDB,
- * and to generate the corresponding [column schema][ColumnSchema].
+ * This class provides methods to convert data from a [<code>ResultSet</code>][ResultSet] to the appropriate type for DuckDB,
+ * and to generate the corresponding [<code>column schema</code>][ColumnSchema].
  */
 public object DuckDb : AdvancedDbType("duckdb") {
 
@@ -100,11 +100,11 @@ public object DuckDb : AdvancedDbType("duckdb") {
     private val duckDbTypeCache = mutableMapOf<Pair<String, Boolean>, AnyJdbcToDataFrameConverter>()
 
     /**
-     * How a column type from JDBC, [sqlTypeName], is read in Java/Kotlin.
-     * The returned type must exactly follow [ResultSet.getObject] of your specific database's JDBC driver.
+     * How a column type from JDBC, [<code>sqlTypeName</code>][sqlTypeName], is read in Java/Kotlin.
+     * The returned type must exactly follow [<code>ResultSet.getObject</code>][ResultSet.getObject] of your specific database's JDBC driver.
      * Returning `null` defer the implementation to the default one (which may not always be correct).
      *
-     * Following [org.duckdb.DuckDBVector.getObject] and converting the result to
+     * Following [<code>org.duckdb.DuckDBVector.getObject</code>][org.duckdb.DuckDBVector.getObject] and converting the result to
      *
      */
     internal fun parseDuckDbType(sqlTypeName: String, isNullable: Boolean): AnyJdbcToDataFrameConverter =
@@ -337,7 +337,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
         return Pair(keyType, valueType)
     }
 
-    /** Parses "X[]" and "X[123]" into "X", and "X[][]" into "X[]" */
+    /** Parses "X[<code></code>][]" and "X[<code>123</code>][123]" into "X", and "X[<code></code>][]" into "X[<code></code>][]" */
     internal fun parseListType(typeString: String): String {
         if (!typeString.endsWith("]")) {
             error("invalid LIST/ARRAY type: $typeString")
@@ -402,8 +402,8 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
     /**
      * How to filter out system tables from user-created ones when using
-     * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
+     * [<code>DataFrame.readAllSqlTables</code>][DataFrame.Companion.readAllSqlTables] and
+     * [<code>DataFrameSchema.readAllSqlTables</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
      *
      * The names of these can sometimes be found in the specific JDBC integration.
      */
@@ -414,9 +414,9 @@ public object DuckDb : AdvancedDbType("duckdb") {
 
     /**
      * How to retrieve the correct table metadata when using
-     * [DataFrame.readAllSqlTables][DataFrame.Companion.readAllSqlTables] and
-     * [DataFrameSchema.readAllSqlTables][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
-     * The names of these can be found in the [DatabaseMetaData] implementation of the DuckDB JDBC integration.
+     * [<code>DataFrame.readAllSqlTables</code>][DataFrame.Companion.readAllSqlTables] and
+     * [<code>DataFrameSchema.readAllSqlTables</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema.Companion.readAllSqlTables].
+     * The names of these can be found in the [<code>DatabaseMetaData</code>][DatabaseMetaData] implementation of the DuckDB JDBC integration.
      */
     override fun buildTableMetadata(tables: ResultSet): TableMetadata =
         TableMetadata(
@@ -432,7 +432,7 @@ public object DuckDb : AdvancedDbType("duckdb") {
      * but supports read-only mode through connection parameters.
      *
      * @param [dbConfig] The database configuration containing URL, credentials, and read-only flag.
-     * @return A configured [Connection] instance.
+     * @return A configured [<code>Connection</code>][Connection] instance.
      */
     override fun createConnection(dbConfig: DbConnectionConfig): Connection {
         val properties = Properties().apply {

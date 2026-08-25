@@ -11,9 +11,9 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 
 /**
- * AtAnyDepth implementation for [TransformableColumnSet].
- * This converts a [TransformableColumnSet] into a [ColumnSet] by redirecting [ColumnSet.resolve]
- * to [TransformableColumnSet.transformResolve] with a correctly configured [AtAnyDepthTransformer].
+ * AtAnyDepth implementation for [<code>TransformableColumnSet</code>][TransformableColumnSet].
+ * This converts a [<code>TransformableColumnSet</code>][TransformableColumnSet] into a [<code>ColumnSet</code>][ColumnSet] by redirecting [<code>ColumnSet.resolve</code>][ColumnSet.resolve]
+ * to [<code>TransformableColumnSet.transformResolve</code>][TransformableColumnSet.transformResolve] with a correctly configured [<code>AtAnyDepthTransformer</code>][AtAnyDepthTransformer].
  */
 internal fun <C> TransformableColumnSet<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
@@ -32,9 +32,9 @@ internal fun <C> TransformableColumnSet<C>.atAnyDepthImpl(
     }
 
 /**
- * AtAnyDepth implementation for [TransformableSingleColumn].
- * This converts a [TransformableSingleColumn] into a [SingleColumn] by redirecting [SingleColumn.resolveSingle]
- * to [TransformableSingleColumn.transformResolveSingle] with a correctly configured [AtAnyDepthTransformer].
+ * AtAnyDepth implementation for [<code>TransformableSingleColumn</code>][TransformableSingleColumn].
+ * This converts a [<code>TransformableSingleColumn</code>][TransformableSingleColumn] into a [<code>SingleColumn</code>][SingleColumn] by redirecting [<code>SingleColumn.resolveSingle</code>][SingleColumn.resolveSingle]
+ * to [<code>TransformableSingleColumn.transformResolveSingle</code>][TransformableSingleColumn.transformResolveSingle] with a correctly configured [<code>AtAnyDepthTransformer</code>][AtAnyDepthTransformer].
  */
 internal fun <C> TransformableSingleColumn<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
@@ -54,8 +54,8 @@ internal fun <C> TransformableSingleColumn<C>.atAnyDepthImpl(
 
 /**
  * ## AtAnyDepth transformer.
- * A [ColumnsResolverTransformer] implementation around the [ColumnsResolver.flattenRecursively] function.
- * Created only using [atAnyDepthImpl].
+ * A [<code>ColumnsResolverTransformer</code>][ColumnsResolverTransformer] implementation around the [<code>ColumnsResolver.flattenRecursively</code>][ColumnsResolver.flattenRecursively] function.
+ * Created only using [<code>atAnyDepthImpl</code>][atAnyDepthImpl].
  */
 private class AtAnyDepthTransformer(val includeGroups: Boolean = true, val includeTopLevel: Boolean = true) :
     ColumnsResolverTransformer {
@@ -80,13 +80,13 @@ private class AtAnyDepthTransformer(val includeGroups: Boolean = true, val inclu
 }
 
 /**
- * Flattens a [ColumnsResolver] recursively.
+ * Flattens a [<code>ColumnsResolver</code>][ColumnsResolver] recursively.
  *
- * If [this] is a [SingleColumn] containing a single [ColumnGroup], the "top-level" is
- * considered to be the [ColumnGroup]'s children, otherwise, if this is a [ColumnsResolver],
- * the "top-level" is considered to be the columns in the [ColumnsResolver].
+ * If [<code>this</code>][this] is a [<code>SingleColumn</code>][SingleColumn] containing a single [<code>ColumnGroup</code>][ColumnGroup], the "top-level" is
+ * considered to be the [<code>ColumnGroup</code>][ColumnGroup]'s children, otherwise, if this is a [<code>ColumnsResolver</code>][ColumnsResolver],
+ * the "top-level" is considered to be the columns in the [<code>ColumnsResolver</code>][ColumnsResolver].
  *
- * @param includeGroups Whether to include [ColumnGroup]s in the result.
+ * @param includeGroups Whether to include [<code>ColumnGroup</code>][ColumnGroup]s in the result.
  * @param includeTopLevel Whether to include the "top-level" columns in the result.
  */
 internal fun ColumnsResolver<*>.flattenRecursively(

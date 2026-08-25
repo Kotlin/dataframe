@@ -11,26 +11,26 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
 
 /**
  * Represents all type information that can be retrieved from an SQL column.
- * This can be extended for your specific [DbType] if you need extra information.
+ * This can be extended for your specific [<code>DbType</code>][DbType] if you need extra information.
  *
- * This class needs to be stateless, so it can be memoized in [AdvancedDbType.generateConverter].
+ * This class needs to be stateless, so it can be memoized in [<code>AdvancedDbType.generateConverter</code>][AdvancedDbType.generateConverter].
  *
- * Use [jdbcToDfConverterFor] to create an instance.
+ * Use [<code>jdbcToDfConverterFor</code>][jdbcToDfConverterFor] to create an instance.
  *
  * This API is experimental and subject to change.
  *
- * @param J the type of the value coming from the JDBC driver, [expectedJdbcType].
- * @param D the type of the column values after preprocessing, [preprocessedValueType]. Will be equal to [J] if [valuePreprocessor] is `null`.
- * @param P the type of the column values after postprocessing, comparable to [DataColumn][DataColumn]`<`[P][P]`>` of [targetSchema].
- *   Will be equal to [D] if [columnBuilder] is `null`.
+ * @param J the type of the value coming from the JDBC driver, [<code>expectedJdbcType</code>][expectedJdbcType].
+ * @param D the type of the column values after preprocessing, [<code>preprocessedValueType</code>][preprocessedValueType]. Will be equal to [<code>J</code>][J] if [<code>valuePreprocessor</code>][valuePreprocessor] is `null`.
+ * @param P the type of the column values after postprocessing, comparable to [<code>DataColumn</code>][DataColumn]`<`[<code>P</code>][P]`>` of [<code>targetSchema</code>][targetSchema].
+ *   Will be equal to [<code>D</code>][D] if [<code>columnBuilder</code>][columnBuilder] is `null`.
  *
  * @property targetSchema the target schema of the column after running the optional
- *   [valuePreprocessor] and [columnBuilder]. Can be `null` if the target schema is dependent on the runtime input
+ *   [<code>valuePreprocessor</code>][valuePreprocessor] and [<code>columnBuilder</code>][columnBuilder]. Can be `null` if the target schema is dependent on the runtime input
  *   and thus cannot be determined from input types alone.
- * @property valuePreprocessor an optional function that converts values from [ResultSet.getObject]
- *   to a cell/row suitable to be put into a [DataColumn].
- * @property columnBuilder an optional function that converts a [List] with values of type [D]
- *   to a [DataColumn] of with values of type [P].
+ * @property valuePreprocessor an optional function that converts values from [<code>ResultSet.getObject</code>][ResultSet.getObject]
+ *   to a cell/row suitable to be put into a [<code>DataColumn</code>][DataColumn].
+ * @property columnBuilder an optional function that converts a [<code>List</code>][List] with values of type [<code>D</code>][D]
+ *   to a [<code>DataColumn</code>][DataColumn] of with values of type [<code>P</code>][P].
  */
 public class JdbcToDataFrameConverter<J, D, P>(
     public val expectedJdbcType: KType,
@@ -190,7 +190,7 @@ public fun interface DbResultSetReader<out J> {
 
 /**
  * This preprocessor can be created for types where you want to convert the values
- * coming from [ResultSet.getObject] to a different type more suitable to be put in a [DataColumn]
+ * coming from [<code>ResultSet.getObject</code>][ResultSet.getObject] to a different type more suitable to be put in a [<code>DataColumn</code>][DataColumn]
  *
  * @param J the type of the value coming from the JDBC driver.
  * @param D the type of the column values after preprocessing.
@@ -198,13 +198,13 @@ public fun interface DbResultSetReader<out J> {
 public fun interface DbValuePreprocessor<in J, out D> {
 
     /**
-     * Converts the given [jdbcValue]: [J] to a [D].
+     * Converts the given [<code>jdbcValue</code>][jdbcValue]: [<code>J</code>][J] to a [<code>D</code>][D].
      *
-     * If you intend to create a [org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
-     * return a [org.jetbrains.kotlinx.dataframe.DataRow] here.
+     * If you intend to create a [<code>org.jetbrains.kotlinx.dataframe.columns.ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup],
+     * return a [<code>org.jetbrains.kotlinx.dataframe.DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] here.
      *
-     * If you intend to create a [org.jetbrains.kotlinx.dataframe.columns.FrameColumn],
-     * return a [org.jetbrains.kotlinx.dataframe.DataFrame] here.
+     * If you intend to create a [<code>org.jetbrains.kotlinx.dataframe.columns.FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn],
+     * return a [<code>org.jetbrains.kotlinx.dataframe.DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] here.
      */
     public fun preprocess(jdbcValue: J): D
 }
@@ -221,7 +221,7 @@ public fun DbValuePreprocessor<*, *>.castToAny(): DbValuePreprocessor<Any?, Any?
 public fun interface DbColumnBuilder<in D, out P> {
 
     /**
-     * Converts the given [values]: [DataColumn] with values of type [D] to a [DataColumn] of with values of type [P].
+     * Converts the given [<code>values</code>][values]: [<code>DataColumn</code>][DataColumn] with values of type [<code>D</code>][D] to a [<code>DataColumn</code>][DataColumn] of with values of type [<code>P</code>][P].
      */
     public fun buildDataColumn(name: String, values: List<D>, inferNullability: Boolean): DataColumn<P>
 }

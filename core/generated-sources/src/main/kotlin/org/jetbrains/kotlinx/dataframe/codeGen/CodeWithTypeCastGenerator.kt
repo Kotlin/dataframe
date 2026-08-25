@@ -3,10 +3,10 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 import org.jetbrains.kotlinx.dataframe.api.cast
 
 /**
- * Class representing generated code declarations for a [Marker].
+ * Class representing generated code declarations for a [<code>Marker</code>][Marker].
  *
  * @param declarations The generated code.
- * @param typeCastGenerator Optional [TypeCastGenerator] for the [Marker], see [TypeCastGenerator] for
+ * @param typeCastGenerator Optional [<code>TypeCastGenerator</code>][TypeCastGenerator] for the [<code>Marker</code>][Marker], see [<code>TypeCastGenerator</code>][TypeCastGenerator] for
  *   more information.
  */
 public data class CodeWithTypeCastGenerator(
@@ -40,10 +40,10 @@ public typealias Code = String
 public typealias Expression = String
 
 /**
- * A [TypeCastGenerator] can generate [Code] given an [Expression] that casts or converts
+ * A [<code>TypeCastGenerator</code>][TypeCastGenerator] can generate [<code>Code</code>][Code] given an [<code>Expression</code>][Expression] that casts or converts
  * it to a predefined target type.
  *
- * To create a [TypeCastGenerator] that, for instance, casts everything you pass to [Any?][Any]:
+ * To create a [<code>TypeCastGenerator</code>][TypeCastGenerator] that, for instance, casts everything you pass to [<code>Any?</code>][Any]:
  * ```kt
  * val myCastGenerator = TypeCastGenerator { expression -> "($expression as Any?)" }
  *
@@ -61,10 +61,10 @@ public fun interface TypeCastGenerator {
     public object Empty : TypeCastGenerator by (TypeCastGenerator { it })
 
     /**
-     * [TypeCastGenerator] that uses the [cast] functions of the DataFrame API.
+     * [<code>TypeCastGenerator</code>][TypeCastGenerator] that uses the [<code>cast</code>][cast] functions of the DataFrame API.
      *
      * NOTE: This generator assumes there's a `.cast<>()` function available that can be called on your
-     * specific [Expression]. It will cause runtime errors when there isn't one.
+     * specific [<code>Expression</code>][Expression]. It will cause runtime errors when there isn't one.
      */
     public class DataFrameApi private constructor(public val types: Array<out String>) : TypeCastGenerator {
         override fun addCastTo(expression: Expression): Code =

@@ -14,9 +14,9 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 /**
- * Column with [type], [name]/[path] and [values]
- * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn].
- * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
+ * Column with [<code>type</code>][type], [<code>name</code>][name]/[<code>path</code>][path] and [<code>values</code>][values]
+ * Base interface for all three kinds of columns: [<code>ValueColumn</code>][ValueColumn], [<code>ColumnGroup</code>][ColumnGroup] and [<code>FrameColumn</code>][FrameColumn].
+ * Column operations that doesn't clash by signature with [<code>DataFrame</code>][DataFrame] operations can be defined for [<code>BaseColumn</code>][BaseColumn]
  *
  * @param T type of values contained in column.
  * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
@@ -40,16 +40,16 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     // region get
 
     /**
-     * Gets the row at given [index].
+     * Gets the row at given [<code>index</code>][index].
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.col] to select a column by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.col</code>][ColumnsSelectionDsl.col] to select a column by index.
      */
     public operator fun get(index: Int): T
 
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> =
         get(
@@ -64,14 +64,14 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     /**
      * Gets the rows at given range of indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by range.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by range.
      */
     public operator fun get(range: IntRange): BaseColumn<T>
 
     /**
      * Gets the rows at given indices.
      *
-     * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
+     * NOTE: This doesn't work in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl], use [<code>ColumnsSelectionDsl.cols</code>][ColumnsSelectionDsl.cols] to select columns by index.
      */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 

@@ -10,14 +10,14 @@ import org.jetbrains.kotlinx.dataframe.impl.api.requireImpl
 import kotlin.reflect.typeOf
 
 /**
- * Resolves [column] in this [DataFrame] and checks that its runtime type is a subtype of [C].
+ * Resolves [<code>column</code>][column] in this [<code>DataFrame</code>][DataFrame] and checks that its runtime type is a subtype of [<code>C</code>][C].
  * Throws if the column can't be resolved or if its type doesn't match.
  *
  * From the compiler plugin perspective, a new column will appear in the compile-time schema as a result of this operation.
  *
  * The aim here is to help incrementally migrate workflows to extension properties API.
  *
- * We recommend considering declaring a [DataSchema] and use [cast] or [convertTo] if you end up with more than a few `requireColumn` calls.
+ * We recommend considering declaring a [<code>DataSchema</code>][DataSchema] and use [<code>cast</code>][cast] or [<code>convertTo</code>][convertTo] if you end up with more than a few `requireColumn` calls.
  *
  * Example:
  *

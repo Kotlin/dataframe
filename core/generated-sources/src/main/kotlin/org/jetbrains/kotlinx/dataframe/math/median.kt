@@ -16,11 +16,11 @@ import kotlin.reflect.typeOf
  * Returns the median of the comparable input:
  * - `null` if empty
  * - `Double` if primitive number
- * - `Double.NaN` if ![skipNaN] and contains NaN
+ * - `Double.NaN` if ![<code>skipNaN</code>][skipNaN] and contains NaN
  * - (lower) middle else
  *
  * Based on quantile implementation;
- * uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3].
+ * uses [<code>QuantileEstimationMethod.R8</code>][QuantileEstimationMethod.R8] for primitive numbers, else [<code>QuantileEstimationMethod.R3</code>][QuantileEstimationMethod.R3].
  */
 @PublishedApi
 internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: Boolean): Any? {
@@ -82,11 +82,11 @@ internal val medianConversion: CalculateReturnType = { type, isEmpty ->
 /**
  * Returns the index of the median in the comparable input:
  * - `-1` if empty or all `null`
- * - index of first NaN if ![skipNaN] and contains NaN
+ * - index of first NaN if ![<code>skipNaN</code>][skipNaN] and contains NaN
  * - index (lower) middle else
  * NOTE: For primitive numbers the `seq.elementAt(seq.indexOfMedian())` might be different from `seq.medianOrNull()`
  *
- * Based on quantile implementation; uses [QuantileEstimationMethod.R3].
+ * Based on quantile implementation; uses [<code>QuantileEstimationMethod.R3</code>][QuantileEstimationMethod.R3].
  */
 internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, skipNaN: Boolean): Int {
     val nonNullType = type.withNullability(false)

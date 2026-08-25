@@ -8,7 +8,7 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.Polygon
 
 /**
- * Converts a [Polygon] to a [MultiPolygon] by wrapping it in a MultiPolygon.
+ * Converts a [<code>Polygon</code>][Polygon] to a [<code>MultiPolygon</code>][MultiPolygon] by wrapping it in a MultiPolygon.
  *
  * @receiver Polygon to be converted.
  * @return A MultiPolygon containing the original Polygon.
@@ -19,7 +19,7 @@ public fun Polygon.toMultiPolygon(): MultiPolygon {
 }
 
 /**
- * Converts a [Point] to a [MultiPoint] by wrapping it in a MultiPoint.
+ * Converts a [<code>Point</code>][Point] to a [<code>MultiPoint</code>][MultiPoint] by wrapping it in a MultiPoint.
  *
  * @receiver Point to be converted.
  * @return A MultiPoint containing the original Point.
@@ -30,7 +30,7 @@ public fun Point.toMultiPoint(): MultiPoint {
 }
 
 /**
- * Converts a [LineString] to a [MultiLineString] by wrapping it in a MultiLineString.
+ * Converts a [<code>LineString</code>][LineString] to a [<code>MultiLineString</code>][MultiLineString] by wrapping it in a MultiLineString.
  *
  * @receiver LineString to be converted.
  * @return A MultiLineString containing the original LineString.

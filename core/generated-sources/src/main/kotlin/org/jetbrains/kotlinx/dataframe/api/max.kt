@@ -48,26 +48,26 @@ import kotlin.reflect.KProperty
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * ### Max Modes
  *
  * Depending on what exactly you want the maximum of, there are several modes.
- * They are shown here for [DataFrame], but they exist for the other receivers too:
+ * They are shown here for [<code>DataFrame</code>][DataFrame], but they exist for the other receivers too:
  *
- * - [max][DataFrame.max]`()` — the maximum of each suitable column separately.
- * - [max][DataFrame.max]` { columns }` — a single maximum of all values in all selected columns.
- * - [maxFor][DataFrame.maxFor]` { columns }` — the maximum of each selected column separately.
- * - [maxOf][DataFrame.maxOf]` { expression }` — the maximum of the values that the given expression
+ * - [<code>max</code>][DataFrame.max]`()` — the maximum of each suitable column separately.
+ * - [<code>max</code>][DataFrame.max]` { columns }` — a single maximum of all values in all selected columns.
+ * - [<code>maxFor</code>][DataFrame.maxFor]` { columns }` — the maximum of each selected column separately.
+ * - [<code>maxOf</code>][DataFrame.maxOf]` { expression }` — the maximum of the values that the given expression
  *   returns for each row.
- * - [maxBy][DataFrame.maxBy]` { expression }` — the first row for which the given expression returns
+ * - [<code>maxBy</code>][DataFrame.maxBy]` { expression }` — the first row for which the given expression returns
  *   the maximum value.
  *
- * [max][DataFrame.max], [maxOf][DataFrame.maxOf], and [maxBy][DataFrame.maxBy] all have an `-OrNull`
+ * [<code>max</code>][DataFrame.max], [<code>maxOf</code>][DataFrame.maxOf], and [<code>maxBy</code>][DataFrame.maxBy] all have an `-OrNull`
  * counterpart which returns `null` instead of throwing an exception when there's nothing to compare.
  *
- * Mirror operation: [min][DataFrame.min].
+ * Mirror operation: [<code>min</code>][DataFrame.min].
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -81,25 +81,25 @@ internal interface MaxDocs : CommonMinMaxDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -107,26 +107,26 @@ internal interface MaxDocs : CommonMinMaxDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`("length", "age")`
+     * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`("length", "age")`
      *
      *
      *
@@ -139,25 +139,25 @@ internal interface MaxDocs : CommonMinMaxDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -165,26 +165,26 @@ internal interface MaxDocs : CommonMinMaxDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[maxFor][org.jetbrains.kotlinx.dataframe.api.maxFor]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>maxFor</code>][org.jetbrains.kotlinx.dataframe.api.maxFor]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[maxFor][org.jetbrains.kotlinx.dataframe.api.maxFor]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>maxFor</code>][org.jetbrains.kotlinx.dataframe.api.maxFor]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[maxFor][org.jetbrains.kotlinx.dataframe.api.maxFor]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>maxFor</code>][org.jetbrains.kotlinx.dataframe.api.maxFor]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[maxFor][org.jetbrains.kotlinx.dataframe.api.maxFor]`("length", "age")`
+     * <code>`df`</code>`.`[<code>maxFor</code>][org.jetbrains.kotlinx.dataframe.api.maxFor]`("length", "age")`
      *
      *
      *
@@ -197,7 +197,7 @@ internal interface MaxDocs : CommonMinMaxDocs {
 // region DataColumn
 
 /**
- * Returns the maximum of the values in this [DataColumn].
+ * Returns the maximum of the values in this [<code>DataColumn</code>][DataColumn].
  *
  *
  *
@@ -207,21 +207,21 @@ internal interface MaxDocs : CommonMinMaxDocs {
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [maxOrNull][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [maxOf][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
- * - [maxBy][DataColumn.maxBy] — the element for which a selector returns the maximum value.
- * - [min][DataColumn.min] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxOrNull</code>][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>maxOf</code>][DataColumn.maxOf] — the maximum of the values a selector returns for each element.
+ * - [<code>maxBy</code>][DataColumn.maxBy] — the element for which a selector returns the maximum value.
+ * - [<code>min</code>][DataColumn.min] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -235,9 +235,9 @@ internal interface MaxDocs : CommonMinMaxDocs {
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -245,7 +245,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
     maxOrNull(skipNaN).suggestIfNull("max")
 
 /**
- * Returns the maximum of the values in this [DataColumn], or `null` if there is nothing to compare.
+ * Returns the maximum of the values in this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
@@ -255,23 +255,23 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [max][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
- * - [maxOfOrNull][DataColumn.maxOfOrNull] — the maximum of the values a selector returns
+ * - [<code>max</code>][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>maxOfOrNull</code>][DataColumn.maxOfOrNull] — the maximum of the values a selector returns
  *   for each element.
- * - [maxByOrNull][DataColumn.maxByOrNull] — the element for which a selector returns
+ * - [<code>maxByOrNull</code>][DataColumn.maxByOrNull] — the element for which a selector returns
  *   the maximum value.
- * - [minOrNull][DataColumn.minOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minOrNull</code>][DataColumn.minOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -284,16 +284,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.max<T>(skipNaN).aggregateSingleColumn(this)
 
 /**
- * Returns the first element of this [DataColumn] for which the given [selector]
+ * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
  * returns the maximum value.
  *
  *
@@ -304,22 +304,22 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxBy] with [maxOf][DataColumn.maxOf], which returns the maximum [selector] value itself
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][DataColumn.maxOf], which returns the maximum [<code>selector</code>][selector] value itself
  * instead of the element it belongs to.
  *
  * See also:
- * - [maxByOrNull][DataColumn.maxByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [minBy][DataColumn.minBy] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxByOrNull</code>][DataColumn.maxByOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>minBy</code>][DataColumn.minBy] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -331,11 +331,11 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The first element for which [selector] returns the maximum value.
+ * @return The first element for which [<code>selector</code>][selector] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
@@ -344,7 +344,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
 ): T & Any = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
 
 /**
- * Returns the first element of this [DataColumn] for which the given [selector]
+ * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
  * returns the maximum value, or `null` if there is nothing to compare.
  *
  *
@@ -355,22 +355,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxByOrNull] with [maxOfOrNull][DataColumn.maxOfOrNull], which returns the maximum
- * [selector] value itself instead of the element it belongs to.
+ * Don't confuse [<code>maxByOrNull</code>][maxByOrNull] with [<code>maxOfOrNull</code>][DataColumn.maxOfOrNull], which returns the maximum
+ * [<code>selector</code>][selector] value itself instead of the element it belongs to.
  *
  * See also:
- * - [maxBy][DataColumn.maxBy] — throws instead of returning `null` for a column with nothing to compare.
- * - [minByOrNull][DataColumn.minByOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxBy</code>][DataColumn.maxBy] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>minByOrNull</code>][DataColumn.minByOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -383,11 +383,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The first element for which [selector] returns the maximum value,
+ * @return The first element for which [<code>selector</code>][selector] returns the maximum value,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(
@@ -396,8 +396,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
 ): T? = Aggregators.max<R>(skipNaN).aggregateByOrNull(this, selector)
 
 /**
- * Returns the maximum of the values that the given [selector] returns
- * for each element of this [DataColumn].
+ * Returns the maximum of the values that the given [<code>selector</code>][selector] returns
+ * for each element of this [<code>DataColumn</code>][DataColumn].
  *
  *
  *
@@ -407,22 +407,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxOf] with [maxBy][DataColumn.maxBy], which returns the element the maximum
- * [selector] value belongs to instead of that value.
+ * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][DataColumn.maxBy], which returns the element the maximum
+ * [<code>selector</code>][selector] value belongs to instead of that value.
  *
  * See also:
- * - [maxOfOrNull][DataColumn.maxOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
- * - [minOf][DataColumn.minOf] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxOfOrNull</code>][DataColumn.maxOfOrNull] — returns `null` instead of throwing for a column with nothing to compare.
+ * - [<code>minOf</code>][DataColumn.minOf] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -434,11 +434,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The maximum of the values [selector] returns.
+ * @return The maximum of the values [<code>selector</code>][selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
@@ -447,8 +447,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
 ): R & Any = maxOfOrNull(skipNaN, selector).suggestIfNull("maxOf")
 
 /**
- * Returns the maximum of the values that the given [selector] returns
- * for each element of this [DataColumn], or `null` if there is nothing to compare.
+ * Returns the maximum of the values that the given [<code>selector</code>][selector] returns
+ * for each element of this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
@@ -458,22 +458,22 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxOfOrNull] with [maxByOrNull][DataColumn.maxByOrNull], which returns the element
- * the maximum [selector] value belongs to instead of that value.
+ * Don't confuse [<code>maxOfOrNull</code>][maxOfOrNull] with [<code>maxByOrNull</code>][DataColumn.maxByOrNull], which returns the element
+ * the maximum [<code>selector</code>][selector] value belongs to instead of that value.
  *
  * See also:
- * - [maxOf][DataColumn.maxOf] — throws instead of returning `null` for a column with nothing to compare.
- * - [minOfOrNull][DataColumn.minOfOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxOf</code>][DataColumn.maxOf] — throws instead of returning `null` for a column with nothing to compare.
+ * - [<code>minOfOrNull</code>][DataColumn.minOfOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -486,11 +486,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
- * @return The maximum of the values [selector] returns,
+ * @return The maximum of the values [<code>selector</code>][selector] returns,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNull(
@@ -509,10 +509,10 @@ public fun DataRow<*>.rowMaxOrNull(): Nothing? = error(ROW_MAX_OR_NULL)
 public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
 
 /**
- * Returns the maximum of the values of type [T] in this [DataRow],
+ * Returns the maximum of the values of type [<code>T</code>][T] in this [<code>DataRow</code>][DataRow],
  * or `null` if there is nothing to compare.
  *
- * Only the values in the columns of type [T] (or `T?`) are taken into account;
+ * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
  *
@@ -523,20 +523,20 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [rowMaxOf][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
- * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — the mirror operation.
- * - [maxOrNull][DataFrame.maxOrNull] — the maximum of the values in specific columns of a [DataFrame].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>rowMaxOf</code>][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>rowMinOfOrNull</code>][DataRow.rowMinOfOrNull] — the mirror operation.
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — the maximum of the values in specific columns of a [<code>DataFrame</code>][DataFrame].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "Row statistics" on the documentation website.](https://kotlin.github.io/dataframe/rowstats.html)
  *
@@ -549,18 +549,18 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The largest value of type [T] in this row, or `null` if there are no values to compare.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The largest value of type [<code>T</code>][T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
 /**
- * Returns the maximum of the values of type [T] in this [DataRow].
+ * Returns the maximum of the values of type [<code>T</code>][T] in this [<code>DataRow</code>][DataRow].
  *
- * Only the values in the columns of type [T] (or `T?`) are taken into account;
+ * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
  *
@@ -571,21 +571,21 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  * See also:
- * - [rowMaxOfOrNull][DataRow.rowMaxOfOrNull] — returns `null` instead of throwing
+ * - [<code>rowMaxOfOrNull</code>][DataRow.rowMaxOfOrNull] — returns `null` instead of throwing
  *   when there's nothing to compare.
- * - [rowMinOf][DataRow.rowMinOf] — the mirror operation.
- * - [max][DataFrame.max] — the maximum of the values in specific columns of a [DataFrame].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>rowMinOf</code>][DataRow.rowMinOf] — the mirror operation.
+ * - [<code>max</code>][DataFrame.max] — the maximum of the values in specific columns of a [<code>DataFrame</code>][DataFrame].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "Row statistics" on the documentation website.](https://kotlin.github.io/dataframe/rowstats.html)
  *
@@ -598,10 +598,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The largest value of type [T] in this row.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The largest value of type [<code>T</code>][T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boolean = skipNaNDefault): T =
@@ -612,7 +612,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
 // region DataFrame
 
 /**
- * Returns the maximum of the values of each suitable column of this [DataFrame] separately.
+ * Returns the maximum of the values of each suitable column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -625,7 +625,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -638,10 +638,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * See also:
- * - [maxFor][DataFrame.maxFor] — the same, but for an explicit selection of columns.
- * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the same, but for an explicit selection of columns.
+ * - [<code>max</code>][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
+ * - [<code>min</code>][DataFrame.min] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -654,10 +654,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the maximum of each suitable column of this [DataFrame].
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each suitable column of this [<code>DataFrame</code>][DataFrame].
  */
 @Refine
 @Interpretable("Max0")
@@ -665,7 +665,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN, intraComparableColumns())
 
 /**
- * Returns the maximum of the values of each selected column of this [DataFrame] separately.
+ * Returns the maximum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  *
  *
@@ -675,7 +675,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -689,22 +689,22 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions].
  *
  * See also:
- * - [max][DataFrame.max]`()` — the same, but for all suitable columns at once.
- * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [minFor][DataFrame.minFor] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][DataFrame.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
+ * - [<code>minFor</code>][DataFrame.minFor] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -718,12 +718,12 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
- * @return A single [DataRow] with the maximum of each selected column.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column.
  */
 @Refine
 @Interpretable("Max1")
@@ -733,7 +733,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 ): DataRow<T> = Aggregators.max.invoke(skipNaN).aggregateFor(this, columns)
 
 /**
- * Returns the maximum of the values of each selected column of this [DataFrame] separately.
+ * Returns the maximum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
  *
  *
  *
@@ -743,7 +743,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -757,15 +757,15 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions].
  *
  * See also:
- * - [max][DataFrame.max]`()` — the same, but for all suitable columns at once.
- * - [max][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
- * - [minFor][DataFrame.minFor] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][DataFrame.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][DataFrame.max]` { columns }` — a single maximum of all values in the selected columns.
+ * - [<code>minFor</code>][DataFrame.minFor] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -775,13 +775,13 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * df.maxFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the maximum of each selected column.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column.
  */
 public fun <T> DataFrame<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
@@ -801,7 +801,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 ): DataRow<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns a single maximum of all the values in the selected columns of this [DataFrame].
+ * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
@@ -811,26 +811,26 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [maxOrNull][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
- * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [<code>maxOf</code>][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
+ * - [<code>min</code>][DataFrame.min] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -838,18 +838,18 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -857,11 +857,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
@@ -874,10 +874,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -888,7 +888,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
 ): C & Any = maxOrNull(skipNaN, columns).suggestIfNull("max")
 
 /**
- * Returns a single maximum of all the values in the selected columns of this [DataFrame].
+ * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
@@ -898,26 +898,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [maxOrNull][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [maxOf][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
- * - [min][DataFrame.min] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [<code>maxOf</code>][DataFrame.maxOf] — the maximum of the values a row expression returns for each row.
+ * - [<code>min</code>][DataFrame.min] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -925,12 +925,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[max][org.jetbrains.kotlinx.dataframe.api.max]`("length", "age")`
+ * <code>`df`</code>`.`[<code>max</code>][org.jetbrains.kotlinx.dataframe.api.max]`("length", "age")`
  *
  *
  *
@@ -941,12 +941,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * df.max("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -968,7 +968,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
 ): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
 
 /**
- * Returns a single maximum of all the values in the selected columns of this [DataFrame],
+ * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
  *
  *
@@ -979,26 +979,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [max][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
- * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
+ * - [<code>max</code>][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
- * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1006,18 +1006,18 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1025,11 +1025,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[maxOrNull][org.jetbrains.kotlinx.dataframe.api.maxOrNull]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>maxOrNull</code>][org.jetbrains.kotlinx.dataframe.api.maxOrNull]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[maxOrNull][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>maxOrNull</code>][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[maxOrNull][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>maxOrNull</code>][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
@@ -1043,10 +1043,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
@@ -1057,7 +1057,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 ): C? = Aggregators.max<C>(skipNaN).aggregateAll(this, columns)
 
 /**
- * Returns a single maximum of all the values in the selected columns of this [DataFrame],
+ * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
  *
  *
@@ -1068,26 +1068,26 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See also:
- * - [max][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
- * - [maxFor][DataFrame.maxFor] — the maximum of each selected column separately.
- * - [maxOfOrNull][DataFrame.maxOfOrNull] — the maximum of the values a row expression
+ * - [<code>max</code>][DataFrame.max] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>maxFor</code>][DataFrame.maxFor] — the maximum of each selected column separately.
+ * - [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull] — the maximum of the values a row expression
  *   returns for each row.
- * - [minOrNull][DataFrame.minOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minOrNull</code>][DataFrame.minOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1095,12 +1095,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[maxOrNull][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`("length", "age")`
+ * <code>`df`</code>`.`[<code>maxOrNull</code>][org.jetbrains.kotlinx.dataframe.api.maxOrNull]`("length", "age")`
  *
  *
  *
@@ -1112,12 +1112,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * df.maxOrNull("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -1139,12 +1139,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 ): C? = maxOrNull(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns the maximum of the values that the given [expression] returns
- * for each row of this [DataFrame].
+ * Returns the maximum of the values that the given [<code>expression</code>][expression] returns
+ * for each row of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1158,24 +1158,24 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxOf] with [maxBy][DataFrame.maxBy], which returns the row the maximum
- * [expression] value belongs to instead of that value.
+ * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][DataFrame.maxBy], which returns the row the maximum
+ * [<code>expression</code>][expression] value belongs to instead of that value.
  *
  * See also:
- * - [maxOfOrNull][DataFrame.maxOfOrNull] — returns `null` instead of throwing when there's
+ * - [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [max][DataFrame.max] — a single maximum of all values in the selected columns.
- * - [minOf][DataFrame.minOf] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][DataFrame.max] — a single maximum of all values in the selected columns.
+ * - [<code>minOf</code>][DataFrame.minOf] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1187,11 +1187,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The maximum of the values [expression] returns.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The maximum of the values [<code>expression</code>][expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
@@ -1200,12 +1200,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
 ): C & Any = maxOfOrNull(skipNaN, expression).suggestIfNull("maxOf")
 
 /**
- * Returns the maximum of the values that the given [expression] returns
- * for each row of this [DataFrame], or `null` if there is nothing to compare.
+ * Returns the maximum of the values that the given [<code>expression</code>][expression] returns
+ * for each row of this [<code>DataFrame</code>][DataFrame], or `null` if there is nothing to compare.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1219,23 +1219,23 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxOfOrNull] with [maxByOrNull][DataFrame.maxByOrNull], which returns the row the
- * maximum [expression] value belongs to instead of that value.
+ * Don't confuse [<code>maxOfOrNull</code>][maxOfOrNull] with [<code>maxByOrNull</code>][DataFrame.maxByOrNull], which returns the row the
+ * maximum [<code>expression</code>][expression] value belongs to instead of that value.
  *
  * See also:
- * - [maxOf][DataFrame.maxOf] — throws instead of returning `null` when there's nothing to compare.
- * - [maxOrNull][DataFrame.maxOrNull] — a single maximum of all values in the selected columns.
- * - [minOfOrNull][DataFrame.minOfOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxOf</code>][DataFrame.maxOf] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — a single maximum of all values in the selected columns.
+ * - [<code>minOfOrNull</code>][DataFrame.minOfOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "min / max" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html)
  *
@@ -1248,11 +1248,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The maximum of the values [expression] returns,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The maximum of the values [<code>expression</code>][expression] returns,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull(
@@ -1261,12 +1261,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
 ): C? = Aggregators.max<C>(skipNaN).aggregateOf(this, expression)
 
 /**
- * Returns the first row of this [DataFrame] for which the given [expression]
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression]
  * returns the maximum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1280,24 +1280,24 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxBy] with [maxOf][DataFrame.maxOf], which returns the maximum [expression] value
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][DataFrame.maxOf], which returns the maximum [<code>expression</code>][expression] value
  * itself instead of the row it belongs to.
  *
  * See also:
- * - [maxByOrNull][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
+ * - [<code>maxByOrNull</code>][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [minBy][DataFrame.minBy] — the mirror operation.
- * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minBy</code>][DataFrame.minBy] — the mirror operation.
+ * - [<code>sortByDesc</code>][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -1311,11 +1311,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The first [DataRow] for which [expression] returns the maximum value.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
@@ -1324,7 +1324,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
 ): DataRow<T> = maxByOrNull(skipNaN, expression).suggestIfNull("maxBy")
 
 /**
- * Returns the first row of this [DataFrame] that has the largest value
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the largest value
  * in the column with the given name.
  *
  *
@@ -1335,25 +1335,25 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
- * Throws a [NoSuchElementException] when there is nothing left to compare,
+ * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxBy] with [maxOf][DataFrame.maxOf], which returns the maximum value a row
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][DataFrame.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [maxByOrNull][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
+ * - [<code>maxByOrNull</code>][DataFrame.maxByOrNull] — returns `null` instead of throwing when there's
  *   nothing to compare.
- * - [max][DataFrame.max] — returns the largest value itself instead of the row it belongs to.
- * - [minBy][DataFrame.minBy] — the mirror operation.
- * - [sortByDesc][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][DataFrame.max] — returns the largest value itself instead of the row it belongs to.
+ * - [<code>minBy</code>][DataFrame.minBy] — the mirror operation.
+ * - [<code>sortByDesc</code>][DataFrame.sortByDesc] — orders all rows instead of taking just the largest one.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -1363,13 +1363,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * df.maxBy("age")
  * ```
  *
- * @param [column] The name of the column of this [DataFrame] to compare the rows by.
+ * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The first [DataRow] with the largest value in the given column.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The first [<code>DataRow</code>][DataRow] with the largest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -1390,12 +1390,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
 ): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
 
 /**
- * Returns the first row of this [DataFrame] for which the given [expression] returns
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression] returns
  * the maximum value, or `null` if there is nothing to compare.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1409,22 +1409,22 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxByOrNull] with [maxOfOrNull][DataFrame.maxOfOrNull], which returns the maximum
- * [expression] value itself instead of the row it belongs to.
+ * Don't confuse [<code>maxByOrNull</code>][maxByOrNull] with [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull], which returns the maximum
+ * [<code>expression</code>][expression] value itself instead of the row it belongs to.
  *
  * See also:
- * - [maxBy][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
- * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>maxBy</code>][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>minByOrNull</code>][DataFrame.minByOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -1436,11 +1436,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return The first [DataRow] for which [expression] returns the maximum value,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the maximum value,
  *   or `null` if there are no values to compare.
  */
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
@@ -1449,7 +1449,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 ): DataRow<T>? = Aggregators.max<C>(skipNaN).aggregateByOrNull(this, expression)
 
 /**
- * Returns the first row of this [DataFrame] that has the largest value in the column with
+ * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the largest value in the column with
  * the given name, or `null` if there is nothing to compare.
  *
  *
@@ -1460,24 +1460,24 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
  *
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
- * (or, if [skipNaN] is `true`, only `null` and [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
- * Don't confuse [maxByOrNull] with [maxOfOrNull][DataFrame.maxOfOrNull], which returns the maximum
+ * Don't confuse [<code>maxByOrNull</code>][maxByOrNull] with [<code>maxOfOrNull</code>][DataFrame.maxOfOrNull], which returns the maximum
  * value a row expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [maxBy][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
- * - [maxOrNull][DataFrame.maxOrNull] — returns the largest value itself instead of
+ * - [<code>maxBy</code>][DataFrame.maxBy] — throws instead of returning `null` when there's nothing to compare.
+ * - [<code>maxOrNull</code>][DataFrame.maxOrNull] — returns the largest value itself instead of
  *   the row it belongs to.
- * - [minByOrNull][DataFrame.minByOrNull] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minByOrNull</code>][DataFrame.minByOrNull] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -1487,13 +1487,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * df.maxByOrNull("age")
  * ```
  *
- * @param [column] The name of the column of this [DataFrame] to compare the rows by.
+ * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return The first [DataRow] with the largest value in the given column,
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return The first [<code>DataRow</code>][DataRow] with the largest value in the given column,
  *   or `null` if there are no values to compare.
  */
 public fun <T> DataFrame<T>.maxByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
@@ -1518,10 +1518,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 // region GroupBy
 
 /**
- * Aggregates this [GroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the maximum of the values of
  * each suitable column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the maximum for each suitable column.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -1534,7 +1534,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1547,12 +1547,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * See also:
- * - [maxFor][Grouped.maxFor] — the same, but for an explicit selection of columns.
- * - [max][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>maxFor</code>][Grouped.maxFor] — the same, but for an explicit selection of columns.
+ * - [<code>max</code>][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [min][Grouped.min] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>min</code>][Grouped.min] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1565,10 +1565,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and the maximum of each suitable column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each suitable column per group.
  */
 @Refine
 @Interpretable("GroupByMax1")
@@ -1576,10 +1576,10 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN, intraComparableColumns())
 
 /**
- * Aggregates this [GroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the maximum for each selected column.
  *
  *
@@ -1590,7 +1590,7 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1604,24 +1604,24 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions].
  *
  * See also:
- * - [max][Grouped.max]`()` — the same, but for all suitable columns at once.
- * - [max][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][Grouped.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][Grouped.minFor] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][Grouped.minFor] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1634,12 +1634,12 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
- * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each selected column per group.
  */
 @Refine
 @Interpretable("GroupByMax0")
@@ -1649,10 +1649,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
 ): DataFrame<T> = Aggregators.max.invoke(skipNaN).aggregateFor(this, columns)
 
 /**
- * Aggregates this [GroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the maximum for each selected column.
  *
  *
@@ -1663,7 +1663,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1677,17 +1677,17 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions].
  *
  * See also:
- * - [max][Grouped.max]`()` — the same, but for all suitable columns at once.
- * - [max][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][Grouped.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][Grouped.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][Grouped.minFor] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][Grouped.minFor] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1701,10 +1701,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * @param [columns] The names of the columns to compute the maximum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each selected column per group.
  */
 public fun <T> Grouped<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
@@ -1724,12 +1724,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
 ): DataFrame<T> = maxFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [GroupBy] by computing a single maximum of all the values
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
  * a single column with the maximum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
+ * That column is named [<code>name</code>][name], or, if [<code>name</code>][name] is `null`, after the selected column
  * if exactly one column is selected, and `"max"` otherwise.
  *
  *
@@ -1740,7 +1740,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1754,17 +1754,17 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions].
  *
  * See also:
- * - [maxFor][Grouped.maxFor] — the maximum of each selected column separately, per group.
- * - [maxOf][Grouped.maxOf] — the maximum of the values a row expression returns
+ * - [<code>maxFor</code>][Grouped.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>maxOf</code>][Grouped.maxOf] — the maximum of the values a row expression returns
  *   for each row of a group.
- * - [min][Grouped.min] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>min</code>][Grouped.min] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1781,11 +1781,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *   is selected, and `"max"` otherwise.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
- * @return A new [DataFrame] with the group keys and a single maximum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the maximum of.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
 @Interpretable("GroupByMax2")
@@ -1796,12 +1796,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
 ): DataFrame<T> = Aggregators.max<C>(skipNaN).aggregateAll(this, name, columns)
 
 /**
- * Aggregates this [GroupBy] by computing a single maximum of all the values
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
  * a single column with the maximum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
+ * That column is named [<code>name</code>][name], or, if [<code>name</code>][name] is `null`, after the selected column
  * if exactly one column is selected, and `"max"` otherwise.
  *
  *
@@ -1812,7 +1812,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1826,17 +1826,17 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions].
  *
  * See also:
- * - [maxFor][Grouped.maxFor] — the maximum of each selected column separately, per group.
- * - [maxOf][Grouped.maxOf] — the maximum of the values a row expression returns
+ * - [<code>maxFor</code>][Grouped.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>maxOf</code>][Grouped.maxOf] — the maximum of the values a row expression returns
  *   for each row of a group.
- * - [min][Grouped.min] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>min</code>][Grouped.min] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1854,10 +1854,10 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *   is selected, and `"max"` otherwise.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A new [DataFrame] with the group keys and a single maximum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
 public fun <T> Grouped<T>.max(
     vararg columns: String,
@@ -1882,15 +1882,15 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
 ): DataFrame<T> = max(name, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [GroupBy] by computing the maximum of the values that the given [expression]
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by computing the maximum of the values that the given [<code>expression</code>][expression]
  * returns for each row of a group.
  *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
- * a single column with the maximum per group, named [name] (or `"max"` if [name] is `null`).
+ * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns and
+ * a single column with the maximum per group, named [<code>name</code>][name] (or `"max"` if [<code>name</code>][name] is `null`).
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1904,7 +1904,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -1916,14 +1916,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [maxOf] with [maxBy][GroupBy.maxBy], which returns the row of each group for which
+ * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][GroupBy.maxBy], which returns the row of each group for which
  * the expression returns the maximum value, instead of that value.
  *
  * See also:
- * - [max][Grouped.max] — a single maximum of all values in the selected columns, per group.
- * - [minOf][Grouped.minOf] — the mirror operation.
- * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][Grouped.max] — a single maximum of all values in the selected columns, per group.
+ * - [<code>minOf</code>][Grouped.minOf] — the mirror operation.
+ * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
@@ -1937,11 +1937,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * @param [name] The name of the resulting column. If `null` (the default), `"max"` is used.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
- * @return A new [DataFrame] with the group keys and a single maximum per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
 @Interpretable("GroupByMaxOf")
@@ -1952,21 +1952,21 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
 ): DataFrame<T> = Aggregators.max<C>(skipNaN).aggregateOf(this, name, expression)
 
 /**
- * Reduces each group of this [GroupBy] to the first row for which the given [rowExpression]
+ * Reduces each group of this [<code>GroupBy</code>][GroupBy] to the first row for which the given [<code>rowExpression</code>][rowExpression]
  * returns the maximum value.
  *
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
- * [concat][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [into][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
+ * Instead, it returns a [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
+ * [<code>concat</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
  *
- * See [GroupBy reducing][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
+ * See [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -1980,17 +1980,17 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [maxBy] with [maxOf][Grouped.maxOf], which returns the maximum value itself
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][Grouped.maxOf], which returns the maximum value itself
  * instead of the row it belongs to.
  *
  * See also:
- * - [minBy][GroupBy.minBy] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minBy</code>][GroupBy.minBy] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -2002,12 +2002,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to compute the value to compare for each row.
- * @return A [ReducedGroupBy] with, for each group, the first row
- *   for which [rowExpression] returns the maximum value.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
+ *   for which [<code>rowExpression</code>][rowExpression] returns the maximum value.
  */
 @Interpretable("GroupByReduceExpression")
 public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.maxBy(
@@ -2023,17 +2023,17 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
 ): ReducedGroupBy<T, G> = reduce { maxByOrNull(column, skipNaN) }
 
 /**
- * Reduces each group of this [GroupBy] to the first row that has the largest value
+ * Reduces each group of this [<code>GroupBy</code>][GroupBy] to the first row that has the largest value
  * in the column with the given name.
  *
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
- * [concat][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [into][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
+ * Instead, it returns a [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] — an intermediate step which can be finished with
+ * [<code>concat</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.concat] (to get a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the selected rows),
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
  *
- * See [GroupBy reducing][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
+ * See [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
  *
  *
  *
@@ -2043,18 +2043,18 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * Don't confuse [maxBy] with [maxOf][Grouped.maxOf], which returns the maximum value a row
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][Grouped.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row it belongs to.
  *
  * See also:
- * - [max][Grouped.max] — the maximum value itself instead of the row it belongs to.
- * - [minBy][GroupBy.minBy] — the mirror operation.
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][Grouped.max] — the maximum value itself instead of the row it belongs to.
+ * - [<code>minBy</code>][GroupBy.minBy] — the mirror operation.
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -2067,10 +2067,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedGroupBy] with, for each group, the first row
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
  *   that has the largest value in the given column.
  */
 public fun <T, G> GroupBy<T, G>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
@@ -2088,10 +2088,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
 // region Pivot
 
 /**
- * Aggregates this [Pivot] by computing the maximum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the maximum of the values of
  * each suitable column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the maximum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of each suitable column of the corresponding group.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
@@ -2104,7 +2104,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2116,15 +2116,15 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [maxFor][Pivot.maxFor] — the same, but for an explicit selection of columns.
- * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>maxFor</code>][Pivot.maxFor] — the same, but for an explicit selection of columns.
+ * - [<code>max</code>][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [min][Pivot.min] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>min</code>][Pivot.min] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2151,10 +2151,10 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
     delegate { max(separate, skipNaN) }
 
 /**
- * Aggregates this [Pivot] by computing the maximum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the maximum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of each selected column of the corresponding group.
  *
  *
@@ -2165,7 +2165,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2179,24 +2179,24 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]`()` — the same, but for all suitable columns at once.
- * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][Pivot.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][Pivot.minFor] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][Pivot.minFor] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2230,10 +2230,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
 ): DataRow<T> = delegate { maxFor(separate, skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing the maximum of the values of
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the maximum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of each selected column of the corresponding group.
  *
  *
@@ -2244,7 +2244,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2258,17 +2258,17 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]`()` — the same, but for all suitable columns at once.
- * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][Pivot.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][Pivot.minFor] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][Pivot.minFor] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2315,10 +2315,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
 ): DataRow<T> = maxFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [Pivot] by computing a single maximum of all the values
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the largest
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the largest
  * value among all the values in the selected columns of the corresponding group.
  *
  *
@@ -2329,7 +2329,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2343,16 +2343,16 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]`()` — the maximum of each suitable column separately, per group.
- * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
- * - [min][Pivot.min] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][Pivot.max]`()` — the maximum of each suitable column separately, per group.
+ * - [<code>maxFor</code>][Pivot.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>min</code>][Pivot.min] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2378,10 +2378,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
 ): DataRow<T> = delegate { max(skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing a single maximum of all the values
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the largest
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the largest
  * value among all the values in the selected columns of the corresponding group.
  *
  *
@@ -2392,7 +2392,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2406,16 +2406,16 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions], or check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]`()` — the maximum of each suitable column separately, per group.
- * - [maxFor][Pivot.maxFor] — the maximum of each selected column separately, per group.
- * - [min][Pivot.min] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][Pivot.max]`()` — the maximum of each suitable column separately, per group.
+ * - [<code>maxFor</code>][Pivot.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>min</code>][Pivot.min] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2453,15 +2453,15 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
 ): DataRow<T> = max(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [Pivot] by computing the maximum of the values that the given [rowExpression]
+ * Aggregates this [<code>Pivot</code>][Pivot] by computing the maximum of the values that the given [<code>rowExpression</code>][rowExpression]
  * returns for each row, per group.
  *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the maximum
+ * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of the expression's results for the rows of the corresponding group.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -2475,7 +2475,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2487,17 +2487,17 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
+ * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][Pivot.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minOf][Pivot.minOf] — the mirror operation.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minOf</code>][Pivot.minOf] — the mirror operation.
+ * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2522,12 +2522,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
 ): DataRow<T> = delegate { maxOf(skipNaN, rowExpression) }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * for which the given [rowExpression] returns the maximum value.
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
+ * for which the given [<code>rowExpression</code>][rowExpression] returns the maximum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -2541,7 +2541,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -2549,18 +2549,18 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivot][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
+ * Instead, it returns a [<code>ReducedPivot</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
  *
- * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value the expression
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][Pivot.maxOf], which returns the maximum value the expression
  * returns itself, instead of the row.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [minBy][Pivot.minBy] — the mirror operation.
- * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minBy</code>][Pivot.minBy] — the mirror operation.
+ * - [<code>Pivot reducing</code>][PivotDocs.Reducing] — all other ways to reduce a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -2572,12 +2572,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivot] holding, per group,
- *   the first row where the [rowExpression] produced the maximum result.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group,
+ *   the first row where the [<code>rowExpression</code>][rowExpression] produced the maximum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -2592,8 +2592,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
 ): ReducedPivot<T> = reduce { maxByOrNull(column, skipNaN) }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * that has the largest value in the given [column].
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
+ * that has the largest value in the given [<code>column</code>][column].
  *
  *
  *
@@ -2603,7 +2603,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -2611,19 +2611,19 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivot][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
+ * Instead, it returns a [<code>ReducedPivot</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivot.with].
  *
- * Don't confuse [maxBy] with [maxOf][Pivot.maxOf], which returns the maximum value a row expression
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][Pivot.maxOf], which returns the maximum value a row expression
  * returns itself, instead of the row.
  *
- * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
  * See also:
- * - [max][Pivot.max]` { columns }` — the maximum value itself, instead of the row.
- * - [minBy][Pivot.minBy] — the mirror operation.
- * - [Pivot reducing][PivotDocs.Reducing] — all other ways to reduce a [Pivot].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][Pivot.max]` { columns }` — the maximum value itself, instead of the row.
+ * - [<code>minBy</code>][Pivot.minBy] — the mirror operation.
+ * - [<code>Pivot reducing</code>][PivotDocs.Reducing] — all other ways to reduce a [<code>Pivot</code>][Pivot].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -2636,10 +2636,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedPivot] holding, per group, the first row with the largest value
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group, the first row with the largest value
  *   in the given column.
  */
 public fun <T> Pivot<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
@@ -2657,11 +2657,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
 // region PivotGroupBy
 
 /**
- * Aggregates this [PivotGroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the maximum of the values of
  * each suitable column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the maximum of each suitable column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of each suitable column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
@@ -2673,7 +2673,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2685,16 +2685,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [maxFor][PivotGroupBy.maxFor] — the same, but for an explicit selection of columns.
- * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>maxFor</code>][PivotGroupBy.maxFor] — the same, but for an explicit selection of columns.
+ * - [<code>max</code>][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [min][PivotGroupBy.min] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>min</code>][PivotGroupBy.min] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2721,11 +2721,11 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
     maxFor(separate, skipNaN, intraComparableColumns())
 
 /**
- * Aggregates this [PivotGroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the maximum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of each selected column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2735,7 +2735,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2749,26 +2749,26 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * The columns are selected with the [ColumnsForAggregateSelectionDsl][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
+ * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [into][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [default][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
- * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][PivotGroupBy.minFor] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][PivotGroupBy.minFor] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2800,11 +2800,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
 ): DataFrame<T> = Aggregators.max.invoke(skipNaN).aggregateFor(this, separate, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing the maximum of the values of
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the maximum of the values of
  * each selected column separately, per group.
  *
- * Returns a [DataFrame] where each cell contains the maximum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of each selected column
+ * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2814,7 +2814,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2828,19 +2828,19 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxForSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
- * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][PivotGroupBy.max]`()` — the same, but for all suitable columns at once.
+ * - [<code>max</code>][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minFor][PivotGroupBy.minFor] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minFor</code>][PivotGroupBy.minFor] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2887,12 +2887,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
 ): DataFrame<T> = maxFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single maximum of all the values
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a [DataFrame] where each cell contains the largest value among all the values in the
- * selected columns of the group corresponding to that [pivot] key (column)
- * and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the largest value among all the values in the
+ * selected columns of the group corresponding to that [<code>pivot</code>][pivot] key (column)
+ * and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2902,7 +2902,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2916,18 +2916,18 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
- * - [maxFor][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
- * - [min][PivotGroupBy.min] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
+ * - [<code>maxFor</code>][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>min</code>][PivotGroupBy.min] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -2953,12 +2953,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
 ): DataFrame<T> = Aggregators.max<R>(skipNaN).aggregateAll(this, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single maximum of all the values
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing a single maximum of all the values
  * in the selected columns, per group.
  *
- * Returns a [DataFrame] where each cell contains the largest value among all the values in the
- * selected columns of the group corresponding to that [pivot] key (column)
- * and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the largest value among all the values in the
+ * selected columns of the group corresponding to that [<code>pivot</code>][pivot] key (column)
+ * and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
@@ -2968,7 +2968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -2982,18 +2982,18 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][MaxDocs.MaxSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * See [<code>Selecting Columns</code>][MaxDocs.MaxSelectingOptions], or check out the
+ * [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
- * - [maxFor][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
- * - [min][PivotGroupBy.min] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][PivotGroupBy.max]`()` — the maximum of each suitable column separately, per group.
+ * - [<code>maxFor</code>][PivotGroupBy.maxFor] — the maximum of each selected column separately, per group.
+ * - [<code>min</code>][PivotGroupBy.min] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -3031,15 +3031,15 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
 ): DataFrame<T> = max(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [PivotGroupBy] by computing the maximum of the values that the given
- * [rowExpression] returns for each row, per group.
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the maximum of the values that the given
+ * [<code>rowExpression</code>][rowExpression] returns for each row, per group.
  *
- * Returns a [DataFrame] where each cell contains the maximum of the expression's results for the
- * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+ * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of the expression's results for the
+ * rows of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -3053,7 +3053,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  *
@@ -3065,18 +3065,18 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
- * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
+ * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
+ * - [<code>max</code>][PivotGroupBy.max]` { columns }` — a single maximum of all values in the selected columns,
  *   per group.
- * - [minOf][PivotGroupBy.minOf] — the mirror operation.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minOf</code>][PivotGroupBy.minOf] — the mirror operation.
+ * - [<code>PivotGroupBy aggregation</code>][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
  * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
@@ -3101,12 +3101,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
 ): DataFrame<T> = aggregate { maxOfOrNull(skipNaN, rowExpression) }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
- * the first [row][DataRow] for which the given [rowExpression] returns the maximum value.
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
+ * the first [<code>row</code>][DataRow] for which the given [<code>rowExpression</code>][rowExpression] returns the maximum value.
  *
  *
  *
- * The given [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
+ * The given [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] is evaluated for each row of the dataframe.
  * The row is both the receiver and the argument (`it`) of the expression,
  * so the values in it can be accessed directly.
  *
@@ -3120,7 +3120,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -3128,19 +3128,19 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivotGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
+ * Instead, it returns a [<code>ReducedPivotGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
  *
- * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value the
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][PivotGroupBy.maxOf], which returns the maximum value the
  * expression returns itself, instead of the row.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [minBy][PivotGroupBy.minBy] — the mirror operation.
- * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>minBy</code>][PivotGroupBy.minBy] — the mirror operation.
+ * - [<code>PivotGroupBy reducing</code>][PivotGroupByDocs.Reducing] — all other ways to reduce
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -3152,12 +3152,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [ReducedPivotGroupBy] holding, per group,
- *   the first row where the [rowExpression] produced the maximum result.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group,
+ *   the first row where the [<code>rowExpression</code>][rowExpression] produced the maximum result.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
@@ -3172,8 +3172,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
 ): ReducedPivotGroupBy<T> = reduce { maxByOrNull(column, skipNaN) }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
- * the first [row][DataRow] that has the largest value in the given [column].
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
+ * the first [<code>row</code>][DataRow] that has the largest value in the given [<code>column</code>][column].
  *
  *
  *
@@ -3183,7 +3183,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  *
  * `null` values in the input are always ignored.
  *
- * If the input contains [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
+ * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -3191,20 +3191,20 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  *
  *
  * This operation does not produce a result right away.
- * Instead, it returns a [ReducedPivotGroupBy][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
- * [values][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [with][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
+ * Instead, it returns a [<code>ReducedPivotGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy] — an intermediate step which can be finished with
+ * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.values] or [<code>with</code>][org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy.with].
  *
- * Don't confuse [maxBy] with [maxOf][PivotGroupBy.maxOf], which returns the maximum value a row
+ * Don't confuse [<code>maxBy</code>][maxBy] with [<code>maxOf</code>][PivotGroupBy.maxOf], which returns the maximum value a row
  * expression returns itself, instead of the row.
  *
- * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+ * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [max][PivotGroupBy.max]` { columns }` — the maximum value itself, instead of the row.
- * - [minBy][PivotGroupBy.minBy] — the mirror operation.
- * - [PivotGroupBy reducing][PivotGroupByDocs.Reducing] — all other ways to reduce
- *   a [PivotGroupBy].
- * - [The Max Operation][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
+ * - [<code>max</code>][PivotGroupBy.max]` { columns }` — the maximum value itself, instead of the row.
+ * - [<code>minBy</code>][PivotGroupBy.minBy] — the mirror operation.
+ * - [<code>PivotGroupBy reducing</code>][PivotGroupByDocs.Reducing] — all other ways to reduce
+ *   a [<code>PivotGroupBy</code>][PivotGroupBy].
+ * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See `maxBy` on the documentation website.](https://kotlin.github.io/dataframe/maxby.html)
  *
@@ -3217,10 +3217,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  * @param [column] The name of the column to compare the rows by.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [ReducedPivotGroupBy] holding, per group, the first row with the largest value
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group, the first row with the largest value
  *   in the given column.
  */
 public fun <T> PivotGroupBy<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =
