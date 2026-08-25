@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -72,6 +73,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -98,6 +101,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
+     *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -128,6 +133,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -154,6 +161,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
+     *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -184,6 +193,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -212,6 +223,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
+     *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
@@ -242,6 +255,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -269,6 +284,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
      *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -295,6 +312,8 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis].
+     *
+     * For more information: [See `Range of Columns` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#range-of-columns)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *

@@ -33,6 +33,22 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.hikaricp)
+    testImplementation(libs.testcontainers)
+    testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.mysql)
+    testImplementation(libs.testcontainers.mariadb)
+    testImplementation(libs.testcontainers.mssqlserver)
+}
+
+buildConfig {
+    sourceSets.named("test") {
+        packageName = "org.jetbrains.kotlinx.dataframe.io.testcontainers"
+        className = "BuildConfig"
+        buildConfigField("MARIADB_IMAGE", "mariadb:${libs.versions.dockerImage.mariadb.get()}")
+        buildConfigField("MYSQL_IMAGE", "mysql:${libs.versions.dockerImage.mysql.get()}")
+        buildConfigField("POSTGRES_IMAGE", "postgres:${libs.versions.dockerImage.postgres.get()}")
+        buildConfigField("MSSQL_IMAGE", "mcr.microsoft.com/mssql/server:${libs.versions.dockerImage.mssql.get()}")
+    }
 }
 
 kotlinPublications {
@@ -46,4 +62,37 @@ kotlinPublications {
 
 tasks.processKDocsMain {
     dependsOn(tasks.generateBuildConfigClasses)
+}
+
+// Implementations of the abstract database tests running against databases in Docker containers
+private val testcontainersTests = "org.jetbrains.kotlinx.dataframe.io.testcontainers.*"
+
+// Implementations of the abstract database tests running against database servers on localhost
+private val localDbTests = "org.jetbrains.kotlinx.dataframe.io.local.*LocalTest"
+
+tasks.test {
+    filter {
+        excludeTestsMatching(testcontainersTests)
+        excludeTestsMatching(localDbTests)
+    }
+}
+
+tasks.register<Test>("testcontainersTest") {
+    description = "Runs tests that require Docker via Testcontainers."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    filter {
+        includeTestsMatching(testcontainersTests)
+    }
+}
+
+tasks.register<Test>("localDbTest") {
+    description = "Runs tests that require database servers running on localhost."
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    filter {
+        includeTestsMatching(localDbTests)
+    }
 }

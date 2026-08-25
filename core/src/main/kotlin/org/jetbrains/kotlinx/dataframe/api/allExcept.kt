@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -104,6 +105,8 @@ public interface AllExceptColumnsSelectionDsl {
      * ## (All) (Cols) Except
      *
      * Exclude a selection of columns from the current selection using the {@include [ColumnsSelectionDslLink]}.
+     *
+     * For more information: {@include [DocumentationUrls.AllColsExcept]}
      *
      * ### Check out: [Grammar]
      *

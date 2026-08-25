@@ -33,7 +33,7 @@ public class UngroupWrongColumnKindException(public val df: DataFrame<*>, public
  *
  * See [Selecting Columns][UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group].
  */
@@ -102,7 +102,7 @@ internal interface UngroupDocs {
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload
@@ -152,7 +152,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload

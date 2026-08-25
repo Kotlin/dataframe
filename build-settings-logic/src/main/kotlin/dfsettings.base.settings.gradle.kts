@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-val jupyterApiTCRepo: String? by settings
+val jupyterApiTCRepo: String? = providers.gradleProperty("jupyterApiTCRepo").orNull
 
 dependencyResolutionManagement {
 
@@ -26,6 +26,13 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://redirector.kotlinlang.org/maven/bootstrap")
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
     }
 }
 

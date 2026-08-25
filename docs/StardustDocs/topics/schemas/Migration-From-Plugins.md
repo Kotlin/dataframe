@@ -14,6 +14,14 @@ Our plans for the next iteration of schema generation from source feature can be
 > and has a different plugin ID.  
 > {style="note"}
 
+Latest available release of the deprecated plugin:
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta4"
+}
+```
+
 1. **Generation of [data schemas](schemas.md)** from data sources  
    (files, databases, or external URLs).
     - You could copy already generated schemas from `build/generate` into your project sources.
@@ -27,6 +35,14 @@ Our plans for the next iteration of schema generation from source feature can be
 
 
 ## KSP Plugin
+
+Latest available release of the deprecated processor:
+
+```kotlin
+dependencies {
+    ksp("org.jetbrains.kotlinx.dataframe:symbol-processor-all:1.0.0-Beta4")
+}
+```
 
 - **Generation of [data schemas](schemas.md)** from data sources  
   (files, databases, or external URLs).

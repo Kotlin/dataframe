@@ -77,14 +77,3 @@ There are functions that are not supported:
 - `gather`, `split`, `implode`, some CS DSL functions — they will be supported in the future release
 
 In Gradle projects it means that sometimes you'd need to provide [data schema](dataSchema.md) or fall back to String API.
-
-In Kotlin Notebook, the compiler plugin complements the built-in code generator that updates types or variables after cell execution.
-
-```kotlin
-val df = DataFrame.readX("...")
-```
-
-In the next cell you can add, convert, remove, aggregate columns and expect that schema will be updated accordingly, 
-without having to split your pipeline into multiple steps and trigger notebook code generation.
-
-

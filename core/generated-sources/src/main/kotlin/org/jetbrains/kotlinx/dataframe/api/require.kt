@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.requireImpl
 import kotlin.reflect.typeOf
 
@@ -56,6 +57,7 @@ import kotlin.reflect.typeOf
  *     .select { "full_name" and stars }
  * ```
  *
+ * For more information: [See `requireColumn` on the documentation website.](https://kotlin.github.io/dataframe/require.html)
  */
 @Refine
 @Interpretable("Require0")

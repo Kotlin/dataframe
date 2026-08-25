@@ -14,10 +14,11 @@ import java.io.File
 import java.nio.file.Files
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.Types
 import kotlin.reflect.typeOf
 
 @DataSchema
-interface CustomerSQLite {
+interface CustomerSqlite {
     val id: Int?
     val name: String?
     val age: Int?
@@ -26,7 +27,7 @@ interface CustomerSQLite {
 }
 
 @DataSchema
-interface OrderSQLite {
+interface OrderSqlite {
     val id: Int?
     val customerName: String?
     val orderDate: String?
@@ -35,7 +36,7 @@ interface OrderSQLite {
 }
 
 @DataSchema
-interface CustomerOrderSQLite {
+interface CustomerOrderSqlite {
     val customerId: Int?
     val customerName: String?
     val customerAge: Int?
@@ -45,6 +46,13 @@ interface CustomerOrderSQLite {
     val orderDate: String?
     val totalAmount: Double
     val orderDetails: ByteArray?
+}
+
+@DataSchema
+interface FlagSqlite {
+    val id: Int?
+    val enabled: Boolean
+    val optional: Boolean?
 }
 
 class SqliteTest {
@@ -92,6 +100,96 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(createOrderTableQuery)
+
+            @Language("SQL")
+            val createFlagsTableQuery = """
+            CREATE TABLE Flags (
+                id INTEGER PRIMARY KEY,
+                enabled BOOLEAN NOT NULL,
+                optional BOOLEAN
+            )
+            """
+
+            connection.createStatement().execute(createFlagsTableQuery)
+
+            connection.prepareStatement("INSERT INTO Flags (enabled, optional) VALUES (?, ?)").use {
+                it.setBoolean(1, true)
+                it.setBoolean(2, false)
+                it.executeUpdate()
+            }
+
+            connection.prepareStatement("INSERT INTO Flags (enabled, optional) VALUES (?, ?)").use {
+                it.setBoolean(1, false)
+                it.setNull(2, Types.BOOLEAN)
+                it.executeUpdate()
+            }
+
+            // Dates and timestamps: SQLite stores each in one of three encodings — ISO text,
+            // Unix seconds (INTEGER), or Julian days (REAL). Each type is declared twice:
+            // once NOT NULL (guaranteed non-null column) and once without NOT NULL (nullable
+            // column with at least one NULL row).
+            @Language("SQL")
+            val createTemporalTableQuery = """
+            CREATE TABLE Temporal (
+                id INTEGER PRIMARY KEY,
+                isoDate DATE NOT NULL,
+                isoDateOpt DATE,
+                isoDateTime DATETIME NOT NULL,
+                isoDateTimeOpt DATETIME,
+                isoTimestamp TIMESTAMP NOT NULL,
+                isoTimestampOpt TIMESTAMP,
+                unixTimestamp TIMESTAMP NOT NULL,
+                unixTimestampOpt TIMESTAMP,
+                julianDate DATE NOT NULL,
+                julianDateOpt DATE,
+                julianTimestamp TIMESTAMP NOT NULL,
+                julianTimestampOpt TIMESTAMP
+            )
+            """
+
+            connection.createStatement().execute(createTemporalTableQuery)
+
+            // Row 0: every column populated. Julian day 2460146.5 = 2023-07-21 00:00:00 UTC;
+            // the `.5` fraction forces SQLite to store it as REAL (Julian day convention).
+            connection.createStatement().execute(
+                """
+                INSERT INTO Temporal
+                    (isoDate, isoDateOpt,
+                     isoDateTime, isoDateTimeOpt,
+                     isoTimestamp, isoTimestampOpt,
+                     unixTimestamp, unixTimestampOpt,
+                     julianDate, julianDateOpt,
+                     julianTimestamp, julianTimestampOpt)
+                    VALUES
+                    ('2023-07-21', '2023-07-21',
+                     '2023-07-21 10:30:00', '2023-07-21 10:30:00',
+                     '2023-07-21T10:30:00Z', '2023-07-21T10:30:00Z',
+                     1690000000, 1690000000,
+                     2460146.5, 2460146.5,
+                     2460146.5, 2460146.5)
+                """.trimIndent(),
+            )
+
+            // Row 1: NOT NULL columns keep their values; the nullable variants are set to NULL to
+            // exercise the nullable path of every date/time converter.
+            connection.createStatement().execute(
+                """
+                INSERT INTO Temporal
+                    (isoDate, isoDateOpt,
+                     isoDateTime, isoDateTimeOpt,
+                     isoTimestamp, isoTimestampOpt,
+                     unixTimestamp, unixTimestampOpt,
+                     julianDate, julianDateOpt,
+                     julianTimestamp, julianTimestampOpt)
+                    VALUES
+                    ('2023-07-21', NULL,
+                     '2023-07-21 10:30:00', NULL,
+                     '2023-07-21T10:30:00Z', NULL,
+                     1690000000, NULL,
+                     2460146.5, NULL,
+                     2460146.5, NULL)
+                """.trimIndent(),
+            )
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()
@@ -153,7 +251,7 @@ class SqliteTest {
     @Test
     fun `read from tables`() {
         val customerTableName = "Customers"
-        val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSQLite>()
+        val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSqlite>()
         val result = df.filter { "name"<String?>() == "John Doe" }
         result[0][2] shouldBe 30
 
@@ -164,7 +262,7 @@ class SqliteTest {
         schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
 
         val orderTableName = "Orders"
-        val df2 = DataFrame.readSqlTable(connection, orderTableName).cast<OrderSQLite>()
+        val df2 = DataFrame.readSqlTable(connection, orderTableName).cast<OrderSqlite>()
         val result2 = df2.filter { "totalAmount"<Double>() > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
@@ -180,7 +278,7 @@ class SqliteTest {
 
         val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
-        val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSQLite>()
+        val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSqlite>()
         val result = df.filter { "name"<String?>() == "John Doe" }
         result[0][2] shouldBe 30
 
@@ -191,7 +289,7 @@ class SqliteTest {
         schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
 
         val orderTableName = "Orders"
-        val df2 = DataFrame.readSqlTable(dbConnectionConfig, orderTableName).cast<OrderSQLite>()
+        val df2 = DataFrame.readSqlTable(dbConnectionConfig, orderTableName).cast<OrderSqlite>()
         val result2 = df2.filter { "totalAmount"<Double>() > 10 }
         result2[0][2] shouldBe "2023-07-21"
 
@@ -219,7 +317,7 @@ class SqliteTest {
 
     @Test
     fun `read from sql query`() {
-        val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSQLite>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerOrderSqlite>()
         val result = df.filter { "customerSalary"<Double>() > 1 }
         result[0][3] shouldBe 2500.5
 
@@ -234,7 +332,7 @@ class SqliteTest {
     fun `read from sql query with DBConnectionConfig`() {
         val dbConnectionConfig = DbConnectionConfig(databaseUrl)
 
-        val df = DataFrame.readSqlQuery(dbConnectionConfig, sqlQuery).cast<CustomerOrderSQLite>()
+        val df = DataFrame.readSqlQuery(dbConnectionConfig, sqlQuery).cast<CustomerOrderSqlite>()
         val result = df.filter { "customerSalary"<Double>() > 1 }
         result[0][3] shouldBe 2500.5
 
@@ -247,18 +345,112 @@ class SqliteTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
+        val dataframes = DataFrame.readAllSqlTables(connection)
 
-        val customerDf = dataframes[0].cast<CustomerSQLite>()
+        val customerDf = dataframes.getValue("Customers").cast<CustomerSqlite>()
 
         customerDf.rowsCount() shouldBe 2
         customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
-        val orderDf = dataframes[1].cast<OrderSQLite>()
+        val orderDf = dataframes.getValue("Orders").cast<OrderSqlite>()
 
         orderDf.rowsCount() shouldBe 2
         orderDf.filter { "totalAmount"<Double>() > 200 }.rowsCount() shouldBe 1
         orderDf[0][1] shouldBe null
+    }
+
+    @Test
+    fun `read boolean column`() {
+        val flagsTableName = "Flags"
+        val df = DataFrame.readSqlTable(connection, flagsTableName).cast<FlagSqlite>()
+
+        df.rowsCount() shouldBe 2
+        df["enabled"][0] shouldBe true
+        df["enabled"][1] shouldBe false
+        df["optional"][0] shouldBe false
+        df["optional"][1] shouldBe null
+
+        // Actual DataFrame column types (per-column, not just schema).
+        df["enabled"].type() shouldBe typeOf<Boolean>()
+        df["optional"].type() shouldBe typeOf<Boolean?>()
+
+        val schema = DataFrameSchema.readSqlTable(connection, flagsTableName)
+        schema.columns["enabled"]!!.type shouldBe typeOf<Boolean>()
+        schema.columns["optional"]!!.type shouldBe typeOf<Boolean?>()
+    }
+
+    @Test
+    fun `read date and timestamp columns converts storage class to declared type`() {
+        // SQLite doesn't have native DATE/TIMESTAMP storage — values may be TEXT (ISO), INTEGER
+        // (Unix seconds), or REAL (Julian day). The library preserves an idiomatic Kotlin
+        // date-time type in the schema and converts each value in preprocessing based on its
+        // runtime storage class. Each type is tested in both NOT NULL and nullable variants.
+        val df = DataFrame.readSqlTable(connection, "Temporal")
+        val expectedDate = kotlinx.datetime.LocalDate.parse("2023-07-21")
+        val expectedDateTime = kotlinx.datetime.LocalDateTime.parse("2023-07-21T10:30:00")
+        val expectedIsoInstant = kotlin.time.Instant.parse("2023-07-21T10:30:00Z")
+        val expectedUnixInstant = kotlin.time.Instant.fromEpochSeconds(1690000000)
+        val expectedJulianInstant = kotlin.time.Instant.parse("2023-07-21T00:00:00Z")
+
+        df.rowsCount() shouldBe 2
+
+        // Row 0 — both NOT NULL and nullable columns populated with the same value.
+        df["isoDate"][0] shouldBe expectedDate
+        df["isoDateOpt"][0] shouldBe expectedDate
+        df["isoDateTime"][0] shouldBe expectedDateTime
+        df["isoDateTimeOpt"][0] shouldBe expectedDateTime
+        df["isoTimestamp"][0] shouldBe expectedIsoInstant
+        df["isoTimestampOpt"][0] shouldBe expectedIsoInstant
+        df["unixTimestamp"][0] shouldBe expectedUnixInstant
+        df["unixTimestampOpt"][0] shouldBe expectedUnixInstant
+        df["julianDate"][0] shouldBe expectedDate
+        df["julianDateOpt"][0] shouldBe expectedDate
+        df["julianTimestamp"][0] shouldBe expectedJulianInstant
+        df["julianTimestampOpt"][0] shouldBe expectedJulianInstant
+
+        // Row 1 — NOT NULL columns still populated; nullable columns are NULL.
+        df["isoDate"][1] shouldBe expectedDate
+        df["isoDateOpt"][1] shouldBe null
+        df["isoDateTime"][1] shouldBe expectedDateTime
+        df["isoDateTimeOpt"][1] shouldBe null
+        df["isoTimestamp"][1] shouldBe expectedIsoInstant
+        df["isoTimestampOpt"][1] shouldBe null
+        df["unixTimestamp"][1] shouldBe expectedUnixInstant
+        df["unixTimestampOpt"][1] shouldBe null
+        df["julianDate"][1] shouldBe expectedDate
+        df["julianDateOpt"][1] shouldBe null
+        df["julianTimestamp"][1] shouldBe expectedJulianInstant
+        df["julianTimestampOpt"][1] shouldBe null
+
+        // Actual DataFrame column types — NOT NULL columns are narrowed by Infer.Nulls;
+        // nullable columns keep the nullable type.
+        df["isoDate"].type() shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        df["isoDateOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        df["isoDateTime"].type() shouldBe typeOf<kotlinx.datetime.LocalDateTime>()
+        df["isoDateTimeOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
+        df["isoTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["isoTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+        df["unixTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["unixTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+        df["julianDate"].type() shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        df["julianDateOpt"].type() shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        df["julianTimestamp"].type() shouldBe typeOf<kotlin.time.Instant>()
+        df["julianTimestampOpt"].type() shouldBe typeOf<kotlin.time.Instant?>()
+
+        // Schema types follow the SQL nullability declaration exactly.
+        val schema = DataFrameSchema.readSqlTable(connection, "Temporal")
+        schema.columns["isoDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        schema.columns["isoDateOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["isoDateTime"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime>()
+        schema.columns["isoDateTimeOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDateTime?>()
+        schema.columns["isoTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["isoTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["unixTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["unixTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
+        schema.columns["julianDate"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate>()
+        schema.columns["julianDateOpt"]!!.type shouldBe typeOf<kotlinx.datetime.LocalDate?>()
+        schema.columns["julianTimestamp"]!!.type shouldBe typeOf<kotlin.time.Instant>()
+        schema.columns["julianTimestampOpt"]!!.type shouldBe typeOf<kotlin.time.Instant?>()
     }
 }

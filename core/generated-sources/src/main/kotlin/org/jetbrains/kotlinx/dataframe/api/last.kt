@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -33,6 +34,8 @@ import kotlin.reflect.KProperty
 /**
  * Returns the last value in this [DataColumn].
  *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
+ *
  * See also [lastOrNull], [first], [take], [takeLast].
  *
  * @return The last value in this [DataColumn].
@@ -43,6 +46,8 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
 
 /**
  * Returns the last value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ *
+ * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
  * See also [last], [first], [take], [takeLast].
  *
@@ -59,6 +64,8 @@ public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
  * // find the amount of the most recent financial transaction over 100 euros
  * df.amount.last { it > 100 }
  * ```
+ *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
  *
  * See also [lastOrNull], [first], [take], [takeLast].
  *
@@ -86,6 +93,8 @@ public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.
  * // or 'null' if there is no such transaction
  * df.amount.lastOrNull { it > 100 }
  * ```
+ *
+ * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
  * See also [last], [first], [take], [takeLast].
  *
@@ -131,6 +140,8 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * df.lastOrNull { amount > 100 }
  * ```
  *
+ * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/last.html#lastornull)
+ *
  * See also [last][DataFrame.last],
  * [first][DataFrame.first],
  * [take][DataFrame.take],
@@ -171,6 +182,8 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * df.last { amount > 100 }
  * ```
  *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
  * See also [lastOrNull][DataFrame.lastOrNull],
  * [first][DataFrame.first],
  * [take][DataFrame.take],
@@ -192,6 +205,8 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
 /**
  * Returns the last [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
  *
+ * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/last.html#lastornull)
+ *
  * See also [last][DataFrame.last],
  * [first][DataFrame.first],
  * [take][DataFrame.take],
@@ -203,6 +218,8 @@ public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow -
 
 /**
  * Returns the last [row][DataRow] in this [DataFrame].
+ *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
  * See also [lastOrNull][DataFrame.lastOrNull],
  * [first][DataFrame.first],
@@ -240,6 +257,10 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
  * // find the most recent status for each order
  * df.groupBy { orderId }.last().concat()
  * ```
+ *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
+ * For more information about [GroupBy] and [last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
  * See also [first][GroupBy.first].
  *
@@ -281,6 +302,10 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * df.groupBy { orderId }.last { !isInternal }.concat()
  * ```
  *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
+ * For more information about [GroupBy] and [last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ *
  * See also [first][GroupBy.first].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
@@ -300,7 +325,9 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the last [row][DataRow] from each group,
  * and returns a [ReducedPivot] that contains the last [row][DataRow] from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
+ * For more information about [Pivot] and [last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  * ### Example
  * ```kotlin
@@ -320,7 +347,9 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * satisfying the given [predicate], and returns a [ReducedPivot] that contains the last [row][DataRow],
  * matching the [predicate], from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
+ * For more information about [Pivot] and [last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  *
  *
@@ -366,6 +395,8 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
  * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
  *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
+ *
  * For more information about [PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * ### Example
@@ -395,6 +426,8 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
  * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
  * (except the grouping key).
+ *
+ * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
  * [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
@@ -542,6 +575,8 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -575,6 +610,8 @@ public interface LastColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -597,7 +634,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("Last0")
-    public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    public fun <C> ColumnSet<C>.last(condition: (ColumnWithPath<C>) -> Boolean = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -610,6 +647,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
@@ -630,7 +669,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     @Interpretable("Last1")
-    public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.last(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         asSingleColumn().lastCol(condition)
 
     /**
@@ -641,6 +680,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
@@ -661,7 +702,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     @Interpretable("Last2")
-    public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun SingleColumn<DataRow<*>>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().last(condition)
 
     /**
@@ -672,6 +713,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
@@ -691,7 +734,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
-    public fun String.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -702,6 +745,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
@@ -725,7 +770,7 @@ public interface LastColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 
     /**
@@ -736,6 +781,8 @@ public interface LastColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
@@ -755,7 +802,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
-    public fun ColumnPath.lastCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.lastCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).lastCol(condition)
 }
 

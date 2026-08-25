@@ -41,8 +41,6 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     - NOTE: Only apply this plugin to the root project!
     - NOTE: Add every dependency version that needs to be synced to the `libs.versions.toml` file of the example in
       the `versionsToSync` list!
-    - NOTE: Add every dependency used in each example project to `dependencies { exampleDependencyUpdates() }`
-      so `dependencyUpdates` can detect outdated dependencies in examples.
 
     - Projects inside `/examples/projects` are built using the latest release version of DataFrame.
       They are meant to be downloadable as separate projects by users.
@@ -79,3 +77,14 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
       code in Notebooks or any of our [plugins](../plugins). Words like "package", "fun", "suspend", etc...
       As the Kotlin language can change over time, this task ensures that any changes to the language
       will be reflected in our code generation.
+
+- `dfbuild.caupain`: Allows tracking updates for dependencies in `/gradle/libs.versions.toml`.
+    This plugin is meant to be applied only to the main project.
+    - See https://github.com/deezer/caupain/tree/main for more information.
+    - Run `checkDependencyUpdates` to check for outdated dependencies.
+      This produces a report in the terminal, and as HTML and Markdown files in `/build/reports`.
+    - There's also `replaceOutdatedDependencies` to replace outdated dependencies directly in the
+      `/gradle/libs.versions.toml` file, but be careful.
+    - Comment `#ignoreUpdates` in `/gradle/libs.versions.toml` to ignore updates for specific dependencies.
+    - `/.github/workflows/check-dependency-updates.yml` is a Github Action which runs `checkDependencyUpdates`. 
+  

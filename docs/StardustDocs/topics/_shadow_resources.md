@@ -191,6 +191,11 @@
 <resource src="notebook_test_tail_1.html"></resource>
 <resource src="notebook_test_tail_2.html"></resource>
 <resource src="notebook_test_tail_3.html"></resource>
+<resource src="valueCounts.html"></resource>
+<resource src="valueCountsColumn.html"></resource>
+<resource src="valueCountsDf.html"></resource>
+<resource src="valueCountsSelector_properties.html"></resource>
+<resource src="valueCountsWithNA.html"></resource>
 <resource src="example.csv"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="dfCast.html"></resource>
@@ -261,7 +266,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
@@ -344,3 +348,11 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updatePerRowCol.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateWithConst.html"></resource>
+<resource src="filter_properties.html"></resource>
+<resource src="filterColumn_properties.html"></resource>
+<resource src="noneDf.html"></resource>
+<resource src="firstOnColumnDf.html"></resource>
+<resource src="countDf.html"></resource>
+<resource src="countGroupBy_properties.html"></resource>
+<resource src="countPivot_properties.html"></resource>
+<resource src="countPivotGroupBy_properties.html"></resource>

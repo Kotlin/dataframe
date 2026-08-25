@@ -85,10 +85,12 @@ so do familiarize yourself with the following guidelines.
 
 ## Environment requirements
 
-* JDK >= 21 referred to by the `JAVA_HOME` environment variable.
+* A Java runtime available through `JAVA_HOME` or `PATH` is required to launch the Gradle Wrapper.
+  The build itself runs on the daemon JDK provisioned from `gradle/gradle-daemon-jvm.properties`.
 
-  * Note, any version above 21 should work in theory, but JDK 21 is the only version we test with,
-  so it is the recommended version.
+  * The daemon JDK version is controlled by `gradle-jdk` in `gradle/libs.versions.toml`.
+    After changing it (for example, from `21` to `25`), run `./gradlew updateDaemonJvm`
+    and commit the regenerated properties file.
 
 * We recommend using [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) as the IDE. This
 has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) of course.

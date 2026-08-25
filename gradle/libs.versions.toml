@@ -8,13 +8,14 @@ kotlin = "2.4.0"
 kotlinpoet = "2.3.0"
 
 # The jvmToolchain version. Gradle should run with this JDK version.
+# After changing it, run `./gradlew updateDaemonJvm` and commit the regenerated properties file.
 gradle-jdk = "21"
 
 dokka = "2.2.0"
 libsPublisher = "2.2.0-rc3-dev-59"
 
 # Latest release version of DataFrame, used in examples
-dataframe = "1.0.0-Beta5"
+dataframe = "1.0.0-rc01"
 
 korro = "0.2.2"
 
@@ -45,23 +46,35 @@ kotlinLogging = "8.0.4"
 sl4j = "2.0.18"
 log4j = "2.26.1"
 
+# ignoreUpdates
 junit = "4.13.2" # Issue #426
+# ignoreUpdates
 junit-jupiter = "5.11.3"
+# ignoreUpdates
 junit-platform = "1.11.3" # Issue #426
 kotestAsserions = "6.2.2"
 
 jsoup = "1.22.2"
 arrow = "19.0.0"
-kodex = "0.5.4"
-simpleGit = "2.3.1"
-dependencyVersions = "0.54.0"
+kodex = "0.6.2"
+caupain = "1.9.1"
 plugin-publish = "2.1.1"
 shadow = "9.5.1"
+# ignoreUpdates
 android-gradle-api = "7.3.1" # unused for now
 ktor = "3.5.1"
+# ignoreUpdates
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
 duckdb = "1.5.4.0"
+testcontainers = "2.0.5"
+
+# Docker image tags of the databases used in the Testcontainers tests
+dockerImage-mariadb = "12.3.2" # available tags: https://hub.docker.com/_/mariadb/tags
+dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
+dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
+dockerImage-mssql = "2022-CU22-ubuntu-22.04" # available tags: https://mcr.microsoft.com/en-us/artifact/mar/mssql/server
+
 buildconfig = "6.0.10"
 benchmark = "0.4.17"
 
@@ -69,7 +82,7 @@ geotools = "33.5" # 34.x and higher versions are not compatible with Java 11
 jai-core = "1.1.3"
 jts = "1.20.0"
 
-kandy = "0.8.5-dev-100"
+kandy = "0.8.5"
 kotlin-dl = "0.5.2"
 
 exposed = "1.3.1"
@@ -77,7 +90,7 @@ hibernate = "7.4.4.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
-spark3 = "3.3.2"
+spark3 = "3.3.2" # ignoreUpdates
 spark4 = "4.1.2"
 
 multik = "0.3.1"
@@ -119,6 +132,12 @@ mssql = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = 
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+
+testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-mysql = { group = "org.testcontainers", name = "testcontainers-mysql", version.ref = "testcontainers" }
+testcontainers-mariadb = { group = "org.testcontainers", name = "testcontainers-mariadb", version.ref = "testcontainers" }
+testcontainers-mssqlserver = { group = "org.testcontainers", name = "testcontainers-mssqlserver", version.ref = "testcontainers" }
 
 kandy = { group = "org.jetbrains.kotlinx", name = "kandy-lets-plot", version.ref = "kandy" }
 kandy-geo = { group = "org.jetbrains.kotlinx", name = "kandy-geo", version.ref = "kandy" }
@@ -199,6 +218,7 @@ exposed-json = { group = "org.jetbrains.exposed", name = "exposed-json", version
 exposed-money = { group = "org.jetbrains.exposed", name = "exposed-money", version.ref = "exposed" }
 
 hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+hibernate-processor = { group = "org.hibernate.orm", name = "hibernate-processor", version.ref = "hibernate" }
 hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 
@@ -261,9 +281,8 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
-simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
+caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
@@ -271,6 +290,8 @@ kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "ben
 dataframe-compiler-plugin = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
 gradlePlugin-gradle-foojayToolchains = { id = "org.gradle.toolchains:foojay-resolver-convention", version.ref = "gradlePlugin-gradle-foojayToolchains" }
 typesafe-conventions = { id = "dev.panuszewski:typesafe-conventions", version.ref = "typesafe-conventions" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 # Android example
 android-application = { id = "com.android.application", version.ref = "agp" }

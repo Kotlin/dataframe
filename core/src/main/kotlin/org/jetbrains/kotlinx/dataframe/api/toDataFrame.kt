@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -17,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.TRAVERSE_PROPERTIES_DSL
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -153,10 +155,30 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
         ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
+/**
+ * [DslMarker] to prevent functions from [CreateDataFrameDsl] being used inside [TraversePropertiesDsl].
+ * This prevents notations like:
+ * ```kt
+ * list.toDataFrame {
+ *     "colA" from { ... }
+ *     properties {
+ *         preserve<T>()
+ *         "colB" from { ... } // ERROR, cannot be called in this context an implicit receiver.
+ *     }
+ * }
+ * ```
+ */
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPEALIAS, AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+public annotation class CreateDataFrameDslMarker
+
+@CreateDataFrameDslMarker
 public interface TraversePropertiesDsl {
 
     /**
      * Skip given [classes] during recursive (dfs) traversal.
+     *
+     * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
      */
     @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
@@ -164,12 +186,16 @@ public interface TraversePropertiesDsl {
     /**
      * Skip given [properties] during recursive (dfs) traversal.
      * These can also be getter-like functions (like `getX()` or `isX()`).
+     *
+     * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
      */
     @Interpretable("Exclude1")
     public fun exclude(vararg properties: KCallable<*>)
 
     /**
      * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+     *
+     * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
      */
     @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
@@ -177,6 +203,8 @@ public interface TraversePropertiesDsl {
     /**
      * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      * These can also be getter-like functions (like `getX()` or `isX()`).
+     *
+     * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
      */
     @Interpretable("Preserve1")
     public fun preserve(vararg properties: KCallable<*>)
@@ -184,11 +212,17 @@ public interface TraversePropertiesDsl {
 
 /**
  * Store values of given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ *
+ * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
  */
 @Interpretable("PreserveT")
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
-public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
+@Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+public inline fun <reified T> CreateDataFrameDsl<*>.preserve(): Unit = Unit
+
+@CreateDataFrameDslMarker
+public abstract class CreateDataFrameDsl<T> {
 
     public abstract val source: Iterable<T>
 
@@ -206,6 +240,18 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
         maxDepth: Int = 0,
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun exclude(vararg classes: KClass<*>): Unit = Unit
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun exclude(vararg properties: KCallable<*>): Unit = Unit
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun preserve(vararg classes: KClass<*>): Unit = Unit
+
+    @Deprecated(TRAVERSE_PROPERTIES_DSL, level = DeprecationLevel.ERROR)
+    public fun preserve(vararg properties: KCallable<*>): Unit = Unit
 
     public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn(infer = infer)
@@ -282,6 +328,8 @@ public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): DataFrame<*> =
  *
  * With [containsColumns] = `true`, interprets each inner list as a column.
  * If [header] is not provided, the first element will be used as the column name, and the remaining elements as values.
+ *
+ * For more information: {@include [DocumentationUrls.CreateDataFrameFromListOfLists]}
  *
  * @param T The type of elements contained in the nested lists.
  * @param containsColumns If `true`, treats each nested list as a column.

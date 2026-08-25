@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
@@ -37,10 +38,18 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-/** Returns `true` if all [values] match the given [predicate] or [values] is empty. */
+/**
+ * Returns `true` if all [values] match the given [predicate] or [values] is empty.
+ *
+ * For more information: [See `all` on the documentation website.](https://kotlin.github.io/dataframe/all.html)
+ */
 public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(predicate)
 
-/** Returns `true` if all [values] are `null` or [values] is empty. */
+/**
+ * Returns `true` if all [values] are `null` or [values] is empty.
+ *
+ * For more information: [See `all` on the documentation website.](https://kotlin.github.io/dataframe/all.html)
+ */
 public fun <C> DataColumn<C>.allNulls(): Boolean =
     size == 0 ||
         type() == nullableNothingType ||
@@ -56,7 +65,11 @@ public fun DataRow<*>.allNA(): Boolean = owner.columns().all { it[index()].isNA 
 
 // region DataFrame
 
-/** Returns `true` if all [rows] match the given [predicate] or [rows] is empty. */
+/**
+ * Returns `true` if all [rows] match the given [predicate] or [rows] is empty.
+ *
+ * For more information: [See `all` on the documentation website.](https://kotlin.github.io/dataframe/all.html)
+ */
 public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
 
 // endregion
@@ -195,6 +208,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
+     *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
@@ -251,6 +266,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
+     *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
@@ -301,6 +318,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -353,6 +372,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
+     *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
      *
@@ -402,6 +423,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -454,6 +477,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `all` is named `allCols` instead to avoid confusion.
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
+     *
+     * For more information: [See `all`/`allCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols)
      *
      * #### For example:
      * `df.`[move][org.jetbrains.kotlinx.dataframe.DataFrame.move]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() }.`[under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under]`("info")`
@@ -511,6 +536,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -572,6 +599,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -615,7 +644,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allAfter(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allAfter(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allAfterInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) After
@@ -633,6 +662,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -696,6 +727,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -755,6 +788,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -816,6 +851,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -880,6 +917,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -942,6 +981,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1001,6 +1042,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1062,6 +1105,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1122,6 +1167,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1185,6 +1232,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1251,6 +1300,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1321,6 +1372,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1380,6 +1433,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1441,6 +1496,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1505,6 +1562,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1564,6 +1623,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1625,6 +1686,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1685,6 +1748,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1744,6 +1809,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -1808,6 +1875,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1871,6 +1940,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1933,6 +2004,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1994,6 +2067,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2058,6 +2133,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2120,6 +2197,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2181,6 +2260,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2240,6 +2321,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2301,6 +2384,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2361,6 +2446,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2429,6 +2516,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2489,6 +2578,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2532,7 +2623,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allFrom(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allFrom(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allFromInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) From
@@ -2550,6 +2641,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2613,6 +2706,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2672,6 +2767,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2733,6 +2830,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -2796,6 +2895,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2858,6 +2959,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2918,6 +3021,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2977,6 +3082,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3040,6 +3147,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3101,6 +3210,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3167,6 +3278,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3237,6 +3350,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3296,6 +3411,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3357,6 +3474,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3421,6 +3540,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3480,6 +3601,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3541,6 +3664,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3601,6 +3726,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3660,6 +3787,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3724,6 +3853,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3787,6 +3918,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3849,6 +3982,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3910,6 +4045,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -3974,6 +4111,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4036,6 +4175,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4097,6 +4238,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4156,6 +4299,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4217,6 +4362,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4276,6 +4423,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4344,6 +4493,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4404,6 +4555,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4447,7 +4600,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allBefore(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allBefore(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allBeforeInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) Before
@@ -4465,6 +4618,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4528,6 +4683,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4587,6 +4744,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4648,6 +4807,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4712,6 +4873,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4774,6 +4937,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4835,6 +5000,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -4894,6 +5061,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -4955,6 +5124,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5018,6 +5189,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5085,6 +5258,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5151,6 +5326,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5210,6 +5387,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5271,6 +5450,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5335,6 +5516,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5396,6 +5579,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5455,6 +5640,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5516,6 +5703,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5575,6 +5764,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5639,6 +5830,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5702,6 +5895,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5764,6 +5959,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5825,6 +6022,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -5889,6 +6088,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -5951,6 +6152,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6012,6 +6215,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6071,6 +6276,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6132,6 +6339,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6192,6 +6401,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6260,6 +6471,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6320,6 +6533,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6363,7 +6578,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.allUpTo(column: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.allUpTo(column: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         allUpToInternal(column as ColumnFilter<*>) as ColumnSet<C>
 
     /** ## All (Cols) Up To
@@ -6381,6 +6596,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6444,6 +6661,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6503,6 +6722,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6564,6 +6785,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6627,6 +6850,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6689,6 +6914,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6749,6 +6976,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6808,6 +7037,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6871,6 +7102,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -6932,6 +7165,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -6998,6 +7233,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7068,6 +7305,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7127,6 +7366,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7188,6 +7429,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7252,6 +7495,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7311,6 +7556,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7372,6 +7619,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7432,6 +7681,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7491,6 +7742,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7555,6 +7808,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7618,6 +7873,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7680,6 +7937,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7741,6 +8000,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -7805,6 +8066,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7867,6 +8130,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7928,6 +8193,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -7987,6 +8254,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
@@ -8048,6 +8317,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
      *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -8107,6 +8378,8 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      * in the Plain DSL and on [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] it requires a [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] instead.
+     *
+     * For more information: [See all(Cols) After/Before/From/UpTo on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#all-cols-after-before-from-up-to)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar]
      *

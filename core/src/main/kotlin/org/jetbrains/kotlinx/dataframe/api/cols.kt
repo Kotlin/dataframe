@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
@@ -111,6 +112,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * Aside from calling [cols] directly, you can also use the [`get`][ColumnSet.get] operator in most cases.
      *
+     * For more information: {@include [DocumentationUrls.Cols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -169,6 +172,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * Retrieves one or multiple columns from [this\] in the form of a [ColumnSet] by their indices.
      * If any of the indices are out of bounds, an [IndexOutOfBoundsException] is thrown.
      *
+     * For more information: {@include [DocumentationUrls.Cols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -199,6 +204,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * Retrieves multiple columns from [this\] in the form of a [ColumnSet] by a [range\] of indices.
      * If any of the indices in the [range\] are out of bounds, an [IndexOutOfBoundsException] is thrown.
+     *
+     * For more information: {@include [DocumentationUrls.Cols]}
      *
      * ### Check out: [Grammar]
      *
@@ -248,14 +255,15 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /** @include [ColumnSetColsPredicateDocs] */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.cols(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.cols(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
 
     @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
     public fun <C> ColumnSet<C>.cols(): ColumnSet<C> = cols { true }
 
     /** @include [ColumnSetColsPredicateDocs] */
-    public operator fun <C> ColumnSet<C>.get(predicate: ColumnFilter<C> = { true }): ColumnSet<C> = cols(predicate)
+    public operator fun <C> ColumnSet<C>.get(predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
+        cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -276,14 +284,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnsSelectionDslColsPredicateDocs = Nothing
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
-    public fun ColumnsSelectionDsl<*>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().colsInternal(predicate)
 
     @Deprecated(COLS_TO_ALL, ReplaceWith(COLS_TO_ALL_REPLACE), DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnsSelectionDslColsPredicateDocs] */
-    public operator fun ColumnsSelectionDsl<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public operator fun ColumnsSelectionDsl<*>.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         cols(predicate)
 
     /**
@@ -304,7 +312,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias SingleColumnAnyRowColsPredicateDocs = Nothing
 
     /** @include [SingleColumnAnyRowColsPredicateDocs] */
-    public fun SingleColumn<DataRow<*>>.cols(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().colsInternal(predicate)
 
     @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
@@ -313,8 +321,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [SingleColumnAnyRowColsPredicateDocs]
      */
-    public operator fun SingleColumn<DataRow<*>>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        cols(predicate)
+    public operator fun SingleColumn<DataRow<*>>.get(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -331,13 +340,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias StringColsPredicateDocs = Nothing
 
     /** @include [StringColsPredicateDocs] */
-    public fun String.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun String.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = columnGroup(this).cols(predicate)
 
     @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
     public fun String.cols(): ColumnSet<*> = cols { true }
 
     /** @include [StringColsPredicateDocs] */
-    public operator fun String.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
+    public operator fun String.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> = cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -358,13 +367,14 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun KProperty<*>.cols(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
+    public operator fun KProperty<*>.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
+        cols(predicate)
 
     /**
      * @include [CommonColsDocs.Predicate]
@@ -379,13 +389,15 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private typealias ColumnPathPredicateDocs = Nothing
 
     /** @include [ColumnPathPredicateDocs] */
-    public fun ColumnPath.cols(predicate: ColumnFilter<*>): ColumnSet<*> = columnGroup(this).cols(predicate)
+    public fun ColumnPath.cols(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
+        columnGroup(this).cols(predicate)
 
     @Deprecated(COLS_TO_ALL_COLS, ReplaceWith(COLS_TO_ALL_COLS_REPLACE), DeprecationLevel.ERROR)
     public fun ColumnPath.cols(): ColumnSet<*> = cols { true }
 
     /** @include [ColumnPathPredicateDocs] */
-    public operator fun ColumnPath.get(predicate: ColumnFilter<*> = { true }): ColumnSet<*> = cols(predicate)
+    public operator fun ColumnPath.get(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
+        cols(predicate)
 
     // endregion
 

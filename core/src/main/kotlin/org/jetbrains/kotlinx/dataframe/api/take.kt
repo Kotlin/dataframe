@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -37,7 +38,9 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 // region DataFrame
 
 /**
- * Returns a DataFrame containing first [n] rows.
+ * Returns a [DataFrame] containing first [n] rows.
+ *
+ * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
@@ -47,7 +50,9 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing last [n] rows.
+ * Returns a [DataFrame] containing last [n] rows.
+ *
+ * For more information: {@include [DocumentationUrls.TakeLast]}
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
@@ -57,7 +62,9 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing first rows that satisfy the given [predicate].
+ * Returns a [DataFrame] containing first rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.TakeWhile]}
  */
 public inline fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
@@ -103,6 +110,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Take
      * @set [CommonTakeAndDropDocs.OPERATION] take
      * @set [CommonTakeAndDropDocs.NOUN] take
@@ -174,6 +182,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Take Last
      * @set [CommonTakeAndDropDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropDocs.NOUN] take
@@ -245,6 +254,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take
      * @set [CommonTakeAndDropWhileDocs.OPERATION] take
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
@@ -260,7 +270,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
 
     /**
@@ -269,7 +279,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeWhile][ColumnsSelectionDsl.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun ColumnsSelectionDsl<*>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeColsWhile(predicate)
 
     /**
@@ -278,7 +288,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeWhile(predicate) }
 
     /**
@@ -287,7 +297,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeColsWhile][String.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     /**
@@ -300,7 +310,7 @@ public interface TakeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     /**
@@ -309,7 +319,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeColsWhile][ColumnPath.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.takeColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
     // endregion
@@ -318,6 +328,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
@@ -333,7 +344,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.takeLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
 
     /**
@@ -342,7 +353,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLastWhile][ColumnsSelectionDsl.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         asSingleColumn().takeLastColsWhile(predicate)
 
     /**
@@ -351,7 +362,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLastColsWhile][SingleColumn.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().takeLastWhile(predicate) }
 
     /**
@@ -360,7 +371,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastColsWhile][String.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     /**
@@ -373,7 +384,7 @@ public interface TakeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     /**
@@ -382,7 +393,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastColsWhile][ColumnPath.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.takeLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 
     // endregion

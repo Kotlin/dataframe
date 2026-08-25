@@ -9,7 +9,7 @@ Reverse operation to [`split`](split.md)
 ```kotlin
 merge { columns }
     [.notNull()]
-    .by(delimeter) | .by { merger } 
+    .by(separator) | .by { merger } 
     [.into(column) | .intoList() ]
 
 merger: (DataRow).List<T> -> Any
@@ -55,7 +55,7 @@ df.merge { name.firstName and age and isHappy }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDifferentWith.html" width="100%"/>
 <!---END-->
 
-By default, when no `delimeter` or `merger` is specified, values will be merged into the [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
+By default, when no `separator` or `merger` is specified, values will be merged into the [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
 
 <!---FUN mergeDefault-->
 

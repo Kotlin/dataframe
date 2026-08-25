@@ -78,3 +78,6 @@ df.sortWith { row1, row2 ->
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html" width="100%"/>
 <!---END-->
+
+If called on a [`DataColumn`](DataColumn.md), `sortWith()` returns the sorted version of the current column
+based on the given comparator.

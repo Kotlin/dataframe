@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE vars SYSTEM "https://resources.jetbrains.com/writerside/1.0/vars.dtd">
 <vars>
-    <var name="dataFrameVersion" value="1.0.0-Beta5" type="string"/>
-    <var name="kandyVersion" value="0.8.4" type="string"/>
-    <var name="compilerPluginKotlinVersion" value="2.4.0" type="string"/>
+    <var name="dataFrameVersion" value="1.0.0-rc01" type="string"/>
+    <var name="dataFrameNotebookVersion" value="1.0.0-rc01n" type="string"/>
+    <var name="kandyVersion" value="0.8.5" type="string"/>
+    <var name="compilerPluginKotlinVersion" value="2.4.10" type="string"/>
 </vars>

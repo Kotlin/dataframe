@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -73,6 +74,8 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * columns directly in [this\], or with [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
      * columns in [this\] at any depth.
      *
+     * For more information: {@include [DocumentationUrls.ColsInGroups]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -121,7 +124,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnSet<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         transform { it.flatMap { it.cols().filter { predicate(it) } } }
 
     /**
@@ -145,7 +148,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         asSingleColumn().colsInGroups(predicate)
 
     /**
@@ -169,8 +172,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
+    public fun SingleColumn<DataRow<*>>.colsInGroups(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
     /**
      * @include [ColsInGroupsDocs]
@@ -192,7 +196,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun String.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -213,7 +217,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun KProperty<*>.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**
@@ -227,7 +231,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_IN_GROUPS_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnPath.colsInGroups(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
 
     /**

@@ -12,7 +12,7 @@ Will work in compiler plugin starting from IntelliJ IDEA 2026.2 and Kotlin 2.4.0
 requireColumn { column }
 ```
 
-**Related operations**: [](cast.md), [](convertTo)
+**Related operations**: [](cast.md), [](convertTo.md)
 
 ```kotlin
 // Before `requireColumn` extension property will not be resolved

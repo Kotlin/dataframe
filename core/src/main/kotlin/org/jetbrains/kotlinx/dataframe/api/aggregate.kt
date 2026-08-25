@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * inside the [AggregateDsl].
  *
  * Returns a new [DataRow] with the original [pivot] keys as top-level columns on top level
- * and the correspndonding aggregated values in new nested columns.
+ * and the corresponding aggregated values in new nested columns.
  *
  * @include [AggregateDslDocs]
  * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}
@@ -61,7 +61,7 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * inside the [AggregateGroupedDsl].
  *
  * Returns a new [DataFrame] with the original [groupBy] key columns
- * and the correspodning aggregated values in new columns.
+ * and the corresponding aggregated values in new columns.
  *
  * @include [AggregateGroupedDslDocsSnippet]
  * {@set [AggregateDslDocs.APPLY_NOTE] The given [aggregating expression][body] is applied to each group independently.}

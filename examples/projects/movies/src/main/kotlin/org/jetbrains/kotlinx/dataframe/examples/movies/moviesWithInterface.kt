@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import java.io.File
 
 /**
@@ -41,7 +41,7 @@ fun main() {
     // This example shows how to the use extension properties API to address columns in different operations
     // https://kotlin.github.io/dataframe/apilevels.html#extension-properties-api
     // check the README https://github.com/Kotlin/dataframe
-    val step1 = DataFrame.read(pathToCsv)
+    val step1 = DataFrame.readCsv(pathToCsv)
         .convertTo<Movie>()
         .split { genres }.by("|").inplace()
         .split { title }.by {

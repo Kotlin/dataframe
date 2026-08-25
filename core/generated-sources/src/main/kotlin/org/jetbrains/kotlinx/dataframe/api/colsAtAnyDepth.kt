@@ -9,8 +9,10 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -114,6 +116,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet] filter function like
      * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], or [valueCols][ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -172,6 +177,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -223,7 +231,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnSet<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
     /**
@@ -233,6 +241,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -288,6 +299,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -341,8 +355,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        asSingleColumn().colsAtAnyDepthInternal(predicate)
+    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = asSingleColumn().colsAtAnyDepthInternal(predicate)
 
     /**
      * ## Cols At Any Depth
@@ -351,6 +366,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -408,6 +426,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -459,8 +480,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
-        ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
+    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(
+        predicate: (ColumnWithPath<*>) -> Boolean = { true },
+    ): ColumnSet<*> = ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
     /**
      * ## Cols At Any Depth
@@ -469,6 +491,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -525,6 +550,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -575,7 +603,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
         replaceWith = ReplaceWith(COLS_AT_ANY_DEPTH_REPLACE),
         level = DeprecationLevel.WARNING,
     )
-    public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun String.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
@@ -585,6 +613,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -639,6 +670,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -686,7 +720,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun KProperty<*>.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
@@ -696,6 +730,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
@@ -742,7 +779,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.simplify]
      */
     @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
-    public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
+    public fun ColumnPath.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
 
     /**
@@ -752,6 +789,9 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * This function can also be followed by another [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
      * [colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf], [single][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single], or [valueCols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols].
+     *
+     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar]
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`

@@ -19,7 +19,7 @@ buildConfig {
 }
 
 // combining buildconfig with ktlint
-val buildConfigSources by kotlin.sourceSets.creating {
+val buildConfigSources = kotlin.sourceSets.create("buildConfigSources") {
     kotlin.srcDir("build/generated/sources/buildConfig/main")
 }
 tasks.generateBuildConfigClasses {

@@ -169,21 +169,22 @@ df.print()
 Output:
 
 ```text
-  ㅤ                        
-                                 full_name                                 html_url stargazers_count                                   topics watchers
-  0                          JetBrains/JPS         https://github.com/JetBrains/JPS               23                                       []       23
-  1                JetBrains/YouTrackSharp https://github.com/JetBrains/YouTrack...              115 [jetbrains, jetbrains-youtrack, youtr...      115
-  2              JetBrains/colorSchemeTool https://github.com/JetBrains/colorSch...              290                                       []      290
-  3                      JetBrains/ideavim     https://github.com/JetBrains/ideavim             6120 [ideavim, intellij, intellij-platform...     6120
-  4           JetBrains/youtrack-vcs-hooks https://github.com/JetBrains/youtrack...                5                                       []        5
-  5   JetBrains/youtrack-rest-ruby-library https://github.com/JetBrains/youtrack...                8                                       []        8
-  6                     JetBrains/emacs4ij    https://github.com/JetBrains/emacs4ij               47                                       []       47
-  7          JetBrains/codereview4intellij https://github.com/JetBrains/coderevi...               11                                       []       11
-  8       JetBrains/teamcity-nuget-support https://github.com/JetBrains/teamcity...               41 [nuget, nuget-feed, teamcity, teamcit...       41
-  9                  JetBrains/Grammar-Kit https://github.com/JetBrains/Grammar-Kit              534                                       []      534
- 10     JetBrains/intellij-starteam-plugin https://github.com/JetBrains/intellij...                6                                       []        6
+                                   full_name                                  html_url  stargazers_count                                    topics  watchers
+                                      String                                       URL               Int                                    String       Int
+                                        ----                                      ----              ----                                      ----      ----
+   0                           JetBrains/JPS          https://github.com/JetBrains/JPS                23                                        []        23
+   1                 JetBrains/YouTrackSharp  https://github.com/JetBrains/YouTrack...               115  [jetbrains, jetbrains-youtrack, youtr...       115
+   2               JetBrains/colorSchemeTool  https://github.com/JetBrains/colorSch...               290                                        []       290
+   3                       JetBrains/ideavim      https://github.com/JetBrains/ideavim              6120  [ideavim, intellij, intellij-platform...      6120
+   4            JetBrains/youtrack-vcs-hooks  https://github.com/JetBrains/youtrack...                 5                                        []         5
+   5    JetBrains/youtrack-rest-ruby-library  https://github.com/JetBrains/youtrack...                 8                                        []         8
+   6                      JetBrains/emacs4ij     https://github.com/JetBrains/emacs4ij                47                                        []        47
+   7           JetBrains/codereview4intellij  https://github.com/JetBrains/coderevi...                11                                        []        11
+   8        JetBrains/teamcity-nuget-support  https://github.com/JetBrains/teamcity...                41  [nuget, nuget-feed, teamcity, teamcit...        41
+   9                   JetBrains/Grammar-Kit  https://github.com/JetBrains/Grammar-Kit               534                                        []       534
+  10      JetBrains/intellij-starteam-plugin  https://github.com/JetBrains/intellij...                 6                                        []         6
 ...
-
+5 columns x 562 rows
 ```
 
 ### Interactive web outputs

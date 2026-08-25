@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -42,6 +43,8 @@ public fun <T> DataColumn<T>.dropLast(n: Int = 1): DataColumn<T> = take(size - n
 /**
  * Returns a DataFrame containing all rows except first [n] rows.
  *
+ * For more information: {@include [DocumentationUrls.DropFirst]}
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
@@ -52,6 +55,8 @@ public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except last [n] rows.
  *
+ * For more information: {@include [DocumentationUrls.DropLast]}
+ *
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
@@ -61,11 +66,15 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.Drop]}
  */
 public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.DropWhile]}
  */
 public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
@@ -111,6 +120,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Drop
      * @set [CommonTakeAndDropDocs.OPERATION] drop
      * @set [CommonTakeAndDropDocs.NOUN] drop
@@ -180,6 +190,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropDocs.NOUN] drop
@@ -249,6 +260,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop
      * @set [CommonTakeAndDropWhileDocs.OPERATION] drop
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
@@ -264,7 +276,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropWhile][ColumnSet.dropWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun <C> ColumnSet<C>.dropWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.dropWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropWhile(predicate) }
 
     /**
@@ -273,7 +285,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[dropWhile][ColumnsSelectionDsl.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun ColumnsSelectionDsl<*>.dropWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.dropWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropColsWhile(predicate)
 
     /**
@@ -282,7 +294,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropWhile(predicate) }
 
     /**
@@ -291,7 +303,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     /**
@@ -302,7 +314,7 @@ public interface DropColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     /**
@@ -311,7 +323,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.dropColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     // endregion
@@ -320,6 +332,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.DropCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
@@ -335,7 +348,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun <C> ColumnSet<C>.dropLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.dropLastWhile(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         transform { it.dropLastWhile(predicate) }
 
     /**
@@ -344,7 +357,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.dropLastWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.asSingleColumn().dropLastColsWhile(predicate)
 
     /**
@@ -353,7 +366,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLastWhile(predicate) }
 
     /**
@@ -362,7 +375,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun String.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun String.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     /**
@@ -375,7 +388,7 @@ public interface DropColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun KProperty<*>.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     /**
@@ -384,7 +397,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnPath.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
+    public fun ColumnPath.dropLastColsWhile(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     // endregion

@@ -32,6 +32,8 @@ import kotlin.reflect.KProperty
 /**
  * Returns a new [DataColumn] containing only the elements that match the given [predicate].
  *
+ * For more information: {@include [DocumentationUrls.FilterColumn]}
+ *
  * @param predicate the condition used to filter the elements in the DataColumn.
  * @return a new DataColumn containing elements that satisfy the predicate.
  */
@@ -140,6 +142,8 @@ public interface FilterColumnsSelectionDsl {
      * Aside from calling [filter][ColumnSet.filter] directly, you can also use the [get][ColumnsSelectionDsl.get] operator
      * in most cases. This function belongs to [cols][ColumnsSelectionDsl.cols] but operates identically.
      *
+     * For more information: {@include [DocumentationUrls.FilterCols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -157,7 +161,7 @@ public interface FilterColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols]
      */
     @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.filter(predicate: ColumnFilter<C>): ColumnSet<C> =
+    public fun <C> ColumnSet<C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnSet<C> =
         colsInternal(predicate as ColumnFilter<*>).cast()
 }
 

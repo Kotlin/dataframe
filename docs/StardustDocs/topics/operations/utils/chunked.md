@@ -30,6 +30,18 @@ df.chunked(size: Int, name: String)
 df.chunked(startIndices: List<Int>, name: String)
 ```
 
+If called on a [`DataColumn`](DataColumn.md), groups consecutive values of this column into lists of at most the given size
+and returns them as a [`ValueColumn`](DataColumn.md#valuecolumn) of lists.
+
+If called on a [`ColumnGroup`](DataColumn.md#columngroup) (or on a [`DataColumn`](DataColumn.md) of rows), splits it
+into a [`FrameColumn`](DataColumn.md#framecolumn) of sub-dataframes with at most the given number of rows in each
+chunk. The resulting [`FrameColumn`](DataColumn.md#framecolumn) inherits the name of the group (or the column of rows).
+
+```kotlin
+column.chunked(size: Int)
+columnGroup.chunked(size: Int)
+```
+
 ### Examples
 
 <!---FUN notebook_test_chunked_1-->

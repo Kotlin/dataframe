@@ -80,9 +80,11 @@ df.parse { date and value }
 
 You can get this list by accessing `availableParserTypes` on the [](#global-parser-options) as well.
 
-When `.parse()` is called on a single column and the input (`String`/`Char`) type is the same as the output type,
-(a.k.a., it cannot be parsed further) an `IllegalStateException` is thrown.
-To avoid this, use `col.tryParse()` instead.
+### On a DataColumn
+
+When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Char`, `parse()` attempts to convert the column
+to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type,
+(a.k.a., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
 
 ### Parser Options
 
@@ -112,11 +114,11 @@ Available parser options:
     * Enabled by global default
 * `parseExperimentalUuid: Boolean` is used to enable or disable parsing to the experimental [
   `kotlin.uuid.Uuid` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.uuid/-uuid/).
-    * Disabled by global default
+    * Enabled by global default from DataFrame 1.0.0-rc01
 * `parseExperimentalInstant: Boolean` is used to enable or disable parsing to the
   [`kotlin.time.Instant` class](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-instant/), available from
   Kotlin 2.1+. Will parse to `kotlinx.datetime.Instant` if `false`.
-    * Disabled by global default, enabled in DataFrame 1.0.0-Beta5.
+    * Enabled by global default from DataFrame 1.0.0-Beta5
 
 <inline-frame src="./resources/dfParseWithOptions.html" width="100%" height="500px"></inline-frame>
 

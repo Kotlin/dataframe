@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
@@ -92,6 +93,8 @@ public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> =
  *
  * `}`
  *
+ * For more information: [See `sortWith` on the documentation website.](https://kotlin.github.io/dataframe/sortby.html#sortwith)
+ *
  * @receiver The [DataColumn] to sort. This can be either a [ValueColumn], [FrameColumn], or [ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator] The [Comparator] to use for sorting the [DataColumn]. This can either be a [Comparator]<[T]> or
@@ -119,6 +122,8 @@ private typealias CommonDataColumnSortWithDocs = Nothing
  *
  * `}`
  *
+ * For more information: [See `sortWith` on the documentation website.](https://kotlin.github.io/dataframe/sortby.html#sortwith)
+ *
  * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.
  * @param [comparator] The [Comparator] to use for sorting the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. This can either be a [Comparator]<[T]> or
@@ -145,6 +150,8 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
  * &nbsp;&nbsp;&nbsp;&nbsp;`name.`[sortWith][org.jetbrains.kotlinx.dataframe.api.sortWith]`(myComparator) `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `[allAfter][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`(name)`
  *
  * `}`
+ *
+ * For more information: [See `sortWith` on the documentation website.](https://kotlin.github.io/dataframe/sortby.html#sortwith)
  *
  * @receiver The [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] to sort. This can be either a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn], [FrameColumn][org.jetbrains.kotlinx.dataframe.columns.FrameColumn], or [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and will
  *   dictate the return type of the function.

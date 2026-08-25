@@ -67,7 +67,7 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
  *
  * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
  *
- * For more information: {@include [DocumentationUrls.GroupBy]}
+ * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Concat]}
  *
  * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
  */

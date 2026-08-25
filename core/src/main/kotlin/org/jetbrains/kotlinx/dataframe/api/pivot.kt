@@ -325,6 +325,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [\other].
      *
+     * For more information: {@include [DocumentationUrls.Pivot]}
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [\other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -867,7 +869,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
  *
  * See [GroupBy.pivot] and [PivotGroupByDocs.Aggregation] for more information.
  *
- * For more information: {@include [DocumentationUrls.PivotInsideAggregationStatistics]}
+ * For more information: {@include [DocumentationUrls.PivotInsideAggregate]}
  *
  * Check out [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1262,7 +1264,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      *
      * Returns a new [DataFrame] with the [groupBy] key columns
      * and the [pivot] keys as top-level columns on top level,
-     * and the correspodning aggregated values in new nested columns.
+     * and the corresponding aggregated values in new nested columns.
      *
      * @include [AggregateDslDocs]
      * {@set [AggregateDslDocs.AGGREGATE_DSL_TYPE] [AggregateDsl]}

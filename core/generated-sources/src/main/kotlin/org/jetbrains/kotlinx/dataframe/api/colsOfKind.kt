@@ -8,9 +8,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -123,6 +125,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -161,6 +165,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -191,7 +197,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun ColumnSet<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -206,6 +212,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -233,7 +241,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         asSingleColumn().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -248,6 +256,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -275,7 +285,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> =
         this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
@@ -290,6 +300,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -317,7 +329,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun String.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
@@ -328,6 +340,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -357,7 +371,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
@@ -368,6 +382,8 @@ public interface ColsOfKindColumnsSelectionDsl {
      * [colsOfKind][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.colsOfKind] can be called using any of the supported [APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis] (+ [ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]).
      *
      * This function operates solely on columns at the top-level.
+     *
+     * For more information: [See `colsOfKind` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of-kind)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar]
      *
@@ -395,7 +411,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     public fun ColumnPath.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
-        filter: ColumnFilter<*> = { true },
+        filter: (ColumnWithPath<*>) -> Boolean = { true },
     ): ColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion

@@ -16,12 +16,6 @@ Step-by-step setup guide for using Kotlin DataFrame in different environments li
 
 Kotlin DataFrame is supported in multiple environments — choose the one that suits you best and follow the setup steps.
 
-- [**Setup in Kotlin Notebook**](SetupKotlinNotebook.md) — one-line Kotlin DataFrame setup for powerful interactive 
-[Kotlin notebooks in IntelliJ IDEA and Android Studio](https://kotlinlang.org/docs/kotlin-notebook-overview.html). 
-No configuration required, full IDE support.
-Perfect for learning Kotlin DataFrame basics and experimenting, and a great professional tool
-for [data analysis](https://kotlinlang.org/docs/data-analysis-overview.html).
-
 - [**Setup in Gradle**](SetupGradle.md) — add Kotlin DataFrame to your Gradle project for convenient data handling 
 in your Kotlin applications.
 
@@ -30,6 +24,12 @@ in your Kotlin applications.
 
 - [**Setup on Android**](SetupAndroid.md) — use Kotlin DataFrame in your Android apps to simplify local data processing 
 and transformation.
+
+- [**Setup in Kotlin Notebook**](SetupKotlinNotebook.md) — one-line Kotlin DataFrame setup for powerful interactive
+  [Kotlin notebooks in IntelliJ IDEA and Android Studio](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
+  No configuration required, full IDE support.
+  Perfect for learning Kotlin DataFrame basics and experimenting, and a great professional tool
+  for [data analysis](https://kotlinlang.org/docs/data-analysis-overview.html).
 
 - [**Setup on Datalore**](SetupDatalore.md) — run Kotlin DataFrame in 
 [JetBrains Datalore](https://www.jetbrains.com/datalore/) notebooks, 

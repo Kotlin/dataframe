@@ -91,8 +91,8 @@ gradlePlugin {
 }
 
 sourceSets {
-    val main by getting
-    val test by getting
+    val main = getByName("main")
+    val test = getByName("test")
     val testRuntimeClasspath by configurations
     create("integrationTest") {
         kotlin.srcDir("src/integrationTest/kotlin")
@@ -101,7 +101,7 @@ sourceSets {
     }
 }
 
-val integrationTestConfiguration by configurations.creating {
+val integrationTestConfiguration = configurations.create("integrationTestConfiguration") {
     extendsFrom(configurations.testImplementation.get())
 }
 

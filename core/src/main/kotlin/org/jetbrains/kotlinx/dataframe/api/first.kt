@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -33,6 +34,8 @@ import kotlin.reflect.KProperty
 /**
  * Returns the first value in this [DataColumn].
  *
+ * For more information: {@include [DocumentationUrls.FirstOnColumn]}
+ *
  * See also [firstOrNull], [last], [take], [takeLast].
  *
  * @return The first value in this [DataColumn].
@@ -43,6 +46,8 @@ public fun <T> DataColumn<T>.first(): T = get(0)
 
 /**
  * Returns the first value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ *
+ * For more information: {@include [DocumentationUrls.FirstOrNullOnColumn]}
  *
  * See also [first], [last], [take], [takeLast].
  *
@@ -59,6 +64,8 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  * // find the amount of the first transaction over 100 euros
  * df.amount.first { it > 100 }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.FirstOnColumn]}
  *
  * See also [firstOrNull], [last], [take], [takeLast].
  *
@@ -87,6 +94,8 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  * df.amount.firstOrNull { it > 100 }
  * ```
  *
+ * For more information: {@include [DocumentationUrls.FirstOrNullOnColumn]}
+ *
  * See also [first], [last], [take], [takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
@@ -105,6 +114,8 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame].
+ *
+ * For more information: {@include [DocumentationUrls.First]}
  *
  * See also [firstOrNull][DataFrame.firstOrNull],
  * [last][DataFrame.last],
@@ -125,6 +136,8 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 
 /**
  * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ *
+ * For more information: {@include [DocumentationUrls.FirstOrNull]}
  *
  * See also [first][DataFrame.first],
  * [last][DataFrame.last],
@@ -149,6 +162,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * // find the first transaction with amount over 100 euros
  * df.first { amount > 100 }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.First]}
  *
  * See also [firstOrNull][DataFrame.firstOrNull],
  * [last][DataFrame.last],
@@ -184,6 +199,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * // or 'null' if there is no such transaction
  * df.firstOrNull { amount > 100 }
  * ```
+ *
+ * For more information: {@include [DocumentationUrls.FirstOrNull]}
  *
  * See also [first][DataFrame.first],
  * [last][DataFrame.last],
@@ -223,6 +240,10 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  * df.groupBy { customerId }.first().concat()
  * ```
  *
+ * For more information: {@include [DocumentationUrls.First]}
+ *
+ * For more information about [GroupBy] and [first] with examples: {@include [DocumentationUrls.GroupBy]}
+ *
  * See also [last][GroupBy.last].
  *
  * @return A [ReducedGroupBy] containing the first [row][DataRow]
@@ -252,6 +273,10 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * df.groupBy { customerId }.first { total > 100 }.concat()
  * ```
  *
+ * For more information: {@include [DocumentationUrls.First]}
+ *
+ * For more information about [GroupBy] and [first] with examples: {@include [DocumentationUrls.GroupBy]}
+ *
  * See also [last][GroupBy.last].
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
@@ -271,7 +296,9 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the first [row][DataRow] from each group,
  * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
+ * For more information: {@include [DocumentationUrls.First]}
+ *
+ * For more information about [Pivot] and [first] with examples: {@include [DocumentationUrls.Pivot]}
  *
  * ### Example
  * ```kotlin
@@ -291,7 +318,9 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row, matching the [predicate],
  * from the corresponding group in each column.
  *
- * For more information about [Pivot] with examples: {@include [DocumentationUrls.Pivot]}
+ * For more information: {@include [DocumentationUrls.First]}
+ *
+ * For more information about [Pivot] and [first] with examples: {@include [DocumentationUrls.Pivot]}
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
@@ -326,6 +355,8 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
  * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
  *
+ * For more information: {@include [DocumentationUrls.First]}
+ *
  * For more information about [PivotGroupBy] with examples: {@include [DocumentationUrls.PivotGroupBy]}
  *
  * ### Example
@@ -354,6 +385,8 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
  * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
  * (except the grouping key).
+ *
+ * For more information: {@include [DocumentationUrls.First]}
  *
  * @include [DocumentationUrls.PivotGroupBy]
  *
@@ -446,6 +479,8 @@ public interface FirstColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
+     * For more information: {@include [DocumentationUrls.FirstLastSingleCols]}
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -479,7 +514,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     @Interpretable("First0")
-    public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): SingleColumn<C> =
+    public fun <C> ColumnSet<C>.first(condition: (ColumnWithPath<C>) -> Boolean = { true }): SingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
             .singleOrNullWithTransformerImpl()
@@ -491,7 +526,7 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("First1")
-    public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnsSelectionDsl<*>.first(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         asSingleColumn().firstCol(condition)
 
     /**
@@ -501,15 +536,16 @@ public interface FirstColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
      */
     @Interpretable("First2")
-    public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
-        this.ensureIsColumnGroup().asColumnSet().first(condition)
+    public fun SingleColumn<DataRow<*>>.firstCol(
+        condition: (ColumnWithPath<*>) -> Boolean = { true },
+    ): SingleColumn<*> = this.ensureIsColumnGroup().asColumnSet().first(condition)
 
     /**
      * @include [CommonFirstDocs]
      * @set [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun String.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun String.firstCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -521,7 +557,7 @@ public interface FirstColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun KProperty<*>.firstCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 
     /**
@@ -529,7 +565,7 @@ public interface FirstColumnsSelectionDsl {
      * @set [CommonFirstDocs.Examples]
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
-    public fun ColumnPath.firstCol(condition: ColumnFilter<*> = { true }): SingleColumn<*> =
+    public fun ColumnPath.firstCol(condition: (ColumnWithPath<*>) -> Boolean = { true }): SingleColumn<*> =
         columnGroup(this).firstCol(condition)
 }
 
