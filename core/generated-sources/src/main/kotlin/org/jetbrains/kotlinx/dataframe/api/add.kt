@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -36,7 +37,7 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param columns columns to add.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -55,7 +56,7 @@ public fun <T> DataFrame<T>.add(vararg columns: BaseColumn<*>): DataFrame<T> = a
  *
  * Returns a new [DataFrame] with the new [columns] appended to the original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param columns columns to add.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -85,7 +86,7 @@ public fun <T> DataFrame<T>.addAll(columns: Iterable<BaseColumn<*>>): DataFrame<
  * Returns a new [DataFrame] with the columns from the specified
  * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param dataFrames dataFrames to get columns from.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -105,7 +106,7 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: DataFrame<*>): DataFrame<T> =
  * Returns a new [DataFrame] with the columns from the specified
  * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param dataFrames dataFrames to get columns from.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -122,7 +123,7 @@ public fun <T> DataFrame<T>.addAll(vararg dataFrames: DataFrame<*>): DataFrame<T
  * Returns a new [DataFrame] with the columns from the specified
  * [dataFrames] appended to the original list of [DataFrame.columns].
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param dataFrames dataFrames to get columns from.
  * @throws [DuplicateColumnNamesException] if columns in an expected result have repeated names.
@@ -148,6 +149,8 @@ public interface AddDataRow<out T> : DataRow<T> {
      * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
      *
      * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
+     *
+     * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
      *
      * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
      */
@@ -194,7 +197,7 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
  * }
  * ```
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.
@@ -240,7 +243,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
  * [newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue] to reference values already computed in the new column.
  * For example, use `prev().newValue()` to access the new column value from the previous row.
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * Returns a new [DataFrame] with the new column inserted at the given [path].
  *
@@ -409,7 +412,7 @@ public class AddDsl<T>(
  * }
  * ```
  *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
+ * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
  *
  * @param body An [AddDsl] expression used to define new columns and column groups.
  * @return A new [DataFrame] with the added columns.
@@ -436,6 +439,10 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * Returns a new [GroupBy] with the new column
  * appended to each group [DataFrame] to the original list of [DataFrame.columns].
  *
+ * Check out [`GroupBy grammar`][Grammar].
+ *
+ * For more information: [See "`GroupBy` Transformation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#transformation)
+ *
  * ## Example
  *
  * ```kotlin
@@ -451,8 +458,6 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  *     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
  * }
  * ```
- *
- * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html).
  *
  * @param name name for a new column.
  * If it is empty, a unique column name will be generated.

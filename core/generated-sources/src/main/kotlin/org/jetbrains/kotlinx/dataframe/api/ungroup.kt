@@ -33,7 +33,7 @@ public class UngroupWrongColumnKindException(public val df: DataFrame<*>, public
  *
  * See [Selecting Columns][UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group].
  */
@@ -58,6 +58,9 @@ internal interface UngroupDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
      *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
@@ -102,7 +105,7 @@ internal interface UngroupDocs {
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload
@@ -115,6 +118,9 @@ internal interface UngroupDocs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -152,7 +158,7 @@ public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFram
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.UngroupDocs.UngroupSelectingOptions].
  *
- * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
+ * For more information: [See `ungroup` on the documentation website.](https://kotlin.github.io/dataframe/ungroup.html)
  *
  * Reverse operation: [group][org.jetbrains.kotlinx.dataframe.api.group].
  * ### This Ungroup Overload

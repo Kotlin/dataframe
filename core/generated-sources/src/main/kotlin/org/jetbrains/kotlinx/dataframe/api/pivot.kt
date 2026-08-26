@@ -181,7 +181,7 @@ internal interface PivotDocs {
      *
      * Check out [`Pivot grammar`][Grammar].
      *
-     * For more information: [See "Pivot` reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
+     * For more information: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
      */
     typealias Reducing = Nothing
 
@@ -215,7 +215,7 @@ internal interface PivotDocs {
      *
      * Check out [`Pivot grammar`][Grammar].
      *
-     * For more information: [See "Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
+     * For more information: [See "`Pivot` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation)
      */
     typealias Aggregation = Nothing
 
@@ -317,6 +317,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -331,6 +333,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -344,6 +348,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
      *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+     *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
      * columns keys) in the hierarchy.
@@ -356,6 +362,8 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
      *
      * In the resulting [Pivot][org.jetbrains.kotlinx.dataframe.api.Pivot], the receiver column (or columns) will appear
      * one level above the keys from columns provided by [other].
+     *
+     * For more information: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
      *
      * @receiver pivot key column(s) that appear **above** in the hierarchy.
      * @param [other] pivot key column(s) that appear **below** (as child keys of the receiver
@@ -922,6 +930,9 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
+ *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -995,6 +1006,9 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: B
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -1826,7 +1840,7 @@ public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResol
  *
  * Check out [`Pivot grammar`][Grammar].
  *
- * For more information, refer to: [See "Pivot` reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
+ * For more information, refer to: [See "`Pivot` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#reducing)
  */
 public class ReducedPivot<T>(
     @PublishedApi internal val pivot: Pivot<T>,
@@ -1893,7 +1907,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      *
      * Returns a new [DataFrame] with the [groupBy] key columns
      * and the [pivot] keys as top-level columns on top level,
-     * and the correspodning aggregated values in new nested columns.
+     * and the corresponding aggregated values in new nested columns.
      *
      * [AggregateDsl] allows to compute statistics on the columns within groups in [PivotGroupBy]
      * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [expression][body] is applied to each group independently.

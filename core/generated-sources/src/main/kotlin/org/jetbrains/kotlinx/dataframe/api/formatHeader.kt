@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.formatHeaderImpl
 
 // region docs
@@ -18,6 +19,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.formatHeaderImpl
  * - Center the header: `attr("text-align", "center")`
  * - Make it bold: `bold`
  * - Set a custom color: `textColor(rgb(10, 10, 10))`
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public typealias HeaderColFormatter<C> = FormattingDsl.(col: ColumnWithPath<C>) -> CellAttributes?
 
@@ -29,6 +32,8 @@ public typealias HeaderColFormatter<C> = FormattingDsl.(col: ColumnWithPath<C>) 
  *
  * Header formatting is additive and supports nested column groups: styles specified for a parent group
  * are inherited by its child columns unless overridden for the child.
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public class HeaderFormatClause<T, C>(
     internal val df: DataFrame<T>,
@@ -51,6 +56,8 @@ public class HeaderFormatClause<T, C>(
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T, C> DataFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): HeaderFormatClause<T, C> =
     HeaderFormatClause(this, columns)
@@ -62,6 +69,8 @@ public fun <T, C> DataFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): Hea
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T> DataFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
@@ -73,6 +82,8 @@ public fun <T> DataFrame<T>.formatHeader(vararg columns: String): HeaderFormatCl
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T> DataFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> = HeaderFormatClause(this)
 
@@ -87,6 +98,8 @@ public fun <T> DataFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> = Header
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T, C> FormattedFrame<T>.formatHeader(columns: ColumnsSelector<T, C>): HeaderFormatClause<T, C> =
     HeaderFormatClause(
@@ -103,6 +116,8 @@ public fun <T, C> FormattedFrame<T>.formatHeader(columns: ColumnsSelector<T, C>)
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T> FormattedFrame<T>.formatHeader(vararg columns: String): HeaderFormatClause<T, Any?> =
     formatHeader { columns.toColumnSet() }
@@ -114,6 +129,8 @@ public fun <T> FormattedFrame<T>.formatHeader(vararg columns: String): HeaderFor
  *
  * This does not immediately produce a [FormattedFrame]; instead it returns a [HeaderFormatClause]
  * which must be finalized using [HeaderFormatClause.with].
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
     HeaderFormatClause(
@@ -135,6 +152,8 @@ public fun <T> FormattedFrame<T>.formatHeader(): HeaderFormatClause<T, Any?> =
  *
  *  returned attributes using [CellAttributes.and]. If a parent column group is selected, its attributes are
  * applied to its children unless explicitly overridden.
+ *
+ * For more information: [See `formatHeader` on the documentation website.](https://kotlin.github.io/dataframe/format.html#formatheader)
  */
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> HeaderFormatClause<T, C>.with(formatter: HeaderColFormatter<C>): FormattedFrame<T> =

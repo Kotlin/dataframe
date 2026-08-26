@@ -106,6 +106,9 @@ internal interface FillNulls {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -171,6 +174,9 @@ private typealias SetFillNullsOperationArg = Nothing
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -413,6 +419,9 @@ internal interface FillNaNs {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -475,6 +484,9 @@ internal interface FillNaNs {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -659,6 +671,9 @@ internal interface FillNA {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -721,6 +736,9 @@ internal interface FillNA {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -851,6 +869,9 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -989,6 +1010,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
  * ## The Drop Nulls Operation
  *
  * Removes `null` values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  */
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
     (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
@@ -1019,6 +1042,9 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -1156,6 +1182,8 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = 
  * ## The Drop `NA` Operation
  *
  * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
@@ -1189,6 +1217,9 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -1310,6 +1341,8 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T>
  * ## The Drop `NaN` Operation
  *
  * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  */
 public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
     when (typeClass) {

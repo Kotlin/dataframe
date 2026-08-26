@@ -55,6 +55,7 @@ import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_SEE_ALSO
 import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_COLUMN_TYPE
 import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -66,6 +67,8 @@ import java.math.BigInteger
  * of this {@get [NOT_COLUMN_TYPE] [DataColumn]}. {@get [NOT_NULL_NOTE]}
  *
  * {@get [NOT_DESCRIPTION]}
+ *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Not]}
  *
  * ### Example
  * ```kotlin
@@ -145,14 +148,16 @@ public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> =
  *
  * {@get [COLUMN_PLUS_NUMBER_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Plus]}
+ *
+ * See also {@get [COLUMN_PLUS_NUMBER_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [COLUMN_PLUS_NUMBER_EXAMPLE] // In a DataFrame of financial transactions,
  * // add a fixed fee to each transaction amount
  * df.amount + {@get [COLUMN_PLUS_NUMBER_EXAMPLE_NUMBER] 10}}
  * ```
- *
- * See also {@get [COLUMN_PLUS_NUMBER_SEE_ALSO]}.
  *
  * @param [\value] The value to add to each element of this {@get [COLUMN_PLUS_NUMBER_COLUMN_TYPE] [DataColumn]}.
  *
@@ -254,14 +259,16 @@ public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<B
  *
  * {@get [NUMBER_PLUS_COLUMN_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Plus]}
+ *
+ * See also {@get [NUMBER_PLUS_COLUMN_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [NUMBER_PLUS_COLUMN_EXAMPLE] // In a DataFrame of orders to deliver,
  * // compute the total delivery cost of each order from a fixed base fee and a variable distance fee.
  * {@get [NUMBER_PLUS_COLUMN_EXAMPLE_NUMBER] 10} + df.distanceFee}
  * ```
- *
- * See also {@get [NUMBER_PLUS_COLUMN_SEE_ALSO]}.
  *
  * @param [\column] A {@get [NUMBER_PLUS_COLUMN_COLUMN_TYPE] [DataColumn]} containing the elements to add
  * to this {@get [NUMBER_PLUS_COLUMN_NUMBER_TYPE] [Int]}.
@@ -374,6 +381,10 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  *
  * `null` values are converted to the string `"null"`.
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Plus]}
+ *
+ * See also {@get [COLUMN_PLUS_STRING_SEE_ALSO] [plus][DataColumn.plus]}.
+ *
  * ### Example
  * ```kotlin
  * // Given a DataFrame of temperature measurements, display temperatures with units
@@ -381,8 +392,6 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  * // or
  * df.temperature + " °C"
  * ```
- *
- * See also {@get [COLUMN_PLUS_STRING_SEE_ALSO] [plus][DataColumn.plus]}.
  *
  * @param [\str] The [String] to append to each element of this {@get [COLUMN_PLUS_STRING_RECEIVER] [AnyCol]}.
  *
@@ -425,14 +434,16 @@ public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<Str
  *
  * {@get [COLUMN_MINUS_NUMBER_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Minus]}
+ *
+ * See also {@get [COLUMN_MINUS_NUMBER_SEE_ALSO] [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [COLUMN_MINUS_NUMBER_EXAMPLE] // In a DataFrame of financial transactions,
  * // subtract a fixed fee from each transaction amount
  * df.amount - {@get [COLUMN_MINUS_NUMBER_EXAMPLE_NUMBER] 10}}
  * ```
- *
- * See also {@get [COLUMN_MINUS_NUMBER_SEE_ALSO] [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div]}.
  *
  * @return A {@get [COLUMN_MINUS_NUMBER_COLUMN_TYPE] [DataColumn]} containing the results of subtracting [\value]
  * from each element of this {@get [COLUMN_MINUS_NUMBER_COLUMN_TYPE] [DataColumn]}.
@@ -523,14 +534,16 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
  *
  * {@get [NUMBER_MINUS_COLUMN_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Minus]}
+ *
+ * See also {@get [NUMBER_MINUS_COLUMN_SEE_ALSO] [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [NUMBER_MINUS_COLUMN_EXAMPLE] // Given a budget of 1000 euros per employee,
  * // compute the remaining budget for each employee after expenses
  * val remainingBudget = {@get [NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER] 1000} - df.expenses}
  * ```
- *
- * See also {@get [NUMBER_MINUS_COLUMN_SEE_ALSO] [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div]}.
  *
  * @param [\column] A {@get [NUMBER_MINUS_COLUMN_COLUMN_TYPE] [DataColumn]} containing the elements to subtract
  * from this {@get [NUMBER_MINUS_COLUMN_NUMBER_TYPE] [Int]}.
@@ -634,6 +647,8 @@ public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn
  *
  * {@get [UNARY_MINUS_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.UnaryMinus]}
+ *
  * ### Example
  * ```kotlin
  * // In a DataFrame of financial transactions,
@@ -705,14 +720,16 @@ public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> 
  *
  * {@get [TIMES_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Times]}
+ *
+ * See also {@get [TIMES_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [TIMES_EXAMPLE] // In a DataFrame with distances in kilometers,
  * // convert them to meters
  * val distanceMeters = df.distanceKm * {@get [TIMES_EXAMPLE_NUMBER] 1000}}
  * ```
- *
- * See also {@get [TIMES_SEE_ALSO]}.
  *
  * @param [\value] The value to multiply each element of this {@get [TIMES_COLUMN_TYPE] [DataColumn]} by.
  *
@@ -815,14 +832,16 @@ public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<
  *
  * {@get [COLUMN_DIV_NUMBER_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Div]}
+ *
+ * See also {@get [COLUMN_DIV_NUMBER_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [COLUMN_DIV_NUMBER_EXAMPLE] // In a DataFrame of item counts,
  * // compute how many full boxes of 10 items can be formed
  * val fullBoxes = df.itemCount / 10}
  * ```
- *
- * See also {@get [COLUMN_DIV_NUMBER_SEE_ALSO]}.
  *
  * @param [\value] The value to divide each element of this {@get [COLUMN_DIV_NUMBER_COLUMN_TYPE] [DataColumn]} by.
  *
@@ -946,14 +965,16 @@ public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<Bi
  *
  * {@get [NUMBER_DIV_COLUMN_NULL_NOTE]}
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Div]}
+ *
+ * See also {@get [NUMBER_DIV_COLUMN_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [NUMBER_DIV_COLUMN_EXAMPLE] // In a DataFrame of tasks with estimated hours,
  * // compute how many tasks can fit into a fixed 40-hour work week
  * val tasksPerWeek = 40 / df.estimatedHours}
  * ```
- *
- * See also {@get [NUMBER_DIV_COLUMN_SEE_ALSO]}.
  *
  * @param [\column] A {@get [NUMBER_DIV_COLUMN_COLUMN_TYPE] [DataColumn]} containing the elements
  * to divide this {@get [NUMBER_DIV_COLUMN_DIVIDEND_TYPE] [Int]} by.
@@ -1086,12 +1107,14 @@ public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<B
  * Returns a [DataColumn] containing the [results][Boolean] of comparing each element of this [DataColumn]
  * with [\value] {@get [COMPARE_DESCRIPTION]}.
  *
+ * For more information: {@include [DocumentationUrls.ColumnArithmetics.Compare]}
+ *
+ * See also {@get [COMPARE_SEE_ALSO]}.
+ *
  * ### Example
  * ```kotlin
  * {@get [COMPARE_EXAMPLE]}
  * ```
- *
- * See also {@get [COMPARE_SEE_ALSO]}.
  *
  * @param [\value] The value to compare each element of this [DataColumn] with.
  *

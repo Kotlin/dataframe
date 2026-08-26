@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -152,6 +153,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar]
      *
      * #### Examples:
@@ -183,6 +186,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
@@ -221,6 +226,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -251,6 +258,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
@@ -287,6 +296,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -315,6 +326,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
@@ -352,6 +365,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -380,6 +395,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
@@ -415,6 +432,8 @@ public interface SingleColumnsSelectionDsl {
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
      *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
@@ -442,6 +461,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *
@@ -475,6 +496,8 @@ public interface SingleColumnsSelectionDsl {
      * This function operates solely on columns at the top-level.
      *
      * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     *
+     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar]
      *

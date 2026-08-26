@@ -63,6 +63,9 @@ internal interface Select {
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -122,6 +125,9 @@ internal interface Select {
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -295,6 +301,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -339,6 +347,8 @@ public interface SelectColumnsSelectionDsl {
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
@@ -385,6 +395,8 @@ public interface SelectColumnsSelectionDsl {
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
@@ -433,6 +445,8 @@ public interface SelectColumnsSelectionDsl {
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
      *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -477,6 +491,8 @@ public interface SelectColumnsSelectionDsl {
      * the [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] you are selecting from.
      *
      * The [invoke][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
+     *
+     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar]
      *

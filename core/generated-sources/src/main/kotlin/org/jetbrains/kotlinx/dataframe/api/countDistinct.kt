@@ -39,7 +39,7 @@ import kotlin.reflect.KProperty
 public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
 
 /**
- * Returns number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns the number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Compares values in the selected columns and returns
  * the number of unique values combinations.
@@ -60,6 +60,9 @@ public fun DataFrame<*>.countDistinct(): Int = countDistinct { all() }
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -83,7 +86,7 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 }
 
 /**
- * Returns number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Returns the number of distinct combinations of values in selected [columns] in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Compares values in the selected columns and returns
  * the number of unique values combinations.
@@ -189,6 +192,9 @@ public fun <T> Grouped<T>.countDistinct(resultName: String = "countDistinct"): D
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *

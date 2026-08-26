@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -148,6 +149,8 @@ public interface ColsOfColumnsSelectionDsl {
      *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
      *   after it.
      *
+     * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -199,6 +202,8 @@ public interface ColsOfColumnsSelectionDsl {
      *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
      *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
+     *
+     * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -252,6 +257,8 @@ public interface ColsOfColumnsSelectionDsl {
      *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
      *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
+     *
+     * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
@@ -308,6 +315,8 @@ public interface ColsOfColumnsSelectionDsl {
      *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
      *
+     * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -362,6 +371,8 @@ public interface ColsOfColumnsSelectionDsl {
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -414,6 +425,8 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> B
  *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
+ *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -470,6 +483,8 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -523,6 +538,8 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
+ *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
@@ -575,6 +592,8 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
  *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
+ *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
@@ -630,6 +649,8 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
  *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
+ *
+ * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *

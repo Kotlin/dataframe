@@ -53,7 +53,7 @@ import kotlin.reflect.typeOf
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  */
 internal interface CorrDocs {
 
@@ -77,6 +77,9 @@ internal interface CorrDocs {
      * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
+     *
+     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
      *
      * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
@@ -171,7 +174,7 @@ public class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: Col
  * [Boolean] values are converted into 1 for true and 0 for false.
  * All other columns are ignored.
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  *
  * @return A square correlation matrix as a [DataFrame], where both rows and columns correspond to the original columns.
  */
@@ -213,7 +216,7 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr Overload
  *
  *
@@ -224,6 +227,9 @@ public fun <T> DataFrame<T>.corr(): DataFrame<T> =
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -282,7 +288,7 @@ public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> 
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr Overload
  *
  *
@@ -333,7 +339,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * See also: [Selecting Columns][SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  */
 internal typealias CorrWithDocs = Nothing
 
@@ -353,7 +359,7 @@ internal typealias CorrWithDocs = Nothing
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr With Overload
  *
  *
@@ -364,6 +370,9 @@ internal typealias CorrWithDocs = Nothing
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
@@ -402,7 +411,7 @@ public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataF
  *
  * See also: [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  * ### This Corr With Overload
  *
  *
@@ -444,7 +453,7 @@ public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): D
  *
  * Check out [Grammar].
  *
- * For more information, see: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
+ * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
  *
  * @return A [DataFrame] containing the pairwise correlation matrix.
  */

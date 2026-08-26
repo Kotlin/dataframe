@@ -67,6 +67,8 @@ public interface ColumnDescription {
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
+ * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
+ *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
  *         The output contains one row per described column with the summary metrics as columns.
  */
@@ -107,6 +109,8 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  * For non-numeric columns, statistical metrics
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
+ *
+ * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
  *         The output contains one row per described column with the summary metrics as columns.
@@ -164,6 +168,9 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
+ *
+ * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for specifying columns type- and name-safe.
  *
  * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *

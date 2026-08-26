@@ -4052,6 +4052,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/SortDsl : or
 	public static synthetic fun nullsLast$default (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static synthetic fun nullsLast$default (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static synthetic fun nullsLast$default (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public fun reverse (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public fun reversed (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public fun reversed (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public fun reversed (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/SortKt {
@@ -5369,6 +5373,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Do
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$AccessApis {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$ColumnArithmetics {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$DataRow {

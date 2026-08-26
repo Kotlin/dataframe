@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -37,7 +38,9 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 // region DataFrame
 
 /**
- * Returns a DataFrame containing first [n] rows.
+ * Returns a [DataFrame] containing first [n] rows.
+ *
+ * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
@@ -47,7 +50,9 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing last [n] rows.
+ * Returns a [DataFrame] containing last [n] rows.
+ *
+ * For more information: {@include [DocumentationUrls.TakeLast]}
  *
  * @throws IllegalArgumentException if [n] is negative.
  */
@@ -57,7 +62,9 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
 }
 
 /**
- * Returns a DataFrame containing first rows that satisfy the given [predicate].
+ * Returns a [DataFrame] containing first rows that satisfy the given [predicate].
+ *
+ * For more information: {@include [DocumentationUrls.TakeWhile]}
  */
 public inline fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
@@ -103,6 +110,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Take
      * @set [CommonTakeAndDropDocs.OPERATION] take
      * @set [CommonTakeAndDropDocs.NOUN] take
@@ -174,6 +182,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
+     * {@set [CommonTakeAndDropDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropDocs.TITLE] Take Last
      * @set [CommonTakeAndDropDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropDocs.NOUN] take
@@ -245,6 +254,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take
      * @set [CommonTakeAndDropWhileDocs.OPERATION] take
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
@@ -318,6 +328,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
+     * {@set [CommonTakeAndDropWhileDocs.URL] {@include [DocumentationUrls.TakeCols]}}
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] take

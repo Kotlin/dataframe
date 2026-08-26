@@ -39,7 +39,6 @@ import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 import kotlin.math.ln
@@ -105,32 +104,6 @@ class Analyze : TestBase() {
     fun describeColumns_strings() {
         // SampleStart
         df.describe { "age" and "name".allCols() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countCondition() {
-        // SampleStart
-        df.count { age > 15 }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun count() {
-        // SampleStart
-        df.count()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun countAggregation() {
-        // SampleStart
-        df.groupBy { city }.count()
-        df.pivot { city }.count { age > 18 }
-        df.pivot { name.firstName }.groupBy { name.lastName }.count()
         // SampleEnd
     }
 
@@ -473,16 +446,6 @@ class Analyze : TestBase() {
         df.cumSum { weight }
         df.weight.cumSum()
         df.groupBy { city }.cumSum { weight }.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun valueCounts() {
-        // SampleStart
-        df.city.valueCounts()
-
-        df.valueCounts { name and city }
         // SampleEnd
     }
 }

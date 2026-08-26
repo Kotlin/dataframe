@@ -41,6 +41,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.LazyMap
@@ -87,7 +88,7 @@ internal interface StringParser<out T> {
     /**
      * Applies [ParserOptions] and optionally supplied previously [attemptedParsers]
      * to get the actual [string parser function][ParserFunction] that
-     * can parse [String] to [T] (or `null` if unsucessful).
+     * can parse [String] to [T] (or `null` if unsuccessful).
      *
      * If the returned [ParserFunction][ParserFunction]` == `[SKIP_PARSER][SKIP_PARSER], the function
      * will always return `null` for the current [global parser options][Parsers] and given arguments
@@ -158,7 +159,7 @@ internal fun <T> ParserFunction<T>.withFallback(fallbackFunction: ParserFunction
 internal fun <T> parseBy(body: ParserFunction<T>): ParserFunction<T> = body
 
 /**
- * [ParserFunction] that aways returns `null`.
+ * [ParserFunction] that always returns `null`.
  * Useful if a parser needs to be skipped based on the provided [ParserOptions].
  */
 internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
@@ -1085,6 +1086,8 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.
+ *
+ * For more information: {@include [DocumentationUrls.ParseOnDataColumn]}
  *
  * @param options options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)

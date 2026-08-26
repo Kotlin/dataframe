@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
@@ -140,6 +141,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar]
      *
      * #### For example:
@@ -216,6 +219,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -265,6 +270,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * NOTE: This overload is an identity function and can be omitted.
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -318,6 +325,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -376,6 +385,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -428,6 +439,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -482,6 +495,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -534,6 +549,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -592,6 +609,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -642,6 +661,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -697,6 +718,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -749,6 +772,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -803,6 +828,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -862,6 +889,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -915,6 +944,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -966,6 +997,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1020,6 +1053,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1077,6 +1112,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1131,6 +1168,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1187,6 +1226,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1240,6 +1281,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1299,6 +1342,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1349,6 +1394,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1403,6 +1450,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1454,6 +1503,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1507,6 +1558,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1565,6 +1618,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1617,6 +1672,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1671,6 +1728,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1724,6 +1783,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1776,6 +1837,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1832,6 +1895,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1887,6 +1952,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -1939,6 +2006,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -1997,6 +2066,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2046,6 +2117,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2099,6 +2172,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2150,6 +2225,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2204,6 +2281,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2257,6 +2336,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2309,6 +2390,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2367,6 +2450,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2418,6 +2503,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2474,6 +2561,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2527,6 +2616,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2583,6 +2674,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2637,6 +2730,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2690,6 +2785,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2748,6 +2845,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2802,6 +2901,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2854,6 +2955,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
@@ -2911,6 +3014,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -2966,6 +3071,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
+     *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *
      * #### For example:
@@ -3019,6 +3126,8 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     * For more information: [See `col` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#col)
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar]
      *

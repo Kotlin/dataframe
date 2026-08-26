@@ -25,6 +25,9 @@ df.shuffle()
 df.shuffle(random: Random)
 ```
 
+If called on a [`DataColumn`](DataColumn.md), returns a new [`DataColumn`](DataColumn.md) 
+with the same values in random order using the provided source of randomness or the default randomness.
+
 ### Examples
 
 <!---FUN notebook_test_shuffle_1-->
