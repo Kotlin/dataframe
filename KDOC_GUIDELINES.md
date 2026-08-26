@@ -498,6 +498,15 @@ private typealias Common~OperationName~Docs = Nothing
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
 
+Keep in mind that `@param` and `@return` have to stay at the end of a KDoc.
+So when a template already ends with them, you cannot `@include` it and then append
+overload-specific text after the include — that text would land inside the template's `@return`.
+Everything that differs between the overloads has to be passed *into* the template as a `@set`
+argument instead. That is why a template shared by several sibling overloads usually has one
+argument per varying part (receiver type, "See also" section, type parameter description, and so on),
+like
+[`CommonTakeAndDropDocs`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/CommonTakeAndDropDocs.kt).
+
 ### Grammar
 
 DSL Grammar (helpers usually are called simply `Grammar` and place inside the
@@ -564,6 +573,11 @@ internal interface CommonDoc {
 When using `@set` and `@get` / `$`, it's a good practice to use a reference as the key name.
 This makes the KDoc more refactor-safe, and it makes it easier to understand which arguments
 need to be provided for a certain template.
+
+A `@set` value may span several lines, but the indentation of the continuation lines is kept
+verbatim in the processed KDoc. Keep continuation lines at the same indentation as the first line:
+a hanging indent of four or more spaces is read by Markdown as a code block, so the whole
+paragraph would silently render as monospace.
 
 A good example of this concept can be found in the
 [`AllColumnsSelectionDsl.CommonAllSubsetDocs` documentation interface](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/all.kt).
