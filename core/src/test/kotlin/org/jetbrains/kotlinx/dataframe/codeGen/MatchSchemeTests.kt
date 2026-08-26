@@ -257,7 +257,7 @@ class MatchSchemeTests {
     }
 
     @Test
-    fun `column order inside a column group affects equality but not compare`() {
+    fun `column order inside a column group affects equality but not compare matches`() {
         val scheme1 = dataFrameOf(
             "group" to columnOf(
                 "a" to columnOf(1),
@@ -330,5 +330,11 @@ class MatchSchemeTests {
         (scheme == reordered) shouldBe false
         scheme.compare(reordered, LENIENT) shouldBe Matches
         same.hashCode() shouldNotBe reordered.hashCode()
+
+        val reorderedSame = typed.move { pageInfo.resultsPerPage }.after { pageInfo.snippets }.schema()
+
+        (reorderedSame == reordered) shouldBe true
+        reorderedSame.compare(reordered, LENIENT) shouldBe Matches
+        reorderedSame.hashCode() shouldBe reordered.hashCode()
     }
 }
