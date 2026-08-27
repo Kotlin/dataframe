@@ -498,6 +498,15 @@ we introduced the `AdvancedDbType` and `JdbcToDataFrameConverter` classes.
 This API is still experimental and may change in the future, but if you're interested in using it,
 check our [DuckDB implementation](https://github.com/Kotlin/dataframe/blob/master/dataframe-jdbc/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/db/DuckDb.kt).
 
+Another example is [SQLite](https://www.sqlite.org/datatype3.html), which uses [type affinity](https://www.sqlite.org/datatype3.html#type_affinity):
+every column is assigned one of five basic types, while the user-declared type serves as a hint and is exposed through metadata.
+
+However, the assigned column type does not always represent the actual values type,
+or you may want to provide custom type converters from primitive types
+(for example, to convert a `DATETIME` value stored as a `String`).
+`AdvancedDbType` and `JdbcToDataFrameConverter` help with these cases,
+making it easier to add support for custom types. 
+Check out [our SQLite implementation](https://github.com/Kotlin/dataframe/blob/master/dataframe-jdbc/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/db/Sqlite.kt).
+
 > **Note:** The set of overridable methods and properties may change in the next Beta release as we continue to improve
 > the API based on user feedback.
-

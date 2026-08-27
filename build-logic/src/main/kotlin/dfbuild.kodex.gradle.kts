@@ -63,6 +63,7 @@ afterEvaluate {
     )
 
     // use `project()` dependencies for connecting contextual KoDEx sources and -caches
+    // Any api/implementation/compileOnly project dependency is added as contextual context.
     val contextualProjects =
         sequenceOf(
             configurations.api,
@@ -94,7 +95,10 @@ afterEvaluate {
             ?.sourceDirectories
             ?.toList()
             ?: emptyList()
-    }.toSet()
+    }
+        // Adding the `:samples` module manually
+        .plus<List<File>>(listOf(findRootDir().resolve("samples/src/test/kotlin")))
+        .toSet()
 
     extension.contextualSourcesDirectories.convention(contextualProjectsSources)
 }

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toInstant
 import org.intellij.lang.annotations.Language
@@ -193,7 +194,7 @@ class SqliteTestCustomTypes {
                 char('-')
                 monthNumber()
                 char('-')
-                dayOfMonth()
+                day()
                 char(' ')
                 hour()
                 char(':')
