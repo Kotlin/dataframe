@@ -408,7 +408,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
         header
-            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .map { columnBuilder(it) named it } // create the columns and make sure to rename them to the given header
             .toDataFrame()
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =

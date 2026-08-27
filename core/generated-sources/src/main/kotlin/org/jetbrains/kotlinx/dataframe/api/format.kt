@@ -66,7 +66,7 @@ import kotlin.reflect.KProperty
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *
- * The [FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][FormatClause.with], [perRowCol][FormatClause.perRowCol], or [linearBg][FormatClause.linearBg].
@@ -311,7 +311,7 @@ internal interface FormatDocs {
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
@@ -383,7 +383,7 @@ public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatCla
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
@@ -442,7 +442,7 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
@@ -512,7 +512,7 @@ public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClaus
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
@@ -586,7 +586,7 @@ public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): Form
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].
@@ -646,7 +646,7 @@ public fun <T> FormattedFrame<T>.format(vararg columns: String): FormatClause<T,
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FormatDocs.FormatSelectingColumns].
  *
- * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause][org.jetbrains.kotlinx.dataframe.api.FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][org.jetbrains.kotlinx.dataframe.api.FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][org.jetbrains.kotlinx.dataframe.api.FormatClause.with], [perRowCol][org.jetbrains.kotlinx.dataframe.api.FormatClause.perRowCol], or [linearBg][org.jetbrains.kotlinx.dataframe.api.FormatClause.linearBg].

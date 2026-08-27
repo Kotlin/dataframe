@@ -80,7 +80,7 @@ import kotlin.reflect.typeOf
 internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
- *  allows to compute statistics on the
+ *  allows you to compute statistics on the
  * and store the results as a new column using [into][AggregateDsl.into].
  *
  *
@@ -100,10 +100,10 @@ internal typealias DataFrameAggregationStatistics = Nothing
 internal interface AggregateDslDocs
 
 /**
- * A specialized [ColumnsSelectionDsl] that allows to aggregate
+ * A specialized [ColumnsSelectionDsl] that allows you to aggregate
  * [DataFrame] or `DataFrame`-like structures ([GroupBy], [Pivot] or [PivotGroupBy]).
  *
- * [AggregateDsl] allows to compute statistics on the columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]
+ * [AggregateDsl] allows you to compute statistics on the columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]
  * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given aggregating expression is applied to each group independently.
  *
  *

@@ -1909,7 +1909,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * and the [pivot] keys as top-level columns on top level,
      * and the corresponding aggregated values in new nested columns.
      *
-     * [AggregateDsl] allows to compute statistics on the columns within groups in [PivotGroupBy]
+     * [AggregateDsl] allows you to compute statistics on the columns within groups in [PivotGroupBy]
      * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [expression][body] is applied to each group independently.
      *
      *

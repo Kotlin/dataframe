@@ -22,7 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * Returns a new [DataRow] with the original [pivot] keys as top-level columns on top level
  * and the corresponding aggregated values in new nested columns.
  *
- * [AggregateDsl] allows to compute statistics on the columns within groups in [Pivot]
+ * [AggregateDsl] allows you to compute statistics on the columns within groups in [Pivot]
  * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
  *
  *
@@ -78,7 +78,7 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * Returns a new [DataFrame] with the original [groupBy] key columns
  * and the corresponding aggregated values in new columns.
  *
- * [AggregateGroupedDsl][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows to compute statistics on the columns within groups in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
+ * [AggregateGroupedDsl][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows you to compute statistics on the columns within groups in [GroupBy][org.jetbrains.kotlinx.dataframe.api.GroupBy]
  * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given [aggregating expression][body] is applied to each group independently.
  *
  *
