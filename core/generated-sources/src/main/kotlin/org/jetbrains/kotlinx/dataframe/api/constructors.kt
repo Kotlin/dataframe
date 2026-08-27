@@ -312,7 +312,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 /**
  * Creates new [DataFrame] with given [columns].
  *
- * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitiled1", "untitled2" etc.
+ * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitled1", "untitled2" etc.
  *
  * All columns must have equal sizes.
  *

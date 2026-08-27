@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.NA
  *
  * You add additional constraints to an [IsBetterThan] function in the following fashion:
  *
- * Let's say you want a value to álways be returned when it satisfies the condition `isPreferred(it)`,
+ * Let's say you want a value to always be returned when it satisfies the condition `isPreferred(it)`,
  * but in all other cases, you just want the best.
  * Then you can write:
  * ```kt

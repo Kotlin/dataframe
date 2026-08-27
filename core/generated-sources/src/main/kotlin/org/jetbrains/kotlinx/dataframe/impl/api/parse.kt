@@ -440,7 +440,7 @@ internal object Parsers : GlobalParserOptions {
 
     /**
      * Parses a [string][str] using the given [java formatter][DateTimeFormatter] and [query]
-     * while avoiding exceptions. This avoidance is achieved by first trying to parse the string _unresovled_.
+     * while avoiding exceptions. This avoidance is achieved by first trying to parse the string _unresolved_.
      * If this is unsuccessful, we can simply return `null` without throwing an exception. Only if the string can
      * successfully be parsed unresolved, we try to parse it _resolved_.
      *
