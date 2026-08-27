@@ -133,6 +133,15 @@ of conversion by supplying a [custom converter](#custom-converters), for example
 
 <!---FUN forTypeWithConverter-->
 
+```kotlin
+val sqlite = Sqlite.withCustomConverters {
+    // Convert DATETIME values stored as strings in a non-standard format.
+    forType("DATETIME") { raw: String ->
+        LocalDateTime.parse(raw, customFormat)
+    }
+}
+```
+
 <!---END-->
 
 ### BOOLEAN — INTEGER 0/1 converted to Boolean
@@ -170,12 +179,24 @@ You can specify the expected column type (`Number`) explicitly:
 
 <!---FUN forColumnSpecifyType-->
 
+```kotlin
+val sqlite = Sqlite.withCustomConverters {
+    forColumn<Number?>("mixed_values")
+}
+```
+
 <!---END-->
 
 
 Or you can provide a converter to convert the values to the desired type:
 
 <!---FUN forColumnWithConverter-->
+
+```kotlin
+val sqlite = Sqlite.withCustomConverters {
+    forColumn("mixed_values") { raw: Number? -> raw?.toLong() }
+}
+```
 
 <!---END-->
 
@@ -209,6 +230,34 @@ Two overloads are available for each side:
   explicitly (`forType<Long?>("BIGINT")`) if you want a nullable column type.
 
 <!---FUN complexSqlite-->
+
+```kotlin
+val format = LocalDateTime.Format {
+    year(); char('-'); monthNumber(); char('-'); day()
+    char(' ')
+    hour(); char(':'); minute(); char(':'); second()
+    chars(" UTC")
+}
+
+val sqlite = Sqlite.withCustomConverters {
+    // Parse a custom text representation into Instant.
+    forType("MY_DATETIME") { raw: String? ->
+        raw?.let { LocalDateTime.parse(it, format).toInstant(TimeZone.UTC) }
+    }
+
+    // Explicitly treat values columns with of `LONGVARCHAR` type as nullable strings.
+    // This is necessary because SQLite type affinity assigns those columns the `NUMERIC`
+    // base type, causing DataFrame to expect integer values.
+    // No conversion is performed; only the expected value type is specified.
+    forType<String?>("LONGVARCHAR")
+
+    // Override conversion for a specific "time" column.
+    // Column-specific converters take precedence over type-specific converters.
+    forColumn("time") { raw: String -> raw.toDouble() }
+}
+
+val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
+```
 
 <!---END-->
 
