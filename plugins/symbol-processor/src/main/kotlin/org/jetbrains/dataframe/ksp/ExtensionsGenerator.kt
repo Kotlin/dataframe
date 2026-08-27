@@ -84,9 +84,9 @@ public class ExtensionsGenerator(
                     "DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES",
                 )
                 if (this@effectivelyPublicOrInternalOrNull != dataSchema) {
-                    append(", but it's parent $nameString is $visibility")
+                    append(", but its parent $nameString is $visibility")
                 } else {
-                    append("but is $visibility")
+                    append(", but is $visibility")
                 }
             }
             logger.error(message)
