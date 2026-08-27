@@ -475,7 +475,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
     }
 
     private fun createTestDatabase(connection: Connection) {
-        // Crate table Customer
+        // Create table Customer
         connection.createStatement().execute(
             """
             CREATE TABLE Customer (
