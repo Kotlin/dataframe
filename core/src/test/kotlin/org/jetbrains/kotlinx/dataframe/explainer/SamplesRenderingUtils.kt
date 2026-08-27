@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 val SamplesDisplayConfiguration = DisplayConfiguration(enableFallbackStaticTables = false)
 
 val WritersideStyle = DataFrameHtmlData(
-    // copy writerside stlyles
+    // copy writerside styles
     style =
         """
         body {

@@ -116,7 +116,7 @@ Also, you can use
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
 
-More about `@set` and `@get` connventions [here](#setget-references).
+More about `@set` and `@get` conventions [here](#setget-references).
 
 ```kotlin
 /**
@@ -184,7 +184,7 @@ public fun someFunction()
 ```
 
 Naming convention for KDoc-topic — the name must fully reflect its content at the end.
-In the future, we want to have a nice topic names with backtics 
+In the future, we want to have nice topic names with backticks 
 (like `` `Access API` `` instead of `AccessApis`), but 
 [it's not possible yet due to KoDEx bug](https://github.com/Jolanrensen/KoDEx/issues/97).
 
@@ -572,7 +572,7 @@ This interface provides a template for all overloads of `allBefore`,
 
 Nested in the documentation interface, there are several other KDoc-helpers that define the expected arguments
 of the template.
-These KDoc-helpes are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs itself,
+These KDoc-helpers are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs themselves,
 just a simple comment explaining what the argument is for.
 
 Other KDoc-helpers like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set

@@ -56,7 +56,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * `df.`[sortBy][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
  *
- * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
+ * @param [name] The name of the temporary column. Is empty by default ("untitled" in the DataFrame).
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
  */
