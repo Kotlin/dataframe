@@ -18,7 +18,7 @@ and the Kotlin type produced when the column is read into a DataFrame. Aliases a
 canonicalised by MySQL at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
-Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
+Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
 
 ## Numeric types
 

@@ -38,7 +38,7 @@ import kotlinx.datetime.LocalDateTime as KotlinLocalDateTime
 import kotlinx.datetime.LocalTime as KotlinLocalTime
 
 /**
- * Non-integraion tests for [DbType.getExpectedJdbcType] and related type-mapping logic.
+ * Non-integration tests for [DbType.getExpectedJdbcType] and related type-mapping logic.
  *
  * For each DB type implemented in Kotlin Dataframe, checks mapping between the all of SQL types and their
  * expected types for a [column][org.jetbrains.kotlinx.dataframe.DataColumn].

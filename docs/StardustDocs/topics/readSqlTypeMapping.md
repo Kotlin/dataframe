@@ -23,7 +23,7 @@ two steps using `DbType` — a class responsible for handling column metadata an
    before being placed into the DataFrame (`DbType.preprocessValue`). For example,
    `java.sql.Timestamp` is turned into `kotlin.time.Instant`.
 
-Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).`
+Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).`
 
 For some databases (such as [DuckDB](readSqlTypeMapping_DuckDB.md) and [SQLite](readSqlTypeMapping_SQLite.md)),
 this logic is overridden with custom dialect-specific converters based on column metadata —

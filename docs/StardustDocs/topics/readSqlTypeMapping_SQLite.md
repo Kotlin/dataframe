@@ -1,5 +1,7 @@
 [//]: # (title: SQLite type mapping)
 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.io.jdbc.SqliteSamples-->
+
 <web-summary>
 How SQLite's dynamic type system is mapped to Kotlin types when read into a Kotlin DataFrame,
 including the type-affinity rules DataFrame relies on.
@@ -59,7 +61,7 @@ DataFrame's SQLite handler resolves each column in the following order:
    DataFrame may expect a special type for some SQL type names (for example, `UUID`), while the Xerial driver only provides primitives.
    Consider using [custom converters](#custom-converters) to handle these cases.
 
-Nullable columns produce nullable Kotlin types (`Int?` instead of `Int`).
+Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
 
 ## INTEGER affinity
 
@@ -104,10 +106,12 @@ Declared type contains `BLOB` or the column has no declared type.
 
 ## NUMERIC affinity (fallback for everything else)
 
-### DATE / DATETIME / TIME / TIMESTAMP — column type is fixed, values are converted
+### DATE / DATETIME / TIME / TIMESTAMP
 
-The DataFrame column type is an idiomatic Kotlin date-time type; each row's value is
-converted from its storage class during preprocessing.
+SQLite stores [date and time values as `TEXT`, `INTEGER`, or `REAL`](https://sqlite.org/lang_datefunc.html).
+Kotlin DataFrame automatically converts columns with recognized date-time types into idiomatic Kotlin date-time types.
+
+Each value is converted according to its SQLite storage class during preprocessing.
 
 | Declared type | DataFrame column type            | Storage class → conversion                                                                                                                              |
 |---------------|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -122,16 +126,14 @@ reported as `Types.FLOAT`, and a `TIMESTAMP` column with an INTEGER value is rep
 `Types.INTEGER`. DataFrame's SQLite adapter looks at `sqlTypeName` (substring match: `DATETIME`,
 `TIMESTAMP`, `DATE`, `TIME`) to preserve the intended date-time semantics regardless.
 
-If a value cannot be parsed automatically (e.g., a `DATE` column contains an unexpected format), reading
+If a value cannot be parsed automatically (e.g., a `DATETIME` column contains an unexpected format), reading
 throws with a clear error message referencing the column name and stored value. Opt out
-of conversion by supplying a [custom converter](#custom-converters), e.g.
+of conversion by supplying a [custom converter](#custom-converters), for example:
 
-```kotlin
-val sqlite = Sqlite.withCustomConverters {
-    // Provide custom conversion for DATETIME columns.
-    forType("DATETIME") { raw: String -> Instant.parse(raw, customFormat) }
-}
-```
+
+<!---FUN forTypeWithConverter-->
+
+<!---END-->
 
 ### BOOLEAN — INTEGER 0/1 converted to Boolean
 
@@ -166,19 +168,17 @@ Assume we have a nullable `"mixed_values"` column for which the Xerial driver re
 
 You can specify the expected column type (`Number`) explicitly:
 
-```kotlin
-val sqlite = Sqlite.withCustomConverters {
-    forColumn<Number?>("mixed_values")
-}
-```
+<!---FUN forColumnSpecifyType-->
+
+<!---END-->
+
 
 Or you can provide a converter to convert the values to the desired type:
 
-```kotlin
-val sqlite = Sqlite.withCustomConverters {
-    forColumn("mixed_values") { raw: Number? -> raw?.toLong() }
-}
-```
+<!---FUN forColumnWithConverter-->
+
+<!---END-->
+
 
 ## STRICT tables
 
@@ -208,27 +208,9 @@ Two overloads are available for each side:
   mapping picks the wrong Kotlin type. Note: **nullability is part of `T`** — declare it
   explicitly (`forType<Long?>("BIGINT")`) if you want a nullable column type.
 
-```kotlin
-val format = LocalDateTime.Format {
-    year(); char('-'); monthNumber(); char('-'); day()
-    char(' ')
-    hour(); char(':'); minute(); char(':'); second()
-    chars(" UTC")
-}
+<!---FUN complexSqlite-->
 
-val sqlite = Sqlite.withCustomConverters {
-    // Parse a proprietary text format into Instant.
-    forType("MY_DATETIME") { raw: String? ->
-        raw?.let { LocalDateTime.parse(it, format).toInstant(TimeZone.UTC) }
-    }
-    // Pin LONGVARCHAR to String? even though SQLite affinity says NUMERIC.
-    forType<String?>("LONGVARCHAR")
-    // Override a specific column by name — this wins over any type-name override.
-    forColumn("ratio") { raw: String -> raw.toDouble() }
-}
-
-val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
-```
+<!---END-->
 
 ## SQLite specifics
 
