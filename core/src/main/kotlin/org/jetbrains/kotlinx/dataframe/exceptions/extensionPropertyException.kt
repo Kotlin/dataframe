@@ -16,7 +16,7 @@ private const val TROUBLESHOOTING_LINK =
  *
  * @param [e] any [Exception] caught inside `catch(e: Exception)`.
  * @param [columnName] rendered column name used in the resulting exception message.
- * @throws [IllegalStateException] with a custom message that depends on the type of [e] and containing [e] as cause.
+ * @throws [IllegalStateException] with a custom message that depends on the type of [e] and with [e] as its cause.
  */
 public fun handleExtensionPropertyException(e: Exception, columnName: String) {
     val msg = when (e) {

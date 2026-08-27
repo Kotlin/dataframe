@@ -751,7 +751,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  * Don't confuse this with [sortBy][GroupBy.sortBy] that sorts the group rows.
  *
  * See also
- *   - [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes ascending.
+ *   - [sortByCountAsc] that sorts the key-group pairs of this [GroupBy] by the group sizes in ascending order.
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
