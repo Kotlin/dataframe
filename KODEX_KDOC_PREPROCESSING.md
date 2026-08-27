@@ -100,9 +100,20 @@ KoDEx uses special notations in KDocs to indicate that a certain (tag) processor
 in that place.
 These notations follow the Javadoc/KDoc `@tag content`/`{@tag content}` tag conventions.
 
-Tags without `{}` are allowed, but only at the beginning of a line, like you're used to with
-`@param`, `@return`, `@throws`, etc. If you want to use them in the middle of a line, or inside ` ``` ` blocks,
-you should use `{}`.
+When a tag starts a line, write it **without** `{}`, the same way you write `@param`, `@return`, `@throws`.
+That is the normal form; `{@tag ...}` alone on a line does exactly the same thing and only adds noise.
+Use `{}` only when the tag sits in the middle of a line, or inside a ` ``` ` block.
+
+A block tag runs until the next tag, so whatever you write after it — on the same line or on the lines below —
+stays in place, right after the content the tag produced. So a following paragraph is **not** a reason
+to reach for `{}`:
+
+```kt
+/**
+ * @include [CommonDocs]
+ * This sentence stays right after the included content.
+ */
+```
 
 Tag processors have access to any number of arguments they need, which are separated by spaces, like:
 

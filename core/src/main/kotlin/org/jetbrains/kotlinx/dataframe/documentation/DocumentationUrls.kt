@@ -230,6 +230,9 @@ public interface DocumentationUrls {
     /** [See `filter` on the documentation website.]({@include [Url]}/filter.html#filter-on-a-datacolumn) */
     public typealias FilterColumn = Nothing
 
+    /** [See `xs` on the documentation website.]({@include [Url]}/xs.html) */
+    public typealias Xs = Nothing
+
     /** [See `count` on the documentation website.]({@include [Url]}/count.html) */
     public typealias Count = Nothing
 
