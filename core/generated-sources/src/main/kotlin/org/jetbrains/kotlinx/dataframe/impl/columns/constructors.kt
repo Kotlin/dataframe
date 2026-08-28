@@ -188,18 +188,18 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  * some conversions to unify the values if necessary.
  *
  * @param values values to create a column from
- * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer].
- *   See [TypeSuggestion] for more information.
- * @param defaultValue optional default value for the column used when a [ValueColumn] is created.
- * @param nullable optional hint for the column nullability, used when a [ValueColumn] is created.
+ * @param suggestedType optional suggested type for values. Default is [<code>TypeSuggestion.Infer</code>][TypeSuggestion.Infer].
+ *   See [<code>TypeSuggestion</code>][TypeSuggestion] for more information.
+ * @param defaultValue optional default value for the column used when a [<code>ValueColumn</code>][ValueColumn] is created.
+ * @param nullable optional hint for the column nullability, used when a [<code>ValueColumn</code>][ValueColumn] is created.
  * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
- *   Note: this parameter is ignored if another [Collection] is present in the values.
+ *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
- * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
- *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
+ *   a column group will be created instead of a [<code>DataColumn</code>][DataColumn]`<`[<code>AnyCol</code>][AnyCol]`>`.
+ * @param unifyNumbers if `true`, then all numbers encountered in [<code>values</code>][values] will be converted to the smallest possible
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [<code>UnifyingNumbers</code>][UnifyingNumbers].
+ *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [<code>Double</code>][Double].
  */
 @PublishedApi
 internal fun <T> createColumnGuessingType(
@@ -227,18 +227,18 @@ internal fun <T> createColumnGuessingType(
  * some conversions to unify the values if necessary.
  *
  * @param values values to create a column from
- * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion.Infer].
- *   See [TypeSuggestion][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion] for more information.
- * @param defaultValue optional default value for the column used when a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
- * @param nullable optional hint for the column nullability, used when a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
+ * @param suggestedType optional suggested type for values. Default is [<code>TypeSuggestion.Infer</code>][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion.Infer].
+ *   See [<code>TypeSuggestion</code>][org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion] for more information.
+ * @param defaultValue optional default value for the column used when a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
+ * @param nullable optional hint for the column nullability, used when a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] is created.
  * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
- *   Note: this parameter is ignored if another [Collection] is present in the values.
+ *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
- *   a column group will be created instead of a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
- * @param unifyNumbers if `true`, then all numbers encountered in [values][org.jetbrains.kotlinx.dataframe.values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers].
- *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
+ *   a column group will be created instead of a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol]`>`.
+ * @param unifyNumbers if `true`, then all numbers encountered in [<code>values</code>][org.jetbrains.kotlinx.dataframe.values] will be converted to the smallest possible
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [<code>UnifyingNumbers</code>][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers].
+ *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [<code>Double</code>][Double].
  * @param name name for the column
  */
 @PublishedApi

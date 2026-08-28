@@ -16,10 +16,10 @@ import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
 
 /**
- * Writes [df] to [writer] in a delimiter-separated format.
+ * Writes [<code>df</code>][df] to [<code>writer</code>][writer] in a delimiter-separated format.
  *
  * @param df The data to write.
- * @param writer The [Appendable] to write to.
+ * @param writer The [<code>Appendable</code>][Appendable] to write to.
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -29,9 +29,9 @@ import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
  *   Used when field- or line delimiters should be interpreted as literal text.
  *
  *   For example: `123,"hello, there",456,` would correspond to: `123`; `hello, there`; `456`.
- * @param quoteMode The [QuoteMode][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
- *   Default: [QuoteMode.MINIMAL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
- * @param escapeChar The escape character to use when writing CSV / TSV files with [QuoteMode.NONE][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
+ * @param quoteMode The [<code>QuoteMode</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
+ *   Default: [<code>QuoteMode.MINIMAL</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
+ * @param escapeChar The escape character to use when writing CSV / TSV files with [<code>QuoteMode.NONE</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
  *   Default: `null`. This will double-quote the value.
  * @param commentChar The character that indicates a comment line in a CSV / TSV file.
  *   Default: `'#'`.
@@ -39,9 +39,9 @@ import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
  *   Default: empty list.
  * @param recordSeparator The character that separates records in a CSV / TSV file.
  *   Default: `'\n'`, a Unix-newline.
- * @param adjustCsvFormat Optional extra [CSVFormat] configuration. Default: `{ it }`.
+ * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
  *
- *   Before instantiating the [CSVFormat], the [CSVFormat.Builder] will be passed to this lambda.
+ *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
  *   This will allow you to configure/overwrite any CSV / TSV writing options.
  */
 internal fun writeDelimImpl(

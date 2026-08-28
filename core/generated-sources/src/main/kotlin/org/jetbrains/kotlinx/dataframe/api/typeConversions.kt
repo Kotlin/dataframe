@@ -163,61 +163,61 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 /**
  * ## As ColumnGroup
  *
- * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C]`>>` from [this][this].
- * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
- * type is not recognized as a [ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
- * and it will return the same type if it is already a [ColumnGroup].
+ * Creates a [<code>ColumnAccessor</code>][ColumnAccessor]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
+ * This is especially useful when you want to use [<code>ColumnGroup</code>][ColumnGroup] functions in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] but your column
+ * type is not recognized as a [<code>ColumnGroup</code>][ColumnGroup].
+ * If you're not sure whether a column is recognized as [<code>ColumnGroup</code>][ColumnGroup] or not, you can always call [<code>asColumnGroup</code>][asColumnGroup]
+ * and it will return the same type if it is already a [<code>ColumnGroup</code>][ColumnGroup].
  *
- * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
+ * NOTE: This does not check whether the column is actually a [<code>ColumnGroup</code>][ColumnGroup] or not. It just casts it.
  *
  * #### For example:
  *
- * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[<code>select</code>][DataFrame.select]` { `[<code>first</code>][ColumnsSelectionDsl.first]`().`[<code>asColumnGroup</code>][SingleColumn.asColumnGroup]`().`[<code>firstCol</code>][ColumnsSelectionDsl.firstCol]`() }`
  *
- * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C]`>>`.
+ * @receiver The column reference to cast to a [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
  * @param [C] The type of the (group) column.
- * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C]`>>`.
+ * @return A [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
  */
 private typealias SingleColumnAsColumnGroupDocs = Nothing
 
 /** ## As ColumnGroup
  *
- * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
- * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
+ * This is especially useful when you want to use [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [<code>ColumnsSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [<code>asColumnGroup</code>][asColumnGroup]
+ * and it will return the same type if it is already a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ * NOTE: This does not check whether the column is actually a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[<code>firstCol</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
- * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @receiver The column reference to cast to a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>`.
  * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+ * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>`. */
 @Suppress("UNCHECKED_CAST")
 public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
 
 /** ## As ColumnGroup
  *
- * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
- * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
+ * This is especially useful when you want to use [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [<code>ColumnsSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
+ * type is not recognized as a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * If you're not sure whether a column is recognized as [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [<code>asColumnGroup</code>][asColumnGroup]
+ * and it will return the same type if it is already a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
- * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
+ * NOTE: This does not check whether the column is actually a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[<code>asColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[<code>firstCol</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
  *
- * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
+ * @receiver The column reference to cast to a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>`.
  * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+ * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>`. */
 @JvmName("asColumnGroupDataRow")
 public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
@@ -269,9 +269,9 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): V
     toValueColumn(column.columnName)
 
 /**
- * Indicates how [DataColumn.type] should be calculated.
+ * Indicates how [<code>DataColumn.type</code>][DataColumn.type] should be calculated.
  *
- * Used in [add], [insert], [convert], [map], [merge], [split] and other [DataFrame] operations
+ * Used in [<code>add</code>][add], [<code>insert</code>][insert], [<code>convert</code>][convert], [<code>map</code>][map], [<code>merge</code>][merge], [<code>split</code>][split] and other [<code>DataFrame</code>][DataFrame] operations
  */
 public enum class Infer {
 
@@ -303,14 +303,14 @@ public enum class Infer {
     ;
 
     /**
-     * @param [infer] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
-     * Either [None], [Nulls], or [Type].
+     * @param [infer] [<code>An enum</code>][Infer] that indicates how [<code>DataColumn.type</code>][DataColumn.type] should be calculated.
+     * Either [<code>None</code>][None], [<code>Nulls</code>][Nulls], or [<code>Type</code>][Type].
      */
     internal typealias ParamDoc = Nothing
 }
 
 /**
- * Indicates how [DataColumn.hasNulls] (or, more accurately, DataColumn.type.isMarkedNullable) should be initialized from
+ * Indicates how [<code>DataColumn.hasNulls</code>][DataColumn.hasNulls] (or, more accurately, DataColumn.type.isMarkedNullable) should be initialized from
  * expected schema and actual data when reading schema-defined data formats.
  */
 public enum class NullabilityOptions {
@@ -334,8 +334,8 @@ public enum class NullabilityOptions {
 public class NullabilityException : Exception()
 
 /**
- * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
- * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
+ * @return if column should be marked nullable for current [<code>NullabilityOptions</code>][NullabilityOptions] value with actual [<code>data</code>][data] and [<code>expectedNulls</code>][expectedNulls] per some schema/signature.
+ * @throws [NullabilityException] for [<code>NullabilityOptions.Checking</code>][NullabilityOptions.Checking] if [<code>expectedNulls</code>][expectedNulls] is false and [<code>data</code>][data] contains nulls.
  */
 public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {
     val hasNulls = data.anyNull()

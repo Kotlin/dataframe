@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorMu
 import kotlin.reflect.KType
 
 /**
- * Implementation of [AggregatorMultipleColumnsHandler] that simply flattens all input columns.
+ * Implementation of [<code>AggregatorMultipleColumnsHandler</code>][AggregatorMultipleColumnsHandler] that simply flattens all input columns.
  * This is useful for aggregators that depend on the distribution of values across multiple columns.
  *
  * @see [TwoStepMultipleColumnsHandler]
@@ -27,7 +27,7 @@ internal class FlatteningMultipleColumnsHandler<in Value : Any, out Return : Any
     }
 
     /**
-     * Function that can give the return type of [aggregateMultipleColumns], given types of the columns.
+     * Function that can give the return type of [<code>aggregateMultipleColumns</code>][aggregateMultipleColumns], given types of the columns.
      * This allows aggregators to avoid runtime type calculations.
      *
      * @param colTypes The types of the input columns.

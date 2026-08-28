@@ -345,13 +345,13 @@ private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConf
     }
 
 /**
- * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
- * CSS rendering is enabled by default but can be turned off using [includeCss]
+ * Renders [<code>this</code>][this] [<code>DataFrame</code>][DataFrame] as static HTML (meaning no JS is used).
+ * CSS rendering is enabled by default but can be turned off using [<code>includeCss</code>][includeCss]
  *
- * __IMPORTANT:__ If JavaScript is enabled, the table inside the returned [DataFrameHtmlData] will be HIDDEN when rendered.
- * This is done so this function can be used as a fallback mechanism for [AnyFrame.toHtmlData], which
+ * __IMPORTANT:__ If JavaScript is enabled, the table inside the returned [<code>DataFrameHtmlData</code>][DataFrameHtmlData] will be HIDDEN when rendered.
+ * This is done so this function can be used as a fallback mechanism for [<code>AnyFrame.toHtmlData</code>][AnyFrame.toHtmlData], which
  * requires JavaScript to be displayed.
- * Call `.copy(script = "")` on the returned [DataFrameHtmlData] to remove this hiding/fallback mechanism.
+ * Call `.copy(script = "")` on the returned [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to remove this hiding/fallback mechanism.
  *
  * @param configuration optional configuration for rendering
  * @param cellRenderer optional cell renderer for rendering
@@ -523,7 +523,7 @@ private fun Set<Border>.toClass(): String =
     }
 
 /**
- * Wrapper class which contains a nullable [ColumnWithPath] and a set of [Border]s.
+ * Wrapper class which contains a nullable [<code>ColumnWithPath</code>][ColumnWithPath] and a set of [<code>Border</code>][Border]s.
  * (Empty cells can have borders too)
  */
 private data class ColumnWithPathWithBorder<T>(
@@ -550,9 +550,9 @@ internal fun BaseColumn<*>.maxWidth(): Int =
     }
 
 /**
- * Given a [DataFrame], this function returns a depth-first "matrix" containing all columns
+ * Given a [<code>DataFrame</code>][DataFrame], this function returns a depth-first "matrix" containing all columns
  * laid out in such a way that they can be used to render the header of a table. The
- * [ColumnWithPathWithBorder.columnWithPath] is `null` when nothing should be rendered in that cell.
+ * [<code>ColumnWithPathWithBorder.columnWithPath</code>][ColumnWithPathWithBorder.columnWithPath] is `null` when nothing should be rendered in that cell.
  * Borders are included too, also for `null` cells.
  *
  * For example:
@@ -623,27 +623,27 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 ): DataFrameHtmlData = toStandaloneHtml(configuration, cellRenderer, getFooter)
 
 /**
- * Returns a [DataFrameHtmlData] with CSS- and script definitions for DataFrame.
+ * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] with CSS- and script definitions for DataFrame.
  *
  * To change the formatting of certain cells or columns in the dataframe,
- * use [DataFrame.format].
+ * use [<code>DataFrame.format</code>][DataFrame.format].
  *
- * Use [toHtml] if you don't need the [DataFrameHtmlData] to include CSS- and script definitions.
+ * Use [<code>toHtml</code>][toHtml] if you don't need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
  *
- * The [DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
+ * The [<code>DataFrameHtmlData</code>][DataFrameHtmlData] can be saved as an *.html file and displayed in the browser.
  * If you save it as a file and find it in the project tree,
  * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure)
  * feature of IntelliJ IDEA will automatically reload the file content when it's updated.
  *
  * By default, cell content is formatted as text
- * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ * Use [<code>RenderedContent.media</code>][RenderedContent.media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
  *
- * __NOTE:__ In Kotlin Notebook, output [DataFrame] directly, or use [toHtml],
+ * __NOTE:__ In Kotlin Notebook, output [<code>DataFrame</code>][DataFrame] directly, or use [<code>toHtml</code>][toHtml],
  * as that environment already has CSS- and script definitions for DataFrame.
- * Using [toStandaloneHtml] might produce unexpected results.
+ * Using [<code>toStandaloneHtml</code>][toStandaloneHtml] might produce unexpected results.
  *
- * @param [configuration] The [DisplayConfiguration] to use. Default: [DisplayConfiguration.DEFAULT].
- * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+ * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use. Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
  * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
  *   Default: `"DataFrame [rows x cols]"`
  * @see toHtml
@@ -655,20 +655,20 @@ public fun <T> DataFrame<T>.toStandaloneHtml(
 ): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
- * Returns a [DataFrameHtmlData] without additional definitions.
+ * Returns a [<code>DataFrameHtmlData</code>][DataFrameHtmlData] without additional definitions.
  * Can be rendered in Jupyter kernel (Kotlin Notebook) environments or other environments that already have
  * CSS- and script definitions for DataFrame.
  *
  * To change the formatting of certain cells or columns in the dataframe,
- * use [DataFrame.format].
+ * use [<code>DataFrame.format</code>][DataFrame.format].
  *
- * Use [toStandaloneHtml] if you need the [DataFrameHtmlData] to include CSS- and script definitions.
+ * Use [<code>toStandaloneHtml</code>][toStandaloneHtml] if you need the [<code>DataFrameHtmlData</code>][DataFrameHtmlData] to include CSS- and script definitions.
  *
  * By default, cell content is formatted as text
- * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ * Use [<code>RenderedContent.media</code>][RenderedContent.media] or [<code>IMG</code>][IMG], [<code>IFRAME</code>][IFRAME] if you need custom HTML inside a cell.
  *
- * @param [configuration] The [DisplayConfiguration] to use. Default: [DisplayConfiguration.DEFAULT].
- * @param [cellRenderer] Mostly for internal usage, use [DefaultCellRenderer] if unsure.
+ * @param [configuration] The [<code>DisplayConfiguration</code>][DisplayConfiguration] to use. Default: [<code>DisplayConfiguration.DEFAULT</code>][DisplayConfiguration.DEFAULT].
+ * @param [cellRenderer] Mostly for internal usage, use [<code>DefaultCellRenderer</code>][DefaultCellRenderer] if unsure.
  * @param [getFooter] Allows you to specify how to render the footer text beneath the dataframe.
  *   Default: `"DataFrame [rows x cols]"`
  * @see toStandaloneHtml
@@ -789,7 +789,7 @@ public class DataFrameHtmlData(
 
     /**
      * Opens a new tab in your default browser.
-     * Consider [writeHtml] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
+     * Consider [<code>writeHtml</code>][writeHtml] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
      */
     public fun openInBrowser() {
         val file = File.createTempFile("df_rendering", ".html")

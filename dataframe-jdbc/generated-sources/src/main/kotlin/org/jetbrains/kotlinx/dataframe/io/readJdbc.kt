@@ -28,19 +28,19 @@ import kotlin.reflect.full.isSubclassOf
 private val logger = KotlinLogging.logger {}
 
 /**
- * Reads data from an SQL table and converts it into a [DataFrame].
+ * Reads data from an SQL table and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the configuration for the database, including URL, user, and password.
@@ -50,8 +50,8 @@ private val logger = KotlinLogging.logger {}
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dbConfig].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  */
@@ -70,21 +70,21 @@ public fun DataFrame.Companion.readSqlTable(
 }
 
 /**
- * Reads data from an SQL table and converts it into a [DataFrame].
+ * Reads data from an SQL table and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [dataSource] the [<code>DataSource</code>][DataSource] to get a database connection from.
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dataSource].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  *
@@ -112,11 +112,11 @@ public fun DataFrame.Companion.readSqlTable(
 }
 
 /**
- * Reads data from an SQL table and converts it into a [DataFrame].
+ * Reads data from an SQL table and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param [connection] the database connection to read tables from.
  * @param [tableName] the name of the table to read data from.
@@ -125,8 +125,8 @@ public fun DataFrame.Companion.readSqlTable(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [connection].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  *
@@ -207,22 +207,22 @@ private fun executeQueryAndBuildDataFrame(
     }
 
 /**
- * Converts the result of an SQL query to the [DataFrame].
+ * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
  * It should not contain `;` symbol.
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
@@ -232,11 +232,11 @@ private fun executeQueryAndBuildDataFrame(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dbConfig].
- * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @param [validation] controls SQL query validation. [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML statements and
  *   only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
- *   [SqlValidation.None] (default) passes the query to the database without validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   [<code>SqlValidation.None</code>][SqlValidation.None] (default) passes the query to the database without validation.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
@@ -256,24 +256,24 @@ public fun DataFrame.Companion.readSqlQuery(
 }
 
 /**
- * Converts the result of an SQL query to the [DataFrame].
+ * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * @param [dataSource] the [DataSource] to obtain a database connection from.
+ * @param [dataSource] the [<code>DataSource</code>][DataSource] to obtain a database connection from.
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dataSource].
- * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @param [validation] controls SQL query validation. [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML statements and
  *   only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
- *   [SqlValidation.None] (default) passes the query to the database without validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   [<code>SqlValidation.None</code>][SqlValidation.None] (default) passes the query to the database without validation.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
@@ -295,11 +295,11 @@ public fun DataFrame.Companion.readSqlQuery(
 }
 
 /**
- * Converts the result of an SQL query to the [DataFrame].
+ * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param [connection] the database connection to execute the SQL query.
  * @param [sqlQuery] the SQL query to execute.
@@ -308,11 +308,11 @@ public fun DataFrame.Companion.readSqlQuery(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [connection].
- * @param [validation] controls SQL query validation. [SqlValidation.ReadOnly] blocks DDL/DML statements and
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @param [validation] controls SQL query validation. [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML statements and
  *   only allows read-oriented queries (SELECT, WITH, VALUES, TABLE, EXPLAIN).
- *   [SqlValidation.None] (default) passes the query to the database without validation.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   [<code>SqlValidation.None</code>][SqlValidation.None] (default) passes the query to the database without validation.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
@@ -352,19 +352,19 @@ public fun DataFrame.Companion.readSqlQuery(
 }
 
 /**
- * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
+ * Converts the result of an SQL query or SQL table (by name) to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
@@ -373,11 +373,11 @@ public fun DataFrame.Companion.readSqlQuery(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [DbConnectionConfig].
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>DbConnectionConfig</code>][DbConnectionConfig].
  * @param [validation] controls SQL query validation when a query (not a table name) is provided.
- *   [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *   [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML; [<code>SqlValidation.None</code>][SqlValidation.None] (default) skips validation.
  *   Table name validation is always strict regardless of this parameter.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
@@ -417,11 +417,11 @@ public fun DbConnectionConfig.readDataFrame(
 }
 
 /**
- * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
+ * Converts the result of an SQL query or SQL table (by name) to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param [sqlQueryOrTableName] the SQL query to execute or the name of an SQL table.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
@@ -429,11 +429,11 @@ public fun DbConnectionConfig.readDataFrame(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [Connection].
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>Connection</code>][Connection].
  * @param [validation] controls SQL query validation when a query (not a table name) is provided.
- *   [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *   [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML; [<code>SqlValidation.None</code>][SqlValidation.None] (default) skips validation.
  *   Table name validation is always strict regardless of this parameter.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
@@ -473,11 +473,11 @@ public fun Connection.readDataFrame(
 }
 
 /**
- * Converts the result of an SQL query or SQL table (by name) to the [DataFrame].
+ * Converts the result of an SQL query or SQL table (by name) to the [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -504,11 +504,11 @@ public fun Connection.readDataFrame(
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [DataSource].
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>DataSource</code>][DataSource].
  * @param [validation] controls SQL query validation when a query (not a table name) is provided.
- *   [SqlValidation.ReadOnly] blocks DDL/DML; [SqlValidation.None] (default) skips validation.
+ *   [<code>SqlValidation.ReadOnly</code>][SqlValidation.ReadOnly] blocks DDL/DML; [<code>SqlValidation.None</code>][SqlValidation.None] (default) skips validation.
  *   Table name validation is always strict regardless of this parameter.
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  *
@@ -552,28 +552,28 @@ public fun DataSource.readDataFrame(
 }
 
 /**
- * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [<code>ResultSet</code>][java.sql.ResultSet] and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [<code>ResultSet</code>][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [<code>ResultSet</code>][java.sql.ResultSet].
  *
- * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ * NOTE: Reading from the [<code>ResultSet</code>][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
+ * @param [resultSet] the [<code>ResultSet</code>][java.sql.ResultSet] containing the data to read.
  *   Its state may be altered after the read operation.
- * @param [dbType] the type of database that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [dbType] the type of database that the [<code>ResultSet</code>][ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [<code>ResultSet</code>][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [<code>ResultSet</code>][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -589,26 +589,26 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [<code>ResultSet</code>][java.sql.ResultSet] and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [<code>ResultSet</code>][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [<code>ResultSet</code>][java.sql.ResultSet].
  *
- * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ * NOTE: Reading from the [<code>ResultSet</code>][java.sql.ResultSet] could potentially change its state.
  *
- * @param [dbType] the type of database that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [dbType] the type of database that the [<code>ResultSet</code>][ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [<code>ResultSet</code>][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ * @return the DataFrame generated from the [<code>ResultSet</code>][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -618,31 +618,31 @@ public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNull
 }
 
 /**
- * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [<code>ResultSet</code>][java.sql.ResultSet] and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [<code>ResultSet</code>][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [<code>ResultSet</code>][java.sql.ResultSet].
  *
- * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ * __NOTE:__ Reading from the [<code>ResultSet</code>][java.sql.ResultSet] could potentially change its state.
  *
- * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
+ * @param [resultSet] the [<code>ResultSet</code>][java.sql.ResultSet] containing the data to read.
  *   Its state may be altered after the read operation.
  * @param [connection] the connection to the database (it's required to extract the database type)
- * that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * that the [<code>ResultSet</code>][ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [<code>ResultSet</code>][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [resultSet].
- * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>resultSet</code>][resultSet].
+ * @return the DataFrame generated from the [<code>ResultSet</code>][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -660,29 +660,29 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a [DataFrame].
+ * Reads the data from a [<code>ResultSet</code>][java.sql.ResultSet] and converts it into a [<code>DataFrame</code>][DataFrame].
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * A [<code>ResultSet</code>][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
  * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
  * Therefore, you can iterate through it only once, from the first row to the last row.
  *
- * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ * For more details, refer to the official Java documentation on [<code>ResultSet</code>][java.sql.ResultSet].
  *
- * __NOTE:__ Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ * __NOTE:__ Reading from the [<code>ResultSet</code>][java.sql.ResultSet] could potentially change its state.
  *
  * @param [connection] the connection to the database (it's required to extract the database type)
- * that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * that the [<code>ResultSet</code>][ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [<code>ResultSet</code>][java.sql.ResultSet].
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [ResultSet].
- * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>ResultSet</code>][ResultSet].
+ * @return the DataFrame generated from the [<code>ResultSet</code>][java.sql.ResultSet] data.
  *
  * @see [java.sql.ResultSet]
  */
@@ -698,19 +698,19 @@ public fun ResultSet.readDataFrame(
 
 /**
  * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding [DataFrame]s using the provided database configuration and limit.
+ * as a map of SQL tables and corresponding [<code>DataFrame</code>][DataFrame]s using the provided database configuration and limit.
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * ### Default Behavior:
- * If [DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
+ * If [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is `true` (which is the default), the connection will be:
  * - explicitly set as read-only via `Connection.setReadOnly(true)`
  * - used with `autoCommit = false`
  * - automatically rolled back after reading, ensuring no changes to the database
  *
- * Even if [DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
+ * Even if [<code>DbConnectionConfig.readOnly</code>][DbConnectionConfig.readOnly] is set to `false`, the library still prevents data-modifying queries
  * and only permits safe `SELECT` operations internally.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
@@ -720,10 +720,10 @@ public fun ResultSet.readDataFrame(
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dbConfig].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dbConfig</code>][dbConfig].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [<code>String</code>][String] to [<code>AnyFrame</code>][AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DbConnectionConfig,
@@ -741,11 +741,11 @@ public fun DataFrame.Companion.readAllSqlTables(
 
 /**
  * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding [DataFrame]s.
+ * as a map of SQL tables and corresponding [<code>DataFrame</code>][DataFrame]s.
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * ### Example with HikariCP:
  * ```kotlin
@@ -767,17 +767,17 @@ public fun DataFrame.Companion.readAllSqlTables(
  * val ordersDF = allTables["orders"]
  * ```
  *
- * @param [dataSource] the [DataSource] to get a database connection from.
+ * @param [dataSource] the [<code>DataSource</code>][DataSource] to get a database connection from.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [limit] the maximum number of rows to read from each table.
  *   `null` (default) means no limit - all available rows will be fetched
  *   or positive integer (e.g., `100`) - fetch at most that many rows
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [dataSource].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>dataSource</code>][dataSource].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [<code>String</code>][String] to [<code>AnyFrame</code>][AnyFrame] objects representing the non-system tables from the database.
  *
  * @see [DataSource.getConnection]
  */
@@ -797,11 +797,11 @@ public fun DataFrame.Companion.readAllSqlTables(
 
 /**
  * Reads all non-system tables from a database and returns them
- * as a map of SQL tables and corresponding [DataFrame]s.
+ * as a map of SQL tables and corresponding [<code>DataFrame</code>][DataFrame]s.
  *
  * Note that if input dataframe contains duplicate column names,
- * they will be [automatically renamed][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
- * in the resulting [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
+ * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
@@ -810,10 +810,10 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
- *   in that case the [dbType] will be recognized from the [connection].
- * @param [configureStatement] optional lambda to configure the [PreparedStatement] before execution.
+ *   in that case the [<code>dbType</code>][dbType] will be recognized from the [<code>connection</code>][connection].
+ * @param [configureStatement] optional lambda to configure the [<code>PreparedStatement</code>][PreparedStatement] before execution.
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
- * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [<code>String</code>][String] to [<code>AnyFrame</code>][AnyFrame] objects representing the non-system tables from the database.
  *
  * @see [DriverManager.getConnection]
  */
@@ -907,16 +907,16 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List
     dbType.getTableColumnsMetadata(resultSet)
 
 /**
- * Fetches and converts data from a ResultSet into a [DataFrame].
+ * Fetches and converts data from a ResultSet into a [<code>DataFrame</code>][DataFrame].
  *
  * Will handle data in the following order:
  *
- * - For each column (inside [readAndPreprocessRowsFromResultSet]):
+ * - For each column (inside [<code>readAndPreprocessRowsFromResultSet</code>][readAndPreprocessRowsFromResultSet]):
  *     - Fetches each individual value from the [ResultSet] using [DbType.getValueFromResultSet]
  *       with the return type defined by [DbType.getExpectedJdbcType].
  *     - Potentially preprocesses the value using [DbType.preprocessValue]
  *       with the return type defined by [DbType.getPreprocessedValueType].
- * - From the resulting list of columns,`List<List<Any?>>`, (inside [buildDataFrameFromColumnData]):
+ * - From the resulting list of columns,`List<List<Any?>>`, (inside [<code>buildDataFrameFromColumnData</code>][buildDataFrameFromColumnData]):
  *     - Uses [DbType.buildDataColumn] to turn each list of values into a [DataColumn]
  *       with the correct structure defined by [DbType.getTargetColumnSchema].
  *     - Turns the result into a [DataFrame].
@@ -927,7 +927,7 @@ internal fun getTableColumnsMetadata(resultSet: ResultSet, dbType: DbType): List
  * @param [limit] the maximum number of rows to retrieve from the table.
  *   `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return A [DataFrame] containing the fetched and converted data.
+ * @return A [<code>DataFrame</code>][DataFrame] containing the fetched and converted data.
  */
 internal fun fetchAndConvertDataFromResultSet(
     dbType: DbType,

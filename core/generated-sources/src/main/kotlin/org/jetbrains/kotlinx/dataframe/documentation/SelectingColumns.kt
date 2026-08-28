@@ -16,25 +16,25 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  *
  * ## Selecting Columns
  *
- * Selecting columns for various [DataFrame] operations
+ * Selecting columns for various [<code>DataFrame</code>][DataFrame] operations
  * can be done in the following ways:
- * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+ * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
  *
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -42,22 +42,22 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
  *
  * #### For example:
  *
- * <code>`df`</code>`.`<code>`operation`</code>` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`<code>`operation`</code>` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`<code>`operation`</code>`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
- *
- *
- *
- * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
- * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+ * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
+ * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+ * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ *
+ *
+ *
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
@@ -73,18 +73,18 @@ internal interface SelectingColumns {
     /**
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn] or [ColumnSet] (so, a [ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][SingleColumn] or [<code>ColumnSet</code>][ColumnSet] (so, a [<code>ColumnsResolver</code>][ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -97,18 +97,18 @@ internal interface SelectingColumns {
          *
          *
          *
-         * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+         * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
          *
-         * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-         * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-         * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+         * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+         * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+         * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
          * This is an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into one or more columns.
          *
-         * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+         * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
          * for specifying columns type- and name-safe.
          *
-         * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+         * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
          *
          * &nbsp;&nbsp;&nbsp;&nbsp;
          *
@@ -116,11 +116,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * <code>`df`</code>`.`<code>`operation`</code>` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * <code>`df`</code>`.`<code>`operation`</code>` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
          *
          *
          *
@@ -132,15 +132,15 @@ internal interface SelectingColumns {
      *
      *
      * Select or express a single column using the Column Selection DSL.
-     * (Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+     * (Any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
      *
-     * This DSL is initiated by a [Column Selector][ColumnSelector] lambda,
-     * which operates in context of the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
-     * expects you to return a [SingleColumn].
+     * This DSL is initiated by a [<code>Column Selector</code>][ColumnSelector] lambda,
+     * which operates in context of the [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][SingleColumn].
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into a single column.
      *
-     * The Column Selection DSL allows using [Extension Properties][AccessApis.ExtensionPropertiesApi]
+     * The Column Selection DSL allows using [<code>Extension Properties</code>][AccessApis.ExtensionPropertiesApi]
      * for specifying column type- and name-safe.
      *
      *
@@ -156,15 +156,15 @@ internal interface SelectingColumns {
          *
          *
          * Select or express a single column using the Column Selection DSL.
-         * (Any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
+         * (Any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
          *
-         * This DSL is initiated by a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector] lambda,
-         * which operates in context of the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
-         * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
+         * This DSL is initiated by a [<code>Column Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnSelector] lambda,
+         * which operates in context of the [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] and
+         * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
          * This is an entity formed by calling any (combination) of the functions
          * in the DSL that is or can be resolved into a single column.
          *
-         * The Column Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+         * The Column Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
          * for specifying column type- and name-safe.
          *
          *
@@ -176,9 +176,9 @@ internal interface SelectingColumns {
          *
          * <code>`df`</code>`.`<code>`operation`</code>` { length }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>col</code>][ColumnsSelectionDsl.col]`(1) }`
          *
-         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * <code>`df`</code>`.`<code>`operation`</code>`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>().`[<code>first</code>][ColumnsSelectionDsl.first]`() }`
          *
          *
          *
@@ -189,8 +189,8 @@ internal interface SelectingColumns {
     /**
      *
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      */
     interface ColumnNamesApi {
 
@@ -199,8 +199,8 @@ internal interface SelectingColumns {
          *
          *
          *
-         * Select single or multiple columns using their names as [String]s.
-         * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+         * Select single or multiple columns using their names as [<code>String</code>][String]s.
+         * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
          *
          * #### For example:
          *

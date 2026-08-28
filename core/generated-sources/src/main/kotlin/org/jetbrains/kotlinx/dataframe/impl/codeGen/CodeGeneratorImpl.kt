@@ -51,8 +51,8 @@ internal fun Iterable<Marker>.filterRequiredForSchema(schema: DataFrameSchema) =
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
 /**
- * Simple utility function that creates a [CodeWithTypeCastGenerator] using [code] and [TypeCastGenerator.DataFrameApi],
- * meaning it uses the [cast] functions of DataFrame.
+ * Simple utility function that creates a [<code>CodeWithTypeCastGenerator</code>][CodeWithTypeCastGenerator] using [<code>code</code>][code] and [<code>TypeCastGenerator.DataFrameApi</code>][TypeCastGenerator.DataFrameApi],
+ * meaning it uses the [<code>cast</code>][cast] functions of DataFrame.
  */
 internal fun createCodeWithTypeCastGenerator(code: String, vararg targetTypeNames: String) =
     CodeWithTypeCastGenerator(code, TypeCastGenerator.DataFrameApi(*targetTypeNames))
@@ -105,7 +105,7 @@ public fun KClass<*>.quotedQualifiedNameOrNull(): String? {
 
 internal fun List<Code>.join() = joinToString("\n")
 
-/** Strategy to render types. Instances include [FullyQualifiedNames] and [ShortNames]. */
+/** Strategy to render types. Instances include [<code>FullyQualifiedNames</code>][FullyQualifiedNames] and [<code>ShortNames</code>][ShortNames]. */
 internal interface TypeRenderingStrategy {
 
     /**
@@ -115,28 +115,28 @@ internal interface TypeRenderingStrategy {
     fun renderRowTypeName(markerName: String): String
 
     /**
-     * How to render a columns-container (base type for [DataFrame] and [ColumnSelectionDsl]).
+     * How to render a columns-container (base type for [<code>DataFrame</code>][DataFrame] and [<code>ColumnSelectionDsl</code>][ColumnSelectionDsl]).
      * Used as receiver type for column accessors.
      * E.g.: `ColumnsContainer<Marker>`
      */
     fun renderColumnsContainerTypeName(markerName: String): String
 
     /**
-     * How to render a column type from a [BaseField]. Used as return type for column accessors.
-     * Result will be a [DataColumn] (or [ColumnGroup], which can be seen as a [DataColumn]).
+     * How to render a column type from a [<code>BaseField</code>][BaseField]. Used as return type for column accessors.
+     * Result will be a [<code>DataColumn</code>][DataColumn] (or [<code>ColumnGroup</code>][ColumnGroup], which can be seen as a [<code>DataColumn</code>][DataColumn]).
      * E.g.: `DataColumn<DataFrame<Marker>>`
      */
     fun BaseField.renderColumnType(): Code
 
     /**
-     * How to render the field type of [BaseField]. Used as return type for column accessors for DSLs.
-     * Result will be either the value type name, a [DataRow] or [DataFrame].
+     * How to render the field type of [<code>BaseField</code>][BaseField]. Used as return type for column accessors for DSLs.
+     * Result will be either the value type name, a [<code>DataRow</code>][DataRow] or [<code>DataFrame</code>][DataFrame].
      */
     fun BaseField.renderAccessorFieldType(): Code
 
     /**
-     * How to render the field type of [BaseField]. Used as property type in generated interfaces.
-     * Result will be either the value type name, the group field type name or [DataFrame].
+     * How to render the field type of [<code>BaseField</code>][BaseField]. Used as property type in generated interfaces.
+     * Result will be either the value type name, the group field type name or [<code>DataFrame</code>][DataFrame].
      */
     fun BaseField.renderFieldType(): Code
 }

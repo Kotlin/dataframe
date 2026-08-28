@@ -33,54 +33,54 @@ import kotlin.reflect.KProperty
  * ## The Fill Nulls Operation
  *
  * Replaces `null` values with given value or expression.
- * Specific case of [update].
+ * Specific case of [<code>update</code>][update].
  *
- * ### Check out: [Grammar][FillNulls.Grammar]
+ * ### Check out: [<code>Grammar</code>][FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  */
 internal interface FillNulls {
 
-    /** ## [**fillNulls**][fillNulls] Operation Grammar
+    /** ## [<code>**fillNulls**</code>][fillNulls] Operation Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * [**fillNulls**][fillNulls]**`  {  `**[`columns`][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
+     * [<code>**fillNulls**</code>][fillNulls]**`  {  `**[<code>`columns`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`where`**][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[`rowValueCondition`][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `[ `__`.`__[<code>**`where`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[<code>`rowValueCondition`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`at`**][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[`rowIndices`][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[<code>**`at`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[<code>`rowIndices`</code>][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
+     * `[ `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`with`**][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[<code>**`with`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[`colExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[<code>`colExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perRowCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[`rowColExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perRowCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[<code>`rowColExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withNull`**][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
+     * `| `__`.`__[<code>**`withNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withZero`**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
+     * `| `__`.`__[<code>**`withZero`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`asFrame`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[<code>`dataFrameExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
     typealias Grammar = Nothing
@@ -91,25 +91,25 @@ internal interface FillNulls {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -117,26 +117,26 @@ internal interface FillNulls {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`("length", "age")`
+     * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`("length", "age")`
      *
      *
      *
@@ -150,15 +150,15 @@ private typealias SetFillNullsOperationArg = Nothing
  * ## The Fill Nulls Operation
  *
  * Replaces `null` values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
@@ -167,18 +167,18 @@ private typealias SetFillNullsOperationArg = Nothing
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -186,15 +186,15 @@ private typealias SetFillNullsOperationArg = Nothing
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Interpretable("FillNulls0")
 public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Update<T, C?> =
@@ -204,15 +204,15 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * ## The Fill Nulls Operation
  *
  * Replaces `null` values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
@@ -221,16 +221,16 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`("length", "age")`
+ * <code>`df`</code>`.`[<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls]`("length", "age")`
  *
  *
  *
- * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
 
@@ -238,21 +238,21 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * ## The Fill Nulls Operation
  *
  * Replaces `null` values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
  *
  *
- * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -263,21 +263,21 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * ## The Fill Nulls Operation
  *
  * Replaces `null` values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill Nulls Overload
  *
  *
- * @param [columns] The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -286,11 +286,11 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
 
 // endregion
 
-/** Is only `true` if [this] is [Double.NaN] or [Float.NaN]. */
+/** Is only `true` if [<code>this</code>][this] is [<code>Double.NaN</code>][Double.NaN] or [<code>Float.NaN</code>][Float.NaN]. */
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
 /**
- * Returns `true` if [this] is considered NA.
+ * Returns `true` if [<code>this</code>][this] is considered NA.
  * "NA", in DataFrame, roughly means `null` or `NaN`.
  *
  * Overload of `isNA` with contract support.
@@ -306,7 +306,7 @@ internal inline fun <T : Any?> T.isNA(): Boolean {
 }
 
 /**
- * Is `true` if [this] is considered NA.
+ * Is `true` if [<code>this</code>][this] is considered NA.
  * "NA", in DataFrame, roughly means `null` or `NaN`.
  * @see NA
  */
@@ -323,19 +323,19 @@ internal inline val Any?.isNA: Boolean
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
 /**
- * Is `true` when [this] column can have [`NA`] values.
+ * Is `true` when [<code>this</code>][this] column can have [<code>`NA`</code>][`NA`] values.
  * @see NA
  */
 internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
 /**
- * Is `true` when [this] is `null` or [Double.NaN].
+ * Is `true` when [<code>this</code>][this] is `null` or [<code>Double.NaN</code>][Double.NaN].
  * @see NA
  */
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
 /**
- * Is `true` when [this] is `null` or [Float.NaN].
+ * Is `true` when [<code>this</code>][this] is `null` or [<code>Float.NaN</code>][Float.NaN].
  * @see NA
  */
 internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
@@ -345,55 +345,55 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][NaN] values with given value or expression.
- * Specific case of [update].
+ * Replaces [<code>`NaN`</code>][NaN] values with given value or expression.
+ * Specific case of [<code>update</code>][update].
  *
- * ### Check out: [Grammar][FillNaNs.Grammar]
+ * ### Check out: [<code>Grammar</code>][FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  */
 internal interface FillNaNs {
 
-    /** ## [fillNaNs][fillNaNs] Operation Grammar
+    /** ## [<code>fillNaNs</code>][fillNaNs] Operation Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * [fillNaNs][fillNaNs]**`  {  `**[`columns`][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
+     * [<code>fillNaNs</code>][fillNaNs]**`  {  `**[<code>`columns`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`where`**][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[`rowValueCondition`][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `[ `__`.`__[<code>**`where`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[<code>`rowValueCondition`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`at`**][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[`rowIndices`][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[<code>**`at`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[<code>`rowIndices`</code>][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
+     * `[ `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`with`**][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[<code>**`with`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[`colExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[<code>`colExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perRowCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[`rowColExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perRowCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[<code>`rowColExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withNull`**][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
+     * `| `__`.`__[<code>**`withNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withZero`**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
+     * `| `__`.`__[<code>**`withZero`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`asFrame`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[<code>`dataFrameExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
     typealias Grammar = Nothing
@@ -404,25 +404,25 @@ internal interface FillNaNs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -430,26 +430,26 @@ internal interface FillNaNs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`("length", "age")`
+     * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`("length", "age")`
      *
      *
      *
@@ -460,16 +460,16 @@ internal interface FillNaNs {
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
@@ -477,18 +477,18 @@ internal interface FillNaNs {
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -496,15 +496,15 @@ internal interface FillNaNs {
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Interpretable("FillNaNs0")
 public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<T, C> =
@@ -513,16 +513,16 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
@@ -530,37 +530,37 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`("length", "age")`
+ * <code>`df`</code>`.`[<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`("length", "age")`
  *
  *
  *
- * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
 
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
  *
- * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -569,21 +569,21 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NaNs Overload
  *
- * @param [columns] The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -597,55 +597,55 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][NA] values with given value or expression.
- * Specific case of [update].
+ * Replaces [<code>`NA`</code>][NA] values with given value or expression.
+ * Specific case of [<code>update</code>][update].
  *
- * ### Check out: [Grammar][FillNA.Grammar]
+ * ### Check out: [<code>Grammar</code>][FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  */
 internal interface FillNA {
 
-    /** ## [fillNA][fillNA] Operation Grammar
+    /** ## [<code>fillNA</code>][fillNA] Operation Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * [fillNA][fillNA]**`  {  `**[`columns`][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
+     * [<code>fillNA</code>][fillNA]**`  {  `**[<code>`columns`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`where`**][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[`rowValueCondition`][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `[ `__`.`__[<code>**`where`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.where]**`  {  `**[<code>`rowValueCondition`</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`at`**][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[`rowIndices`][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[<code>**`at`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.at]**`(`**[<code>`rowIndices`</code>][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
+     * `[ `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`()`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`with`**][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[<code>**`with`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.with]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`notNull`**][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[`rowExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`notNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.notNull]**`  {  `**[<code>`rowExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[`colExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perCol]**`  {  `**[<code>`colExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`perRowCol`**][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[`rowColExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`perRowCol`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]**`  {  `**[<code>`rowColExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withNull`**][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
+     * `| `__`.`__[<code>**`withNull`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withNull]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`withZero`**][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
+     * `| `__`.`__[<code>**`withZero`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`asFrame`**][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[`dataFrameExpression`][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[<code>**`asFrame`**</code>][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]**`  {  `**[<code>`dataFrameExpression`</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      */
     typealias Grammar = Nothing
@@ -656,25 +656,25 @@ internal interface FillNA {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -682,26 +682,26 @@ internal interface FillNA {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`("length", "age")`
+     * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`("length", "age")`
      *
      *
      *
@@ -712,16 +712,16 @@ internal interface FillNA {
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NA Overload
@@ -729,18 +729,18 @@ internal interface FillNA {
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -748,15 +748,15 @@ internal interface FillNA {
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * @param [columns] The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Interpretable("FillNulls0") // fillNA changes schema same as fillNulls
 public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T, C?> =
@@ -765,16 +765,16 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NA Overload
@@ -782,37 +782,37 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`("length", "age")`
+ * <code>`df`</code>`.`[<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA]`("length", "age")`
  *
  *
  *
- * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
 
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NA Overload
  *
- * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -821,21 +821,21 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
- * Specific case of [update][org.jetbrains.kotlinx.dataframe.api.update].
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
+ * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
  * for all the selecting options.
  *
  * ### This Fill NA Overload
  *
- * @param [columns] The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
+ * @param [columns] The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -849,9 +849,9 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
  *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
@@ -862,18 +862,18 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -881,19 +881,19 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * `df.`[dropNulls][dropNulls]`(whereAllNull = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>dropNulls</code>][dropNulls]`(whereAllNull = true) { `[<code>colsOf</code>][colsOf]`<`[<code>Double</code>][Double]`>() }`
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Refine
 @Interpretable("DropNulls0")
@@ -918,16 +918,16 @@ public fun <T> DataFrame<T>.filterNotNull(columns: ColumnsSelector<T, *>): DataF
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
  *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  * ### This Drop Nulls Overload
- * This overload operates on all columns in the [DataFrame].
+ * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
@@ -939,9 +939,9 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
  *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
@@ -949,11 +949,11 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  * ### This Drop Nulls Overload
  *
- * `df.`[dropNulls][dropNulls]`(Person::length, whereAllNull = true)`
+ * `df.`[<code>dropNulls</code>][dropNulls]`(Person::length, whereAllNull = true)`
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [<code>KProperties</code>][KProperty] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -963,9 +963,9 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
  *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
@@ -973,11 +973,11 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  * ### This Drop Nulls Overload
  *
- * `df.`[dropNulls][dropNulls]`("length", whereAllNull = true)`
+ * `df.`[<code>dropNulls</code>][dropNulls]`("length", whereAllNull = true)`
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Strings][String] corresponding to the names of columns in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [<code>Strings</code>][String] corresponding to the names of columns in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
@@ -985,9 +985,9 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
  *
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
  * rows are dropped if any of the selected cells are `null`.
@@ -995,11 +995,11 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  * ### This Drop Nulls Overload
  *
- * `df.`[dropNulls][dropNulls]`(length, whereAllNull = true)`
+ * `df.`[<code>dropNulls</code>][dropNulls]`(length, whereAllNull = true)`
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1009,7 +1009,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
 /**
  * ## The Drop Nulls Operation
  *
- * Removes `null` values from this [DataColumn], adjusting the type accordingly.
+ * Removes `null` values from this [<code>DataColumn</code>][DataColumn], adjusting the type accordingly.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
  */
@@ -1023,11 +1023,11 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
@@ -1035,18 +1035,18 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1054,19 +1054,19 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * `df.`[dropNA][dropNA]`(whereAllNA = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>dropNA</code>][dropNA]`(whereAllNA = true) { `[<code>colsOf</code>][colsOf]`<`[<code>Double</code>][Double]`>() }`
  * @param whereAllNA `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- * @param columns The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * @param columns The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Refine
 @Interpretable("DropNa0")
@@ -1082,20 +1082,20 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: Columns
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
  *
- * `df.`[dropNA][dropNA]`(Person::length, whereAllNA = true)`
+ * `df.`[<code>dropNA</code>][dropNA]`(Person::length, whereAllNA = true)`
  * @param whereAllNA `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- * @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * @param columns The [<code>KProperties</code>][KProperty] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1105,11 +1105,11 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
@@ -1117,20 +1117,20 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`("length", "age")`
+ * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`("length", "age")`
  *
  *
  *
- * `df.`[dropNA][dropNA]`("length", whereAllNA = true)`
+ * `df.`[<code>dropNA</code>][dropNA]`("length", whereAllNA = true)`
  * @param whereAllNA `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- * @param columns The [Strings][String] corresponding to the names of columns in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * @param columns The [<code>Strings</code>][String] corresponding to the names of columns in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
@@ -1138,20 +1138,20 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
  *
- * `df.`[dropNA][dropNA]`(length, whereAllNA = true)`
+ * `df.`[<code>dropNA</code>][dropNA]`(length, whereAllNA = true)`
  * @param whereAllNA `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- * @param columns The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * @param columns The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1161,18 +1161,18 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
 /**
  * ## The Drop `NA` Operation
  *
- * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
- * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
- * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  * ### This Drop NA Overload
- * This overload operates on all columns in the [DataFrame].
+ * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNA `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
- *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  */
 @Refine
 @Interpretable("DropNa1")
@@ -1181,7 +1181,7 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = 
 /**
  * ## The Drop `NA` Operation
  *
- * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ * Removes [<code>`NA`</code>][NA] values from this [<code>DataColumn</code>][DataColumn], adjusting the type accordingly.
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
  */
@@ -1198,11 +1198,11 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
- * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
- * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
@@ -1210,18 +1210,18 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -1229,19 +1229,19 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
  *
- * `df.`[dropNaNs][dropNaNs]`(whereAllNaN = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>dropNaNs</code>][dropNaNs]`(whereAllNaN = true) { `[<code>colsOf</code>][colsOf]`<`[<code>Double</code>][Double]`>() }`
  * @param whereAllNaN `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
- *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
- * @param columns The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
+ * @param columns The [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
@@ -1255,20 +1255,20 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: Colu
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
- * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
- * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
  *
- * `df.`[dropNaNs][dropNaNs]`(Person::length, whereAllNaN = true)`
+ * `df.`[<code>dropNaNs</code>][dropNaNs]`(Person::length, whereAllNaN = true)`
  * @param whereAllNaN `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
- *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
- * @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
+ * @param columns The [<code>KProperties</code>][KProperty] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1278,20 +1278,20 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: 
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
- * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
- * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
  *
- * `df.`[dropNaNs][dropNaNs]`("length", whereAllNaN = true)`
+ * `df.`[<code>dropNaNs</code>][dropNaNs]`("length", whereAllNaN = true)`
  * @param whereAllNaN `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
- *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
- * @param columns The [Strings][String] corresponding to the names of columns in this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
+ * @param columns The [<code>Strings</code>][String] corresponding to the names of columns in this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolean = false): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
@@ -1299,20 +1299,20 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
- * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
- * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
  *
- * `df.`[dropNaNs][dropNaNs]`(length, whereAllNaN = true)`
+ * `df.`[<code>dropNaNs</code>][dropNaNs]`(length, whereAllNaN = true)`
  * @param whereAllNaN `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
- *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
- * @param columns The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
+ * @param columns The [<code>Column References</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] used to select the columns of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1322,25 +1322,25 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAl
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
- * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
- * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
- * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  * ### This Drop NaNs Overload
- * This overload operates on all columns in the [DataFrame].
+ * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNaN `false` by default.
- *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
- *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
  */
 public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> = dropNaNs(whereAllNaN) { all() }
 
 /**
  * ## The Drop `NaN` Operation
  *
- * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ * Removes [<code>`NaN`</code>][NaN] values from this [<code>DataColumn</code>][DataColumn], adjusting the type accordingly.
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
  */

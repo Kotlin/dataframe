@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 /**
- * Make your enum class inherit [DataSchemaEnum] to
+ * Make your enum class inherit [<code>DataSchemaEnum</code>][DataSchemaEnum] to
  * make String -> Enum and Enum -> String conversions work
- * using [value] instead of the enum name.
+ * using [<code>value</code>][value] instead of the enum name.
  * (Fallback to enum name if the value cannot be found is implemented)
  */
 public interface DataSchemaEnum {

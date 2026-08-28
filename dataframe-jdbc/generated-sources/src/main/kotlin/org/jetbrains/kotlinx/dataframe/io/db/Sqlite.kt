@@ -25,29 +25,29 @@ import java.time.LocalTime as JavaLocalTime
 
 /**
  * A user-provided converter from an SQLite declared column type name to
- * the [DataFrame] column type and a lambda that converts each stored value.
+ * the [<code>DataFrame</code>][DataFrame] column type and a lambda that converts each stored value.
  *
- * The type parameter [T] (and [expectedType] — this type as [KType]) is the **storage-class type** of the column
+ * The type parameter [<code>T</code>][T] (and [<code>expectedType</code>][expectedType] — this type as [<code>KType</code>][KType]) is the **storage-class type** of the column
  * — the actual class of
- * values returned by [java.sql.ResultSet.getObject][ResultSet.getObject] for that column.
- * Used as a result of [DbType.getExpectedJdbcType].
+ * values returned by [<code>java.sql.ResultSet.getObject</code>][ResultSet.getObject] for that column.
+ * Used as a result of [<code>DbType.getExpectedJdbcType</code>][DbType.getExpectedJdbcType].
  * The Xerial SQLite JDBC driver's `getObject(int)` returns exactly one of the following, chosen
  * from the runtime storage class of the value (not the declared column type):
  *
- *  - [java.lang.Integer] ([Int]) — `INTEGER` values that fit in `Int` (`-2^31 .. 2^31 - 1`)
- *  - [java.lang.Long] ([Long]) — `INTEGER` values outside `Int` range
- *  - [java.lang.Double] ([Double]) — `REAL` values
- *  - [java.lang.String] ([String]) — `TEXT` values
- *  - `byte[]` ([ByteArray]) — `BLOB` values
+ *  - [<code>java.lang.Integer</code>][java.lang.Integer] ([<code>Int</code>][Int]) — `INTEGER` values that fit in `Int` (`-2^31 .. 2^31 - 1`)
+ *  - [<code>java.lang.Long</code>][java.lang.Long] ([<code>Long</code>][Long]) — `INTEGER` values outside `Int` range
+ *  - [<code>java.lang.Double</code>][java.lang.Double] ([<code>Double</code>][Double]) — `REAL` values
+ *  - [<code>java.lang.String</code>][java.lang.String] ([<code>String</code>][String]) — `TEXT` values
+ *  - `byte[]` ([<code>ByteArray</code>][ByteArray]) — `BLOB` values
  *  - `null` — NULL
  *
  * The driver never produces any other type — in particular, declared `DATE` / `TIME` / `TIMESTAMP` /
  * `BOOLEAN` columns still surface as one of the six types above, not as their Java-time / Boolean
  * equivalent.
  *
- * The type parameter [R] (and [resultingType] — this type as [KType]) is the **resulting type** of the column
- * after applying [convert].
- * Used as a result of [DbType.getPreprocessedValueType].
+ * The type parameter [<code>R</code>][R] (and [<code>resultingType</code>][resultingType] — this type as [<code>KType</code>][KType]) is the **resulting type** of the column
+ * after applying [<code>convert</code>][convert].
+ * Used as a result of [<code>DbType.getPreprocessedValueType</code>][DbType.getPreprocessedValueType].
  *
  * ### Example
  * ```
@@ -80,9 +80,9 @@ public data class SqliteCustomTypeConverter<T, R>(
 )
 
 /**
- * DSL builder collected by [Sqlite.withCustomConverters]. Register converters via
- * [forType] (matches by declared SQL type name) or [forColumn] (matches by column name;
- * takes precedence over [forType]).
+ * DSL builder collected by [<code>Sqlite.withCustomConverters</code>][Sqlite.withCustomConverters]. Register converters via
+ * [<code>forType</code>][forType] (matches by declared SQL type name) or [<code>forColumn</code>][forColumn] (matches by column name;
+ * takes precedence over [<code>forType</code>][forType]).
  *
  * Two overloads are available for each column or type converter:
  *  - **Converter form** — `forType<T, R>(name) { raw -> ... }` / `forColumn<T, R>(name) { raw -> ... }`.
@@ -129,7 +129,7 @@ public class SqliteCustomConvertersBuilder
         /**
          * Register a converter for every column with the given declared SQL type name.
          *
-         * @param T the storage class of the raw stored value ([String], [Int], [Long], [Double],
+         * @param T the storage class of the raw stored value ([<code>String</code>][String], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Double</code>][Double],
          *    or [ByteArray]  or their nullable variants).
          * @param R the target Kotlin type for the resulting DataFrame column. Resolved via
          *   `typeOf<R>()` — must be a non-abstract type reachable by reflection.
@@ -148,7 +148,7 @@ public class SqliteCustomConvertersBuilder
 
         /**
          * Register an **identity converter** for every column with the given declared SQL type name:
-         * values pass through unchanged, but the [DataFrame] [column type][org.jetbrains.kotlinx.dataframe.DataColumn.type]
+         * values pass through unchanged, but the [<code>DataFrame</code>][DataFrame] [<code>column type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type]
          * is fixed to `T` (resolved via `typeOf<T>()`).
          *
          * Useful when SQLite's [type affinity](https://www.sqlite.org/datatype3.html#type_affinity)
@@ -158,8 +158,8 @@ public class SqliteCustomConvertersBuilder
          * `forType<String>("MY_ID")` pins the column to `String` regardless.
          *
          * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
-         *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
-         *   or [ByteArray] or their nullable variants).
+         *   storage-class types the driver actually returns ([<code>String</code>][String], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Double</code>][Double],
+         *   or [<code>ByteArray</code>][ByteArray] or their nullable variants).
          *
          * ### Example
          * ```
@@ -181,7 +181,7 @@ public class SqliteCustomConvertersBuilder
 
         /**
          * Register a converter for a specific column by name. Column-name overrides take
-         * precedence over type-name overrides registered via [forType].
+         * precedence over type-name overrides registered via [<code>forType</code>][forType].
          *
          * @param T the storage class of the raw stored value.
          * @param R the target Kotlin type for the resulting DataFrame column.
@@ -205,8 +205,8 @@ public class SqliteCustomConvertersBuilder
          * declared type would give.
          *
          * @param T the target Kotlin type for the resulting DataFrame column — must be one of the
-         *   storage-class types the driver actually returns ([String], [Int], [Long], [Double],
-         *   or [ByteArray] or their nullable variants).
+         *   storage-class types the driver actually returns ([<code>String</code>][String], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Double</code>][Double],
+         *   or [<code>ByteArray</code>][ByteArray] or their nullable variants).
          *
          * ### Example
          * ```
@@ -232,15 +232,15 @@ public class SqliteCustomConvertersBuilder
 /**
  * Represents the Sqlite database type.
  *
- * This class provides methods to convert data from a [ResultSet] to the appropriate type for
+ * This class provides methods to convert data from a [<code>ResultSet</code>][ResultSet] to the appropriate type for
  * [Sqlite](https://sqlite.org/),
- * and to generate the corresponding [DataFrame] schema.
+ * and to generate the corresponding [<code>DataFrame</code>][DataFrame] schema.
  *
  * Two levels of custom overrides are supported, with the following resolution order (first match
  * wins):
- *  1. [customColumnsMap] — keyed by the **column name**. Use this to override a specific column,
+ *  1. [<code>customColumnsMap</code>][customColumnsMap] — keyed by the **column name**. Use this to override a specific column,
  *     regardless of its declared type.
- *  2. [customTypesMap] — keyed by the declared **SQL type name** (as written in `CREATE TABLE`).
+ *  2. [<code>customTypesMap</code>][customTypesMap] — keyed by the declared **SQL type name** (as written in `CREATE TABLE`).
  *     Use this to override every column that shares a declared type.
  *  3. The built-in SQLite conversion for BOOLEAN, DATE, DATETIME, TIME, TIMESTAMP, DECIMAL,
  *     NUMERIC.
@@ -269,7 +269,7 @@ public class Sqlite(
     }
 
     /**
-     * Delegate all unexpected column type handlings to default [DbType]
+     * Delegate all unexpected column type handlings to default [<code>DbType</code>][DbType]
      */
     private val fallback: DbType = object : DbType("sqlite") {
         override val driverClassName: String get() = "org.sqlite.JDBC"
@@ -362,7 +362,7 @@ public class Sqlite(
     }
 
     /**
-     * Builds a converter that mirrors the base [DbType] pipeline end-to-end for this column using [fallback].
+     * Builds a converter that mirrors the base [<code>DbType</code>][DbType] pipeline end-to-end for this column using [<code>fallback</code>][fallback].
      */
     private fun fallbackConverter(meta: TableColumnMetadata): AnyJdbcToDataFrameConverter {
         val expectedJdbcTypeBase = fallback.getExpectedJdbcType(meta)
@@ -573,25 +573,25 @@ public class Sqlite(
 
     public companion object {
         /**
-         * Default [Sqlite] instance with no custom overrides.
+         * Default [<code>Sqlite</code>][Sqlite] instance with no custom overrides.
          *
          * Uses built-in SQLite conversions for most common types (`BOOLEAN`, `DATE`, `DATETIME`, `TIME`, `TIMESTAMP`,
          * `DECIMAL`, `NUMERIC`).
          *
-         * See [Sqlite.withCustomConverters] to register custom type converters.
+         * See [<code>Sqlite.withCustomConverters</code>][Sqlite.withCustomConverters] to register custom type converters.
          */
         public val default: Sqlite = Sqlite()
 
         /**
-         * Builds a [Sqlite] with custom type converters registered via a [SqliteCustomConvertersBuilder] DSL block.
+         * Builds a [<code>Sqlite</code>][Sqlite] with custom type converters registered via a [<code>SqliteCustomConvertersBuilder</code>][SqliteCustomConvertersBuilder] DSL block.
          *
-         * * use [forType][SqliteCustomConvertersBuilder.forType] to register a converter
+         * * use [<code>forType</code>][SqliteCustomConvertersBuilder.forType] to register a converter
          * keyed by the declared SQL type name (as written in `CREATE TABLE`);
-         * * use [forColumn][SqliteCustomConvertersBuilder.forColumn] to register a converter keyed by column name
-         * (takes precedence over [forType][SqliteCustomConvertersBuilder.forType] for the named column).
+         * * use [<code>forColumn</code>][SqliteCustomConvertersBuilder.forColumn] to register a converter keyed by column name
+         * (takes precedence over [<code>forType</code>][SqliteCustomConvertersBuilder.forType] for the named column).
          *
          * Both DSL functions accept two generic type parameters:
-         *  - `T` — the storage class of the raw stored value [String], [Int], [Long], [Double],
+         *  - `T` — the storage class of the raw stored value [<code>String</code>][String], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Double</code>][Double],
          *         or [ByteArray] or their nullable variants).
          *  - `R` — the target Kotlin type of the resulting DataFrame column; must be reified.
          *

@@ -86,37 +86,37 @@ private val logger = KotlinLogging.logger { }
 internal interface StringParser<out T> {
 
     /**
-     * Applies [ParserOptions] and optionally supplied previously [attemptedParsers]
-     * to get the actual [string parser function][ParserFunction] that
-     * can parse [String] to [T] (or `null` if unsuccessful).
+     * Applies [<code>ParserOptions</code>][ParserOptions] and optionally supplied previously [<code>attemptedParsers</code>][attemptedParsers]
+     * to get the actual [<code>string parser function</code>][ParserFunction] that
+     * can parse [<code>String</code>][String] to [<code>T</code>][T] (or `null` if unsuccessful).
      *
-     * If the returned [ParserFunction][ParserFunction]` == `[SKIP_PARSER][SKIP_PARSER], the function
-     * will always return `null` for the current [global parser options][Parsers] and given arguments
+     * If the returned [<code>ParserFunction</code>][ParserFunction]` == `[<code>SKIP_PARSER</code>][SKIP_PARSER], the function
+     * will always return `null` for the current [<code>global parser options</code>][Parsers] and given arguments
      * and can thus be skipped.
      */
     fun applyOptions(options: ParserOptions?, attemptedParsers: List<KType> = emptyList()): ParserFunction<T>
 
     /**
-     * Applies [ParserOptions] to get a [ParserFunction] that can be run in case
-     * this [StringParser] is turned into a converter (like at [Parsers.getAsConverterOrNull]).
+     * Applies [<code>ParserOptions</code>][ParserOptions] to get a [<code>ParserFunction</code>][ParserFunction] that can be run in case
+     * this [<code>StringParser</code>][StringParser] is turned into a converter (like at [<code>Parsers.getAsConverterOrNull</code>][Parsers.getAsConverterOrNull]).
      *
-     * By default, this should do the same as [applyOptions] but it may be customized.
-     * For instance, maybe the parser is skipped due to [GlobalParserOptions] but this should not happen
+     * By default, this should do the same as [<code>applyOptions</code>][applyOptions] but it may be customized.
+     * For instance, maybe the parser is skipped due to [<code>GlobalParserOptions</code>][GlobalParserOptions] but this should not happen
      * during conversion.
      *
      * Or, because we know what the expected parsed type should be,
      * we can enable fallback parsing via an intermediate type that may also be a parse target, such as:
      *
-     * [String] -> [DateTimeComponents] -> [LocalDate]
+     * [<code>String</code>][String] -> [<code>DateTimeComponents</code>][DateTimeComponents] -> [<code>LocalDate</code>][LocalDate]
      *
      * It's even okay if we lose some information in the process, meaning we can convert
-     * `"10-04-2026 13:11:42"` to [LocalDate]`(2026, 4, 10)`.
+     * `"10-04-2026 13:11:42"` to [<code>LocalDate</code>][LocalDate]`(2026, 4, 10)`.
      *
-     * This is different from if we were to just call `parse()` and be happy if any non-[String] type comes out.
+     * This is different from if we were to just call `parse()` and be happy if any non-[<code>String</code>][String] type comes out.
      */
     fun applyOptionsForConverter(options: ParserOptions?): ParserFunction<T>
 
-    /** [T], the target type of the parser. */
+    /** [<code>T</code>][T], the target type of the parser. */
     val type: KType
 }
 
@@ -155,21 +155,21 @@ internal typealias ParserFunction<T> = (String) -> T?
 internal fun <T> ParserFunction<T>.withFallback(fallbackFunction: ParserFunction<T>): ParserFunction<T> =
     parseBy { string -> this(string) ?: fallbackFunction(string) }
 
-/** Tiny helper function to create a correctly typed [ParserFunction]`<T>`, aka `(String) -> T?`. */
+/** Tiny helper function to create a correctly typed [<code>ParserFunction</code>][ParserFunction]`<T>`, aka `(String) -> T?`. */
 internal fun <T> parseBy(body: ParserFunction<T>): ParserFunction<T> = body
 
 /**
- * [ParserFunction] that always returns `null`.
- * Useful if a parser needs to be skipped based on the provided [ParserOptions].
+ * [<code>ParserFunction</code>][ParserFunction] that always returns `null`.
+ * Useful if a parser needs to be skipped based on the provided [<code>ParserOptions</code>][ParserOptions].
  */
 internal val SKIP_PARSER: ParserFunction<Nothing?> = parseBy { null }
 
 /**
- * Central implementation for [GlobalParserOptions].
+ * Central implementation for [<code>GlobalParserOptions</code>][GlobalParserOptions].
  *
- * Can be obtained by a user by calling [DataFrame.parser][DataFrame.Companion.parser].
+ * Can be obtained by a user by calling [<code>DataFrame.parser</code>][DataFrame.Companion.parser].
  *
- * Defaults are set by [resetToDefault].
+ * Defaults are set by [<code>resetToDefault</code>][resetToDefault].
  */
 internal object Parsers : GlobalParserOptions {
 
@@ -353,8 +353,8 @@ internal object Parsers : GlobalParserOptions {
     }
 
     /**
-     * Returns true if Kotlin DateTime parsing can be used based on the provided [options], [Parsers], and [isConverter] flag.
-     * [global parser options][Parsers] are ignored if [isConverter] is true.
+     * Returns true if Kotlin DateTime parsing can be used based on the provided [<code>options</code>][options], [<code>Parsers</code>][Parsers], and [<code>isConverter</code>][isConverter] flag.
+     * [<code>global parser options</code>][Parsers] are ignored if [<code>isConverter</code>][isConverter] is true.
      */
     private fun canUseKotlinDateTime(options: ParserOptions?, isConverter: Boolean): Boolean =
         when (options?.dateTime) {
@@ -375,8 +375,8 @@ internal object Parsers : GlobalParserOptions {
         }
 
     /**
-     * Returns true if Java DateTime parsing can be used based on the provided [options], [Parsers], and [isConverter] flag.
-     * [global parser options][Parsers] are ignored if [isConverter] is true.
+     * Returns true if Java DateTime parsing can be used based on the provided [<code>options</code>][options], [<code>Parsers</code>][Parsers], and [<code>isConverter</code>][isConverter] flag.
+     * [<code>global parser options</code>][Parsers] are ignored if [<code>isConverter</code>][isConverter] is true.
      */
     private fun canUseJavaDateTime(options: ParserOptions?, isConverter: Boolean): Boolean =
         when (options?.dateTime) {
@@ -439,12 +439,12 @@ internal object Parsers : GlobalParserOptions {
     private fun ParserOptions?.containsDateTimeFormats(): Boolean = this?.dateTime?.dateTimeFormats != null
 
     /**
-     * Parses a [string][str] using the given [java formatter][DateTimeFormatter] and [query]
+     * Parses a [<code>string</code>][str] using the given [<code>java formatter</code>][DateTimeFormatter] and [<code>query</code>][query]
      * while avoiding exceptions. This avoidance is achieved by first trying to parse the string _unresolved_.
      * If this is unsuccessful, we can simply return `null` without throwing an exception. Only if the string can
      * successfully be parsed unresolved, we try to parse it _resolved_.
      *
-     * See more about resolved and unresolved parsing in the [DateTimeFormatter] documentation.
+     * See more about resolved and unresolved parsing in the [<code>DateTimeFormatter</code>][DateTimeFormatter] documentation.
      */
     private fun <T : Temporal> JavaDateTimeFormatter.parseOrNull(str: String, query: TemporalQuery<out T>): T? =
         catchSilent {
@@ -1002,10 +1002,10 @@ internal object Parsers : GlobalParserOptions {
     }
 
     /**
-     * Turns the parsers of given [type] into a converter.
+     * Turns the parsers of given [<code>type</code>][type] into a converter.
      *
      * __NOTE__: Do not cache this converter.
-     * [GlobalParserOptions] might influence which parsers should run and which should be skipped.
+     * [<code>GlobalParserOptions</code>][GlobalParserOptions] might influence which parsers should run and which should be skipped.
      */
     @Suppress("UNCHECKED_CAST", "standard:blank-line-before-declaration")
     fun getAsConverterOrNull(type: KType, options: ParserOptions?): TypeConverter? {
@@ -1082,7 +1082,7 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
 
 /**
  * Tries to parse a column of strings into a column of a different type.
- * Each parser in [Parsers] is run in order until a valid parser is found,
+ * Each parser in [<code>Parsers</code>][Parsers] is run in order until a valid parser is found,
  * a.k.a. that parser was able to parse all values in the column successfully. If a parser
  * fails to parse any value, the next parser is tried. If all the others fail, the final parser
  * simply returns the original string, leaving the column unchanged.

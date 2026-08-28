@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.util.KEY_VALUE_PROPERTY
 import org.jetbrains.kotlinx.dataframe.util.KEY_VALUE_PROPERTY_KEY
 
-/** A [DataSchema] interface / class can implement this if it represents a map-like data schema (so name: value). */
+/** A [<code>DataSchema</code>][DataSchema] interface / class can implement this if it represents a map-like data schema (so name: value). */
 @DataSchema
 public interface NameValueProperty<T> {
     // needs to be explicitly overridden in @DataSchema interface, otherwise extension functions won't generate (TODO)
@@ -23,7 +23,7 @@ public interface NameValueProperty<T> {
 
 // region Deprecated
 
-/** A [DataSchema] interface / class can implement this if it represents a map-like data schema (so key: value). */
+/** A [<code>DataSchema</code>][DataSchema] interface / class can implement this if it represents a map-like data schema (so key: value). */
 @Deprecated(KEY_VALUE_PROPERTY, ReplaceWith("NameValueProperty<T>"))
 public interface KeyValueProperty<T> {
     // needs to be explicitly overridden in @DataSchema interface, otherwise extension functions won't generate (TODO)
@@ -55,44 +55,44 @@ public val DataRow<KeyValueProperty<*>?>.key: String?
     get() = this["key"] as String?
 
 /**
- * Accesses the 'key' column of this [KeyValueProperty][KeyValueProperty]
- * [ColumnsContainer][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
+ * Accesses the 'key' column of this [<code>KeyValueProperty</code>][KeyValueProperty]
+ * [<code>ColumnsContainer</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
  *
- * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
- * to [NameValueProperty].
+ * This is a temporary, future-proof, extension property in preparation of the migration from [<code>KeyValueProperty</code>][KeyValueProperty]
+ * to [<code>NameValueProperty</code>][NameValueProperty].
  */
 public val ColumnsScope<KeyValueProperty<*>>.name: DataColumn<String>
     @JvmName("KeyValueProperty_name")
     get() = key
 
 /**
- * Accesses the 'key' column of this [KeyValueProperty][KeyValueProperty]
- * [ColumnsContainer][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
+ * Accesses the 'key' column of this [<code>KeyValueProperty</code>][KeyValueProperty]
+ * [<code>ColumnsContainer</code>][org.jetbrains.kotlinx.dataframe.ColumnsContainer].
  *
- * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
- * to [NameValueProperty].
+ * This is a temporary, future-proof, extension property in preparation of the migration from [<code>KeyValueProperty</code>][KeyValueProperty]
+ * to [<code>NameValueProperty</code>][NameValueProperty].
  */
 public val ColumnsScope<KeyValueProperty<*>?>.name: DataColumn<String?>
     @JvmName("NullableKeyValueProperty_name")
     get() = key
 
 /**
- * Accesses the 'key' value of this [KeyValueProperty][KeyValueProperty]
- * [DataRow][DataRow].
+ * Accesses the 'key' value of this [<code>KeyValueProperty</code>][KeyValueProperty]
+ * [<code>DataRow</code>][DataRow].
  *
- * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
- * to [NameValueProperty].
+ * This is a temporary, future-proof, extension property in preparation of the migration from [<code>KeyValueProperty</code>][KeyValueProperty]
+ * to [<code>NameValueProperty</code>][NameValueProperty].
  */
 public val DataRow<KeyValueProperty<*>>.name: String
     @JvmName("KeyValueProperty_name")
     get() = key
 
 /**
- * Accesses the 'key' value of this [KeyValueProperty][KeyValueProperty]
- * [DataRow][DataRow].
+ * Accesses the 'key' value of this [<code>KeyValueProperty</code>][KeyValueProperty]
+ * [<code>DataRow</code>][DataRow].
  *
- * This is a temporary, future-proof, extension property in preparation of the migration from [KeyValueProperty]
- * to [NameValueProperty].
+ * This is a temporary, future-proof, extension property in preparation of the migration from [<code>KeyValueProperty</code>][KeyValueProperty]
+ * to [<code>NameValueProperty</code>][NameValueProperty].
  */
 public val DataRow<KeyValueProperty<*>?>.name: String?
     @JvmName("NullableKeyValueProperty_name")

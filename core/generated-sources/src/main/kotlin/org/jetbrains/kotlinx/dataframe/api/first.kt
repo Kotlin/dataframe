@@ -32,31 +32,31 @@ import kotlin.reflect.KProperty
 // region DataColumn
 
 /**
- * Returns the first value in this [DataColumn].
+ * Returns the first value in this [<code>DataColumn</code>][DataColumn].
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
  *
- * See also [firstOrNull], [last], [take], [takeLast].
+ * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
- * @return The first value in this [DataColumn].
+ * @return The first value in this [<code>DataColumn</code>][DataColumn].
  *
- * @throws [IndexOutOfBoundsException] if the [DataColumn] is empty.
+ * @throws [IndexOutOfBoundsException] if the [<code>DataColumn</code>][DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.first(): T = get(0)
 
 /**
- * Returns the first value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ * Returns the first value in this [<code>DataColumn</code>][DataColumn]. If the [<code>DataColumn</code>][DataColumn] is empty, returns `null`.
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
  *
- * See also [first], [last], [take], [takeLast].
+ * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
- * @return The first value in this [DataColumn], or `null` if the [DataColumn] is empty.
+ * @return The first value in this [<code>DataColumn</code>][DataColumn], or `null` if the [<code>DataColumn</code>][DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
 
 /**
- * Returns the first value in this [DataColumn] that matches the given [predicate].
+ * Returns the first value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
  *
  * ### Example
  * ```kotlin
@@ -67,24 +67,24 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
  *
- * See also [firstOrNull], [last], [take], [takeLast].
+ * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
+ * This predicate takes a value from the [<code>DataColumn</code>][DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
  *
- * @return The first value in this [DataColumn] that matches the given [predicate].
+ * @return The first value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
  *
- * @throws [NoSuchElementException] if the [DataColumn] contains no elements matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * @throws [NoSuchElementException] if the [<code>DataColumn</code>][DataColumn] contains no elements matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataColumn</code>][DataColumn] is empty).
  */
 public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
 
 /**
- * Returns the first value in this [DataColumn] that matches the given [predicate].
- * Returns `null` if the [DataColumn] contains no elements matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * Returns the first value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
+ * Returns `null` if the [<code>DataColumn</code>][DataColumn] contains no elements matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataColumn</code>][DataColumn] is empty).
  *
  * ### Example
  * ```kotlin
@@ -96,15 +96,15 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
  *
- * See also [first], [last], [take], [takeLast].
+ * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
+ * This predicate takes a value from the [<code>DataColumn</code>][DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
  *
- * @return The first value in this [DataColumn] that matches the given [predicate],
- * or `null` if the [DataColumn] contains no elements matching the [predicate].
+ * @return The first value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate],
+ * or `null` if the [<code>DataColumn</code>][DataColumn] contains no elements matching the [<code>predicate</code>][predicate].
  */
 public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
 
@@ -113,19 +113,19 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
 // region DataFrame
 
 /**
- * Returns the first [row][DataRow] in this [DataFrame].
+ * Returns the first [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame].
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>firstOrNull</code>][DataFrame.firstOrNull],
+ * [<code>last</code>][DataFrame.last],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @return A [DataRow] containing the first row in this [DataFrame].
+ * @return A [<code>DataRow</code>][DataRow] containing the first row in this [<code>DataFrame</code>][DataFrame].
  *
- * @throws NoSuchElementException if the [DataFrame] contains no rows.
+ * @throws NoSuchElementException if the [<code>DataFrame</code>][DataFrame] contains no rows.
  */
 public fun <T> DataFrame<T>.first(): DataRow<T> {
     if (nrow == 0) {
@@ -135,37 +135,37 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 }
 
 /**
- * Returns the first [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ * Returns the first [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame]. If the [<code>DataFrame</code>][DataFrame] does not contain any rows, returns `null`.
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/first.html#firstornull)
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>first</code>][DataFrame.first],
+ * [<code>last</code>][DataFrame.last],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
+ * @return A [<code>DataRow</code>][DataRow] containing the first row in this [<code>DataFrame</code>][DataFrame], or `null` if the [<code>DataFrame</code>][DataFrame] is empty.
  */
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
 /**
- * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ * Returns the first [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -176,18 +176,18 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * See also [firstOrNull][DataFrame.firstOrNull],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>firstOrNull</code>][DataFrame.firstOrNull],
+ * [<code>last</code>][DataFrame.last],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
  *
- * @return A [DataRow] containing the first row that matches the given [predicate].
+ * @return A [<code>DataRow</code>][DataRow] containing the first row that matches the given [<code>predicate</code>][predicate].
  *
- * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
+ * @throws [NoSuchElementException] if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate].
  */
 public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
     rows().first {
@@ -195,24 +195,24 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
     }
 
 /**
- * Returns the first [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
- * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
- * (including the case when the [DataFrame] is empty).
+ * Returns the first [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
+ * Returns `null` if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataFrame</code>][DataFrame] is empty).
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -224,17 +224,17 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/first.html#firstornull)
  *
- * See also [first][DataFrame.first],
- * [last][DataFrame.last],
- * [take][DataFrame.take],
- * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>first</code>][DataFrame.first],
+ * [<code>last</code>][DataFrame.last],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
  *
- * @return A [DataRow] containing the first row that matches the given [predicate],
- * or `null` if the [DataFrame] contains no rows matching the [predicate].
+ * @return A [<code>DataRow</code>][DataRow] containing the first row that matches the given [<code>predicate</code>][predicate],
+ * or `null` if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate].
  */
 public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rows().firstOrNull {
@@ -246,13 +246,13 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
 // region GroupBy
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking the first [row][DataRow] from each group,
- * and returns a [ReducedGroupBy] containing these rows
- * (one [row][DataRow] per group, each [row][DataRow] is the first [row][DataRow] in its group).
+ * [<code>Reduces</code>][GroupByDocs.Reducing] the groups of this [<code>GroupBy</code>][GroupBy]
+ * by taking the first [<code>row</code>][DataRow] from each group,
+ * and returns a [<code>ReducedGroupBy</code>][ReducedGroupBy] containing these rows
+ * (one [<code>row</code>][DataRow] per group, each [<code>row</code>][DataRow] is the first [<code>row</code>][DataRow] in its group).
  *
- * If a group in this [GroupBy] is empty,
- * the corresponding [row][DataRow] in the resulting [ReducedGroupBy] will contain `null` values
+ * If a group in this [<code>GroupBy</code>][GroupBy] is empty,
+ * the corresponding [<code>row</code>][DataRow] in the resulting [<code>ReducedGroupBy</code>][ReducedGroupBy] will contain `null` values
  * for all columns in the group, except the grouping key.
  *
  * ### Example
@@ -264,40 +264,40 @@ public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * For more information about [GroupBy] and [first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information about [<code>GroupBy</code>][GroupBy] and [<code>first</code>][first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * See also [last][GroupBy.last].
+ * See also [<code>last</code>][GroupBy.last].
  *
- * @return A [ReducedGroupBy] containing the first [row][DataRow]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] containing the first [<code>row</code>][DataRow]
+ * (or a [<code>row</code>][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOrNull() }
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking from each group the first [row][DataRow] satisfying the given [predicate],
- * and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per group,
- * each [row][DataRow] is the first [row][DataRow] in its group that satisfies the [predicate]).
+ * [<code>Reduces</code>][GroupByDocs.Reducing] the groups of this [<code>GroupBy</code>][GroupBy]
+ * by taking from each group the first [<code>row</code>][DataRow] satisfying the given [<code>predicate</code>][predicate],
+ * and returns a [<code>ReducedGroupBy</code>][ReducedGroupBy] containing these rows (one [<code>row</code>][DataRow] per group,
+ * each [<code>row</code>][DataRow] is the first [<code>row</code>][DataRow] in its group that satisfies the [<code>predicate</code>][predicate]).
  *
- * If the group in [GroupBy] contains no matching rows,
- * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
+ * If the group in [<code>GroupBy</code>][GroupBy] contains no matching rows,
+ * the corresponding row in [<code>ReducedGroupBy</code>][ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -308,15 +308,15 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * For more information about [GroupBy] and [first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information about [<code>GroupBy</code>][GroupBy] and [<code>first</code>][first] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * See also [last][GroupBy.last].
+ * See also [<code>last</code>][GroupBy.last].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedGroupBy] containing the first [row][DataRow] matching the [predicate]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] containing the first [<code>row</code>][DataRow] matching the [<code>predicate</code>][predicate]
+ * (or a [<code>row</code>][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { firstOrNull(predicate) }
@@ -326,12 +326,12 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
 // region Pivot
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the first [row][DataRow] from each group,
- * and returns a [ReducedPivot] that contains the first [row][DataRow] from the corresponding group in each column.
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking the first [<code>row</code>][DataRow] from each group,
+ * and returns a [<code>ReducedPivot</code>][ReducedPivot] that contains the first [<code>row</code>][DataRow] from the corresponding group in each column.
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * For more information about [Pivot] and [first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information about [<code>Pivot</code>][Pivot] and [<code>first</code>][first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  * ### Example
  * ```kotlin
@@ -340,35 +340,35 @@ public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T
  * df.pivot { type }.first().values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
+ * See also [<code>pivot</code>][pivot], [<code>reduce</code>][Pivot.reduce], [<code>last</code>][Pivot.last].
  *
- * @return A [ReducedPivot] containing in each column the first [row][DataRow] from the corresponding group.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] containing in each column the first [<code>row</code>][DataRow] from the corresponding group.
  */
 public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
- * satisfying the given [predicate], and returns a [ReducedPivot] that contains the first row, matching the [predicate],
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
+ * satisfying the given [<code>predicate</code>][predicate], and returns a [<code>ReducedPivot</code>][ReducedPivot] that contains the first row, matching the [<code>predicate</code>][predicate],
  * from the corresponding group in each column.
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * For more information about [Pivot] and [first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information about [<code>Pivot</code>][Pivot] and [<code>first</code>][first] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -378,13 +378,13 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * df.pivot { type }.first { !soldOut }.values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [last][Pivot.last].
+ * See also [<code>pivot</code>][pivot], [<code>reduce</code>][Pivot.reduce], [<code>last</code>][Pivot.last].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedPivot] containing in each column the first [row][DataRow]
- * that satisfies the [predicate], from the corresponding group (or a [row][DataRow] with `null` values).
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] containing in each column the first [<code>row</code>][DataRow]
+ * that satisfies the [<code>predicate</code>][predicate], from the corresponding group (or a [<code>row</code>][DataRow] with `null` values).
  */
 public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce { firstOrNull(predicate) }
 
@@ -393,15 +393,15 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
 // region PivotGroupBy
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the first [row][DataRow]
- * from each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy]
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking the first [<code>row</code>][DataRow]
+ * from each combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group, and returns a [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy]
  * that contains the first row from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
- * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
+ * If any combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group in [<code>PivotGroupBy</code>][PivotGroupBy] is empty, in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy]
+ * it will be represented by a [<code>row</code>][DataRow] with `null` values (except the grouping key).
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
  *
- * For more information about [PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
+ * For more information about [<code>PivotGroupBy</code>][PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * ### Example
  * ```kotlin
@@ -411,23 +411,23 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * df.pivot { type }.groupBy { city }.first().values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [last][PivotGroupBy.last].
+ * See also [<code>groupBy</code>][Pivot.groupBy],
+ * [<code>pivot</code>][GroupBy.pivot],
+ * [<code>reduce</code>][PivotGroupBy.reduce],
+ * [<code>last</code>][PivotGroupBy.last].
  *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] containing in each combination of a [<code>groupBy</code>][groupBy] key and a [<code>pivot</code>][pivot] key either
+ * the first [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
+ * or a [<code>row</code>][DataRow] with `null` values (except the grouping key) if this [<code>DataFrame</code>][DataFrame] is empty.
  */
 public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy]
- * by taking from each combined [pivot] + [groupBy] group the first [row][DataRow] satisfying the given [predicate].
- * Returns a [ReducedPivotGroupBy] that contains the first row, matching the [predicate], from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
- * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy]
+ * by taking from each combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group the first [<code>row</code>][DataRow] satisfying the given [<code>predicate</code>][predicate].
+ * Returns a [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] that contains the first row, matching the [<code>predicate</code>][predicate], from each corresponding group.
+ * If any combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group in [<code>PivotGroupBy</code>][PivotGroupBy] does not contain any rows matching the [<code>predicate</code>][predicate],
+ * in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] it will be represented by a [<code>row</code>][DataRow] with `null` values
  * (except the grouping key).
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/first.html)
@@ -440,18 +440,18 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -462,17 +462,17 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * df.pivot { type }.groupBy { city }.first { !soldOut }.values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [last][PivotGroupBy.last].
+ * See also [<code>groupBy</code>][Pivot.groupBy],
+ * [<code>pivot</code>][GroupBy.pivot],
+ * [<code>reduce</code>][PivotGroupBy.reduce],
+ * [<code>last</code>][PivotGroupBy.last].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the first value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the first matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] containing in each combination of a [<code>groupBy</code>][groupBy] key and a [<code>pivot</code>][pivot] key either
+ * the first matching the [<code>predicate</code>][predicate] [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
+ * or a [<code>row</code>][DataRow] with `null` values if this [<code>DataFrame</code>][DataFrame] does not contain any rows matching the [<code>predicate</code>][predicate].
  */
 public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> =
     reduce { firstOrNull(predicate) }
@@ -482,9 +482,9 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
 // region ColumnsSelectionDsl
 
 /**
- * ## First (Col) [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## First (Col) [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface FirstColumnsSelectionDsl {
 
@@ -494,61 +494,61 @@ public interface FirstColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**`first`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`firstCol`**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`first`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`firstCol`**</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -560,13 +560,13 @@ public interface FirstColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`first`**][ColumnsSelectionDsl.first] */
+        /** [<code>**`first`**</code>][ColumnsSelectionDsl.first] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
+        /** __`.`__[<code>**`first`**</code>][ColumnsSelectionDsl.first] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
+        /** __`.`__[<code>**`firstCol`**</code>][ColumnsSelectionDsl.firstCol] */
         public typealias ColumnGroupName = Nothing
     }
 
@@ -574,28 +574,28 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>first</code>][ColumnsSelectionDsl.first]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][String.firstCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
      *
      *
-     * @param [condition] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -610,30 +610,30 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[first][ColumnSet.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>String</code>][String]`>().`[<code>first</code>][ColumnSet.first]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[first][ColumnSet.first]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>().`[<code>first</code>][ColumnSet.first]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -649,28 +649,28 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[first][ColumnsSelectionDsl.first]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>first</code>][ColumnsSelectionDsl.first]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -683,28 +683,28 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[firstCol][SingleColumn.firstCol]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>firstCol</code>][SingleColumn.firstCol]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -718,28 +718,28 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[firstCol][String.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][String.firstCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -751,30 +751,30 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[firstCol][SingleColumn.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>firstCol</code>][SingleColumn.firstCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[firstCol][KProperty.firstCol]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { DataSchemaType::myColumnGroup.`[<code>firstCol</code>][KProperty.firstCol]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
@@ -788,28 +788,28 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col)
      *
      * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[firstCol][kotlin.String.firstCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][kotlin.String.firstCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[firstCol][ColumnPath.firstCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>firstCol</code>][ColumnPath.firstCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the first column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]

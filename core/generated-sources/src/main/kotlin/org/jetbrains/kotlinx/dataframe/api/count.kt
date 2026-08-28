@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 // region DataColumn
 
 /**
- * Counts the elements in this [DataColumn] that satisfy a given [predicate] or returns the total count
+ * Counts the elements in this [<code>DataColumn</code>][DataColumn] that satisfy a given [<code>predicate</code>][predicate] or returns the total count
  * if no predicate is provided.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
@@ -37,7 +37,7 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
 // region DataRow
 
 /**
- * Returns the number of columns in this [DataRow].
+ * Returns the number of columns in this [<code>DataRow</code>][DataRow].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html) [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -47,7 +47,7 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
 public fun DataRow<*>.count(): Int = columnsCount()
 
 /**
- * Counts the number of elements in the current row that satisfy the given [predicate].
+ * Counts the number of elements in the current row that satisfy the given [<code>predicate</code>][predicate].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html) [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -62,31 +62,31 @@ public inline fun DataRow<*>.count(predicate: Predicate<Any?>): Int = values().c
 // region DataFrame
 
 /**
- * Returns the total number of rows of this [DataFrame].
+ * Returns the total number of rows of this [<code>DataFrame</code>][DataFrame].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
- * @return The number of rows in the [DataFrame].
+ * @return The number of rows in the [<code>DataFrame</code>][DataFrame].
  */
 public fun <T> DataFrame<T>.count(): Int = rowsCount()
 
 /**
- * Counts the number of rows in this [DataFrame] that satisfy the given [predicate].
+ * Counts the number of rows in this [<code>DataFrame</code>][DataFrame] that satisfy the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * See also:
- * - [filter][DataFrame.filter] — filters rows using a [RowFilter] condition.
- * - [countDistinct][DataFrame.countDistinct] — counts distinct rows or values.
+ * - [<code>filter</code>][DataFrame.filter] — filters rows using a [<code>RowFilter</code>][RowFilter] condition.
+ * - [<code>countDistinct</code>][DataFrame.countDistinct] — counts distinct rows or values.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -99,8 +99,8 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
  * df.count { prev()?.length >= 50.0 ?: false }
  * ```
  *
- * @param T The schema marker type of the [DataFrame].
- * @param predicate A [RowFilter] that returns `true` for rows that should be counted.
+ * @param T The schema marker type of the [<code>DataFrame</code>][DataFrame].
+ * @param predicate A [<code>RowFilter</code>][RowFilter] that returns `true` for rows that should be counted.
  * @return The number of rows that satisfy the predicate.
  */
 public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count { predicate(it, it) }
@@ -110,16 +110,16 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
 // region GroupBy
 
 /**
- * Aggregates this [GroupBy] by counting the number of rows in each group.
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by counting the number of rows in each group.
  *
- * Returns a new [DataFrame] where each row corresponds to a group.
+ * Returns a new [<code>DataFrame</code>][DataFrame] where each row corresponds to a group.
  * The resulting frame contains:
  * - the original group key columns,
- * - a new column (named [resultName], default is `"count"`) that contains the number of rows in each group.
+ * - a new column (named [<code>resultName</code>][resultName], default is `"count"`) that contains the number of rows in each group.
  *
  * This is equivalent to applying `.aggregate { count() }`, but more efficient.
  *
- * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
+ * See also [<code>DataFrame.groupBy</code>][DataFrame.groupBy] and common [<code>aggregate</code>][Grouped.aggregate].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -131,7 +131,7 @@ public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().
  * ```
  *
  * @param resultName The name of the result column that will store the group sizes. Defaults to `"count"`.
- * @return A new [DataFrame] with group keys and corresponding group sizes.
+ * @return A new [<code>DataFrame</code>][DataFrame] with group keys and corresponding group sizes.
  */
 @Refine
 @Interpretable("GroupByCount0")
@@ -139,29 +139,29 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
     aggregateValue(resultName) { count() default 0 }
 
 /**
- * Aggregates this [GroupBy] by counting the number of rows in each group
- * that satisfy the given [predicate].
+ * Aggregates this [<code>GroupBy</code>][GroupBy] by counting the number of rows in each group
+ * that satisfy the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
- * Returns a new [DataFrame] where each row corresponds to a group.
+ * Returns a new [<code>DataFrame</code>][DataFrame] where each row corresponds to a group.
  * The resulting frame contains:
  * - the original group key columns,
- * - a new column (named [resultName], defaults to `"count"`)
- *   that stores the number of rows in each group matching the [predicate].
+ * - a new column (named [<code>resultName</code>][resultName], defaults to `"count"`)
+ *   that stores the number of rows in each group matching the [<code>predicate</code>][predicate].
  *
  * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
  *
- * See also [DataFrame.groupBy] and common [aggregate][Grouped.aggregate].
+ * See also [<code>DataFrame.groupBy</code>][DataFrame.groupBy] and common [<code>aggregate</code>][Grouped.aggregate].
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -173,7 +173,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * ```
  *
  * @param resultName The name of the result column containing the group sizes. Defaults to `"count"`.
- * @return A new [DataFrame] with group keys and filtered row counts per group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with group keys and filtered row counts per group.
  */
 @Refine
 @Interpretable("GroupByCount0")
@@ -187,26 +187,26 @@ public inline fun <T> Grouped<T>.count(
 // region Pivot
 
 /**
- * Aggregates this [Pivot] by counting the number of rows in each group.
+ * Aggregates this [<code>Pivot</code>][Pivot] by counting the number of rows in each group.
  *
- * Returns a single [DataRow] where:
- * - each column corresponds to a [pivot] group — if multiple pivot keys were used,
+ * Returns a single [<code>DataRow</code>][DataRow] where:
+ * - each column corresponds to a [<code>pivot</code>][pivot] group — if multiple pivot keys were used,
  *   the result will contain column groups for each pivot key, with columns inside
  *   corresponding to the values of that key;
  * - each value contains the number of rows in that group.
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * The original [<code>Pivot</code>][Pivot] column structure is preserved.
+ * If the [<code>Pivot</code>][Pivot] was created using multiple or nested keys
+ * (e.g., via [<code>and</code>][PivotDsl.and] or [<code>then</code>][PivotDsl.then]),
  * the structure remains unchanged — only the contents of each group
  * are replaced with the number of rows in that group.
  *
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
- * - [pivot].
- * - common [aggregate][Pivot.aggregate].
- * - [pivotCounts][DataFrame.pivotCounts] shortcut.
+ * - [<code>pivot</code>][pivot].
+ * - common [<code>aggregate</code>][Pivot.aggregate].
+ * - [<code>pivotCounts</code>][DataFrame.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -217,43 +217,43 @@ public inline fun <T> Grouped<T>.count(
  * df.pivot { city }.count()
  * ```
  *
- * @return A single [DataRow] with one column per group and the corresponding group size as its value.
+ * @return A single [<code>DataRow</code>][DataRow] with one column per group and the corresponding group size as its value.
  */
 public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
 
 /**
- * Aggregates this [Pivot] by counting the number of rows in each group
- * that satisfy the given [predicate].
+ * Aggregates this [<code>Pivot</code>][Pivot] by counting the number of rows in each group
+ * that satisfy the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
- * Returns a single [DataRow] where:
- * - each column corresponds to a [pivot] group — if multiple pivot keys were used,
+ * Returns a single [<code>DataRow</code>][DataRow] where:
+ * - each column corresponds to a [<code>pivot</code>][pivot] group — if multiple pivot keys were used,
  *   the result will contain column groups for each pivot key, with columns inside
  *   corresponding to the values of that key;
- * - each value contains the number of rows in that group matching the [predicate].
+ * - each value contains the number of rows in that group matching the [<code>predicate</code>][predicate].
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * The original [<code>Pivot</code>][Pivot] column structure is preserved.
+ * If the [<code>Pivot</code>][Pivot] was created using multiple or nested keys
+ * (e.g., via [<code>and</code>][PivotDsl.and] or [<code>then</code>][PivotDsl.then]),
  * the structure remains unchanged — only the contents of each group
- * are replaced with the number of rows (matching the [predicate]) in that group.
+ * are replaced with the number of rows (matching the [<code>predicate</code>][predicate]) in that group.
  *
  * This is equivalent to calling `.aggregate { count(predicate) }`, but more efficient.
  *
  * See also:
- * - [pivot].
- * - common [aggregate][Pivot.aggregate].
- * - [pivotCounts][DataFrame.pivotCounts] shortcut.
+ * - [<code>pivot</code>][pivot].
+ * - common [<code>aggregate</code>][Pivot.aggregate].
+ * - [<code>pivotCounts</code>][DataFrame.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -264,7 +264,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  * df.pivot { city }.count { income > 30.0 }
  * ```
  *
- * @return A single [DataRow] with original [Pivot] columns and filtered row counts per group.
+ * @return A single [<code>DataRow</code>][DataRow] with original [<code>Pivot</code>][Pivot] columns and filtered row counts per group.
  */
 public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataRow<T> = delegate { count(predicate) }
 
@@ -273,26 +273,26 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
 // region PivotGroupBy
 
 /**
- * Aggregates this [PivotGroupBy] by counting the number of rows in each
- * combined [pivot] + [groupBy] group.
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by counting the number of rows in each
+ * combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group.
  *
- * Returns a new [DataFrame] containing a following matrix:
- * - one row per [groupBy] key (or keys set);
- * - one column group per [pivot] key, where each inner column corresponds to a value of that key;
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing a following matrix:
+ * - one row per [<code>groupBy</code>][groupBy] key (or keys set);
+ * - one column group per [<code>pivot</code>][pivot] key, where each inner column corresponds to a value of that key;
  * - each cell contains the number of rows in the corresponding pivot–group pair.
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * The original [<code>Pivot</code>][Pivot] column structure is preserved.
+ * If the [<code>Pivot</code>][Pivot] was created using multiple or nested keys
+ * (e.g., via [<code>and</code>][PivotDsl.and] or [<code>then</code>][PivotDsl.then]),
  * the result will contain nested column groups reflecting that key structure,
  * with each group containing columns for the values of the corresponding key.
  *
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
- *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
- *  - common [aggregate][PivotGroupBy.aggregate];
- *  - [GroupBy.pivotCounts] shortcut.
+ *  - [<code>pivot</code>][pivot], [<code>DataFrame.groupBy</code>][DataFrame.groupBy], [<code>Pivot.groupBy</code>][Pivot.groupBy] and [<code>GroupBy.pivot</code>][GroupBy.pivot].
+ *  - common [<code>aggregate</code>][PivotGroupBy.aggregate];
+ *  - [<code>GroupBy.pivotCounts</code>][GroupBy.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -304,32 +304,32 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  * df.pivot { city }.groupBy { age }.count()
  * ```
  *
- * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns.
+ * @return A [<code>DataFrame</code>][DataFrame] with [<code>groupBy</code>][groupBy] rows and pivoted counts as columns.
  */
 public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() default 0 }
 
 /**
- * Aggregates this [PivotGroupBy] by counting the number of rows in each
- * combined [pivot] + [groupBy] group, that satisfy the given [predicate].
+ * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by counting the number of rows in each
+ * combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group, that satisfy the given [<code>predicate</code>][predicate].
  *
- * Returns a new [DataFrame] containing a following matrix:
- * - one row per [groupBy] key (or keys set);
- * - one column group per [pivot] key, where each inner column corresponds to a value of that key;
+ * Returns a new [<code>DataFrame</code>][DataFrame] containing a following matrix:
+ * - one row per [<code>groupBy</code>][groupBy] key (or keys set);
+ * - one column group per [<code>pivot</code>][pivot] key, where each inner column corresponds to a value of that key;
  * - each cell contains the number of rows in the corresponding pivot–group pair.
  *
- * The original [Pivot] column structure is preserved.
- * If the [Pivot] was created using multiple or nested keys
- * (e.g., via [and][PivotDsl.and] or [then][PivotDsl.then]),
+ * The original [<code>Pivot</code>][Pivot] column structure is preserved.
+ * If the [<code>Pivot</code>][Pivot] was created using multiple or nested keys
+ * (e.g., via [<code>and</code>][PivotDsl.and] or [<code>then</code>][PivotDsl.then]),
  * the result will contain nested column groups reflecting that key structure,
  * with each group containing columns for the values
- * (matching the [predicate]) of the corresponding key.
+ * (matching the [<code>predicate</code>][predicate]) of the corresponding key.
  *
  * This is equivalent to calling `.aggregate { count() }`, but more efficient.
  *
  * See also:
- *  - [pivot], [DataFrame.groupBy], [Pivot.groupBy] and [GroupBy.pivot].
- *  - common [aggregate][PivotGroupBy.aggregate];
- *  - [GroupBy.pivotCounts] shortcut.
+ *  - [<code>pivot</code>][pivot], [<code>DataFrame.groupBy</code>][DataFrame.groupBy], [<code>Pivot.groupBy</code>][Pivot.groupBy] and [<code>GroupBy.pivot</code>][GroupBy.pivot].
+ *  - common [<code>aggregate</code>][PivotGroupBy.aggregate];
+ *  - [<code>GroupBy.pivotCounts</code>][GroupBy.pivotCounts] shortcut.
  *
  * For more information: [See `count` on the documentation website.](https://kotlin.github.io/dataframe/count.html)
  *
@@ -341,7 +341,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  * df.pivot { city }.groupBy { age }.count()
  * ```
  *
- * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns matching the [predicate]..
+ * @return A [<code>DataFrame</code>][DataFrame] with [<code>groupBy</code>][groupBy] rows and pivoted counts as columns matching the [<code>predicate</code>][predicate]..
  */
 public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<T> =
     aggregate {

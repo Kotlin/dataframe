@@ -62,7 +62,7 @@ public annotation class Order(val order: Int)
  * 1. Scope properties that only serve as a reference for internal property resolution
  * 2. Schema properties that reflect dataframe structure
  * Scope properties need
- * to be excluded in IDE plugin and in [org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor.get]
+ * to be excluded in IDE plugin and in [<code>org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor.get</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor.get]
  * This annotation serves to distinguish between the two where needed
  */
 @Target(AnnotationTarget.PROPERTY)

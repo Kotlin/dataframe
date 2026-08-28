@@ -47,31 +47,31 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 /**
- * ### [DataFrame] aggregation statistics
+ * ### [<code>DataFrame</code>][DataFrame] aggregation statistics
  *
- * Predefined shortcuts for the most common statistical aggregation operations on [DataFrame].
+ * Predefined shortcuts for the most common statistical aggregation operations on [<code>DataFrame</code>][DataFrame].
  *
- * * [count][DataFrame.count] — calculate the number of rows
+ * * [<code>count</code>][DataFrame.count] — calculate the number of rows
  *   (optionally counting only rows that satisfy the given predicate);
- * * [max][DataFrame.max] / [maxOf][DataFrame.maxOf] / [maxFor][DataFrame.maxFor] —
+ * * [<code>max</code>][DataFrame.max] / [<code>maxOf</code>][DataFrame.maxOf] / [<code>maxFor</code>][DataFrame.maxFor] —
  *   calculate the maximum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [min][DataFrame.min] / [minOf][DataFrame.minOf] / [minFor][DataFrame.minFor] —
+ * * [<code>min</code>][DataFrame.min] / [<code>minOf</code>][DataFrame.minOf] / [<code>minFor</code>][DataFrame.minFor] —
  *   calculate the minimum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [sum][DataFrame.sum] / [sumOf][DataFrame.sumOf] / [sumFor][DataFrame.sumFor] —
+ * * [<code>sum</code>][DataFrame.sum] / [<code>sumOf</code>][DataFrame.sumOf] / [<code>sumFor</code>][DataFrame.sumFor] —
  *   calculate the sum of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [mean][DataFrame.mean] / [meanOf][DataFrame.meanOf] / [meanFor][DataFrame.meanFor] —
+ * * [<code>mean</code>][DataFrame.mean] / [<code>meanOf</code>][DataFrame.meanOf] / [<code>meanFor</code>][DataFrame.meanFor] —
  *   calculate the mean (average) of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [std][DataFrame.std] / [stdOf][DataFrame.stdOf] / [stdFor][DataFrame.stdFor] —
+ * * [<code>std</code>][DataFrame.std] / [<code>stdOf</code>][DataFrame.stdOf] / [<code>stdFor</code>][DataFrame.stdFor] —
  *   calculate the standard deviation of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [median][DataFrame.median] / [medianOf][DataFrame.medianOf] / [medianFor][DataFrame.medianFor] —
+ * * [<code>median</code>][DataFrame.median] / [<code>medianOf</code>][DataFrame.medianOf] / [<code>medianFor</code>][DataFrame.medianFor] —
  *   calculate the median of all values on the selected columns / by a row expression /
  *   for each of the selected columns;
- * * [percentile][DataFrame.percentile] / [percentileOf][DataFrame.percentileOf] / [percentileFor][DataFrame.percentileFor] —
+ * * [<code>percentile</code>][DataFrame.percentile] / [<code>percentileOf</code>][DataFrame.percentileOf] / [<code>percentileFor</code>][DataFrame.percentileFor] —
  *   calculate a specified percentile of all values on the selected columns / by a row expression /
  *   for each of the selected columns.
  *
@@ -81,44 +81,44 @@ internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
  *  allows to compute statistics on the
- * and store the results as a new column using [into][AggregateDsl.into].
+ * and store the results as a new column using [<code>into</code>][AggregateDsl.into].
  *
  *
  * The resulting  has the same structure as the original
  * ;
- * instead of the groups, there are new columns of aggregated values created with [into][AggregateDsl.into].
+ * instead of the groups, there are new columns of aggregated values created with [<code>into</code>][AggregateDsl.into].
  *
- * You can use any of [DataFrame Aggregation Statistics][DataFrameAggregationStatistics]
+ * You can use any of [<code>DataFrame Aggregation Statistics</code>][DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
- * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
- * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
- * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
- * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+ * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
+ * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+ * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+ * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
  * in the resulting  while preserving the original structure at higher levels.
  */
 internal interface AggregateDslDocs
 
 /**
- * A specialized [ColumnsSelectionDsl] that allows to aggregate
- * [DataFrame] or `DataFrame`-like structures ([GroupBy], [Pivot] or [PivotGroupBy]).
+ * A specialized [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] that allows to aggregate
+ * [<code>DataFrame</code>][DataFrame] or `DataFrame`-like structures ([<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot] or [<code>PivotGroupBy</code>][PivotGroupBy]).
  *
- * [AggregateDsl] allows to compute statistics on the columns of the [DataFrame] or columns within groups in [GroupBy], [Pivot], or [PivotGroupBy]
- * and store the results as a new column using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given aggregating expression is applied to each group independently.
+ * [<code>AggregateDsl</code>][AggregateDsl] allows to compute statistics on the columns of the [<code>DataFrame</code>][DataFrame] or columns within groups in [<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot], or [<code>PivotGroupBy</code>][PivotGroupBy]
+ * and store the results as a new column using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given aggregating expression is applied to each group independently.
  *
  *
- * The resulting [DataFrame] or [DataRow] has the same structure as the original
- * [DataFrame], [GroupBy], [Pivot] or [PivotGroupBy];
- * instead of the groups, there are new columns of aggregated values created with [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
+ * The resulting [<code>DataFrame</code>][DataFrame] or [<code>DataRow</code>][DataRow] has the same structure as the original
+ * [<code>DataFrame</code>][DataFrame], [<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot] or [<code>PivotGroupBy</code>][PivotGroupBy];
+ * instead of the groups, there are new columns of aggregated values created with [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
  *
- * You can use any of [DataFrame Aggregation Statistics][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
+ * You can use any of [<code>DataFrame Aggregation Statistics</code>][org.jetbrains.kotlinx.dataframe.aggregation.DataFrameAggregationStatistics]
  * or any custom aggregation function.
  *
- * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
- * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
- * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
- * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
- * in the resulting [DataFrame] or [DataRow] while preserving the original structure at higher levels.
+ * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
+ * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+ * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+ * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+ * in the resulting [<code>DataFrame</code>][DataFrame] or [<code>DataRow</code>][DataRow] while preserving the original structure at higher levels.
  *
  *
  *
@@ -132,13 +132,13 @@ public abstract class AggregateDsl<out T> :
 
     /**
      * Adds the result of the aggregation operation to the resulting
-     * [DataFrame] or [DataRow] as a new column.
+     * [<code>DataFrame</code>][DataFrame] or [<code>DataRow</code>][DataRow] as a new column.
      *
-     * Aggregated values can be either simple values, [data rows][org.jetbrains.kotlinx.dataframe.DataRow] or even
-     * [data frames][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [into][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
-     * to creating [value column][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
-     * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [frame column][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
-     * in the resulting [DataFrame] or [DataRow] while preserving the original structure at higher levels.
+     * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
+     * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
+     * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+     * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+     * in the resulting [<code>DataFrame</code>][DataFrame] or [<code>DataRow</code>][DataRow] while preserving the original structure at higher levels.
      *
      * @param [name] The name of the new column.
      */
@@ -160,7 +160,7 @@ public abstract class AggregateDsl<out T> :
      * Sets the default value for the aggregation operation.
      * All `null` values will be replaced with this value.
      *
-     * Can be used before or after [into].
+     * Can be used before or after [<code>into</code>][into].
      *
      * @receiver The aggregation operation result.
      * @param [defaultValue] The default value for the result.

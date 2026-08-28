@@ -38,13 +38,13 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  * `Long`/`ULong` and `Double` could be joined to `Double`,
  * potentially losing a little precision, but a warning will be given.
  *
- * See [UnifiedNumberTypeOptions] for these settings.
+ * See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions] for these settings.
  *
  * Nullability, while not displayed in the graph, is also taken into account.
  * This means that `Int?` and `Float` will be unified to `Double?`.
  *
- * At the bottom of the graph is [Nothing].
+ * At the bottom of the graph is [<code>Nothing</code>][Nothing].
  * This can be interpreted as "no type" and can have no instance,
- * while [Nothing?][Nothing] can only be `null`.
+ * while [<code>Nothing?</code>][Nothing] can only be `null`.
  */
 public interface UnifyingNumbers

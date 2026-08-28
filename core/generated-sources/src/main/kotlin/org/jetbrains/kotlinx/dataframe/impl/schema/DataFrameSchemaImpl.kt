@@ -15,22 +15,22 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchemaDoc
 import org.jetbrains.kotlinx.dataframe.schema.plus
 
 /**
- * [DataFrameSchema] implementation.
+ * [<code>DataFrameSchema</code>][DataFrameSchema] implementation.
  *
  * Represents the schema of a dataframe,
  * i.e., an ordered map of column names to their types.
  *
- * Column types are represented by [ColumnSchema][org.jetbrains.kotlinx.dataframe.schema.ColumnSchema]:
+ * Column types are represented by [<code>ColumnSchema</code>][org.jetbrains.kotlinx.dataframe.schema.ColumnSchema]:
  *
- * - For value columns, it contains the [type][kotlin.reflect.KType] of the column.
- * - For column groups, it contains the [DataFrameSchema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the nested columns.
- * - For frame columns, it contains the [DataFrameSchema][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the contained dataframes.
+ * - For value columns, it contains the [<code>type</code>][kotlin.reflect.KType] of the column.
+ * - For column groups, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the nested columns.
+ * - For frame columns, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the contained dataframes.
  *
- * Use [compare][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
- * to compare this schema with another schema using different [comparison modes][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode].
+ * Use [<code>compare</code>][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
+ * to compare this schema with another schema using different [<code>comparison modes</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode].
  * The comparison ignores column order and can report how the schemas are related.
  *
- * Use [equals][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.equals]
+ * Use [<code>equals</code>][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.equals]
  * to check whether two schemas are exactly equal, including column order.
  */
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
@@ -75,20 +75,20 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
 
     /**
      * Returns `true` if, and only if,
-     * this schema has the same columns **in the same order** as the [other schema][other].
+     * this schema has the same columns **in the same order** as the [<code>other schema</code>][other].
      * The types must also match exactly.
      *
-     * Each column is compared by [ColumnSchema.equals], so nested schemas of
-     * [column group schemas][ColumnSchema.Group] and [frame column schemas][ColumnSchema.Frame]
+     * Each column is compared by [<code>ColumnSchema.equals</code>][ColumnSchema.equals], so nested schemas of
+     * [<code>column group schemas</code>][ColumnSchema.Group] and [<code>frame column schemas</code>][ColumnSchema.Frame]
      * are compared by these same rules, recursively.
      *
-     * Note that [equals] and [compare][DataFrameSchema.compare] behave differently:
-     * [equals] requires schemas to match exactly, including column order,
-     * while [compare][DataFrameSchema.compare] ignores column order and provides additional comparison options
-     * (see [ComparisonMode]).
+     * Note that [<code>equals</code>][equals] and [<code>compare</code>][DataFrameSchema.compare] behave differently:
+     * [<code>equals</code>][equals] requires schemas to match exactly, including column order,
+     * while [<code>compare</code>][DataFrameSchema.compare] ignores column order and provides additional comparison options
+     * (see [<code>ComparisonMode</code>][ComparisonMode]).
      *
-     * Use [compare][DataFrameSchema.compare] when column order does not matter or
-     * when you need additional [comparison options][ComparisonMode].
+     * Use [<code>compare</code>][DataFrameSchema.compare] when column order does not matter or
+     * when you need additional [<code>comparison options</code>][ComparisonMode].
      *
      * @see [DataFrameSchema.compare]
      * @see [CompareResult.matches]

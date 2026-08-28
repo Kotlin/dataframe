@@ -17,9 +17,9 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
 /**
- * Provides access to [columns][DataColumn].
+ * Provides access to [<code>columns</code>][DataColumn].
  *
- * Base interface for [DataFrame] and [ColumnSelectionDsl]
+ * Base interface for [<code>DataFrame</code>][DataFrame] and [<code>ColumnSelectionDsl</code>][ColumnSelectionDsl]
  *
  * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */

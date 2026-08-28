@@ -56,9 +56,9 @@ public annotation class CsvOptions(public val delimiter: Char)
  * An annotation class that represents options for JDBC connection.
  *
  * @property [user] The username for the JDBC connection. Default value is an empty string.
- * If [extractCredFromEnv] is true, the [user] value will be interpreted as key for system environment variable.
+ * If [<code>extractCredFromEnv</code>][extractCredFromEnv] is true, the [<code>user</code>][user] value will be interpreted as key for system environment variable.
  * @property [password] The password for the JDBC connection. Default value is an empty string.
- * If [extractCredFromEnv] is true, the [password] value will be interpreted as key for system environment variable.
+ * If [<code>extractCredFromEnv</code>][extractCredFromEnv] is true, the [<code>password</code>][password] value will be interpreted as key for system environment variable.
  * @property [extractCredFromEnv] Whether to extract the JDBC credentials from environment variables. Default value is false.
  * @property [tableName] The name of the table for the JDBC connection. Default value is an empty string.
  * @property [sqlQuery] The SQL query to be executed in the JDBC connection. Default value is an empty string.
@@ -74,18 +74,18 @@ public annotation class JdbcOptions(
 public annotation class JsonOptions(
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.
-     * Must be either [JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [JsonOptions.TypeClashTactics.ANY_COLUMNS]
-     * */
+     * Must be either [<code>JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS</code>][JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [<code>JsonOptions.TypeClashTactics.ANY_COLUMNS</code>][JsonOptions.TypeClashTactics.ANY_COLUMNS]
+     */
     public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
-     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
+     * List of [<code>JsonPath</code>][JsonPath]s where instead of a [<code>ColumnGroup</code>][ColumnGroup], a [<code>FrameColumn</code>][FrameColumn]<[<code>NameValueProperty</code>][NameValueProperty]>
      *     will be created.
      *
      * Example:
      * `["""$["store"]["book"][*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
-    /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
+    /** Whether to [<code>unify the numbers that are read</code>][UnifyingNumbers]. `true` by default. */
     public val unifyNumbers: Boolean = true,
 ) {
     public object TypeClashTactics {

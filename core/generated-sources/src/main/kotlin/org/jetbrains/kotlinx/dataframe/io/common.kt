@@ -16,10 +16,10 @@ import java.net.URI
 import java.net.URL
 
 /**
- * Opens a stream to [url] to create a [DataFrame] from it.
+ * Opens a stream to [<code>url</code>][url] to create a [<code>DataFrame</code>][DataFrame] from it.
  * If the URL is a file URL, the file is read directly.
  * If the URL is an HTTP URL, it's also read directly, but if the server returns an error code,
- * the error response is read and parsed as [DataFrame] too.
+ * the error response is read and parsed as [<code>DataFrame</code>][DataFrame] too.
  *
  * Public so it may be used in other modules.
  */
@@ -72,7 +72,7 @@ public fun urlAsFile(url: URL): File = File(url.toURI())
 public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")
 
 /**
- * Converts a file path or URL [String] to a [URL].
+ * Converts a file path or URL [<code>String</code>][String] to a [<code>URL</code>][URL].
  * If the path is a file path, the file is checked for existence and not being a directory.
  */
 public fun asUrl(fileOrUrl: String): URL =

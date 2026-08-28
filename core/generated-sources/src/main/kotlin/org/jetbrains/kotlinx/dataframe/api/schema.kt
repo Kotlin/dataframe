@@ -28,7 +28,7 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
 // endregion
 
 /**
- * [ordered] - if true, columns are ordered the same as in runtime schema for easier diff between the two.
+ * [<code>ordered</code>][ordered] - if true, columns are ordered the same as in runtime schema for easier diff between the two.
  * if false, columns are ordered as they are represented in the compiler plugin
  */
 public inline fun <reified T> DataFrame<T>.compileTimeSchema(ordered: Boolean = true): DataFrameSchema =

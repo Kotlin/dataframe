@@ -14,9 +14,9 @@ private const val TROUBLESHOOTING_LINK =
  * 2) ClassCastException -> most probably incorrect column type. Should be replaced with a custom "wrong column type"  exception (#1871)
  * 3) else -> unexpected exception.
  *
- * @param [e] any [Exception] caught inside `catch(e: Exception)`.
+ * @param [e] any [<code>Exception</code>][Exception] caught inside `catch(e: Exception)`.
  * @param [columnName] rendered column name used in the resulting exception message.
- * @throws [IllegalStateException] with a custom message that depends on the type of [e] and with [e] as its cause.
+ * @throws [IllegalStateException] with a custom message that depends on the type of [<code>e</code>][e] and with [<code>e</code>][e] as its cause.
  */
 public fun handleExtensionPropertyException(e: Exception, columnName: String) {
     val msg = when (e) {

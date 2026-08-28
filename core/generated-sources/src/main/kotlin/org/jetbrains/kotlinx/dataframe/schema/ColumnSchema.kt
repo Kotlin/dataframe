@@ -14,25 +14,25 @@ import kotlin.reflect.typeOf
 
 public sealed class ColumnSchema {
 
-    /** Either [Value] or [Group] or [Frame]. */
+    /** Either [<code>Value</code>][Value] or [<code>Group</code>][Group] or [<code>Frame</code>][Frame]. */
     public abstract val kind: ColumnKind
 
-    /** Whether the column is nullable. Is always `false` for [Group]. */
+    /** Whether the column is nullable. Is always `false` for [<code>Group</code>][Group]. */
     public abstract val nullable: Boolean
 
     /**
      * The type of the column.
-     * For [Value] this is the common base type associated with all the values in the column.
-     * For [Group] this is [AnyRow].
-     * For [Frame] this is [AnyFrame].
+     * For [<code>Value</code>][Value] this is the common base type associated with all the values in the column.
+     * For [<code>Group</code>][Group] this is [<code>AnyRow</code>][AnyRow].
+     * For [<code>Frame</code>][Frame] this is [<code>AnyFrame</code>][AnyFrame].
      */
     public abstract val type: KType
 
     /**
      * The type associated with the contents of the column.
-     * For [Value] this is irrelevant and thus `null`. Use [type] instead.
-     * For [Group] this is the common base type associated with all the [DataRow]s in the column.
-     * For [Frame] this is the common base type associated with all the [DataFrame]s in the column.
+     * For [<code>Value</code>][Value] this is irrelevant and thus `null`. Use [<code>type</code>][type] instead.
+     * For [<code>Group</code>][Group] this is the common base type associated with all the [<code>DataRow</code>][DataRow]s in the column.
+     * For [<code>Frame</code>][Frame] this is the common base type associated with all the [<code>DataFrame</code>][DataFrame]s in the column.
      */
     public abstract val contentType: KType?
 

@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.RECORD_SEPAR
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**
- * ### Convert [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV String
+ * ### Convert [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to CSV String
  *
- * Converts [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV [String].
+ * Converts [this][this] [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a CSV [<code>String</code>][String].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -25,14 +25,14 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeCsv][writeCsv]`()`, you can write CSV to [File][File], [Path][java.nio.file.Path],
- * [Appendable], or [String].
+ * With overloads of [DataFrame.writeCsv][writeCsv]`()`, you can write CSV to [<code>File</code>][File], [<code>Path</code>][java.nio.file.Path],
+ * [<code>Appendable</code>][Appendable], or [<code>String</code>][String].
  *
  * For example, [DataFrame.writeCsv][writeCsv]`("output.csv")`
  *
- * or [DataFrame.writeCsv][writeCsv]`(`[File][File]`("output.csv"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeCsv][writeCsv]`(`[<code>File</code>][File]`("output.csv"), quoteMode = `[<code>QuoteMode.ALL</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
- * Converting to a [String] can be done like this:
+ * Converting to a [<code>String</code>][String] can be done like this:
  *
  * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
  *
@@ -45,9 +45,9 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  *   Used when field- or line delimiters should be interpreted as literal text.
  *
  *   For example: `123,"hello, there",456,` would correspond to: `123`; `hello, there`; `456`.
- * @param quoteMode The [QuoteMode][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
- *   Default: [QuoteMode.MINIMAL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
- * @param escapeChar The escape character to use when writing CSV / TSV files with [QuoteMode.NONE][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
+ * @param quoteMode The [<code>QuoteMode</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
+ *   Default: [<code>QuoteMode.MINIMAL</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
+ * @param escapeChar The escape character to use when writing CSV / TSV files with [<code>QuoteMode.NONE</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
  *   Default: `null`. This will double-quote the value.
  * @param commentChar The character that indicates a comment line in a CSV / TSV file.
  *   Default: `'#'`.

@@ -310,7 +310,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 // region create DataFrame
 
 /**
- * Creates new [DataFrame] with given [columns].
+ * Creates new [<code>DataFrame</code>][DataFrame] with given [<code>columns</code>][columns].
  *
  * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitled1", "untitled2" etc.
  *
@@ -320,7 +320,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
  *
  * @throws [DuplicateColumnNamesException] if column names are not unique
  * @throws [UnequalColumnSizesException] if column size are not equal
- * @param columns columns for [DataFrame]
+ * @param columns columns for [<code>DataFrame</code>][DataFrame]
  */
 public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
@@ -526,7 +526,7 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * Adds a column to the builder, ensuring its name is unique.
      *
      * - If a column with the same name already exists, the new column is renamed to a unique name.
-     * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical values
+     * - If [<code>checkDuplicateValues</code>][checkDuplicateValues] is `true`, the method checks whether the new column has identical values
      *   to an existing column with the same name. If the values match, the column is not added.
      *
      * [See `DynamicDataFrameBuilder` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dynamicdataframebuilder)
@@ -560,7 +560,7 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * and infers the type of the column's elements.
      *
      * - If a column with the same name already exists, the new column is renamed to a unique name.
-     * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
+     * - If the [<code>checkDuplicateValues</code>][checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
      *   has identical values to an existing column with the same name. If the values match, the column is not added.
      *
      * [See `DynamicDataFrameBuilder` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dynamicdataframebuilder)
@@ -584,24 +584,24 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
     public fun get(column: String): AnyCol? = cols[column]
 
     /**
-     * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame].
-     * The resulting [DataFrame] is constructed from the columns stored in the builder.
+     * Converts the current [<code>DynamicDataFrameBuilder</code>][DynamicDataFrameBuilder] instance into a [<code>DataFrame</code>][DataFrame].
+     * The resulting [<code>DataFrame</code>][DataFrame] is constructed from the columns stored in the builder.
      *
      * [See `DynamicDataFrameBuilder` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dynamicdataframebuilder)
      *
-     * @return A [DataFrame] containing the columns defined in the [DynamicDataFrameBuilder].
+     * @return A [<code>DataFrame</code>][DataFrame] containing the columns defined in the [<code>DynamicDataFrameBuilder</code>][DynamicDataFrameBuilder].
      */
     public fun toDataFrame(): DataFrame<*> = cols.values.toDataFrame()
 }
 
 /**
- * Returns [DataFrame] with empty columns according to schema [T].
+ * Returns [<code>DataFrame</code>][DataFrame] with empty columns according to schema [<code>T</code>][T].
  *
- * To create [DataFrame] with empty columns or empty rows see [DataFrame.empty]
+ * To create [<code>DataFrame</code>][DataFrame] with empty columns or empty rows see [<code>DataFrame.empty</code>][DataFrame.empty]
  *
  * [See `emptyDataFrame` on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#emptydataframe)
  *
- * @param T schema marker for [DataFrame]
+ * @param T schema marker for [<code>DataFrame</code>][DataFrame]
  */
 public inline fun <reified T> emptyDataFrame(): DataFrame<T> = DataFrame.emptyOf<T>()
 
