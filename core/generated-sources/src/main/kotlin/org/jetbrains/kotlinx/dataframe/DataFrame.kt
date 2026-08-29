@@ -89,7 +89,7 @@ public interface DataFrame<out T> :
      *
      * Returns a new [<code>DataRow</code>][DataRow] with the aggregated values.
      *
-     * [<code>AggregateDsl</code>][AggregateDsl] allows to compute statistics on the columns of this [<code>DataFrame</code>][DataFrame]
+     * [<code>AggregateDsl</code>][AggregateDsl] allows you to compute statistics on the columns of this [<code>DataFrame</code>][DataFrame]
      * and store the results as a new column using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into].
      *
      *

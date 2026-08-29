@@ -6,7 +6,7 @@ import java.sql.ResultSet
 import kotlin.reflect.KType
 
 /**
- * Alternative version of [<code>DbType</code>][DbType] that allows to customize type mapping
+ * Alternative version of [<code>DbType</code>][DbType] that allows you to customize type mapping
  * by initializing a [<code>JdbcToDataFrameConverter</code>][JdbcToDataFrameConverter] instance for each JDBC type.
  *
  * This can be helpful for JDBC databases that support structured data, like [<code>DuckDb</code>][DuckDb]
