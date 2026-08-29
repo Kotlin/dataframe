@@ -81,12 +81,12 @@ public class ExtensionsGenerator(
         if (visibility !in EXPECTED_VISIBILITIES) {
             val message = buildString {
                 append(
-                    "DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES",
+                    "The DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES, but",
                 )
                 if (this@effectivelyPublicOrInternalOrNull != dataSchema) {
-                    append(", but its parent $nameString is $visibility")
+                    append("its parent $nameString is $visibility.")
                 } else {
-                    append(", but is $visibility")
+                    append("it is $visibility.")
                 }
             }
             logger.error(message)
