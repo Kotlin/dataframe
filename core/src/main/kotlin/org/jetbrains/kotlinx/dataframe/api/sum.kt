@@ -121,6 +121,34 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias ZeroCellOnEmptySnippet = Nothing
 
     /**
+     * {@comment Note about which columns the no-argument `sum` modes take into account. KDoc-snippet.}
+     *
+     * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
+     * the other columns are simply left out of the result.
+     */
+    @ExcludeFromSources
+    typealias AllSuitableColumnsSnippet = Nothing
+
+    /**
+     * {@comment The documentation website links all [Grouped] `sum` KDocs end with. KDoc-snippet.}
+     *
+     * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+     * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+     */
+    @ExcludeFromSources
+    typealias GroupByUrlsSnippet = Nothing
+
+    /**
+     * {@comment The documentation website links all [Pivot] and [PivotGroupBy] `sum` KDocs end with.
+     *    KDoc-snippet.}
+     *
+     * For more information: {@include [DocumentationUrls.PivotStatistics]},
+     * {@include [DocumentationUrls.PivotAggregationStatistics]}
+     */
+    @ExcludeFromSources
+    typealias PivotUrlsSnippet = Nothing
+
+    /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSumOperationArg]}
      */
@@ -280,21 +308,299 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
+     * @comment The parts all [DataFrame.sumOf] overloads have in common.
+     *    KDoc-snippet.
+     *
+     * @include [SumDocs.RowExpressionSnippet]
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroOnEmptySnippet]
+     *
+     * See also:
+     * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
+     * $[SEE_ALSO_TAIL]
+     *
+     * For more information: {@include [DocumentationUrls.Sum]}
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface DataFrameSumOfSnippet {
+
+        // The remaining "See also" bullets of this sumOf overload.
+        typealias SEE_ALSO_TAIL = Nothing
+
+        // The example to render for this sumOf overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * {@comment The parts all [Grouped.sumFor] overloads have in common. KDoc-snippet.}
+     *
+     * Aggregates this [GroupBy] by computing the sum of the values of
+     * each selected column separately, per group.
+     *
+     * Returns a new [DataFrame] with one row per group, containing the group key columns
+     * and a column with the sum for each selected column.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * $[NOTE]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumForSelectingOptions].
+     *
+     * See also:
+     * - [`sum`][Grouped.sum]`()` — the same, but for all suitable columns at once.
+     * - [`sum`][Grouped.sum]` { columns }` — a single sum of all values in the selected columns, per group.
+     * - [`meanFor`][Grouped.meanFor] — the sum of each selected column divided by its number of values,
+     *   per group.
+     * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.GroupByUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface GroupedSumForSnippet {
+
+        // The note about the aggregate columns selector; can be omitted
+        typealias NOTE = Nothing
+
+        // The example to render for this sumFor overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * @comment The parts all column-selecting [Grouped.sum] overloads have in common.
+     *    KDoc-snippet.
+     *
+     * Aggregates this [GroupBy] by computing a single sum of all the values
+     * in the selected columns, per group.
+     *
+     * Returns a new [DataFrame] with one row per group, containing the group key columns and
+     * a single column with the sum per group.
+     * That column is named [name\], or, if [name\] is `null`, after the selected column
+     * if exactly one column is selected, and `"sum"` otherwise.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumSelectingOptions].
+     *
+     * See also:
+     * - [`sumFor`][Grouped.sumFor] — the sum of each selected column separately, per group.
+     * - [`sumOf`][Grouped.sumOf] — the sum of the values a row expression returns
+     *   for each row of a group.
+     * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.GroupByUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface GroupedSumSnippet {
+
+        // The example to render for this sum overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * {@comment The parts all [Pivot.sumFor] overloads have in common. KDoc-snippet.}
+     *
+     * Aggregates this [Pivot] by computing the sum of the values of
+     * each selected column separately, per group.
+     *
+     * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum
+     * of each selected column of the corresponding group.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * $[NOTE]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
+     * [`Pivot` Grammar][PivotDocs.Grammar].
+     *
+     * See also:
+     * - [`sum`][Pivot.sum]`()` — the same, but for all suitable columns at once.
+     * - [`sum`][Pivot.sum]` { columns }` — a single sum of all values in the selected columns, per group.
+     * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.PivotUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface PivotSumForSnippet {
+
+        // The note about the aggregate columns selector; can be omitted
+        typealias NOTE = Nothing
+
+        // The example to render for this sumFor overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * @comment The parts all column-selecting [Pivot.sum] overloads have in common.
+     *    KDoc-snippet.
+     *
+     * Aggregates this [Pivot] by computing a single sum of all the values
+     * in the selected columns, per group.
+     *
+     * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum of all
+     * the values in the selected columns of the corresponding group.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
+     * [`Pivot` Grammar][PivotDocs.Grammar].
+     *
+     * See also:
+     * - [`sum`][Pivot.sum]`()` — the sum of each suitable column separately, per group.
+     * - [`sumFor`][Pivot.sumFor] — the sum of each selected column separately, per group.
+     * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.PivotUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface PivotSumSnippet {
+
+        // The example to render for this sum overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * {@comment The parts all [PivotGroupBy.sumFor] overloads have in common. KDoc-snippet.}
+     *
+     * Aggregates this [PivotGroupBy] by computing the sum of the values of
+     * each selected column separately, per group.
+     *
+     * Returns a [DataFrame] where each cell contains the sum of each selected column
+     * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * $[NOTE]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
+     * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+     *
+     * See also:
+     * - [`sum`][PivotGroupBy.sum]`()` — the same, but for all suitable columns at once.
+     * - [`sum`][PivotGroupBy.sum]` { columns }` — a single sum of all values in the selected columns,
+     *   per group.
+     * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+     *   a [PivotGroupBy].
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.PivotUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface PivotGroupBySumForSnippet {
+
+        // The note about the aggregate columns selector; can be omitted
+        typealias NOTE = Nothing
+
+        // The example to render for this sumFor overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * @comment The parts all column-selecting [PivotGroupBy.sum] overloads have in common.
+     *    KDoc-snippet.
+     *
+     * Aggregates this [PivotGroupBy] by computing a single sum of all the values
+     * in the selected columns, per group.
+     *
+     * Returns a [DataFrame] where each cell contains the sum of all the values in the selected columns
+     * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
+     * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
+     *
+     * See also:
+     * - [`sum`][PivotGroupBy.sum]`()` — the sum of each suitable column separately, per group.
+     * - [`sumFor`][PivotGroupBy.sumFor] — the sum of each selected column separately, per group.
+     * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
+     *   a [PivotGroupBy].
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * @include [SumDocs.PivotUrlsSnippet]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface PivotGroupBySumSnippet {
+
+        // The example to render for this sum overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
      * {@comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.}
      *
-     * @param [columns\] The [ColumnsSelector] used to select the columns of this [DataFrame]
-     *   to compute the sum of.
+     * @param [columns\] The [ColumnsSelector] used to select the columns to compute the sum of.
      */
     @ExcludeFromSources
     typealias ColumnsSelectorParam = Nothing
 
     /**
+     * {@comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.}
+     *
+     * @param [columns\] The [ColumnsForAggregateSelector] used to select the columns
+     *   to compute the sum of.
+     */
+    @ExcludeFromSources
+    typealias AggregateColumnsSelectorParam = Nothing
+
+    /**
      * {@comment The `columns` parameter of the [String] overloads. KDoc-snippet.}
      *
-     * @param [columns\] The names of the columns of this [DataFrame] to compute the sum of.
+     * @param [columns\] The names of the columns to compute the sum of.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
+
+    /**
+     * {@comment The `expression` parameter of the `sumOf` overloads. KDoc-snippet.}
+     *
+     * @param [expression\] The [RowExpression] to compute the value to sum for each row.
+     */
+    @ExcludeFromSources
+    typealias ExpressionParam = Nothing
+
+    /**
+     * {@comment The `name` parameter of the [Grouped.sum] overloads. KDoc-snippet.}
+     *
+     * @param [name\] The name of the resulting column.
+     *   If `null` (the default), the name of the selected column is used if exactly one column
+     *   is selected, and `"sum"` otherwise.
+     */
+    @ExcludeFromSources
+    typealias ResultColumnNameParam = Nothing
 }
 
 /** [The Sum Operation][SumDocs] */
@@ -609,9 +915,7 @@ public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): 
 /**
  * Returns the sum of the values of each suitable column of this [DataFrame] separately.
  *
- * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
- * the other columns are simply left out of the result.
- *
+ * @include [SumDocs.AllSuitableColumnsSnippet]
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
@@ -648,8 +952,7 @@ public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * df.sumFor(skipNaN = true) { age into "totalAge" and (weight into "totalWeight") }
  * ```
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
- *   to compute the sum of.
+ * @include [SumDocs.AggregateColumnsSelectorParam]
  * @return A single [DataRow] with the sum of each selected column.
  */
 @Refine
@@ -814,23 +1117,15 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  * Returns the sum of the [Short] values that the given [expression] returns
  * for each row of this [DataFrame], as an [Int].
  *
- * @include [SumDocs.RowExpressionSnippet]
- * @include [SumDocs.SupportedTypesSnippet]
- * @include [SumDocs.ZeroOnEmptySnippet]
- *
- * See also:
- * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
+ * @include [SumDocs.DataFrameSumOfSnippet]
+ * @set [SumDocs.DataFrameSumOfSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all halved "amount" values (of `Short`s), as an `Int`
  * df.sumOf { (amount / 2).toShort() }
  * ```
- *
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return The sum of the values [expression] returns, as an [Int].
  */
 @JvmName("sumOfShort")
@@ -842,25 +1137,15 @@ public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline express
  * Returns the sum of the [Byte] values that the given [expression] returns
  * for each row of this [DataFrame], as an [Int].
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * See also:
- * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
+ * @include [SumDocs.DataFrameSumOfSnippet]
+ * @set [SumDocs.DataFrameSumOfSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all halved "amount" values (of `Byte`s), as an `Int`
  * df.sumOf { (amount / 2).toByte() }
  * ```
- *
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return The sum of the values [expression] returns, as an [Int].
  */
 @JvmName("sumOfByte")
@@ -872,27 +1157,17 @@ public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expressi
  * Returns the sum of the values that the given [expression] returns
  * for each row of this [DataFrame].
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * See also:
- * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
+ * @include [SumDocs.DataFrameSumOfSnippet]
+ * @set [SumDocs.DataFrameSumOfSnippet.SEE_ALSO_TAIL]
  * - [`meanOf`][DataFrame.meanOf] — the sum of those values divided by the number of values.
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of the weight-to-age ratios of all rows
  * df.sumOf { (weight ?: 0) / age }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return The sum of the values [expression] returns.
  */
 @Suppress("UNCHECKED_CAST")
@@ -913,12 +1188,10 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
  *
  * Returns a new [DataFrame] with one row per group, containing the group key columns
  * and a column with the sum for each suitable column.
- * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
- * the other columns are simply left out of the result.
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.AllSuitableColumnsSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * See also:
  * - [`sumFor`][Grouped.sumFor] — the same, but for an explicit selection of columns.
@@ -927,8 +1200,7 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [SumDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -945,41 +1217,15 @@ public fun <T> Grouped<T>.sum(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
 /**
- * Aggregates this [GroupBy] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
- * and a column with the sum for each selected column.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SumDocs.AggregateColumnsSelectorSnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions].
- *
- * See also:
- * - [`sum`][Grouped.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][Grouped.sum]` { columns }` — a single sum of all values in the selected columns, per group.
- * - [`meanFor`][Grouped.meanFor] — the sum of each selected column divided by its number of values,
- *   per group.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.GroupedSumForSnippet]
+ * @set [SumDocs.GroupedSumForSnippet.NOTE] {@include [SumDocs.AggregateColumnsSelectorSnippet]}
+ * @set [SumDocs.GroupedSumForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of the "age" values and the sum of the "weight" values
  * df.groupBy { city }.sumFor { age and weight }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.AggregateColumnsSelectorParam]
  * @return A new [DataFrame] with the group keys and the sum of each selected column per group.
  */
 @Refine
@@ -990,38 +1236,13 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
 /**
- * Aggregates this [GroupBy] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a new [DataFrame] with one row per group, containing the group key columns
- * and a column with the sum for each selected column.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions].
- *
- * See also:
- * - [`sum`][Grouped.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][Grouped.sum]` { columns }` — a single sum of all values in the selected columns, per group.
- * - [`meanFor`][Grouped.meanFor] — the sum of each selected column divided by its number of values,
- *   per group.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.GroupedSumForSnippet]
+ * @set [SumDocs.GroupedSumForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of the "age" values and the sum of the "weight" values
  * df.groupBy { city }.sumFor("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the sum of each selected column per group.
  */
@@ -1043,44 +1264,16 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
 ): DataFrame<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [GroupBy] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
- * a single column with the sum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
- * if exactly one column is selected, and `"sum"` otherwise.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions].
- *
- * See also:
- * - [`sumFor`][Grouped.sumFor] — the sum of each selected column separately, per group.
- * - [`sumOf`][Grouped.sumOf] — the sum of the values a row expression returns
- *   for each row of a group.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.GroupedSumSnippet]
+ * @set [SumDocs.GroupedSumSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of all values in the "age" and "weight" columns,
  * // in a column called "total"
  * df.groupBy { city }.sum("total") { age and weight }
  * ```
- *
- * @param [name] The name of the resulting column.
- *   If `null` (the default), the name of the selected column is used if exactly one column
- *   is selected, and `"sum"` otherwise.
+ * @include [SumDocs.ResultColumnNameParam]
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return A new [DataFrame] with the group keys and a single sum per group.
  */
 @Refine
@@ -1092,43 +1285,15 @@ public fun <T, C : Number?> Grouped<T>.sum(
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, name, columns)
 
 /**
- * Aggregates this [GroupBy] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a new [DataFrame] with one row per group, containing the group key columns and
- * a single column with the sum per group.
- * That column is named [name], or, if [name] is `null`, after the selected column
- * if exactly one column is selected, and `"sum"` otherwise.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions].
- *
- * See also:
- * - [`sumFor`][Grouped.sumFor] — the sum of each selected column separately, per group.
- * - [`sumOf`][Grouped.sumOf] — the sum of the values a row expression returns
- *   for each row of a group.
- * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.GroupedSumSnippet]
+ * @set [SumDocs.GroupedSumSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of all values in the "age" and "weight" columns,
  * // in a column called "total"
  * df.groupBy { city }.sum("age", "weight", name = "total")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
- * @param [name] The name of the resulting column.
- *   If `null` (the default), the name of the selected column is used if exactly one column
- *   is selected, and `"sum"` otherwise.
+ * @include [SumDocs.ColumnNamesParam]
+ * @include [SumDocs.ResultColumnNameParam]
  * @include [SumDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and a single sum per group.
  */
@@ -1161,11 +1326,9 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * Returns a new [DataFrame] with one row per group, containing the group key columns and
  * a single column with the sum per group, named [resultName] (or `"sum"` if [resultName] is `null`).
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.RowExpressionSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * See also:
  * - [`sum`][Grouped.sum] — a single sum of all values in the selected columns, per group.
@@ -1173,8 +1336,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [SumDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1184,7 +1346,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
  *
  * @param [resultName] The name of the resulting column. If `null` (the default), `"sum"` is used.
  * @include [SumDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return A new [DataFrame] with the group keys and a single sum per group.
  */
 @Refine
@@ -1205,12 +1367,10 @@ public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
  *
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum
  * of each suitable column of the corresponding group.
- * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
- * the other columns are simply left out of the result.
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.AllSuitableColumnsSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1220,8 +1380,7 @@ public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [SumDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1237,43 +1396,18 @@ public fun <T> Pivot<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNa
     sumFor(separate, skipNaN, primitiveOrMixedNumberColumns())
 
 /**
- * Aggregates this [Pivot] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum
- * of each selected column of the corresponding group.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SumDocs.AggregateColumnsSelectorSnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
- * [`Pivot` Grammar][PivotDocs.Grammar].
- *
- * See also:
- * - [`sum`][Pivot.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][Pivot.sum]` { columns }` — a single sum of all values in the selected columns, per group.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotSumForSnippet]
+ * @set [SumDocs.PivotSumForSnippet.NOTE] {@include [SumDocs.AggregateColumnsSelectorSnippet]}
+ * @set [SumDocs.PivotSumForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of the "age" values and the sum of the "weight" values
  * df.pivot { city }.sumFor { age and weight }
  * // The same, but with the results grouped by aggregated column instead of by city
  * df.pivot { city }.sumFor(separate = true) { age and weight }
  * ```
- *
  * @include [SumDocs.SeparateParam]
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.AggregateColumnsSelectorParam]
  * @return A single [DataRow] with the sum of each selected column per [pivot] group.
  */
 public fun <T, R : Number?> Pivot<T>.sumFor(
@@ -1283,37 +1417,13 @@ public fun <T, R : Number?> Pivot<T>.sumFor(
 ): DataRow<T> = delegate { sumFor(separate, skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum
- * of each selected column of the corresponding group.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
- * [`Pivot` Grammar][PivotDocs.Grammar].
- *
- * See also:
- * - [`sum`][Pivot.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][Pivot.sum]` { columns }` — a single sum of all values in the selected columns, per group.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotSumForSnippet]
+ * @set [SumDocs.PivotSumForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of the "age" values and the sum of the "weight" values
  * df.pivot { city }.sumFor("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SeparateParam]
  * @include [SumDocs.SkipNanParam]
  * @return A single [DataRow] with the sum of each selected column per [pivot] group.
@@ -1341,38 +1451,14 @@ public fun <T, C : Number?> Pivot<T>.sumFor(
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [Pivot] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum of all
- * the values in the selected columns of the corresponding group.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
- * [`Pivot` Grammar][PivotDocs.Grammar].
- *
- * See also:
- * - [`sum`][Pivot.sum]`()` — the sum of each suitable column separately, per group.
- * - [`sumFor`][Pivot.sumFor] — the sum of each selected column separately, per group.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotSumSnippet]
+ * @set [SumDocs.PivotSumSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of all values in the "age" and "weight" columns
  * df.pivot { city }.sum { age and weight }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return A single [DataRow] with, per [pivot] group, the sum of all the values
  *   in the selected columns.
  */
@@ -1382,37 +1468,13 @@ public fun <T, C : Number?> Pivot<T>.sum(
 ): DataRow<T> = delegate { sum(skipNaN, columns) }
 
 /**
- * Aggregates this [Pivot] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum of all
- * the values in the selected columns of the corresponding group.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
- * [`Pivot` Grammar][PivotDocs.Grammar].
- *
- * See also:
- * - [`sum`][Pivot.sum]`()` — the sum of each suitable column separately, per group.
- * - [`sumFor`][Pivot.sumFor] — the sum of each selected column separately, per group.
- * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotSumSnippet]
+ * @set [SumDocs.PivotSumSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the sum of all values in the "age" and "weight" columns
  * df.pivot { city }.sum("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SkipNanParam]
  * @return A single [DataRow] with, per [pivot] group, the sum of all the values
  *   in the selected columns.
@@ -1439,11 +1501,9 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the sum
  * of the expression's results for the rows of the corresponding group.
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.RowExpressionSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1452,8 +1512,7 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [SumDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1462,7 +1521,7 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  * ```
  *
  * @include [SumDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return A single [DataRow] with, per [pivot] group, the sum of the expression's results.
  */
 public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
@@ -1480,12 +1539,10 @@ public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
  *
  * Returns a [DataFrame] where each cell contains the sum of each suitable column
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
- * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
- * the other columns are simply left out of the result.
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.AllSuitableColumnsSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1497,8 +1554,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
  *   a [PivotGroupBy].
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [SumDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1514,43 +1570,16 @@ public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false, skipNaN: Boolean =
     sumFor(separate, skipNaN, primitiveOrMixedNumberColumns())
 
 /**
- * Aggregates this [PivotGroupBy] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a [DataFrame] where each cell contains the sum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SumDocs.AggregateColumnsSelectorSnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
- *
- * See also:
- * - [`sum`][PivotGroupBy.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][PivotGroupBy.sum]` { columns }` — a single sum of all values in the selected columns,
- *   per group.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotGroupBySumForSnippet]
+ * @set [SumDocs.PivotGroupBySumForSnippet.NOTE] {@include [SumDocs.AggregateColumnsSelectorSnippet]}
+ * @set [SumDocs.PivotGroupBySumForSnippet.EXAMPLE]
  * ```kotlin
  * // Per city and last name, the sum of the "age" values and the sum of the "weight" values
  * df.pivot { city }.groupBy { name.lastName }.sumFor { age and weight }
  * ```
- *
  * @include [SumDocs.SeparateParam]
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the sum of each selected column per group.
  */
 public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
@@ -1560,39 +1589,13 @@ public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, separate, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing the sum of the values of
- * each selected column separately, per group.
- *
- * Returns a [DataFrame] where each cell contains the sum of each selected column
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
- *
- * See also:
- * - [`sum`][PivotGroupBy.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][PivotGroupBy.sum]` { columns }` — a single sum of all values in the selected columns,
- *   per group.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotGroupBySumForSnippet]
+ * @set [SumDocs.PivotGroupBySumForSnippet.EXAMPLE]
  * ```kotlin
  * // Per city and last name, the sum of the "age" values and the sum of the "weight" values
  * df.pivot { city }.groupBy { name.lastName }.sumFor("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SeparateParam]
  * @include [SumDocs.SkipNanParam]
  * @return A [DataFrame] with the sum of each selected column per group.
@@ -1620,39 +1623,14 @@ public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a [DataFrame] where each cell contains the sum of all the values in the selected columns
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
- *
- * See also:
- * - [`sum`][PivotGroupBy.sum]`()` — the sum of each suitable column separately, per group.
- * - [`sumFor`][PivotGroupBy.sumFor] — the sum of each selected column separately, per group.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotGroupBySumSnippet]
+ * @set [SumDocs.PivotGroupBySumSnippet.EXAMPLE]
  * ```kotlin
  * // Per city and last name, the sum of all values in the "age" and "weight" columns
  * df.pivot { city }.groupBy { name.lastName }.sum { age and weight }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, the sum of all the values in the selected columns.
  */
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
@@ -1661,38 +1639,13 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, columns)
 
 /**
- * Aggregates this [PivotGroupBy] by computing a single sum of all the values
- * in the selected columns, per group.
- *
- * Returns a [DataFrame] where each cell contains the sum of all the values in the selected columns
- * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
- * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
- *
- * See also:
- * - [`sum`][PivotGroupBy.sum]`()` — the sum of each suitable column separately, per group.
- * - [`sumFor`][PivotGroupBy.sumFor] — the sum of each selected column separately, per group.
- * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
- *   a [PivotGroupBy].
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
- *
- * ### Example
+ * @include [SumDocs.PivotGroupBySumSnippet]
+ * @set [SumDocs.PivotGroupBySumSnippet.EXAMPLE]
  * ```kotlin
  * // Per city and last name, the sum of all values in the "age" and "weight" columns
  * df.pivot { city }.groupBy { name.lastName }.sum("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, the sum of all the values in the selected columns.
  */
@@ -1720,11 +1673,9 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * Returns a [DataFrame] where each cell contains the sum of the expression's results for the
  * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.RowExpressionSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1735,8 +1686,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  *   a [PivotGroupBy].
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [SumDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1745,7 +1695,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * ```
  *
  * @include [SumDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to sum for each row.
+ * @include [SumDocs.ExpressionParam]
  * @return A [DataFrame] with, per group, the sum of the expression's results.
  */
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(
