@@ -498,7 +498,7 @@ private typealias SeeAlsoConvertAsColumn = Nothing
  * Converts values in columns previously selected by [convert] using the specified [rowConverter],
  * a [row value expression][RowValueExpression] applied to each row in the [DataFrame].
  *
- * A [row value expression][RowValueExpression] allows to provide a new value for every selected cell
+ * A [row value expression][RowValueExpression] allows you to provide a new value for every selected cell
  * given its row (as a receiver) and its previous value (as a lambda argument).
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -560,7 +560,7 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  * For more information: {@include [DocumentationUrls.Convert]}
  *
  * It's a compiler plugin-friendly variant of [ReplaceClause.with].
- * [ReplaceClause.with] allows to change both column types and names.
+ * [ReplaceClause.with] allows you to change both column types and names.
  * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
  * to do statically.
  * This function ensures that all column names remain as is and only their type changes to [R]
@@ -595,7 +595,7 @@ private typealias SeeAlsoConvertWith = Nothing
  * Converts values in the columns previously selected with [convert]
  * using [row column][RowColumnExpression] [expression] within the [DataFrame].
  *
- * A [row column expression][RowColumnExpression] allows to provide a new value for every selected cell
+ * A [row column expression][RowColumnExpression] allows you to provide a new value for every selected cell
  * given its row and column (as lambda arguments).
  *
  * For more information: {@include [DocumentationUrls.Convert]}

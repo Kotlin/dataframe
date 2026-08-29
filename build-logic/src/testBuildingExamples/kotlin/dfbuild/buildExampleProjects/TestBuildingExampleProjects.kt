@@ -49,7 +49,7 @@ abstract class TestBuildingExampleProjects {
 
     protected fun buildGradleProject(name: String, folder: File, isAndroid: Boolean) {
         // Needs the android.sdk.dir property to be set or -Pandroid.sdk.dir=... added as Gradle argument
-        // when and android-named example is run
+        // when an android-named example is run
         val androidSdkDir = getGradleProperty("android.sdk.dir")
         if (isAndroid && androidSdkDir == null) {
             throw AssumptionViolatedException(
