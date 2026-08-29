@@ -80,7 +80,7 @@ import kotlin.reflect.typeOf
 internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
- *  allows to compute statistics on the
+ *  allows you to compute statistics on the
  * and store the results as a new column using [<code>into</code>][AggregateDsl.into].
  *
  *
@@ -100,10 +100,10 @@ internal typealias DataFrameAggregationStatistics = Nothing
 internal interface AggregateDslDocs
 
 /**
- * A specialized [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] that allows to aggregate
+ * A specialized [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] that allows you to aggregate
  * [<code>DataFrame</code>][DataFrame] or `DataFrame`-like structures ([<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot] or [<code>PivotGroupBy</code>][PivotGroupBy]).
  *
- * [<code>AggregateDsl</code>][AggregateDsl] allows to compute statistics on the columns of the [<code>DataFrame</code>][DataFrame] or columns within groups in [<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot], or [<code>PivotGroupBy</code>][PivotGroupBy]
+ * [<code>AggregateDsl</code>][AggregateDsl] allows you to compute statistics on the columns of the [<code>DataFrame</code>][DataFrame] or columns within groups in [<code>GroupBy</code>][GroupBy], [<code>Pivot</code>][Pivot], or [<code>PivotGroupBy</code>][PivotGroupBy]
  * and store the results as a new column using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given aggregating expression is applied to each group independently.
  *
  *

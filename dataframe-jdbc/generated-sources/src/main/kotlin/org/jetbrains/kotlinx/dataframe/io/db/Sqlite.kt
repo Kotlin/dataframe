@@ -269,7 +269,7 @@ public class Sqlite(
     }
 
     /**
-     * Delegate all unexpected column type handlings to default [<code>DbType</code>][DbType]
+     * Delegate all unexpected column type handling to the default [<code>DbType</code>][DbType]
      */
     private val fallback: DbType = object : DbType("sqlite") {
         override val driverClassName: String get() = "org.sqlite.JDBC"

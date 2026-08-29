@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * used in [<code>GroupBy.aggregate</code>][Grouped.aggregate] method; allows
  * [<code>pivoting</code>][DataFrame.pivot] inside its body.
  *
- * [<code>AggregateGroupedDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows to compute statistics on the columns within groups in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]
+ * [<code>AggregateGroupedDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl] allows you to compute statistics on the columns within groups in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]
  * and store the results as a new column using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into]. The given aggregating expression is applied to each group independently.
  *
  *

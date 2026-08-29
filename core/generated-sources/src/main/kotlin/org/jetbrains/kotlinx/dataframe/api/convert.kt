@@ -637,7 +637,7 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
  * Converts values in columns previously selected by [<code>convert</code>][convert] using the specified [<code>rowConverter</code>][rowConverter],
  * a [<code>row value expression</code>][RowValueExpression] applied to each row in the [<code>DataFrame</code>][DataFrame].
  *
- * A [<code>row value expression</code>][RowValueExpression] allows to provide a new value for every selected cell
+ * A [<code>row value expression</code>][RowValueExpression] allows you to provide a new value for every selected cell
  * given its row (as a receiver) and its previous value (as a lambda argument).
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
@@ -704,7 +704,7 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * It's a compiler plugin-friendly variant of [<code>ReplaceClause.with</code>][ReplaceClause.with].
- * [<code>ReplaceClause.with</code>][ReplaceClause.with] allows to change both column types and names.
+ * [<code>ReplaceClause.with</code>][ReplaceClause.with] allows you to change both column types and names.
  * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
  * to do statically.
  * This function ensures that all column names remain as is and only their type changes to [<code>R</code>][R]
@@ -735,7 +735,7 @@ public inline fun <T, C, R> Convert<T, C>.asColumn(
  * Converts values in the columns previously selected with [<code>convert</code>][convert]
  * using [<code>row column</code>][RowColumnExpression] [<code>expression</code>][expression] within the [<code>DataFrame</code>][DataFrame].
  *
- * A [<code>row column expression</code>][RowColumnExpression] allows to provide a new value for every selected cell
+ * A [<code>row column expression</code>][RowColumnExpression] allows you to provide a new value for every selected cell
  * given its row and column (as lambda arguments).
  *
  * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)

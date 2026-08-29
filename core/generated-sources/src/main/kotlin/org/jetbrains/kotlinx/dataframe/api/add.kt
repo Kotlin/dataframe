@@ -383,7 +383,7 @@ public class AddDsl<T>(
 /**
  * Creates new columns using the [<code>AddDsl</code>][AddDsl] builder.
  *
- * An [<code>AddDsl</code>][AddDsl] allows to add multiple new columns and column groups to a [<code>DataFrame</code>][DataFrame]
+ * An [<code>AddDsl</code>][AddDsl] allows you to add multiple new columns and column groups to a [<code>DataFrame</code>][DataFrame]
  * using concise syntax based on `from`, `into` operations and [<code>AddExpression</code>][AddExpression]s.
  *
  * Returns a new [<code>DataFrame</code>][DataFrame] with the newly added columns.
