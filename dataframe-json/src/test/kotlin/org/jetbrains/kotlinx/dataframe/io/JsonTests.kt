@@ -570,12 +570,29 @@ class JsonTests {
     }
 
     @Test
-    fun `serialize generated all-null scalar value column`() {
+    fun `all-null value column is read as regular column`() {
         @Language("json")
         val mixedJson = """[{"label":"record"},0,null,null]"""
+
+        // TODO Issue #2045
+        // DataFrame.readJsonStr(mixedJson).toJson() shouldBe """[{"label":"record"},0,null,null]"""
+
+        // Even though `value` was created by `readJson`, taking a slice makes it all-null.
+        // We can no longer tell the difference between a generated 'value' and a regular column that was named 'value'
+        // So, in this case, we produce different JSON than expected
         val scalarRows = DataFrame.readJsonStr(mixedJson)[2..3]
 
-        scalarRows.toJson() shouldBe "[null,null]"
+        scalarRows.toJson() shouldBe """[{"label":null,"value":null},{"label":null,"value":null}]"""
+    }
+
+    @Test
+    fun `Issue 2035`() {
+        val df = dataFrameOf(
+            "value" to listOf<Double?>(null, null),
+            "name" to listOf("Alice", "Bob"),
+        )
+
+        df.toJson() shouldBe """[{"value":null,"name":"Alice"},{"value":null,"name":"Bob"}]"""
     }
 
     @Test
@@ -647,13 +664,13 @@ class JsonTests {
     }
 
     @Test
-    fun `serialize all-null array column without other data`() {
+    fun `do not treat all-null column as array column`() {
         val df = dataFrameOf("array", "placeholder")(
             null, null,
             null, null,
         )
 
-        df.toJson() shouldBe "[null,null]"
+        df.toJson() shouldBe """[{"array":null,"placeholder":null},{"array":null,"placeholder":null}]"""
     }
 
     @Test
