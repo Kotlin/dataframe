@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
-import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
@@ -213,6 +212,89 @@ internal interface SumDocs : CommonStatisticsDocs {
         // The example to render for this rowSumOf overload
         typealias EXAMPLE = Nothing
     }
+
+    /**
+     * {@comment The parts all [DataFrame.sumFor] overloads have in common. KDoc-snippet.}
+     *
+     * Returns the sum of the values of each selected column of this [DataFrame] separately.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * $[NOTE]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See [Selecting Columns][SumDocs.SumForSelectingOptions].
+     *
+     * See also:
+     * - [`sum`][DataFrame.sum]`()` — the same, but for all suitable columns at once.
+     * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
+     * - [`meanFor`][DataFrame.meanFor] — the sum of each selected column divided by its number of values.
+     * - {@include [SumDocsLink]} — an overview of all `sum` modes.
+     *
+     * For more information: {@include [DocumentationUrls.Sum]}
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface DataFrameSumForSnippet {
+
+        // The note about the aggregate columns selector; can be omitted
+        typealias NOTE = Nothing
+
+        // The example to render for this sumFor overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * @comment The parts all column-selecting [DataFrame.sum] overloads have in common.
+     *    KDoc-snippet.
+     *
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroOnEmptySnippet]
+     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     *
+     * See also:
+     * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
+     * - [`sumOf`][DataFrame.sumOf] — the sum of the values a row expression returns for each row.
+     * $[SEE_ALSO_TAIL]
+     *
+     * For more information: {@include [DocumentationUrls.Sum]}
+     *
+     * $[COLUMNS_API]
+     *
+     * ### Example
+     * $[EXAMPLE]
+     */
+    @ExcludeFromSources
+    interface DataFrameSumSnippet {
+
+        // The remaining "See also" bullets of this sum overload.
+        typealias SEE_ALSO_TAIL = Nothing
+
+        // How this overload selects its columns: the Columns Selection DSL or column names
+        typealias COLUMNS_API = Nothing
+
+        // The example to render for this sum overload
+        typealias EXAMPLE = Nothing
+    }
+
+    /**
+     * {@comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.}
+     *
+     * @param [columns\] The [ColumnsSelector] used to select the columns of this [DataFrame]
+     *   to compute the sum of.
+     */
+    @ExcludeFromSources
+    typealias ColumnsSelectorParam = Nothing
+
+    /**
+     * {@comment The `columns` parameter of the [String] overloads. KDoc-snippet.}
+     *
+     * @param [columns\] The names of the columns of this [DataFrame] to compute the sum of.
+     */
+    @ExcludeFromSources
+    typealias ColumnNamesParam = Nothing
 }
 
 /** [The Sum Operation][SumDocs] */
@@ -530,9 +612,8 @@ public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): 
  * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
  * See also:
  * - [`sumFor`][DataFrame.sumFor] — the same, but for an explicit selection of columns.
@@ -557,34 +638,15 @@ public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
 /**
- * Returns the sum of the values of each selected column of this [DataFrame] separately.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SumDocs.AggregateColumnsSelectorSnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions].
- *
- * See also:
- * - [`sum`][DataFrame.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
- * - [`meanFor`][DataFrame.meanFor] — the sum of each selected column divided by its number of values.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * ### Example
+ * @include [SumDocs.DataFrameSumForSnippet]
+ * @set [SumDocs.DataFrameSumForSnippet.NOTE] {@include [SumDocs.AggregateColumnsSelectorSnippet]}
+ * @set [SumDocs.DataFrameSumForSnippet.EXAMPLE]
  * ```kotlin
  * // A single row with the sum of the "age" values and the sum of the "weight" values
  * df.sumFor { age and weight }
  * // The same, ignoring `NaN` values, and naming the results explicitly
  * df.sumFor(skipNaN = true) { age into "totalAge" and (weight into "totalWeight") }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
  *   to compute the sum of.
@@ -598,31 +660,13 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
 ): DataRow<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
 /**
- * Returns the sum of the values of each selected column of this [DataFrame] separately.
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroCellOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See [Selecting Columns][SumDocs.SumForSelectingOptions].
- *
- * See also:
- * - [`sum`][DataFrame.sum]`()` — the same, but for all suitable columns at once.
- * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
- * - [`meanFor`][DataFrame.meanFor] — the sum of each selected column divided by its number of values.
- * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * ### Example
+ * @include [SumDocs.DataFrameSumForSnippet]
+ * @set [SumDocs.DataFrameSumForSnippet.EXAMPLE]
  * ```kotlin
  * // A single row with the sum of the "age" values and the sum of the "weight" values
  * df.sumFor("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns of this [DataFrame] to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SkipNanParam]
  * @return A single [DataRow] with the sum of each selected column.
  */
@@ -647,29 +691,16 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
  * Returns a single sum of all the [Short] values in the selected columns of this [DataFrame],
  * as an [Int].
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See also:
- * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
- * - [`sumOf`][DataFrame.sumOf] — the sum of the values a row expression returns for each row.
+ * @include [SumDocs.DataFrameSumSnippet]
+ * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * @include [SelectingColumns.ColumnsSelectionDsl]
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * @set [SumDocs.DataFrameSumSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all values in the "amount" and "bonus" columns of `Short`s, as an `Int`
  * df.sum { amount and bonus }
  * ```
- *
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
- *   to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return The sum of all the values in the selected columns, as an [Int].
  */
 @JvmName("sumShort")
@@ -681,29 +712,16 @@ public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int
  * Returns a single sum of all the [Byte] values in the selected columns of this [DataFrame],
  * as an [Int].
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See also:
- * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
- * - [`sumOf`][DataFrame.sumOf] — the sum of the values a row expression returns for each row.
+ * @include [SumDocs.DataFrameSumSnippet]
+ * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * @include [SelectingColumns.ColumnsSelectionDsl]
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * @set [SumDocs.DataFrameSumSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all values in the "amount" and "bonus" columns of `Byte`s, as an `Int`
  * df.sum { amount and bonus }
  * ```
- *
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
- *   to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return The sum of all the values in the selected columns, as an [Int].
  */
 @JvmName("sumByte")
@@ -714,31 +732,18 @@ public fun <T, C : Byte?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int 
 /**
  * Returns a single sum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See also:
- * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
- * - [`sumOf`][DataFrame.sumOf] — the sum of the values a row expression returns for each row.
+ * @include [SumDocs.DataFrameSumSnippet]
+ * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - [`mean`][DataFrame.mean] — the sum divided by the number of values.
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * @include [SelectingColumns.ColumnsSelectionDsl]
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * @set [SumDocs.DataFrameSumSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all values in the "age" and "weight" columns together
  * df.sum { age and weight }
  * ```
- *
  * @include [SumDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
- *   to compute the sum of.
+ * @include [SumDocs.ColumnsSelectorParam]
  * @return The sum of all the values in the selected columns.
  */
 @Suppress("UNCHECKED_CAST")
@@ -770,29 +775,17 @@ public fun <T, C : Number?> DataFrame<T>.sum(
 /**
  * Returns a single sum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
- *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
- *
- * See also:
- * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
- * - [`sumOf`][DataFrame.sumOf] — the sum of the values a row expression returns for each row.
+ * @include [SumDocs.DataFrameSumSnippet]
+ * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - [`mean`][DataFrame.mean] — the sum divided by the number of values.
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
- *
- * For more information: {@include [DocumentationUrls.Sum]}
- *
- * @include [SelectingColumns.ColumnNamesApi]
- *
- * ### Example
+ * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnNamesApi]}
+ * @set [SumDocs.DataFrameSumSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all values in the "age" and "weight" columns together
  * df.sum("age", "weight")
  * ```
- *
- * @param [columns] The names of the columns of this [DataFrame] to compute the sum of.
+ * @include [SumDocs.ColumnNamesParam]
  * @include [SumDocs.SkipNanParam]
  * @return The sum of all the values in the selected columns.
  */
@@ -821,11 +814,9 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  * Returns the sum of the [Short] values that the given [expression] returns
  * for each row of this [DataFrame], as an [Int].
  *
- * {@include [SumDocs.RowExpressionSnippet]}
- *
- * {@include [SumDocs.SupportedTypesSnippet]}
- *
- * {@include [SumDocs.ZeroOnEmptySnippet]}
+ * @include [SumDocs.RowExpressionSnippet]
+ * @include [SumDocs.SupportedTypesSnippet]
+ * @include [SumDocs.ZeroOnEmptySnippet]
  *
  * See also:
  * - [`sum`][DataFrame.sum]` { columns }` — a single sum of all values in the selected columns.
