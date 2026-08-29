@@ -80,7 +80,7 @@ import kotlin.reflect.typeOf
 internal typealias DataFrameAggregationStatistics = Nothing
 
 /**
- * {@get [AGGREGATE_DSL_TYPE]} allows to compute statistics on the {@get [OPERATING_COLUMNS]}
+ * {@get [AGGREGATE_DSL_TYPE]} allows you to compute statistics on the {@get [OPERATING_COLUMNS]}
  * and store the results as a new column using [into][AggregateDsl.into]. {@get [APPLY_NOTE]}
  *
  *
@@ -122,7 +122,7 @@ internal interface AggregateDslDocs {
 }
 
 /**
- * A specialized [ColumnsSelectionDsl] that allows to aggregate
+ * A specialized [ColumnsSelectionDsl] that allows you to aggregate
  * [DataFrame] or `DataFrame`-like structures ([GroupBy], [Pivot] or [PivotGroupBy]).
  *
  * @include [AggregateDslDocs]

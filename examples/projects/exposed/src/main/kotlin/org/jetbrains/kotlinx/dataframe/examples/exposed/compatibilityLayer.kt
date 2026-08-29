@@ -85,7 +85,7 @@ fun Table.toDataFrameSchema(columnNameToAccessor: MutableMap<String, String> = m
             // get the column type from `val a: Column<Type>`
             val type = prop.returnType.arguments.first().type!!
 
-            // and we add the name and column shema type to the `columns` map :)
+            // and we add the name and column schema type to the `columns` map :)
             columnName to ColumnSchema.Value(type)
         }
     return DataFrameSchemaImpl(columns)
