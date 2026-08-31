@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnNames
@@ -28,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.valuesOf
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Test
 import kotlin.math.sqrt
 
@@ -111,6 +113,31 @@ class DataRowTests : BaseTest() {
         val df = dataFrameOf("a", "b")(1, 2).first().transposeTo<Int>()
         df.name.toList() shouldBe listOf("a", "b")
         df.value.toList() shouldBe listOf(1, 2)
+    }
+
+    private class NotConvertibleToInt
+
+    @Test
+    fun `transposeTo leaves a value alone when it is already of the target type`() {
+        // both values are already a Number, so neither is converted:
+        // they keep their original runtime types instead of becoming one common type
+        val df = dataFrameOf("a", "b")(1, 2.5).first().transposeTo<Number>()
+        df.value.toList() shouldBe listOf(1, 2.5)
+        df.value.toList().map { it!!::class } shouldBe listOf(Int::class, Double::class)
+    }
+
+    @Test
+    fun `transposeTo keeps null values as null`() {
+        // null is not converted, so a null cell stays null even though the target type is String
+        val df = dataFrameOf("a", "b")(1, null).first().transposeTo<String>()
+        df.value.toList() shouldBe listOf("1", null)
+    }
+
+    @Test
+    fun `transposeTo throws when there is no converter to the target type`() {
+        shouldThrow<TypeConverterNotFoundException> {
+            dataFrameOf("a")(NotConvertibleToInt()).first().transposeTo<Int>()
+        }
     }
 
     @Test

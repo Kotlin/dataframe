@@ -426,6 +426,10 @@ Describe parameters and return of the method using `@param` and `@return` tags.
 Remember type parameters.
 
 Wrap parameter names into `[]` for better readability.
+This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes KoDEx emit a broken
+doc comment with a doubled `*/` terminator, which then fails
+`runKtlintFormatOverGeneratedMainSourcesSourceSet` with "Expecting a top level declaration".
+Always write `@param [T] ...`.
 
 ## KDoc-helpers Structure
 
