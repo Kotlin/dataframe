@@ -35,9 +35,6 @@ import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fill
-import org.jetbrains.kotlinx.dataframe.api.fillNA
-import org.jetbrains.kotlinx.dataframe.api.fillNaNs
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -100,7 +97,6 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.io.readJson
@@ -292,32 +288,6 @@ class Modify : TestBase() {
     fun reverse() {
         // SampleStart
         df.reverse()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun fillNulls() {
-        // SampleStart
-        df.fillNulls { colsOf<Int?>() }.with { -1 }
-        // same as
-        df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun fillNaNs() {
-        // SampleStart
-        df.fillNaNs { colsOf<Double>() }.withZero()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun fillNA() {
-        // SampleStart
-        df.fillNA { weight }.with { -1 }
         // SampleEnd
     }
 
