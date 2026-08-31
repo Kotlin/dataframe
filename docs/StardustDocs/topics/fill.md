@@ -1,6 +1,6 @@
 [//]: # (title: fill)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.FillSamples-->
 
 Replace missing values.
 
@@ -16,12 +16,20 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 ```kotlin
 df.fillNulls { colsOf<Int?>() }.with { -1 }
-// same as
+```
+
+<!---END-->
+
+same as
+
+<!---FUN fillNullsAsUpdate-->
+
+```kotlin
 df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNulls.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/fillNulls.html" width="100%" height="500px"></inline-frame>
 
 ## fillNaNs
 
@@ -35,8 +43,8 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.fillNaNs { colsOf<Double>() }.withZero()
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNaNs.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/fillNaNs.html" width="100%" height="500px"></inline-frame>
 
 ## fillNA
 
@@ -50,5 +58,5 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.fillNA { weight }.with { -1 }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.fillNA.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/fillNA.html" width="100%" height="500px"></inline-frame>

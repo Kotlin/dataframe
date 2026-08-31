@@ -1,25 +1,73 @@
 [//]: # (title: Column selectors)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ColumnSelectorsSamples-->
 
 [`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns: the Columns Selection DSL.
 
 Column selectors are used in many operations:
 
-<!---FUN columnSelectorsUsages-->
+<!---FUN columnSelectorsUsageSelect-->
 
 ```kotlin
 df.select { age and name }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageSelect.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageFillNaNs-->
+
+```kotlin
 df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageFillNaNs.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageRemove-->
+
+```kotlin
 df.remove { cols { it.hasNulls() } }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageRemove.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageGroup-->
+
+```kotlin
 df.group { cols { it.data != name } }.into { "nameless" }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageUpdate-->
+
+```kotlin
 df.update { city }.notNull { it.lowercase() }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageUpdate.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageGather-->
+
+```kotlin
 df.gather { colsOf<Number>() }.into("key", "value")
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageGather.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageMove-->
+
+```kotlin
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/columnSelectorsUsageMove.html" width="100%" height="500px"></inline-frame>
 
 #### Full DSL Grammar {collapsible="true"}
 
@@ -421,38 +469,13 @@ It's extremely useful when you want to create a new column based on existing col
 
 **Select columns by name:**
 
-<!---FUN columnSelectors-->
+<!---FUN columnSelectorsByColumnNameIt-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
 // by column name
 df.select { it.name }
-df.select { name }
-
-// by column path
-df.select { name.firstName }
-
-// with a new name
-df.select { name named "Full Name" }
-
-// converted
-df.select { name.firstName.map { it.lowercase() } }
-
-// column arithmetics
-df.select { 2021 - age }
-
-// two columns
-df.select { name and age }
-
-// range of columns
-df.select { name..age }
-
-// all columns of ColumnGroup
-df.select { name.allCols() }
-
-// traversal of columns at any depth from here excluding ColumnGroups
-df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab>
@@ -461,136 +484,471 @@ df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```kotlin
 // by column name
 df.select { it["name"] }
+```
 
+</tab></tabs>
+<!---END-->
+
+same as
+
+<!---FUN columnSelectorsByColumnName-->
+
+```kotlin
+// by column name
+df.select { name }
+```
+
+<!---END-->
+
+<inline-frame src="./resources/columnSelectorsByColumnNameIt_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsByColumnPath-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 // by column path
-df.select { it["name"]["firstName"] }
-df.select { "name"["firstName"] }
+df.select { name.firstName }
+```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+// by column path
+df.select { it["name"]["firstName"] } // same as df.select { "name"["firstName"] }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsByColumnPath_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsWithNewName-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// with a new name
+df.select { name named "Full Name" }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 // with a new name
 df.select { "name" named "Full Name" }
+```
 
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsWithNewName_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsConverted-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
 // converted
-df.select { "name"["firstName"]<String>().map { it.uppercase() } }
+df.select { name.firstName.map { it.lowercase() } }
+```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+// converted
+df.select { "name"["firstName"]<String>().map { it.lowercase() } }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsConverted_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsArithmetic-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// column arithmetics
+df.select { 2021 - age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 // column arithmetics
 df.select { 2021 - "age"<Int>() }
+```
 
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsArithmetic_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsTwoColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// two columns
+df.select { name and age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 // two columns
 df.select { "name" and "age" }
+```
 
-// by range of names
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsTwoColumns_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsColumnRange-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// range of columns
+df.select { name..age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+// range of columns
 df.select { "name".."age" }
+```
 
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsColumnRange_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAllColumnsOfGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// all columns of ColumnGroup
+df.select { name.allCols() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 // all columns of ColumnGroup
 df.select { "name".allCols() }
+```
 
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAllColumnsOfGroup_properties.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAtAnyDepthFromGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+// traversal of columns at any depth from here excluding ColumnGroups
+df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
 // traversal of columns at any depth from here excluding ColumnGroups
 df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/columnSelectorsAtAnyDepthFromGroup_properties.html" width="100%" height="500px"></inline-frame>
 
 **Select columns by column index:**
 
-<!---FUN columnsSelectorByIndices-->
+<!---FUN columnsSelectorByIndex-->
 
 ```kotlin
 // by index
 df.select { col(2) }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnsSelectorByIndex.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnsSelectorBySeveralIndices-->
+
+```kotlin
 // by several indices
 df.select { cols(0, 1, 3) }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnsSelectorBySeveralIndices.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnsSelectorByIndexRange-->
+
+```kotlin
 // by range of indices
 df.select { cols(1..4) }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/columnsSelectorByIndexRange.html" width="100%" height="500px"></inline-frame>
 
 **Other column selectors:**
 
-<!---FUN columnSelectorsMisc-->
+<!---FUN columnSelectorsByCondition-->
 
 ```kotlin
 // by condition
 df.select { cols { it.name().startsWith("year") } }
+```
+
+<!---END-->
+
+same as
+
+<!---FUN columnSelectorsByName-->
+
+```kotlin
+// by condition
 df.select { nameStartsWith("year") }
+```
 
+<!---END-->
+
+<inline-frame src="./resources/columnSelectorsByCondition.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsByType-->
+
+```kotlin
 // by type
-df.select { colsOf<String>() }
+df.select { colsOf<Int?>() }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsByType.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsByTypeWithCondition-->
+
+```kotlin
 // by type with condition
-df.select { colsOf<String?> { it.countDistinct() > 5 } }
+df.select { colsOf<Int?> { it.hasNulls() } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsByTypeWithCondition.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAllTopLevel-->
+
+```kotlin
 // all top-level columns
 df.select { all() }
+```
 
-// first/last n columns
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAllTopLevel.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsTake-->
+
+```kotlin
+// first n columns
 df.select { take(2) }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsTake.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsTakeLast-->
+
+```kotlin
+// last n columns
 df.select { takeLast(2) }
+```
 
-// all except first/last n columns
+<!---END-->
+<inline-frame src="./resources/columnSelectorsTakeLast.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsDrop-->
+
+```kotlin
+// all except first n columns
 df.select { drop(2) }
-df.select { dropLast(2) }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsDrop.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsDropLast-->
+
+```kotlin
+// all except last n columns
+df.select { dropLast(2) }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsDropLast.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsFirst-->
+
+```kotlin
 // find the first column satisfying the condition
 df.select { first { it.name.startsWith("year") } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsFirst.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsLastInGroup-->
+
+```kotlin
 // find the last column inside a column group satisfying the condition
 df.select {
     colGroup("name").lastCol { it.name().endsWith("Name") }
 }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsLastInGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAtAnyDepthExcludingGroups-->
+
+```kotlin
 // traversal of columns at any depth from here excluding ColumnGroups
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAtAnyDepthExcludingGroups.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAtAnyDepthIncludingGroups-->
+
+```kotlin
 // traversal of columns at any depth from here including ColumnGroups
 df.select { colsAtAnyDepth() }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAtAnyDepthIncludingGroups.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAtAnyDepthWithCondition-->
+
+```kotlin
 // traversal of columns at any depth with condition
-df.select { colsAtAnyDepth().filter { it.name().contains(":") } }
+df.select { colsAtAnyDepth().filter { it.name().contains("y") } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAtAnyDepthWithCondition.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAtAnyDepthByType-->
+
+```kotlin
 // traversal of columns at any depth to find columns of given type
 df.select { colsAtAnyDepth().colsOf<String>() }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAtAnyDepthByType.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsAllExcept-->
+
+```kotlin
 // all columns except given column set
 df.select { allExcept { colsOf<String>() } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsAllExcept.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUnion-->
+
+```kotlin
 // union of column sets
 df.select { take(2) and col(3) }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/columnSelectorsUnion.html" width="100%" height="500px"></inline-frame>
 
 **Modify the set of selected columns:**
 
-<!---FUN columnSelectorsModifySet-->
+<!---FUN columnSelectorsModifyTake-->
 
 ```kotlin
-// first/last n value- and frame columns in column set
+// first n value- and frame columns in column set
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyTake.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyTakeLast-->
+
+```kotlin
+// last n value- and frame columns in column set
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
+```
 
-// all except first/last n value- and frame columns in column set
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyTakeLast.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyDrop-->
+
+```kotlin
+// all except first n value- and frame columns in column set
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyDrop.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyDropLast-->
+
+```kotlin
+// all except last n value- and frame columns in column set
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyDropLast.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyFilter-->
+
+```kotlin
 // filter column set by condition
-df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("year") } }
+df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("age") } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyFilter.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyExcept-->
+
+```kotlin
 // exclude columns from column set
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
+```
 
+<!---END-->
+<inline-frame src="./resources/columnSelectorsModifyExcept.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsModifyDistinct-->
+
+```kotlin
 // keep only unique columns
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/columnSelectorsModifyDistinct.html" width="100%" height="500px"></inline-frame>
 
 ### Column Resolvers
 
@@ -613,5 +971,3 @@ df.group { colsAtAnyDepth().colsOf<String>() }
 .into { it.path.dropLast(2) }
 ```
 - **`ColumnSet`** — resolves to an ordered list of [`DataColumn`s](DataColumn.md).
-
-
