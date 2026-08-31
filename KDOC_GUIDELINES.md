@@ -498,6 +498,15 @@ private typealias Common~OperationName~Docs = Nothing
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
 
+Keep in mind that `@param` and `@return` have to stay at the end of a KDoc.
+So when a template already ends with them, you cannot `@include` it and then append
+overload-specific text after the include — that text would land inside the template's `@return`.
+Everything that differs between the overloads has to be passed *into* the template as a `@set`
+argument instead. That is why a template shared by several sibling overloads usually has one
+argument per varying part (receiver type, "See also" section, type parameter description, and so on),
+like
+[`CommonTakeAndDropDocs`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/CommonTakeAndDropDocs.kt).
+
 ### Grammar
 
 DSL Grammar (helpers usually are called simply `Grammar` and place inside the
