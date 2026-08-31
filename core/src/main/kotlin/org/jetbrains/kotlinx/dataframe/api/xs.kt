@@ -156,6 +156,7 @@ private typealias XsDocsLink = Nothing
  * | :-- | :---- | :----- | :------ |
  * | 40  | Milan | null   | true    |
  *
+ * @param [T] The schema marker type of this [DataFrame].
  * @param [keyValues] The values that the key columns must hold.
  * @return A new [DataFrame] with the matching rows and without the key columns.
  */
@@ -194,6 +195,8 @@ public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> =
  * | :------------- | :------------ | :-- | :----- |
  * | Charlie        | Byrd          | 30  | 90     |
  *
+ * @param [T] The schema marker type of this [DataFrame].
+ * @param [C] The type of the [keyValues] and of the columns that [keyColumns] selects.
  * @param [keyValues] The values that the [key columns][keyColumns] must hold.
  * @param [keyColumns] The [Columns Selector][ColumnsSelector] that defines the key columns.
  * @return A new [DataFrame] with the matching rows and without the key columns.
@@ -249,6 +252,8 @@ public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelect
  * | Charlie        | Daniels       | 20  | null   | false   |
  * | Charlie        | Byrd          | 30  | 90     | true    |
  *
+ * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
+ * @param [G] The schema marker type of the groups.
  * @param [keyValues] The values that the key columns must hold.
  * @return A new [GroupBy] with the matching key–group pairs and without the key columns.
  */
@@ -317,6 +322,9 @@ public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> {
  * | Charlie        | Chaplin       | 40  | Milan  | null   |
  * | Bob            | Marley        | 30  | Tokyo  | 68     |
  *
+ * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
+ * @param [G] The schema marker type of the groups.
+ * @param [C] The type of the [keyValues] and of the columns that [keyColumns] selects.
  * @param [keyValues] The values that the [key columns][keyColumns] must hold.
  * @param [keyColumns] The [Columns Selector][ColumnsSelector] that defines the key columns.
  * @return A new [GroupBy] with the matching key–group pairs and without the key columns.
