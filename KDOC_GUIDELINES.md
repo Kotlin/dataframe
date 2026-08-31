@@ -21,6 +21,7 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
       * [Documentation website link](#documentation-website-link-)
       * [Columns selection information](#columns-selection-information)
       * [Examples section](#examples-section)
+      * [Data tables in examples](#data-tables-in-examples)
       * [Parameters and return section](#parameters-and-return-section)
   * [KDoc-helpers Structure](#kdoc-helpers-structure)
     * [Grammar](#grammar)
@@ -110,6 +111,15 @@ For example, the
 has a KDoc which describes column path creation behavior. 
 The whole file is excluded from sources,
 but the KDoc is included in other KDocs.
+
+Escape parameter references inside a KDoc-snippet: write `` [columns\] ``, not `[columns]`.
+A snippet is not attached to a function, so an unescaped reference is resolved right where it is
+written, against whatever happens to be in scope there
+(`[columns]` in `Remove`, for instance, becomes a link to the `…dataframe.columns` *package*).
+The escape makes KoDEx leave the reference in place instead; the `\` is removed and the reference
+is resolved once the KDoc is fully processed — by then the snippet sits in the KDoc of a function
+that does have such a parameter.
+This applies to `@param` lines in a snippet as well: `` @param [columns\] … ``.
 
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
@@ -419,6 +429,66 @@ Start the section with
 ```
 ### Examples
 ```
+
+#### Data tables in examples
+
+KDoc support for Markdown tables is poor — they are rendered without borders and take a lot of
+vertical space in a popup. So the default is to *not* put the data in the KDoc: show the call,
+say in one sentence what it does, and send the reader to the operation's page on the
+documentation website.
+
+Before and after tables are an option, not a rule. Add them only when both hold:
+
+- the operation is an uncommon one whose result a sentence does not convey —
+  it changes the shape of the data in a way the reader cannot guess (`xs`, `pivot`);
+- the task at hand asks for them explicitly.
+
+Keep the input in one KDoc-snippet that all overloads share:
+
+````kotlin
+internal interface ~OperationName~Docs {
+
+    /**
+     * The examples below use this [DataFrame]:
+     *
+     * | name/firstName | age | city   |
+     * | :------------- | :-- | :----- |
+     * | Alice          | 15  | London |
+     * | Charlie        | 40  | Milan  |
+     */
+    @ExcludeFromSources
+    typealias ExampleDataSnippet = Nothing
+}
+````
+
+The example itself is the snippet followed by the call and its result:
+
+````kotlin
+/**
+ * ### Example
+ *
+ * {@include [~OperationName~Docs.ExampleDataSnippet]}
+ *
+ * (One sentence saying what this call does.)
+ *
+ * ```
+ * df.~operationName~("Charlie")
+ * ```
+ * | age | city  |
+ * | :-- | :---- |
+ * | 40  | Milan |
+ */
+````
+
+A few rules:
+
+- If the operation has a page on the documentation website, take its dataset and its calls
+  (website samples use the `df` from `samples/api/TestBase.kt`), and link to that page.
+  Then the KDoc, the website and the tests all show one example instead of three different ones.
+- Write a nested column as `group/column` in the table header.
+- Back every table with a test that asserts exactly that result, and mark those tests, so the
+  next editor knows the tables depend on them.
+- Copy a table from a real run of the call, never from reading the implementation.
 
 #### Parameters and return section
 

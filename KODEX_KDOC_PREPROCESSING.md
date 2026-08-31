@@ -100,9 +100,37 @@ KoDEx uses special notations in KDocs to indicate that a certain (tag) processor
 in that place.
 These notations follow the Javadoc/KDoc `@tag content`/`{@tag content}` tag conventions.
 
-Tags without `{}` are allowed, but only at the beginning of a line, like you're used to with
-`@param`, `@return`, `@throws`, etc. If you want to use them in the middle of a line, or inside ` ``` ` blocks,
-you should use `{}`.
+When a tag starts a line, write it **without** `{}`, the same way you write `@param`, `@return`, `@throws`.
+That is the normal form; `{@tag ...}` alone on a line does exactly the same thing and only adds noise.
+Use `{}` when the tag sits in the middle of a line, inside a ` ``` ` block, or when the tag has to be
+scoped — see the exception below.
+
+A block tag is fed everything from itself up to the next block tag. Most tag processors — `@include`,
+`@get`/`$`, `@sample`, `@sampleNoComments`, `@includeFile`, `@exportAsHtmlStart` — take only the
+arguments they need out of that and leave the rest in place. `@include [CommonDocs]` below replaces
+just the `@include [CommonDocs]` part with the KDoc of `CommonDocs`, so a paragraph after a tag is
+**not** a reason to reach for `{}`:
+
+```kt
+/**
+ * @include [CommonDocs]
+ * This sentence stays right after the included content.
+ */
+```
+
+`@comment` and `@set KEY` are the exception: they consume *everything* they are fed, up to the next
+block tag. Whatever you write below them becomes part of their input and disappears from the output.
+Either move them down, among the other tags, or scope them with `{}`:
+
+```kt
+/**
+ * {@set [CommonDocs.OPERATION] [select][select]}
+ * Without the brackets this sentence would have become part of the `@set` value.
+ */
+```
+
+The IntelliJ KoDEx plugin colors the background of the range each tag affects — use it whenever you
+are unsure how far a tag reaches.
 
 Tag processors have access to any number of arguments they need, which are separated by spaces, like:
 
