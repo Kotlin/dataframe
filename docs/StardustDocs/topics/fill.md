@@ -6,6 +6,17 @@ Replace missing values.
 
 **Related operations**: [](updateConvert.md)
 
+The examples on this page use the following dataframe:
+
+<!---FUN fillDf-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/fillDf.html" width="100%" height="500px"></inline-frame>
+
 ## fillNulls
 
 Replaces `null` values with given value or expression. 

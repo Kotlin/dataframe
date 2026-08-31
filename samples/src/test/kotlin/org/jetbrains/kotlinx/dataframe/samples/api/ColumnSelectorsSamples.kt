@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
@@ -28,6 +27,14 @@ import org.junit.Test
 
 class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
     val df = peopleDf
+
+    @Test
+    fun columnSelectorsDf() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
 
     @Test
     fun columnSelectorsUsageSelect() {
@@ -276,26 +283,23 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsByCondition() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by condition
-        df.select { cols { it.name().startsWith("year") } }
+        df.select { cols { it.name().startsWith("a") } }
             // SampleEnd
             .saveDfHtmlSample()
     }
 
     @Test
     fun columnSelectorsByName() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by condition
-        df.select { nameStartsWith("year") }
+        df.select { nameStartsWith("a") }
             // SampleEnd
     }
 
     @Test
     fun columnSelectorsByType() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by type
         df.select { colsOf<Int?>() }
@@ -305,7 +309,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsByTypeWithCondition() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // by type with condition
         df.select { colsOf<Int?> { it.hasNulls() } }
@@ -315,7 +318,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAllTopLevel() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // all top-level columns
         df.select { all() }
@@ -325,7 +327,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsTake() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // first n columns
         df.select { take(2) }
@@ -335,7 +336,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsTakeLast() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // last n columns
         df.select { takeLast(2) }
@@ -345,7 +345,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsDrop() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // all except first n columns
         df.select { drop(2) }
@@ -355,7 +354,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsDropLast() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // all except last n columns
         df.select { dropLast(2) }
@@ -365,17 +363,15 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsFirst() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // find the first column satisfying the condition
-        df.select { first { it.name.startsWith("year") } }
+        df.select { first { it.hasNulls() } }
             // SampleEnd
             .saveDfHtmlSample()
     }
 
     @Test
     fun columnSelectorsLastInGroup() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // find the last column inside a column group satisfying the condition
         df.select {
@@ -387,7 +383,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAtAnyDepthExcludingGroups() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // traversal of columns at any depth from here excluding ColumnGroups
         df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
@@ -397,7 +392,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAtAnyDepthIncludingGroups() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // traversal of columns at any depth from here including ColumnGroups
         df.select { colsAtAnyDepth() }
@@ -407,7 +401,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAtAnyDepthWithCondition() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // traversal of columns at any depth with condition
         df.select { colsAtAnyDepth().filter { it.name().contains("y") } }
@@ -417,7 +410,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAtAnyDepthByType() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // traversal of columns at any depth to find columns of given type
         df.select { colsAtAnyDepth().colsOf<String>() }
@@ -427,7 +419,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsAllExcept() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // all columns except given column set
         df.select { allExcept { colsOf<String>() } }
@@ -437,7 +428,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
 
     @Test
     fun columnSelectorsUnion() {
-        val df = df.add { "year" from { 0 } }
         // SampleStart
         // union of column sets
         df.select { take(2) and col(3) }
