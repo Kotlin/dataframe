@@ -112,11 +112,14 @@ has a KDoc which describes column path creation behavior.
 The whole file is excluded from sources,
 but the KDoc is included in other KDocs.
 
-Do not write parameter references like `[columns]` inside a KDoc-snippet.
-A snippet is not attached to a function, so the reference doesn't point to a parameter;
-when the snippet is included, KoDEx rewrites it to whatever it does resolve to
+Escape parameter references inside a KDoc-snippet: write `` [columns\] ``, not `[columns]`.
+A snippet is not attached to a function, so an unescaped reference is resolved right where it is
+written, against whatever happens to be in scope there
 (`[columns]` in `Remove`, for instance, becomes a link to the `…dataframe.columns` *package*).
-Write the parameter name in a code span there, and keep `[]` references for the function's own KDoc.
+The escape makes KoDEx leave the reference in place instead; the `\` is removed and the reference
+is resolved once the KDoc is fully processed — by then the snippet sits in the KDoc of a function
+that does have such a parameter.
+This applies to `@param` lines in a snippet as well: `` @param [columns\] … ``.
 
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
@@ -429,12 +432,18 @@ Start the section with
 
 #### Data tables in examples
 
-When an operation changes the shape of the data — rows dropped, columns removed, columns regrouped —
-a call with a comment does not show the reader what actually happened. Show the data before and after
-as Markdown tables. The reference layout is
-[`concatWithKeys`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/concat.kt).
+KDoc support for Markdown tables is poor — they are rendered without borders and take a lot of
+vertical space in a popup. So the default is to *not* put the data in the KDoc: show the call,
+say in one sentence what it does, and send the reader to the operation's page on the
+documentation website.
 
-Put the input into a KDoc-snippet, so all overloads of the operation share one dataset:
+Before and after tables are an option, not a rule. Add them only when both hold:
+
+- the operation is an uncommon one whose result a sentence does not convey —
+  it changes the shape of the data in a way the reader cannot guess (`xs`, `pivot`);
+- the task at hand asks for them explicitly.
+
+Keep the input in one KDoc-snippet that all overloads share:
 
 ````kotlin
 internal interface ~OperationName~Docs {
@@ -452,13 +461,13 @@ internal interface ~OperationName~Docs {
 }
 ````
 
-Each overload then includes the snippet and follows it with the call and its result:
+The example itself is the snippet followed by the call and its result:
 
 ````kotlin
 /**
  * ### Example
  *
- * @include [~OperationName~Docs.ExampleDataSnippet]
+ * {@include [~OperationName~Docs.ExampleDataSnippet]}
  *
  * (One sentence saying what this call does.)
  *
@@ -474,8 +483,8 @@ Each overload then includes the snippet and follows it with the call and its res
 A few rules:
 
 - If the operation has a page on the documentation website, take its dataset and its calls
-  (website samples use the `df` from `samples/api/TestBase.kt`). Then the KDoc, the website
-  and the tests all show one example instead of three different ones.
+  (website samples use the `df` from `samples/api/TestBase.kt`), and link to that page.
+  Then the KDoc, the website and the tests all show one example instead of three different ones.
 - Write a nested column as `group/column` in the table header.
 - Back every table with a test that asserts exactly that result, and mark those tests, so the
   next editor knows the tables depend on them.

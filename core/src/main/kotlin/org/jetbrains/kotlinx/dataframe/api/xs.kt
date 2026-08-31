@@ -10,7 +10,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
 
+// region docs
+
 /**
+ * {@comment
+ *    The Xs Operation KDoc-topic; it also holds all common `xs` KDoc-snippets.
+ *    Link to it with `{@include [XsDocsLink]}`.
+ * }
+ *
  * ## The Xs Operation
  *
  * Returns a cross-section: keeps only the rows in which the key columns hold the given key values,
@@ -23,11 +30,28 @@ import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
  *
  * The rows that are kept stay in their original order.
  *
+ * ### Xs Modes
+ *
+ * The key columns are either taken by position or selected explicitly.
+ * Both modes exist for [DataFrame] and for [GroupBy]:
+ *
+ * - [xs][DataFrame.xs]`(keyValues)` — the key columns are the first columns of the [DataFrame].
+ * - [xs][DataFrame.xs]`(keyValues) { keyColumns }` — the key columns are the selected ones.
+ * - [xs][GroupBy.xs]`(keyValues)` — the key columns are the first columns of [keys][GroupBy.keys].
+ * - [xs][GroupBy.xs]`(keyValues) { keyColumns }` — the key columns are the selected ones.
+ *
+ * See also:
+ * - [filter][DataFrame.filter] — selects rows by a condition and leaves all columns in place.
+ * - [remove][DataFrame.remove] — only removes columns, without selecting rows.
+ *
  * For more information: {@include [DocumentationUrls.Xs]}
  */
 internal interface XsDocs {
 
     /**
+     * {@comment How the key columns are found when no selector is given. KDoc-snippet.
+     *    Set [SOURCE] to the columns they are taken from.}
+     *
      * The key columns are the first `n` columns of {@get [SOURCE]},
      * where `n` is the number of given key values.
      * Columns are counted from left to right;
@@ -35,10 +59,19 @@ internal interface XsDocs {
      * If there are fewer columns than key values, an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
-    typealias DefaultKeyColumnsSnippet = Nothing
+    interface DefaultKeyColumnsSnippet {
+
+        /*
+         * The key for a @set that names the columns the default key columns are taken from.
+         */
+        @ExcludeFromSources
+        typealias SOURCE = Nothing
+    }
 
     /**
-     * The key columns are the columns returned by the `keyColumns` selector,
+     * {@comment How the key columns are found when a selector is given. KDoc-snippet.}
+     *
+     * The key columns are the columns returned by the [keyColumns\] selector,
      * in the order the selector returns them — not in the order they appear in the data.
      * The selector must return exactly one column per key value;
      * otherwise, an [IllegalArgumentException] is thrown.
@@ -47,9 +80,21 @@ internal interface XsDocs {
     typealias SelectedKeyColumnsSnippet = Nothing
 
     /**
-     * The examples below use this [DataFrame], the same data as the `xs` page on the
-     * documentation website. `firstName` and `lastName` sit inside the `name`
-     * [column group][ColumnGroup]:
+     * {@comment What a [GroupBy] receiver means for the operation. KDoc-snippet.}
+     *
+     * Both parts of the [GroupBy] are filtered: the key–group pairs, and the rows inside the groups.
+     * The key columns are removed from [keys][GroupBy.keys] and from the groups.
+     */
+    @ExcludeFromSources
+    typealias GroupByPartsSnippet = Nothing
+
+    /**
+     * {@comment The input of every `xs` example. KDoc-snippet.
+     *    Every result table that follows it is an expected value in `XsTests`.}
+     *
+     * The examples below use this [DataFrame], the same data as the
+     * [`xs` page on the documentation website]({@include [DocumentationUrls.Url]}/xs.html).
+     * `firstName` and `lastName` sit inside the `name` [column group][ColumnGroup]:
      *
      * | name/firstName | name/lastName | age | city   | weight | isHappy |
      * | :------------- | :------------ | :-- | :----- | :----- | :------ |
@@ -63,33 +108,31 @@ internal interface XsDocs {
      */
     @ExcludeFromSources
     typealias ExampleDataSnippet = Nothing
-
-    /*
-     * The key for a @set that names the columns the default key columns are taken from.
-     */
-    @ExcludeFromSources
-    typealias SOURCE = Nothing
 }
+
+/** [The Xs Operation][XsDocs] */
+@ExcludeFromSources
+private typealias XsDocsLink = Nothing
+
+// endregion
 
 // region DataFrame
 
 /**
- * @include [XsDocs]
+ * Returns a cross-section of this [DataFrame]: only the rows in which the key columns hold
+ * the given [keyValues], without those key columns.
  *
- * See also [filter][DataFrame.filter], which selects rows by a condition and leaves all columns in place,
- * and [remove][DataFrame.remove], which only removes columns.
- * ### This `xs` Overload
- */
-@ExcludeFromSources
-private typealias CommonDataFrameXsDocs = Nothing
-
-/**
- * @include [CommonDataFrameXsDocs]
- * @include [XsDocs.DefaultKeyColumnsSnippet] {@set [XsDocs.SOURCE] this [DataFrame]}
+ * {@include [XsDocs.DefaultKeyColumnsSnippet] {@set [XsDocs.DefaultKeyColumnsSnippet.SOURCE] this [DataFrame]}}
+ *
+ * See also:
+ * - [xs][DataFrame.xs]`(keyValues) { keyColumns }` — selects the key columns explicitly.
+ * - {@include [XsDocsLink]} — an overview of all `xs` modes.
+ *
+ * For more information: {@include [DocumentationUrls.Xs]}
  *
  * ### Example
  *
- * @include [XsDocs.ExampleDataSnippet]
+ * {@include [XsDocs.ExampleDataSnippet]}
  *
  * With one key value the key column is the first column, `name/firstName`.
  * The `name` group is not a key column itself, so it stays with its remaining column:
@@ -124,14 +167,22 @@ public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> =
     }
 
 /**
- * @include [CommonDataFrameXsDocs]
- * @include [XsDocs.SelectedKeyColumnsSnippet]
+ * Returns a cross-section of this [DataFrame]: only the rows in which the [key columns][keyColumns] hold
+ * the given [keyValues], without those key columns.
  *
- * @include [SelectingColumns.ColumnsSelectionDsl]
+ * {@include [XsDocs.SelectedKeyColumnsSnippet]}
+ *
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
+ *
+ * See also:
+ * - [xs][DataFrame.xs]`(keyValues)` — takes the first columns as the key columns.
+ * - {@include [XsDocsLink]} — an overview of all `xs` modes.
+ *
+ * For more information: {@include [DocumentationUrls.Xs]}
  *
  * ### Example
  *
- * @include [XsDocs.ExampleDataSnippet]
+ * {@include [XsDocs.ExampleDataSnippet]}
  *
  * The key columns do not have to be the first ones —
  * here "city" and "isHappy" are selected explicitly:
@@ -157,22 +208,22 @@ public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelect
 // region GroupBy
 
 /**
- * @include [XsDocs]
+ * Returns a cross-section of this [GroupBy]: only the key–group pairs in which the key columns hold
+ * the given [keyValues], without those key columns.
  *
- * Both parts of a [GroupBy] are filtered: the key–group pairs, and the rows inside the groups.
- * The key columns are removed from [keys][GroupBy.keys] and from the groups.
- * ### This `xs` Overload
- */
-@ExcludeFromSources
-private typealias CommonGroupByXsDocs = Nothing
-
-/**
- * @include [CommonGroupByXsDocs]
- * @include [XsDocs.DefaultKeyColumnsSnippet] {@set [XsDocs.SOURCE] [keys][GroupBy.keys]}
+ * {@include [XsDocs.GroupByPartsSnippet]}
+ *
+ * {@include [XsDocs.DefaultKeyColumnsSnippet] {@set [XsDocs.DefaultKeyColumnsSnippet.SOURCE] [keys][GroupBy.keys]}}
+ *
+ * See also:
+ * - [xs][GroupBy.xs]`(keyValues) { keyColumns }` — selects the key columns explicitly.
+ * - {@include [XsDocsLink]} — an overview of all `xs` modes.
+ *
+ * For more information: {@include [DocumentationUrls.Xs]}
  *
  * ### Example
  *
- * @include [XsDocs.ExampleDataSnippet]
+ * {@include [XsDocs.ExampleDataSnippet]}
  *
  * ```kotlin
  * val gb = df.groupBy { city and isHappy }
@@ -203,24 +254,38 @@ private typealias CommonGroupByXsDocs = Nothing
  */
 @Refine
 @Interpretable("GroupByXs")
-public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> =
-    xs(*keyValues) {
-        colsAtAnyDepth().filter { !it.isColumnGroup() }.take(keyValues.size)
+public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> {
+    // the selector is resolved against `keys` plus the frame column that holds the groups;
+    // that frame column is not part of `keys`, so it must not be counted as a key column
+    val groupsPath = pathOf(groups.name())
+    return xs(*keyValues) {
+        colsAtAnyDepth().filter { !it.isColumnGroup() && it.path != groupsPath }.take(keyValues.size)
     }
+}
 
 /**
- * @include [CommonGroupByXsDocs]
- * @include [XsDocs.SelectedKeyColumnsSnippet]
+ * Returns a cross-section of this [GroupBy]: only the key–group pairs in which
+ * the [key columns][keyColumns] hold the given [keyValues], without those key columns.
+ *
+ * {@include [XsDocs.GroupByPartsSnippet]}
+ *
+ * {@include [XsDocs.SelectedKeyColumnsSnippet]}
  *
  * A key column that exists in only one part is used in that part only.
  * For example, a column that is not a grouping key exists only in the groups,
  * so only the groups are filtered by it.
  *
- * @include [SelectingColumns.ColumnsSelectionDsl]
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
+ *
+ * See also:
+ * - [xs][GroupBy.xs]`(keyValues)` — takes the first key columns as the key columns.
+ * - {@include [XsDocsLink]} — an overview of all `xs` modes.
+ *
+ * For more information: {@include [DocumentationUrls.Xs]}
  *
  * ### Example
  *
- * @include [XsDocs.ExampleDataSnippet]
+ * {@include [XsDocs.ExampleDataSnippet]}
  *
  * ```kotlin
  * val gb = df.groupBy { city }

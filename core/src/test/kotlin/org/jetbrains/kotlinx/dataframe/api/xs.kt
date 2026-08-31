@@ -80,6 +80,13 @@ class XsTests {
         shouldThrow<IllegalArgumentException> {
             df.groupBy("name").xs("Charlie", 20) { "name"<Any?>() }
         }
+        // 2 key values, but the keys have only 1 column.
+        // The message is asserted here because the frame column that holds the groups is part of
+        // the receiver the default selector is resolved against: when it is counted as a key column,
+        // the size check passes and the operation fails later with "Column not found" instead.
+        shouldThrow<IllegalArgumentException> {
+            df.groupBy("city").xs("Moscow", "Charlie")
+        }.message shouldBe "Number of key values 2 doesn't equal to number of key columns 1"
     }
 
     @Test
