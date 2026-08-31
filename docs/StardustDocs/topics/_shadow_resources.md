@@ -42,6 +42,7 @@
 <resource src="columnSelectorsTwoColumns_properties.html"></resource>
 <resource src="columnSelectorsUnion.html"></resource>
 <resource src="columnSelectorsUsageFillNaNs.html"></resource>
+<resource src="columnSelectorsUsageFillNaNsDf.html"></resource>
 <resource src="columnSelectorsUsageGather.html"></resource>
 <resource src="columnSelectorsUsageGroup.html"></resource>
 <resource src="columnSelectorsUsageMove.html"></resource>
@@ -78,6 +79,7 @@
 <resource src="fillDf.html"></resource>
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
+<resource src="fillNaNsDf.html"></resource>
 <resource src="fillNulls.html"></resource>
 <resource src="firstOnColumnDf.html"></resource>
 <resource src="formatHeader.html"></resource>
