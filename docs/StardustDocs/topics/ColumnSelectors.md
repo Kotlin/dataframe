@@ -4,6 +4,17 @@
 
 [`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns: the Columns Selection DSL.
 
+The examples on this page use the following dataframe:
+
+<!---FUN columnSelectorsDf-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsDf.html" width="100%" height="500px"></inline-frame>
+
 Column selectors are used in many operations:
 
 <!---FUN columnSelectorsUsageSelect-->
@@ -708,7 +719,7 @@ df.select { cols(1..4) }
 
 ```kotlin
 // by condition
-df.select { cols { it.name().startsWith("year") } }
+df.select { cols { it.name().startsWith("a") } }
 ```
 
 <!---END-->
@@ -719,7 +730,7 @@ same as
 
 ```kotlin
 // by condition
-df.select { nameStartsWith("year") }
+df.select { nameStartsWith("a") }
 ```
 
 <!---END-->
@@ -800,7 +811,7 @@ df.select { dropLast(2) }
 
 ```kotlin
 // find the first column satisfying the condition
-df.select { first { it.name.startsWith("year") } }
+df.select { first { it.hasNulls() } }
 ```
 
 <!---END-->

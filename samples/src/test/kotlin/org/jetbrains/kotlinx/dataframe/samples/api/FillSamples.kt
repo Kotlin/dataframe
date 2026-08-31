@@ -15,6 +15,14 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
     val df = peopleDf
 
     @Test
+    fun fillDf() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun fillNulls() {
         // SampleStart
         df.fillNulls { colsOf<Int?>() }.with { -1 }

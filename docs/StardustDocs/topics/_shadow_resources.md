@@ -17,14 +17,15 @@
 <resource src="columnSelectorsAtAnyDepthFromGroup_properties.html"></resource>
 <resource src="columnSelectorsAtAnyDepthIncludingGroups.html"></resource>
 <resource src="columnSelectorsAtAnyDepthWithCondition.html"></resource>
-<resource src="columnSelectorsByColumnNameIt_properties.html"></resource>
 <resource src="columnSelectorsByColumnName.html"></resource>
+<resource src="columnSelectorsByColumnNameIt_properties.html"></resource>
 <resource src="columnSelectorsByColumnPath_properties.html"></resource>
 <resource src="columnSelectorsByCondition.html"></resource>
 <resource src="columnSelectorsByType.html"></resource>
 <resource src="columnSelectorsByTypeWithCondition.html"></resource>
 <resource src="columnSelectorsColumnRange_properties.html"></resource>
 <resource src="columnSelectorsConverted_properties.html"></resource>
+<resource src="columnSelectorsDf.html"></resource>
 <resource src="columnSelectorsDrop.html"></resource>
 <resource src="columnSelectorsDropLast.html"></resource>
 <resource src="columnSelectorsFirst.html"></resource>
@@ -74,6 +75,7 @@
 <resource src="pivotWithExpression_properties.html"></resource>
 <resource src="updateWithCondition_properties.html"></resource>
 <resource src="updateWithExpression_properties.html"></resource>
+<resource src="fillDf.html"></resource>
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
 <resource src="fillNulls.html"></resource>
