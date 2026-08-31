@@ -92,7 +92,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
     /**
      * It contains constants related to different database modes.
      *
-     * The mode value is used in the [extractDBTypeFromConnection] function to determine the corresponding `DbType` for the H2 database connection URL.
+     * The mode value is used in the [<code>extractDBTypeFromConnection</code>][extractDBTypeFromConnection] function to determine the corresponding `DbType` for the H2 database connection URL.
      * For example, if the URL contains the mode value "MySQL", the H2 instance with the MySQL database type is returned.
      * Otherwise, the `DbType` is determined based on the URL without the mode value.
      *

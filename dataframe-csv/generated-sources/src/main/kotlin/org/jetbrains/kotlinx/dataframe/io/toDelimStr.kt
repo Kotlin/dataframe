@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.RECORD_SEPAR
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**
- * ### Convert [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text String
+ * ### Convert [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to Delimiter-Separated Text String
  *
- * Converts [this][this] [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [String].
+ * Converts [this][this] [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to a delimiter-separated text [<code>String</code>][String].
  *
  * Parameters you can use to customize the process include, for instance, [delimiter],
  * [includeHeader], [quoteMode], and [headerComments].
@@ -25,14 +25,14 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  * The integration is built upon [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/).
  *
  * ##### Similar Functions
- * With overloads of [DataFrame.writeDelim][writeDelim]`()`, you can write delimiter-separated text to [File][File], [Path][java.nio.file.Path],
- * [Appendable], or [String].
+ * With overloads of [DataFrame.writeDelim][writeDelim]`()`, you can write delimiter-separated text to [<code>File</code>][File], [<code>Path</code>][java.nio.file.Path],
+ * [<code>Appendable</code>][Appendable], or [<code>String</code>][String].
  *
  * For example, [DataFrame.writeDelim][writeDelim]`("output.txt")`
  *
- * or [DataFrame.writeDelim][writeDelim]`(`[File][File]`("output.txt"), quoteMode = `[QuoteMode.ALL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
+ * or [DataFrame.writeDelim][writeDelim]`(`[<code>File</code>][File]`("output.txt"), quoteMode = `[<code>QuoteMode.ALL</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL]`)`
  *
- * Converting to a [String] can be done like this:
+ * Converting to a [<code>String</code>][String] can be done like this:
  *
  * [DataFrame.toDelimStr][toDelimStr]`(delimiter = ",")`
  *
@@ -45,9 +45,9 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  *   Used when field- or line delimiters should be interpreted as literal text.
  *
  *   For example: `123,"hello, there",456,` would correspond to: `123`; `hello, there`; `456`.
- * @param quoteMode The [QuoteMode][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
- *   Default: [QuoteMode.MINIMAL][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
- * @param escapeChar The escape character to use when writing CSV / TSV files with [QuoteMode.NONE][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
+ * @param quoteMode The [<code>QuoteMode</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode] to use when writing CSV / TSV files.
+ *   Default: [<code>QuoteMode.MINIMAL</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.MINIMAL].
+ * @param escapeChar The escape character to use when writing CSV / TSV files with [<code>QuoteMode.NONE</code>][org.jetbrains.kotlinx.dataframe.io.QuoteMode.NONE].
  *   Default: `null`. This will double-quote the value.
  * @param commentChar The character that indicates a comment line in a CSV / TSV file.
  *   Default: `'#'`.

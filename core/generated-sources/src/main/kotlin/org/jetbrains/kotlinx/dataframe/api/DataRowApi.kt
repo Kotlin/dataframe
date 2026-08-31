@@ -110,7 +110,7 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
 // endregion
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -119,7 +119,7 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
 internal typealias DiffDocs = Nothing
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -128,7 +128,7 @@ internal typealias DiffDocs = Nothing
 internal typealias DiffOrNullDocs = Nothing
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -141,7 +141,7 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExp
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -155,7 +155,7 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpres
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -166,7 +166,7 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpre
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -177,7 +177,7 @@ public inline fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpr
         ?: firstRowResult
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -189,7 +189,7 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -199,7 +199,7 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): 
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -209,7 +209,7 @@ public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>):
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
- * Calculates the difference between the results of a row expression computed on the current and previous [DataRow][org.jetbrains.kotlinx.dataframe.DataRow].
+ * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
@@ -242,12 +242,12 @@ public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
 }
 
 /**
- * Returns the previous [row][DataRow] in the [DataFrame] relative to the current row.
- * If the current row is the first row in the [DataFrame], it returns `null`.
+ * Returns the previous [<code>row</code>][DataRow] in the [<code>DataFrame</code>][DataFrame] relative to the current row.
+ * If the current row is the first row in the [<code>DataFrame</code>][DataFrame], it returns `null`.
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
- * @return The previous [DataRow] if it exists, or `null` if the current row is the first in the [DataFrame].
+ * @return The previous [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the first in the [<code>DataFrame</code>][DataFrame].
  */
 public fun <T> DataRow<T>.prev(): DataRow<T>? {
     val index = index()
@@ -255,12 +255,12 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
 }
 
 /**
- * Returns the next [row][DataRow] in the [DataFrame] relative to the current row.
- * If the current row is the last row in the [DataFrame], it returns `null`.
+ * Returns the next [<code>row</code>][DataRow] in the [<code>DataFrame</code>][DataFrame] relative to the current row.
+ * If the current row is the last row in the [<code>DataFrame</code>][DataFrame], it returns `null`.
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
- * @return The previous [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
+ * @return The previous [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the last in the [<code>DataFrame</code>][DataFrame].
  */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()

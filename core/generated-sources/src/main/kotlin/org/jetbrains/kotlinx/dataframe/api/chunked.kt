@@ -13,46 +13,46 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 
 /**
- * Splits this [DataFrame] into consecutive chunks of up to [size] rows
- * and returns them as a [FrameColumn].
+ * Splits this [<code>DataFrame</code>][DataFrame] into consecutive chunks of up to [<code>size</code>][size] rows
+ * and returns them as a [<code>FrameColumn</code>][FrameColumn].
  *
- * Each element of the resulting [FrameColumn] is a sub-[DataFrame] containing
- * at most [size] rows. Chunks are formed in order, without overlap.
+ * Each element of the resulting [<code>FrameColumn</code>][FrameColumn] is a sub-[<code>DataFrame</code>][DataFrame] containing
+ * at most [<code>size</code>][size] rows. Chunks are formed in order, without overlap.
  *
  * For more information: [See `chunked` on the documentation website.](https://kotlin.github.io/dataframe/chunked.html)
  *
  * @param [size] Maximum number of rows in each chunk. Must be positive.
- * @param [name] Name of the resulting [FrameColumn]. Defaults to `"groups"`.
- * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
+ * @param [name] Name of the resulting [<code>FrameColumn</code>][FrameColumn]. Defaults to `"groups"`.
+ * @return A [<code>FrameColumn</code>][FrameColumn] where each value is a sub-[<code>DataFrame</code>][DataFrame] chunk.
  */
 public fun <T> DataFrame<T>.chunked(size: Int, name: String = "groups"): FrameColumn<T> =
     chunked(startIndices = 0 until nrow step size, name = name)
 
 /**
- * Splits this [DataFrame] into chunks starting at the given [startIndices].
+ * Splits this [<code>DataFrame</code>][DataFrame] into chunks starting at the given [<code>startIndices</code>][startIndices].
  *
  * The chunk starting at index `i` ends right before the next start index
- * or the end of the [DataFrame].
+ * or the end of the [<code>DataFrame</code>][DataFrame].
  * Use this overload when you need custom chunk boundaries.
  *
  * For more information: [See `chunked` on the documentation website.](https://kotlin.github.io/dataframe/chunked.html)
  *
  * @param [startIndices] Zero-based row indices where each new chunk starts.
- * @param [name] Name of the resulting [FrameColumn]. Defaults to `"groups"`.
- * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
+ * @param [name] Name of the resulting [<code>FrameColumn</code>][FrameColumn]. Defaults to `"groups"`.
+ * @return A [<code>FrameColumn</code>][FrameColumn] where each value is a sub-[<code>DataFrame</code>][DataFrame] chunk.
  */
 public fun <T> DataFrame<T>.chunked(startIndices: Iterable<Int>, name: String = "groups"): FrameColumn<T> =
     chunkedImpl(startIndices, name)
 
 /**
- * Groups consecutive values of this [DataColumn] into lists of at most [size] elements.
+ * Groups consecutive values of this [<code>DataColumn</code>][DataColumn] into lists of at most [<code>size</code>][size] elements.
  *
- * This works like [kotlin.collections.chunked], but returns a [ValueColumn] instead of a [List].
+ * This works like [<code>kotlin.collections.chunked</code>][kotlin.collections.chunked], but returns a [<code>ValueColumn</code>][ValueColumn] instead of a [<code>List</code>][List].
  *
  * For more information: [See `chunked` on the documentation website.](https://kotlin.github.io/dataframe/chunked.html)
  *
  * @param [size] Maximum number of elements in each chunk. Must be positive.
- * @return A [ValueColumn] whose elements are lists representing chunks of the original values.
+ * @return A [<code>ValueColumn</code>][ValueColumn] whose elements are lists representing chunks of the original values.
  */
 public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
     val values = toList().chunked(size)
@@ -60,28 +60,28 @@ public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
 }
 
 /**
- * Splits this [ColumnGroup] into a [FrameColumn] of sub-dataframes
- * with up to [size] rows in each chunk.
+ * Splits this [<code>ColumnGroup</code>][ColumnGroup] into a [<code>FrameColumn</code>][FrameColumn] of sub-dataframes
+ * with up to [<code>size</code>][size] rows in each chunk.
  *
- * The resulting [FrameColumn] inherits the name of this group.
+ * The resulting [<code>FrameColumn</code>][FrameColumn] inherits the name of this group.
  *
  * For more information: [See `chunked` on the documentation website.](https://kotlin.github.io/dataframe/chunked.html)
  *
  * @param [size] Maximum number of rows in each sub-dataframe. Must be positive.
- * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
+ * @return A [<code>FrameColumn</code>][FrameColumn] where each value is a sub-[<code>DataFrame</code>][DataFrame] chunk.
  */
 public fun <T> ColumnGroup<T>.chunked(size: Int): FrameColumn<T> = chunked(size, name())
 
 /**
- * Splits a [DataColumn] of [DataRow] into a [FrameColumn] of sub-dataframes
- * with up to [size] rows in each chunk.
+ * Splits a [<code>DataColumn</code>][DataColumn] of [<code>DataRow</code>][DataRow] into a [<code>FrameColumn</code>][FrameColumn] of sub-dataframes
+ * with up to [<code>size</code>][size] rows in each chunk.
  *
- * This is a convenience overload that treats a [DataColumn] of rows
- * as if it were a [ColumnGroup] (see [ColumnGroup.chunked]).
+ * This is a convenience overload that treats a [<code>DataColumn</code>][DataColumn] of rows
+ * as if it were a [<code>ColumnGroup</code>][ColumnGroup] (see [<code>ColumnGroup.chunked</code>][ColumnGroup.chunked]).
  *
  * For more information: [See `chunked` on the documentation website.](https://kotlin.github.io/dataframe/chunked.html)
  *
  * @param [size] Maximum number of rows in each sub-dataframe. Must be positive.
- * @return A [FrameColumn] where each value is a sub-[DataFrame] chunk.
+ * @return A [<code>FrameColumn</code>][FrameColumn] where each value is a sub-[<code>DataFrame</code>][DataFrame] chunk.
  */
 public fun <T> DataColumn<DataRow<T>>.chunked(size: Int): FrameColumn<T> = asColumnGroup().chunked(size)

@@ -33,7 +33,7 @@ public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = 
 
 /**
  * Vertically concat rows from two DataFrames with different schemas.
- * Use [Iterable.concat] to concatenate DataFrames with identical schemas.
+ * Use [<code>Iterable.concat</code>][Iterable.concat] to concatenate DataFrames with identical schemas.
  *
  * #### Schema unification
  * If input DataFrame objects have different schemas, every column in the resulting DataFrame will get the lowest common type of the original columns with the same name.
@@ -60,29 +60,29 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
 // region GroupBy
 
 /**
- * Concatenates all [groups] in this [GroupBy] into a single [DataFrame].
+ * Concatenates all [<code>groups</code>][groups] in this [<code>GroupBy</code>][GroupBy] into a single [<code>DataFrame</code>][DataFrame].
  *
- * Doesn't take [keys] into account.
- * See also [concatWithKeys], which also includes all grouping key columns.
+ * Doesn't take [<code>keys</code>][keys] into account.
+ * See also [<code>concatWithKeys</code>][concatWithKeys], which also includes all grouping key columns.
  *
- * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+ * Check out [<code>`groupBy` Grammar</code>][GroupByDocs.Grammar] for more information.
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html) [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
  *
- * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
+ * @return A new [<code>DataFrame</code>][DataFrame] where all groups are combined and additional key columns are included in each row.
  */
 public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 /**
- * Concatenates all [groups] in this [GroupBy] into a single [DataFrame],
+ * Concatenates all [<code>groups</code>][groups] in this [<code>GroupBy</code>][GroupBy] into a single [<code>DataFrame</code>][DataFrame],
  * preserving and including all grouping key columns that are not present in the group's columns.
  *
  * Doesn't affect key columns that have the same name as columns inside the groups (even if their content differs).
  *
  * This function is especially useful when grouping by expressions or renamed columns,
- * and you want the resulting [DataFrame] to include those keys as part of the output.
+ * and you want the resulting [<code>DataFrame</code>][DataFrame] to include those keys as part of the output.
  *
- * Check out [`groupBy` Grammar][GroupByDocs.Grammar] for more information.
+ * Check out [<code>`groupBy` Grammar</code>][GroupByDocs.Grammar] for more information.
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
@@ -97,7 +97,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  * val gb = df.groupBy { expr { "Category: ${type.uppercase()}" } named "category" }
  * ```
  *
- * A regular `concat()` will return a [DataFrame] similar to the original `df`
+ * A regular `concat()` will return a [<code>DataFrame</code>][DataFrame] similar to the original `df`
  * (with the same columns and rows but in the different orders):
  *
  * ```
@@ -122,7 +122,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  * | 2     | b    | Category: B   |
  * | 3     | b    | Category: B   |
  *
- * @return A new [DataFrame] where all groups are combined and additional key columns are included in each row.
+ * @return A new [<code>DataFrame</code>][DataFrame] where all groups are combined and additional key columns are included in each row.
  */
 @Refine
 @Interpretable("ConcatWithKeys")

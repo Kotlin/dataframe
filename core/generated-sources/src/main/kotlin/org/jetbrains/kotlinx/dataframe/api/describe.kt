@@ -40,7 +40,7 @@ public interface ColumnDescription {
 // region DataColumn
 
 /**
- * Computes descriptive statistics for a given [DataColumn], returning a [DataFrame] with key summary metrics.
+ * Computes descriptive statistics for a given [<code>DataColumn</code>][DataColumn], returning a [<code>DataFrame</code>][DataFrame] with key summary metrics.
  *
  * This function provides a statistical summary of a given column, including its type, count, uniqueness,
  * missing values, most frequent values, and statistical measures if applicable.
@@ -69,7 +69,7 @@ public interface ColumnDescription {
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
- * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
+ * @return A [<code>DataFrame</code>][DataFrame] where each row represents the descriptive statistics of a single column.
  *         The output contains one row per described column with the summary metrics as columns.
  */
 public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describeImpl(listOf(this))
@@ -81,8 +81,8 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for all columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
+ * Computes descriptive statistics for all columns in a given [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
+ * returning a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [<code>ColumnDescription</code>][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
  * This function provides a statistical summary for all columns, including nested ones,
  * providing their type, count, unique and missing values, most frequent values,
@@ -112,7 +112,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
- * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
+ * @return A [<code>DataFrame</code>][DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
  *         The output contains one row per described column with the summary metrics as columns.
  */
 public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
@@ -123,8 +123,8 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
+ * Computes descriptive statistics for the selected columns in a given [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
+ * returning a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [<code>ColumnDescription</code>][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
  * This function provides a statistical summary for all columns, including nested ones,
  * providing their type, count, unique and missing values, most frequent values,
@@ -152,7 +152,7 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
@@ -161,18 +161,18 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -180,17 +180,17 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]` { length `[and][ColumnsSelectionDsl.and]` age }`
+ * <code>`df`</code>`.`[<code>describe</code>][org.jetbrains.kotlinx.dataframe.api.describe]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * <code>`df`</code>`.`[<code>describe</code>][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
- *
- *
+ * <code>`df`</code>`.`[<code>describe</code>][org.jetbrains.kotlinx.dataframe.api.describe]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
  *
  *
- * @param [columns] The [Columns Selector][ColumnsSelector] that specifies which
- * columns of this [DataFrame] should be described.
+ *
+ *
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] that specifies which
+ * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> =
     describeImpl(getColumnsWithPaths(columns))
@@ -198,8 +198,8 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
+ * Computes descriptive statistics for the selected columns in a given [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
+ * returning a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [<code>ColumnDescription</code>][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
  * This function provides a statistical summary for all columns, including nested ones,
  * providing their type, count, unique and missing values, most frequent values,
@@ -227,7 +227,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
@@ -236,18 +236,18 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * #### For example:
  *
- * <code>`df`</code>`.`[describe][org.jetbrains.kotlinx.dataframe.api.describe]`("length", "age")`
+ * <code>`df`</code>`.`[<code>describe</code>][org.jetbrains.kotlinx.dataframe.api.describe]`("length", "age")`
  *
  *
  *
  *
- * @param [columns] The [Column Names][String] that specifies which
- * columns of this [DataFrame] should be described.
+ * @param [columns] The [<code>Column Names</code>][String] that specifies which
+ * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
     describe { columns.toColumnSet() }
@@ -255,8 +255,8 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
+ * Computes descriptive statistics for the selected columns in a given [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
+ * returning a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [<code>ColumnDescription</code>][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
  * This function provides a statistical summary for all columns, including nested ones,
  * providing their type, count, unique and missing values, most frequent values,
@@ -284,14 +284,14 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
  *
- * @param [columns] The [Column Accessors][ColumnReference] that specifies which
- * columns of this [DataFrame] should be described.
+ * @param [columns] The [<code>Column Accessors</code>][ColumnReference] that specifies which
+ * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -301,8 +301,8 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
 /**
  * ## The Describe Operation
  *
- * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
+ * Computes descriptive statistics for the selected columns in a given [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
+ * returning a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [<code>ColumnDescription</code>][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
  * This function provides a statistical summary for all columns, including nested ones,
  * providing their type, count, unique and missing values, most frequent values,
@@ -330,14 +330,14 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
  *
  * ### This Describe Overload
  *
- * @param [columns] The [KProperties][KProperty] that specifies which
- * columns of this [DataFrame] should be described.
+ * @param [columns] The [<code>KProperties</code>][KProperty] that specifies which
+ * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

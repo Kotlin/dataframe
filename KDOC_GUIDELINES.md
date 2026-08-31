@@ -126,7 +126,7 @@ Also, you can use
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
 
-More about `@set` and `@get` connventions [here](#setget-references).
+More about `@set` and `@get` conventions [here](#setget-references).
 
 ```kotlin
 /**
@@ -194,7 +194,7 @@ public fun someFunction()
 ```
 
 Naming convention for KDoc-topic — the name must fully reflect its content at the end.
-In the future, we want to have a nice topic names with backtics 
+In the future, we want to have nice topic names with backticks 
 (like `` `Access API` `` instead of `AccessApis`), but 
 [it's not possible yet due to KoDEx bug](https://github.com/Jolanrensen/KoDEx/issues/97).
 
@@ -496,6 +496,10 @@ Describe parameters and return of the method using `@param` and `@return` tags.
 Remember type parameters.
 
 Wrap parameter names into `[]` for better readability.
+This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes KoDEx emit a broken
+doc comment with a doubled `*/` terminator, which then fails
+`runKtlintFormatOverGeneratedMainSourcesSourceSet` with "Expecting a top level declaration".
+Always write `@param [T] ...`.
 
 ## KDoc-helpers Structure
 
@@ -567,6 +571,15 @@ private typealias Common~OperationName~Docs = Nothing
  */
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
+
+Keep in mind that `@param` and `@return` have to stay at the end of a KDoc.
+So when a template already ends with them, you cannot `@include` it and then append
+overload-specific text after the include — that text would land inside the template's `@return`.
+Everything that differs between the overloads has to be passed *into* the template as a `@set`
+argument instead. That is why a template shared by several sibling overloads usually has one
+argument per varying part (receiver type, "See also" section, type parameter description, and so on),
+like
+[`CommonTakeAndDropDocs`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/CommonTakeAndDropDocs.kt).
 
 ### Grammar
 
@@ -642,7 +655,7 @@ This interface provides a template for all overloads of `allBefore`,
 
 Nested in the documentation interface, there are several other KDoc-helpers that define the expected arguments
 of the template.
-These KDoc-helpes are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs itself,
+These KDoc-helpers are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs themselves,
 just a simple comment explaining what the argument is for.
 
 Other KDoc-helpers like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set

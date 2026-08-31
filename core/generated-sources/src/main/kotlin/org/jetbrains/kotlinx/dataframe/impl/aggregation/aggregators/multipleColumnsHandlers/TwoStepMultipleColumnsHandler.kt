@@ -10,24 +10,24 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCal
 import kotlin.reflect.KType
 
 /**
- * Implementation of [AggregatorMultipleColumnsHandler] that aggregates the data in two steps:
+ * Implementation of [<code>AggregatorMultipleColumnsHandler</code>][AggregatorMultipleColumnsHandler] that aggregates the data in two steps:
  * - first, it aggregates the data for each of the given columns
  * - then, it aggregates the results of the first step into a single value
  *
- * For the first step, this [aggregator] will be used as usual.
+ * For the first step, this [<code>aggregator</code>][aggregator] will be used as usual.
  *
- * For the second step, a [new][stepTwo] [Aggregator] will be constructed using the supplied handlers:
- * [stepTwoAggregationHandler] and [stepTwoInputHandler].
+ * For the second step, a [<code>new</code>][stepTwo] [<code>Aggregator</code>][Aggregator] will be constructed using the supplied handlers:
+ * [<code>stepTwoAggregationHandler</code>][stepTwoAggregationHandler] and [<code>stepTwoInputHandler</code>][stepTwoInputHandler].
  * For both arguments, it holds that if they are not supplied or `null`,
- * the handlers of this [aggregator] will be cast and reused.
- * In all cases [NoMultipleColumnsHandler] will be used as [AggregatorMultipleColumnsHandler].
+ * the handlers of this [<code>aggregator</code>][aggregator] will be cast and reused.
+ * In all cases [<code>NoMultipleColumnsHandler</code>][NoMultipleColumnsHandler] will be used as [<code>AggregatorMultipleColumnsHandler</code>][AggregatorMultipleColumnsHandler].
  *
  * This is useful for aggregators that do not depend on the distribution of values across multiple columns.
- * It may be more memory efficient than [FlatteningMultipleColumnsHandler] and could be parallelized in the future.
+ * It may be more memory efficient than [<code>FlatteningMultipleColumnsHandler</code>][FlatteningMultipleColumnsHandler] and could be parallelized in the future.
  *
- * @param stepTwoAggregationHandler The [aggregation handler][AggregatorAggregationHandler] for the second step.
+ * @param stepTwoAggregationHandler The [<code>aggregation handler</code>][AggregatorAggregationHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
- * @param stepTwoInputHandler The [input handler][AggregatorInputHandler] for the second step.
+ * @param stepTwoInputHandler The [<code>input handler</code>][AggregatorInputHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
  * @see [FlatteningMultipleColumnsHandler]
  */
@@ -37,8 +37,8 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
 ) : AggregatorMultipleColumnsHandler<Value, Return> {
 
     /**
-     * The second step [Aggregator] which can take multiple outputs of
-     * this [aggregator] and aggregate it to a single value.
+     * The second step [<code>Aggregator</code>][Aggregator] which can take multiple outputs of
+     * this [<code>aggregator</code>][aggregator] and aggregate it to a single value.
      */
     @Suppress("UNCHECKED_CAST")
     val stepTwo by lazy {
@@ -54,8 +54,8 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      *
-     * This function calls [aggregator][aggregator] [.aggregateSingleColumn()][Aggregator.aggregateSingleColumn]
-     * on each column and then [stepTwo] [.aggregateSequence()][Aggregator.aggregateSequence] on the results.
+     * This function calls [<code>aggregator</code>][aggregator] [<code>.aggregateSingleColumn()</code>][Aggregator.aggregateSingleColumn]
+     * on each column and then [<code>stepTwo</code>][stepTwo] [<code>.aggregateSequence()</code>][Aggregator.aggregateSequence] on the results.
      */
     override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
         val (values, types) = columns.map { col ->
@@ -71,7 +71,7 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
     }
 
     /**
-     * Function that can give the return type of [aggregateMultipleColumns], given types of the columns.
+     * Function that can give the return type of [<code>aggregateMultipleColumns</code>][aggregateMultipleColumns], given types of the columns.
      * This allows aggregators to avoid runtime type calculations.
      *
      * @param colTypes The types of the input columns.

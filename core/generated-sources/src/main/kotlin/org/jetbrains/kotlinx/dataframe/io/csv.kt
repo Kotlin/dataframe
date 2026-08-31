@@ -333,7 +333,7 @@ public fun DataFrame.Companion.readDelim(
     )
 }
 
-/** Column types that DataFrame can [parse] from a [String]. */
+/** Column types that DataFrame can [<code>parse</code>][parse] from a [<code>String</code>][String]. */
 public enum class ColType {
     Int,
     Long,
@@ -373,7 +373,7 @@ public enum class ColType {
 
         /**
          * You can add a default column type to the `colTypes` parameter
-         * by setting the key to [ColType.DEFAULT] and the value to the desired type.
+         * by setting the key to [<code>ColType.DEFAULT</code>][ColType.DEFAULT] and the value to the desired type.
          */
         public const val DEFAULT: kotlin.String = ".default"
     }

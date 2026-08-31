@@ -27,10 +27,10 @@ public object PostgreSql : DbType("postgresql") {
         get() = "org.postgresql.Driver"
 
     /**
-     * Map of [PostgreSQL object][PGobject] types by name
-     * containing both their [Java class][Class] and [Kotlin type][KType].
+     * Map of [<code>PostgreSQL object</code>][PGobject] types by name
+     * containing both their [<code>Java class</code>][Class] and [<code>Kotlin type</code>][KType].
      *
-     * These types need to be retrieved explicitly with [Java class][Class] in [ResultSet.getObject], else
+     * These types need to be retrieved explicitly with [<code>Java class</code>][Class] in [<code>ResultSet.getObject</code>][ResultSet.getObject], else
      * their return type is unpredictable.
      */
     private val pgObjectTypes by lazy {
@@ -59,7 +59,7 @@ public object PostgreSql : DbType("postgresql") {
     }
 
     /**
-     * Overridden so [PGobject] types are retrieved explicitly with [Java class][Class],
+     * Overridden so [<code>PGobject</code>][PGobject] types are retrieved explicitly with [<code>Java class</code>][Class],
      * else their return type is unpredictable.
      */
     override fun <J> getValueFromResultSet(

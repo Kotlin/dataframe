@@ -64,7 +64,7 @@ import kotlin.reflect.KProperty
  *
  * See [Selecting Columns][FormatSelectingColumns].
  *
- * The [FormatClause] allows to further narrow down the selection to individual cells
+ * The [FormatClause] allows you to further narrow down the selection to individual cells
  * by selecting only certain rows, using [where][FormatClause.where],
  * and then finally specify how to format the cells using
  * [with][FormatClause.with], [perRowCol][FormatClause.perRowCol], or [linearBg][FormatClause.linearBg].

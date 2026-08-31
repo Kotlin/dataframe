@@ -12,12 +12,12 @@ package org.jetbrains.kotlinx.dataframe.io
  *
  * ### Read-Only Mode Behavior:
  *
- * When [readOnly] is `true` (default), the connection operates in read-only mode with:
+ * When [<code>readOnly</code>][readOnly] is `true` (default), the connection operates in read-only mode with:
  * - `Connection.setReadOnly(true)`
  * - `Connection.setAutoCommit(false)`
  * - automatic `rollback()` at the end of execution
  *
- * When [readOnly] is `false`, the connection uses JDBC defaults (usually read-write),
+ * When [<code>readOnly</code>][readOnly] is `false`, the connection uses JDBC defaults (usually read-write),
  * but the library still rejects any queries that appear to modify data
  * (e.g. contain `INSERT`, `UPDATE`, `DELETE`, etc.).
  *
@@ -82,7 +82,7 @@ public class DbConnectionConfig(
      * @param user The username. If not specified, uses the current value.
      * @param password The password. If not specified, uses the current value.
      * @param readOnly The read-only flag. If not specified, uses the current value.
-     * @return A new [DbConnectionConfig] instance with the specified changes.
+     * @return A new [<code>DbConnectionConfig</code>][DbConnectionConfig] instance with the specified changes.
      */
     public fun copy(
         url: String = this.url,

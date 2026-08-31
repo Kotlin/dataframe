@@ -490,6 +490,9 @@ public interface DocumentationUrls {
     /** [See `shuffle` on the documentation website.]({@include [Url]}/shuffle.html) */
     public typealias Shuffle = Nothing
 
+    /** [See `reverse` on the documentation website.]({@include [Url]}/reverse.html) */
+    public typealias Reverse = Nothing
+
     /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
     public typealias SortWith = Nothing
 

@@ -14,25 +14,25 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 // region ColumnsSelectionDsl
 
 /**
- * ## Simplify [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Simplify [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface SimplifyColumnsSelectionDsl {
 
     /**
-     * ## Simplify [ColumnSet] Grammar
+     * ## Simplify [<code>ColumnSet</code>][ColumnSet] Grammar
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      *
      *
@@ -41,14 +41,14 @@ public interface SimplifyColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`simplify`**][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`simplify`**</code>][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
      *
      *
      *
@@ -61,32 +61,32 @@ public interface SimplifyColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** __`.`__[**`simplify`**][ColumnsSelectionDsl.simplify] */
+        /** __`.`__[<code>**`simplify`**</code>][ColumnsSelectionDsl.simplify] */
         public typealias ColumnSetName = Nothing
     }
 
     /**
-     * ## Simplify [ColumnSet]
+     * ## Simplify [<code>ColumnSet</code>][ColumnSet]
      *
-     * Given a [this] [ColumnSet], [simplify] simplifies the structure by removing columns that are already present in
+     * Given a [<code>this</code>][this] [<code>ColumnSet</code>][ColumnSet], [<code>simplify</code>][simplify] simplifies the structure by removing columns that are already present in
      * column groups, returning only these groups plus columns not belonging in any of the groups.
      *
-     * In other words, this means that if a column in [this] is inside another column group in [this],
+     * In other words, this means that if a column in [<code>this</code>][this] is inside another column group in [<code>this</code>][this],
      * it will not be included in the result.
      *
      * For more information: [See `simplify` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#simplify)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * ## For example:
      *
-     * [cols][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() == `[cols][ColumnsSelectionDsl.cols]`(a, d.c)`
+     * [<code>cols</code>][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[<code>simplify</code>][SimplifyColumnsSelectionDsl.simplify]`() == `[<code>cols</code>][ColumnsSelectionDsl.cols]`(a, d.c)`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[<code>in</code>][String.contains]` it.`[<code>name</code>][DataColumn.name]` }.`[<code>simplify</code>][ColumnSet.simplify]`() }`
      *
-     * @return A [ColumnSet][ColumnSet]`<`[C][C]`>` containing only the columns that are not inside any column group in [this].
+     * @return A [<code>ColumnSet</code>][ColumnSet]`<`[<code>C</code>][C]`>` containing only the columns that are not inside any column group in [<code>this</code>][this].
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.simplify(): ColumnSet<C> = simplifyInternal() as ColumnSet<C>
@@ -94,7 +94,7 @@ public interface SimplifyColumnsSelectionDsl {
 
 /**
  * Simplifies structure by removing columns that are already present in
- * column groups in [this].
+ * column groups in [<code>this</code>][this].
  *
  * A.k.a. it gets a sub-list of columns that are roots of the trees of columns.
  */

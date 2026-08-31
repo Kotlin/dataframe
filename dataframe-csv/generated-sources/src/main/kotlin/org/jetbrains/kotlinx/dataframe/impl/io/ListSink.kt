@@ -25,7 +25,7 @@ internal interface SinkSource<T : Any> :
     Source<T>
 
 /**
- * Implementation of Deephaven's [Sink] and [Source] that stores data in an [ArrayList].
+ * Implementation of Deephaven's [<code>Sink</code>][Sink] and [<code>Source</code>][Source] that stores data in an [<code>ArrayList</code>][ArrayList].
  *
  * The implementation is based on [Writing Your Own Data Sinks](https://github.com/deephaven/deephaven-csv/blob/main/ADVANCED.md).
  *

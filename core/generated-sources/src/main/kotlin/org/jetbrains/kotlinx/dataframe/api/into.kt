@@ -22,22 +22,22 @@ import kotlin.reflect.typeOf
 // region GroupBy
 
 /**
- * Converts this [GroupBy] into a [DataFrame].
+ * Converts this [<code>GroupBy</code>][GroupBy] into a [<code>DataFrame</code>][DataFrame].
  *
- * Does the same as [GroupBy.toDataFrame].
+ * Does the same as [<code>GroupBy.toDataFrame</code>][GroupBy.toDataFrame].
  *
- * Each row of the resulting [DataFrame] represents a unique keys–group pair:
- * a row from [keys] and its corresponding group of rows (as [DataFrame]).
+ * Each row of the resulting [<code>DataFrame</code>][DataFrame] represents a unique keys–group pair:
+ * a row from [<code>keys</code>][keys] and its corresponding group of rows (as [<code>DataFrame</code>][DataFrame]).
  *
- * Resulting [DataFrame] contains a [FrameColumn] with [groups].
+ * Resulting [<code>DataFrame</code>][DataFrame] contains a [<code>FrameColumn</code>][FrameColumn] with [<code>groups</code>][groups].
  *
- * Check out [groupBy Grammar][GroupByDocs.Grammar].
+ * Check out [<code>groupBy Grammar</code>][GroupByDocs.Grammar].
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
  * @param column The name of the column in which to store grouped data.
- * @return A new [DataFrame] that includes the grouping key columns together
- * with a [FrameColumn] containing the corresponding groups.
+ * @return A new [<code>DataFrame</code>][DataFrame] that includes the grouping key columns together
+ * with a [<code>FrameColumn</code>][FrameColumn] containing the corresponding groups.
  */
 @Refine
 @Interpretable("GroupByInto")
@@ -52,16 +52,16 @@ public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<DataFrame<*>>): DataFra
 public fun <T> GroupBy<T, *>.into(column: KProperty<DataFrame<*>>): DataFrame<T> = toDataFrame(column.columnName)
 
 /**
- * Aggregates this [GroupBy] into a [DataFrame]
- * by computing the values of [expression] on all rows for each group.
+ * Aggregates this [<code>GroupBy</code>][GroupBy] into a [<code>DataFrame</code>][DataFrame]
+ * by computing the values of [<code>expression</code>][expression] on all rows for each group.
  *
- * Each row of the resulting [DataFrame] represents a unique keys–value pair:
- * a row from [keys] and list of values, computed on all rows of the corresponding group using
- * provided [expression].
+ * Each row of the resulting [<code>DataFrame</code>][DataFrame] represents a unique keys–value pair:
+ * a row from [<code>keys</code>][keys] and list of values, computed on all rows of the corresponding group using
+ * provided [<code>expression</code>][expression].
  *
- * Check out [groupBy Grammar][GroupByDocs.Grammar].
+ * Check out [<code>groupBy Grammar</code>][GroupByDocs.Grammar].
  *
- * See [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow]
+ * See [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow]
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
@@ -76,7 +76,7 @@ public fun <T> GroupBy<T, *>.into(column: KProperty<DataFrame<*>>): DataFrame<T>
  *
  * @param [columnName] The name of the column in which to store aggregated data.
  * @param [expression] The expression to compute on each group row.
- * @return A new [DataFrame] that includes the grouping key columns together
+ * @return A new [<code>DataFrame</code>][DataFrame] that includes the grouping key columns together
  * with a list of values computed on all rows of corresponding groups.
  */
 public inline fun <T, G, reified V> GroupBy<T, G>.into(

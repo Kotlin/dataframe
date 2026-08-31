@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.name
  * Represents the type of Markers that we can use for code generation.
  * This includes [OpenApiMarker.Enum], [OpenApiMarker.Interface] (and [OpenApiMarker.AdditionalPropertyInterface]),
  * [OpenApiMarker.TypeAlias], and [OpenApiMarker.MarkerAlias].
- * It's a bit more flexible than [Marker] and insures the right arguments are given for the right type of [Marker].
+ * It's a bit more flexible than [Marker] and ensures the right arguments are given for the right type of [Marker].
  */
 internal sealed class OpenApiMarker private constructor(
     val nullable: Boolean, // in openApi, just like an enum, nullability can be saved in the object

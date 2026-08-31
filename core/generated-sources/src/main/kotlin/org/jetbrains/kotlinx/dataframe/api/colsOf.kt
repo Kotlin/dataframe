@@ -24,9 +24,9 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * ## Cols Of [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Cols Of [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface ColsOfColumnsSelectionDsl {
 
@@ -36,29 +36,29 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
+     *  `singleColumn: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroupReference: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroupReference: `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[<code>`ColumnAccessor`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -66,33 +66,33 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `kType: `[`KType`][kotlin.reflect.KType]
+     *  `kType: `[<code>`KType`</code>][kotlin.reflect.KType]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**colsOf**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOf`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -103,17 +103,17 @@ public interface ColsOfColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [`singleColumn`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.SingleColumnDef]
+     *  [<code>`singleColumn`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.SingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOf`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [`columnGroupReference`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupNoSingleColumnDef]
+     *  [<code>`columnGroupReference`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupNoSingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOf`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -126,64 +126,64 @@ public interface ColsOfColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
+        /** [<code>**colsOf**</code>][ColumnsSelectionDsl.colsOf] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        /** __`.`__[<code>**`colsOf`**</code>][ColumnsSelectionDsl.colsOf] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        /** __`.`__[<code>**`colsOf`**</code>][ColumnsSelectionDsl.colsOf] */
         public typealias ColumnGroupName = Nothing
     }
 
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * Returns a [<code>ColumnSet</code>][ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
      *
-     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][colsOf]`<T?>()`.
-     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[filter][ColumnsSelectionDsl.filter]` { !it.`[allNulls][DataColumn.allNulls]`() }`
+     * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][colsOf]`<T?>()`.
+     *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[<code>filter</code>][ColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][DataColumn.allNulls]`() }`
      *   after it.
      *
      * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Alternatively, [colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Finally, [colsOf] can also take a [KType] argument instead of a reified type.
+     * Alternatively, [<code>colsOf</code>][colsOf] can also be called on existing columns:
+     *
+     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+     *
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
+     *
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Finally, [<code>colsOf</code>][colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
      *
      * #### Examples for this overload:
      */
     private interface CommonColsOfDocs {
 
-        /** @return A [ColumnSet] containing the columns of given type that were included by [filter]. */
+        /** @return A [<code>ColumnSet</code>][ColumnSet] containing the columns of given type that were included by [filter]. */
         typealias Return = Nothing
 
         /** @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included. */
@@ -193,54 +193,54 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
      *
-     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
-     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
      *
      * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+     * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][String.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][String.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOf][String.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][String.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
      *
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
     public fun <C> String.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
@@ -248,54 +248,54 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
      *
-     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
-     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
      *
      * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+     * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsOf][KProperty.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { DataSchemaType::myColumnGroup.`[<code>colsOf</code>][KProperty.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOf][KProperty.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][KProperty.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
      *
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -305,54 +305,54 @@ public interface ColsOfColumnsSelectionDsl {
     /**
      * ## Cols Of
      *
-     * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+     * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
      * by [filter].
      *
      * This function operates solely on columns at the top-level.
      *
-     * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
-     *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+     * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+     *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+     *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
      *   after it.
      *
      * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+     * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     *
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
      * This is useful when the type is not known at compile time or when the API function cannot be inlined.
      *
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][ColumnPath.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>colsOf</code>][ColumnPath.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOf][ColumnPath.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>colsOf</code>][ColumnPath.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
      *
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
     public fun <C> ColumnPath.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
@@ -361,54 +361,54 @@ public interface ColsOfColumnsSelectionDsl {
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { .. }.`[<code>colsOf</code>][ColumnSet.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { .. }.`[<code>colsOf</code>][ColumnSet.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOfInternal(type, filter)
@@ -416,54 +416,54 @@ public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (ColumnWithPath<C>) -> B
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { .. }.`[<code>colsOf</code>][ColumnSet.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsOf][ColumnSet.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { .. }.`[<code>colsOf</code>][ColumnSet.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 @Interpretable("ColsOf1")
 public inline fun <reified C> ColumnSet<*>.colsOf(
@@ -473,52 +473,52 @@ public inline fun <reified C> ColumnSet<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 public fun <C> ColumnsSelectionDsl<*>.colsOf(
     type: KType,
@@ -528,52 +528,52 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 @Interpretable("ColsOf0")
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
@@ -583,54 +583,54 @@ public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][DataColumn]`<`[Int][Int]`> -> it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 public fun <C> SingleColumn<DataRow<*>>.colsOf(
     type: KType,
@@ -640,54 +640,54 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
 /**
  * ## Cols Of
  *
- * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
+ * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
  * by [filter].
  *
  * This function operates solely on columns at the top-level.
  *
- * __NOTE:__ Null-filled columns of type [Nothing?][Nothing] will be included when selecting [`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
- *   This is because [Nothing][Nothing] is considered a subtype of all other types in Kotlin.
- *   To exclude these columns, call `.`[filter][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[allNulls][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
+ * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf]`<T?>()`.
+ *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
+ *   To exclude these columns, call `.`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][org.jetbrains.kotlinx.dataframe.DataColumn.allNulls]`() }`
  *   after it.
  *
  * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
  *
- * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- * Alternatively, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`>() }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
- * Finally, [colsOf][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [KType] argument instead of a reified type.
+ * Alternatively, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also be called on existing columns:
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ *
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * Finally, [<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
  * This is useful when the type is not known at compile time or when the API function cannot be inlined.
  *
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
  *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>(`[typeOf][typeOf]`<`[Int][Int]`>()) { it: `[DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[Int][Int]`> -> it.`[size][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][org.jetbrains.kotlinx.dataframe.DataColumn.size]` > 10 } }`
  *
  * #### Examples for this overload:
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`> { it.`[size][DataColumn.size]` > 10 } }`
+ * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() }`
+ * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
  *
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
- * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
+ * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
 @Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
@@ -695,12 +695,12 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
 ): ColumnSet<C> = colsOf(typeOf<C>(), filter)
 
 /**
- * If this [ColumnsResolver] is a [SingleColumn], it
- * returns a new [ColumnSet] containing the columns inside of this [SingleColumn] that
- * match the given [filter] and are the given [type].
+ * If this [<code>ColumnsResolver</code>][ColumnsResolver] is a [<code>SingleColumn</code>][SingleColumn], it
+ * returns a new [<code>ColumnSet</code>][ColumnSet] containing the columns inside of this [<code>SingleColumn</code>][SingleColumn] that
+ * match the given [<code>filter</code>][filter] and are the given [<code>type</code>][type].
  *
- * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
- * match the given [filter] and are the given [type].
+ * Else, it returns a new [<code>ColumnSet</code>][ColumnSet] containing all columns in this [<code>ColumnsResolver</code>][ColumnsResolver] that
+ * match the given [<code>filter</code>][filter] and are the given [<code>type</code>][type].
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun <C> ColumnsResolver<*>.colsOfInternal(

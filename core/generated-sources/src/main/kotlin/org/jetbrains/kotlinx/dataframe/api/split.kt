@@ -162,8 +162,8 @@ internal inline fun <T, C, R> Split<T, C>.by(
  * dataFrameOf("str" to listOf("100 ml", "1 L"))
  *      .split { "str"<String>() }.match("(\d+)\s*(ml|l|L)").into("volume", "unit")
  * ```
- * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in original column
- * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in original column
+ * Check [<code>Split.by</code>][Split.by] overload with regex parameter if you're looking to split String value by [<code>Regex</code>][Regex] delimiter
  *
  * For more information: [See `split` on the documentation website.](https://kotlin.github.io/dataframe/split.html)
  */
@@ -180,8 +180,8 @@ public fun <T, C : String?> Split<T, C>.match(
  * dataFrameOf("str" to listOf("100 ml", "1 L"))
  *      .split { "str"<String>() }.match("(\d+)\s*(ml|l|L)").into("volume", "unit")
  * ```
- * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in original column
- * Check [Split.by][org.jetbrains.kotlinx.dataframe.api.Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in original column
+ * Check [<code>Split.by</code>][org.jetbrains.kotlinx.dataframe.api.Split.by] overload with regex parameter if you're looking to split String value by [<code>Regex</code>][Regex] delimiter
  *
  * For more information: [See `split` on the documentation website.](https://kotlin.github.io/dataframe/split.html)
  */

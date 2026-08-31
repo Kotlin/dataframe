@@ -74,11 +74,11 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 // region DataFrame
 
 /**
- * Note: When this method is applied to a **[ColumnGroup]**,
- * its behavior differs from [DataColumn.map].
- * To apply `map` as if on a regular [DataColumn] (i.e., a column of [DataRow]s
+ * Note: When this method is applied to a **[<code>ColumnGroup</code>][ColumnGroup]**,
+ * its behavior differs from [<code>DataColumn.map</code>][DataColumn.map].
+ * To apply `map` as if on a regular [<code>DataColumn</code>][DataColumn] (i.e., a column of [<code>DataRow</code>][DataRow]s
  * whose values correspond to values in columns of the group),
- * call [ColumnGroup.asDataColumn] first.
+ * call [<code>ColumnGroup.asDataColumn</code>][ColumnGroup.asDataColumn] first.
  */
 public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 

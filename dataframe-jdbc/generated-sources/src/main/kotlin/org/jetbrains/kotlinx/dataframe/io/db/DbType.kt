@@ -59,20 +59,20 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *
      * NOTE: It's important for usage in dataframe-gradle-plugin for force class loading.
      *
-     * @return The JDBC driver class name as a [String].
+     * @return The JDBC driver class name as a [<code>String</code>][String].
      */
     public abstract val driverClassName: String
 
     /**
      * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
-     * [readAllSqlTables], and [readAllSqlTables] as a filter when querying the database
-     * for all the tables it has using [DatabaseMetaData.getTables].
+     * [<code>readAllSqlTables</code>][readAllSqlTables], and [<code>readAllSqlTables</code>][readAllSqlTables] as a filter when querying the database
+     * for all the tables it has using [<code>DatabaseMetaData.getTables</code>][DatabaseMetaData.getTables].
      *
-     * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,
+     * This is usually "TABLE" or "BASE TABLE", which is what [<code>tableTypes</code>][tableTypes] is set to by default,
      * but it can be overridden to any custom list of table types, or `null` to let the JDBC integration
      * return all types of tables.
      *
-     * See [DatabaseMetaData.getTableTypes] for all supported table types of your specific database.
+     * See [<code>DatabaseMetaData.getTableTypes</code>][DatabaseMetaData.getTableTypes] for all supported table types of your specific database.
      */
     public open val tableTypes: List<String>? = listOf("TABLE", "BASE TABLE")
 
@@ -97,7 +97,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public open val defaultQueryTimeout: Int? = null // null = no timeout
 
-    /** Default mapping of [Java SQL Types][Types] to [KType]. */
+    /** Default mapping of [<code>Java SQL Types</code>][Types] to [<code>KType</code>][KType]. */
     protected val defaultJdbcTypeToKTypeMapping: Map<Int, KType> = mapOf(
         Types.BIT to typeOf<Boolean>(),
         Types.TINYINT to typeOf<Int>(),
@@ -142,25 +142,25 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Retrieves column metadata from a JDBC ResultSet.
      *
-     * This method reads column metadata from [ResultSetMetaData] with graceful fallbacks
-     * for JDBC drivers that throw [java.sql.SQLFeatureNotSupportedException] for certain methods
+     * This method reads column metadata from [<code>ResultSetMetaData</code>][ResultSetMetaData] with graceful fallbacks
+     * for JDBC drivers that throw [<code>java.sql.SQLFeatureNotSupportedException</code>][java.sql.SQLFeatureNotSupportedException] for certain methods
      * (e.g., Apache Hive).
      *
      * Fallback behavior for unsupported methods:
      * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
      * - `getTableName()` → extract from column name if contains '.' → `null`
-     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
+     * - `isNullable()` → [<code>DatabaseMetaData.getColumns</code>][DatabaseMetaData.getColumns] → `true` (assume nullable)
      * - `getColumnTypeName()` → `"OTHER"`
-     * - `getColumnType()` → [Types.OTHER]
+     * - `getColumnType()` → [<code>Types.OTHER</code>][Types.OTHER]
      * - `getColumnDisplaySize()` → `0`
      * - `getColumnClassName()` → `"java.lang.Object"`
      *
      * Override this method in subclasses to provide database-specific behavior
      * (for example, to disable fallback for databases like Teradata or Oracle
-     * where [DatabaseMetaData.getColumns] is known to be slow).
+     * where [<code>DatabaseMetaData.getColumns</code>][DatabaseMetaData.getColumns] is known to be slow).
      *
-     * @param resultSet The [ResultSet] containing query results.
-     * @return A list of [TableColumnMetadata] objects.
+     * @param resultSet The [<code>ResultSet</code>][ResultSet] containing query results.
+     * @return A list of [<code>TableColumnMetadata</code>][TableColumnMetadata] objects.
      */
     public open fun getTableColumnsMetadata(resultSet: ResultSet): List<TableColumnMetadata> {
         val rsMetaData = resultSet.metaData
@@ -278,17 +278,17 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Returns the [type][KType] of the objects returned by [getValueFromResultSet]
-     * for the given [column][tableColumnMetadata]. Also called type `J`.
+     * Returns the [<code>type</code>][KType] of the objects returned by [<code>getValueFromResultSet</code>][getValueFromResultSet]
+     * for the given [<code>column</code>][tableColumnMetadata]. Also called type `J`.
      *
-     * While [DbType] contains a basic type mapping,
+     * While [<code>DbType</code>][DbType] contains a basic type mapping,
      * it's often necessary to override this function for specific JDBC implementations,
      * as each implementation can deviate from the standard type mapping and may return
-     * unexpected types when [ResultSet.getObject] is called.
+     * unexpected types when [<code>ResultSet.getObject</code>][ResultSet.getObject] is called.
      *
      * @param [tableColumnMetadata] all information we have about the column
-     * @return the type of the objects returned by [getValueFromResultSet] and
-     *   [ResultSet.getObject] for the given column
+     * @return the type of the objects returned by [<code>getValueFromResultSet</code>][getValueFromResultSet] and
+     *   [<code>ResultSet.getObject</code>][ResultSet.getObject] for the given column
      */
     public open fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         val kType = when (tableColumnMetadata.jdbcType) {
@@ -332,19 +332,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Extracts a value from the [result set][rs] for the given [column][tableColumnMetadata].
+     * Extracts a value from the [<code>result set</code>][rs] for the given [<code>column</code>][tableColumnMetadata].
      *
      * This method can be overridden for custom database types to change low-level reading logic.
      *
-     * The return value, of type [J], must match the [expectedJdbcType] parameter exactly.
-     * This parameter is obtained from [getExpectedJdbcType].
+     * The return value, of type [<code>J</code>][J], must match the [<code>expectedJdbcType</code>][expectedJdbcType] parameter exactly.
+     * This parameter is obtained from [<code>getExpectedJdbcType</code>][getExpectedJdbcType].
      *
-     * @param [J] the JDBC type, [expectedJdbcType]
+     * @param [J] the JDBC type, [<code>expectedJdbcType</code>][expectedJdbcType]
      * @param [rs] the ResultSet to read from
      * @param [columnIndex] zero-based column index
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedJdbcType] the type of the return value, [J], obtained from [getExpectedJdbcType]
-     * @return the value extracted from the [result set][rs] for the given [column index][columnIndex]
+     * @param [expectedJdbcType] the type of the return value, [<code>J</code>][J], obtained from [<code>getExpectedJdbcType</code>][getExpectedJdbcType]
+     * @return the value extracted from the [<code>result set</code>][rs] for the given [<code>column index</code>][columnIndex]
      */
     @Suppress("UNCHECKED_CAST")
     public open fun <J> getValueFromResultSet(
@@ -361,15 +361,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         } as J
 
     /**
-     * Returns the [type][KType] of the objects returned by [preprocessValue]
-     * for the given [column][tableColumnMetadata]. Also called type `D`.
+     * Returns the [<code>type</code>][KType] of the objects returned by [<code>preprocessValue</code>][preprocessValue]
+     * for the given [<code>column</code>][tableColumnMetadata]. Also called type `D`.
      *
      * This is the type of the value after preprocessing the individual value,
      * which may differ from the JDBC type `J`.
      *
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedJdbcType] the JDBC type, `J`, obtained from [getExpectedJdbcType]
-     * @return the type of the objects returned by [preprocessValue] for the given column
+     * @param [expectedJdbcType] the JDBC type, `J`, obtained from [<code>getExpectedJdbcType</code>][getExpectedJdbcType]
+     * @return the type of the objects returned by [<code>preprocessValue</code>][preprocessValue] for the given column
      */
     public open fun getPreprocessedValueType(
         tableColumnMetadata: TableColumnMetadata,
@@ -390,19 +390,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         }.withNullability(tableColumnMetadata.isNullable)
 
     /**
-     * (Potentially) preprocesses the [value] for the given [column][tableColumnMetadata] before
-     * collecting it in a DataFrame [DataColumn].
+     * (Potentially) preprocesses the [<code>value</code>][value] for the given [<code>column</code>][tableColumnMetadata] before
+     * collecting it in a DataFrame [<code>DataColumn</code>][DataColumn].
      *
-     * While [DbType] contains some basic preprocessing logic, converting some Java classes to Kotlin ones,
+     * While [<code>DbType</code>][DbType] contains some basic preprocessing logic, converting some Java classes to Kotlin ones,
      * it's often necessary to override this function for specific JDBC implementations.
      *
-     * @param [J] the JDBC type, [expectedJdbcType]
-     * @param [D] the type of the return value, [expectedPreprocessedValueType]
+     * @param [J] the JDBC type, [<code>expectedJdbcType</code>][expectedJdbcType]
+     * @param [D] the type of the return value, [<code>expectedPreprocessedValueType</code>][expectedPreprocessedValueType]
      * @param [value] the value to preprocess
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [expectedJdbcType] the JDBC type, [J], obtained from [getExpectedJdbcType]
-     * @param [expectedPreprocessedValueType] the type of the return value, [D], obtained from [getPreprocessedValueType]
-     * @return the preprocessed version of [value]
+     * @param [expectedJdbcType] the JDBC type, [<code>J</code>][J], obtained from [<code>getExpectedJdbcType</code>][getExpectedJdbcType]
+     * @param [expectedPreprocessedValueType] the type of the return value, [<code>D</code>][D], obtained from [<code>getPreprocessedValueType</code>][getPreprocessedValueType]
+     * @return the preprocessed version of [<code>value</code>][value]
      */
     @Suppress("UNCHECKED_CAST")
     public open fun <J, D> preprocessValue(
@@ -426,15 +426,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         } as D
 
     /**
-     * Returns the target [schema][ColumnSchema] of the given [column][tableColumnMetadata]
-     * which [buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
-     * it will describe the [schema][ColumnSchema] of `DataColumn<P>`.
+     * Returns the target [<code>schema</code>][ColumnSchema] of the given [<code>column</code>][tableColumnMetadata]
+     * which [<code>buildDataColumn</code>][buildDataColumn] will adhere to. This schema corresponds to type `P`, in the sense that
+     * it will describe the [<code>schema</code>][ColumnSchema] of `DataColumn<P>`.
      *
-     * If `null` is returned, the [schema][ColumnSchema] cannot be determined before looking at the actual data.
+     * If `null` is returned, the [<code>schema</code>][ColumnSchema] cannot be determined before looking at the actual data.
      *
      * @param [tableColumnMetadata] all information we have about the column
      * @param [expectedValueType] the type of the values after preprocessing, `D`
-     * @return the target [schema][ColumnSchema] of the given column,
+     * @return the target [<code>schema</code>][ColumnSchema] of the given column,
      *   or `null` if it cannot be determined from the types alone.
      */
     public open fun getTargetColumnSchema(
@@ -449,19 +449,19 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
         }
 
     /**
-     * Builds a [DataColumn] from the given ([preprocessed][preprocessValue]) [values],
-     * adhering to [targetColumnSchema].
+     * Builds a [<code>DataColumn</code>][DataColumn] from the given ([<code>preprocessed</code>][preprocessValue]) [<code>values</code>][values],
+     * adhering to [<code>targetColumnSchema</code>][targetColumnSchema].
      *
      * @param [D] the type of the values after preprocessing
-     * @param [P] the type of the resulting [DataColumn][DataColumn]`<`[P][P]`>`, [targetColumnSchema]
+     * @param [P] the type of the resulting [<code>DataColumn</code>][DataColumn]`<`[<code>P</code>][P]`>`, [<code>targetColumnSchema</code>][targetColumnSchema]
      * @param [name] the name of the column
-     * @param [values] the ([preprocessed][preprocessValue]) values to put in the column
+     * @param [values] the ([<code>preprocessed</code>][preprocessValue]) values to put in the column
      * @param [tableColumnMetadata] all information we have about the column
-     * @param [targetColumnSchema] the schema of the column [DataColumn][DataColumn]`<`[P][P]`>`,
-     *   as determined by [getTargetColumnSchema]
+     * @param [targetColumnSchema] the schema of the column [<code>DataColumn</code>][DataColumn]`<`[<code>P</code>][P]`>`,
+     *   as determined by [<code>getTargetColumnSchema</code>][getTargetColumnSchema]
      * @param [inferNullability] whether to infer nullability from the runtime values (this is more expensive),
-     *   as opposed to using the nullability information from the [targetColumnSchema]
-     * @return the built [DataColumn]
+     *   as opposed to using the nullability information from the [<code>targetColumnSchema</code>][targetColumnSchema]
+     * @return the built [<code>DataColumn</code>][DataColumn]
      */
     public open fun <D, P> buildDataColumn(
         name: String,
@@ -484,16 +484,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     }
 
     /**
-     * Helper function to convert [this] list of values to a [DataColumn][DataColumn]`<`[P][P]`>`.
+     * Helper function to convert [<code>this</code>][this] list of values to a [<code>DataColumn</code>][DataColumn]`<`[<code>P</code>][P]`>`.
      *
      * **NOTE:** While this function can handle
-     * [targetColumnSchema][targetColumnSchema]`  =  `[ColumnSchema.Group][ColumnSchema.Group],
-     * and [this] being a [List][List]`<`[`DataRow<*>`][DataRow]`>`,
-     * this should generally be avoided to circumvent creating `n` [data rows][DataRow],
-     * (which essentially are `n` single-row [dataframes][DataFrame]).
+     * [<code>targetColumnSchema</code>][targetColumnSchema]`  =  `[<code>ColumnSchema.Group</code>][ColumnSchema.Group],
+     * and [<code>this</code>][this] being a [<code>List</code>][List]`<`[<code>`DataRow<*>`</code>][DataRow]`>`,
+     * this should generally be avoided to circumvent creating `n` [<code>data rows</code>][DataRow],
+     * (which essentially are `n` single-row [<code>dataframes</code>][DataFrame]).
      *
-     * Instead, use [preprocessValue][preprocessValue] to convert to [Map][Map]`<`[String][String]`, `[Any?][Any]`>`
-     * and then use the more efficient [Iterable<Map<String, Any?>>.toDataFrame()][Iterable.toDataFrame] in [buildDataColumn]:
+     * Instead, use [<code>preprocessValue</code>][preprocessValue] to convert to [<code>Map</code>][Map]`<`[<code>String</code>][String]`, `[<code>Any?</code>][Any]`>`
+     * and then use the more efficient [<code>Iterable<Map<String, Any?>>.toDataFrame()</code>][Iterable.toDataFrame] in [<code>buildDataColumn</code>][buildDataColumn]:
      * ```kt
      * (values as List<Map<String, Any?>>)
      *     .toDataFrame()
@@ -622,13 +622,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
     /**
      * Creates a database connection using the provided configuration.
-     * This method is only called when working with [DbConnectionConfig] (internally managed connections).
+     * This method is only called when working with [<code>DbConnectionConfig</code>][DbConnectionConfig] (internally managed connections).
      *
-     * Some databases (like [Sqlite]) require read-only mode to be set during connection creation
+     * Some databases (like [<code>Sqlite</code>][Sqlite]) require read-only mode to be set during connection creation
      * rather than after the connection is established.
      *
      * @param [dbConfig] The database configuration containing URL, credentials, and read-only flag.
-     * @return A configured [Connection] instance.
+     * @return A configured [<code>Connection</code>][Connection] instance.
      */
     public open fun createConnection(dbConfig: DbConnectionConfig): Connection {
         val connection = DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)

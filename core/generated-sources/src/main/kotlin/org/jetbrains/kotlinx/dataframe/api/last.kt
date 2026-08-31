@@ -32,31 +32,31 @@ import kotlin.reflect.KProperty
 // region DataColumn
 
 /**
- * Returns the last value in this [DataColumn].
+ * Returns the last value in this [<code>DataColumn</code>][DataColumn].
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
  *
- * See also [lastOrNull], [first], [take], [takeLast].
+ * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
- * @return The last value in this [DataColumn].
+ * @return The last value in this [<code>DataColumn</code>][DataColumn].
  *
- * @throws [IndexOutOfBoundsException] if the [DataColumn] is empty.
+ * @throws [IndexOutOfBoundsException] if the [<code>DataColumn</code>][DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.last(): T = get(size - 1)
 
 /**
- * Returns the last value in this [DataColumn]. If the [DataColumn] is empty, returns `null`.
+ * Returns the last value in this [<code>DataColumn</code>][DataColumn]. If the [<code>DataColumn</code>][DataColumn] is empty, returns `null`.
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
- * See also [last], [first], [take], [takeLast].
+ * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
- * @return The last value in this [DataColumn], or `null` if the [DataColumn] is empty.
+ * @return The last value in this [<code>DataColumn</code>][DataColumn], or `null` if the [<code>DataColumn</code>][DataColumn] is empty.
  */
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
 
 /**
- * Returns the last value in this [DataColumn] that matches the given [predicate].
+ * Returns the last value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
  *
  * ### Example
  * ```kotlin
@@ -67,24 +67,24 @@ public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
  *
- * See also [lastOrNull], [first], [take], [takeLast].
+ * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
+ * This predicate takes a value from the [<code>DataColumn</code>][DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
  *
- * @return The last value in this [DataColumn] that matches the given [predicate].
+ * @return The last value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
  *
- * @throws [NoSuchElementException] if the [DataColumn] contains no element matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * @throws [NoSuchElementException] if the [<code>DataColumn</code>][DataColumn] contains no element matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataColumn</code>][DataColumn] is empty).
  */
 public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
 
 /**
- * Returns the last value in this [DataColumn] that matches the given [predicate].
- * Returns `null` if the [DataColumn] contains no elements matching the [predicate]
- * (including the case when the [DataColumn] is empty).
+ * Returns the last value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate].
+ * Returns `null` if the [<code>DataColumn</code>][DataColumn] contains no elements matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataColumn</code>][DataColumn] is empty).
  *
  * ### Example
  * ```kotlin
@@ -96,15 +96,15 @@ public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
- * See also [last], [first], [take], [takeLast].
+ * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
- * This predicate takes a value from the [DataColumn] as an input
+ * This predicate takes a value from the [<code>DataColumn</code>][DataColumn] as an input
  * and returns `true` if the value satisfies the condition or `false` otherwise.
  *
- * @return The last value in this [DataColumn] that matches the given [predicate],
- * or `null` if the [DataColumn] contains no elements matching the [predicate].
+ * @return The last value in this [<code>DataColumn</code>][DataColumn] that matches the given [<code>predicate</code>][predicate],
+ * or `null` if the [<code>DataColumn</code>][DataColumn] contains no elements matching the [<code>predicate</code>][predicate].
  */
 public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
 
@@ -113,24 +113,24 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
 // region DataFrame
 
 /**
- * Returns the last [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
- * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
- * (including the case when the [DataFrame] is empty).
+ * Returns the last [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
+ * Returns `null` if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataFrame</code>][DataFrame] is empty).
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -142,38 +142,38 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/last.html#lastornull)
  *
- * See also [last][DataFrame.last],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * See also [<code>last</code>][DataFrame.last],
+ * [<code>first</code>][DataFrame.first],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>takeWhile</code>][DataFrame.takeWhile].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
  *
- * @return A [DataRow] containing the last row that matches the given [predicate],
- * or `null` if the [DataFrame] contains no rows matching the [predicate].
+ * @return A [<code>DataRow</code>][DataRow] containing the last row that matches the given [<code>predicate</code>][predicate],
+ * or `null` if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate].
  */
 public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
 /**
- * Returns the last [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ * Returns the last [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -184,18 +184,18 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * See also [lastOrNull][DataFrame.lastOrNull],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * See also [<code>lastOrNull</code>][DataFrame.lastOrNull],
+ * [<code>first</code>][DataFrame.first],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>takeWhile</code>][DataFrame.takeWhile].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
  *
- * @return A [DataRow] containing the last row that matches the given [predicate].
+ * @return A [<code>DataRow</code>][DataRow] containing the last row that matches the given [<code>predicate</code>][predicate].
  *
- * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
+ * @throws [NoSuchElementException] if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate].
  */
 public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
     rowsReversed().first {
@@ -203,32 +203,32 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
     }
 
 /**
- * Returns the last [row][DataRow] in this [DataFrame]. If the [DataFrame] does not contain any rows, returns `null`.
+ * Returns the last [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame]. If the [<code>DataFrame</code>][DataFrame] does not contain any rows, returns `null`.
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/last.html#lastornull)
  *
- * See also [last][DataFrame.last],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>last</code>][DataFrame.last],
+ * [<code>first</code>][DataFrame.first],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @return A [DataRow] containing the last row in this [DataFrame], or `null` if the [DataFrame] is empty.
+ * @return A [<code>DataRow</code>][DataRow] containing the last row in this [<code>DataFrame</code>][DataFrame], or `null` if the [<code>DataFrame</code>][DataFrame] is empty.
  */
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
 
 /**
- * Returns the last [row][DataRow] in this [DataFrame].
+ * Returns the last [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame].
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * See also [lastOrNull][DataFrame.lastOrNull],
- * [first][DataFrame.first],
- * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * See also [<code>lastOrNull</code>][DataFrame.lastOrNull],
+ * [<code>first</code>][DataFrame.first],
+ * [<code>take</code>][DataFrame.take],
+ * [<code>takeLast</code>][DataFrame.takeLast].
  *
- * @return A [DataRow] containing the last row in this [DataFrame].
+ * @return A [<code>DataRow</code>][DataRow] containing the last row in this [<code>DataFrame</code>][DataFrame].
  *
- * @throws NoSuchElementException if the [DataFrame] contains no rows.
+ * @throws NoSuchElementException if the [<code>DataFrame</code>][DataFrame] contains no rows.
  */
 public fun <T> DataFrame<T>.last(): DataRow<T> {
     if (nrow == 0) {
@@ -242,13 +242,13 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
 // region GroupBy
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking the last [row][DataRow] from each group,
- * and returns a [ReducedGroupBy] containing these rows
- * (one [row][DataRow] per group, each [row][DataRow] is the last [row][DataRow] in its group).
+ * [<code>Reduces</code>][GroupByDocs.Reducing] the groups of this [<code>GroupBy</code>][GroupBy]
+ * by taking the last [<code>row</code>][DataRow] from each group,
+ * and returns a [<code>ReducedGroupBy</code>][ReducedGroupBy] containing these rows
+ * (one [<code>row</code>][DataRow] per group, each [<code>row</code>][DataRow] is the last [<code>row</code>][DataRow] in its group).
  *
- * If a group in this [GroupBy] is empty,
- * the corresponding [row][DataRow] in the resulting [ReducedGroupBy] will contain `null` values
+ * If a group in this [<code>GroupBy</code>][GroupBy] is empty,
+ * the corresponding [<code>row</code>][DataRow] in the resulting [<code>ReducedGroupBy</code>][ReducedGroupBy] will contain `null` values
  * for all columns in the group, except the grouping key.
  *
  * ### Example
@@ -260,40 +260,40 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * For more information about [GroupBy] and [last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information about [<code>GroupBy</code>][GroupBy] and [<code>last</code>][last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * See also [first][GroupBy.first].
+ * See also [<code>first</code>][GroupBy.first].
  *
- * @return A [ReducedGroupBy] containing the last [row][DataRow]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] containing the last [<code>row</code>][DataRow]
+ * (or a [<code>row</code>][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNull() }
 
 /**
- * [Reduces][GroupByDocs.Reducing] the groups of this [GroupBy]
- * by taking from each group the last [row][DataRow] satisfying the given [predicate],
- * and returns a [ReducedGroupBy] containing these rows (one [row][DataRow] per group,
- * each [row][DataRow] is the last [row][DataRow] in its group that satisfies the [predicate]).
+ * [<code>Reduces</code>][GroupByDocs.Reducing] the groups of this [<code>GroupBy</code>][GroupBy]
+ * by taking from each group the last [<code>row</code>][DataRow] satisfying the given [<code>predicate</code>][predicate],
+ * and returns a [<code>ReducedGroupBy</code>][ReducedGroupBy] containing these rows (one [<code>row</code>][DataRow] per group,
+ * each [<code>row</code>][DataRow] is the last [<code>row</code>][DataRow] in its group that satisfies the [<code>predicate</code>][predicate]).
  *
- * If the group in [GroupBy] contains no matching rows,
- * the corresponding row in [ReducedGroupBy] will contain `null` values for all columns in the group,
+ * If the group in [<code>GroupBy</code>][GroupBy] contains no matching rows,
+ * the corresponding row in [<code>ReducedGroupBy</code>][ReducedGroupBy] will contain `null` values for all columns in the group,
  * except the grouping key.
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -304,15 +304,15 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * For more information about [GroupBy] and [last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
+ * For more information about [<code>GroupBy</code>][GroupBy] and [<code>last</code>][last] with examples: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * See also [first][GroupBy.first].
+ * See also [<code>first</code>][GroupBy.first].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedGroupBy] containing the last [row][DataRow] matching the [predicate]
- * (or a [row][DataRow] with `null` values, except the grouping key) from each group.
+ * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] containing the last [<code>row</code>][DataRow] matching the [<code>predicate</code>][predicate]
+ * (or a [<code>row</code>][DataRow] with `null` values, except the grouping key) from each group.
  */
 @Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { lastOrNull(predicate) }
@@ -322,12 +322,12 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
 // region Pivot
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking the last [row][DataRow] from each group,
- * and returns a [ReducedPivot] that contains the last [row][DataRow] from the corresponding group in each column.
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking the last [<code>row</code>][DataRow] from each group,
+ * and returns a [<code>ReducedPivot</code>][ReducedPivot] that contains the last [<code>row</code>][DataRow] from the corresponding group in each column.
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * For more information about [Pivot] and [last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information about [<code>Pivot</code>][Pivot] and [<code>last</code>][last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  * ### Example
  * ```kotlin
@@ -336,35 +336,35 @@ public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T,
  * df.pivot { type }.last().values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ * See also [<code>pivot</code>][pivot], [<code>reduce</code>][Pivot.reduce], [<code>first</code>][Pivot.first].
  *
- * @return A [ReducedPivot] containing in each column the last [row][DataRow] from the corresponding group.
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] containing in each column the last [<code>row</code>][DataRow] from the corresponding group.
  */
 public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
 
 /**
- * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the last [row][DataRow]
- * satisfying the given [predicate], and returns a [ReducedPivot] that contains the last [row][DataRow],
- * matching the [predicate], from the corresponding group in each column.
+ * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the last [<code>row</code>][DataRow]
+ * satisfying the given [<code>predicate</code>][predicate], and returns a [<code>ReducedPivot</code>][ReducedPivot] that contains the last [<code>row</code>][DataRow],
+ * matching the [<code>predicate</code>][predicate], from the corresponding group in each column.
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * For more information about [Pivot] and [last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
+ * For more information about [<code>Pivot</code>][Pivot] and [<code>last</code>][last] with examples: [See `pivot` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html)
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -374,13 +374,13 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * df.pivot { type }.last { price < 500_000 }.values()
  * ```
  *
- * See also [pivot], [reduce][Pivot.reduce], [first][Pivot.first].
+ * See also [<code>pivot</code>][pivot], [<code>reduce</code>][Pivot.reduce], [<code>first</code>][Pivot.first].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedPivot] containing in each column the last [row][DataRow]
- * that satisfies the [predicate], from the corresponding group (or a [row][DataRow] with `null` values)
+ * @return A [<code>ReducedPivot</code>][ReducedPivot] containing in each column the last [<code>row</code>][DataRow]
+ * that satisfies the [<code>predicate</code>][predicate], from the corresponding group (or a [<code>row</code>][DataRow] with `null` values)
  */
 public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce { lastOrNull(predicate) }
 
@@ -389,15 +389,15 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
 // region PivotGroupBy
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking the last [row][DataRow]
- * from each combined [pivot] + [groupBy] group, and returns a [ReducedPivotGroupBy]
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking the last [<code>row</code>][DataRow]
+ * from each combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group, and returns a [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy]
  * that contains the last row from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] is empty, in the resulting [ReducedPivotGroupBy]
- * it will be represented by a [row][DataRow] with `null` values (except the grouping key).
+ * If any combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group in [<code>PivotGroupBy</code>][PivotGroupBy] is empty, in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy]
+ * it will be represented by a [<code>row</code>][DataRow] with `null` values (except the grouping key).
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
  *
- * For more information about [PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
+ * For more information about [<code>PivotGroupBy</code>][PivotGroupBy] with examples: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * ### Example
  * ```kotlin
@@ -407,24 +407,24 @@ public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce 
  * df.pivot { type }.groupBy { city }.last().values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [first][PivotGroupBy.first].
+ * See also [<code>groupBy</code>][Pivot.groupBy],
+ * [<code>pivot</code>][GroupBy.pivot],
+ * [<code>reduce</code>][PivotGroupBy.reduce],
+ * [<code>first</code>][PivotGroupBy.first].
  *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the last [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] containing in each combination of a [<code>groupBy</code>][groupBy] key and a [<code>pivot</code>][pivot] key either
+ * the last [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
+ * or a [<code>row</code>][DataRow] with `null` values (except the grouping key) if this [<code>DataFrame</code>][DataFrame] is empty.
  */
 public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrNull() }
 
 /**
- * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy]
- * by taking from each combined [pivot] + [groupBy] group the last [row][DataRow] satisfying the given [predicate].
- * Returns a [ReducedPivotGroupBy] that contains the last [row][DataRow], matching the [predicate],
+ * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy]
+ * by taking from each combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group the last [<code>row</code>][DataRow] satisfying the given [<code>predicate</code>][predicate].
+ * Returns a [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] that contains the last [<code>row</code>][DataRow], matching the [<code>predicate</code>][predicate],
  * from each corresponding group.
- * If any combined [pivot] + [groupBy] group in [PivotGroupBy] does not contain any rows matching the [predicate],
- * in the resulting [ReducedPivotGroupBy] it will be represented by a [row][DataRow] with `null` values
+ * If any combined [<code>pivot</code>][pivot] + [<code>groupBy</code>][groupBy] group in [<code>PivotGroupBy</code>][PivotGroupBy] does not contain any rows matching the [<code>predicate</code>][predicate],
+ * in the resulting [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] it will be represented by a [<code>row</code>][DataRow] with `null` values
  * (except the grouping key).
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/last.html)
@@ -437,18 +437,18 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  *
  *
  *
- * The [predicate] is a [RowFilter][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
- * including through [extension properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
  * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * ### Example
  * ```kotlin
@@ -459,17 +459,17 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * df.pivot { type }.groupBy { city }.last { price < 500_000 }.values()
  * ```
  *
- * See also [groupBy][Pivot.groupBy],
- * [pivot][GroupBy.pivot],
- * [reduce][PivotGroupBy.reduce],
- * [first][PivotGroupBy.first].
+ * See also [<code>groupBy</code>][Pivot.groupBy],
+ * [<code>pivot</code>][GroupBy.pivot],
+ * [<code>reduce</code>][PivotGroupBy.reduce],
+ * [<code>first</code>][PivotGroupBy.first].
  *
- * @param [predicate] A [row filter][RowFilter] used to get the last value
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
  *
- * @return A [ReducedPivotGroupBy] containing in each combination of a [groupBy] key and a [pivot] key either
- * the last matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
- * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
+ * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] containing in each combination of a [<code>groupBy</code>][groupBy] key and a [<code>pivot</code>][pivot] key either
+ * the last matching the [<code>predicate</code>][predicate] [<code>row</code>][DataRow] of the corresponding [<code>DataFrame</code>][DataFrame] formed by this pivot–group pair,
+ * or a [<code>row</code>][DataRow] with `null` values if this [<code>DataFrame</code>][DataFrame] does not contain any rows matching the [<code>predicate</code>][predicate].
  */
 public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { lastOrNull(predicate) }
 
@@ -478,9 +478,9 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
 // region ColumnsSelectionDsl
 
 /**
- * # Last (Col) [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * # Last (Col) [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface LastColumnsSelectionDsl {
 
@@ -490,61 +490,61 @@ public interface LastColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  `condition: `[<code>`ColumnFilter`</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**`last`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`lastCol`**][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`last`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`lastCol`**</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol]`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -556,41 +556,41 @@ public interface LastColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`last`**][ColumnsSelectionDsl.last] */
+        /** [<code>**`last`**</code>][ColumnsSelectionDsl.last] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`last`**][ColumnsSelectionDsl.last] */
+        /** __`.`__[<code>**`last`**</code>][ColumnsSelectionDsl.last] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`lastCol`**][ColumnsSelectionDsl.lastCol] */
+        /** __`.`__[<code>**`lastCol`**</code>][ColumnsSelectionDsl.lastCol] */
         public typealias ColumnGroupName = Nothing
     }
 
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>last</code>][ColumnsSelectionDsl.last]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][String.lastCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
      *
      *
-     * @param [condition] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -604,30 +604,30 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[last][ColumnSet.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>String</code>][String]`>().`[<code>last</code>][ColumnSet.last]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>().`[<code>last</code>][ColumnSet.last]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -642,28 +642,28 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>last</code>][ColumnsSelectionDsl.last]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -675,28 +675,28 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>lastCol</code>][SingleColumn.lastCol]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -708,28 +708,28 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[lastCol][String.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][String.lastCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -740,30 +740,30 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[lastCol][SingleColumn.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>lastCol</code>][SingleColumn.lastCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]` { DataSchemaType::myColumnGroup.`[<code>lastCol</code>][KProperty.lastCol]`() }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
@@ -776,28 +776,28 @@ public interface LastColumnsSelectionDsl {
     /**
      * ## Last (Col)
      * Returns the last column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [NoSuchElementException] is thrown.
+     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
+     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `last` is named `lastCol` instead to avoid confusion.
      *
      * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[last][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>last</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[lastCol][kotlin.String.lastCol]` { it.`[name][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[<code>lastCol</code>][kotlin.String.lastCol]` { it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
      *
      * #### Examples for this overload:
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[lastCol][ColumnPath.lastCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myColumnGroup"].`[<code>lastCol</code>][ColumnPath.lastCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
      *
-     * @param [condition] The optional [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
+     * @param [condition] The optional [<code>ColumnFilter</code>][org.jetbrains.kotlinx.dataframe.ColumnFilter] condition that the column must adhere to.
+     * @return A [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] containing the last column
      *   that adheres to the given [condition].
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]

@@ -39,14 +39,14 @@ public enum class ExcessiveColumns {
 }
 
 /**
- * Holds data context for [fill] operation
+ * Holds data context for [<code>fill</code>][fill] operation
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */
 public data class ConvertToFill<T, C>(internal val dsl: ConvertSchemaDsl<T>, val columns: ColumnsSelector<T, C>)
 
 /**
- * Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method.
+ * Provides access to [<code>fromType</code>][fromType] and [<code>toSchema</code>][toSchema] in the flexible [<code>ConvertSchemaDsl.convertIf</code>][ConvertSchemaDsl.convertIf] method.
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */
@@ -72,17 +72,17 @@ public class ConverterScope(public val fromType: KType, public val toSchema: Col
 public interface ConvertSchemaDsl<in T> {
 
     /**
-     * Defines how to convert [from]: [A] to [to]: [B].
+     * Defines how to convert [<code>from</code>][from]: [<code>A</code>][A] to [<code>to</code>][to]: [<code>B</code>][B].
      *
      * Note: In most cases using `convert<Type>().with { }` is more convenient, however
-     * if you only have [KType], this method can be used.
+     * if you only have [<code>KType</code>][KType], this method can be used.
      *
      * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
      */
     public fun <A, B> convert(from: KType, to: KType, converter: (A) -> B)
 
     /**
-     * Advanced version of [convert].
+     * Advanced version of [<code>convert</code>][convert].
      * If you want to define a common conversion for multiple types (or any type), or
      * you need extra information about the target, such as its schema, use this method.
      *
@@ -93,7 +93,7 @@ public interface ConvertSchemaDsl<in T> {
      *
      * @param condition a function that should return `true` if the conversion should be applied from the given `fromType`
      *   to the given `toSchema`.
-     * @param converter a function that performs the conversion with access to a [ConverterScope].
+     * @param converter a function that performs the conversion with access to a [<code>ConverterScope</code>][ConverterScope].
      */
     public fun convertIf(
         condition: (fromType: KType, toSchema: ColumnSchema) -> Boolean,
@@ -103,7 +103,7 @@ public interface ConvertSchemaDsl<in T> {
 
 /**
  * Defines how to fill specified columns in destination schema that were not found in the original dataframe.
- * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
+ * All [<code>fill</code>][fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [<code>with</code>][with] expression.
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  *
@@ -118,7 +118,7 @@ public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
 }
 
 /**
- * Defines how to convert `String` values into given type [C].
+ * Defines how to convert `String` values into given type [<code>C</code>][C].
  *
  * This method is a shortcut for `convert<String>().with { }`.
  *
@@ -130,14 +130,14 @@ public inline fun <reified C> ConvertSchemaDsl<*>.parser(noinline parser: (Strin
     convert<String>().with(parser)
 
 /**
- * Defines how to convert values of given type [C]
+ * Defines how to convert values of given type [<code>C</code>][C]
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */
 public inline fun <reified C> ConvertSchemaDsl<*>.convert(): ConvertType<C> = ConvertType(this, typeOf<C>())
 
 /**
- * Defines how to convert values of type [C] into type [R]
+ * Defines how to convert values of type [<code>C</code>][C] into type [<code>R</code>][R]
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */
@@ -153,13 +153,13 @@ public class ConvertType<T>(
 // region DataFrame
 
 /**
- * Converts values in [DataFrame] to match given column schema [T].
+ * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>T</code>][T].
  *
- * Original columns are mapped to destination columns by column [path][DataColumn.path].
+ * Original columns are mapped to destination columns by column [<code>path</code>][DataColumn.path].
  *
- * Type converters for every column are selected automatically. See [convert] operation for details.
+ * Type converters for every column are selected automatically. See [<code>convert</code>][convert] operation for details.
  *
- * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ * To specify custom type converters for the particular types use [<code>ConvertSchemaDsl</code>][ConvertSchemaDsl].
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  *
@@ -176,13 +176,13 @@ public class ConvertType<T>(
  * ```
  *
  * @param [T] class that defines target schema for conversion.
- * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
+ * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
- * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
+ * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
- * @return converted [DataFrame].
+ * @return converted [<code>DataFrame</code>][DataFrame].
  */
 public inline fun <reified T : Any> DataFrame<*>.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
@@ -190,13 +190,13 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
- * Converts values in [DataFrame] to match given column schema [T].
+ * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>T</code>][T].
  *
- * Original columns are mapped to destination columns by column [path][DataColumn.path].
+ * Original columns are mapped to destination columns by column [<code>path</code>][DataColumn.path].
  *
- * Type converters for every column are selected automatically. See [convert] operation for details.
+ * Type converters for every column are selected automatically. See [<code>convert</code>][convert] operation for details.
  *
- * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ * To specify custom type converters for the particular types use [<code>ConvertSchemaDsl</code>][ConvertSchemaDsl].
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  *
@@ -213,14 +213,14 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * ```
  *
  * @param [T] class that defines target schema for conversion.
- * @param [schemaFrom] dataframe which type [T] will be used.
- * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
+ * @param [schemaFrom] dataframe which type [<code>T</code>][T] will be used.
+ * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
- * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
+ * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
- * @return converted [DataFrame].
+ * @return converted [<code>DataFrame</code>][DataFrame].
  */
 public inline fun <reified T : Any> DataFrame<*>.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
@@ -229,13 +229,13 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
- * Converts values in [DataFrame] to match given column schema [schemaType].
+ * Converts values in [<code>DataFrame</code>][DataFrame] to match given column schema [<code>schemaType</code>][schemaType].
  *
- * Original columns are mapped to destination columns by column [path][DataColumn.path].
+ * Original columns are mapped to destination columns by column [<code>path</code>][DataColumn.path].
  *
- * Type converters for every column are selected automatically. See [convert] operation for details.
+ * Type converters for every column are selected automatically. See [<code>convert</code>][convert] operation for details.
  *
- * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ * To specify custom type converters for the particular types use [<code>ConvertSchemaDsl</code>][ConvertSchemaDsl].
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  *
@@ -252,13 +252,13 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * ```
  *
  * @param [schemaType] defines target schema for conversion.
- * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
+ * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [<code>DataFrame</code>][DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
- * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
+ * @throws [ColumnNotFoundException] if [<code>DataFrame</code>][DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [ExcessiveColumnsException] if [<code>DataFrame</code>][DataFrame] contains columns that are not required by destination schema and [<code>excessiveColumnsBehavior</code>][excessiveColumnsBehavior] is set to [<code>ExcessiveColumns.Fail</code>][ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
- * @return converted [DataFrame].
+ * @return converted [<code>DataFrame</code>][DataFrame].
  */
 public fun DataFrame<*>.convertTo(
     schemaType: KType,
