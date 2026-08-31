@@ -4,7 +4,7 @@
 
 [`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns: the Columns Selection DSL.
 
-The examples on this page use the following dataframe:
+Unless stated otherwise, the examples on this page use the following dataframe:
 
 <!---FUN columnSelectorsDf-->
 
@@ -25,15 +25,6 @@ df.select { age and name }
 
 <!---END-->
 <inline-frame src="./resources/columnSelectorsUsageSelect.html" width="100%" height="500px"></inline-frame>
-
-<!---FUN columnSelectorsUsageFillNaNs-->
-
-```kotlin
-df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
-```
-
-<!---END-->
-<inline-frame src="./resources/columnSelectorsUsageFillNaNs.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsUsageRemove-->
 
@@ -79,6 +70,26 @@ df.move { name.firstName and name.lastName }.after { city }
 
 <!---END-->
 <inline-frame src="./resources/columnSelectorsUsageMove.html" width="100%" height="500px"></inline-frame>
+
+For the `fillNaNs` example, the following dataframe is used:
+
+<!---FUN columnSelectorsUsageFillNaNsDf-->
+
+```kotlin
+dfWithNaNs
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageFillNaNsDf.html" width="100%" height="500px"></inline-frame>
+
+<!---FUN columnSelectorsUsageFillNaNs-->
+
+```kotlin
+dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
+```
+
+<!---END-->
+<inline-frame src="./resources/columnSelectorsUsageFillNaNs.html" width="100%" height="500px"></inline-frame>
 
 #### Full DSL Grammar {collapsible="true"}
 

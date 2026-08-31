@@ -6,7 +6,7 @@ Replace missing values.
 
 **Related operations**: [](updateConvert.md)
 
-The examples on this page use the following dataframe:
+Unless stated otherwise, the examples on this page use the following dataframe:
 
 <!---FUN fillDf-->
 
@@ -48,10 +48,21 @@ Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with giv
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
+For the `fillNaNs` example, the following dataframe is used:
+
+<!---FUN fillNaNsDf-->
+
+```kotlin
+dfWithNaNs
+```
+
+<!---END-->
+<inline-frame src="./resources/fillNaNsDf.html" width="100%" height="500px"></inline-frame>
+
 <!---FUN fillNaNs-->
 
 ```kotlin
-df.fillNaNs { colsOf<Double>() }.withZero()
+dfWithNaNs.fillNaNs { colsOf<Double>() }.withZero()
 ```
 
 <!---END-->

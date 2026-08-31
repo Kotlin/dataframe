@@ -1,7 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
@@ -26,6 +30,22 @@ import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
 class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
+    @DataSchema
+    interface PersonWithWeight {
+        val name: String
+        val weight: Double
+    }
+
+    private val dfWithNaNs: DataFrame<PersonWithWeight> = dataFrameOf(
+        "name",
+        "weight",
+    )(
+        "Alice",
+        54.0,
+        "Charlie",
+        Double.NaN,
+    ).cast()
+
     val df = peopleDf
 
     @Test
@@ -40,14 +60,6 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
     fun columnSelectorsUsageSelect() {
         // SampleStart
         df.select { age and name }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun columnSelectorsUsageFillNaNs() {
-        // SampleStart
-        df.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -88,6 +100,22 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
     fun columnSelectorsUsageMove() {
         // SampleStart
         df.move { name.firstName and name.lastName }.after { city }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun columnSelectorsUsageFillNaNsDf() {
+        // SampleStart
+        dfWithNaNs
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun columnSelectorsUsageFillNaNs() {
+        // SampleStart
+        dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -295,7 +323,7 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
         // SampleStart
         // by condition
         df.select { nameStartsWith("a") }
-            // SampleEnd
+        // SampleEnd
     }
 
     @Test
