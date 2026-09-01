@@ -38,6 +38,8 @@ import kotlin.reflect.KProperty
  * ### Check out: [Grammar][FillNulls.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
+ *
+ * See also [dropNulls], which removes rows with `null` values instead of replacing these values.
  */
 internal interface FillNulls {
 
@@ -168,6 +170,8 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * ### Check out: [Grammar][FillNaNs.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
+ *
+ * See also [dropNaNs], which removes rows with [`NaN`][NaN] values instead of replacing these values.
  */
 internal interface FillNaNs {
 
@@ -243,6 +247,8 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * ### Check out: [Grammar][FillNA.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNA]}
+ *
+ * See also [dropNA], which removes rows with [`NA`][NA] values instead of replacing these values.
  */
 internal interface FillNA {
 

@@ -19,7 +19,9 @@ df
 
 ## fillNulls
 
-Replaces `null` values with given value or expression. 
+Replaces `null` values with given value or expression.
+
+See also [dropNulls](drop.md#dropnulls), which removes rows with `null` values instead of replacing these values.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
@@ -46,6 +48,9 @@ df.update { weight }.where { it == null }.with { -1.0 }
 
 Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with given value or expression.
 
+See also [dropNaNs](drop.md#dropnans), which removes rows with [`NaN` values](nanAndNa.md#nan)
+instead of replacing these values.
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN fillNaNs-->
@@ -60,6 +65,9 @@ df.fillNaNs { weight }.withZero()
 ## fillNA
 
 Replaces [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, and `Float.NaN`) with given value or expression.
+
+See also [dropNA](drop.md#dropna), which removes rows with [`NA` values](nanAndNa.md#na)
+instead of replacing these values.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
