@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.junit.Test
@@ -45,6 +46,19 @@ class GroupByOptimizationTest {
             val grouped = df.groupBy(moveToTop) { it["nested"]["nestedKey"] }
             grouped.groups.toList() shouldBe listOf(df[0, 2], df[1, 3])
             grouped.groups.toList().forEach { it.schema() shouldBe df.schema() }
+        }
+    }
+
+    @Test
+    fun `groupBy handles nullable dataframe value columns`() {
+        val frame = dataFrameOf("inner")(1)
+        val df = dataFrameOf(
+            DataColumn.createValueColumn("key", listOf(1, 2)),
+            DataColumn.createValueColumn("frame", listOf(frame, null)),
+        )
+
+        shouldNotThrowAny {
+            df.groupBy("key")
         }
     }
 
