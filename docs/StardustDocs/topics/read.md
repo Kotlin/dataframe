@@ -447,14 +447,23 @@ By default, if a type clash occurs when reading JSON, a new [`column group`](Dat
 any number of object properties:
 
 * "value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.
-* "array" will be set to the array of values if the JSON element is an array, else it will be `[]`.
+* "array" will be set to the array of values if the JSON element is an array, else it will be `null`.
 
 If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
+Since every one of these columns only holds a value for the elements that actually have that shape, all of them
+are nullable. A JSON `null` element, as well as a missing property, is `null` in all of them.
+
+> An empty JSON array `[]` is read as an empty list, which is different from `null`, meaning "there is no array here".
+>
+> When the arrays contain objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn) instead. There, an
+> element without an array is an empty [`DataFrame`](DataFrame.md), because frame columns cannot hold `null`.
+> {style="note"}
+
 In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
 
-For example, this is how the following JSON will be read (including `null` and `[]` values):
+For example, this is how the following JSON will be read (including `null` values):
 
 <!---FUN readJsonTypeClash-->
 

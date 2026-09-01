@@ -1301,6 +1301,30 @@ class JsonTests {
         val json = """[1,{"label":"record"},[123],null,[]]"""
 
         DataFrame.readJsonStr(json).alsoDebug().toJson() shouldBe json
+
+        // the example documented in docs/StardustDocs/topics/write.md
+        @Language("json")
+        val documented = """[1,{"label":"record"},[123],null]"""
+
+        DataFrame.readJsonStr(documented).toJson() shouldBe documented
+    }
+
+    @Test
+    fun `a null record and an object of nulls only are indistinguishable`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        // both jsons are read into the exact same DataFrame, so writing it back can only produce one of them
+        val nullRecord = DataFrame.readJsonStr("""[1,{"label":"record"},null]""").alsoDebug()
+        val objectOfNulls = DataFrame.readJsonStr("""[1,{"label":"record"},{"label":null}]""").alsoDebug()
+
+        objectOfNulls shouldBe nullRecord
+
+        // a row without any values is written back as a `null` record
+        nullRecord.toJson() shouldBe """[1,{"label":"record"},null]"""
+        objectOfNulls.toJson() shouldBe """[1,{"label":"record"},null]"""
+
+        // without a type clash there's no unnamed `value`/`array` column, so rows stay objects
+        DataFrame.readJsonStr("""[{"label":"record"},{"label":null}]""")
+            .toJson() shouldBe """[{"label":"record"},{"label":null}]"""
     }
 
     @Test

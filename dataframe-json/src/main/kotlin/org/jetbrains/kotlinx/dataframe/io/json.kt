@@ -116,6 +116,19 @@ public class JSON(
      * So, for the type clashing argument it will create a [ColumnGroup] with the properties `value`, `array`,
      * and the unwrapped properties of the objects the property can be.
      *
+     * Each of these columns only holds a value for the records that actually have that shape;
+     * for all other records it holds `null`, which makes all of them nullable:
+     *
+     * - `value` holds the JSON primitive, or `null` if the record is not a primitive.
+     * - `array` holds the JSON array as a [List], or `null` if the record is not an array
+     *   (note that this is different from an empty JSON array `[]`, which is read as an empty list).
+     *   When the arrays contain objects, `array` becomes a [FrameColumn] instead, in which a record
+     *   without an array is an empty [DataFrame], as frame columns cannot hold `null`.
+     * - the unwrapped object properties hold `null` if the record is not an object,
+     *   or if the object does not have that property.
+     *
+     * A JSON `null` record, as well as a missing property, is `null` in all these columns.
+     *
      * [ANY_COLUMNS] will create a [DataFrame] looking like:
      * ```
      * ⌌-------------⌍
@@ -473,6 +486,25 @@ public fun DataRow.Companion.readJsonStr(
         unifyNumbers = unifyNumbers,
     ).single()
 
+/**
+ * Converts this [DataFrame] to a JSON array; each row becomes an element of that array.
+ *
+ * By default, a row is written as a JSON object: a [ColumnGroup] becomes a nested object,
+ * a [FrameColumn] becomes a nested array of objects, and a [List] value becomes a JSON array.
+ *
+ * There's one exception, so that a [DataFrame] read from JSON with a type clash can be written back
+ * to its original form (see [TypeClashTactic]): when this frame has an unnamed `value` or `array` column,
+ * a row is instead written as the value it holds. Per row, in order:
+ * the `value` primitive, else the `array` array, else an object of the remaining columns,
+ * else — when the row holds no values at all — `null`.
+ *
+ * Note that a row of `null`s only is indistinguishable from a JSON `null` record, so
+ * `[1,{"label":"record"},{"label":null}]` is written back as `[1,{"label":"record"},null]`.
+ * Both forms are read into the exact same [DataFrame].
+ *
+ * @param prettyPrint Whether to format the output with indentation and line breaks. `false` by default.
+ * @return This [DataFrame] as a JSON string.
+ */
 public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
     val json = Json {
         this.prettyPrint = prettyPrint
