@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.Update.UPDATE_OPERATION
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -79,6 +80,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable(interpreter = "FillNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
 
 /**
@@ -209,6 +211,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable("FillNaNs0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
 
 /**
@@ -284,6 +287,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable(interpreter = "FillNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
 
 /**
@@ -419,6 +423,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropColumnNamesParam]
  */
+@Refine
+@StringApiInterpretable(interpreter = "DropNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -524,6 +530,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  * @include [DropNA.WhereAllNAParam]
  * @include [DropColumnNamesParam]
  */
+@Refine
+@StringApiInterpretable(interpreter = "DropNa0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
