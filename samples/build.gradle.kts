@@ -71,6 +71,7 @@ dependencies {
     testImplementation(libs.kandy.samples.utils) {
         exclude("org.jetbrains.kotlinx", "dataframe")
     }
+    testImplementation(libs.konsist)
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
@@ -177,6 +178,7 @@ korro {
 }
 
 tasks.test {
+    maxHeapSize = "4g"
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }
 

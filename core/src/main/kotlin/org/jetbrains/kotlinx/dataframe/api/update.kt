@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -173,6 +174,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable(interpreter = "Update0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumnSet() }
 
 /**

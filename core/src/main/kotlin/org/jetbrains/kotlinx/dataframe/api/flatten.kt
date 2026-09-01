@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -77,6 +78,8 @@ public fun <T, C> DataFrame<T>.flatten(
  * {@include [FlattenDocs]}
  * {@set [FlattenDocs.GROUPS] selected}
  */
+@Refine
+@StringApiInterpretable(interpreter = "Flatten0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.flatten(
     vararg columns: String,
     keepParentNameForColumns: Boolean = false,

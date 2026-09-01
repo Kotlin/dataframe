@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -136,6 +137,8 @@ public fun <T> DataFrame<T>.explode(
  * @include [ExplodeDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
  */
+@Refine
+@StringApiInterpretable(interpreter = "Explode0", stringArgument = "columns", targetArgument = "selector")
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
@@ -228,6 +231,8 @@ public fun <T> DataRow<T>.explode(
  * @include [ExplodeDataRowDocs.ReturnSnippet]
  * @include [ExplodeDocs.ThrowsSnippet]
  */
+@Refine
+@StringApiInterpretable(interpreter = "ExplodeColumns", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
