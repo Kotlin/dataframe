@@ -45,7 +45,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNulls() {
         // SampleStart
-        df.dropNulls() // remove rows with null value in any column
+        // remove rows with null value in any column
+        df.dropNulls()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -53,7 +54,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsWhereAllNull() {
         // SampleStart
-        df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
+        // remove rows with null values in all columns
+        df.dropNulls(whereAllNull = true)
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -61,7 +63,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsSelector() {
         // SampleStart
-        df.dropNulls { city } // remove rows with null value in 'city' column
+        // remove rows with null value in 'city' column
+        df.dropNulls { city }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -69,7 +72,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsSelectorSeveralCols() {
         // SampleStart
-        df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
+        // remove rows with null value in 'city' OR 'weight' columns
+        df.dropNulls { city and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -77,7 +81,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsWhereAllNullSelector() {
         // SampleStart
-        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with nulls in both columns
+        // remove rows with nulls in both columns
+        df.dropNulls(whereAllNull = true) { city and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -93,7 +98,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNs() {
         // SampleStart
-        df.dropNaNs() // remove rows containing NaN in any column
+        // remove rows containing NaN in any column
+        df.dropNaNs()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -101,7 +107,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsWhereAllNaN() {
         // SampleStart
-        df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
+        // remove rows with NaN in all columns
+        df.dropNaNs(whereAllNaN = true)
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -109,7 +116,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsSelector() {
         // SampleStart
-        df.dropNaNs { weight } // remove rows where 'weight' is NaN
+        // remove rows where 'weight' is NaN
+        df.dropNaNs { weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -117,7 +125,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsSelectorSeveralCols() {
         // SampleStart
-        df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is NaN
+        // remove rows where either 'age' or 'weight' is NaN
+        df.dropNaNs { age and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -125,7 +134,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsWhereAllNaNSelector() {
         // SampleStart
-        df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
+        // remove rows where both 'age' and 'weight' are NaN
+        df.dropNaNs(whereAllNaN = true) { age and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -142,7 +152,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNA() {
         // SampleStart
-        df.dropNA() // remove rows containing null or NaN in any column
+        // remove rows containing null or NaN in any column
+        df.dropNA()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -150,7 +161,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNAWhereAllNA() {
         // SampleStart
-        df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
+        // remove rows with null or NaN in all columns
+        df.dropNA(whereAllNA = true)
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -158,7 +170,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNASelector() {
         // SampleStart
-        df.dropNA { weight } // remove rows where 'weight' is null or NaN
+        // remove rows where 'weight' is null or NaN
+        df.dropNA { weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -166,7 +179,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNASelectorSeveralCols() {
         // SampleStart
-        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or NaN
+        // remove rows where either 'age' or 'weight' is null or NaN
+        df.dropNA { age and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -174,7 +188,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNAWhereAllNASelector() {
         // SampleStart
-        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
+        // remove rows where both 'age' and 'weight' are null or NaN
+        df.dropNA(whereAllNA = true) { age and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
