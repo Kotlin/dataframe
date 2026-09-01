@@ -189,7 +189,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.TITLE] Take
      * @set [CommonTakeAndDropDocs.OPERATION] take
      * @set [CommonTakeAndDropDocs.NOUN] take
-     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropDocs.SUMMARY] This collects the first [n\] columns from `this` into a [ColumnSet].
      * @set [CommonTakeAndDropDocs.SEE_ALSO]
      * - [takeLast][ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
      * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
@@ -267,7 +267,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.TITLE] Take Last
      * @set [CommonTakeAndDropDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropDocs.NOUN] take
-     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropDocs.SUMMARY] This collects the last [n\] columns from `this` into a [ColumnSet].
      * @set [CommonTakeAndDropDocs.SEE_ALSO]
      * - [take][ColumnsSelectionDsl.take] — takes the first `n` columns instead.
      * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
@@ -345,7 +345,9 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take
      * @set [CommonTakeAndDropWhileDocs.OPERATION] take
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
-     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropWhileDocs.SUMMARY] This operation takes the first columns from `this` while they adhere
+     * to the [predicate\], stops as soon as it encounters one that does not, and collects the taken columns into a
+     * [ColumnSet].
      * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
      * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
      * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
@@ -426,7 +428,9 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.TITLE] Take Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
-     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropWhileDocs.SUMMARY] This operation takes the last columns from `this` while they adhere
+     * to the [predicate\], stops as soon as it encounters one that does not, and collects the taken columns into a
+     * [ColumnSet].
      * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
      * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
      * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.

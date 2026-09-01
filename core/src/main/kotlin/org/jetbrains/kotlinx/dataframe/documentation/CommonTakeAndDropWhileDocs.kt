@@ -15,9 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 
 /**
  * ## {@get [TITLE]} (Cols) While
- * This function {@get [NOUN]}s the {@get [FIRST_OR_LAST]} columns from [this\] for as long as the
- * given [predicate\] holds, stopping as soon as a column does not adhere to it, and collects the
- * result into a [ColumnSet].
+ * {@get [SUMMARY]}
  *
  * This function operates solely on columns at the top-level.
  *
@@ -59,8 +57,8 @@ internal interface CommonTakeAndDropWhileDocs {
     // Operation, like "take"
     typealias NOUN = Nothing
 
-    // like "last"
-    typealias FIRST_OR_LAST = Nothing
+    // Summary of the operation
+    typealias SUMMARY = Nothing
 
     // Example argument to use
     typealias EXAMPLE = Nothing

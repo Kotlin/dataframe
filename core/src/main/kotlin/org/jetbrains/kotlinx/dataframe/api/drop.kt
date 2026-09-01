@@ -224,7 +224,8 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.TITLE] Drop
      * @set [CommonTakeAndDropDocs.OPERATION] drop
      * @set [CommonTakeAndDropDocs.NOUN] drop
-     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropDocs.SUMMARY] This operation collects all columns from `this` except the first [n\] into
+     * a [ColumnSet].
      * @set [CommonTakeAndDropDocs.SEE_ALSO]
      * - [dropLast][ColumnsSelectionDsl.dropLast] — drops the last `n` columns instead.
      * - [dropWhile][ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
@@ -300,7 +301,8 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropDocs.NOUN] drop
-     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropDocs.SUMMARY] This operation collects all columns from `this` except the last [n\] into a
+     * [ColumnSet].
      * @set [CommonTakeAndDropDocs.SEE_ALSO]
      * - [drop][ColumnsSelectionDsl.drop] — drops the first `n` columns instead.
      * - [dropWhile][ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
@@ -376,7 +378,9 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop
      * @set [CommonTakeAndDropWhileDocs.OPERATION] drop
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
-     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropWhileDocs.SUMMARY] This operation drops the first columns from `this` while they
+     * adhere to the [predicate\], stops as soon as it encounters one that does not, and collects the remaining
+     * columns into a [ColumnSet].
      * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
      * - [drop][ColumnsSelectionDsl.drop] — drops a fixed number of first columns.
      * - [dropLast][ColumnsSelectionDsl.dropLast] — drops a fixed number of last columns.
@@ -455,7 +459,9 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.TITLE] Drop Last
      * @set [CommonTakeAndDropWhileDocs.OPERATION] dropLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] drop
-     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropWhileDocs.SUMMARY] This operation drops the last columns from `this` while they adhere
+     * to the [predicate\], stops as soon as it encounters one that does not, and collects the remaining columns into
+     * a [ColumnSet].
      * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
      * - [drop][ColumnsSelectionDsl.drop] — drops a fixed number of first columns.
      * - [dropLast][ColumnsSelectionDsl.dropLast] — drops a fixed number of last columns.

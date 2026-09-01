@@ -1,6 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNaNs
@@ -9,7 +14,19 @@ import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
 class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
-    val df = peopleDf
+    @DataSchema
+    interface DropData {
+        val name: String?
+        val age: Double?
+        val weight: Double?
+    }
+
+    private val df: DataFrame<DropData> =
+        dataFrameOf(
+            "name" to columnOf<String?>("Alice", "Bob", "Charlie", null, null),
+            "age" to columnOf<Double?>(15.0, Double.NaN, null, null, Double.NaN),
+            "weight" to columnOf<Double?>(54.0, 87.0, null, null, Double.NaN),
+        ).cast()
 
     @Test
     fun dropDf() {
@@ -22,7 +39,7 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropWhere_properties() {
         // SampleStart
-        df.drop { weight == null || city == null }
+        df.drop { weight == null || name == null }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -30,14 +47,14 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropWhere_strings() {
         // SampleStart
-        df.drop { it["weight"] == null || it["city"] == null }
+        df.drop { it["weight"] == null || it["name"] == null }
         // SampleEnd
     }
 
     @Test
     fun dropDataColumnByPredicate() {
         // SampleStart
-        df.age.drop { it < 20 }
+        df.weight.drop { it != null && it < 60 }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -63,8 +80,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsSelector() {
         // SampleStart
-        // remove rows with null value in 'city' column
-        df.dropNulls { city }
+        // remove rows with null value in 'name' column
+        df.dropNulls { name }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -72,8 +89,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsSelectorSeveralCols() {
         // SampleStart
-        // remove rows with null value in 'city' OR 'weight' columns
-        df.dropNulls { city and weight }
+        // remove rows with null value in 'name' OR 'weight' columns
+        df.dropNulls { name and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -81,8 +98,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNullsWhereAllNullSelector() {
         // SampleStart
-        // remove rows with nulls in both columns
-        df.dropNulls(whereAllNull = true) { city and weight }
+        // remove rows with nulls in both 'name' and 'weight' columns
+        df.dropNulls(whereAllNull = true) { name and weight }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -107,8 +124,8 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsWhereAllNaN() {
         // SampleStart
-        // remove rows with NaN in all columns
-        df.dropNaNs(whereAllNaN = true)
+        // remove rows with NaN in all columns of type `Double?`
+        df.dropNaNs(whereAllNaN = true) { colsOf<Double?>() }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -143,8 +160,7 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNaNsDataColumn() {
         // SampleStart
-        val values by columnOf(1.0, Double.NaN, 2.0, Double.NaN)
-        values.dropNaNs()
+        df.weight.dropNaNs()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -197,8 +213,7 @@ class DropNullsNansNaSamples : DataFrameSampleHelper("drop", "api") {
     @Test
     fun dropNADataColumn() {
         // SampleStart
-        val values by columnOf(1.0, null, Double.NaN, 2.0)
-        values.dropNA()
+        df.weight.dropNA()
             // SampleEnd
             .saveDfHtmlSample()
     }

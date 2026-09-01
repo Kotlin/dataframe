@@ -12,8 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 
 /**
  * ## {@get [TITLE]} (Cols)
- * This {@get [NOUN]}s the {@get [FIRST_OR_LAST]} [n\] columns from [this\] collecting
- * the result into a [ColumnSet].
+ * {@get [SUMMARY]}
  *
  * This function operates solely on columns at the top-level.
  *
@@ -56,8 +55,8 @@ internal interface CommonTakeAndDropDocs {
     // Operation, like "take"
     typealias NOUN = Nothing
 
-    // like "first"
-    typealias FIRST_OR_LAST = Nothing
+    // Summary of the operation
+    typealias SUMMARY = Nothing
 
     // Example argument to use
     typealias EXAMPLE = Nothing

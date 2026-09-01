@@ -23,14 +23,14 @@ Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
 <tab title="Properties">
 
 ```kotlin
-df.drop { weight == null || city == null }
+df.drop { weight == null || name == null }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.drop { it["weight"] == null || it["city"] == null }
+df.drop { it["weight"] == null || it["name"] == null }
 ```
 
 </tab></tabs>
@@ -43,7 +43,7 @@ and returns a [`DataColumn`](DataColumn.md) containing the values that do not ma
 <!---FUN dropDataColumnByPredicate-->
 
 ```kotlin
-df.age.drop { it < 20 }
+df.weight.drop { it != null && it < 60 }
 ```
 
 <!---END-->
@@ -80,8 +80,8 @@ df.dropNulls(whereAllNull = true)
 <!---FUN dropNullsSelector-->
 
 ```kotlin
-// remove rows with null value in 'city' column
-df.dropNulls { city }
+// remove rows with null value in 'name' column
+df.dropNulls { name }
 ```
 
 <!---END-->
@@ -90,8 +90,8 @@ df.dropNulls { city }
 <!---FUN dropNullsSelectorSeveralCols-->
 
 ```kotlin
-// remove rows with null value in 'city' OR 'weight' columns
-df.dropNulls { city and weight }
+// remove rows with null value in 'name' OR 'weight' columns
+df.dropNulls { name and weight }
 ```
 
 <!---END-->
@@ -101,7 +101,7 @@ df.dropNulls { city and weight }
 
 ```kotlin
 // remove rows with nulls in both columns
-df.dropNulls(whereAllNull = true) { city and weight }
+df.dropNulls(whereAllNull = true) { name and weight }
 ```
 
 <!---END-->
@@ -140,8 +140,8 @@ df.dropNaNs()
 <!---FUN dropNaNsWhereAllNaN-->
 
 ```kotlin
-// remove rows with NaN in all columns
-df.dropNaNs(whereAllNaN = true)
+// remove rows with NaN in all floating-point columns
+df.dropNaNs(whereAllNaN = true) { colsOf<Double?>() }
 ```
 
 <!---END-->
@@ -183,8 +183,7 @@ adjusting the type accordingly.
 <!---FUN dropNaNsDataColumn-->
 
 ```kotlin
-val values by columnOf(1.0, Double.NaN, 2.0, Double.NaN)
-values.dropNaNs()
+df.weight.dropNaNs()
 ```
 
 <!---END-->
@@ -254,8 +253,7 @@ adjusting the type accordingly.
 <!---FUN dropNADataColumn-->
 
 ```kotlin
-val values by columnOf(1.0, null, Double.NaN, 2.0)
-values.dropNA()
+df.weight.dropNA()
 ```
 
 <!---END-->
