@@ -308,10 +308,15 @@ internal fun fromJsonListAnyColumns(
                         .asList()
                         .splitByIndices(startIndices.asSequence())
                         .toList()
+                        // records that hold no array at all (like `null`) are not empty lists
+                        .mapIndexed { i, list -> if (records[i] is JsonArray) list else null }
                     DataColumn.createValueColumn(
                         name = ARRAY_COLUMN_NAME,
                         values = columnValues,
-                        type = List::class.createType(listOf(KTypeProjection.invariant(elementType))),
+                        type = List::class.createType(
+                            arguments = listOf(KTypeProjection.invariant(elementType)),
+                            nullable = records.any { it !is JsonArray },
+                        ),
                     )
                 }
 
@@ -478,9 +483,9 @@ internal fun fromJsonListArrayAndValueColumns(
     // list element type can be JsonObject, JsonArray or primitive
     // So first, we gather all properties of objects to merge including "array" and "value" if needed
     // so the resulting type of a property with instances 123, ["abc"], and { "a": 1, "b": 2 } will be
-    // { array: List<String>, value: Int?, a: Int?, b: Int? }
+    // { array: List<String>?, value: Int?, a: Int?, b: Int? }
     // and instances will look like
-    // { "array": [], "value": 123, "a": null, "b": null }
+    // { "array": null, "value": 123, "a": null, "b": null }
 
     val nameGenerator = ColumnNameGenerator()
     records.forEach { record ->
@@ -668,10 +673,15 @@ internal fun fromJsonListArrayAndValueColumns(
                                         .asList()
                                         .splitByIndices(startIndices.asSequence())
                                         .toList()
+                                        // records that hold no array at all (like `null`) are not empty lists
+                                        .mapIndexed { i, list -> if (records[i] is JsonArray) list else null }
                                 DataColumn.createValueColumn(
                                     name = colName,
                                     values = columnValues,
-                                    type = List::class.createType(listOf(KTypeProjection.invariant(elementType))),
+                                    type = List::class.createType(
+                                        arguments = listOf(KTypeProjection.invariant(elementType)),
+                                        nullable = records.any { it !is JsonArray },
+                                    ),
                                 )
                             }
 

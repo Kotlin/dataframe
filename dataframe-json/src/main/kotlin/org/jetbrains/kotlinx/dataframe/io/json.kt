@@ -103,15 +103,15 @@ public class JSON(
      *  ]
      * ```
      *
-     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like (including `null` and `[]` values):
+     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like (including `null` values):
      * ```
-     * ⌌----------------------------------------------⌍
-     * |  | a:{b:Int?, value:String?, array:List<Int>}|
-     * |--|-------------------------------------------|
-     * | 0|         { b:null, value:"text", array:[] }|
-     * | 1|              { b:2, value:null, array:[] }|
-     * | 2|    { b:null, value:null, array:[6, 7, 8] }|
-     * ⌎----------------------------------------------⌏
+     * ⌌-----------------------------------------------⌍
+     * |  | a:{b:Int?, value:String?, array:List<Int>?}|
+     * |--|--------------------------------------------|
+     * | 0|        { b:null, value:"text", array:null }|
+     * | 1|             { b:2, value:null, array:null }|
+     * | 2|     { b:null, value:null, array:[6, 7, 8] }|
+     * ⌎-----------------------------------------------⌏
      * ```
      * So, for the type clashing argument it will create a [ColumnGroup] with the properties `value`, `array`,
      * and the unwrapped properties of the objects the property can be.
