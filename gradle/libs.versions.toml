@@ -52,6 +52,7 @@ junit = "4.13.2" # Issue #426
 junit-jupiter = "5.11.3"
 # ignoreUpdates
 junit-platform = "1.11.3" # Issue #426
+konsist = "0.17.3"
 kotestAsserions = "6.2.2"
 
 jsoup = "1.22.2"
