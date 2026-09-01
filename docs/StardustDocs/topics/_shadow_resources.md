@@ -79,7 +79,6 @@
 <resource src="fillDf.html"></resource>
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
-<resource src="fillNaNsDf.html"></resource>
 <resource src="fillNulls.html"></resource>
 <resource src="firstOnColumnDf.html"></resource>
 <resource src="formatHeader.html"></resource>

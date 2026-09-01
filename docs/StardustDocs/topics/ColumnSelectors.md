@@ -85,7 +85,7 @@ dfWithNaNs
 <!---FUN columnSelectorsUsageFillNaNs-->
 
 ```kotlin
-dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
+dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double?>() }.withZero()
 ```
 
 <!---END-->
