@@ -149,8 +149,8 @@ implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
 > guide when using Java 9+
 > {style = "warning"}
 
-[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
-and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format)
+and [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files)
 to raw WritableByteChannel, OutputStream, File or ByteArray.
 
 Data may be saved "as is" (like exporting to new Excel file) or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)

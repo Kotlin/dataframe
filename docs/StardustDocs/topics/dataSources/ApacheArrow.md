@@ -25,15 +25,17 @@ and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for
 > when using Java 9+.
 > {style="warning"}
 
-> Structured (nested) Arrow types such as Struct are not supported yet in Kotlin DataFrame.
-> See the issue: [Add inner / Struct type support in Arrow](https://github.com/Kotlin/dataframe/issues/536)
-> {style="warning"}
+> Nested Arrow `Struct` columns are read as a [`ColumnGroup`](DataColumn.md#columngroup). An **optional
+> (nullable)** struct is read as a `ColumnGroup` whose child columns become nullable, holding `null` in the rows
+> where the struct is absent. A `ColumnGroup` is never `null` per row, so an absent struct and a present struct
+> with all-`null` children are represented the same way. See [Parquet](Parquet.md) for details.
+> {style="note"}
 
 ## Read
 
 [`DataFrame`](DataFrame.md) supports both the 
-[Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) 
-and the [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files).
+[Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format) 
+and the [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files).
 
 You can read a `DataFrame` from Apache Arrow data sources 
 (via a file path, URL, or stream) using the [`readArrowFeather()`](read.md#read-apache-arrow-formats) method:
