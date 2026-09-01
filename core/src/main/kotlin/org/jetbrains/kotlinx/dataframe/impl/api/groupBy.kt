@@ -43,6 +43,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     }
     val keyDataColumns = keyColumns.map { it.data }
     val nRows = rowsCount()
+    // Reuse row membership to redistribute every value column in a sequential pass.
     val rowToGroup = IntArray(nRows)
     val groupMap = LinkedHashMap<Any?, Int>()
     val groups = ArrayList<MutableList<Int>>()
@@ -82,11 +83,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
 
     val groupSizes = IntArray(nGroups) { groups[it].size }
-    /*
-     * Step 5 benchmark (see core/GROUP_BY_PERFORMANCE.md): parallel column processing is 1.55-2.24x faster than
-     * step 4 on the measured 24-thread machine. Allocations are effectively unchanged except for a 1.07x
-     * reduction on the wide-frame scenario; the latency benefit is hardware-dependent.
-     */
+    // Preserve the existing slicing behavior for hierarchical columns.
     val columnGroupResults: List<Array<AnyCol>> = columns().parallelStream().map { column ->
         if (column is ValueColumn<*>) {
             processValueColumnForGroups(column, nRows, nGroups, groupSizes, rowToGroup)
