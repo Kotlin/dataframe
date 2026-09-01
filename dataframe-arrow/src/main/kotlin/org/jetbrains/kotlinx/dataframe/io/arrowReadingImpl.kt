@@ -350,6 +350,17 @@ private fun AnyBaseCol.injectNullsAt(isNull: BooleanArray): AnyBaseCol =
             )
     }
 
+/**
+ * The struct's own per-row null mask over [range] — Arrow keeps a struct validity buffer independent of its
+ * child vectors — or `null` when this slice has no null-parent rows, so required groups are read as before.
+ */
+private fun StructVector.nullMaskOrNull(range: IntRange): BooleanArray? =
+    if (nullCount > 0) {
+        BooleanArray(range.count()) { isNull(range.first + it) }.takeIf { mask -> mask.any { it } }
+    } else {
+        null
+    }
+
 private fun readField(
     vector: FieldVector,
     field: Field,
@@ -361,17 +372,13 @@ private fun readField(
             // An Arrow struct carries its own validity buffer, independent of the child vectors. Under a
             // null-parent slot the physical child values are unspecified (zeros, or leaked from other rows),
             // so reading them as-is produces phantom data; injectNullsAt pushes the parent-null down onto the
-            // children instead. Built once for all children and left null when this slice has no null parent,
-            // so required groups (no struct-level nulls) are read exactly as before.
-            val nullMask: BooleanArray? =
-                if (vector.nullCount > 0) {
-                    BooleanArray(range.count()) { vector.isNull(range.first + it) }
-                        .takeIf { mask -> mask.any { it } }
-                } else {
-                    null
-                }
+            // children instead. When the struct has null rows we also read its children with Widening: their
+            // physically-null cells at those rows are about to be nulled anyway and must not trip
+            // NullabilityOptions.Checking. Required groups (no struct-level nulls) are read exactly as before.
+            val nullMask = vector.nullMaskOrNull(range)
+            val childNullability = if (nullMask != null) NullabilityOptions.Widening else nullability
             val columns = field.children.map { childField ->
-                val child = readField(vector.getChild(childField.name), childField, nullability, range)
+                val child = readField(vector.getChild(childField.name), childField, childNullability, range)
                 if (nullMask != null) child.injectNullsAt(nullMask) else child
             }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
@@ -466,7 +473,6 @@ private fun readListVector(
         val structField = field.children.single()
         // A struct *element* can itself be null inside the list; like the top-level struct path we honor
         // its own validity buffer so null elements don't materialize phantom child values.
-        val elementHasNulls = dataVector.nullCount > 0
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
@@ -478,11 +484,7 @@ private fun readListVector(
                     start until end,
                 )
             }
-            val nullMask = if (elementHasNulls) {
-                BooleanArray(end - start) { dataVector.isNull(start + it) }.takeIf { mask -> mask.any { it } }
-            } else {
-                null
-            }
+            val nullMask = dataVector.nullMaskOrNull(start until end)
             val elementColumns = if (nullMask != null) columns.map { it.injectNullsAt(nullMask) } else columns
             elementColumns.toDataFrame()
         }
@@ -551,7 +553,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
     readField(root.getVector(field), field, nullability)
 
 /**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowIPCImpl(
     channel: ReadableByteChannel,
@@ -560,7 +562,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
 ): AnyFrame = readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
+ * Read [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowFeatherImpl(
     channel: SeekableByteChannel,
@@ -569,7 +571,7 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
 ): AnyFrame = readArrowImpl(ArrowFileReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ * Read [Arrow any format](https://arrow.apache.org/java/current/ipc.html#reading-writing-ipc-formats) data from existing [reader]
  */
 internal fun DataFrame.Companion.readArrowImpl(
     reader: ArrowReader,

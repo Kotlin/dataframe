@@ -29,7 +29,7 @@ Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is in
 > absent. This is a deliberate limitation: a `ColumnGroup` is never `null` per row, so Kotlin DataFrame cannot
 > represent a whole nullable group cell (a type like `{x: Int, y: Int}?`) — instead the nullability is pushed down to
 > the leaf columns. As a consequence, an absent group and a present group whose children are all `null` are
-> represented the same way. The same applies to nested `Struct`s read from Arrow IPC/Feather.
+> represented the same way. The same applies to nested `Struct`s read from Arrow IPC and Feather.
 > {style="note"}
 
 ## Reading Parquet Files

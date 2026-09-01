@@ -73,7 +73,7 @@ public interface ArrowWriter : AutoCloseable {
     // IPC saving block
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
      */
     public fun writeArrowIPC(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
@@ -84,14 +84,14 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
      */
     public fun writeArrowIPC(stream: OutputStream) {
         writeArrowIPC(Channels.newChannel(stream))
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
      * If file exists, it can be recreated or expanded.
      */
     public fun writeArrowIPC(file: File, append: Boolean = true) {
@@ -99,7 +99,7 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format),
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format),
      * write to a new or existing file on the given [path].
      * If file on the given [path] exists, it can be recreated or expanded.
      */
@@ -113,7 +113,7 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
      */
     public fun saveArrowIPCToByteArray(): ByteArray {
         val stream = ByteArrayOutputStream()
@@ -124,7 +124,7 @@ public interface ArrowWriter : AutoCloseable {
     // Feather saving block
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
      */
     public fun writeArrowFeather(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
@@ -135,14 +135,14 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
      */
     public fun writeArrowFeather(stream: OutputStream) {
         writeArrowFeather(Channels.newChannel(stream))
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
      * If [file] exists, it would be recreated.
      */
     public fun writeArrowFeather(file: File) {
@@ -150,7 +150,7 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files),
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files),
      * write to a new or existing file on the given [path].
      * If file on the given [path] exists, it would be recreated.
      */
@@ -164,7 +164,7 @@ public interface ArrowWriter : AutoCloseable {
     }
 
     /**
-     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
+     * Save data to [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
      */
     public fun saveArrowFeatherToByteArray(): ByteArray {
         val stream = ByteArrayOutputStream()

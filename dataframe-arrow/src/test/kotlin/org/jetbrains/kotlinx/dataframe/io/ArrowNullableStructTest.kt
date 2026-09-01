@@ -47,13 +47,13 @@ internal class ArrowNullableStructTest {
 
     // region test helpers — see arrowTestUtils.kt (arrowBytes / toArrowStreamBytes) for the Arrow-building idiom
 
-    private val intField = FieldType.notNullable(ArrowType.Int(32, true))
+    private val intType = FieldType.notNullable(ArrowType.Int(32, true))
 
     private fun channelField(name: String): Field =
         Field(
             name,
             FieldType.nullable(ArrowType.Struct()),
-            listOf(Field("x", intField, null), Field("y", intField, null)),
+            listOf(Field("x", intType, null), Field("y", intType, null)),
         )
 
     /** The two-channel schema from the bug report: a required `timestamp` plus two optional `{ x, y }` groups. */
@@ -184,6 +184,36 @@ internal class ArrowNullableStructTest {
     }
 
     /**
+     * A `required` (non-null) child that is **physically `null`** under a null-parent row must not be reported as a
+     * nullability violation when reading with [NullabilityOptions.Checking] — the parent-null is pushed down, so the
+     * child cell is legitimately `null`. This is the real Parquet layout (an optional group's required children are
+     * materialized as null when the group is absent), which the two-channel fixture above does not reproduce because
+     * it fills the hidden child cells via `setSafe`.
+     *
+     * Schema: `rec: { x: Int (required) }?` — row0 present `{x:1}`; row1 struct null with `x` physically null.
+     */
+    @Test
+    fun `required child physically null under null parent passes checking mode`() {
+        val rec = Field("rec", FieldType.nullable(ArrowType.Struct()), listOf(Field("x", intType, null)))
+
+        val bytes = arrowBytes(rec) { root ->
+            val recV = root.getVector("rec") as StructVector
+            recV.allocateNew()
+            val x = recV.getChild("x") as IntVector
+            recV.setIndexDefined(0)
+            x.setSafe(0, 1)
+            recV.setNull(1)
+            x.setNull(1) // required child is physically null at the null-parent row
+            root.setRowCount(2)
+        }
+
+        val group = DataFrame.readArrowIPC(bytes, nullability = NullabilityOptions.Checking)["rec"]
+            .shouldBeInstanceOf<ColumnGroup<*>>()
+        group["x"].type() shouldBe typeOf<Int?>()
+        group["x"].values().toList() shouldBe listOf(1, null)
+    }
+
+    /**
      * End-to-end parquet path, generated in code (team-controlled, cross-platform).
      * Head (expected): row0 `{x:1,y:2}, null`; row1 `null, {x:3,y:4}`.
      */
@@ -235,13 +265,13 @@ internal class ArrowNullableStructTest {
      */
     @Test
     fun `nullable nested struct nulls descendants and keeps required struct`() {
-        val required = Field("req", FieldType.notNullable(ArrowType.Struct()), listOf(Field("p", intField, null)))
+        val required = Field("req", FieldType.notNullable(ArrowType.Struct()), listOf(Field("p", intType, null)))
         val rec = Field(
             "rec",
             FieldType.nullable(ArrowType.Struct()),
             listOf(
-                Field("x", intField, null),
-                Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("a", intField, null))),
+                Field("x", intType, null),
+                Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("a", intType, null))),
             ),
         )
 
@@ -349,7 +379,7 @@ internal class ArrowNullableStructTest {
         val element = Field(
             "element",
             FieldType.nullable(ArrowType.Struct()),
-            listOf(Field("item", FieldType.notNullable(ArrowType.Utf8()), null), Field("qty", intField, null)),
+            listOf(Field("item", FieldType.notNullable(ArrowType.Utf8()), null), Field("qty", intType, null)),
         )
         val orders = Field("orders", FieldType.nullable(ArrowType.List()), listOf(element))
 
@@ -433,14 +463,14 @@ internal class ArrowNullableStructTest {
             FieldType.nullable(ArrowType.List()),
             listOf(Field("element", FieldType.notNullable(ArrowType.Utf8()), null)),
         )
-        val itemElement = Field("element", FieldType.nullable(ArrowType.Struct()), listOf(Field("q", intField, null)))
+        val itemElement = Field("element", FieldType.nullable(ArrowType.Struct()), listOf(Field("q", intType, null)))
         val items = Field("items", FieldType.nullable(ArrowType.List()), listOf(itemElement))
-        val inner = Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("c", intField, null)))
-        val mid = Field("mid", FieldType.nullable(ArrowType.Struct()), listOf(Field("b", intField, null), inner))
+        val inner = Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("c", intType, null)))
+        val mid = Field("mid", FieldType.nullable(ArrowType.Struct()), listOf(Field("b", intType, null), inner))
         val outer = Field(
             "outer",
             FieldType.nullable(ArrowType.Struct()),
-            listOf(Field("a", intField, null), tags, items, mid),
+            listOf(Field("a", intType, null), tags, items, mid),
         )
 
         val bytes = arrowBytes(outer) { root ->
