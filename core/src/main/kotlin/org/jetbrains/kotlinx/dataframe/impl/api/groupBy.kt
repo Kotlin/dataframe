@@ -36,15 +36,16 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
         }
     }
     /*
-     * Step 1 benchmark (see core/GROUP_BY_PERFORMANCE.md): latency ranges from a 1.17x speedup to a 19%
-     * regression, while allocations drop by 1.04-1.45x. Unlike the baseline, it also passes the 1M-row
-     * constrained-heap case with -Xmx192m.
+     * Step 2 benchmark (see core/GROUP_BY_PERFORMANCE.md): direct key-column access is effectively neutral,
+     * measuring 0.97-1.08x the latency of step 1 with unchanged allocations. It enables the single-key
+     * specialization in the next step.
      */
+    val keyDataColumns = keyColumns.map { it.data }
     val groupMap = LinkedHashMap<List<Any?>, Int>()
     val groups = ArrayList<MutableList<Int>>()
     for (index in 0 until rowsCount()) {
-        val key = ArrayList<Any?>(keyColumns.size)
-        for (column in keyColumns) key.add(column[index])
+        val key = ArrayList<Any?>(keyDataColumns.size)
+        for (column in keyDataColumns) key.add(column[index])
         val groupIndex = groupMap.getOrPut(key) {
             groups.add(ArrayList())
             groups.lastIndex
