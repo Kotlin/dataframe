@@ -15,14 +15,9 @@ import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl1
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl2
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl3
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl4
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl5
 import kotlin.random.Random
 
-/** Compares the original groupBy implementation with five cumulative optimization steps. */
+/** Measures the current groupBy implementation against the scenarios recorded in GROUP_BY_PERFORMANCE.md. */
 @State(Scope.Benchmark)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
@@ -63,22 +58,7 @@ open class GroupByBenchmark {
     }
 
     @Benchmark
-    fun baseline(): GroupBy<*, *> = df.groupBy { keyColumnNames.toColumnSet() }
-
-    @Benchmark
-    fun step1ImperativeGrouping(): GroupBy<*, *> = df.groupByImpl1(true) { keyColumnNames.toColumnSet() }
-
-    @Benchmark
-    fun step2RawKeyColumns(): GroupBy<*, *> = df.groupByImpl2(true) { keyColumnNames.toColumnSet() }
-
-    @Benchmark
-    fun step3SingleKeyFastPath(): GroupBy<*, *> = df.groupByImpl3(true) { keyColumnNames.toColumnSet() }
-
-    @Benchmark
-    fun step4ColumnFirst(): GroupBy<*, *> = df.groupByImpl4(true) { keyColumnNames.toColumnSet() }
-
-    @Benchmark
-    fun step5ParallelColumns(): GroupBy<*, *> = df.groupByImpl5(true) { keyColumnNames.toColumnSet() }
+    fun groupBy(): GroupBy<*, *> = df.groupBy { keyColumnNames.toColumnSet() }
 }
 
 private enum class GroupByScenario(

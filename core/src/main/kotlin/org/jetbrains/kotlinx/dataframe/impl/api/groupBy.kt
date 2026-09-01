@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.getRows
-import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
@@ -36,12 +35,24 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
             }
         }
     }
-    val groups = indices()
-        .map { index -> keyColumns.map { it[index] } to index }
-        .groupBy({ it.first }) { it.second }
-        .toList()
+    /*
+     * Step 1 benchmark (see core/GROUP_BY_PERFORMANCE.md): latency ranges from a 1.17x speedup to a 19%
+     * regression, while allocations drop by 1.04-1.45x. Unlike the baseline, it also passes the 1M-row
+     * constrained-heap case with -Xmx192m.
+     */
+    val groupMap = LinkedHashMap<List<Any?>, Int>()
+    val groups = ArrayList<MutableList<Int>>()
+    for (index in 0 until rowsCount()) {
+        val key = ArrayList<Any?>(keyColumns.size)
+        for (column in keyColumns) key.add(column[index])
+        val groupIndex = groupMap.getOrPut(key) {
+            groups.add(ArrayList())
+            groups.lastIndex
+        }
+        groups[groupIndex].add(index)
+    }
 
-    val keyIndices = groups.map { it.second[0] }
+    val keyIndices = List(groups.size) { groups[it][0] }
 
     val keyColumnsToInsert = keyColumns.map {
         val column = it[keyIndices]
@@ -51,13 +62,13 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
 
     val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
 
-    val permutation = groups.flatMap { it.second }
+    val permutation = groups.flatten()
     val sorted = getRows(permutation)
 
     var lastIndex = 0
     val startIndices = groups.asSequence().map {
         val start = lastIndex
-        lastIndex += it.second.size
+        lastIndex += it.size
         start
     }
 
