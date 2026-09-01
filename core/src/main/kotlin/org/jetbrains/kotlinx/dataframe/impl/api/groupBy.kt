@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,7 +18,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import java.util.stream.Collectors
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) :
     GroupedDataRow<T, G>,
@@ -116,6 +119,7 @@ private fun processValueColumnForGroups(
     @Suppress("UNCHECKED_CAST")
     val values = column.values() as List<Any?>
     val type = column.type()
+    val canBecomeFrameColumn = type.isSubtypeOf(typeOf<AnyFrame?>())
     val groupValues = Array<MutableList<Any?>>(nGroups) { ArrayList(groupSizes[it]) }
     val groupNullable = BooleanArray(nGroups)
 
@@ -128,14 +132,18 @@ private fun processValueColumnForGroups(
 
     return Array(nGroups) { groupIndex ->
         @Suppress("UNCHECKED_CAST")
-        DataColumn.createValueColumn(
-            name = column.name(),
-            values = groupValues[groupIndex] as List<Nothing>,
-            type = if (groupNullable[groupIndex] == type.isMarkedNullable) {
-                type
-            } else {
-                type.withNullability(groupNullable[groupIndex])
-            },
-        ) as AnyCol
+        if (!groupNullable[groupIndex] && canBecomeFrameColumn) {
+            DataColumn.createFrameColumn(column.name(), groupValues[groupIndex] as List<AnyFrame>)
+        } else {
+            DataColumn.createValueColumn(
+                name = column.name(),
+                values = groupValues[groupIndex] as List<Nothing>,
+                type = if (groupNullable[groupIndex] == type.isMarkedNullable) {
+                    type
+                } else {
+                    type.withNullability(groupNullable[groupIndex])
+                },
+            )
+        } as AnyCol
     }
 }
