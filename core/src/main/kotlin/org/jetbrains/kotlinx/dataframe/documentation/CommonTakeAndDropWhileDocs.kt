@@ -15,8 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 
 /**
  * ## {@get [TITLE]} (Cols) While
- * This function {@get [NOUN]}s the {@get [FIRST_OR_LAST]} columns from [this\] adhering to the
- * given [predicate\] collecting the result into a [ColumnSet].
+ * This function {@get [NOUN]}s the {@get [FIRST_OR_LAST]} columns from [this\] for as long as the
+ * given [predicate\] holds, stopping as soon as a column does not adhere to it, and collects the
+ * result into a [ColumnSet].
  *
  * This function operates solely on columns at the top-level.
  *
@@ -28,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  *
  * For more information: {@get [URL]}
  *
- * ### Check out: [Usage\]
+ * ### Check out: [Grammar\]
  *
  * #### Examples:
  * `df.`[select][DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[\`{@get [OPERATION]}While\`][ColumnSet.{@get [OPERATION]}While]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
@@ -41,8 +42,11 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
  *
  * {@get [CommonTakeAndDropWhileDocs.EXAMPLE]}
  *
+ * See also:
+ * {@get [SEE_ALSO]}
+ *
  * @param [predicate\] The [ColumnFilter] to control which columns to {@get [NOUN]}.
- * @return A [ColumnSet] containing the {@get [FIRST_OR_LAST]} columns adhering to the [predicate\].
+ * @return {@get [RETURN]}
  */
 internal interface CommonTakeAndDropWhileDocs {
 
@@ -63,4 +67,10 @@ internal interface CommonTakeAndDropWhileDocs {
 
     // Link to the corresponding page on the documentation website
     typealias URL = Nothing
+
+    // Related operations (the `See also` part)
+    typealias SEE_ALSO = Nothing
+
+    // Value returned by the operation (the `@return` part)
+    typealias RETURN = Nothing
 }

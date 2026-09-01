@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -15,6 +14,8 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -24,6 +25,24 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns a [DataColumn] containing the first [n] values of this [DataColumn].
+ *
+ * If [n] is greater than or equal to the size of this [DataColumn], this [DataColumn] is returned as is.
+ *
+ * For more information: {@include [DocumentationUrls.TakeFirst]}
+ *
+ * See also:
+ * - [takeLast][DataColumn.takeLast] — takes the last [n] values instead.
+ * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values.
+ * - [dropLast][DataColumn.dropLast] — drops the last [n] values.
+ * - [drop][DataColumn.drop]`{ predicate: Predicate<T> }` — drops every value that matches the predicate.
+ *
+ * @param [n] The number of values to take. Must not be negative.
+ * @return A [DataColumn] containing the first [n] values of this [DataColumn],
+ * or this [DataColumn] if [n] is greater than or equal to its size.
+ * @throws [IllegalArgumentException] if [n] is negative.
+ */
 public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
     when {
         n == 0 -> get(emptyList())
@@ -31,6 +50,24 @@ public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
         else -> get(0 until n)
     }
 
+/**
+ * Returns a [DataColumn] containing the last [n] values of this [DataColumn].
+ *
+ * If [n] is zero or negative, an empty [DataColumn] is returned.
+ *
+ * For more information: {@include [DocumentationUrls.TakeLast]}
+ *
+ * See also:
+ * - [take][DataColumn.take] — takes the first [n] values instead.
+ * - [dropLast][DataColumn.dropLast] — drops the last [n] values.
+ * - [drop][DataColumn.drop]`(n: Int)` — drops the first [n] values.
+ * - [drop][DataColumn.drop]`{ predicate: Predicate<T> }` — drops every value that matches the predicate.
+ *
+ * @param [n] The number of values to take. Must not exceed the size of this [DataColumn].
+ * @return A [DataColumn] containing the last [n] values of this [DataColumn],
+ * or an empty [DataColumn] if [n] is zero or negative.
+ * @throws [IndexOutOfBoundsException] if [n] is greater than the size of this [DataColumn].
+ */
 public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
 // endregion
@@ -38,10 +75,21 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 // region DataFrame
 
 /**
- * Returns a [DataFrame] containing first [n] rows.
+ * Returns a [DataFrame] containing the first [n] rows.
+ *
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
  *
  * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
+ * See also:
+ * - [takeLast][DataFrame.takeLast] — takes the last [n] rows instead.
+ * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
+ * - [drop][DataFrame.drop]`(n: Int)` — drops the first [n] rows.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [n] The number of rows to take. Must not be negative.
+ * @return A [DataFrame] containing the first [n] rows,
+ * or the whole [DataFrame] if [n] is greater than or equal to the number of rows.
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
@@ -50,10 +98,21 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 }
 
 /**
- * Returns a [DataFrame] containing last [n] rows.
+ * Returns a [DataFrame] containing the last [n] rows.
+ *
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
  *
  * For more information: {@include [DocumentationUrls.TakeLast]}
  *
+ * See also:
+ * - [take][DataFrame.take] — takes the first [n] rows instead.
+ * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
+ * - [dropLast][DataFrame.dropLast] — drops the last [n] rows.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [n] The number of rows to take. Must not be negative.
+ * @return A [DataFrame] containing the last [n] rows,
+ * or the whole [DataFrame] if [n] is greater than or equal to the number of rows.
  * @throws IllegalArgumentException if [n] is negative.
  */
 public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
@@ -62,9 +121,25 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
 }
 
 /**
- * Returns a [DataFrame] containing first rows that satisfy the given [predicate].
+ * Returns a [DataFrame] containing the first rows that satisfy the given [predicate].
+ *
+ * Rows are taken for as long as the [predicate] holds; the operation stops at the first row that
+ * does not satisfy it, and no later row is taken even if it satisfies the [predicate].
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * For more information: {@include [DocumentationUrls.TakeWhile]}
+ *
+ * See also:
+ * - [take][DataFrame.take] — takes a fixed number of first rows.
+ * - [takeLast][DataFrame.takeLast] — takes a fixed number of last rows.
+ * - [dropWhile][DataFrame.dropWhile] — drops the first rows while the predicate holds.
+ * - [filter][DataFrame.filter] — keeps every row that matches the predicate.
+ *
+ * @param [predicate] The [RowFilter] that the leading rows to take must satisfy.
+ * @return A [DataFrame] containing the first rows that satisfy the [predicate].
  */
 public inline fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
     firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
@@ -115,6 +190,12 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.OPERATION] take
      * @set [CommonTakeAndDropDocs.NOUN] take
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropDocs.SEE_ALSO]
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes the last `n` columns instead.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [drop][ColumnsSelectionDsl.drop] — drops the first `n` columns.
+     * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing the first [n\] columns.
      */
     private typealias CommonTakeFirstDocs = Nothing
 
@@ -187,6 +268,12 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropDocs.NOUN] take
      * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropDocs.SEE_ALSO]
+     * - [take][ColumnsSelectionDsl.take] — takes the first `n` columns instead.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropLast][ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
+     * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing the last [n\] columns.
      */
     private typealias CommonTakeLastDocs = Nothing
 
@@ -259,6 +346,13 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.OPERATION] take
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
+     * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
+     * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeLastWhile][ColumnsSelectionDsl.takeLastWhile] — takes the last columns while a predicate holds.
+     * - [dropWhile][ColumnsSelectionDsl.dropWhile] — drops the first columns while a predicate holds.
+     * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing the first columns
+     * adhering to the [predicate\].
      */
     private typealias CommonTakeFirstWhileDocs = Nothing
 
@@ -333,6 +427,13 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.OPERATION] takeLast
      * @set [CommonTakeAndDropWhileDocs.NOUN] take
      * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
+     * @set [CommonTakeAndDropWhileDocs.SEE_ALSO]
+     * - [take][ColumnsSelectionDsl.take] — takes a fixed number of first columns.
+     * - [takeLast][ColumnsSelectionDsl.takeLast] — takes a fixed number of last columns.
+     * - [takeWhile][ColumnsSelectionDsl.takeWhile] — takes the first columns while a predicate holds.
+     * - [dropLastWhile][ColumnsSelectionDsl.dropLastWhile] — drops the last columns while a predicate holds.
+     * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing the last columns
+     * adhering to the [predicate\].
      */
     private typealias CommonTakeLastWhileDocs = Nothing
 
