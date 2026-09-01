@@ -21,6 +21,7 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
       * [Documentation website link](#documentation-website-link-)
       * [Columns selection information](#columns-selection-information)
       * [Examples section](#examples-section)
+      * [Data tables in examples](#data-tables-in-examples)
       * [Parameters and return section](#parameters-and-return-section)
   * [KDoc-helpers Structure](#kdoc-helpers-structure)
     * [Grammar](#grammar)
@@ -110,6 +111,11 @@ For example, the
 has a KDoc which describes column path creation behavior. 
 The whole file is excluded from sources,
 but the KDoc is included in other KDocs.
+
+Escape parameter references inside a KDoc-snippet: `` [columns\] ``, not `[columns]` — `@param`
+lines included. Unescaped, the reference is resolved where it is written (`[columns]` in `Remove`
+becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
+resolves after processing, once the snippet sits in a function that has that parameter.
 
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
@@ -419,6 +425,15 @@ Start the section with
 ```
 ### Examples
 ```
+
+#### Data tables in examples
+
+By default, do not put data tables in a KDoc. KDoc renders Markdown tables without borders, so show
+the call, say in one sentence what it does, and link to the operation's page on the documentation
+website.
+
+Only if the task explicitly asks for before/after tables, read
+[Data tables in KDoc examples](KDOC_DATA_TABLES.md). Otherwise skip it.
 
 #### Parameters and return section
 
