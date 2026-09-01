@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -270,6 +271,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * into `df.`[<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
  * @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
+@StringApiInterpretable(interpreter = "Update0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumnSet() }
 
 /**
