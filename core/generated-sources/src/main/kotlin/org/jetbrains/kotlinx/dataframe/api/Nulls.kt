@@ -38,6 +38,8 @@ import kotlin.reflect.KProperty
  * ### Check out: [<code>Grammar</code>][FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
+ *
+ * See also [<code>dropNulls</code>][dropNulls], which removes rows with `null` values instead of replacing these values.
  */
 internal interface FillNulls {
 
@@ -156,6 +158,8 @@ private typealias SetFillNullsOperationArg = Nothing
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
+ * See also [<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls], which removes rows with `null` values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
@@ -210,6 +214,8 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
+ * See also [<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls], which removes rows with `null` values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
@@ -244,6 +250,8 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  *
+ * See also [<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls], which removes rows with `null` values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.FillNullsSelectingOptions]
@@ -268,6 +276,8 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
+ *
+ * See also [<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls], which removes rows with `null` values instead of replacing these values.
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -351,6 +361,8 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * ### Check out: [<code>Grammar</code>][FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
+ *
+ * See also [<code>dropNaNs</code>][dropNaNs], which removes rows with [<code>`NaN`</code>][NaN] values instead of replacing these values.
  */
 internal interface FillNaNs {
 
@@ -467,6 +479,8 @@ internal interface FillNaNs {
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
+ * See also [<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs], which removes rows with [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
@@ -520,6 +534,8 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
+ * See also [<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs], which removes rows with [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
@@ -553,6 +569,8 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = 
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  *
+ * See also [<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs], which removes rows with [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.FillNaNsSelectingOptions]
@@ -575,6 +593,8 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
+ *
+ * See also [<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs], which removes rows with [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of replacing these values.
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -603,6 +623,8 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * ### Check out: [<code>Grammar</code>][FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
+ *
+ * See also [<code>dropNA</code>][dropNA], which removes rows with [<code>`NA`</code>][NA] values instead of replacing these values.
  */
 internal interface FillNA {
 
@@ -719,6 +741,8 @@ internal interface FillNA {
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
+ * See also [<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA], which removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
@@ -772,6 +796,8 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
+ * See also [<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA], which removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
@@ -805,6 +831,8 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fi
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  *
+ * See also [<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA], which removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of replacing these values.
+ *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.FillNASelectingOptions]
@@ -827,6 +855,8 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
+ *
+ * See also [<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA], which removes rows with [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of replacing these values.
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
