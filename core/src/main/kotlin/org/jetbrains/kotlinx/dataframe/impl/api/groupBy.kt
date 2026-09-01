@@ -35,22 +35,32 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
             }
         }
     }
-    /*
-     * Step 2 benchmark (see core/GROUP_BY_PERFORMANCE.md): direct key-column access is effectively neutral,
-     * measuring 0.97-1.08x the latency of step 1 with unchanged allocations. It enables the single-key
-     * specialization in the next step.
-     */
     val keyDataColumns = keyColumns.map { it.data }
-    val groupMap = LinkedHashMap<List<Any?>, Int>()
+    val groupMap = LinkedHashMap<Any?, Int>()
     val groups = ArrayList<MutableList<Int>>()
-    for (index in 0 until rowsCount()) {
-        val key = ArrayList<Any?>(keyDataColumns.size)
-        for (column in keyDataColumns) key.add(column[index])
-        val groupIndex = groupMap.getOrPut(key) {
-            groups.add(ArrayList())
-            groups.lastIndex
+    /*
+     * Step 3 benchmark (see core/GROUP_BY_PERFORMANCE.md): the single-key scenarios are 1.09-1.69x faster than
+     * step 2 and allocate up to 1.69x less. The multi-key scenario is effectively unchanged, as expected.
+     */
+    if (keyDataColumns.size == 1) {
+        val column = keyDataColumns[0]
+        for (index in 0 until rowsCount()) {
+            val groupIndex = groupMap.getOrPut(column[index]) {
+                groups.add(ArrayList())
+                groups.lastIndex
+            }
+            groups[groupIndex].add(index)
         }
-        groups[groupIndex].add(index)
+    } else {
+        for (index in 0 until rowsCount()) {
+            val key = ArrayList<Any?>(keyDataColumns.size)
+            for (column in keyDataColumns) key.add(column[index])
+            val groupIndex = groupMap.getOrPut(key) {
+                groups.add(ArrayList())
+                groups.lastIndex
+            }
+            groups[groupIndex].add(index)
+        }
     }
 
     val keyIndices = List(groups.size) { groups[it][0] }
