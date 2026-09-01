@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import java.util.stream.Collectors
 import kotlin.reflect.full.withNullability
 
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) :
@@ -82,16 +83,17 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
 
     val groupSizes = IntArray(nGroups) { groups[it].size }
     /*
-     * Step 4 benchmark (see core/GROUP_BY_PERFORMANCE.md): column-first group construction is 1.07-3.87x faster
-     * than step 3 across all measured scenarios and reduces allocations by 1.21-1.64x.
+     * Step 5 benchmark (see core/GROUP_BY_PERFORMANCE.md): parallel column processing is 1.55-2.24x faster than
+     * step 4 on the measured 24-thread machine. Allocations are effectively unchanged except for a 1.07x
+     * reduction on the wide-frame scenario; the latency benefit is hardware-dependent.
      */
-    val columnGroupResults: List<Array<AnyCol>> = columns().map { column ->
+    val columnGroupResults: List<Array<AnyCol>> = columns().parallelStream().map { column ->
         if (column is ValueColumn<*>) {
             processValueColumnForGroups(column, nRows, nGroups, groupSizes, rowToGroup)
         } else {
             Array(nGroups) { groupIndex -> column[groups[groupIndex]] }
         }
-    }
+    }.collect(Collectors.toList())
     val groupDataFrames = List(nGroups) { groupIndex ->
         columnGroupResults.map { it[groupIndex] }.toDataFrame().cast<T>()
     }
