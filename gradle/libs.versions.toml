@@ -4,7 +4,7 @@ kotlinJupyter = "0.19.0-951"
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 
-kotlin = "2.4.0"
+kotlin = "2.4.20-RC2"
 kotlinpoet = "2.3.0"
 
 # The jvmToolchain version. Gradle should run with this JDK version.
@@ -158,6 +158,7 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 junit-platform-runner = { group = "org.junit.platform", name = "junit-platform-runner", version.ref = "junit-platform" }
 junit-platform-suite-api = { group = "org.junit.platform", name = "junit-platform-suite-api", version.ref = "junit-platform" }
 
+konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 kotestAssertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestAsserions" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
