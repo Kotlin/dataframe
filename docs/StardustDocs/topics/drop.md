@@ -51,14 +51,17 @@ df.age.drop { it < 20 }
 
 ## dropNulls
 
-Remove rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
+Removes rows with `null` values. This is a DataFrame equivalent of `filterNotNull`.
+
+See also [fillNulls](fill.md#fillnulls), which replaces `null` values instead of removing rows.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNulls-->
 
 ```kotlin
-df.dropNulls() // remove rows with null value in any column
+// remove rows with null value in any column
+df.dropNulls()
 ```
 
 <!---END-->
@@ -67,7 +70,8 @@ df.dropNulls() // remove rows with null value in any column
 <!---FUN dropNullsWhereAllNull-->
 
 ```kotlin
-df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
+// remove rows with null values in all columns
+df.dropNulls(whereAllNull = true)
 ```
 
 <!---END-->
@@ -76,7 +80,8 @@ df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
 <!---FUN dropNullsSelector-->
 
 ```kotlin
-df.dropNulls { city } // remove rows with null value in 'city' column
+// remove rows with null value in 'city' column
+df.dropNulls { city }
 ```
 
 <!---END-->
@@ -85,7 +90,8 @@ df.dropNulls { city } // remove rows with null value in 'city' column
 <!---FUN dropNullsSelectorSeveralCols-->
 
 ```kotlin
-df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
+// remove rows with null value in 'city' OR 'weight' columns
+df.dropNulls { city and weight }
 ```
 
 <!---END-->
@@ -94,7 +100,8 @@ df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'we
 <!---FUN dropNullsWhereAllNullSelector-->
 
 ```kotlin
-df.dropNulls(whereAllNull = true) { city and weight } // remove rows with nulls in both columns
+// remove rows with nulls in both columns
+df.dropNulls(whereAllNull = true) { city and weight }
 ```
 
 <!---END-->
@@ -114,14 +121,17 @@ df.weight.dropNulls()
 
 ## dropNaNs
 
-Remove rows with [`NaN` values](nanAndNa.md#nan) (`Double.NaN` or `Float.NaN`).
+Removes rows with [`NaN` values](nanAndNa.md#nan) (`Double.NaN` or `Float.NaN`).
+
+See also [fillNaNs](fill.md#fillnans), which replaces [`NaN` values](nanAndNa.md#nan) instead of removing rows.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNaNs-->
 
 ```kotlin
-df.dropNaNs() // remove rows containing NaN in any column
+// remove rows containing NaN in any column
+df.dropNaNs()
 ```
 
 <!---END-->
@@ -130,7 +140,8 @@ df.dropNaNs() // remove rows containing NaN in any column
 <!---FUN dropNaNsWhereAllNaN-->
 
 ```kotlin
-df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
+// remove rows with NaN in all columns
+df.dropNaNs(whereAllNaN = true)
 ```
 
 <!---END-->
@@ -139,7 +150,8 @@ df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
 <!---FUN dropNaNsSelector-->
 
 ```kotlin
-df.dropNaNs { weight } // remove rows where 'weight' is NaN
+// remove rows where 'weight' is NaN
+df.dropNaNs { weight }
 ```
 
 <!---END-->
@@ -148,7 +160,8 @@ df.dropNaNs { weight } // remove rows where 'weight' is NaN
 <!---FUN dropNaNsSelectorSeveralCols-->
 
 ```kotlin
-df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is NaN
+// remove rows where either 'age' or 'weight' is NaN
+df.dropNaNs { age and weight }
 ```
 
 <!---END-->
@@ -157,7 +170,8 @@ df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is 
 <!---FUN dropNaNsWhereAllNaNSelector-->
 
 ```kotlin
-df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
+// remove rows where both 'age' and 'weight' are NaN
+df.dropNaNs(whereAllNaN = true) { age and weight }
 ```
 
 <!---END-->
@@ -178,14 +192,17 @@ values.dropNaNs()
 
 ## dropNA
 
-Remove rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
+Removes rows with [`NA` values](nanAndNa.md#na) (`null`, `Double.NaN`, or `Float.NaN`).
+
+See also [fillNA](fill.md#fillna), which replaces [`NA` values](nanAndNa.md#na) instead of removing rows.
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 <!---FUN dropNA-->
 
 ```kotlin
-df.dropNA() // remove rows containing null or NaN in any column
+// remove rows containing null or NaN in any column
+df.dropNA()
 ```
 
 <!---END-->
@@ -194,7 +211,8 @@ df.dropNA() // remove rows containing null or NaN in any column
 <!---FUN dropNAWhereAllNA-->
 
 ```kotlin
-df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
+// remove rows with null or NaN in all columns
+df.dropNA(whereAllNA = true)
 ```
 
 <!---END-->
@@ -203,7 +221,8 @@ df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
 <!---FUN dropNASelector-->
 
 ```kotlin
-df.dropNA { weight } // remove rows where 'weight' is null or NaN
+// remove rows where 'weight' is null or NaN
+df.dropNA { weight }
 ```
 
 <!---END-->
@@ -212,7 +231,8 @@ df.dropNA { weight } // remove rows where 'weight' is null or NaN
 <!---FUN dropNASelectorSeveralCols-->
 
 ```kotlin
-df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or NaN
+// remove rows where either 'age' or 'weight' is null or NaN
+df.dropNA { age and weight }
 ```
 
 <!---END-->
@@ -221,7 +241,8 @@ df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is nu
 <!---FUN dropNAWhereAllNASelector-->
 
 ```kotlin
-df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
+// remove rows where both 'age' and 'weight' are null or NaN
+df.dropNA(whereAllNA = true) { age and weight }
 ```
 
 <!---END-->
