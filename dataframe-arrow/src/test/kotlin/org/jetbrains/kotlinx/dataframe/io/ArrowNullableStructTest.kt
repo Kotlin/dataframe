@@ -12,7 +12,6 @@ import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.complex.ListVector
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowStreamReader
-import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.TimeUnit
 import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
@@ -26,10 +25,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.junit.Ignore
 import org.junit.Test
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
-import java.nio.channels.Channels
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.toPath
@@ -229,11 +226,6 @@ internal class ArrowNullableStructTest {
     /**
      * A null parent nulls all descendant leaves (nested struct); a sibling required struct is untouched.
      *
-     * Schema (as read):
-     * ```
-     * req: { p: Int }                       // required struct -> non-null ColumnGroup
-     * rec: { x: Int?, inner: { a: Int? } }  // nullable struct, one level deeper
-     * ```
      * Head (hidden physical values under the null parent in parentheses):
      * ```
      * req        rec
@@ -244,8 +236,14 @@ internal class ArrowNullableStructTest {
     @Test
     fun `nullable nested struct nulls descendants and keeps required struct`() {
         val required = Field("req", FieldType.notNullable(ArrowType.Struct()), listOf(Field("p", intField, null)))
-        val inner = Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("a", intField, null)))
-        val rec = Field("rec", FieldType.nullable(ArrowType.Struct()), listOf(Field("x", intField, null), inner))
+        val rec = Field(
+            "rec",
+            FieldType.nullable(ArrowType.Struct()),
+            listOf(
+                Field("x", intField, null),
+                Field("inner", FieldType.nullable(ArrowType.Struct()), listOf(Field("a", intField, null))),
+            ),
+        )
 
         val bytes = arrowBytes(required, rec) { root ->
             val req = root.getVector("req") as StructVector
@@ -355,7 +353,7 @@ internal class ArrowNullableStructTest {
         )
         val orders = Field("orders", FieldType.nullable(ArrowType.List()), listOf(element))
 
-        val bytes = arrowBytes(orders) { root ->
+        val listWithNullableStructElement = arrowBytes(orders) { root ->
             val list = root.getVector("orders") as ListVector
             list.allocateNew()
             val struct = list.dataVector as StructVector
@@ -385,12 +383,22 @@ internal class ArrowNullableStructTest {
             root.setRowCount(2)
         }
 
-        val ordersColumn = DataFrame.readArrowIPC(bytes)["orders"].shouldBeInstanceOf<FrameColumn<*>>()
-        ordersColumn[0]["item"].values().toList() shouldBe listOf("A", "B")
-        ordersColumn[0]["qty"].values().toList() shouldBe listOf(1, 2)
-        // the null struct element must NOT leak its hidden values
-        ordersColumn[1]["item"].values().toList() shouldBe listOf(null, "C")
-        ordersColumn[1]["qty"].values().toList() shouldBe listOf(null, 4)
+        val ordersColumn = DataFrame.readArrowIPC(listWithNullableStructElement)["orders"]
+            .shouldBeInstanceOf<FrameColumn<*>>()
+
+        // row0: both list elements present
+        val row0 = ordersColumn[0]
+        row0[0]["item"] shouldBe "A"
+        row0[0]["qty"] shouldBe 1
+        row0[1]["item"] shouldBe "B"
+        row0[1]["qty"] shouldBe 2
+
+        // row1: its 1st element was a null struct -> that element's cells are null, not the hidden "HID"/999
+        val row1 = ordersColumn[1]
+        row1[0]["item"] shouldBe null
+        row1[0]["qty"] shouldBe null
+        row1[1]["item"] shouldBe "C"
+        row1[1]["qty"] shouldBe 4
     }
 
     /**
