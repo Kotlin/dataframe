@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -31,20 +32,39 @@ import org.junit.Test
 
 class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
     @DataSchema
+    interface Name {
+        val firstName: String
+        val lastName: String
+    }
+
+    @DataSchema
+    interface Measurements {
+        val weight: Double?
+    }
+
+    @DataSchema
     interface PersonWithWeight {
-        val name: String
-        val weight: Double
+        val name: DataRow<Name>
+        val measurements: DataRow<Measurements>
     }
 
     private val dfWithNaNs: DataFrame<PersonWithWeight> = dataFrameOf(
-        "name",
+        "firstName",
+        "lastName",
         "weight",
     )(
         "Alice",
+        "Cooper",
         54.0,
         "Charlie",
+        "Daniels",
         Double.NaN,
-    ).cast()
+        "Bob",
+        "Dylan",
+        null,
+    ).group { firstName and lastName }.into("name")
+        .group { weight }.into("measurements")
+        .cast()
 
     val df = peopleDf
 
@@ -115,7 +135,7 @@ class ColumnSelectorsSamples : DataFrameSampleHelper("columnSelectors", "api") {
     @Test
     fun columnSelectorsUsageFillNaNs() {
         // SampleStart
-        dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double>() }.withZero()
+        dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double?>() }.withZero()
             // SampleEnd
             .saveDfHtmlSample()
     }

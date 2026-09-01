@@ -6,7 +6,7 @@ Replace missing values.
 
 **Related operations**: [](updateConvert.md)
 
-Unless stated otherwise, the examples on this page use the following dataframe:
+The examples on this page use the following dataframe:
 
 <!---FUN fillDf-->
 
@@ -26,7 +26,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 <!---FUN fillNulls-->
 
 ```kotlin
-df.fillNulls { colsOf<Int?>() }.with { -1 }
+df.fillNulls { weight }.with { -1.0 }
 ```
 
 <!---END-->
@@ -36,7 +36,7 @@ same as
 <!---FUN fillNullsAsUpdate-->
 
 ```kotlin
-df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
+df.update { weight }.where { it == null }.with { -1.0 }
 ```
 
 <!---END-->
@@ -48,21 +48,10 @@ Replaces [`NaN` values](nanAndNa.md#nan) (`Double.NaN` and `Float.NaN`) with giv
 
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
-For the `fillNaNs` example, the following dataframe is used:
-
-<!---FUN fillNaNsDf-->
-
-```kotlin
-dfWithNaNs
-```
-
-<!---END-->
-<inline-frame src="./resources/fillNaNsDf.html" width="100%" height="500px"></inline-frame>
-
 <!---FUN fillNaNs-->
 
 ```kotlin
-dfWithNaNs.fillNaNs { colsOf<Double>() }.withZero()
+df.fillNaNs { weight }.withZero()
 ```
 
 <!---END-->
@@ -77,7 +66,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 <!---FUN fillNA-->
 
 ```kotlin
-df.fillNA { weight }.with { -1 }
+df.fillNA { weight }.with { -1.0 }
 ```
 
 <!---END-->

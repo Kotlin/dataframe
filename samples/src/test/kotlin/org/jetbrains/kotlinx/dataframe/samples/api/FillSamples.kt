@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.fillNA
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
@@ -19,10 +18,10 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
     @DataSchema
     interface PersonWithWeight {
         val name: String
-        val weight: Double
+        val weight: Double?
     }
 
-    private val dfWithNaNs: DataFrame<PersonWithWeight> = dataFrameOf(
+    private val df: DataFrame<PersonWithWeight> = dataFrameOf(
         "name",
         "weight",
     )(
@@ -30,9 +29,9 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
         54.0,
         "Charlie",
         Double.NaN,
+        "Bob",
+        null,
     ).cast()
-
-    val df = peopleDf
 
     @Test
     fun fillDf() {
@@ -45,7 +44,7 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
     @Test
     fun fillNulls() {
         // SampleStart
-        df.fillNulls { colsOf<Int?>() }.with { -1 }
+        df.fillNulls { weight }.with { -1.0 }
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -53,22 +52,14 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
     @Test
     fun fillNullsAsUpdate() {
         // SampleStart
-        df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
+        df.update { weight }.where { it == null }.with { -1.0 }
         // SampleEnd
-    }
-
-    @Test
-    fun fillNaNsDf() {
-        // SampleStart
-        dfWithNaNs
-            // SampleEnd
-            .saveDfHtmlSample()
     }
 
     @Test
     fun fillNaNs() {
         // SampleStart
-        dfWithNaNs.fillNaNs { colsOf<Double>() }.withZero()
+        df.fillNaNs { weight }.withZero()
             // SampleEnd
             .saveDfHtmlSample()
     }
@@ -76,7 +67,7 @@ class FillSamples : DataFrameSampleHelper("fill", "api") {
     @Test
     fun fillNA() {
         // SampleStart
-        df.fillNA { weight }.with { -1 }
+        df.fillNA { weight }.with { -1.0 }
             // SampleEnd
             .saveDfHtmlSample()
     }
