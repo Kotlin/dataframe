@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertTo
 
 /**
  * This annotation marks an interface or data class as a [data schema](https://kotlin.github.io/dataframe/schemas.html).
- * An annotated declaration should be a non-local and non-private interface or class.
+ * An annotated declaration should be a non-local and non-private interface or class with [only constructor properties](https://kotlin.github.io/dataframe/schemas.html#dataschema-annotation).
  *
  * This annotation generates an extension properties API for a declaration according to its properties.
  * The aim is to provide a convenient class-like syntax for working with a dataframe instance after reading it from CSV,
@@ -66,7 +66,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertTo
  * val groups: List<Group> = df.toList()
  * val participants: List<Person> = groups.first().participants
  * ```
- *
+ * @property isOpen used in REPL to reduce interconnection between generated schemas; outside REPL is effectively noop
  * @see [org.jetbrains.kotlinx.dataframe.api.generateDataClasses]
  * @see [org.jetbrains.kotlinx.dataframe.api.generateInterfaces]
  * @see [org.jetbrains.kotlinx.dataframe.DataFrame.cast]
