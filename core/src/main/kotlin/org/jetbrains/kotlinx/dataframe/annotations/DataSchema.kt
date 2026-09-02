@@ -4,48 +4,53 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 
 /**
- *  Annotation to generate extension properties API for a given declaration, according to its properties.
- *  Annotated declaration should be non-local and non-private interface or a class.
- *  The aim here is to provide convenient syntax for working with a dataframe instance right after reading from it CSV, JSON, Databases, Arrow, etc.
- *  After `val df = DataFrame.read*` operation, `df` is a source of truth for the DataSchema.
- *  One way to look at it, DataSchema "tells" the compiler what's already there. It doesn't affect reading.
- *  See the list below of code generation methods to simplify the process of getting what we call an initial dataschema.
- *  Given the initial schema of the data you read, the compiler plugin will provide a typed result for most operations.
+ * This annotation marks an interface or data class as a [data schema](https://kotlin.github.io/dataframe/schemas.html).
+ *
+ * This annotation generates an extension properties API for a declaration according to its properties.
+ * An annotated declaration should be a non-local and non-private interface or class.
+ * The aim is to provide a convenient syntax for working with a dataframe instance right after reading it from CSV,
+ * JSON, databases, Arrow, or other sources.
+ *
+ * After a `val df = DataFrame.read*` operation, `df` is the source of truth for the data schema.
+ * One way to look at it is that a data schema tells the compiler what is already there; it does not affect reading.
+ * See the related operations in the See also section.
+ * Given the initial schema of the data you read, the
+ * [compiler plugin](https://github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe) provides a typed result
+ * for most operations.
  *
  * Example:
- * ```
+ * ```kotlin
  * @DataSchema
  * data class Group(
- *     val id: String,
- *     val participants: List<Person>
+ *     val id: String, // DataColumn<String>
+ *     val participants: List<Person>, // FrameColumn<Person>
  * )
  *
  * @DataSchema
  * data class Person(
- *     val name: Name,
- *     val age: Int,
- *     val city: String?
+ *     val name: Name, // ColumnGroup<Name>
+ *     val age: Int, // DataColumn<Int>
+ *     val city: String?, // DataColumn<String?>
  * )
  *
  * @DataSchema
  * data class Name(
- *     val firstName: String,
- *     val lastName: String,
+ *     val firstName: String, // DataColumn<String>
+ *     val lastName: String, // DataColumn<String>
  * )
  *
  * fun main() {
- *  val url = "https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/participants.json"
- *  val df = DataFrame.readJson(url).cast<Group>()
- *  val i: Int = df.id[0] // properties style access to columns and values
+ *     val url = "https://raw.githubusercontent.com/Kotlin/dataframe/refs/heads/master/data/participants.json"
+ *     val df = DataFrame.readJson(url).cast<Group>()
+ *     val groupId: String = df.id[0] // Properties-style access to columns and values.
  *
- *  val df1 = df.asGroupBy { participants }.aggregate {
- *    count() into "groupSize"
- *    distinct { city } into "cities"
- *  }
+ *     val df1 = df.asGroupBy { participants }.aggregate {
+ *         count() into "groupSize"
+ *         distinct { city } into "cities"
+ *     }
  *
- *  // now compiler plugin uses previous knowledge of `Group` combined with its understanding of aggregate operation
- *  // to help you access new columns
- *  val l: List<String> = df1.cities[0]
+ *     // The compiler plugin uses prior knowledge of `Group` and the aggregate operation to infer new columns.
+ *     val cities: List<String> = df1.cities[0]
  * }
  * ```
  *
