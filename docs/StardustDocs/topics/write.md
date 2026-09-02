@@ -49,6 +49,32 @@ val jsonStr = df.toJson(prettyPrint = true)
 
 <!---END-->
 
+Each row is written as an element of a JSON array: a [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested
+object, a [`FrameColumn`](DataColumn.md#framecolumn) becomes a nested array of objects, and a `List` value becomes
+a JSON array.
+
+There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with a
+[type clash](read.md#manage-type-clashes) can be written back to its original form: when the frame has an unnamed
+"value" or "array" column, a row is instead written as the value it holds — the "value" primitive, else the "array"
+array, else an object of the remaining columns, else — when the row holds no values at all — `null`. For example:
+
+<!---FUN readAndWriteJson-->
+
+```kotlin
+DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").toJson()
+```
+
+Output:
+
+[1,{"label":"record"},[123],null]
+
+<!---END-->
+
+> A row of `null`s only is indistinguishable from a JSON `null` element, so
+> `[1,{"label":"record"},{"label":null}]` is written back as `[1,{"label":"record"},null]`.
+> Both forms are read into the exact same [`DataFrame`](DataFrame.md).
+> {style="note"}
+
 ### Write to Excel spreadsheet
 
 Add dependency:
