@@ -58,10 +58,17 @@ There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with
 "value" or "array" column, a row is instead written as the value it holds — the "value" primitive, else the "array"
 array, else an object of the remaining columns, else — when the row holds no values at all — `null`. For example:
 
+<!---FUN readAndWriteJson-->
+
 ```kotlin
 DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").toJson()
-// [1,{"label":"record"},[123],null]
 ```
+
+Output:
+
+[1,{"label":"record"},[123],null]
+
+<!---END-->
 
 > A row of `null`s only is indistinguishable from a JSON `null` element, so
 > `[1,{"label":"record"},{"label":null}]` is written back as `[1,{"label":"record"},null]`.
