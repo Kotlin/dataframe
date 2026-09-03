@@ -123,7 +123,7 @@ private typealias CommonGatherDocs = Nothing
  * // into a single "tag" column, omitting the key column.
  * df.gather { colsOf<String>() }.valuesInto("tag")
  * ```
- * @param [selector] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ * @param [selector] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to gather.
  */
 @Interpretable("Gather0")
 public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
