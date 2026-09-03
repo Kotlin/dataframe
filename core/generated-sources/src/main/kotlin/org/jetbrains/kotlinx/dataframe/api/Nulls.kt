@@ -857,6 +857,8 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls], which replaces `null` values instead of removing rows.
  * ### This Drop Nulls Overload
  *
  *
@@ -926,6 +928,8 @@ public fun <T> DataFrame<T>.filterNotNull(columns: ColumnsSelector<T, *>): DataF
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls], which replaces `null` values instead of removing rows.
  * ### This Drop Nulls Overload
  * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNull `false` by default.
@@ -947,6 +951,8 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls], which replaces `null` values instead of removing rows.
  * ### This Drop Nulls Overload
  *
  * `df.`[<code>dropNulls</code>][dropNulls]`(Person::length, whereAllNull = true)`
@@ -971,6 +977,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls], which replaces `null` values instead of removing rows.
  * ### This Drop Nulls Overload
  *
  * `df.`[<code>dropNulls</code>][dropNulls]`("length", whereAllNull = true)`
@@ -993,6 +1001,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][org.jetbrains.kotlinx.dataframe.api.fillNulls], which replaces `null` values instead of removing rows.
  * ### This Drop Nulls Overload
  *
  * `df.`[<code>dropNulls</code>][dropNulls]`(length, whereAllNull = true)`
@@ -1030,6 +1040,8 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA], which replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of removing rows.
  * ### This Drop NA Overload
  *
  *
@@ -1089,6 +1101,8 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: Columns
  * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA], which replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of removing rows.
  * ### This Drop NA Overload
  *
  * `df.`[<code>dropNA</code>][dropNA]`(Person::length, whereAllNA = true)`
@@ -1112,6 +1126,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA], which replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of removing rows.
  * ### This Drop NA Overload
  *
  *
@@ -1145,6 +1161,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA], which replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of removing rows.
  * ### This Drop NA Overload
  *
  * `df.`[<code>dropNA</code>][dropNA]`(length, whereAllNA = true)`
@@ -1168,6 +1186,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  * rows are dropped if any of the selected cells are [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *
  * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][org.jetbrains.kotlinx.dataframe.api.fillNA], which replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values instead of removing rows.
  * ### This Drop NA Overload
  * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNA `false` by default.
@@ -1205,6 +1225,8 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs], which replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of removing rows.
  * ### This Drop NaNs Overload
  *
  *
@@ -1262,6 +1284,8 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: Colu
  * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs], which replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of removing rows.
  * ### This Drop NaNs Overload
  *
  * `df.`[<code>dropNaNs</code>][dropNaNs]`(Person::length, whereAllNaN = true)`
@@ -1285,6 +1309,8 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: 
  * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs], which replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of removing rows.
  * ### This Drop NaNs Overload
  *
  * `df.`[<code>dropNaNs</code>][dropNaNs]`("length", whereAllNaN = true)`
@@ -1306,6 +1332,8 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs], which replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of removing rows.
  * ### This Drop NaNs Overload
  *
  * `df.`[<code>dropNaNs</code>][dropNaNs]`(length, whereAllNaN = true)`
@@ -1329,6 +1357,8 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAl
  * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
  *
  * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][org.jetbrains.kotlinx.dataframe.api.fillNaNs], which replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values instead of removing rows.
  * ### This Drop NaNs Overload
  * This overload operates on all columns in the [<code>DataFrame</code>][DataFrame].
  * @param whereAllNaN `false` by default.

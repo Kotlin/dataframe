@@ -100,7 +100,7 @@ df.dropNulls { name and weight }
 <!---FUN dropNullsWhereAllNullSelector-->
 
 ```kotlin
-// remove rows with nulls in both columns
+// remove rows with nulls in both 'name' and 'weight' columns
 df.dropNulls(whereAllNull = true) { name and weight }
 ```
 
@@ -140,7 +140,7 @@ df.dropNaNs()
 <!---FUN dropNaNsWhereAllNaN-->
 
 ```kotlin
-// remove rows with NaN in all floating-point columns
+// remove rows with NaN in all columns of type `Double?`
 df.dropNaNs(whereAllNaN = true) { colsOf<Double?>() }
 ```
 
