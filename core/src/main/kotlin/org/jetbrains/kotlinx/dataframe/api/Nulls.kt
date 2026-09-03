@@ -335,6 +335,8 @@ private typealias DropColumnAccessorsParam = Nothing
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNulls]}
+ *
+ * See also [fillNulls], which replaces `null` values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNulls {
@@ -458,6 +460,8 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [`NA`][NA].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNA]}
+ *
+ * See also [fillNA], which replaces [`NA`][NA] values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNA {
@@ -575,6 +579,8 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNaNs]}
+ *
+ * See also [fillNaNs], which replaces [`NaN`][NaN] values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNaNs {
