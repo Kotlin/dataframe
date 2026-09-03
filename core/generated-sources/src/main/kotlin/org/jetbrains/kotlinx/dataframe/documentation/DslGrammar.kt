@@ -16,7 +16,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  * ### Symbols
  * - '**`bold text`**' : literal Kotlin notation, e.g. '**`myFunction`**', '**`{ }`**', '**`[ ]`**', etc.
  * - '`normal text`' : Definitions or types existing either just in the grammar or in the library itself.
- * - '`:`' : Separates a definition from its type, e.g. '`name: `[String]'.
+ * - '`:`' : Separates a definition from its type, e.g. '`name: `[<code>String</code>][String]'.
  * - '`|`', '`/`' : Separates multiple possibilities, often clarified with `()` brackets or spaces, e.g. '**`a`**` ( `**`b`**` | `**`c`**` )`'.
  * - '`[ ... ]`' : Indicates that the contents are optional, e.g. '`[ `**`a`**` ]`'. Careful to not confuse this with **bold** Kotlin brackets **`[]`**.
  *    - NOTE: sometimes **`function`**` [`**`{ }`**`]` notation is used to indicate that the function has an optional lambda. This function will still require **`()`** brackets to work without lambda.

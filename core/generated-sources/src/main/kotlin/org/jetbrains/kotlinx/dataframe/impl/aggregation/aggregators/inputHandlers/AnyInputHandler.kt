@@ -23,16 +23,16 @@ internal class AnyInputHandler<in Value : Any, out Return : Any?> : AggregatorIn
     ): Pair<Sequence<@UnsafeVariance Value?>, KType> = Pair(values, valueType.kType)
 
     /**
-     * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
-     * this function can be called to calculate it in terms of inheritance by combining the set of known [valueTypes].
+     * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+     * this function can be called to calculate it in terms of inheritance by combining the set of known [<code>valueTypes</code>][valueTypes].
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType = valueTypes.commonType(false).toValueType()
 
     /**
      * WARNING: HEAVY!
      *
-     * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
-     * this function can be called to calculate it in terms of inheritance by getting the types of [values] at runtime.
+     * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+     * this function can be called to calculate it in terms of inheritance by getting the types of [<code>values</code>][values] at runtime.
      * This is heavy because it uses reflection on each value.
      */
     override fun calculateValueType(values: Sequence<Value?>): ValueType {

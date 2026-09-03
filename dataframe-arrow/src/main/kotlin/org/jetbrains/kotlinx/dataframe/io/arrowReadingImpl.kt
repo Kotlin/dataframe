@@ -69,6 +69,9 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.math.BigDecimal
@@ -222,11 +225,6 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
-    range.map {
-        getObject(it)
-    }
-
 private fun NullVector.values(range: IntRange): List<Nothing?> =
     range.map {
         getObject(it) as Nothing?
@@ -311,6 +309,58 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
+/**
+ * Propagates an Arrow struct's parent-level null into its child columns, returning a copy of this column with the
+ * cells marked `true` in [isNull] set to `null`. A [ColumnGroup] has no per-row null mask ("a column group is never
+ * null, instead, make the columns inside nullable"), so the parent-null has nowhere to live on the group itself and
+ * must be pushed down onto the leaves.
+ *
+ * Two representation constraints shape the result:
+ * - a [FrameColumn] cannot hold `null`, so a null row becomes an empty [DataFrame] carrying the column's original
+ *   schema — the nested list genuinely does not exist for that row, yet its columns stay typed;
+ * - the null is structurally mandated by the parent, so value cells are nulled without re-running [applyNullability],
+ *   which would otherwise reject a structurally-required null under [NullabilityOptions.Checking].
+ *
+ * Callers invoke this only when [isNull] contains at least one `true`.
+ */
+private fun AnyBaseCol.injectNullsAt(isNull: BooleanArray): AnyBaseCol =
+    when (kind()) {
+        ColumnKind.Group ->
+            DataColumn.createColumnGroup(
+                name = name(),
+                df = (this as ColumnGroup<*>).columns().map { it.injectNullsAt(isNull) }.toDataFrame(),
+            )
+
+        ColumnKind.Frame -> {
+            val frameColumn = this as FrameColumn<*>
+            val emptyFrame = DataFrame.empty(frameColumn.schema.value)
+            DataColumn.createFrameColumn(
+                name = name(),
+                groups = frameColumn.toList().mapIndexed { i, frame -> if (isNull[i]) emptyFrame else frame },
+                schema = frameColumn.schema,
+            )
+        }
+
+        ColumnKind.Value ->
+            DataColumn.createValueColumn(
+                name = name(),
+                values = toList().mapIndexed { i, value -> if (isNull[i]) null else value },
+                type = type().withNullability(true),
+                infer = Infer.None,
+            )
+    }
+
+/**
+ * The struct's own per-row null mask over [range] — Arrow keeps a struct validity buffer independent of its
+ * child vectors — or `null` when this slice has no null-parent rows, so required groups are read as before.
+ */
+private fun StructVector.nullMaskOrNull(range: IntRange): BooleanArray? =
+    if (nullCount > 0) {
+        BooleanArray(range.count()) { isNull(range.first + it) }.takeIf { mask -> mask.any { it } }
+    } else {
+        null
+    }
+
 private fun readField(
     vector: FieldVector,
     field: Field,
@@ -319,8 +369,17 @@ private fun readField(
 ): AnyBaseCol {
     try {
         if (vector is StructVector) {
+            // An Arrow struct carries its own validity buffer, independent of the child vectors. Under a
+            // null-parent slot the physical child values are unspecified (zeros, or leaked from other rows),
+            // so reading them as-is produces phantom data; injectNullsAt pushes the parent-null down onto the
+            // children instead. When the struct has null rows we also read its children with Widening: their
+            // physically-null cells at those rows are about to be nulled anyway and must not trip
+            // NullabilityOptions.Checking. Required groups (no struct-level nulls) are read exactly as before.
+            val nullMask = vector.nullMaskOrNull(range)
+            val childNullability = if (nullMask != null) NullabilityOptions.Widening else nullability
             val columns = field.children.map { childField ->
-                readField(vector.getChild(childField.name), childField, nullability, range)
+                val child = readField(vector.getChild(childField.name), childField, childNullability, range)
+                if (nullMask != null) child.injectNullsAt(nullMask) else child
             }
             return DataColumn.createColumnGroup(field.name, columns.toDataFrame())
         }
@@ -412,6 +471,8 @@ private fun readListVector(
     val dataVector = accessor.dataVector
     return if (dataVector is StructVector) {
         val structField = field.children.single()
+        // A struct *element* can itself be null inside the list; like the top-level struct path we honor
+        // its own validity buffer so null elements don't materialize phantom child values.
         val frames = range.map { i ->
             val start = accessor.getElementStartIndex(i)
             val end = accessor.getElementEndIndex(i)
@@ -423,7 +484,9 @@ private fun readListVector(
                     start until end,
                 )
             }
-            columns.toDataFrame()
+            val nullMask = dataVector.nullMaskOrNull(start until end)
+            val elementColumns = if (nullMask != null) columns.map { it.injectNullsAt(nullMask) } else columns
+            elementColumns.toDataFrame()
         }
         DataColumn.createFrameColumn(field.name, frames)
     } else {
@@ -490,7 +553,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
     readField(root.getVector(field), field, nullability)
 
 /**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowIPCImpl(
     channel: ReadableByteChannel,
@@ -499,7 +562,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
 ): AnyFrame = readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
+ * Read [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
 internal fun DataFrame.Companion.readArrowFeatherImpl(
     channel: SeekableByteChannel,
@@ -508,7 +571,7 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
 ): AnyFrame = readArrowImpl(ArrowFileReader(channel, allocator), nullability)
 
 /**
- * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
+ * Read [Arrow any format](https://arrow.apache.org/java/current/ipc.html#reading-writing-ipc-formats) data from existing [reader]
  */
 internal fun DataFrame.Companion.readArrowImpl(
     reader: ArrowReader,

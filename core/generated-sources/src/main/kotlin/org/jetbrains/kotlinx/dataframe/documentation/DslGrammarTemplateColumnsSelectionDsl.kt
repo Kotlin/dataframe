@@ -22,7 +22,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -35,7 +35,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,12 +47,12 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      *
      *
@@ -61,12 +61,12 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>Column Group (reference)</code>][DslGrammarTemplate.ColumnGroupDef]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *
      *
@@ -84,80 +84,80 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region Definitions for at the top of the template
 
         /**
-         * `columnGroupReference: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroupReference: `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupNoSingleColumnDef = Nothing
 
-        /** `colSelector: `[`ColumnSelector`][ColumnSelector] */
+        /** `colSelector: `[<code>`ColumnSelector`</code>][ColumnSelector] */
         public typealias ColumnSelectorDef = Nothing
 
-        /** `colsSelector: `[`ColumnsSelector`][ColumnsSelector] */
+        /** `colsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector] */
         public typealias ColumnsSelectorDef = Nothing
 
         /**
-         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `column: `[<code>`ColumnAccessor`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnDef = Nothing
 
         /**
-         * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public typealias ColumnGroupDef = Nothing
 
-        /** `columnNoAccessor: `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
+        /** `columnNoAccessor: `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
         public typealias ColumnNoAccessorDef = Nothing
 
-        /** `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef] */
+        /** `columnOrSet: `[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef] */
         public typealias ColumnOrColumnSetDef = Nothing
 
-        /** `columnSet: `[`ColumnSet`][ColumnSet]`<*>` */
+        /** `columnSet: `[<code>`ColumnSet`</code>][ColumnSet]`<*>` */
         public typealias ColumnSetDef = Nothing
 
-        /** `columnsResolver: `[`ColumnsResolver`][ColumnsResolver] */
+        /** `columnsResolver: `[<code>`ColumnsResolver`</code>][ColumnsResolver] */
         public typealias ColumnsResolverDef = Nothing
 
-        /** `condition: `[`ColumnFilter`][ColumnFilter] */
+        /** `condition: `[<code>`ColumnFilter`</code>][ColumnFilter] */
         public typealias ConditionDef = Nothing
 
-        /** `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] */
+        /** `expression: `[<code>Column Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] */
         public typealias ColumnExpressionDef = Nothing
 
-        /** `ignoreCase: `[`Boolean`][Boolean] */
+        /** `ignoreCase: `[<code>`Boolean`</code>][Boolean] */
         public typealias IgnoreCaseDef = Nothing
 
-        /** `index: `[`Int`][Int] */
+        /** `index: `[<code>`Int`</code>][Int] */
         public typealias IndexDef = Nothing
 
-        /** `indexRange: `[`IntRange`][IntRange] */
+        /** `indexRange: `[<code>`IntRange`</code>][IntRange] */
         public typealias IndexRangeDef = Nothing
 
-        /** `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer] */
+        /** `infer: `[<code>`Infer`</code>][org.jetbrains.kotlinx.dataframe.api.Infer] */
         public typealias InferDef = Nothing
 
-        /** `kind: `[`ColumnKind`][ColumnKind] */
+        /** `kind: `[<code>`ColumnKind`</code>][ColumnKind] */
         public typealias ColumnKindDef = Nothing
 
-        /** `kType: `[`KType`][kotlin.reflect.KType] */
+        /** `kType: `[<code>`KType`</code>][kotlin.reflect.KType] */
         public typealias KTypeDef = Nothing
 
-        /** `name: `[`String`][String] */
+        /** `name: `[<code>`String`</code>][String] */
         public typealias NameDef = Nothing
 
-        /** `number: `[`Int`][Int] */
+        /** `number: `[<code>`Int`</code>][Int] */
         public typealias NumberDef = Nothing
 
-        /** `regex: `[`Regex`][Regex] */
+        /** `regex: `[<code>`Regex`</code>][Regex] */
         public typealias RegexDef = Nothing
 
         /**
-         * `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
+         * `singleColumn: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
          */
         public typealias SingleColumnDef = Nothing
 
         /** `T: Column type` */
         public typealias ColumnTypeDef = Nothing
 
-        /** `text: `[`String`][String] */
+        /** `text: `[<code>`String`</code>][String] */
         public typealias TextDef = Nothing
         // endregion
 

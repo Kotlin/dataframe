@@ -7,18 +7,18 @@ import kotlin.reflect.KType
  *
  * The suggestion can either be:
  *
- * - [Infer] - The library will try to infer the type by checking all the values.
- * - [InferWithUpperbound] - The library will infer the type by checking all the values taking a given upper bound into account.
- * - [Use] - The library will use the specified type without inference.
+ * - [<code>Infer</code>][Infer] - The library will try to infer the type by checking all the values.
+ * - [<code>InferWithUpperbound</code>][InferWithUpperbound] - The library will infer the type by checking all the values taking a given upper bound into account.
+ * - [<code>Use</code>][Use] - The library will use the specified type without inference.
  *
- * It can be either an [exact type][Use] or an [upper bound][InferWithUpperbound] of possible types
+ * It can be either an [<code>exact type</code>][Use] or an [<code>upper bound</code>][InferWithUpperbound] of possible types
  * after which the library will infer the exact type.
  */
 public sealed interface TypeSuggestion {
 
     public companion object {
 
-        /** Creates a new [TypeSuggestion] instance based on the given parameters. */
+        /** Creates a new [<code>TypeSuggestion</code>][TypeSuggestion] instance based on the given parameters. */
         public fun create(suggestedType: KType?, guessType: Boolean): TypeSuggestion =
             when {
                 suggestedType != null && guessType -> InferWithUpperbound(suggestedType)

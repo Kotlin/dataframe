@@ -12,9 +12,9 @@ import kotlin.reflect.typeOf
 // region ColumnsSelectionDsl
 
 /**
- * ## Expr [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## Expr [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface ExprColumnsSelectionDsl {
 
@@ -24,33 +24,33 @@ public interface ExprColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `name: `[`String`][String]
+     *  `name: `[<code>`String`</code>][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer]
+     *  `infer: `[<code>`Infer`</code>][org.jetbrains.kotlinx.dataframe.api.Infer]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression]
+     *  `expression: `[<code>Column Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression]
      *
      *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**`expr`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[`name`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[`infer`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`) { `**[`expression`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>**`expr`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[<code>`infer`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`) { `**[<code>`expression`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
      *
      *
      *
@@ -64,7 +64,7 @@ public interface ExprColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`expr`**][ColumnsSelectionDsl.expr] */
+        /** [<code>**`expr`**</code>][ColumnsSelectionDsl.expr] */
         public typealias PlainDslName = Nothing
     }
 }
@@ -72,22 +72,22 @@ public interface ExprColumnsSelectionDsl {
 /**
  * Creates a temporary new column by defining an expression to fill up each row.
  *
- * See [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
+ * See [<code>Column Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression] for more information.
  *
  * For more information: [See `expr` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#expr-column-expression)
  *
- * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Usage</code>][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
- * `df.`[groupBy][DataFrame.groupBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { firstName.`[`length`][String.length]` + lastName.`[`length`][String.length]`  }  `[`named`][named]` "nameLength" }`
+ * `df.`[<code>groupBy</code>][DataFrame.groupBy]`  {  `[<code>`expr`</code>][ColumnsSelectionDsl.expr]` { firstName.`[<code>`length`</code>][String.length]` + lastName.`[<code>`length`</code>][String.length]`  }  `[<code>`named`</code>][named]` "nameLength" }`
  *
- * `df.`[sortBy][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
+ * `df.`[<code>sortBy</code>][DataFrame.sortBy]`  {  `[<code>`expr`</code>][ColumnsSelectionDsl.expr]` { name.`[<code>`length`</code>][String.length]` }.`[<code>`desc`</code>][SortDsl.desc]`() }`
  *
- * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
- * @param [infer] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [DataColumn.type][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
- * Either [None][org.jetbrains.kotlinx.dataframe.api.Infer.None], [Nulls][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [Type][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [Nulls][Infer.Nulls].
- * @param [expression] An [AddExpression] to define what each new row of the temporary column should contain.
+ * @param [name] The name of the temporary column. Is empty by default ("untitled" in the DataFrame).
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
+ * @param [expression] An [<code>AddExpression</code>][AddExpression] to define what each new row of the temporary column should contain.
  */
 @Interpretable("Expr0")
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(

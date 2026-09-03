@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 /**
- * Wrapper around an [aggregator factory][AggregatorProvider] for aggregators that require a single parameter.
+ * Wrapper around an [<code>aggregator factory</code>][AggregatorProvider] for aggregators that require a single parameter.
  *
  * Aggregators are cached by their parameter value.
  * @see AggregatorOptionSwitch2
@@ -22,7 +22,7 @@ public class AggregatorOptionSwitch1<in Param1, in Value : Any, out Return : Any
     public companion object {
 
         /**
-         * Creates [AggregatorOptionSwitch1].
+         * Creates [<code>AggregatorOptionSwitch1</code>][AggregatorOptionSwitch1].
          *
          * Used like:
          * ```kt
@@ -38,7 +38,7 @@ public class AggregatorOptionSwitch1<in Param1, in Value : Any, out Return : Any
 }
 
 /**
- * Wrapper around an [aggregator factory][AggregatorProvider] for aggregators that require two parameters.
+ * Wrapper around an [<code>aggregator factory</code>][AggregatorProvider] for aggregators that require two parameters.
  *
  * Aggregators are cached by their parameter values.
  * @see AggregatorOptionSwitch1
@@ -59,7 +59,7 @@ public class AggregatorOptionSwitch2<in Param1, in Param2, in Value : Any, out R
     public companion object {
 
         /**
-         * Creates [AggregatorOptionSwitch2].
+         * Creates [<code>AggregatorOptionSwitch2</code>][AggregatorOptionSwitch2].
          *
          * Used like:
          * ```kt

@@ -22,9 +22,9 @@ import kotlin.reflect.KProperty
 // region ColumnsSelectionDsl
 
 /**
- * ## And [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
+ * ## And [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
- * See [Grammar] for all functions in this interface.
+ * See [<code>Grammar</code>][Grammar] for all functions in this interface.
  */
 public interface AndColumnsSelectionDsl {
 
@@ -34,67 +34,67 @@ public interface AndColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[<code>`ColumnSet`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnGroup: `[<code>`SingleColumn`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[<code>`DataRow`</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  |  `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[<code>`ColumnAccessor`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[<code>`String`</code>][String]`  |  `[<code>`ColumnPath`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *  [`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**` ]`
-     *
-     *  `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  `columnOrSet: `[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *  ### What can be called directly in the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  `| `[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]__`.`__[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *
+     *
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  ### What can be called on a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
+     *
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
+     *  ### What can be called on a [<code>Column Group (reference)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      *
      *
@@ -106,45 +106,45 @@ public interface AndColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`and`**][ColumnsSelectionDsl.and] */
+        /** [<code>**`and`**</code>][ColumnsSelectionDsl.and] */
         public typealias InfixName = Nothing
 
-        /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
+        /** __`.`__[<code>**`and`**</code>][ColumnsSelectionDsl.and] */
         public typealias Name = Nothing
     }
 
     /**
      * ## And Operator
-     * The [and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar]
+     * ### Check out: [<code>Grammar</code>][Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][DataFrame.groupBy]`  { "colA"  `[`and`][String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][String.and]` colB }`
      *
-     * `df.`[`select`][DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][ColumnSet.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][DataFrame.select]`  { "colC"  `[`and`][String.and]`  Type::colB  `[`and`][KProperty.and]`  "pathTo"["colC"]  `[`and`][ColumnPath.and]` colD }`
+     * `df.`[<code>`select`</code>][DataFrame.select]`  { "colC"  `[<code>`and`</code>][String.and]`  Type::colB  `[<code>`and`</code>][KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][ColumnPath.and]` colD }`
      *
      * #### Example for this overload:
      *
      *
      *
-     * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
-     *   and right side of the [and] operator.
+     * @return A [<code>ColumnSet</code>][ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][and] operator.
      */
     private interface CommonAndDocs {
 
@@ -155,36 +155,36 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code></code>` }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>`cols`</code>][ColumnsSelectionDsl.cols]`  { ... }  `[<code>`and`</code>][ColumnsResolver.and]` `<code></code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     private interface ColumnsResolverAndDocs {
 
@@ -192,139 +192,139 @@ public interface AndColumnsSelectionDsl {
     }
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>`cols`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[<code>`colsOf`</code>][SingleColumn.colsOf]`<`[<code>`Int`</code>][Int]`>()`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Interpretable("And0")
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnListImpl(this, other)
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>`cols`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[<code>`/`</code>][DataColumn.div]`  2.0  `[<code>`named`</code>][ColumnReference.named]` "half colA" }`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>`cols`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>`cols`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -336,36 +336,36 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code></code>` }`
+     * `df.`[<code>select</code>][DataFrame.select]`  { "colA"  `[<code>`and`</code>][String.and]` `<code></code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     private interface StringAndDocs {
 
@@ -373,138 +373,138 @@ public interface AndColumnsSelectionDsl {
     }
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` `<code>[<code>`colsOf`</code>][SingleColumn.colsOf]`<`[<code>`Int`</code>][Int]`>()`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` `<code>`{ colA `[<code>`/`</code>][DataColumn.div]`  2.0  `[<code>`named`</code>][ColumnReference.named]` "half colA" }`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     public infix fun <C> String.and(other: () -> ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other()
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`"colB"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` `<code>`"colB"`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`Type::colB`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` `<code>`Type::colB`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -516,36 +516,36 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code></code>` }`
+     * `df.`[<code>select</code>][DataFrame.select]`  { Type::colA  `[<code>`and`</code>][KProperty.and]` `<code></code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     private interface KPropertyAndDocs {
 
@@ -553,72 +553,72 @@ public interface AndColumnsSelectionDsl {
     }
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[<code>`and`</code>][kotlin.reflect.KProperty.and]` `<code>[<code>`colsOf`</code>][SingleColumn.colsOf]`<`[<code>`Int`</code>][Int]`>()`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[<code>`and`</code>][kotlin.reflect.KProperty.and]` `<code>`{ colA `[<code>/</code>][DataColumn.div]`  2.0  `[<code>`named`</code>][ColumnReference.named]` "half colA" }`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -626,72 +626,72 @@ public interface AndColumnsSelectionDsl {
         toColumnAccessor() and other()
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[<code>`and`</code>][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
     /** ## And Operator
-     * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
+     * The [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.
      *
-     * You can even mix and match any [Access APIs][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
+     * You can even mix and match any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]!
      *
      * For more information: [See `and` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#and)
      *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
+     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar]
      *
      * #### Examples:
      *
-     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
+     * `df.`[<code>`groupBy`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[<code>`and`</code>][kotlin.String.and]` colB }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsOf`</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[<code>`String`</code>][String]`>() `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<code>`colsAtAnyDepth`</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[<code>`in`</code>][String.contains]` it.`[<code>`name`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[<code>`select`</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[<code>`and`</code>][kotlin.String.and]`  Type::colB  `[<code>`and`</code>][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[<code>`and`</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[<code>`and`</code>][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }`
      *
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
-     *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
+     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [<code>ColumnsResolvers</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
+     *   and right side of the [<code>and</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload

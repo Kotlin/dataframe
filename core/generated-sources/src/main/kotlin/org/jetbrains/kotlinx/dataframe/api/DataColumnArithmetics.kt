@@ -63,10 +63,10 @@ import java.math.BigInteger
 // region Not
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the inverse [Boolean] values
- * of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the inverse [<code>Boolean</code>][Boolean] values
+ * of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * Each element in this [column][DataColumn] is transformed
+ * Each element in this [<code>column</code>][DataColumn] is transformed
  * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.
  *
  * For more information: [See `not` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#not)
@@ -80,13 +80,13 @@ import java.math.BigInteger
  * !df.isSuccessful
  * ```
  *
- * @return A [DataColumn] containing the negated [Boolean] values of this [column][DataColumn].
+ * @return A [<code>DataColumn</code>][DataColumn] containing the negated [<code>Boolean</code>][Boolean] values of this [<code>column</code>][DataColumn].
  */
 public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the inverse [Boolean] values
- * of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]. Each `null` value in the original [DataColumn] is preserved.
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the inverse [<code>Boolean</code>][Boolean] values
+ * of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]. Each `null` value in the original [<code>DataColumn</code>][DataColumn] is preserved.
  *
  * Non-null values are transformed using the logical `not` operation:
  * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.
@@ -102,17 +102,17 @@ public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
  * !df.isSuccessful
  * ```
  *
- * @return A [DataColumn] containing the negated [Boolean] values of this [column][DataColumn],
+ * @return A [<code>DataColumn</code>][DataColumn] containing the negated [<code>Boolean</code>][Boolean] values of this [<code>column</code>][DataColumn],
  * while preserving `null` values.
  */
 @JvmName("notBooleanNullable")
 public operator fun DataColumn<Boolean?>.not(): DataColumn<Boolean?> = map { it?.not() }
 
 /**
- * Returns a [ColumnReference] containing the inverse [Boolean] values
- * of this [ColumnReference].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing the inverse [<code>Boolean</code>][Boolean] values
+ * of this [<code>ColumnReference</code>][ColumnReference].
  *
- * Each value in this [reference][ColumnReference] is transformed
+ * Each value in this [<code>reference</code>][ColumnReference] is transformed
  * using the logical `not` operation: `true` becomes `false`, and `false` becomes `true`.
  *
  * For more information: [See `not` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#not)
@@ -126,13 +126,13 @@ public operator fun DataColumn<Boolean?>.not(): DataColumn<Boolean?> = map { it?
  * !df.isSuccessful
  * ```
  *
- * @return A [ColumnReference] containing the negated [Boolean] values of this [reference][ColumnReference].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the negated [<code>Boolean</code>][Boolean] values of this [<code>reference</code>][ColumnReference].
  */
 public operator fun ColumnReference<Boolean>.not(): ColumnReference<Boolean> = map { !it }
 
 /**
- * Returns a [ColumnReference] containing the inverse [Boolean] values
- * of this [ColumnReference]. Each `null` value in the original [ColumnReference] is preserved.
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing the inverse [<code>Boolean</code>][Boolean] values
+ * of this [<code>ColumnReference</code>][ColumnReference]. Each `null` value in the original [<code>ColumnReference</code>][ColumnReference] is preserved.
  *
  * Non-null values are transformed using the logical `not` operation:
  * `true` becomes `false`, and `false` becomes `true`. `null` values remain `null`.
@@ -148,8 +148,8 @@ public operator fun ColumnReference<Boolean>.not(): ColumnReference<Boolean> = m
  * !df.isSuccessful
  * ```
  *
- * @return A [ColumnReference] containing the negated [Boolean] values
- * of the original [reference][ColumnReference], while preserving `null` values.
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the negated [<code>Boolean</code>][Boolean] values
+ * of the original [<code>reference</code>][ColumnReference], while preserving `null` values.
  */
 @JvmName("notBooleanNullable")
 public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> = map { it?.not() }
@@ -159,16 +159,16 @@ public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> =
 // region ColumnPlusNumber
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -177,25 +177,25 @@ public operator fun ColumnReference<Boolean?>.not(): ColumnReference<Boolean?> =
  * df.amount + 10
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Int>.plus(value: Int): DataColumn<Int> = map { it + value }
 
 /**
- * Returns a [ColumnReference] where each element is the result of adding [value]
- * to the corresponding element of this [ColumnReference].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>ColumnReference</code>][ColumnReference].
  *
- * That is, [value] is added to each element of this [ColumnReference].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>ColumnReference</code>][ColumnReference].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][ColumnReference.minus],
- * [times][ColumnReference.times], [div][ColumnReference.div].
+ * See also [<code>minus</code>][ColumnReference.minus],
+ * [<code>times</code>][ColumnReference.times], [<code>div</code>][ColumnReference.div].
  *
  * ### Example
  * ```kotlin
@@ -204,24 +204,24 @@ public operator fun DataColumn<Int>.plus(value: Int): DataColumn<Int> = map { it
  * df.amount + 10
  * ```
  *
- * @param [value] The value to add to each element of this [ColumnReference].
+ * @param [value] The value to add to each element of this [<code>ColumnReference</code>][ColumnReference].
  *
- * @return A [ColumnReference] containing the results of adding [value]
- * to each element of this [ColumnReference].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>ColumnReference</code>][ColumnReference].
  */
 public operator fun ColumnReference<Int>.plus(value: Int): ColumnReference<Int> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  * `null` values are not changed by this operation.
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -230,25 +230,25 @@ public operator fun ColumnReference<Int>.plus(value: Int): ColumnReference<Int> 
  * df.amount + 10
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("plusIntNullable")
 public operator fun DataColumn<Int?>.plus(value: Int): DataColumn<Int?> = map { it?.plus(value) }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -257,25 +257,25 @@ public operator fun DataColumn<Int?>.plus(value: Int): DataColumn<Int?> = map { 
  * df.amount + 10.0
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("plusInt")
 public operator fun DataColumn<Int>.plus(value: Double): DataColumn<Double> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -284,25 +284,25 @@ public operator fun DataColumn<Int>.plus(value: Double): DataColumn<Double> = ma
  * df.amount + 10
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("plusDouble")
 public operator fun DataColumn<Double>.plus(value: Int): DataColumn<Double> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -311,24 +311,24 @@ public operator fun DataColumn<Double>.plus(value: Int): DataColumn<Double> = ma
  * df.amount + 10L
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Long>.plus(value: Long): DataColumn<Long> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -337,24 +337,24 @@ public operator fun DataColumn<Long>.plus(value: Long): DataColumn<Long> = map {
  * df.amount + 10.0
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Double>.plus(value: Double): DataColumn<Double> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -363,24 +363,24 @@ public operator fun DataColumn<Double>.plus(value: Double): DataColumn<Double> =
  * df.amount + BigDecimal("12.03")
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<BigDecimal>.plus(value: BigDecimal): DataColumn<BigDecimal> = map { it + value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [value]
- * to the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding [<code>value</code>][value]
+ * to the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is added to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is added to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -389,10 +389,10 @@ public operator fun DataColumn<BigDecimal>.plus(value: BigDecimal): DataColumn<B
  * val totalDisksUsage = df.diskUsage + BigInteger("12345678900")
  * ```
  *
- * @param [value] The value to add to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @param [value] The value to add to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [value]
- * to each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding [<code>value</code>][value]
+ * to each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<BigInteger> = map { it + value }
 
@@ -401,14 +401,14 @@ public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<B
 // region NumberPlusColumn
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -417,24 +417,24 @@ public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<B
  * 10 + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  */
 public operator fun Int.plus(column: DataColumn<Int>): DataColumn<Int> = column.map { this + it }
 
 /**
- * Returns a [ColumnReference] where each element is the result of adding
- * the corresponding element of [column] to this [Int].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][ColumnReference.minus],
- * [times][ColumnReference.times], [div][ColumnReference.div].
+ * See also [<code>minus</code>][ColumnReference.minus],
+ * [<code>times</code>][ColumnReference.times], [<code>div</code>][ColumnReference.div].
  *
  * ### Example
  * ```kotlin
@@ -443,24 +443,24 @@ public operator fun Int.plus(column: DataColumn<Int>): DataColumn<Int> = column.
  * 10 + df.distanceFee
  * ```
  *
- * @param [column] A [ColumnReference] containing the elements to add
- * to this [Int].
+ * @param [column] A [<code>ColumnReference</code>][ColumnReference] containing the elements to add
+ * to this [<code>Int</code>][Int].
  *
- * @return A [ColumnReference] containing the results of adding
- * the corresponding element of [column] to this [Int].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  */
 public operator fun Int.plus(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  *
- * `null` values from the original [column]
- * remain `null` values in the resulting [DataColumn].
+ * `null` values from the original [<code>column</code>][column]
+ * remain `null` values in the resulting [<code>DataColumn</code>][DataColumn].
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -469,24 +469,24 @@ public operator fun Int.plus(column: ColumnReference<Int>): ColumnReference<Int>
  * 10 + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  */
 @JvmName("plusNullable")
 public operator fun Int.plus(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.plus(this) }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Double].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Double</code>][Double].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -495,24 +495,24 @@ public operator fun Int.plus(column: DataColumn<Int?>): DataColumn<Int?> = colum
  * 10.0 + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Double].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Double</code>][Double].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Double].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Double</code>][Double].
  */
 @JvmName("doublePlus")
 public operator fun Double.plus(column: DataColumn<Int>): DataColumn<Double> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -521,24 +521,24 @@ public operator fun Double.plus(column: DataColumn<Int>): DataColumn<Double> = c
  * 10 + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Int</code>][Int].
  */
 @JvmName("intPlus")
 public operator fun Int.plus(column: DataColumn<Double>): DataColumn<Double> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Double].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Double</code>][Double].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -547,23 +547,23 @@ public operator fun Int.plus(column: DataColumn<Double>): DataColumn<Double> = c
  * 10.0 + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Double].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Double</code>][Double].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Double].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Double</code>][Double].
  */
 public operator fun Double.plus(column: DataColumn<Double>): DataColumn<Double> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [Long].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Long</code>][Long].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -572,23 +572,23 @@ public operator fun Double.plus(column: DataColumn<Double>): DataColumn<Double> 
  * 10L + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [Long].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>Long</code>][Long].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [Long].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>Long</code>][Long].
  */
 public operator fun Long.plus(column: DataColumn<Long>): DataColumn<Long> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [BigDecimal].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>BigDecimal</code>][BigDecimal].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -597,23 +597,23 @@ public operator fun Long.plus(column: DataColumn<Long>): DataColumn<Long> = colu
  * BigDecimal("12.03") + df.distanceFee
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [BigDecimal].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>BigDecimal</code>][BigDecimal].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [BigDecimal].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>BigDecimal</code>][BigDecimal].
  */
 public operator fun BigDecimal.plus(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this + it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
- * the corresponding element of [column] to this [BigInteger].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>BigInteger</code>][BigInteger].
  *
  *
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [minus][DataColumn.minus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>minus</code>][DataColumn.minus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -622,11 +622,11 @@ public operator fun BigDecimal.plus(column: DataColumn<BigDecimal>): DataColumn<
  * val diskUsage = BigInteger("12345678900") + df.fileSize
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
- * to this [BigInteger].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to add
+ * to this [<code>BigInteger</code>][BigInteger].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
- * the corresponding element of [column] to this [BigInteger].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of adding
+ * the corresponding element of [<code>column</code>][column] to this [<code>BigInteger</code>][BigInteger].
  */
 public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this + it }
 
@@ -635,15 +635,15 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
 // region ColumnPlusString
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] of [String] values
- * obtained by converting each element of this [AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol]
- * to a [String] and concatenating it with [str].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] of [<code>String</code>][String] values
+ * obtained by converting each element of this [<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol]
+ * to a [<code>String</code>][String] and concatenating it with [<code>str</code>][str].
  *
  * `null` values are converted to the string `"null"`.
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus].
  *
  * ### Example
  * ```kotlin
@@ -653,23 +653,23 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  * df.temperature + " °C"
  * ```
  *
- * @param [str] The [String] to append to each element of this [AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol].
+ * @param [str] The [<code>String</code>][String] to append to each element of this [<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] of [String] values where each element is the result
- * of concatenating the corresponding element of this [AnyCol][org.jetbrains.kotlinx.dataframe.AnyCol] with [str].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] of [<code>String</code>][String] values where each element is the result
+ * of concatenating the corresponding element of this [<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol] with [<code>str</code>][str].
  */
 public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toString() + str }
 
 /**
- * Returns a [ColumnReference] of [String] values
- * obtained by converting each element of this [ColumnReference]
- * to a [String] and concatenating it with [str].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] of [<code>String</code>][String] values
+ * obtained by converting each element of this [<code>ColumnReference</code>][ColumnReference]
+ * to a [<code>String</code>][String] and concatenating it with [<code>str</code>][str].
  *
  * `null` values are converted to the string `"null"`.
  *
  * For more information: [See `plus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#plus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus].
  *
  * ### Example
  * ```kotlin
@@ -679,10 +679,10 @@ public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toSt
  * df.temperature + " °C"
  * ```
  *
- * @param [str] The [String] to append to each element of this [ColumnReference].
+ * @param [str] The [<code>String</code>][String] to append to each element of this [<code>ColumnReference</code>][ColumnReference].
  *
- * @return A [ColumnReference] of [String] values where each element is the result
- * of concatenating the corresponding element of this [ColumnReference] with [str].
+ * @return A [<code>ColumnReference</code>][ColumnReference] of [<code>String</code>][String] values where each element is the result
+ * of concatenating the corresponding element of this [<code>ColumnReference</code>][ColumnReference] with [<code>str</code>][str].
  */
 public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<String> = map { it.toString() + str }
 
@@ -691,16 +691,16 @@ public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<Str
 // region ColumnMinusNumber
 
 /**
- * Returns a [DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn].
+ * Returns a [<code>DataColumn</code>][DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>plus</code>][DataColumn.plus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -709,8 +709,8 @@ public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<Str
  * df.amount - 10
  * ```
  *
- * @return A [DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn].
+ * @return A [<code>DataColumn</code>][DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][DataColumn].
  */
 private interface ColumnMinusNumberDocs {
     // the type of the column accepted and returned by the function
@@ -730,16 +730,16 @@ private interface ColumnMinusNumberDocs {
 }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -748,23 +748,23 @@ private interface ColumnMinusNumberDocs {
  * df.amount - 10
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Int>.minus(value: Int): DataColumn<Int> = map { it - value }
 
 /**
- * Returns a [ColumnReference] where each element is the result of subtracting [value]
- * from the corresponding element of this [ColumnReference].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>ColumnReference</code>][ColumnReference].
  *
- * That is, [value] is subtracted from each element of the [ColumnReference].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>ColumnReference</code>][ColumnReference].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][ColumnReference.plus],
- * [times][ColumnReference.times], [div][ColumnReference.div].
+ * See also [<code>plus</code>][ColumnReference.plus],
+ * [<code>times</code>][ColumnReference.times], [<code>div</code>][ColumnReference.div].
  *
  * ### Example
  * ```kotlin
@@ -773,22 +773,22 @@ public operator fun DataColumn<Int>.minus(value: Int): DataColumn<Int> = map { i
  * df.amount - 10
  * ```
  *
- * @return A [ColumnReference] containing the results of subtracting [value]
- * from each element of this [ColumnReference].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>ColumnReference</code>][ColumnReference].
  */
 public operator fun ColumnReference<Int>.minus(value: Int): ColumnReference<Int> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  * `null` values are not changed by this operation.
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -797,23 +797,23 @@ public operator fun ColumnReference<Int>.minus(value: Int): ColumnReference<Int>
  * df.amount - 10
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("minusIntNullable")
 public operator fun DataColumn<Int?>.minus(value: Int): DataColumn<Int?> = map { it?.minus(value) }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -822,23 +822,23 @@ public operator fun DataColumn<Int?>.minus(value: Int): DataColumn<Int?> = map {
  * df.amount - 10.0
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("minusInt")
 public operator fun DataColumn<Int>.minus(value: Double): DataColumn<Double> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -847,23 +847,23 @@ public operator fun DataColumn<Int>.minus(value: Double): DataColumn<Double> = m
  * df.amount - 10
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("minusDouble")
 public operator fun DataColumn<Double>.minus(value: Int): DataColumn<Double> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -872,22 +872,22 @@ public operator fun DataColumn<Double>.minus(value: Int): DataColumn<Double> = m
  * df.amount - 10.0
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Double>.minus(value: Double): DataColumn<Double> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -896,22 +896,22 @@ public operator fun DataColumn<Double>.minus(value: Double): DataColumn<Double> 
  * df.amount - 10L
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Long>.minus(value: Long): DataColumn<Long> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -920,22 +920,22 @@ public operator fun DataColumn<Long>.minus(value: Long): DataColumn<Long> = map 
  * df.amount - BigDecimal("12.03")
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<BigDecimal>.minus(value: BigDecimal): DataColumn<BigDecimal> = map { it - value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [value]
- * from the corresponding element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
+ * from the corresponding element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * That is, [value] is subtracted from each element of the [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -944,8 +944,8 @@ public operator fun DataColumn<BigDecimal>.minus(value: BigDecimal): DataColumn<
  * val totalDisksUsage = df.diskUsage - BigInteger("12345678900")
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [value]
- * from each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of subtracting [<code>value</code>][value]
+ * from each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<BigInteger> = map { it - value }
 
@@ -954,14 +954,14 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
 // region NumberMinusColumn
 
 /**
- * Returns a [DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Int].
+ * Returns a [<code>DataColumn</code>][DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][DataColumn.plus], [times][DataColumn.times], [div][DataColumn.div].
+ * See also [<code>plus</code>][DataColumn.plus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -970,11 +970,11 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
  * val remainingBudget = 1000 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn] containing the elements to subtract
- * from this [Int].
+ * @param [column] A [<code>DataColumn</code>][DataColumn] containing the elements to subtract
+ * from this [<code>Int</code>][Int].
  *
- * @return A [DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Int].
+ * @return A [<code>DataColumn</code>][DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  */
 private interface NumberMinusColumnDocs {
     // the type of the column passed to the function and returned by the function
@@ -997,14 +997,14 @@ private interface NumberMinusColumnDocs {
 }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1013,23 +1013,23 @@ private interface NumberMinusColumnDocs {
  * val remainingBudget = 1000 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  */
 public operator fun Int.minus(column: DataColumn<Int>): DataColumn<Int> = column.map { this - it }
 
 /**
- * Returns a [ColumnReference] where each element is the result of subtracting
- * the corresponding element of [column] from this [Int].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][ColumnReference.plus], [times][ColumnReference.times], [div][ColumnReference.div].
+ * See also [<code>plus</code>][ColumnReference.plus], [<code>times</code>][ColumnReference.times], [<code>div</code>][ColumnReference.div].
  *
  * ### Example
  * ```kotlin
@@ -1038,23 +1038,23 @@ public operator fun Int.minus(column: DataColumn<Int>): DataColumn<Int> = column
  * val remainingBudget = 1000 - df.expenses
  * ```
  *
- * @param [column] A [ColumnReference] containing the elements to subtract
- * from this [Int].
+ * @param [column] A [<code>ColumnReference</code>][ColumnReference] containing the elements to subtract
+ * from this [<code>Int</code>][Int].
  *
- * @return A [ColumnReference] containing the results
- * of subtracting the corresponding element of [column] from this [Int].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  */
 public operator fun Int.minus(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  *
- * `null` values from the original [column] remain `null` values in the resulting [DataColumn].
+ * `null` values from the original [<code>column</code>][column] remain `null` values in the resulting [<code>DataColumn</code>][DataColumn].
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1063,24 +1063,24 @@ public operator fun Int.minus(column: ColumnReference<Int>): ColumnReference<Int
  * val remainingBudget = 1000 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  */
 @JvmName("minusNullable")
 public operator fun Int.minus(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.let { this - it } }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Double].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Double</code>][Double].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1089,24 +1089,24 @@ public operator fun Int.minus(column: DataColumn<Int?>): DataColumn<Int?> = colu
  * val remainingBudget = 1000.0 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Double].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Double</code>][Double].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Double].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Double</code>][Double].
  */
 @JvmName("doubleMinus")
 public operator fun Double.minus(column: DataColumn<Int>): DataColumn<Double> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Int].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1115,24 +1115,24 @@ public operator fun Double.minus(column: DataColumn<Int>): DataColumn<Double> = 
  * val remainingBudget = 1000 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Int].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Int</code>][Int].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Int].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
  */
 @JvmName("intMinus")
 public operator fun Int.minus(column: DataColumn<Double>): DataColumn<Double> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Double].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Double</code>][Double].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1141,23 +1141,23 @@ public operator fun Int.minus(column: DataColumn<Double>): DataColumn<Double> = 
  * val remainingBudget = 1000.0 - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Double].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Double</code>][Double].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Double].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Double</code>][Double].
  */
 public operator fun Double.minus(column: DataColumn<Double>): DataColumn<Double> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [Long].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>Long</code>][Long].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1166,23 +1166,23 @@ public operator fun Double.minus(column: DataColumn<Double>): DataColumn<Double>
  * val remainingBudget = 1000L - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [Long].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>Long</code>][Long].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [Long].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Long</code>][Long].
  */
 public operator fun Long.minus(column: DataColumn<Long>): DataColumn<Long> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [BigDecimal].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>BigDecimal</code>][BigDecimal].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1191,23 +1191,23 @@ public operator fun Long.minus(column: DataColumn<Long>): DataColumn<Long> = col
  * val remainingBudget = BigDecimal("1000.00") - df.expenses
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [BigDecimal].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>BigDecimal</code>][BigDecimal].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [BigDecimal].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>BigDecimal</code>][BigDecimal].
  */
 public operator fun BigDecimal.minus(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this - it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
- * the corresponding element of [column] from this [BigInteger].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
+ * the corresponding element of [<code>column</code>][column] from this [<code>BigInteger</code>][BigInteger].
  *
  *
  *
  * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
  *
- * See also [plus][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [times][org.jetbrains.kotlinx.dataframe.DataColumn.times], [div][org.jetbrains.kotlinx.dataframe.DataColumn.div].
+ * See also [<code>plus</code>][org.jetbrains.kotlinx.dataframe.DataColumn.plus], [<code>times</code>][org.jetbrains.kotlinx.dataframe.DataColumn.times], [<code>div</code>][org.jetbrains.kotlinx.dataframe.DataColumn.div].
  *
  * ### Example
  * ```kotlin
@@ -1216,11 +1216,11 @@ public operator fun BigDecimal.minus(column: DataColumn<BigDecimal>): DataColumn
  * val diskUsage = BigInteger("12345678900") - df.fileSize
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
- * from this [BigInteger].
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements to subtract
+ * from this [<code>BigInteger</code>][BigInteger].
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of subtracting the corresponding element of [column] from this [BigInteger].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>BigInteger</code>][BigInteger].
  */
 public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this - it }
 
@@ -1229,10 +1229,10 @@ public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn
 // region UnaryMinus
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1246,16 +1246,16 @@ public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 public operator fun DataColumn<Int>.unaryMinus(): DataColumn<Int> = map { -it }
 
 /**
- * Returns a [ColumnReference] containing negatives
- * of the corresponding elements of this [ColumnReference].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing negatives
+ * of the corresponding elements of this [<code>ColumnReference</code>][ColumnReference].
  *
- * The sign of each element in this [ColumnReference] is flipped:
+ * The sign of each element in this [<code>ColumnReference</code>][ColumnReference] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1269,16 +1269,16 @@ public operator fun DataColumn<Int>.unaryMinus(): DataColumn<Int> = map { -it }
  * val expenses = -df.expenses
  * ```
  *
- * @return A [ColumnReference] containing negatives
- * of the corresponding elements of this [ColumnReference].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing negatives
+ * of the corresponding elements of this [<code>ColumnReference</code>][ColumnReference].
  */
 public operator fun ColumnReference<Int>.unaryMinus(): ColumnReference<Int> = map { -it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  * `null` values are not changed by this operation.
@@ -1292,17 +1292,17 @@ public operator fun ColumnReference<Int>.unaryMinus(): ColumnReference<Int> = ma
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("unaryMinusIntNullable")
 public operator fun DataColumn<Int?>.unaryMinus(): DataColumn<Int?> = map { it?.unaryMinus() }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1316,17 +1316,17 @@ public operator fun DataColumn<Int?>.unaryMinus(): DataColumn<Int?> = map { it?.
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("unaryMinusDouble")
 public operator fun DataColumn<Double>.unaryMinus(): DataColumn<Double> = map { -it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1340,17 +1340,17 @@ public operator fun DataColumn<Double>.unaryMinus(): DataColumn<Double> = map { 
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("unaryMinusLong")
 public operator fun DataColumn<Long>.unaryMinus(): DataColumn<Long> = map { -it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1364,17 +1364,17 @@ public operator fun DataColumn<Long>.unaryMinus(): DataColumn<Long> = map { -it 
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("unaryMinusBigDecimal")
 public operator fun DataColumn<BigDecimal>.unaryMinus(): DataColumn<BigDecimal> = map { -it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  *
- * The sign of each element in this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
+ * The sign of each element in this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is flipped:
  * positive values become negative, and negative values become positive.
  *
  *
@@ -1388,8 +1388,8 @@ public operator fun DataColumn<BigDecimal>.unaryMinus(): DataColumn<BigDecimal> 
  * val expenses = -df.expenses
  * ```
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
- * of the corresponding elements of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing negatives
+ * of the corresponding elements of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn].
  */
 @JvmName("unaryMinusBigInteger")
 public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> = map { -it }
@@ -1399,14 +1399,14 @@ public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> 
 // region Times
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1415,22 +1415,22 @@ public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> 
  * val distanceMeters = df.distanceKm * 1000
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Int>.times(value: Int): DataColumn<Int> = map { it * value }
 
 /**
- * Returns a [ColumnReference] containing the results
- * of multiplying each element of this [ColumnReference] by [value].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing the results
+ * of multiplying each element of this [<code>ColumnReference</code>][ColumnReference] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][ColumnReference.div], [plus][ColumnReference.plus], [minus][ColumnReference.minus].
+ * See also [<code>div</code>][ColumnReference.div], [<code>plus</code>][ColumnReference.plus], [<code>minus</code>][ColumnReference.minus].
  *
  * ### Example
  * ```kotlin
@@ -1439,22 +1439,22 @@ public operator fun DataColumn<Int>.times(value: Int): DataColumn<Int> = map { i
  * val distanceMeters = df.distanceKm * 1000
  * ```
  *
- * @param [value] The value to multiply each element of this [ColumnReference] by.
+ * @param [value] The value to multiply each element of this [<code>ColumnReference</code>][ColumnReference] by.
  *
- * @return A [ColumnReference] containing the results
- * of multiplying each element of this [ColumnReference] by [value].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results
+ * of multiplying each element of this [<code>ColumnReference</code>][ColumnReference] by [<code>value</code>][value].
  */
 public operator fun ColumnReference<Int>.times(value: Int): ColumnReference<Int> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  * `null` values are not changed by this operation.
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1463,23 +1463,23 @@ public operator fun ColumnReference<Int>.times(value: Int): ColumnReference<Int>
  * val distanceMeters = df.distanceKm * 1000
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("timesIntNullable")
 public operator fun DataColumn<Int?>.times(value: Int): DataColumn<Int?> = map { it?.times(value) }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1488,23 +1488,23 @@ public operator fun DataColumn<Int?>.times(value: Int): DataColumn<Int?> = map {
  * val distanceMeters = df.distanceKm * 1000.0
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("timesInt")
 public operator fun DataColumn<Int>.times(value: Double): DataColumn<Double> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1513,23 +1513,23 @@ public operator fun DataColumn<Int>.times(value: Double): DataColumn<Double> = m
  * val distanceMeters = df.distanceKm * 1000
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("timesDouble")
 public operator fun DataColumn<Double>.times(value: Int): DataColumn<Double> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1538,22 +1538,22 @@ public operator fun DataColumn<Double>.times(value: Int): DataColumn<Double> = m
  * val distanceMeters = df.distanceKm * 1000.0
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Double>.times(value: Double): DataColumn<Double> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1562,22 +1562,22 @@ public operator fun DataColumn<Double>.times(value: Double): DataColumn<Double> 
  * val distanceMeters = df.distanceKm * 1000L
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Long>.times(value: Long): DataColumn<Long> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1585,22 +1585,22 @@ public operator fun DataColumn<Long>.times(value: Long): DataColumn<Long> = map 
  * val priceWithTax = df.price * BigDecimal("1.20")
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<BigDecimal>.times(value: BigDecimal): DataColumn<BigDecimal> = map { it * value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
  * For more information: [See `times` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#times)
  *
- * See also [div][DataColumn.div], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>div</code>][DataColumn.div], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1608,10 +1608,10 @@ public operator fun DataColumn<BigDecimal>.times(value: BigDecimal): DataColumn<
  * val totalSize = df.fileSize * BigInteger("12345")
  * ```
  *
- * @param [value] The value to multiply each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to multiply each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of multiplying each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of multiplying each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<BigInteger> = map { it * value }
 
@@ -1620,8 +1620,8 @@ public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<
 // region ColumnDivNumber
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1629,7 +1629,7 @@ public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1638,18 +1638,18 @@ public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<
  * val fullBoxes = df.itemCount / 10
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Int>.div(value: Int): DataColumn<Int> = map { it / value }
 
 /**
- * Returns a [ColumnReference] containing the results of dividing
- * each element of this [ColumnReference] by [value].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing the results of dividing
+ * each element of this [<code>ColumnReference</code>][ColumnReference] by [<code>value</code>][value].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1657,8 +1657,8 @@ public operator fun DataColumn<Int>.div(value: Int): DataColumn<Int> = map { it 
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][ColumnReference.times],
- * [plus][ColumnReference.plus], [minus][ColumnReference.minus].
+ * See also [<code>times</code>][ColumnReference.times],
+ * [<code>plus</code>][ColumnReference.plus], [<code>minus</code>][ColumnReference.minus].
  *
  * ### Example
  * ```kotlin
@@ -1667,18 +1667,18 @@ public operator fun DataColumn<Int>.div(value: Int): DataColumn<Int> = map { it 
  * val fullBoxes = df.itemCount / 10
  * ```
  *
- * @param [value] The value to divide each element of this [ColumnReference] by.
+ * @param [value] The value to divide each element of this [<code>ColumnReference</code>][ColumnReference] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [ColumnReference] containing the results of dividing
- * each element of this [ColumnReference] by [value].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results of dividing
+ * each element of this [<code>ColumnReference</code>][ColumnReference] by [<code>value</code>][value].
  */
 public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1686,7 +1686,7 @@ public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> =
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1695,19 +1695,19 @@ public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> =
  * val fullBoxes = df.itemCount / 10
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("divIntNullable")
 public operator fun DataColumn<Int?>.div(value: Int): DataColumn<Int?> = map { it?.div(value) }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
@@ -1715,7 +1715,7 @@ public operator fun DataColumn<Int?>.div(value: Int): DataColumn<Int?> = map { i
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1723,19 +1723,19 @@ public operator fun DataColumn<Int?>.div(value: Int): DataColumn<Int?> = map { i
  * val distanceKm = df.distanceMeters / 1000.0
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("divInt")
 public operator fun DataColumn<Int>.div(value: Double): DataColumn<Double> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
@@ -1743,7 +1743,7 @@ public operator fun DataColumn<Int>.div(value: Double): DataColumn<Double> = map
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1751,19 +1751,19 @@ public operator fun DataColumn<Int>.div(value: Double): DataColumn<Double> = map
  * val distancePerMinute = df.distancePerHour / 60
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 @JvmName("divDouble")
 public operator fun DataColumn<Double>.div(value: Int): DataColumn<Double> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
@@ -1771,7 +1771,7 @@ public operator fun DataColumn<Double>.div(value: Int): DataColumn<Double> = map
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1779,18 +1779,18 @@ public operator fun DataColumn<Double>.div(value: Int): DataColumn<Double> = map
  * val distanceKm = df.distanceMeters / 1000.0
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Double>.div(value: Double): DataColumn<Double> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1798,7 +1798,7 @@ public operator fun DataColumn<Double>.div(value: Double): DataColumn<Double> = 
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1807,18 +1807,18 @@ public operator fun DataColumn<Double>.div(value: Double): DataColumn<Double> = 
  * val fullBoxes = df.itemCount / 10L
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<Long>.div(value: Long): DataColumn<Long> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  *
  *
@@ -1826,7 +1826,7 @@ public operator fun DataColumn<Long>.div(value: Long): DataColumn<Long> = map { 
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1834,18 +1834,18 @@ public operator fun DataColumn<Long>.div(value: Long): DataColumn<Long> = map { 
  * val distanceKm = df.distanceMiles / BigDecimal("0.62137")
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<BigDecimal> = map { it / value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1853,7 +1853,7 @@ public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<Bi
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1862,12 +1862,12 @@ public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<Bi
  * val batches = df.itemCount / BigInteger("1000")
  * ```
  *
- * @param [value] The value to divide each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by.
+ * @param [value] The value to divide each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by.
  *
- * @throws [ArithmeticException] if [value] is equal to zero.
+ * @throws [ArithmeticException] if [<code>value</code>][value] is equal to zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] by [value].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] by [<code>value</code>][value].
  */
 public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<BigInteger> = map { it / value }
 
@@ -1876,8 +1876,8 @@ public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<Bi
 // region NumberDivColumn
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Int] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1885,7 +1885,7 @@ public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<Bi
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1894,19 +1894,19 @@ public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<Bi
  * val tasksPerWeek = 40 / df.estimatedHours
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Int] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Int</code>][Int] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Int] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  */
 public operator fun Int.div(column: DataColumn<Int>): DataColumn<Int> = column.map { this / it }
 
 /**
- * Returns a [ColumnReference] containing the results of dividing
- * this [Int] by each element of [column].
+ * Returns a [<code>ColumnReference</code>][ColumnReference] containing the results of dividing
+ * this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -1914,8 +1914,8 @@ public operator fun Int.div(column: DataColumn<Int>): DataColumn<Int> = column.m
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][ColumnReference.times],
- * [plus][ColumnReference.plus], [minus][ColumnReference.minus].
+ * See also [<code>times</code>][ColumnReference.times],
+ * [<code>plus</code>][ColumnReference.plus], [<code>minus</code>][ColumnReference.minus].
  *
  * ### Example
  * ```kotlin
@@ -1924,28 +1924,28 @@ public operator fun Int.div(column: DataColumn<Int>): DataColumn<Int> = column.m
  * val tasksPerWeek = 40 / df.estimatedHours
  * ```
  *
- * @param [column] A [ColumnReference] containing the elements
- * to divide this [Int] by.
+ * @param [column] A [<code>ColumnReference</code>][ColumnReference] containing the elements
+ * to divide this [<code>Int</code>][Int] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [ColumnReference] containing the results
- * of dividing this [Int] by each element of [column].
+ * @return A [<code>ColumnReference</code>][ColumnReference] containing the results
+ * of dividing this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  */
 public operator fun Int.div(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Int] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
- * If an element of [column] is `null`,
- * the corresponding value in the resulting [DataColumn] is also `null`.
+ * If an element of [<code>column</code>][column] is `null`,
+ * the corresponding value in the resulting [<code>DataColumn</code>][DataColumn] is also `null`.
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1954,20 +1954,20 @@ public operator fun Int.div(column: ColumnReference<Int>): ColumnReference<Int> 
  * val tasksPerWeek = 40 / df.estimatedHours
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Int] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Int</code>][Int] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Int] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  */
 @JvmName("divNullable")
 public operator fun Int.div(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.let { this / it } }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Double] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Double</code>][Double] by each element of [<code>column</code>][column].
  *
  *
  *
@@ -1975,7 +1975,7 @@ public operator fun Int.div(column: DataColumn<Int?>): DataColumn<Int?> = column
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -1984,20 +1984,20 @@ public operator fun Int.div(column: DataColumn<Int?>): DataColumn<Int?> = column
  * val costPerCustomer = 1000.0 / df.acquiredCustomers
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Double] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Double</code>][Double] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Double] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Double</code>][Double] by each element of [<code>column</code>][column].
  */
 @JvmName("doubleDiv")
 public operator fun Double.div(column: DataColumn<Int>): DataColumn<Double> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Int] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  *
  *
  *
@@ -2005,7 +2005,7 @@ public operator fun Double.div(column: DataColumn<Int>): DataColumn<Double> = co
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -2014,20 +2014,20 @@ public operator fun Double.div(column: DataColumn<Int>): DataColumn<Double> = co
  * val squareMeters = 500_000 / df.pricePerSquareMeter
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Int] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Int</code>][Int] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Int] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Int</code>][Int] by each element of [<code>column</code>][column].
  */
 @JvmName("intDiv")
 public operator fun Int.div(column: DataColumn<Double>): DataColumn<Double> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Double] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Double</code>][Double] by each element of [<code>column</code>][column].
  *
  *
  *
@@ -2035,7 +2035,7 @@ public operator fun Int.div(column: DataColumn<Double>): DataColumn<Double> = co
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -2044,19 +2044,19 @@ public operator fun Int.div(column: DataColumn<Double>): DataColumn<Double> = co
  * val squareMeters = 500_000.0 / df.pricePerSquareMeter
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Double] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Double</code>][Double] by.
  *
  * @throws
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Double] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Double</code>][Double] by each element of [<code>column</code>][column].
  */
 public operator fun Double.div(column: DataColumn<Double>): DataColumn<Double> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [Long] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>Long</code>][Long] by each element of [<code>column</code>][column].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -2064,7 +2064,7 @@ public operator fun Double.div(column: DataColumn<Double>): DataColumn<Double> =
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -2073,19 +2073,19 @@ public operator fun Double.div(column: DataColumn<Double>): DataColumn<Double> =
  * val fileCopies = 10_000_000_000L / df.fileSize
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [Long] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>Long</code>][Long] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [Long] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>Long</code>][Long] by each element of [<code>column</code>][column].
  */
 public operator fun Long.div(column: DataColumn<Long>): DataColumn<Long> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [BigDecimal] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>BigDecimal</code>][BigDecimal] by each element of [<code>column</code>][column].
  *
  *
  *
@@ -2093,7 +2093,7 @@ public operator fun Long.div(column: DataColumn<Long>): DataColumn<Long> = colum
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -2102,19 +2102,19 @@ public operator fun Long.div(column: DataColumn<Long>): DataColumn<Long> = colum
  * val productAmount = BigDecimal("3451.76") / df.pricePerGram
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [BigDecimal] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>BigDecimal</code>][BigDecimal] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [BigDecimal] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>BigDecimal</code>][BigDecimal] by each element of [<code>column</code>][column].
  */
 public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this / it }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
- * this [BigInteger] by each element of [column].
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results of dividing
+ * this [<code>BigInteger</code>][BigInteger] by each element of [<code>column</code>][column].
  *
  * The result of each division is truncated to an integer that is closer to zero.
  *
@@ -2122,7 +2122,7 @@ public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<B
  *
  * For more information: [See `div` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#div)
  *
- * See also [times][DataColumn.times], [plus][DataColumn.plus], [minus][DataColumn.minus].
+ * See also [<code>times</code>][DataColumn.times], [<code>plus</code>][DataColumn.plus], [<code>minus</code>][DataColumn.minus].
  *
  * ### Example
  * ```kotlin
@@ -2131,13 +2131,13 @@ public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<B
  * val fileCopies = BigInteger("10000000000") / df.fileSize
  * ```
  *
- * @param [column] A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
- * to divide this [BigInteger] by.
+ * @param [column] A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the elements
+ * to divide this [<code>BigInteger</code>][BigInteger] by.
  *
- * @throws [ArithmeticException] if [column] contains zero.
+ * @throws [ArithmeticException] if [<code>column</code>][column] contains zero.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
- * of dividing this [BigInteger] by each element of [column].
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the results
+ * of dividing this [<code>BigInteger</code>][BigInteger] by each element of [<code>column</code>][column].
  */
 public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this / it }
 
@@ -2146,12 +2146,12 @@ public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<B
 // region Compare
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [results][Boolean] of comparing each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]
- * with [value] for equality using the `==` operator.
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [<code>results</code>][Boolean] of comparing each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]
+ * with [<code>value</code>][value] for equality using the `==` operator.
  *
  * For more information: [See `Compare` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#compare)
  *
- * See also [neq][DataColumn.neq], [gt][DataColumn.gt], [lt][DataColumn.lt].
+ * See also [<code>neq</code>][DataColumn.neq], [<code>gt</code>][DataColumn.gt], [<code>lt</code>][DataColumn.lt].
  *
  * ### Example
  * ```kotlin
@@ -2160,19 +2160,19 @@ public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<B
  * val isCanceled = df.status eq "canceled"
  * ```
  *
- * @param [value] The value to compare each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with.
+ * @param [value] The value to compare each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] with.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements equal to [value], and `false` otherwise.
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements equal to [<code>value</code>][value], and `false` otherwise.
  */
 public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = map { it == value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [results][Boolean] of comparing each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]
- * with [value] for inequality using the `!=` operator.
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [<code>results</code>][Boolean] of comparing each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]
+ * with [<code>value</code>][value] for inequality using the `!=` operator.
  *
  * For more information: [See `Compare` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#compare)
  *
- * See also [eq][DataColumn.eq], [gt][DataColumn.gt], [lt][DataColumn.lt].
+ * See also [<code>eq</code>][DataColumn.eq], [<code>gt</code>][DataColumn.gt], [<code>lt</code>][DataColumn.lt].
  *
  * ### Example
  * ```kotlin
@@ -2181,19 +2181,19 @@ public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = map { it 
  * val isNotCompleted = df.status neq "completed"
  * ```
  *
- * @param [value] The value to compare each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with.
+ * @param [value] The value to compare each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] with.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements not equal to [value], and `false` otherwise.
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements not equal to [<code>value</code>][value], and `false` otherwise.
  */
 public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = map { it != value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [results][Boolean] of comparing each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]
- * with [value] using the `>` operator.
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [<code>results</code>][Boolean] of comparing each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]
+ * with [<code>value</code>][value] using the `>` operator.
  *
  * For more information: [See `Compare` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#compare)
  *
- * See also [eq][DataColumn.eq], [neq][DataColumn.neq], [lt][DataColumn.lt].
+ * See also [<code>eq</code>][DataColumn.eq], [<code>neq</code>][DataColumn.neq], [<code>lt</code>][DataColumn.lt].
  *
  * ### Example
  * ```kotlin
@@ -2202,19 +2202,19 @@ public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = map { it
  * val isExpensive = df.orderCost gt 1000
  * ```
  *
- * @param [value] The value to compare each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with.
+ * @param [value] The value to compare each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] with.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements greater than [value], and `false` otherwise.
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements greater than [<code>value</code>][value], and `false` otherwise.
  */
 public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = map { it > value }
 
 /**
- * Returns a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [results][Boolean] of comparing each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]
- * with [value] using the `<` operator.
+ * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing the [<code>results</code>][Boolean] of comparing each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn]
+ * with [<code>value</code>][value] using the `<` operator.
  *
  * For more information: [See `Compare` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#compare)
  *
- * See also [eq][DataColumn.eq], [neq][DataColumn.neq], [gt][DataColumn.gt].
+ * See also [<code>eq</code>][DataColumn.eq], [<code>neq</code>][DataColumn.neq], [<code>gt</code>][DataColumn.gt].
  *
  * ### Example
  * ```kotlin
@@ -2223,9 +2223,9 @@ public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Bool
  * val isCheap = df.orderCost lt 20
  * ```
  *
- * @param [value] The value to compare each element of this [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with.
+ * @param [value] The value to compare each element of this [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] with.
  *
- * @return A [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements less than [value], and `false` otherwise.
+ * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] containing `true` for elements less than [<code>value</code>][value], and `false` otherwise.
  */
 public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = map { it < value }
 // endregion

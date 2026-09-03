@@ -16,17 +16,17 @@ import java.util.Locale
 private val logger = KotlinLogging.logger {}
 
 /**
- * Parses a [String]/[CharSequence], [CharArray], or [ByteArray] into a [Double].
+ * Parses a [<code>String</code>][String]/[<code>CharSequence</code>][CharSequence], [<code>CharArray</code>][CharArray], or [<code>ByteArray</code>][ByteArray] into a [<code>Double</code>][Double].
  *
- * If [ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with the
+ * If [<code>ParserOptions.useFastDoubleParser</code>][ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with the
  * fast double parser library, [FastDoubleParser](https://github.com/wrandelshofer/FastDoubleParser).
- * If not, or if it fails, it will use [NumberFormat] to parse the input.
+ * If not, or if it fails, it will use [<code>NumberFormat</code>][NumberFormat] to parse the input.
  *
- * The [locale][locale] used by the double parser is defined like:
+ * The [<code>locale</code>][locale] used by the double parser is defined like:
  *
- *   [parserOptions][parserOptions]`?.`[locale][ParserOptions.locale]`  ?:  `[Parsers.locale][Parsers.locale]`  :?  `[Locale.getDefault()][Locale.getDefault]
+ *   [<code>parserOptions</code>][parserOptions]`?.`[<code>locale</code>][ParserOptions.locale]`  ?:  `[<code>Parsers.locale</code>][Parsers.locale]`  :?  `[<code>Locale.getDefault()</code>][Locale.getDefault]
  *
- * [FastDoubleParser] has a fallback mechanism; In practice, this means it can recognize symbols and notations
+ * [<code>FastDoubleParser</code>][FastDoubleParser] has a fallback mechanism; In practice, this means it can recognize symbols and notations
  * of any locale recognized by Java as long as that symbol does not conflict with the given locale.
  *
  * For example, if your locale uses ',' as decimal separator, it will NOT recognize ',' as thousands separator,
@@ -36,8 +36,8 @@ private val logger = KotlinLogging.logger {}
  * Public, so it can be used in other modules.
  *
  * @param parserOptions can be supplied to configure the parser.
- *   If `null`, the global parser options ([DataFrame.parser][DataFrame.Companion.parser]) will be used.
- *   We'll only use [ParserOptions.locale] and [ParserOptions.useFastDoubleParser].
+ *   If `null`, the global parser options ([<code>DataFrame.parser</code>][DataFrame.Companion.parser]) will be used.
+ *   We'll only use [<code>ParserOptions.locale</code>][ParserOptions.locale] and [<code>ParserOptions.useFastDoubleParser</code>][ParserOptions.useFastDoubleParser].
  */
 @Suppress("ktlint:standard:comment-wrapping")
 public class FastDoubleParser(private val parserOptions: ParserOptions? = null) {
@@ -50,8 +50,8 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     private val parser = ConfigurableDoubleParser(/* symbols = */ setupNumberFormatSymbols(), /* ignoreCase = */ true)
 
     /**
-     * Sets up the [NumberFormatSymbols] for the [ConfigurableDoubleParser] based on
-     * the [locale] with fallbacks from all other locales.
+     * Sets up the [<code>NumberFormatSymbols</code>][NumberFormatSymbols] for the [<code>ConfigurableDoubleParser</code>][ConfigurableDoubleParser] based on
+     * the [<code>locale</code>][locale] with fallbacks from all other locales.
      *
      * Fallback characters/strings are only added if they're not clashing with local characters/strings.
      */
@@ -173,8 +173,8 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     /**
      * Parses a double value from a substring of the specified byte array.
      *
-     * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
-     * else, or if that fails, it uses [parseToDoubleOrNullFallback].
+     * It uses the [<code>fast double parser</code>][ConfigurableDoubleParser] if [<code>ParserOptions.useFastDoubleParser</code>][ParserOptions.useFastDoubleParser] is enabled,
+     * else, or if that fails, it uses [<code>parseToDoubleOrNullFallback</code>][parseToDoubleOrNullFallback].
      */
     public fun parseOrNull(
         ba: ByteArray,
@@ -198,10 +198,10 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     }
 
     /**
-     * Parses a double value from the specified [CharSequence].
+     * Parses a double value from the specified [<code>CharSequence</code>][CharSequence].
      *
-     * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
-     * else, or if that fails, it uses [parseToDoubleOrNullFallback].
+     * It uses the [<code>fast double parser</code>][ConfigurableDoubleParser] if [<code>ParserOptions.useFastDoubleParser</code>][ParserOptions.useFastDoubleParser] is enabled,
+     * else, or if that fails, it uses [<code>parseToDoubleOrNullFallback</code>][parseToDoubleOrNullFallback].
      */
     public fun parseOrNull(cs: CharSequence): Double? {
         if (useFastDoubleParser) {
@@ -218,10 +218,10 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     }
 
     /**
-     * Parses a double value from the specified [CharArray].
+     * Parses a double value from the specified [<code>CharArray</code>][CharArray].
      *
-     * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
-     * else, or if that fails, it uses [parseToDoubleOrNullFallback].
+     * It uses the [<code>fast double parser</code>][ConfigurableDoubleParser] if [<code>ParserOptions.useFastDoubleParser</code>][ParserOptions.useFastDoubleParser] is enabled,
+     * else, or if that fails, it uses [<code>parseToDoubleOrNullFallback</code>][parseToDoubleOrNullFallback].
      */
     public fun parseOrNull(ca: CharArray, offset: Int = 0, length: Int = ca.size): Double? {
         if (useFastDoubleParser) {
@@ -241,7 +241,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     /**
      * Here we store all possible decimal format symbols of all locales on the system.
      * These will be used as fallbacks for the selected locale.
-     * They are only added by [withFallback] if they don't interfere with symbols already in the provided [locale]
+     * They are only added by [<code>withFallback</code>][withFallback] if they don't interfere with symbols already in the provided [<code>locale</code>][locale]
      * (so ',' is not added as grouping separator if '.' is already the locale's decimal separator).
      */
     internal companion object {

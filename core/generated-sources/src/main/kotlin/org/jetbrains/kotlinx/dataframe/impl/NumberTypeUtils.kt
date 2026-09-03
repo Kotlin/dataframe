@@ -11,10 +11,10 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
- * @param useBigNumbers Whether to include [BigDecimal] and [BigInteger] in the graph.
- *   If set to `false`, consider setting [allowLongToDoubleConversion] to `true` to have a single "most complex" number type.
- * @param allowLongToDoubleConversion Whether to allow [Long]/[ULong] -> [Double] conversion.
- *   If set to `true`, [Long] and [ULong] will be joined to [Double] in the graph.
+ * @param useBigNumbers Whether to include [<code>BigDecimal</code>][BigDecimal] and [<code>BigInteger</code>][BigInteger] in the graph.
+ *   If set to `false`, consider setting [<code>allowLongToDoubleConversion</code>][allowLongToDoubleConversion] to `true` to have a single "most complex" number type.
+ * @param allowLongToDoubleConversion Whether to allow [<code>Long</code>][Long]/[<code>ULong</code>][ULong] -> [<code>Double</code>][Double] conversion.
+ *   If set to `true`, [<code>Long</code>][Long] and [<code>ULong</code>][ULong] will be joined to [<code>Double</code>][Double] in the graph.
  */
 internal data class UnifiedNumberTypeOptions(val useBigNumbers: Boolean, val allowLongToDoubleConversion: Boolean) {
     companion object {
@@ -56,9 +56,9 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
- * by calling [DirectedAcyclicGraph.findNearestCommonVertex].
+ * by calling [<code>DirectedAcyclicGraph.findNearestCommonVertex</code>][DirectedAcyclicGraph.findNearestCommonVertex].
  *
- * @param options See [UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions]
  * @see getUnifiedNumberClassOrNull
  * @see unifiedNumberClassOrNull
  * @see UnifyingNumbers
@@ -131,9 +131,9 @@ internal fun getUnifiedNumberTypeGraph(
  * ```
  *
  * For any two numbers, we can find the nearest common ancestor in this graph
- * by calling [DirectedAcyclicGraph.findNearestCommonVertex][org.jetbrains.kotlinx.dataframe.impl.DirectedAcyclicGraph.findNearestCommonVertex].
+ * by calling [<code>DirectedAcyclicGraph.findNearestCommonVertex</code>][org.jetbrains.kotlinx.dataframe.impl.DirectedAcyclicGraph.findNearestCommonVertex].
  *
- * @param options See [UnifiedNumberTypeOptions][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
  * @see getUnifiedNumberClassOrNull
  * @see unifiedNumberClassOrNull
  * @see UnifyingNumbers */
@@ -144,15 +144,15 @@ internal fun getUnifiedNumberClassGraph(
 /**
  * Determines the nearest common numeric type, in terms of complexity, between two given classes/types.
  *
- * Unsigned types are supported too even though they are not a [Number] instance,
+ * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless two unsigned types are provided in the input, it will never be returned.
- * Meaning, a single [Number] input, the output will always be a [Number].
+ * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
  * @param first The first numeric type to compare. Can be null, in which case the second to is returned.
  * @param second The second numeric to compare. Cannot be null.
- * @param options See [UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the two input classes.
- *   If no common class is found, [IllegalStateException] is thrown.
+ *   If no common class is found, [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @see UnifyingNumbers
  */
 internal fun getUnifiedNumberTypeOrNull(
@@ -181,15 +181,15 @@ internal fun getUnifiedNumberTypeOrNull(
 
 /** Determines the nearest common numeric type, in terms of complexity, between two given classes/types.
  *
- * Unsigned types are supported too even though they are not a [Number] instance,
+ * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless two unsigned types are provided in the input, it will never be returned.
- * Meaning, a single [Number] input, the output will always be a [Number].
+ * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
  * @param first The first numeric type to compare. Can be null, in which case the second to is returned.
  * @param second The second numeric to compare. Cannot be null.
- * @param options See [UnifiedNumberTypeOptions][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the two input classes.
- *   If no common class is found, [IllegalStateException] is thrown.
+ *   If no common class is found, [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @see UnifyingNumbers */
 @Suppress("IntroduceWhenSubject")
 internal fun getUnifiedNumberClassOrNull(
@@ -204,13 +204,13 @@ internal fun getUnifiedNumberClassOrNull(
     }
 
 /**
- * Determines the nearest common numeric type, in terms of complexity, all types in [this].
+ * Determines the nearest common numeric type, in terms of complexity, all types in [<code>this</code>][this].
  *
- * Unsigned types are supported too even though they are not a [Number] instance,
+ * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless the input solely exists of unsigned numbers, it will never be returned.
- * Meaning, given a [Number] in the input, the output will always be a [Number].
+ * Meaning, given a [<code>Number</code>][Number] in the input, the output will always be a [<code>Number</code>][Number].
  *
- * @param options See [UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the input types.
  *   If no common type is found, it returns `null`.
  * @see UnifyingNumbers
@@ -222,13 +222,13 @@ internal fun Iterable<KType>.unifiedNumberTypeOrNull(
         getUnifiedNumberTypeOrNull(a, b, options) ?: return null
     }
 
-/** Determines the nearest common numeric type, in terms of complexity, all types in [this].
+/** Determines the nearest common numeric type, in terms of complexity, all types in [<code>this</code>][this].
  *
- * Unsigned types are supported too even though they are not a [Number] instance,
+ * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless the input solely exists of unsigned numbers, it will never be returned.
- * Meaning, given a [Number] in the input, the output will always be a [Number].
+ * Meaning, given a [<code>Number</code>][Number] in the input, the output will always be a [<code>Number</code>][Number].
  *
- * @param options See [UnifiedNumberTypeOptions][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
+ * @param options See [<code>UnifiedNumberTypeOptions</code>][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the input types.
  *   If no common type is found, it returns `null`.
  * @see UnifyingNumbers */
@@ -241,8 +241,8 @@ internal fun Iterable<KClass<*>>.unifiedNumberClassOrNull(
 
 /**
  * Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
- * The common numeric type is determined using the provided [commonNumberType] parameter
- * or calculated with [Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
+ * The common numeric type is determined using the provided [<code>commonNumberType</code>][commonNumberType] parameter
+ * or calculated with [<code>Iterable.unifiedNumberTypeOrNull</code>][Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
@@ -270,8 +270,8 @@ internal fun Iterable<Number?>.convertToUnifiedNumberType(
 }
 
 /** Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
- * The common numeric type is determined using the provided [commonNumberType] parameter
- * or calculated with [Iterable.unifiedNumberTypeOrNull][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
+ * The common numeric type is determined using the provided [<code>commonNumberType</code>][commonNumberType] parameter
+ * or calculated with [<code>Iterable.unifiedNumberTypeOrNull</code>][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
@@ -288,8 +288,8 @@ internal fun Iterable<Number>.convertToUnifiedNumberType(
         .convertToUnifiedNumberType(options, commonNumberType) as Iterable<Number>
 
 /** Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
- * The common numeric type is determined using the provided [commonNumberType] parameter
- * or calculated with [Iterable.unifiedNumberTypeOrNull][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
+ * The common numeric type is determined using the provided [<code>commonNumberType</code>][commonNumberType] parameter
+ * or calculated with [<code>Iterable.unifiedNumberTypeOrNull</code>][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
@@ -330,8 +330,8 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
 }
 
 /** Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
- * The common numeric type is determined using the provided [commonNumberType] parameter
- * or calculated with [Iterable.unifiedNumberTypeOrNull][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
+ * The common numeric type is determined using the provided [<code>commonNumberType</code>][commonNumberType] parameter
+ * or calculated with [<code>Iterable.unifiedNumberTypeOrNull</code>][kotlin.collections.Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
@@ -364,14 +364,14 @@ internal fun KType.isMixedNumber(): Boolean = this == typeOf<Number>() || this =
 
 /**
  * Returns `true` when this type is one of the following (nullable) types:
- * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ * [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], or [<code>Double</code>][Double].
  */
 @PublishedApi
 internal fun KType.isPrimitiveNumber(): Boolean = this.withNullability(false) in primitiveNumberTypes
 
 /**
  * Returns `true` when this type is one of the following (nullable) types:
- * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ * [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], [<code>Double</code>][Double], or [<code>Number</code>][Number].
  *
  * Careful: Will return `true` for `Number`.
  * This type may arise as a supertype from multiple non-primitive number types.

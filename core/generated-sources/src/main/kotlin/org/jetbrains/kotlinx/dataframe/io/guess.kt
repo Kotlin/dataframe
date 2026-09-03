@@ -60,9 +60,9 @@ public sealed interface SupportedFormatSample {
  * the `SupportedDataFrameFormat` system is deprecated and will be removed in version 1.0.
  *
  * Implement this interface to provide additional supported formats for DataFrames (such as JSON, XML, CSV, etc.).
- * A [SupportedDataFrameFormat] is read directly to a DataFrame. If specified using
- * [ImportDataSchema] or using the Gradle plugin, the read DataFrame will be used to
- * generate [DataSchema] interfaces.
+ * A [<code>SupportedDataFrameFormat</code>][SupportedDataFrameFormat] is read directly to a DataFrame. If specified using
+ * [<code>ImportDataSchema</code>][ImportDataSchema] or using the Gradle plugin, the read DataFrame will be used to
+ * generate [<code>DataSchema</code>][DataSchema] interfaces.
  */
 @Deprecated(message = SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
 public interface SupportedDataFrameFormat : SupportedFormat {
@@ -80,11 +80,11 @@ public interface SupportedDataFrameFormat : SupportedFormat {
 }
 
 /**
- * Implement this interface to provide additional [DataSchema] interface generation formats for DataFrames (such as OpenAPI).
- * Note, this doesn't add functionality to [DataFrame.Companion.read], just [ImportDataSchema] and Gradle plugin.
+ * Implement this interface to provide additional [<code>DataSchema</code>][DataSchema] interface generation formats for DataFrames (such as OpenAPI).
+ * Note, this doesn't add functionality to [<code>DataFrame.Companion.read</code>][DataFrame.Companion.read], just [<code>ImportDataSchema</code>][ImportDataSchema] and Gradle plugin.
  *
- * Return type will be a [Code] which contains a generated `interface` with the given name containing generated
- * [DataSchema] interfaces and `enum`s, with `typealias`es (and optional extension functions in some integration)
+ * Return type will be a [<code>Code</code>][Code] which contains a generated `interface` with the given name containing generated
+ * [<code>DataSchema</code>][DataSchema] interfaces and `enum`s, with `typealias`es (and optional extension functions in some integration)
  * outside the interface.
  */
 public interface SupportedCodeGenerationFormat : SupportedFormat {

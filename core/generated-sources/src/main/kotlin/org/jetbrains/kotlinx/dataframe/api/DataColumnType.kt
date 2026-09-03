@@ -53,13 +53,13 @@ public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
- * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ * [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], or [<code>Double</code>][Double].
  */
 public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
- * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ * [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], [<code>Double</code>][Double], or [<code>Number</code>][Number].
  *
  * Careful: Will return `true` if the column contains multiple number types that
  * might NOT be primitive.
@@ -68,13 +68,13 @@ public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixe
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
-/** Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
+/** Returns `true` if [<code>this</code>][this] column is intra-comparable (mutually comparable), i.e.,
  * its values can be compared with each other and thus ordered.
  *
- * If true, operations like [`min()`][org.jetbrains.kotlinx.dataframe.DataColumn.min], [`max()`][org.jetbrains.kotlinx.dataframe.DataColumn.max], [`median()`][org.jetbrains.kotlinx.dataframe.DataColumn.median], etc.
+ * If true, operations like [<code>`min()`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.min], [<code>`max()`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.max], [<code>`median()`</code>][org.jetbrains.kotlinx.dataframe.DataColumn.median], etc.
  * will work.
  *
- * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)` */
+ * Technically, this means the values' common type `T(?)` is a subtype of [<code>Comparable</code>][Comparable]`<in T>(?)` */
 @Deprecated(
     message = IS_COMPARABLE,
     replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
@@ -83,12 +83,12 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
- * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
+ * Returns `true` if [<code>this</code>][this] column is intra-comparable (mutually comparable), i.e.,
  * its values can be compared with each other and thus ordered.
  *
- * If true, operations like [`min()`][DataColumn.min], [`max()`][DataColumn.max], [`median()`][DataColumn.median], etc.
+ * If true, operations like [<code>`min()`</code>][DataColumn.min], [<code>`max()`</code>][DataColumn.max], [<code>`median()`</code>][DataColumn.median], etc.
  * will work.
  *
- * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
+ * Technically, this means the values' common type `T(?)` is a subtype of [<code>Comparable</code>][Comparable]`<in T>(?)`
  */
 public fun AnyCol.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()

@@ -5,7 +5,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
  *
  * @property [name] the name of the column.
  * @property [sqlTypeName] the SQL data type of the column.
- * @property [jdbcType] the JDBC data type of the column produced from [java.sql.Types].
+ * @property [jdbcType] the JDBC data type of the column produced from [<code>java.sql.Types</code>][java.sql.Types].
  * @property [size] the size of the column.
  * @property [javaClassName] the class name in Java.
  * @property [isNullable] true if column could contain nulls.

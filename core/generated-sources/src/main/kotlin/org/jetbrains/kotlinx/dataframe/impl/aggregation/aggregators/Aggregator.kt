@@ -14,32 +14,32 @@ import kotlin.reflect.full.withNullability
 /**
  * This class is the main entry-point for creating an aggregator.
  *
- * Aggregators are used to compute a single value from a [Sequence] of values,
- * a single [DataColumn], or multiple [DataColumns][DataColumn].
+ * Aggregators are used to compute a single value from a [<code>Sequence</code>][Sequence] of values,
+ * a single [<code>DataColumn</code>][DataColumn], or multiple [<code>DataColumns</code>][DataColumn].
  *
- * [Aggregator] follows a dependency injection pattern:
+ * [<code>Aggregator</code>][Aggregator] follows a dependency injection pattern:
  *
- * Using the constructor or [Aggregator.invoke] function, you can create an [Aggregator] instance with a choice of:
- * - [AggregatorInputHandler] - The input handler of the aggregator,
+ * Using the constructor or [<code>Aggregator.invoke</code>][Aggregator.invoke] function, you can create an [<code>Aggregator</code>][Aggregator] instance with a choice of:
+ * - [<code>AggregatorInputHandler</code>][AggregatorInputHandler] - The input handler of the aggregator,
  * which handles type checks, conversions, and preprocessing of a single sequence of input values.
- * It can also calculate a specific [value type][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType] from the input values or input types
+ * It can also calculate a specific [<code>value type</code>][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType] from the input values or input types
  * if the (specific) type is not known.
  *
- *   Options: [NumberInputHandler], [AnyInputHandler]
+ *   Options: [<code>NumberInputHandler</code>][NumberInputHandler], [<code>AnyInputHandler</code>][AnyInputHandler]
  *
- * - [AggregatorAggregationHandler] - The base functionality of the aggregator,
- * which defines how the aggregation of a single [Sequence] or [column][org.jetbrains.kotlinx.dataframe.DataColumn] is done.
- * It also provides information on which return type will be given, as [KType], given a [value type][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType].
+ * - [<code>AggregatorAggregationHandler</code>][AggregatorAggregationHandler] - The base functionality of the aggregator,
+ * which defines how the aggregation of a single [<code>Sequence</code>][Sequence] or [<code>column</code>][org.jetbrains.kotlinx.dataframe.DataColumn] is done.
+ * It also provides information on which return type will be given, as [<code>KType</code>][KType], given a [<code>value type</code>][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType].
  * It can also provide the index of the result in the input values if it is a selecting aggregator.
  *
- *   Options: [ReducingAggregationHandler], [SelectingAggregationHandler]
+ *   Options: [<code>ReducingAggregationHandler</code>][ReducingAggregationHandler], [<code>SelectingAggregationHandler</code>][SelectingAggregationHandler]
  *
- * - [AggregatorMultipleColumnsHandler] - The multiple columns handler,
+ * - [<code>AggregatorMultipleColumnsHandler</code>][AggregatorMultipleColumnsHandler] - The multiple columns handler,
  * which specifies how to aggregate multiple columns into a single value by using the supplied
- * [AggregatorAggregationHandler][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler].
+ * [<code>AggregatorAggregationHandler</code>][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler].
  * It can also calculate the return type of the aggregation given all input column types.
  *
- *   Options: [FlatteningMultipleColumnsHandler], [TwoStepMultipleColumnsHandler], [NoMultipleColumnsHandler]
+ *   Options: [<code>FlatteningMultipleColumnsHandler</code>][FlatteningMultipleColumnsHandler], [<code>TwoStepMultipleColumnsHandler</code>][TwoStepMultipleColumnsHandler], [<code>NoMultipleColumnsHandler</code>][NoMultipleColumnsHandler]
  *
  * @param Value The non-null type of the values to be aggregated.
  *   The input can always have nulls, they are filtered out.
@@ -76,7 +76,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
     internal companion object {
 
         /**
-         * Factory function for creating an [Aggregator] instance given a name.
+         * Factory function for creating an [<code>Aggregator</code>][Aggregator] instance given a name.
          *
          * @see AggregatorProvider
          * @see Aggregator
@@ -100,8 +100,8 @@ public class Aggregator<in Value : Any, out Return : Any?>(
 }
 
 /**
- * Performs aggregation on the given [values], taking [valueType] into account.
- * If [valueType] is unknown, see [calculateValueType] or [aggregateCalculatingValueType].
+ * Performs aggregation on the given [<code>values</code>][values], taking [<code>valueType</code>][valueType] into account.
+ * If [<code>valueType</code>][valueType] is unknown, see [<code>calculateValueType</code>][calculateValueType] or [<code>aggregateCalculatingValueType</code>][aggregateCalculatingValueType].
  */
 @PublishedApi
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
@@ -110,8 +110,8 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
 ): Return = aggregateSequence(values, valueType)
 
 /**
- * Performs aggregation on the given [values], taking [valueType] into account.
- * If [valueType] is unknown, see [calculateValueType] or [aggregateCalculatingValueType].
+ * Performs aggregation on the given [<code>values</code>][values], taking [<code>valueType</code>][valueType] into account.
+ * If [<code>valueType</code>][valueType] is unknown, see [<code>calculateValueType</code>][calculateValueType] or [<code>aggregateCalculatingValueType</code>][aggregateCalculatingValueType].
  */
 @PublishedApi
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
@@ -120,14 +120,14 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
 ): Return = aggregate(values, valueType.toValueType(needsFullConversion = false))
 
 /**
- * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
- * this function can be called to calculate it by combining the set of known [valueTypes] or
- * by gathering the types from [values].
+ * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+ * this function can be called to calculate it by combining the set of known [<code>valueTypes</code>][valueTypes] or
+ * by gathering the types from [<code>values</code>][values].
  *
  * This is a helper function that calls the correct
- * [AggregatorInputHandler.calculateValueType] based on the given input.
+ * [<code>AggregatorInputHandler.calculateValueType</code>][AggregatorInputHandler.calculateValueType] based on the given input.
  *
- * Giving [valueTypes] is preferred because of efficiency, as it allows for avoiding runtime type checks.
+ * Giving [<code>valueTypes</code>][valueTypes] is preferred because of efficiency, as it allows for avoiding runtime type checks.
  */
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.calculateValueType(
     values: Sequence<Value?>,
@@ -139,11 +139,11 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.calculateVal
 }
 
 /**
- * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
- * this function can be called to calculate it by combining the set of known [valueTypes] or
- * by gathering the types from [values] and then aggregating them.
+ * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+ * this function can be called to calculate it by combining the set of known [<code>valueTypes</code>][valueTypes] or
+ * by gathering the types from [<code>values</code>][values] and then aggregating them.
  *
- * Giving [valueTypes] is preferred because of efficiency, as it allows for avoiding runtime type checks.
+ * Giving [<code>valueTypes</code>][valueTypes] is preferred because of efficiency, as it allows for avoiding runtime type checks.
  */
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregateCalculatingValueType(
     values: Sequence<Value?>,
@@ -166,15 +166,15 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(co
     aggregateMultipleColumns(columns)
 
 /**
- * Gives the index of the aggregation result in the input [values], if it applies.
- * This is used for aggregators with an [AggregatorAggregationHandler] where
- * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+ * Gives the index of the aggregation result in the input [<code>values</code>][values], if it applies.
+ * This is used for aggregators with an [<code>AggregatorAggregationHandler</code>][AggregatorAggregationHandler] where
+ * [<code>Value</code>][Value]`  ==  `[<code>Return</code>][Return], and where the result exists in the input.
  *
- * Like for [SelectingAggregationHandler].
+ * Like for [<code>SelectingAggregationHandler</code>][SelectingAggregationHandler].
  *
  * Defaults to `-1`.
  *
- * If [valueType] is unknown, see [calculateValueType]
+ * If [<code>valueType</code>][valueType] is unknown, see [<code>calculateValueType</code>][calculateValueType]
  */
 @PublishedApi
 internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.indexOfAggregationResult(
@@ -183,15 +183,15 @@ internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.ind
 ): Int = indexOfAggregationResultSingleSequence(values, valueType)
 
 /**
- * Gives the index of the aggregation result in the input [values], if it applies.
- * This is used for aggregators with an [AggregatorAggregationHandler] where
- * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+ * Gives the index of the aggregation result in the input [<code>values</code>][values], if it applies.
+ * This is used for aggregators with an [<code>AggregatorAggregationHandler</code>][AggregatorAggregationHandler] where
+ * [<code>Value</code>][Value]`  ==  `[<code>Return</code>][Return], and where the result exists in the input.
  *
- * Like for [SelectingAggregationHandler].
+ * Like for [<code>SelectingAggregationHandler</code>][SelectingAggregationHandler].
  *
  * Defaults to `-1`.
  *
- * If [valueType] is unknown, see [calculateValueType]
+ * If [<code>valueType</code>][valueType] is unknown, see [<code>calculateValueType</code>][calculateValueType]
  */
 @PublishedApi
 internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.indexOfAggregationResult(
@@ -209,34 +209,34 @@ internal fun <Value : Any, Return : Any?> Aggregator<*, *>.cast2(): Aggregator<V
     this as Aggregator<Value, Return>
 
 /**
- * Type alias for a function that gives the return type of a [Reducer] or [Selector]
+ * Type alias for a function that gives the return type of a [<code>Reducer</code>][Reducer] or [<code>Selector</code>][Selector]
  * given some input type and whether the input is empty.
  */
 internal typealias CalculateReturnType = (type: KType, emptyInput: Boolean) -> KType
 
 /**
- * Type alias for a reducer function where the type of the values is provided as [KType].
+ * Type alias for a reducer function where the type of the values is provided as [<code>KType</code>][KType].
  * Nulls have already been filtered out when this function is called.
  */
 internal typealias Reducer<Value, Return> = Sequence<Value & Any>.(valueType: KType) -> Return
 
 /**
- * Type alias for a selector function where the type of the values is provided as [KType].
+ * Type alias for a selector function where the type of the values is provided as [<code>KType</code>][KType].
  *
- * It is expected that [Value][Value]`  :  `[Return][Return]`  &  `[Any][Any], and [Return][Return]`  :  `[Any?][Any].
+ * It is expected that [<code>Value</code>][Value]`  :  `[<code>Return</code>][Return]`  &  `[<code>Any</code>][Any], and [<code>Return</code>][Return]`  :  `[<code>Any?</code>][Any].
  *
  * Nulls have already been filtered out when this function is called.
  */
 internal typealias Selector<Value, Return> = Sequence<Value & Any>.(type: KType) -> Return
 
 /**
- * Type alias for a function that returns the index of the result of [Selector] in this sequence.
+ * Type alias for a function that returns the index of the result of [<code>Selector</code>][Selector] in this sequence.
  * If the result is not in the sequence, it returns -1.
- * The type of the values is provided as [KType] and the sequence can contain nulls.
+ * The type of the values is provided as [<code>KType</code>][KType] and the sequence can contain nulls.
  */
 internal typealias IndexOfResult<Value> = Sequence<Value?>.(type: KType) -> Int
 
-/** Common case for [CalculateReturnType], preserves return type, but makes it nullable for empty inputs. */
+/** Common case for [<code>CalculateReturnType</code>][CalculateReturnType], preserves return type, but makes it nullable for empty inputs. */
 internal val preserveReturnTypeNullIfEmpty: CalculateReturnType = { type, emptyInput ->
     type.withNullability(emptyInput)
 }

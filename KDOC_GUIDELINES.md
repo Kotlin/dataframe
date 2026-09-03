@@ -21,6 +21,7 @@ This document outlines the guidelines for writing KDocs in the Kotlin DataFrame 
       * [Documentation website link](#documentation-website-link-)
       * [Columns selection information](#columns-selection-information)
       * [Examples section](#examples-section)
+      * [Data tables in examples](#data-tables-in-examples)
       * [Parameters and return section](#parameters-and-return-section)
   * [KDoc-helpers Structure](#kdoc-helpers-structure)
     * [Grammar](#grammar)
@@ -111,12 +112,17 @@ has a KDoc which describes column path creation behavior.
 The whole file is excluded from sources,
 but the KDoc is included in other KDocs.
 
+Escape parameter references inside a KDoc-snippet: `` [columns\] ``, not `[columns]` — `@param`
+lines included. Unescaped, the reference is resolved where it is written (`[columns]` in `Remove`
+becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
+resolves after processing, once the snippet sits in a function that has that parameter.
+
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
 
-More about `@set` and `@get` connventions [here](#setget-references).
+More about `@set` and `@get` conventions [here](#setget-references).
 
 ```kotlin
 /**
@@ -184,7 +190,7 @@ public fun someFunction()
 ```
 
 Naming convention for KDoc-topic — the name must fully reflect its content at the end.
-In the future, we want to have a nice topic names with backtics 
+In the future, we want to have nice topic names with backticks 
 (like `` `Access API` `` instead of `AccessApis`), but 
 [it's not possible yet due to KoDEx bug](https://github.com/Jolanrensen/KoDEx/issues/97).
 
@@ -420,12 +426,25 @@ Start the section with
 ### Examples
 ```
 
+#### Data tables in examples
+
+By default, do not put data tables in a KDoc. KDoc renders Markdown tables without borders, so show
+the call, say in one sentence what it does, and link to the operation's page on the documentation
+website.
+
+Only if the task explicitly asks for before/after tables, read
+[Data tables in KDoc examples](KDOC_DATA_TABLES.md). Otherwise skip it.
+
 #### Parameters and return section
 
 Describe parameters and return of the method using `@param` and `@return` tags. 
 Remember type parameters.
 
 Wrap parameter names into `[]` for better readability.
+This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes KoDEx emit a broken
+doc comment with a doubled `*/` terminator, which then fails
+`runKtlintFormatOverGeneratedMainSourcesSourceSet` with "Expecting a top level declaration".
+Always write `@param [T] ...`.
 
 ## KDoc-helpers Structure
 
@@ -497,6 +516,15 @@ private typealias Common~OperationName~Docs = Nothing
  */
 public fun <T, C> DataFrame<T>.operation(columns: ColumnsSelector<T, C>)
 ```
+
+Keep in mind that `@param` and `@return` have to stay at the end of a KDoc.
+So when a template already ends with them, you cannot `@include` it and then append
+overload-specific text after the include — that text would land inside the template's `@return`.
+Everything that differs between the overloads has to be passed *into* the template as a `@set`
+argument instead. That is why a template shared by several sibling overloads usually has one
+argument per varying part (receiver type, "See also" section, type parameter description, and so on),
+like
+[`CommonTakeAndDropDocs`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/CommonTakeAndDropDocs.kt).
 
 ### Grammar
 
@@ -572,7 +600,7 @@ This interface provides a template for all overloads of `allBefore`,
 
 Nested in the documentation interface, there are several other KDoc-helpers that define the expected arguments
 of the template.
-These KDoc-helpes are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs itself,
+These KDoc-helpers are named `TITLE`, `FUNCTION`, etc. and commonly have no KDocs themselves,
 just a simple comment explaining what the argument is for.
 
 Other KDoc-helpers like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set

@@ -20,26 +20,26 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     public fun depth(): Int = path.depth()
 
     /**
-     * Casts this column to a [ColumnGroup] and returns a column with the specified [accessor] or null if it
+     * Casts this column to a [<code>ColumnGroup</code>][ColumnGroup] and returns a column with the specified [<code>accessor</code>][accessor] or null if it
      * can't be found.
      */
     public fun <C> getCol(accessor: ColumnReference<C>): ColumnWithPath<C>? =
         asColumnGroup().getColumnOrNull(accessor)?.addPath(path + accessor.path())
 
     /**
-     * Casts this column to a [ColumnGroup] and returns a column with the specified [name] or null if it
+     * Casts this column to a [<code>ColumnGroup</code>][ColumnGroup] and returns a column with the specified [<code>name</code>][name] or null if it
      * can't be found.
      */
     public fun getCol(name: String): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
 
     /**
-     * Casts this column to a [ColumnGroup] and returns a column with the specified [index] or null if it
+     * Casts this column to a [<code>ColumnGroup</code>][ColumnGroup] and returns a column with the specified [<code>index</code>][index] or null if it
      * can't be found.
      */
     public fun getCol(index: Int): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
 
     /**
-     * Casts this column to a [ColumnGroup] and returns a column with the specified [accessor] or null if it
+     * Casts this column to a [<code>ColumnGroup</code>][ColumnGroup] and returns a column with the specified [<code>accessor</code>][accessor] or null if it
      * can't be found.
      */
     public fun <C> getCol(accessor: KProperty<C>): ColumnWithPath<C>? =

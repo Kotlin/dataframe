@@ -22,10 +22,10 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
- * Input handler for aggregators that can handle any (mixed) primitive [Number] type of input.
+ * Input handler for aggregators that can handle any (mixed) primitive [<code>Number</code>][Number] type of input.
  *
  * When calculating the value type,
- * it will try to find the common type in terms of [number unification][UnifyingNumbers].
+ * it will try to find the common type in terms of [<code>number unification</code>][UnifyingNumbers].
  * Preprocessing will handle the conversion of the values in the input to this unified number type.
  */
 internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Number, Return> {
@@ -33,13 +33,13 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
     /**
      * Preprocesses the input values before aggregation.
      *
-     * - If [ValueType.kType] is a primitive number type and [ValueType.needsFullConversion],
-     * then the values are converted to [ValueType.kType].
+     * - If [<code>ValueType.kType</code>][ValueType.kType] is a primitive number type and [<code>ValueType.needsFullConversion</code>][ValueType.needsFullConversion],
+     * then the values are converted to [<code>ValueType.kType</code>][ValueType.kType].
      *
-     * - If [ValueType.kType] is given as [Number]`(?)`, then we first calculate the unified type and convert to that.
+     * - If [<code>ValueType.kType</code>][ValueType.kType] is given as [<code>Number</code>][Number]`(?)`, then we first calculate the unified type and convert to that.
      * This is heavy and should be avoided if possible.
      *
-     * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
+     * @throws IllegalArgumentException if the input type is not [<code>Number</code>][Number]`(?)` or a primitive number type.
      */
     override fun preprocessAggregation(
         values: Sequence<Number?>,
@@ -94,12 +94,12 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
     }
 
     /**
-     * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
-     * this function can be called to calculate it in terms of [number unification][UnifyingNumbers]
+     * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+     * this function can be called to calculate it in terms of [<code>number unification</code>][UnifyingNumbers]
      *
-     * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
+     * @throws IllegalArgumentException if the input type is not [<code>Number</code>][Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.
-     *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
+     *   If no valid unification can be found or the input is solely [<code>Number</code>][Number]`(?)`, the type [<code>Number</code>][Number]`(?)` is returned.
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
@@ -118,14 +118,14 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
     /**
      * WARNING: HEAVY!
      *
-     * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
-     * this function can be called to calculate it in terms of [number unification][UnifyingNumbers]
-     * by getting the types of [values] at runtime.
+     * If the specific [<code>ValueType</code>][ValueType] of the input is not known, but you still want to call [<code>aggregate</code>][aggregate],
+     * this function can be called to calculate it in terms of [<code>number unification</code>][UnifyingNumbers]
+     * by getting the types of [<code>values</code>][values] at runtime.
      * This is heavy because it uses reflection on each value.
      *
-     * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
+     * @throws IllegalArgumentException if the input type is not [<code>Number</code>][Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.
-     *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
+     *   If no valid unification can be found or the input is solely [<code>Number</code>][Number]`(?)`, the type [<code>Number</code>][Number]`(?)` is returned.
      */
     override fun calculateValueType(values: Sequence<Number?>): ValueType =
         calculateValueType(values.asIterable().types().toSet())

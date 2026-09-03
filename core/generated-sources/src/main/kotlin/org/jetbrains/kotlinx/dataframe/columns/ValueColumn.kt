@@ -7,7 +7,7 @@ import kotlin.reflect.KType
 /**
  * Column that stores values.
  *
- * Can be instantiated by [DataColumn.createValueColumn].
+ * Can be instantiated by [<code>DataColumn.createValueColumn</code>][DataColumn.createValueColumn].
  *
  * @param T - type of values
  */
@@ -27,10 +27,10 @@ public interface ValueColumn<out T> : DataColumn<T> {
     public override operator fun get(range: IntRange): DataColumn<T>
 
     /**
-     * Changes column [type][BaseColumn.type].
-     * Doesn't change column [values][BaseColumn.values].
+     * Changes column [<code>type</code>][BaseColumn.type].
+     * Doesn't change column [<code>values</code>][BaseColumn.values].
      *
-     * @param type New column [type][KType].
+     * @param type New column [<code>type</code>][KType].
      */
     public fun changeType(type: KType): ValueColumn<T>
 }

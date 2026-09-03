@@ -16,9 +16,9 @@ import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_DATA_ROW_COLUMN_REFERENCE
 import kotlin.reflect.KProperty
 
 /**
- * Single row of a [DataFrame].
+ * Single row of a [<code>DataFrame</code>][DataFrame].
  *
- * @param T Schema marker. See [DataFrame] for details
+ * @param T Schema marker. See [<code>DataFrame</code>][DataFrame] for details
  */
 @HasSchema(schemaArg = 0)
 public interface DataRow<out T> {

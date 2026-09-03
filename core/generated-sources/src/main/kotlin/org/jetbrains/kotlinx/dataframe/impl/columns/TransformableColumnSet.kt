@@ -10,12 +10,12 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
 /**
  * ## Transformable ColumnSet
- * This type of [ColumnsResolver] can be [transformed][transformResolve] before being resolved.
+ * This type of [<code>ColumnsResolver</code>][ColumnsResolver] can be [<code>transformed</code>][transformResolve] before being resolved.
  *
  * This is especially useful for calls like
- * [colsInternal { }][ColumnsResolver.colsInternal].[atAnyDepthImpl()][atAnyDepthImpl],
- * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [ColumnSet][ColumnsResolver]
- * that [colsInternal { }][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
+ * [<code>colsInternal { }</code>][ColumnsResolver.colsInternal].[<code>atAnyDepthImpl()</code>][atAnyDepthImpl],
+ * where [<code>atAnyDepthImpl</code>][atAnyDepthImpl] modifies the [<code>ColumnSet</code>][ColumnsResolver]
+ * that [<code>colsInternal { }</code>][ColumnsResolver.colsInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [ColumnsResolver]
@@ -32,12 +32,12 @@ internal interface TransformableColumnSet<out C> : ColumnSet<C> {
 
 /**
  * ## Transformable SingleColumn
- * This type of [SingleColumn] can be [transformed][transformResolveSingle] before being resolved.
+ * This type of [<code>SingleColumn</code>][SingleColumn] can be [<code>transformed</code>][transformResolveSingle] before being resolved.
  *
  * This is especially useful for calls like
- * [singleInternal { }][ColumnsResolver.singleInternal].[atAnyDepthImpl()][atAnyDepthImpl],
- * where [atAnyDepthImpl][atAnyDepthImpl] modifies the [SingleColumn]
- * that [singleInternal { }][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
+ * [<code>singleInternal { }</code>][ColumnsResolver.singleInternal].[<code>atAnyDepthImpl()</code>][atAnyDepthImpl],
+ * where [<code>atAnyDepthImpl</code>][atAnyDepthImpl] modifies the [<code>SingleColumn</code>][SingleColumn]
+ * that [<code>singleInternal { }</code>][ColumnsResolver.singleInternal] operates on to include ALL columns, including those inside
  * column groups, before it's evaluated.
  *
  * @see [SingleColumn]
@@ -53,8 +53,8 @@ internal interface TransformableSingleColumn<out C> : SingleColumn<C> {
 
 /**
  * ## Columns Resolver Transformer.
- * This contains implementations for both [transform][ColumnSet.transform] and
- * [transformSingle][SingleColumn.transformSingle] and can be passed around.
+ * This contains implementations for both [<code>transform</code>][ColumnSet.transform] and
+ * [<code>transformSingle</code>][SingleColumn.transformSingle] and can be passed around.
  */
 @PublishedApi
 internal interface ColumnsResolverTransformer {

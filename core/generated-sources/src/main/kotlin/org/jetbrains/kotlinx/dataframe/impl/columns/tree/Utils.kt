@@ -32,8 +32,8 @@ internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath)
 
 /**
  * Traverses all children in the tree in depth-first order and returns the top-most nodes that satisfy
- * [yieldCondition]. This means that if a node satisfies [yieldCondition], its children are not traversed, regardless of
- * whether they satisfy [yieldCondition] or not.
+ * [<code>yieldCondition</code>][yieldCondition]. This means that if a node satisfies [<code>yieldCondition</code>][yieldCondition], its children are not traversed, regardless of
+ * whether they satisfy [<code>yieldCondition</code>][yieldCondition] or not.
  */
 internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> =
     allChildren(
@@ -60,8 +60,8 @@ internal fun <T> TreeNode<T>.topmostChildrenExcluding(excludeRoot: TreeNode<*>):
 }
 
 /**
- * Mapping function for [ReadonlyTreeNodes][ReadonlyTreeNode] (like [TreeNode])
- * which can convert the tree-structure (depth-first) to any other tree-type structure (e.g. [DataFrame]).
+ * Mapping function for [<code>ReadonlyTreeNodes</code>][ReadonlyTreeNode] (like [<code>TreeNode</code>][TreeNode])
+ * which can convert the tree-structure (depth-first) to any other tree-type structure (e.g. [<code>DataFrame</code>][DataFrame]).
  */
 @Suppress("UNCHECKED_CAST")
 internal fun <T : ReadonlyTreeNode<*>, R> T.map(operation: (node: T, children: List<R>) -> R): R {

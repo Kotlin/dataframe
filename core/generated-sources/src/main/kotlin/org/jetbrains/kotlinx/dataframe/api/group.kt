@@ -24,31 +24,31 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 /**
- * Groups the specified [columns] within the [DataFrame] into
- * [column group][ColumnGroup].
+ * Groups the specified [columns] within the [<code>DataFrame</code>][DataFrame] into
+ * [<code>column group</code>][ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
- * returns a [GroupClause],
+ * returns a [<code>GroupClause</code>][GroupClause],
  * which serves as an intermediate step.
- * The [GroupClause] allows specifying the final
+ * The [<code>GroupClause</code>][GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][GroupClause.into] and,
- * that return a new [DataFrame] with grouped columns.
- * Check out [Grammar].
+ * as [<code>into</code>][GroupClause.into] and,
+ * that return a new [<code>DataFrame</code>][DataFrame] with grouped columns.
+ * Check out [<code>Grammar</code>][Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][GroupSelectingOptions].
+ * See [<code>Selecting Columns</code>][GroupSelectingOptions].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
- * Reverse operation: [ungroup].
+ * Reverse operation: [<code>ungroup</code>][ungroup].
  *
- * It is a special case of [move] operation.
+ * It is a special case of [<code>move</code>][move] operation.
  *
- * Don't confuse this with [groupBy],
+ * Don't confuse this with [<code>groupBy</code>][groupBy],
  * which groups the dataframe by the values in the selected columns!
  */
 internal interface GroupDocs {
@@ -59,25 +59,25 @@ internal interface GroupDocs {
      *
      * ## Selecting Columns
      *
-     * Selecting columns for various [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
      * can be done in the following ways:
-     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
      *
      *
      *
      *
-     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
      *
-     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
-     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
-     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
      * This is an entity formed by calling any (combination) of the functions
      * in the DSL that is or can be resolved into one or more columns.
      *
-     * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
      * for specifying columns type- and name-safe.
      *
-     * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -85,26 +85,26 @@ internal interface GroupDocs {
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]` { length `[and][ColumnsSelectionDsl.and]` age }`
+     * <code>`df`</code>`.`[<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     * <code>`df`</code>`.`[<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
-     *
-     *
-     *
-     * > There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
-     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     * <code>`df`</code>`.`[<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
      *
      *
      *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
      *
-     * Select single or multiple columns using their names as [String]s.
-     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
      *
      * #### For example:
      *
-     * <code>`df`</code>`.`[group][org.jetbrains.kotlinx.dataframe.api.group]`("length", "age")`
+     * <code>`df`</code>`.`[<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group]`("length", "age")`
      *
      *
      *
@@ -116,68 +116,68 @@ internal interface GroupDocs {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     * [<code>(What is this notation?)</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * **[`group`][group]****`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     * **[<code>`group`</code>][group]****`  {  `**`columnsSelector: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`into`**][GroupClause.into]**`(`**`groupName: `[`String`][String]**`)`**
+     * __`.`__[<code>**`into`**</code>][GroupClause.into]**`(`**`groupName: `[<code>`String`</code>][String]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`String`][String]` }`
+     * __`.`__[<code>**`into`**</code>][GroupClause.into]` { column: `[<code>`ColumnsSelectionDsl<T>`</code>][ColumnsSelectionDsl]`.(`[<code>`ColumnWithPath<C>`</code>][ColumnWithPath]`) -> `[<code>`String`</code>][String]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`into`**][GroupClause.into]` { column: `[`ColumnsSelectionDsl<T>`][ColumnsSelectionDsl]`.(`[`ColumnWithPath<C>`][ColumnWithPath]`) -> `[`AnyColumnReference`][AnyColumnReference]` }`
+     * __`.`__[<code>**`into`**</code>][GroupClause.into]` { column: `[<code>`ColumnsSelectionDsl<T>`</code>][ColumnsSelectionDsl]`.(`[<code>`ColumnWithPath<C>`</code>][ColumnWithPath]`) -> `[<code>`AnyColumnReference`</code>][AnyColumnReference]` }`
      *
      */
     typealias Grammar = Nothing
 }
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
- * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * Groups the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
- * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],
+ * returns a [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause],
  * which serves as an intermediate step.
- * The [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
+ * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
- * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
- * Reverse operation: [ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup].
+ * Reverse operation: [<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup].
  *
- * It is a special case of [move][org.jetbrains.kotlinx.dataframe.api.move] operation.
+ * It is a special case of [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] operation.
  *
- * Don't confuse this with [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy],
+ * Don't confuse this with [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.api.groupBy],
  * which groups the dataframe by the values in the selected columns!
  * ### This Group Overload
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -187,49 +187,49 @@ internal interface GroupDocs {
  * df.group { columnA and columnB }.into("valueCols")
  * df.group { colsOf<String>() }.into { it.name.split(".").first() }
  * ```
- * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
  */
 @Interpretable("Group0")
 public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, columns)
 
 /**
- * Groups the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] into
- * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ * Groups the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] into
+ * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * This function does not immediately group the columns but instead select columns to group and
- * returns a [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause],
+ * returns a [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause],
  * which serves as an intermediate step.
- * The [GroupClause][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
+ * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
- * that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
- * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
  *
  *
- * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
+ * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.GroupSelectingOptions].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
- * Reverse operation: [ungroup][org.jetbrains.kotlinx.dataframe.api.ungroup].
+ * Reverse operation: [<code>ungroup</code>][org.jetbrains.kotlinx.dataframe.api.ungroup].
  *
- * It is a special case of [move][org.jetbrains.kotlinx.dataframe.api.move] operation.
+ * It is a special case of [<code>move</code>][org.jetbrains.kotlinx.dataframe.api.move] operation.
  *
- * Don't confuse this with [groupBy][org.jetbrains.kotlinx.dataframe.api.groupBy],
+ * Don't confuse this with [<code>groupBy</code>][org.jetbrains.kotlinx.dataframe.api.groupBy],
  * which groups the dataframe by the values in the selected columns!
  * ### This Group Overload
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  * ### Example:
  * ```kotlin
  * df.group("second").into("valueCols")
  * df.group("prop.A", "prop.B", "cnt.A", "cnt.B").into { it.name.split(".").first() }
  * ```
- * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to group.
+ * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
  */
 public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumnSet() }
 
@@ -247,19 +247,19 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
 // region GroupClause
 
 /**
- * An intermediate class used in the [group] operation.
+ * An intermediate class used in the [<code>group</code>][group] operation.
  *
  * This class itself does nothing—it is just a transitional step before specifying
  * how to group the selected columns.
  * It must be followed by one of the positioning methods
- * to produce a new [DataFrame] with the updated column structure.
+ * to produce a new [<code>DataFrame</code>][DataFrame] with the updated column structure.
  *
  * Use the following methods to finalize the move:
- * - [into(groupName)][GroupClause.into] – groups selected columns into a one column group.
- * - [into { groupNameExpression }][GroupClause.into] – groups each column into a group
+ * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a one column group.
+ * - [<code>into { groupNameExpression }</code>][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *
- * See [Grammar][GroupDocs.Grammar] for more details.
+ * See [<code>Grammar</code>][GroupDocs.Grammar] for more details.
  */
 public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "GroupClause(df=$df, columns=$columns)"
@@ -268,21 +268,21 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
 // region into
 
 /**
- * Groups columns, previously selected with [group], into new or existing column groups
- * within the [DataFrame], using an [ColumnsSelectionDsl] expression to specify the target group name for each column.
+ * Groups columns, previously selected with [<code>group</code>][group], into new or existing column groups
+ * within the [<code>DataFrame</code>][DataFrame], using an [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] expression to specify the target group name for each column.
  * The expression is applied to each selected column and determines the name of the column group
  * it will be placed into.
  *
  * If a column group with the specified name does not exist, it will be created.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * ### Example:
  * ```kotlin
@@ -290,7 +290,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
  * df.group { all() }.into { it.type().toString() }
  * ```
  *
- * @param column A [ColumnsSelector] expression that takes a column and returns the name of the [ColumnGroup]
+ * @param column A [<code>ColumnsSelector</code>][ColumnsSelector] expression that takes a column and returns the name of the [<code>ColumnGroup</code>][ColumnGroup]
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
@@ -303,32 +303,32 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
     df.move(columns).under { column(it).toColumnAccessor() }
 
 /**
- * Groups columns, previously selected with [group], into a new or existing column group
- * within the [DataFrame] by specifying its path via [ColumnsSelectionDsl] expression.
+ * Groups columns, previously selected with [<code>group</code>][group], into a new or existing column group
+ * within the [<code>DataFrame</code>][DataFrame] by specifying its path via [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] expression.
  *
  *
  *
  * If the specified path is partially or fully missing — that is, if any segment of the path
  * does not correspond to an existing column or column group — all missing parts will be created automatically.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
  *
  *
- * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  *
- * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
- * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
- * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
  * This is an entity formed by calling any (combination) of the functions
  * in the DSL that is or can be resolved into one or more columns.
  *
- * The Columns Selection DSL allows using [Extension Properties][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for specifying columns type- and name-safe.
  *
- * Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
@@ -346,7 +346,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  * df.group { colsAtAnyDepth().colsOf<String>() }.into { it.path.dropLast(2) }
  * ```
  *
- * @param column A [ColumnsSelector] expression that takes a column and returns the full path to the [ColumnGroup]
+ * @param column A [<code>ColumnsSelector</code>][ColumnsSelector] expression that takes a column and returns the full path to the [<code>ColumnGroup</code>][ColumnGroup]
  * where that column should be grouped.
  * All selected columns will be moved under the groups defined by this expression.
  */
@@ -356,19 +356,19 @@ public fun <T, C> GroupClause<T, C>.into(
 ): DataFrame<T> = df.move(columns).under(column)
 
 /**
- * Groups columns, previously selected with [group], into a new or existing column group
- * within the [DataFrame], by specifying its name.
+ * Groups columns, previously selected with [<code>group</code>][group], into a new or existing column group
+ * within the [<code>DataFrame</code>][DataFrame], by specifying its name.
  *
  * If a column group with the specified name does not exist, it will be created.
  *
- * See [Selecting Columns][SelectingColumns].
+ * See [<code>Selecting Columns</code>][SelectingColumns].
  *
  * For more information: [See `group` on the documentation website.](https://kotlin.github.io/dataframe/group.html)
  *
  *
  *
- * Select single or multiple columns using their names as [String]s.
- * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+ * Select single or multiple columns using their names as [<code>String</code>][String]s.
+ * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
  *
  * ### Examples:
  * ```kotlin
@@ -376,8 +376,8 @@ public fun <T, C> GroupClause<T, C>.into(
  * df.group { age and weight }.into("info")
  * ```
  *
- * @param [column] A [ColumnsSelector] that defines the path to a [ColumnGroup]
- * in the [DataFrame], where the selected columns will be moved.
+ * @param [column] A [<code>ColumnsSelector</code>][ColumnsSelector] that defines the path to a [<code>ColumnGroup</code>][ColumnGroup]
+ * in the [<code>DataFrame</code>][DataFrame], where the selected columns will be moved.
  */
 @Refine
 @Interpretable("Into0")

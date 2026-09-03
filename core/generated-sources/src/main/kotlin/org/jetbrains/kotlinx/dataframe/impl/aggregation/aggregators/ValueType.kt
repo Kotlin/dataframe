@@ -6,7 +6,7 @@ import kotlin.reflect.KType
  * Represents the type of values in a column as the input of an aggregator.
  *
  * @param [kType] The target type of the values.
- * @param [needsFullConversion] Whether explicit conversion to [kType] is needed
+ * @param [needsFullConversion] Whether explicit conversion to [<code>kType</code>][kType] is needed
  *   for the values to become the correct value type. If `false`, the values are already the right type,
  *   or a simple cast will suffice.
  */

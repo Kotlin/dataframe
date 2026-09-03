@@ -49,8 +49,8 @@ internal class TreeNode<T>(
     }
 
     /**
-     * Traverses the tree in depth-first order and returns all nodes that satisfy [yieldCondition].
-     * If [enterCondition] returns false for a node, its children are not traversed.
+     * Traverses the tree in depth-first order and returns all nodes that satisfy [<code>yieldCondition</code>][yieldCondition].
+     * If [<code>enterCondition</code>][enterCondition] returns false for a node, its children are not traversed.
      * By default, all nodes are traversed and all nodes are returned.
      */
     fun allChildren(

@@ -312,7 +312,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
 /**
  * Creates new [DataFrame] with given [columns].
  *
- * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitiled1", "untitled2" etc.
+ * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitled1", "untitled2" etc.
  *
  * All columns must have equal sizes.
  *
@@ -408,7 +408,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
         header
-            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .map { columnBuilder(it) named it } // create the columns and make sure to rename them to the given header
             .toDataFrame()
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =

@@ -22,28 +22,28 @@ internal object DelimParams {
     /**
      * @param path The file path to read.
      *   Use [charset] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [<code>Compression</code>][Compression].
      */
     typealias PATH_READ = Nothing
 
     /**
      * @param file The file to read.
      *   Use [charset] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [<code>Compression</code>][Compression].
      */
     typealias FILE_READ = Nothing
 
     /**
      * @param url The URL from which to fetch the data.
      *   Use [charset] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [<code>Compression</code>][Compression].
      */
     typealias URL_READ = Nothing
 
     /**
      * @param fileOrUrl The file path or URL to read the data from.
      *   Use [charset] to specify the encoding.
-     *   Can also be compressed as `.gz` or `.zip`, see [Compression][Compression].
+     *   Can also be compressed as `.gz` or `.zip`, see [<code>Compression</code>][Compression].
      */
     typealias FILE_OR_URL_READ = Nothing
 
@@ -53,7 +53,7 @@ internal object DelimParams {
      */
     typealias INPUT_STREAM_READ = Nothing
 
-    /** @param text The raw data to read in the form of a [String]. */
+    /** @param text The raw data to read in the form of a [<code>String</code>][String]. */
     typealias TEXT_READ = Nothing
 
     /** @param file The file to write to. */
@@ -62,15 +62,15 @@ internal object DelimParams {
     /** @param path The path pointing to a file to write to. */
     typealias PATH_WRITE = Nothing
 
-    /** @param writer The [Appendable] to write to. */
+    /** @param writer The [<code>Appendable</code>][Appendable] to write to. */
     typealias WRITER_WRITE = Nothing
 
     /**
-     * @param charset The [character set][java.nio.charset.Charset] the input is encoded in.
+     * @param charset The [<code>character set</code>][java.nio.charset.Charset] the input is encoded in.
      *   Default: `null`
      *
      *   If `null`, the Charset will be read from the BOM of the provided input,
-     *   defaulting to [UTF-8][Charsets.UTF_8] if no BOM is found.
+     *   defaulting to [<code>UTF-8</code>][Charsets.UTF_8] if no BOM is found.
      */
     val CHARSET: Charset? = null
 
@@ -126,19 +126,19 @@ internal object DelimParams {
 
     /**
      * @param compression The compression of the data.
-     *   Default: [Compression.None], unless detected otherwise from the input file or url.
+     *   Default: [<code>Compression.None</code>][Compression.None], unless detected otherwise from the input file or url.
      */
     val COMPRESSION: Compression<*> = Compression.None
 
     /**
-     * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
+     * @param colTypes The expected [<code>ColType</code>][ColType] per column name. Default: empty map, a.k.a. infer every column type.
      *
      *   If supplied for a certain column name (inferred from data or given by [header]),
      *   the parser will parse the column with the specified name as the specified type, else it will infer the type.
      *
-     *   e.g. `colTypes = `[mapOf][mapOf]`("colName" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`)`.
-     *   You can also set [ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.X`
-     *   to set a _default_ column type, like [ColType.String].
+     *   e.g. `colTypes = `[<code>mapOf</code>][mapOf]`("colName" `[<code>to</code>][to]` `[<code>ColType</code>][ColType]`.`[<code>Int</code>][ColType.Int]`)`.
+     *   You can also set [<code>ColType</code>][ColType]`.`[<code>DEFAULT</code>][ColType.DEFAULT]` `[<code>to</code>][to]` `[<code>ColType</code>][ColType]`.X`
+     *   to set a _default_ column type, like [<code>ColType.String</code>][ColType.String].
      */
     val COL_TYPES: Map<String, ColType> = emptyMap()
 
@@ -157,18 +157,18 @@ internal object DelimParams {
     val READ_LINES: Long? = null
 
     /**
-     * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
+     * @param parserOptions Optional [<code>parsing options</code>][ParserOptions] for columns initially read as [<code>String</code>][String].
      *   Default, `null`.
      *
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
      *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
-     *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+     *   ([<code>DataFrame.parser</code>][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
-     *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
-     *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
-     *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
+     *   - [<code>nullStrings</code>][ParserOptions.nullStrings], which, if `null`,
+     *   will take the global setting + [<code>["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]</code>][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
+     *   - [<code>skipTypes</code>][ParserOptions.skipTypes], which will always add [<code>typesDeephavenAlreadyParses</code>][typesDeephavenAlreadyParses] to
      *   the given types or the global setting.
      */
     val PARSER_OPTIONS: ParserOptions? = null
@@ -224,9 +224,9 @@ internal object DelimParams {
     const val PARSE_PARALLEL: Boolean = true
 
     /**
-     * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
+     * @param adjustCsvSpecs Optional extra [<code>CsvSpecs</code>][CsvSpecs] configuration. Default: `{ it }`.
      *
-     *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.
+     *   Before instantiating the [<code>CsvSpecs</code>][CsvSpecs], the [<code>CsvSpecs.Builder</code>][CsvSpecs.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV parsing options.
      */
     val ADJUST_CSV_SPECS: AdjustCsvSpecs = { it }
@@ -235,13 +235,13 @@ internal object DelimParams {
     const val INCLUDE_HEADER: Boolean = true
 
     /**
-     * @param quoteMode The [QuoteMode] to use when writing CSV / TSV files.
-     *   Default: [QuoteMode.MINIMAL].
+     * @param quoteMode The [<code>QuoteMode</code>][QuoteMode] to use when writing CSV / TSV files.
+     *   Default: [<code>QuoteMode.MINIMAL</code>][QuoteMode.MINIMAL].
      */
     val QUOTE_MODE: QuoteMode = QuoteMode.MINIMAL
 
     /**
-     * @param escapeChar The escape character to use when writing CSV / TSV files with [QuoteMode.NONE].
+     * @param escapeChar The escape character to use when writing CSV / TSV files with [<code>QuoteMode.NONE</code>][QuoteMode.NONE].
      *   Default: `null`. This will double-quote the value.
      */
     val ESCAPE_CHAR: Char? = null
@@ -265,9 +265,9 @@ internal object DelimParams {
     val HEADER_COMMENTS: List<String> = emptyList()
 
     /**
-     * @param adjustCsvFormat Optional extra [CSVFormat] configuration. Default: `{ it }`.
+     * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
      *
-     *   Before instantiating the [CSVFormat], the [CSVFormat.Builder] will be passed to this lambda.
+     *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV writing options.
      */
     val ADJUST_CSV_FORMAT: AdjustCSVFormat = { it }

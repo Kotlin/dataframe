@@ -19,7 +19,7 @@ private val H2_MODE_URL_PATTERN = "MODE=([^;:&]+)".toRegex(RegexOption.IGNORE_CA
  * For other databases, extracts type from URL.
  *
  * @param [connection] the database connection.
- * @return the corresponding [DbType].
+ * @return the corresponding [<code>DbType</code>][DbType].
  * @throws [IllegalStateException] if URL information is missing in connection meta-data.
  * @throws [IllegalArgumentException] if the URL specifies an unsupported database type.
  * @throws [SQLException] if the URL is null.
@@ -85,7 +85,7 @@ private fun parseH2ModeOrThrow(mode: String?): H2 {
  * Extracts the database type from the given JDBC URL.
  *
  * @param [url] the JDBC URL.
- * @return the corresponding [DbType].
+ * @return the corresponding [<code>DbType</code>][DbType].
  * @throws [SQLException] if the url is null.
  * @throws [IllegalArgumentException] if the URL specifies an unsupported database type.
  */
@@ -118,7 +118,7 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
  * Creates an instance of DbType based on the provided JDBC URL.
  *
  * @param [url] The JDBC URL representing the database connection.
- * @return The corresponding [DbType] instance.
+ * @return The corresponding [<code>DbType</code>][DbType] instance.
  * @throws [IllegalArgumentException] if the provided URL does not contain a valid mode.
  */
 private fun createH2Instance(url: String): DbType {
@@ -130,7 +130,7 @@ private fun createH2Instance(url: String): DbType {
  * Retrieves the driver class name from the given JDBC URL.
  *
  * @param [url] The JDBC URL to extract the driver class name from.
- * @return The driver class name as a [String].
+ * @return The driver class name as a [<code>String</code>][String].
  */
 public fun driverClassNameFromUrl(url: String): String {
     val dbType = extractDBTypeFromUrl(url)
