@@ -156,7 +156,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
+     * @param [col\] The [ColumnAccessor] pointing to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
     private typealias FrameColReferenceDocs = Nothing

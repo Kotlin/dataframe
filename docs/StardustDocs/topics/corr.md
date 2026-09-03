@@ -25,9 +25,9 @@ If a [`ColumnGroup`](DataColumn.md#columngroup) instance is passed as the target
 it will be unpacked into suitable nested columns.
 
 The resulting [`DataFrame`](DataFrame.md) will have `n1` rows and `n2+1` columns,
-where `n1` and `n2` are the number of columns in `columns1` and `columns2` correspondingly.
+where `n1` and `n2` are the number of columns in `columns1` and `columns2` respectively.
 
-The first column will have the name "column" and will contain names of columns in `column1`.
+The first column will have the name "column" and will contain names of columns in `columns1`.
 Other columns will have the same names as in `columns2` and will contain the computed correlation coefficients.
 
 If exactly one [`ColumnGroup`](DataColumn.md#columngroup) is passed in `columns1`,

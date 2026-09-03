@@ -158,22 +158,22 @@ public interface DocumentationUrls {
     /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
     public typealias AsIterable = Nothing
 
-    /** [See `asSequence` on the documentation website.]({@include [Url]}//assequencecolumn.html) */
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
     public typealias AsSequenceCol = Nothing
 
-    /** [See `asSequence` on the documentation website.]({@include [Url]}//assequence.html) */
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequence.html) */
     public typealias AsSequenceDf = Nothing
 
-    /** [See `associateBy` on the documentation website.]({@include [Url]}//associateby.html) */
+    /** [See `associateBy` on the documentation website.]({@include [Url]}/associateby.html) */
     public typealias AssociateBy = Nothing
 
-    /** [See `associate` on the documentation website.]({@include [Url]}//associate.html) */
+    /** [See `associate` on the documentation website.]({@include [Url]}/associate.html) */
     public typealias Associate = Nothing
 
-    /** [See `between` on the documentation website.]({@include [Url]}//between.html) */
+    /** [See `between` on the documentation website.]({@include [Url]}/between.html) */
     public typealias Between = Nothing
 
-    /** [See `cast` on the documentation website.]({@include [Url]}//cast.html) */
+    /** [See `cast` on the documentation website.]({@include [Url]}/cast.html) */
     public typealias Cast = Nothing
 
     /** [See `chunked` on the documentation website.]({@include [Url]}/chunked.html) */
