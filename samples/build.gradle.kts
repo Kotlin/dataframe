@@ -104,6 +104,7 @@ korro {
                 include("toHTML.md")
                 include("guides/*.md")
                 include("concepts/*.md")
+                include("io/*.md")
                 include("schemas/*.md")
                 include("operations/utils/*.md")
                 include("operations/multiple/*.md")
@@ -139,6 +140,7 @@ korro {
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/jdbc/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/schemas/*.kt")
             },
         )
