@@ -18,7 +18,7 @@ REPL.
   possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
-* **Interoperable** — convertable with Kotlin data classes and collections. This also means conversion to/from other
+* **Interoperable** — convertible with Kotlin data classes and collections. This also means conversion to/from other
   libraries' data structures is usually quite straightforward!
 * **Generic** — can store objects of any type, not only numbers or strings.
 * **Typesafe** —
