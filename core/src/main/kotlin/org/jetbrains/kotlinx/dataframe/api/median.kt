@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -144,6 +145,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "Median1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN) { columns.toComparableColumns() }
 
@@ -335,6 +338,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMedian0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -359,6 +364,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateAll(this, name, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMedian2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.median(
     vararg columns: String,
     name: String? = null,

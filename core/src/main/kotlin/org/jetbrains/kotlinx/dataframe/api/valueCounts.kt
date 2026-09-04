@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -217,6 +218,8 @@ public fun <T> DataFrame<T>.valueCounts(
  * @include [ValueCountsParams]
  * @return A [DataFrame] with the distinct value combinations and their counts.
  */
+@Refine
+@StringApiInterpretable(interpreter = "ValueCounts", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: String,
     sort: Boolean = true,
