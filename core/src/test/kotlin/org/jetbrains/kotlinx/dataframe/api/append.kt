@@ -82,6 +82,24 @@ class AppendTests {
     }
 
     @Test
+    fun `append null preserves frame column schema across repeated calls`() {
+        val frame = dataFrameOf("value")(1)
+        val schema = dataFrameOf(columnOf(frame) named "col").schema()
+        val df = DataFrame.empty(schema)
+
+        val result = df.append(null).append(null)
+        val resultColumn = result.getFrameColumn("col")
+
+        result.nrow shouldBe 2
+        result.schema() shouldBe schema
+        resultColumn.values().toList() shouldForAll {
+            shouldNotThrowAny {
+                it["value"]
+            }
+        }
+    }
+
+    @Test
     fun `append zero rows for a dataframe with no columns`() {
         val df = DataFrame.empty(nrow = 2)
 
@@ -167,6 +185,24 @@ class AppendTests {
             DataFrame.empty(frame.schema()),
             DataFrame.empty(frame.schema()),
         )
+        resultColumn.values().toList() shouldForAll {
+            shouldNotThrowAny {
+                it["value"]
+            }
+        }
+    }
+
+    @Test
+    fun `appendNulls preserves frame column schema across repeated calls`() {
+        val frame = dataFrameOf("value")(1)
+        val schema = dataFrameOf(columnOf(frame) named "col").schema()
+        val df = DataFrame.empty(schema)
+
+        val result = df.appendNulls().appendNulls()
+        val resultColumn = result.getFrameColumn("col")
+
+        result.nrow shouldBe 2
+        result.schema() shouldBe schema
         resultColumn.values().toList() shouldForAll {
             shouldNotThrowAny {
                 it["value"]
