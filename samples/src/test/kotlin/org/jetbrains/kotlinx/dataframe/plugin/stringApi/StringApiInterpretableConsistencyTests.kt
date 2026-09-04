@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.plugin.stringApi
 
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.declaration.KoAnnotationDeclaration
@@ -7,41 +7,29 @@ import com.lemonappdev.konsist.api.declaration.KoTypeParameterDeclaration
 import com.lemonappdev.konsist.api.declaration.type.KoTypeDeclaration
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.expr
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.valuesInto
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.junit.Ignore
 import org.junit.Test
 
 @Ignore
-class TestStringApiInterpretableConsistency {
+class StringApiInterpretableConsistencyTests {
     private fun dataFrameApi(): DataFrame<DataFrameApi> {
         val scope = Konsist.scopeFromDirectories(listOf("core"))
             .functions()
@@ -182,93 +170,5 @@ class TestStringApiInterpretableConsistency {
         remainingInconsistentApis.asClue {
             remainingInconsistentApis.rowsCount() shouldBe 0
         }
-    }
-
-    @Test
-    fun `print Interpretable function headers with String API overloads`() {
-        val dataFrameApi = dataFrameApi()
-        val csDslHeaders = dataFrameApi.interpretableFunctions()
-            .add("csDslHeader") {
-                buildString {
-                    receiverType?.name?.let { append("$it.") }
-                    append(name)
-                    append(parameters.joinToString(prefix = "(", postfix = ")") { "${it.name}: ${it.type.name}" })
-                    returnType?.name?.let { append(": $it") }
-                }
-            }
-            .select { interpreter and csDslHeader }
-
-        val stringApiHeaders = dataFrameApi.stringApiFunctions()
-            .add("interpreter") {
-                annotations
-                    .single { it.name == "StringApiInterpretable" }
-                    .arguments
-                    .first()
-                    .value
-            }
-            .add("stringApiHeader") {
-                buildString {
-                    receiverType?.name?.let { append("$it.") }
-                    append(name)
-                    append(parameters.joinToString(prefix = "(", postfix = ")") { "${it.name}: ${it.type.name}" })
-                    returnType?.name?.let { append(": $it") }
-                }
-            }
-            .select { interpreter and stringApiHeader }
-
-        csDslHeaders
-            .innerJoin(stringApiHeaders) { interpreter }
-            .sortBy { interpreter }
-            .gather { all() }
-            .valuesInto("Interpretable ID / CS DSL header / String API header")
-            .print(rowsLimit = 1000, valueLimit = 1000, rowIndex = false, columnTypes = false, alignLeft = true)
-    }
-
-    @Test
-    fun `print StringApiInterpretable functions without Refine when CS DSL has it`() {
-        val dataFrameApi = dataFrameApi()
-        val csDslInterpretersWithRefine = dataFrameApi.interpretableFunctions()
-            .filter { annotations.any { it.name == "Refine" } }
-            .select { interpreter }
-            .distinct()
-
-        dataFrameApi.stringApiFunctions()
-            .filter { annotations.none { it.name == "Refine" } }
-            .add("interpreter") {
-                annotations
-                    .single { it.name == "StringApiInterpretable" }
-                    .arguments
-                    .first()
-                    .value
-            }
-            .innerJoin(csDslInterpretersWithRefine) { interpreter }
-            .add("stringApiHeader") {
-                buildString {
-                    receiverType?.name?.let { append("$it.") }
-                    append(name)
-                    append(parameters.joinToString(prefix = "(", postfix = ")") { "${it.name}: ${it.type.name}" })
-                    returnType?.name?.let { append(": $it") }
-                }
-            }
-            .select { interpreter and stringApiHeader }
-            .sortBy { interpreter }
-            .print(rowsLimit = 1000, valueLimit = 1000, rowIndex = false, columnTypes = false, alignLeft = true)
-    }
-
-    @Test
-    fun print() {
-        val dataFrameApi = dataFrameApi()
-        val trueInterpretable = dataFrameApi.interpretableFunctions()
-        trueInterpretable
-            .convert { parameters }.with { it.map { it.type.name } }
-            .explode { parameters into "parameterName" }
-            .groupBy { parameterName }.sortByCount().count()
-            .sortBy {
-                expr {
-                    parameterName.contains("ColumnsSelector") ||
-                        parameterName.contains("ColumnsForAggregateSelector")
-                }.desc()
-            }
-            .print(rowsLimit = 1000)
     }
 }
