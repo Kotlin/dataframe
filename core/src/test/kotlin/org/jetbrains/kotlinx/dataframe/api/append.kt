@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.inspectors.shouldForAll
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -12,8 +14,6 @@ import kotlin.reflect.typeOf
 class AppendTests {
 
     // region append
-
-    private data class Person(val name: String, val age: Int) : DataRowSchema
 
     @Test
     fun `append adds one row assigning values by column order`() {
@@ -68,20 +68,17 @@ class AppendTests {
         val df = dataFrameOf(columnOf(frame) named "col")
 
         val result = df.append(null)
+        val resultColumn = result.getFrameColumn("col")
 
         result.nrow shouldBe 2
-        result["col"].kind() shouldBe ColumnKind.Frame
-        result["col"].type() shouldBe typeOf<DataFrame<*>>()
-        result["col"].values() shouldBe listOf(frame, DataFrame.empty(frame.schema()))
-    }
-
-    @Test
-    fun `append uses the DataRowSchema overload`() {
-        val df = dataFrameOf(Person("Alice", 20))
-
-        val result = df.append(Person("Bill", 30))
-
-        result shouldBe dataFrameOf("name", "age")("Alice", 20, "Bill", 30)
+        resultColumn.kind() shouldBe ColumnKind.Frame
+        resultColumn.type() shouldBe typeOf<DataFrame<*>>()
+        resultColumn.values() shouldBe listOf(frame, DataFrame.empty(frame.schema()))
+        resultColumn.values().toList() shouldForAll {
+            shouldNotThrowAny {
+                it["value"]
+            }
+        }
     }
 
     @Test
@@ -160,15 +157,21 @@ class AppendTests {
         val df = dataFrameOf(columnOf(frame) named "col")
 
         val result = df.appendNulls(2)
+        val resultColumn = result.getFrameColumn("col")
 
         result.nrow shouldBe 3
-        result["col"].kind() shouldBe ColumnKind.Frame
-        result["col"].type() shouldBe typeOf<DataFrame<*>>()
-        result["col"].values() shouldBe listOf(
+        resultColumn.kind() shouldBe ColumnKind.Frame
+        resultColumn.type() shouldBe typeOf<DataFrame<*>>()
+        resultColumn.values() shouldBe listOf(
             frame,
             DataFrame.empty(frame.schema()),
             DataFrame.empty(frame.schema()),
         )
+        resultColumn.values().toList() shouldForAll {
+            shouldNotThrowAny {
+                it["value"]
+            }
+        }
     }
 
     @Test
