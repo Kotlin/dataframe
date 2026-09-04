@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -276,6 +277,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * ```
  * @param [columns] The [<code>Columns Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
  */
+@StringApiInterpretable(interpreter = "Rename", stringArgument = "cols", targetArgument = "columns")
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
 
 /**
