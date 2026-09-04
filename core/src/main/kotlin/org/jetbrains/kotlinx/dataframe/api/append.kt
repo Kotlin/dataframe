@@ -9,8 +9,13 @@ import org.jetbrains.kotlinx.dataframe.nrow
 // region DataFrame
 
 public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
+    if (values.isEmpty()) return this
+
     val ncol = ncol
-    check(values.size % ncol == 0) {
+    require(ncol > 0) {
+        "Cannot append values to a DataFrame with no columns"
+    }
+    require(values.size % ncol == 0) {
         "Invalid number of arguments. Multiple of $ncol is expected, but actual was: ${values.size}"
     }
     val newRows = values.size / ncol
