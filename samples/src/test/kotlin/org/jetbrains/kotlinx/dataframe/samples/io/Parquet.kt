@@ -3,9 +3,14 @@
 package org.jetbrains.kotlinx.dataframe.samples.io
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.io.ARROW_PARQUET_DEFAULT_BATCH_SIZE
 import org.jetbrains.kotlinx.dataframe.io.readParquet
 import org.jetbrains.kotlinx.dataframe.testParquet
 import org.junit.Ignore
@@ -14,8 +19,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
-
-private const val ARROW_PARQUET_DEFAULT_BATCH_SIZE: Long = 1000
+import kotlin.time.Instant
 
 class Parquet {
 
@@ -111,6 +115,22 @@ class Parquet {
         // SampleEnd
         df.rowsCount() shouldBe 300
         df.columnsCount() shouldBe 20
+    }
+
+    /**
+     * A `isAdjustedToUTC = true` timestamp column is read as an [kotlin.time.Instant], which names a point on the
+     * time-line but no wall clock. Turning it into a reading on someone's clock takes an explicit zone.
+     *
+     * `@Ignore`d because it needs a Parquet file with a timestamp column; what matters for the docs is that the
+     * snippet compiles against the current API.
+     */
+    @Ignore
+    @Test
+    fun convertParquetInstantToLocalDateTime() {
+        // SampleStart
+        val df = DataFrame.readParquet("events.parquet")
+            .convert { "timestamp"<Instant>() }.with { it.toLocalDateTime(TimeZone.of("Europe/Berlin")) }
+        // SampleEnd
     }
 
     @Test

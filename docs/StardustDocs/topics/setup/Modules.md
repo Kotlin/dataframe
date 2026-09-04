@@ -331,10 +331,12 @@ dependencies {
 #### `dataframe-arrow` {id="dataframe-arrow"}
 
 Provides all logic and tests for DataFrame to be able to work with
-[Apache Arrow](https://arrow.apache.org).
+[Apache Arrow](https://arrow.apache.org), and for **reading**
+[Apache Parquet](https://parquet.apache.org/) through
+[Apache Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html). Writing Parquet is not supported.
 
-See [Read Apache Arrow formats](https://kotlin.github.io/dataframe/read.html#read-apache-arrow-formats) and
-[Writing to Apache Arrow formats](https://kotlin.github.io/dataframe/write.html#writing-to-apache-arrow-formats)
+See [](ApacheArrow.md) and [](Parquet.md), or
+[](read.md#read-apache-arrow-formats) and [](write.md#writing-to-apache-arrow-formats)
 for more information about how to use it.
 
 <tabs>

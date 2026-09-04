@@ -17,9 +17,12 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
@@ -57,6 +60,42 @@ internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (Conver
         }
     }
 
+/**
+ * `kotlinx.datetime.Instant` is superseded by [kotlin.time.Instant] but still resolvable, so columns holding it are
+ * mapped too. Kept in a `val` to keep the deprecation suppression off the whole `when`. See issue #1350.
+ */
+@Suppress("DEPRECATION")
+internal val deprecatedInstantType: KType = typeOf<DeprecatedInstant?>()
+
+internal const val NANOS_PER_SECOND: Long = 1_000_000_000L
+
+/**
+ * How many of these units fit into one second.
+ *
+ * Every Arrow timestamp vector stores a `Long` counting this many parts of a second since the epoch, so this is the
+ * divisor that splits such a value into whole seconds plus a sub-second remainder — and the multiplier that puts it
+ * back together. Shared by the reader ([DataFrame.readArrowFeather]) and the writer ([AnyFrame.arrowWriter]) so the
+ * two can never disagree about a unit.
+ */
+internal val TimeUnit.perSecond: Long
+    get() = when (this) {
+        TimeUnit.SECOND -> 1L
+        TimeUnit.MILLISECOND -> 1_000L
+        TimeUnit.MICROSECOND -> 1_000_000L
+        TimeUnit.NANOSECOND -> NANOS_PER_SECOND
+    }
+
+/**
+ * The precision an [Instant][StdlibInstant] column is written with when no target [Schema] is supplied.
+ *
+ * Microseconds, not nanoseconds, for range: an Arrow nanosecond timestamp is an `int64` count of nanoseconds since
+ * the epoch, which only spans 1677–2262, while a microsecond one covers any [StdlibInstant]. It is also the
+ * precision pandas, Polars and PyArrow emit by default. The trade-off is that a sub-microsecond instant loses its
+ * last three digits on write; that is reported as [ConvertingMismatch.PrecisionReduced], and an explicit target
+ * [Schema] with `Timestamp(NANOSECOND, "UTC")` avoids it.
+ */
+internal val DEFAULT_INSTANT_UNIT: TimeUnit = TimeUnit.MICROSECOND
+
 internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
     val nullable = isMarkedNullable
     return when {
@@ -92,6 +131,15 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
         isSubtypeOf(typeOf<JavaLocalDateTime?>()) || isSubtypeOf(typeOf<LocalDateTime?>()) ->
             Field(name, FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
 
+        // An instant is written as a timestamp *with* a timezone: the `"UTC"` marker says the values are already
+        // normalized to UTC, which is what Parquet records as `isAdjustedToUTC = true`, and is what makes the
+        // column read back as an instant rather than as a local date-time. For the unit see
+        // [DEFAULT_INSTANT_UNIT] — it is deliberately coarser than an instant can be.
+        isSubtypeOf(typeOf<StdlibInstant?>()) ||
+            isSubtypeOf(typeOf<JavaInstant?>()) ||
+            isSubtypeOf(deprecatedInstantType) ->
+            Field(name, FieldType(nullable, ArrowType.Timestamp(DEFAULT_INSTANT_UNIT, "UTC"), null), emptyList())
+
         isSubtypeOf(typeOf<JavaLocalTime?>()) || isSubtypeOf(typeOf<LocalTime?>()) ->
             Field(name, FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
@@ -106,6 +154,11 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
+ *
+ * Note the two ways a date-time column is mapped: a `LocalDateTime` column becomes `Date(MILLISECOND)`, while an
+ * `Instant` column becomes `Timestamp(MICROSECOND, "UTC")` — a timestamp *with* a time zone, which is how Arrow
+ * and Parquet mark values already normalized to UTC. Sub-microsecond instants lose their last three digits at that
+ * precision, reported as [ConvertingMismatch.PrecisionReduced]; see [DEFAULT_INSTANT_UNIT] for why.
  */
 public fun List<AnyCol>.toArrowSchema(
     mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,

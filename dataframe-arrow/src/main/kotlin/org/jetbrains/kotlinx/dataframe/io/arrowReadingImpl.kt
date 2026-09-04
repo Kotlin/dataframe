@@ -31,10 +31,15 @@ import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
 import org.apache.arrow.vector.UInt2Vector
@@ -51,6 +56,7 @@ import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
+import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
@@ -86,6 +92,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import kotlin.time.Instant
 import kotlin.time.toKotlinDuration
 import java.time.LocalTime as JavaLocalTime
 
@@ -143,7 +150,9 @@ private fun Float4Vector.values(range: IntRange): List<Float?> = range.map { get
 
 private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { getObject(it) }
 
-private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it).toKotlinDuration() }
+// `getObject` returns `null` for an unset slot, so it must be navigated safely — every neighbouring helper
+// guards against nulls, and omitting it here threw a NullPointerException on any nullable duration column.
+private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it)?.toKotlinDuration() }
 
 private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
     range.map {
@@ -224,6 +233,35 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
             getObject(it).toKotlinLocalDateTime()
         }
     }
+
+/**
+ * Reads a timestamp vector that carries a time zone as [Instant]s.
+ *
+ * An Arrow timestamp *with* a time zone (`ArrowType.Timestamp(unit, tz)`, which is what Parquet's
+ * `isAdjustedToUTC = true` becomes) stores the offset from the Unix epoch already normalized to UTC, so every
+ * value identifies a single point on the time-line. The field's time zone is display metadata only — two files
+ * describing the same instants, one tagged `UTC` and one `Europe/Brussels`, hold the same numbers and must read
+ * back equal — so it is deliberately not applied here.
+ *
+ * Zone-less timestamps ([TimeStampNanoVector] and friends, `isAdjustedToUTC = false`) are calendar-and-clock
+ * readings that identify no such point, and stay [LocalDateTime]. See
+ * [Parquet logical types](https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#timestamp).
+ */
+private fun TimeStampVector.instantValues(range: IntRange): List<Instant?> {
+    val unitsPerSecond = (field.type as ArrowType.Timestamp).unit.perSecond
+    return range.map { if (isNull(it)) null else epochToInstant(get(it), unitsPerSecond) }
+}
+
+/**
+ * Converts an epoch offset expressed in `1 / [unitsPerSecond]` of a second into an [Instant].
+ *
+ * Divides with `floorDiv`/`mod` so that pre-1970 (negative) offsets keep a non-negative nanosecond adjustment.
+ */
+private fun epochToInstant(value: Long, unitsPerSecond: Long): Instant =
+    Instant.fromEpochSeconds(
+        epochSeconds = value.floorDiv(unitsPerSecond),
+        nanosecondAdjustment = value.mod(unitsPerSecond) * (NANOS_PER_SECOND / unitsPerSecond),
+    )
 
 private fun NullVector.values(range: IntRange): List<Nothing?> =
     range.map {
@@ -449,6 +487,10 @@ private fun readField(
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            // Every zone-tagged unit shares one reader; see [instantValues] for why the zone is not applied.
+            is TimeStampNanoTZVector, is TimeStampMicroTZVector, is TimeStampMilliTZVector, is TimeStampSecTZVector ->
+                (vector as TimeStampVector).instantValues(range).withTypeNullable(field.isNullable, nullability)
 
             is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
