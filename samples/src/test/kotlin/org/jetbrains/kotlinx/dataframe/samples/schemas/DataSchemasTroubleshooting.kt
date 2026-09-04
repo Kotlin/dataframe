@@ -43,7 +43,7 @@ class DataSchemasTroubleshooting {
 
     @Test
     fun extensionGeneratedWithAnIncompatibleSchema() {
-        shouldThrow<ClassCastException> {
+        shouldThrow<IllegalStateException> {
             // SampleStart
             val df = DataFrame.readCsv(simpleCsvFile).cast<Schema>()
 

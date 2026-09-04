@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -137,6 +138,8 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "Sum1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN) { columns.toColumnsSetOf() }
 
@@ -244,6 +247,8 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupBySum0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     sumFor(skipNaN) { columns.toNumberColumns() }
 
@@ -269,6 +274,8 @@ public fun <T, C : Number?> Grouped<T>.sum(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, name, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupBySum2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.sum(
     vararg columns: String,
     name: String? = null,

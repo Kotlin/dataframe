@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
@@ -484,6 +485,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * @include [MaxDocs.SkipNaNParam]
  * @return A single [DataRow] with the maximum of each selected column.
  */
+@Refine
+@StringApiInterpretable(interpreter = "Max1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1052,6 +1055,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * @include [MaxDocs.SkipNaNParam]
  * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMax0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.maxFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1161,6 +1166,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * @include [MaxDocs.SkipNaNParam]
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMax2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.max(
     vararg columns: String,
     name: String? = null,
