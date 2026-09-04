@@ -55,6 +55,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.impl.io.extractArrayColumn
+import org.jetbrains.kotlinx.dataframe.impl.io.extractValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
@@ -509,6 +511,166 @@ class JsonTests {
         json shouldContain "\"value\":1"
         val df1 = DataFrame.readJsonStr(json)
         df shouldBe df1
+    }
+
+    @Test
+    fun `serialize multi-column frame with all-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize multi-column frame with partially-null value column`() {
+        val df = dataFrameOf("time", "value", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", 1, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","value":null,"is_forecast_row":true},
+                {"time":"2026-01-02","value":1,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+    }
+
+    @Test
+    fun `serialize generated scalar value column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},1,2,3]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..3]
+
+        scalarRows.toJson() shouldBe "[1,2,3]"
+    }
+
+    @Test
+    fun `recognize generated value column in mixed json`() {
+        @Language("json")
+        val mixedJson = """[1,{"label":"record"},null]"""
+        val df = DataFrame.readJsonStr(mixedJson)
+
+        df.extractValueColumn() shouldBe df["value"]
+    }
+
+    @Test
+    fun `all-null value column is read as regular column`() {
+        @Language("json")
+        val mixedJson = """[{"label":"record"},0,null,null]"""
+
+        // TODO Issue #2045
+        // DataFrame.readJsonStr(mixedJson).toJson() shouldBe """[{"label":"record"},0,null,null]"""
+
+        // Even though `value` was created by `readJson`, taking a slice makes it all-null.
+        // We can no longer tell the difference between a generated 'value' and a regular column that was named 'value'
+        // So, in this case, we produce different JSON than expected
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[2..3]
+
+        scalarRows.toJson() shouldBe """[{"label":null,"value":null},{"label":null,"value":null}]"""
+    }
+
+    @Test
+    fun `Issue 2035`() {
+        val df = dataFrameOf(
+            "value" to listOf<Double?>(null, null),
+            "name" to listOf("Alice", "Bob"),
+        )
+
+        df.toJson() shouldBe """[{"value":null,"name":"Alice"},{"value":null,"name":"Bob"}]"""
+    }
+
+    @Test
+    fun `serialize value1 columns according to their structure`() {
+        val businessFrame = dataFrameOf("time", "value", "value1")(
+            "2026-01-01", "business value", null,
+            "2026-01-02", "business value", null,
+        )
+
+        @Language("json")
+        val expectedBusinessJson =
+            """
+            [
+                {"time":"2026-01-01","value":"business value","value1":null},
+                {"time":"2026-01-02","value":"business value","value1":null}
+            ]
+            """.trimIndent()
+        Json.parseToJsonElement(businessFrame.toJson()) shouldBe Json.parseToJsonElement(expectedBusinessJson)
+
+        @Language("json")
+        val mixedJson = """[{"value":"record"},1,null]"""
+        val scalarRows = DataFrame.readJsonStr(mixedJson)[1..2]
+        scalarRows.toJson() shouldBe "[1,null]"
+    }
+
+    @Test
+    fun `serialize multi-column frame with all-null array column`() {
+        val df = dataFrameOf("time", "array", "is_forecast_row")(
+            "2026-01-01", null, true,
+            "2026-01-02", null, true,
+        )
+
+        @Language("json")
+        val expected =
+            """
+            [
+                {"time":"2026-01-01","array":null,"is_forecast_row":true},
+                {"time":"2026-01-02","array":null,"is_forecast_row":true}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(df.toJson()) shouldBe Json.parseToJsonElement(expected)
+
+        val array1Frame = dataFrameOf("time", "array", "array1")(
+            "2026-01-01", listOf(1), null,
+            "2026-01-02", listOf(2), null,
+        )
+
+        @Language("json")
+        val expectedArray1Json =
+            """
+            [
+                {"time":"2026-01-01","array":[1],"array1":null},
+                {"time":"2026-01-02","array":[2],"array1":null}
+            ]
+            """.trimIndent()
+
+        Json.parseToJsonElement(array1Frame.toJson()) shouldBe Json.parseToJsonElement(expectedArray1Json)
+    }
+
+    @Test
+    fun `recognize non-null array1 column`() {
+        val df = dataFrameOf("array", "array1")(
+            null, listOf(1),
+            null, listOf(2),
+        )
+
+        df.extractArrayColumn() shouldBe df["array1"]
+    }
+
+    @Test
+    fun `do not treat all-null column as array column`() {
+        val df = dataFrameOf("array", "placeholder")(
+            null, null,
+            null, null,
+        )
+
+        df.toJson() shouldBe """[{"array":null,"placeholder":null},{"array":null,"placeholder":null}]"""
     }
 
     @Test
