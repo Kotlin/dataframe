@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
@@ -123,16 +124,22 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 }
 
 /**
- * Replaces all values in column asserting that new values are compatible with current column kind
+ * Replaces all values in the column asserting that new values are compatible with the current column kind.
+ *
+ * For a [<code>FrameColumn</code>][FrameColumn], `null` values are replaced by empty dataframes with the column's schema.
  */
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
     when (this) {
         is FrameColumn<*> -> {
-            values.forEach {
-                require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
+            val frameSchema by schema
+            val groups = values.map {
+                when (it) {
+                    null -> DataFrame.empty(frameSchema)
+                    is AnyFrame -> it
+                    else -> throw IllegalArgumentException("Can not add value '$it' to FrameColumn")
+                }
             }
-            val groups = (values as List<AnyFrame>)
-            DataColumn.createFrameColumn(name, groups) as DataColumn<T>
+            DataColumn.createFrameColumn(name, groups, schema.takeIf { groups.none { it.nrow > 0 } }) as DataColumn<T>
         }
 
         is ColumnGroup<*> -> {
