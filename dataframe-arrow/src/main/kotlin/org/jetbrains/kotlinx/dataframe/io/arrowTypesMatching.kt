@@ -17,9 +17,12 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.time.Instant as StdlibInstant
+import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
@@ -57,6 +60,13 @@ internal fun ColumnSchema.toArrowField(name: String, mismatchSubscriber: (Conver
         }
     }
 
+/**
+ * `kotlinx.datetime.Instant` is superseded by [kotlin.time.Instant] but still resolvable, so columns holding it are
+ * mapped too. Kept in a `val` to keep the deprecation suppression off the whole `when`. See issue #1350.
+ */
+@Suppress("DEPRECATION")
+private val deprecatedInstantType: KType = typeOf<DeprecatedInstant?>()
+
 internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMismatch) -> Unit): Field {
     val nullable = isMarkedNullable
     return when {
@@ -92,6 +102,14 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
         isSubtypeOf(typeOf<JavaLocalDateTime?>()) || isSubtypeOf(typeOf<LocalDateTime?>()) ->
             Field(name, FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
 
+        // An instant is written as a timestamp *with* a timezone: the `"UTC"` marker says the values are already
+        // normalized to UTC, which is what Parquet records as `isAdjustedToUTC = true`. Microseconds match the
+        // default precision pandas/Polars/PyArrow emit, and are what `readField` reads back as an instant.
+        isSubtypeOf(typeOf<StdlibInstant?>()) ||
+            isSubtypeOf(typeOf<JavaInstant?>()) ||
+            isSubtypeOf(deprecatedInstantType) ->
+            Field(name, FieldType(nullable, ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC"), null), emptyList())
+
         isSubtypeOf(typeOf<JavaLocalTime?>()) || isSubtypeOf(typeOf<LocalTime?>()) ->
             Field(name, FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
@@ -106,6 +124,10 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
+ *
+ * Note the two ways a date-time column is mapped: a `LocalDateTime` column becomes `Date(MILLISECOND)`, while an
+ * `Instant` column becomes `Timestamp(MICROSECOND, "UTC")` — a timestamp *with* a time zone, which is how Arrow
+ * and Parquet mark values already normalized to UTC.
  */
 public fun List<AnyCol>.toArrowSchema(
     mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,

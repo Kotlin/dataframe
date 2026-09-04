@@ -22,6 +22,25 @@ equivalent `--add-opens` at runtime. On a modular classpath (e.g. the `examples/
 example), open to the Arrow module specifically rather than to everything — exactly as that example does:
 `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED`.
 
+**The IntelliJ JUnit runner does not inherit that flag** (it lives in `tasks.test`), so running a plain JUnit
+configuration from the gutter fails in *every* test of this module — not just the Parquet ones — with
+`UnsupportedOperationException: sun.misc.Unsafe or java.nio.DirectByteBuffer.<init>(long, int) not available`.
+Use the shared **"dataframe-arrow tests"** run configuration (`.idea/runConfigurations/`), which passes the flag,
+or delegate test running to Gradle. Switching JDKs does not affect this one.
+
+**Parquet needs a native library that some JDK builds fail to load.** `readParquet` goes through Arrow Dataset,
+whose `JniLoader` extracts `arrow_dataset_jni` into the temp dir and `System.load`s it. If that fails you get
+`UnsatisfiedLinkError: … A dynamic link library (DLL) initialization routine failed` before any DataFrame code
+runs, so *every* `readParquet` test fails while all IPC/Feather tests pass — recognize that signature instead of
+hunting for a bug in `readField`. It is not a JDK version boundary and `--add-opens` does not help; observed on
+Windows 10 x64 with Corretto 11 and 21, while JBR 21 and Corretto 25 loaded the same file fine.
+
+The test task inherits the daemon JVM, and `gradle/gradle-daemon-jvm.properties` pins only the version
+(`Java 21, any vendor`), so switching `JAVA_HOME` is enough — but **stop the daemon first**, or the running one
+still matches the criteria and is reused (`./gradlew --stop`, then `JAVA_HOME=<jdk> ./gradlew dataframe-arrow:test`).
+`-Dorg.gradle.java.home` did not work. Tests that must run everywhere should read IPC/Feather rather than Parquet —
+`ArrowTimestampTzTest` keeps a Feather twin of its Parquet fixture, from the same PyArrow script, for this reason.
+
 ## Public API surface (`src/main/kotlin/.../io/`)
 
 - `arrowReading.kt` — reading entry points, all `DataFrame.Companion` extensions:

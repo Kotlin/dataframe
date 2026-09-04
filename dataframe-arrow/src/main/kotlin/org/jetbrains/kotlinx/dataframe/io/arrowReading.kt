@@ -61,6 +61,10 @@ internal object Allocator {
  * Nested Arrow `Struct` columns are read as [ColumnGroup]s; an optional (nullable) struct becomes a column
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row). See [readParquet] and [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * A `Timestamp(unit, tz)` column identifies a single point on the time-line and is read as
+ * [kotlin.time.Instant]; a zone-less `Timestamp(unit, null)` stays [kotlinx.datetime.LocalDateTime]. The zone
+ * is display metadata — the stored values are already normalized to UTC and are not shifted on read.
  */
 public fun DataFrame.Companion.readArrowIPC(
     channel: ReadableByteChannel,
@@ -74,6 +78,10 @@ public fun DataFrame.Companion.readArrowIPC(
  * Nested Arrow `Struct` columns are read as [ColumnGroup]s; an optional (nullable) struct becomes a column
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row). See [readParquet] and [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * A `Timestamp(unit, tz)` column identifies a single point on the time-line and is read as
+ * [kotlin.time.Instant]; a zone-less `Timestamp(unit, null)` stays [kotlinx.datetime.LocalDateTime]. The zone
+ * is display metadata — the stored values are already normalized to UTC and are not shifted on read.
  */
 public fun DataFrame.Companion.readArrowFeather(
     channel: SeekableByteChannel,
@@ -229,6 +237,12 @@ public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = Nullability
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row, so an absent struct and a present all-`null` struct read the same). The same applies to
  * [readArrowIPC] and [readArrowFeather]; see [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
+ * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
+ * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
+ * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
+ * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
  */
 public fun DataFrame.Companion.readParquet(
     vararg urls: URL,
@@ -251,6 +265,12 @@ public fun DataFrame.Companion.readParquet(
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row, so an absent struct and a present all-`null` struct read the same). The same applies to
  * [readArrowIPC] and [readArrowFeather]; see [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
+ * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
+ * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
+ * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
+ * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
  */
 public fun DataFrame.Companion.readParquet(
     vararg strUrls: String,
@@ -265,6 +285,12 @@ public fun DataFrame.Companion.readParquet(
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row, so an absent struct and a present all-`null` struct read the same). The same applies to
  * [readArrowIPC] and [readArrowFeather]; see [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
+ * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
+ * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
+ * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
+ * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
  */
 public fun DataFrame.Companion.readParquet(
     vararg paths: Path,
@@ -287,6 +313,12 @@ public fun DataFrame.Companion.readParquet(
  * group whose child columns are nullable and hold `null` where the struct is absent (a column group is never
  * `null` per row, so an absent struct and a present all-`null` struct read the same). The same applies to
  * [readArrowIPC] and [readArrowFeather]; see [issue #536](https://github.com/Kotlin/dataframe/issues/536).
+ *
+ * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
+ * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
+ * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
+ * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
+ * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
  */
 public fun DataFrame.Companion.readParquet(
     vararg files: File,

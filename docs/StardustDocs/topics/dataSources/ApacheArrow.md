@@ -62,3 +62,59 @@ A [`DataFrame`](DataFrame.md) can be written to Arrow format using the interproc
 Output targets include `WritableByteChannel`, `OutputStream`, `File`, or `ByteArray`.
 
 See [](write.md#writing-to-apache-arrow-formats) for more details.
+
+## Type mapping
+
+### Reading
+
+| Arrow type | Kotlin type |
+|------------|-------------|
+| `Null` | `Nothing?` |
+| `Bool` | `Boolean` |
+| `Int(8, signed)` / `Int(16, signed)` / `Int(32, signed)` / `Int(64, signed)` | `Byte` / `Short` / `Int` / `Long` |
+| `Int(8, unsigned)` / `Int(16, unsigned)` / `Int(32, unsigned)` / `Int(64, unsigned)` | `Short` / `Int` / `Long` / `BigInteger` |
+| `FloatingPoint(SINGLE)` / `FloatingPoint(DOUBLE)` | `Float` / `Double` |
+| `Decimal` (128- and 256-bit) | `BigDecimal` |
+| `Utf8`, `LargeUtf8`, `Utf8View` | `String` |
+| `Binary`, `LargeBinary`, `BinaryView` | `ByteArray` |
+| `Date(DAY)` | `kotlinx.datetime.LocalDate` |
+| `Date(MILLISECOND)` | `kotlinx.datetime.LocalDateTime` |
+| `Time(SECOND / MILLISECOND / MICROSECOND / NANOSECOND)` | `kotlinx.datetime.LocalTime` |
+| `Timestamp(unit, null)` — no time zone | `kotlinx.datetime.LocalDateTime` |
+| `Timestamp(unit, tz)` — with a time zone | `kotlin.time.Instant` |
+| `Duration` | `kotlin.time.Duration` |
+| `Struct` | [`ColumnGroup`](DataColumn.md#columngroup) |
+| `List`, `LargeList` | `List<T>`, or a [`FrameColumn`](DataColumn.md#framecolumn) for a list of structs |
+
+Anything else raises `NotImplementedError`. Column nullability comes from the `nullability` argument
+(`NullabilityOptions.Infer` by default, which marks a column nullable only if it actually contains nulls).
+
+A timestamp **with** a time zone is an offset from `1970-01-01T00:00:00Z` and so identifies a single point on the
+time-line, which is why it becomes an `Instant`; a timestamp **without** one is a bare calendar-and-clock reading
+that identifies no such point, and stays a `LocalDateTime`. This is also how Parquet's `isAdjustedToUTC` flag is
+mapped — see [](Parquet.md#timestamps-and-time-zones).
+
+> The zone in `Timestamp(unit, tz)` is display metadata: the stored values are already normalized to UTC, so two
+> columns describing the same instants read back equal no matter which zone names they carry. Use
+> `convert { … }.with { it.toLocalDateTime(zone) }` to get wall-clock values in a zone you pick.
+> {style="note"}
+
+### Writing
+
+| Kotlin type | Arrow type |
+|-------------|------------|
+| `Nothing?` | `Null` |
+| `String` | `Utf8` |
+| `Boolean` | `Bool` |
+| `Byte` / `Short` / `Int` / `Long` | `Int(8 / 16 / 32 / 64, signed)` |
+| `Float` / `Double` | `FloatingPoint(SINGLE)` / `FloatingPoint(DOUBLE)` |
+| `LocalDate` (`kotlinx.datetime` or `java.time`) | `Date(DAY)` |
+| `LocalDateTime` (`kotlinx.datetime` or `java.time`) | `Date(MILLISECOND)` |
+| `LocalTime` (`kotlinx.datetime` or `java.time`) | `Time(NANOSECOND)` |
+| `Instant` (`kotlin.time` or `java.time`) | `Timestamp(MICROSECOND, "UTC")` |
+| [`ColumnGroup`](DataColumn.md#columngroup) | `Struct` |
+| [`FrameColumn`](DataColumn.md#framecolumn) | `List` of `Struct` |
+
+Any other type is written as `Utf8` (its `toString()`), reported through the `ConvertingMismatch` subscriber.
+When you supply an explicit target `Schema`, `Timestamp` fields are also accepted in every unit, with or without
+a time zone, and the column is converted accordingly.

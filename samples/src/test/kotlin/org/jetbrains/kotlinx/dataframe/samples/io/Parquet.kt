@@ -15,7 +15,13 @@ import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
 
-private const val ARROW_PARQUET_DEFAULT_BATCH_SIZE: Long = 1000
+/**
+ * Mirrors `ARROW_PARQUET_DEFAULT_BATCH_SIZE` from `dataframe-arrow`, which is `internal` and so not visible here.
+ * It exists only so that [Parquet.ReadParquetOverloads] — the hand-copied signature block Korro renders into
+ * `Parquet.md` — compiles. **Keep the value in sync with the real constant**, or the documented default is wrong
+ * (it read `1000` while the real default was `32768`).
+ */
+private const val ARROW_PARQUET_DEFAULT_BATCH_SIZE: Long = 32768
 
 class Parquet {
 

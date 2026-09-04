@@ -11,10 +11,15 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
 import org.apache.arrow.memory.RootAllocator
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
@@ -547,11 +552,19 @@ internal class ArrowKtTest {
             LocalDateTime(2013, 6, 19, 11, 20, 13),
         )
 
+        // Zone-less timestamps are local date-times; the `"UTC"`-tagged ones describe the same points in time,
+        // but as instants. Precision-specific behaviour lives in [ArrowTimestampTzTest].
+        val moments = dates.map { it.toInstant(UtcOffset.ZERO) }
+
         val dataFrame = dataFrameOf(
             "ts_nano" to dates,
+            "ts_nano_tz" to moments,
             "ts_micro" to dates,
+            "ts_micro_tz" to moments,
             "ts_milli" to dates,
+            "ts_milli_tz" to moments,
             "ts_sec" to dates,
+            "ts_sec_tz" to moments,
         )
 
         DataFrame.readArrowFeather(writeArrowTimestamp(dates)) shouldBe dataFrame
@@ -559,29 +572,40 @@ internal class ArrowKtTest {
     }
 
     private fun writeArrowTimestamp(dates: List<LocalDateTime>, streaming: Boolean = false): ByteArray {
-        fun ts(name: String, unit: TimeUnit) = Field(name, FieldType.nullable(ArrowType.Timestamp(unit, null)), null)
+        fun ts(name: String, unit: TimeUnit, zone: String? = null) =
+            Field(name, FieldType.nullable(ArrowType.Timestamp(unit, zone)), null)
         val fields = listOf(
             ts("ts_nano", TimeUnit.NANOSECOND),
+            ts("ts_nano_tz", TimeUnit.NANOSECOND, "UTC"),
             ts("ts_micro", TimeUnit.MICROSECOND),
+            ts("ts_micro_tz", TimeUnit.MICROSECOND, "UTC"),
             ts("ts_milli", TimeUnit.MILLISECOND),
+            ts("ts_milli_tz", TimeUnit.MILLISECOND, "UTC"),
             ts("ts_sec", TimeUnit.SECOND),
+            ts("ts_sec_tz", TimeUnit.SECOND, "UTC"),
         )
         return arrowBytes(*fields.toTypedArray(), feather = !streaming) { root ->
             val nano = root.getVector("ts_nano") as TimeStampNanoVector
+            val nanoTz = root.getVector("ts_nano_tz") as TimeStampNanoTZVector
             val micro = root.getVector("ts_micro") as TimeStampMicroVector
+            val microTz = root.getVector("ts_micro_tz") as TimeStampMicroTZVector
             val milli = root.getVector("ts_milli") as TimeStampMilliVector
+            val milliTz = root.getVector("ts_milli_tz") as TimeStampMilliTZVector
             val sec = root.getVector("ts_sec") as TimeStampSecVector
-            nano.allocateNew(dates.size)
-            micro.allocateNew(dates.size)
-            milli.allocateNew(dates.size)
-            sec.allocateNew(dates.size)
+            val secTz = root.getVector("ts_sec_tz") as TimeStampSecTZVector
+            listOf<TimeStampVector>(nano, nanoTz, micro, microTz, milli, milliTz, sec, secTz)
+                .forEach { it.allocateNew(dates.size) }
 
             dates.forEachIndexed { index, localDateTime ->
                 val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
                 nano[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
+                nanoTz[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
                 micro[index] = instant.toEpochMilli() * 1_000L
+                microTz[index] = instant.toEpochMilli() * 1_000L
                 milli[index] = instant.toEpochMilli()
+                milliTz[index] = instant.toEpochMilli()
                 sec[index] = instant.toEpochMilli() / 1_000L
+                secTz[index] = instant.toEpochMilli() / 1_000L
             }
             root.setRowCount(dates.size)
         }
