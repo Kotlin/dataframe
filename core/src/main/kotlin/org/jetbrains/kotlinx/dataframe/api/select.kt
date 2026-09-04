@@ -84,7 +84,6 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  */
 @Refine
 @Interpretable("SelectString")
-@StringApiInterpretable(interpreter = "Select0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
