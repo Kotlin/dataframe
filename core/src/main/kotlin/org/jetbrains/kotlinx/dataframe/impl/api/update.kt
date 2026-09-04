@@ -123,7 +123,9 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 }
 
 /**
- * Replaces all values in column asserting that new values are compatible with current column kind
+ * Replaces all values in column asserting that new values are compatible with current column kind.
+ *
+ * For a [FrameColumn], `null` values are replaced by empty dataframes with the column's schema.
  */
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
     when (this) {
