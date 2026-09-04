@@ -167,6 +167,7 @@ arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", versi
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
 arrow-dataset = { group = "org.apache.arrow", name = "arrow-dataset", version.ref = "arrow" }
 
+geotools-api = { module = "org.geotools:gt-api", version.ref = "geotools" }
 geotools-main = { module = "org.geotools:gt-main", version.ref = "geotools" }
 geotools-shapefile = { module = "org.geotools:gt-shapefile", version.ref = "geotools" }
 geotools-geojson = { module = "org.geotools:gt-geojson", version.ref = "geotools" }
