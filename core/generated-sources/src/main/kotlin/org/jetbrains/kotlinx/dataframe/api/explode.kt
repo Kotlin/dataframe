@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -156,6 +157,8 @@ public fun <T> DataFrame<T>.explode(
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
  * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
+@Refine
+@StringApiInterpretable(interpreter = "Explode0", stringArgument = "columns", targetArgument = "selector")
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
@@ -282,6 +285,8 @@ public fun <T> DataRow<T>.explode(
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns from this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
  * @throws IllegalArgumentException if the specified columns are not of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  */
+@Refine
+@StringApiInterpretable(interpreter = "ExplodeColumns", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 

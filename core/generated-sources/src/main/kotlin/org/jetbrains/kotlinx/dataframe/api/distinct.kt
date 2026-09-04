@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DESCRIPTION
 import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_PARAM
 import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_RETURN
@@ -103,6 +104,8 @@ public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T>
  * and to consider for evaluating distinct rows.
  * @return A new [<code>DataFrame</code>][DataFrame] containing only selected columns and distinct rows.
  */
+@Refine
+@StringApiInterpretable(interpreter = "Distinct0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
