@@ -123,15 +123,21 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 }
 
 /**
- * Replaces all values in column asserting that new values are compatible with current column kind
+ * Replaces all values in column asserting that new values are compatible with current column kind.
+ *
+ * For a [<code>FrameColumn</code>][FrameColumn], `null` values are replaced by empty dataframes with the column's schema.
  */
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
     when (this) {
         is FrameColumn<*> -> {
-            values.forEach {
-                require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
+            val frameSchema by schema
+            val groups = values.map {
+                when (it) {
+                    null -> DataFrame.empty(frameSchema)
+                    is AnyFrame -> it
+                    else -> throw IllegalArgumentException("Can not add value '$it' to FrameColumn")
+                }
             }
-            val groups = (values as List<AnyFrame>)
             DataColumn.createFrameColumn(name, groups) as DataColumn<T>
         }
 
