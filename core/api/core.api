@@ -295,6 +295,12 @@ public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annot
 public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/ScopeProperty : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/StringApiInterpretable : java/lang/annotation/Annotation {
+	public abstract fun interpreter ()Ljava/lang/String;
+	public abstract fun stringArgument ()Ljava/lang/String;
+	public abstract fun targetArgument ()Ljava/lang/String;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AddDataRow : org/jetbrains/kotlinx/dataframe/DataRow {
 	public abstract fun newValue (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
@@ -6073,6 +6079,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData$Companio
 
 public final class org/jetbrains/kotlinx/dataframe/io/DisplayConfiguration {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration$Companion;
+	public fun <init> ()V
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Ljava/lang/String;ZZZZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
