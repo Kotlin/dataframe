@@ -253,7 +253,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     private typealias ColGroupReferenceDocs = Nothing
@@ -307,7 +307,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -364,7 +364,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -428,7 +428,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -485,7 +485,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -542,7 +542,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -599,7 +599,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
