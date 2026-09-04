@@ -77,11 +77,11 @@ See [](write.md#writing-to-apache-arrow-formats) for more details.
 | `Decimal` (128- and 256-bit) | `BigDecimal` |
 | `Utf8`, `LargeUtf8`, `Utf8View` | `String` |
 | `Binary`, `LargeBinary`, `BinaryView` | `ByteArray` |
-| `Date(DAY)` | `kotlinx.datetime.LocalDate` |
-| `Date(MILLISECOND)` | `kotlinx.datetime.LocalDateTime` |
-| `Time(SECOND / MILLISECOND / MICROSECOND / NANOSECOND)` | `kotlinx.datetime.LocalTime` |
-| `Timestamp(unit, null)` — no time zone | `kotlinx.datetime.LocalDateTime` |
-| `Timestamp(unit, tz)` — with a time zone | `kotlin.time.Instant` |
+| `Date(DAY)` | [`kotlinx.datetime.LocalDate`](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime/-local-date/) |
+| `Date(MILLISECOND)` | [`kotlinx.datetime.LocalDateTime`](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime/-local-date-time/) |
+| `Time(SECOND / MILLISECOND / MICROSECOND / NANOSECOND)` | [`kotlinx.datetime.LocalTime`](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime/-local-time/) |
+| `Timestamp(unit, null)` — no time zone | [`kotlinx.datetime.LocalDateTime`](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime/-local-date-time/) |
+| `Timestamp(unit, tz)` — with a time zone | [`kotlin.time.Instant`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-instant/) |
 | `Duration` | `kotlin.time.Duration` |
 | `Struct` | [`ColumnGroup`](DataColumn.md#columngroup) |
 | `List`, `LargeList` | `List<T>`, or a [`FrameColumn`](DataColumn.md#framecolumn) for a list of structs |
@@ -118,3 +118,13 @@ mapped — see [](Parquet.md#timestamps-and-time-zones).
 Any other type is written as `Utf8` (its `toString()`), reported through the `ConvertingMismatch` subscriber.
 When you supply an explicit target `Schema`, `Timestamp` fields are also accepted in every unit, with or without
 a time zone, and the column is converted accordingly.
+
+> An `Instant` is written at **microsecond** precision, so an instant carrying nanoseconds loses its last three
+> digits — reported as `ConvertingMismatch.PrecisionReduced`. The unit is microseconds rather than nanoseconds for
+> range: an Arrow nanosecond timestamp is an `int64` count of nanoseconds since the epoch and therefore only spans
+> 1677–2262. Pass a target `Schema` with `Timestamp(NANOSECOND, "UTC")` when you need the full precision and your
+> data stays inside that window.
+> {style="note"}
+
+Conversions between local date-times and instants are always resolved against **UTC**, never against the JVM's
+default time zone, so the same [`DataFrame`](DataFrame.md) always writes the same bytes.

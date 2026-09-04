@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.asClue
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -202,7 +203,7 @@ internal class ArrowTypeMappingTest {
 
             written.asClue {
                 // Every writable type must appear in the read table, mapping back to the same Kotlin type.
-                matching?.expected shouldBe readBack
+                matching.shouldNotBeNull().expected shouldBe readBack
             }
         }
     }

@@ -82,6 +82,23 @@ public sealed class ConvertingMismatch(
         override fun toString(): String = "Column \"$column\" has type ${type.canonicalName}, will be saved as String\""
     }
 
+    /**
+     * A date-time value did not fit the target field's precision and its trailing digits were dropped —
+     * for example a nanosecond instant saved into a `Timestamp(MICROSECOND, …)` field.
+     *
+     * Reported once per column, for the first row where it happens. Supply a target `Schema` with a finer
+     * time unit to avoid it.
+     */
+    public data class PrecisionReduced(
+        override val column: String,
+        override val row: Int?,
+        /** Arrow time unit the value was written with, e.g. `"MICROSECOND"`. */
+        public val unit: String,
+    ) : ConvertingMismatch(column, row, null) {
+        override fun toString(): String =
+            "Column \"$column\" holds a value finer than $unit in row $row, saved with the trailing digits dropped"
+    }
+
     public sealed class NullableMismatch(column: String, row: Int?) : ConvertingMismatch(column, row, null) {
         public data class NullValueIgnored(override val column: String, override val row: Int?) :
             NullableMismatch(column, row) {

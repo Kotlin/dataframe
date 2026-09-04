@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
@@ -23,14 +25,7 @@ import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
-import org.apache.arrow.vector.TimeStampMicroTZVector
-import org.apache.arrow.vector.TimeStampMicroVector
-import org.apache.arrow.vector.TimeStampMilliTZVector
-import org.apache.arrow.vector.TimeStampMilliVector
-import org.apache.arrow.vector.TimeStampNanoTZVector
-import org.apache.arrow.vector.TimeStampNanoVector
-import org.apache.arrow.vector.TimeStampSecTZVector
-import org.apache.arrow.vector.TimeStampSecVector
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VariableWidthVector
@@ -44,7 +39,9 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
@@ -68,7 +65,49 @@ import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.Instant as JavaInstant
+import java.time.LocalDateTime as JavaLocalDateTime
 import kotlin.time.Instant as StdlibInstant
+
+/**
+ * Whether [this] holds one of the three supported instant types — `kotlin.time`, `java.time`, or the deprecated
+ * `kotlinx.datetime` one. Converting between them never involves a time zone.
+ */
+private fun AnyCol.isInstantColumn(): Boolean =
+    type().isSubtypeOf(typeOf<StdlibInstant?>()) ||
+        type().isSubtypeOf(typeOf<JavaInstant?>()) ||
+        type().isSubtypeOf(deprecatedInstantType)
+
+private fun AnyCol.isLocalDateTimeColumn(): Boolean =
+    type().isSubtypeOf(typeOf<LocalDateTime?>()) || type().isSubtypeOf(typeOf<JavaLocalDateTime?>())
+
+/**
+ * Converts [this] to [instants][StdlibInstant], resolving a zone-less source against **UTC**.
+ *
+ * The pinned zone is the point. A plain `convertTo<Instant>()` resolves a `LocalDateTime` with
+ * `TimeZone.currentSystemDefault()`, so the very same frame would produce different bytes on a developer's laptop
+ * and on CI. Arrow and Parquet define a timestamp as an offset from `1970-01-01T00:00:00Z`, so UTC is both the
+ * correct reference and the only deterministic one. Sources that are neither a local date-time nor an instant
+ * (a `String`, a `Long`) still go through the generic converter.
+ */
+private fun AnyCol.convertToInstantInUtc(): DataColumn<StdlibInstant?> =
+    if (isLocalDateTimeColumn()) {
+        convertToLocalDateTime().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
+    } else {
+        convertTo<StdlibInstant?>()
+    }
+
+/**
+ * Converts [this] to [LocalDateTime]s, reading an instant source against **UTC**.
+ *
+ * The mirror image of [convertToInstantInUtc], and pinned to UTC for the same reason.
+ */
+private fun AnyCol.convertToLocalDateTimeInUtc(): DataColumn<LocalDateTime?> =
+    if (isInstantColumn()) {
+        convertTo<StdlibInstant?>().map(Infer.None) { it?.toLocalDateTime(TimeZone.UTC) }
+    } else {
+        convertToLocalDateTime()
+    }
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -158,15 +197,15 @@ internal class ArrowWriterImpl(
 
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
 
-            ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
+            ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTimeInUtc()
 
             // A timestamp *with* a timezone holds an instant; a zone-less one holds local date-time fields.
-            // See the note in `readField` and Parquet's `isAdjustedToUTC`.
+            // See [instantValues] in `arrowReadingImpl.kt` and Parquet's `isAdjustedToUTC`.
             is ArrowType.Timestamp ->
                 if (targetFieldType.timezone == null) {
-                    column.convertToLocalDateTime()
+                    column.convertToLocalDateTimeInUtc()
                 } else {
-                    column.convertTo<StdlibInstant?>()
+                    column.convertToInstantInUtc()
                 }
 
             is ArrowType.Time -> column.convertToLocalTime()
@@ -190,6 +229,57 @@ internal class ArrowWriterImpl(
             column
         }
         return result to actualField
+    }
+
+    /**
+     * Writes [column] into any of the eight Arrow timestamp vectors.
+     *
+     * Both the unit and the presence of a time zone come from the vector's own field, so this one body covers
+     * `Timestamp(SECOND … NANOSECOND, null)` and `Timestamp(SECOND … NANOSECOND, tz)` alike. A zone-tagged vector
+     * holds instants, a zone-less one holds local date-time fields; either way the stored `Long` is an offset from
+     * `1970-01-01T00:00:00Z`, which is why both sides convert against [TimeZone.UTC] and never against the
+     * machine's default zone.
+     *
+     * Values finer than the vector's unit are truncated towards the epoch — a lossy step, so the first row where
+     * it happens is reported as [ConvertingMismatch.PrecisionReduced].
+     */
+    private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol) {
+        val arrowType = vector.field.type as ArrowType.Timestamp
+        val unitsPerSecond = arrowType.unit.perSecond
+        val nanosPerUnit = NANOS_PER_SECOND / unitsPerSecond
+
+        val instants = if (arrowType.timezone == null) {
+            column.convertToLocalDateTimeInUtc().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
+        } else {
+            column.convertToInstantInUtc()
+        }
+
+        var firstTruncatedRow: Int? = null
+        instants.forEachIndexed { i, value ->
+            if (value == null) {
+                vector.setNull(i)
+                return@forEachIndexed
+            }
+            val nanos = value.nanosecondsOfSecond.toLong()
+            if (nanos % nanosPerUnit != 0L && firstTruncatedRow == null) {
+                firstTruncatedRow = i
+            }
+            // An Arrow NANOSECOND timestamp is an int64 nanosecond count, so it only spans 1677-2262; anything
+            // outside that would wrap around into a plausible-looking wrong date, so fail loudly instead.
+            val epochUnits = try {
+                Math.addExact(Math.multiplyExact(value.epochSeconds, unitsPerSecond), nanos / nanosPerUnit)
+            } catch (e: ArithmeticException) {
+                throw IllegalArgumentException(
+                    "Value $value in column \"${column.name}\" (row $i) is out of range for an Arrow " +
+                        "${arrowType.unit} timestamp; use a coarser time unit in the target schema",
+                    e,
+                )
+            }
+            vector.set(i, epochUnits)
+        }
+        firstTruncatedRow?.let {
+            mismatchSubscriber(ConvertingMismatch.PrecisionReduced(column.name, it, arrowType.unit.name))
+        }
     }
 
     private fun infillVector(vector: FieldVector, column: AnyCol) {
@@ -279,77 +369,15 @@ internal class ArrowWriterImpl(
                     }
 
             is DateMilliVector ->
-                column.convertToLocalDateTime()
+                column.convertToLocalDateTimeInUtc()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
                             ?: vector.setNull(i)
                     }
 
-            // Zone-less timestamps carry local date-time fields; they are encoded relative to the reference
-            // 1970-01-01T00:00 as the Parquet spec prescribes, which is what `TimeZone.UTC` amounts to here.
-            is TimeStampNanoVector ->
-                column.convertToLocalDateTime()
-                    .forEachIndexed { i, value ->
-                        value?.also {
-                            val instant = it.toInstant(TimeZone.UTC)
-                            vector.set(i, instant.epochSeconds * NANOS_PER_SECOND + instant.nanosecondsOfSecond)
-                        } ?: vector.setNull(i)
-                    }
-
-            is TimeStampMicroVector ->
-                column.convertToLocalDateTime()
-                    .forEachIndexed { i, value ->
-                        value?.also {
-                            val instant = it.toInstant(TimeZone.UTC)
-                            vector.set(i, instant.epochSeconds * 1_000_000L + instant.nanosecondsOfSecond / 1_000)
-                        } ?: vector.setNull(i)
-                    }
-
-            is TimeStampMilliVector ->
-                column.convertToLocalDateTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, it.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
-                            ?: vector.setNull(i)
-                    }
-
-            is TimeStampSecVector ->
-                column.convertToLocalDateTime()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, it.toInstant(TimeZone.UTC).epochSeconds) }
-                            ?: vector.setNull(i)
-                    }
-
-            // Timestamps *with* a timezone hold instants, already normalized to UTC, so the vector's own
-            // timezone is not applied — see the note in `readField`.
-            is TimeStampNanoTZVector ->
-                column.convertTo<StdlibInstant?>()
-                    .forEachIndexed { i, value ->
-                        value?.also {
-                            vector.set(i, it.epochSeconds * NANOS_PER_SECOND + it.nanosecondsOfSecond)
-                        } ?: vector.setNull(i)
-                    }
-
-            is TimeStampMicroTZVector ->
-                column.convertTo<StdlibInstant?>()
-                    .forEachIndexed { i, value ->
-                        value?.also {
-                            vector.set(i, it.epochSeconds * 1_000_000L + it.nanosecondsOfSecond / 1_000)
-                        } ?: vector.setNull(i)
-                    }
-
-            is TimeStampMilliTZVector ->
-                column.convertTo<StdlibInstant?>()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, it.toEpochMilliseconds()) }
-                            ?: vector.setNull(i)
-                    }
-
-            is TimeStampSecTZVector ->
-                column.convertTo<StdlibInstant?>()
-                    .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, it.epochSeconds) }
-                            ?: vector.setNull(i)
-                    }
+            // One branch for all eight timestamp vectors: they differ only in their unit and in whether they
+            // carry a time zone, and both are read off the field. See [infillTimeStampVector].
+            is TimeStampVector -> infillTimeStampVector(vector, column)
 
             is TimeNanoVector ->
                 column.convertToLocalTime()

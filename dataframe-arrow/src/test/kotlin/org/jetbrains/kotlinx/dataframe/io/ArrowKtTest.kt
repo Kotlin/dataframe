@@ -597,15 +597,19 @@ internal class ArrowKtTest {
                 .forEach { it.allocateNew(dates.size) }
 
             dates.forEachIndexed { index, localDateTime ->
+                // `epochSecond` and `nano` split the instant without overlapping; adding `nano` on top of
+                // `toEpochMilli()` would count the sub-second part twice (harmless only while every date here
+                // happens to be whole-second).
                 val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
-                nano[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
-                nanoTz[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
-                micro[index] = instant.toEpochMilli() * 1_000L
-                microTz[index] = instant.toEpochMilli() * 1_000L
-                milli[index] = instant.toEpochMilli()
-                milliTz[index] = instant.toEpochMilli()
-                sec[index] = instant.toEpochMilli() / 1_000L
-                secTz[index] = instant.toEpochMilli() / 1_000L
+                val epochNanos = instant.epochSecond * 1_000_000_000L + instant.nano
+                nano[index] = epochNanos
+                nanoTz[index] = epochNanos
+                micro[index] = epochNanos.floorDiv(1_000L)
+                microTz[index] = epochNanos.floorDiv(1_000L)
+                milli[index] = epochNanos.floorDiv(1_000_000L)
+                milliTz[index] = epochNanos.floorDiv(1_000_000L)
+                sec[index] = instant.epochSecond
+                secTz[index] = instant.epochSecond
             }
             root.setRowCount(dates.size)
         }

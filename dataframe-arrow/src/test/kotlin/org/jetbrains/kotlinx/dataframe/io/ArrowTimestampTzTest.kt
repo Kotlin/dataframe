@@ -1,7 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.asClue
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliTZVector
@@ -41,6 +46,17 @@ internal class ArrowTimestampTzTest {
 
     private fun testResource(resourcePath: String): URL =
         ArrowTimestampTzTest::class.java.classLoader.getResource(resourcePath)!!
+
+    /** Runs [block] with the JVM default time zone set to [zoneId], restoring the previous one afterwards. */
+    private fun <R> withDefaultTimeZone(zoneId: String, block: () -> R): R {
+        val previous = java.util.TimeZone.getDefault()
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone(zoneId))
+        try {
+            return block()
+        } finally {
+            java.util.TimeZone.setDefault(previous)
+        }
+    }
 
     // region crafted Arrow files: the unit x zone matrix Parquet cannot express
 
@@ -147,11 +163,40 @@ internal class ArrowTimestampTzTest {
         assertUnitMatrix(DataFrame.readArrowIPC(unitMatrixBytes(feather = false)))
     }
 
+    /**
+     * The three [NullabilityOptions] differ only in where they take nullability from, so the interesting case is
+     * a **nullable Arrow field holding no nulls**: [NullabilityOptions.Checking] and [NullabilityOptions.Widening]
+     * trust the field and keep the column nullable, while [NullabilityOptions.Infer] looks at the data and does
+     * not. The matrix above (nullable field *with* nulls) can only ever produce `Instant?`, so both are checked.
+     */
     @Test
     fun `nullability options are honoured for timestamps with a timezone`() {
         NullabilityOptions.entries.forEach { nullability ->
-            val df = DataFrame.readArrowFeather(unitMatrixBytes(feather = true), nullability)
-            df.columnTypes() shouldBe List(4) { typeOf<Instant?>() }
+            nullability.asClue {
+                DataFrame.readArrowFeather(unitMatrixBytes(feather = true), nullability)
+                    .columnTypes() shouldBe List(4) { typeOf<Instant?>() }
+            }
+        }
+
+        val moment = Instant.parse("2024-01-01T12:00:00.123456Z")
+        val nullableFieldWithoutNulls = arrowBytes(
+            Field("ts", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC")), null),
+            feather = true,
+        ) { root ->
+            val vector = root.getVector("ts") as TimeStampMicroTZVector
+            vector.allocateNew(1)
+            vector[0] = moment.epochNanos().floorDiv(1_000L)
+            root.setRowCount(1)
+        }
+
+        mapOf(
+            NullabilityOptions.Infer to typeOf<Instant>(),
+            NullabilityOptions.Checking to typeOf<Instant?>(),
+            NullabilityOptions.Widening to typeOf<Instant?>(),
+        ).forEach { (nullability, expected) ->
+            nullability.asClue {
+                DataFrame.readArrowFeather(nullableFieldWithoutNulls, nullability)["ts"].type() shouldBe expected
+            }
         }
     }
 
@@ -212,6 +257,127 @@ internal class ArrowTimestampTzTest {
             df["moment"].type() shouldBe typeOf<Instant?>()
             df["moment"].values().toList() shouldBe truncatedToMicros
         }
+    }
+
+    /**
+     * Every unit x zone combination the writer can be handed, so that all eight Arrow timestamp vectors are
+     * exercised: four zone-less ones fed a [LocalDateTime] column, four zone-tagged ones fed an [Instant] column.
+     * Values coarser than the target unit come back truncated, which is what the expectations encode.
+     */
+    @Test
+    fun `every timestamp unit can be written and read back`() {
+        val localDateTimes = instants.map { it?.toLocalDateTime(TimeZone.UTC) }
+        val expectedLocal = mapOf(
+            TimeUnit.NANOSECOND to localDateTimes,
+            TimeUnit.MICROSECOND to truncatedToMicros.map { it?.toLocalDateTime(TimeZone.UTC) },
+            TimeUnit.MILLISECOND to truncatedToMillis.map { it?.toLocalDateTime(TimeZone.UTC) },
+            TimeUnit.SECOND to truncatedToSeconds.map { it?.toLocalDateTime(TimeZone.UTC) },
+        )
+        val expectedInstant = mapOf(
+            TimeUnit.NANOSECOND to instants,
+            TimeUnit.MICROSECOND to truncatedToMicros,
+            TimeUnit.MILLISECOND to truncatedToMillis,
+            TimeUnit.SECOND to truncatedToSeconds,
+        )
+
+        TimeUnit.entries.forEach { unit ->
+            listOf(null, "UTC").forEach { zone ->
+                val expected = if (zone == null) expectedLocal.getValue(unit) else expectedInstant.getValue(unit)
+                val column = if (zone == null) {
+                    DataColumn.createValueColumn("value", localDateTimes, typeOf<LocalDateTime?>())
+                } else {
+                    DataColumn.createValueColumn("value", instants, typeOf<Instant?>())
+                }
+                val targetSchema = Schema(
+                    listOf(Field("value", FieldType.nullable(ArrowType.Timestamp(unit, zone)), null)),
+                )
+
+                val bytes = dataFrameOf(column).arrowWriter(targetSchema).use { it.saveArrowFeatherToByteArray() }
+                val df = DataFrame.readArrowFeather(bytes)
+
+                "$unit, zone=$zone".asClue {
+                    df["value"].values().toList() shouldBe expected
+                }
+            }
+        }
+    }
+
+    /**
+     * The bytes a timestamp column is written as must not depend on the machine that wrote it.
+     *
+     * Arrow and Parquet define a timestamp as an offset from `1970-01-01T00:00:00Z`, but the generic column
+     * converters in `core` resolve a `LocalDateTime` with `TimeZone.currentSystemDefault()`. Going through them
+     * unguarded made the same frame produce different files on a laptop and on CI, so the writer pins UTC — this
+     * runs the round trip under a deliberately shifted default zone to keep it that way.
+     */
+    @Test
+    fun `writing does not depend on the default time zone`() {
+        val localDateTimes = listOf(LocalDateTime(2024, 1, 1, 12, 0, 0, 123_000_000))
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("moment", listOf(truncatedToMicros[0]), typeOf<Instant?>()),
+            DataColumn.createValueColumn("local", localDateTimes, typeOf<LocalDateTime?>()),
+        )
+        val targetSchema = Schema(
+            listOf(
+                // Crossed over on purpose: the instant lands in a zone-less field and vice versa, which is
+                // exactly where a system-default zone would leak in.
+                Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, null)), null),
+                Field("local", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC")), null),
+            ),
+        )
+
+        val perZone = listOf("UTC", "Europe/Berlin", "Pacific/Kiritimati", "America/Los_Angeles").map { zoneId ->
+            withDefaultTimeZone(zoneId) {
+                DataFrame.readArrowFeather(
+                    frame.arrowWriter(targetSchema).use { it.saveArrowFeatherToByteArray() },
+                )
+            }
+        }
+
+        perZone.forEach { df ->
+            df["moment"].values().toList() shouldBe listOf(LocalDateTime(2024, 1, 1, 12, 0, 0, 123_456_000))
+            df["local"].values().toList() shouldBe listOf(Instant.parse("2024-01-01T12:00:00.123Z"))
+        }
+    }
+
+    /**
+     * Writing an instant at the default [TimeUnit.MICROSECOND] precision drops its last three digits. That is a
+     * deliberate trade-off for range (see `DEFAULT_INSTANT_UNIT`), but it must not be silent.
+     */
+    @Test
+    fun `losing sub-microsecond precision on write is reported`() {
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("moment", instants, typeOf<Instant?>()),
+        )
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        val bytes = frame.arrowWriter(
+            targetSchema = frame.columns().toArrowSchema(),
+            mismatchSubscriber = { mismatches += it },
+        ).use { it.saveArrowFeatherToByteArray() }
+
+        mismatches.filterIsInstance<ConvertingMismatch.PrecisionReduced>() shouldBe
+            listOf(ConvertingMismatch.PrecisionReduced("moment", 0, "MICROSECOND"))
+
+        DataFrame.readArrowFeather(bytes)["moment"].values().toList() shouldBe truncatedToMicros
+    }
+
+    /** A nanosecond Arrow timestamp is an `int64` nanosecond count, so it cannot hold the year 2500. */
+    @Test
+    fun `an instant out of range for the target unit fails loudly`() {
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant?>()),
+        )
+        val targetSchema = Schema(
+            listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")), null)),
+        )
+
+        val message = shouldThrow<IllegalArgumentException> {
+            frame.arrowWriter(targetSchema).use { it.saveArrowFeatherToByteArray() }
+        }.message
+
+        message shouldContain "out of range"
+        message shouldContain "NANOSECOND"
     }
 
     @Test

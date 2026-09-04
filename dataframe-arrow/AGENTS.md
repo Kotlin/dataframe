@@ -61,6 +61,16 @@ still matches the criteria and is reused (`./gradlew --stop`, then `JAVA_HOME=<j
 Implementation is in `arrowReadingImpl.kt`, `ArrowWriterImpl.kt`, and `arrowTypesMatching.kt` (Arrow ↔ Kotlin type
 mapping); `ConvertingMismatch.kt` defines the mismatch model. Follow the `api → impl` split when editing.
 
+**Never convert a date-time column with `core`'s plain `convertTo`/`convertToLocalDateTime` in the writer.** Those
+resolve a `LocalDateTime` against `TimeZone.currentSystemDefault()`, so the same frame would write different bytes
+on a laptop and on CI. Arrow and Parquet define a timestamp as an offset from `1970-01-01T00:00:00Z`, so
+`ArrowWriterImpl` routes every such conversion through `convertToInstantInUtc` / `convertToLocalDateTimeInUtc`,
+which pin UTC. `ArrowTimestampTzTest.writing does not depend on the default time zone` guards this by running the
+round trip under four shifted default zones.
+
+The Arrow ↔ Kotlin type mapping is published as a table in `docs/StardustDocs/topics/dataSources/ApacheArrow.md`
+and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit.
+
 **Legacy/deprecated:** `arrowReading.kt` also defines `ArrowFeather`, an implementation of the old
 `SupportedDataFrameFormat` SPI registered in
 `src/main/resources/META-INF/services/org.jetbrains.kotlinx.dataframe.io.SupportedFormat`. That SPI is deprecated

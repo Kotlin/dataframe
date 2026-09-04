@@ -39,6 +39,7 @@ import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
 import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
 import org.apache.arrow.vector.UInt2Vector
@@ -55,6 +56,7 @@ import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
+import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
@@ -232,66 +234,34 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
-internal const val NANOS_PER_SECOND = 1_000_000_000L
+/**
+ * Reads a timestamp vector that carries a time zone as [Instant]s.
+ *
+ * An Arrow timestamp *with* a time zone (`ArrowType.Timestamp(unit, tz)`, which is what Parquet's
+ * `isAdjustedToUTC = true` becomes) stores the offset from the Unix epoch already normalized to UTC, so every
+ * value identifies a single point on the time-line. The field's time zone is display metadata only — two files
+ * describing the same instants, one tagged `UTC` and one `Europe/Brussels`, hold the same numbers and must read
+ * back equal — so it is deliberately not applied here.
+ *
+ * Zone-less timestamps ([TimeStampNanoVector] and friends, `isAdjustedToUTC = false`) are calendar-and-clock
+ * readings that identify no such point, and stay [LocalDateTime]. See
+ * [Parquet logical types](https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#timestamp).
+ */
+private fun TimeStampVector.instantValues(range: IntRange): List<Instant?> {
+    val unitsPerSecond = (field.type as ArrowType.Timestamp).unit.perSecond
+    return range.map { if (isNull(it)) null else epochToInstant(get(it), unitsPerSecond) }
+}
 
 /**
  * Converts an epoch offset expressed in `1 / [unitsPerSecond]` of a second into an [Instant].
  *
- * Divides with [floorDiv]/[mod] so that pre-1970 (negative) offsets keep a non-negative nanosecond adjustment.
+ * Divides with `floorDiv`/`mod` so that pre-1970 (negative) offsets keep a non-negative nanosecond adjustment.
  */
 private fun epochToInstant(value: Long, unitsPerSecond: Long): Instant =
     Instant.fromEpochSeconds(
         epochSeconds = value.floorDiv(unitsPerSecond),
         nanosecondAdjustment = value.mod(unitsPerSecond) * (NANOS_PER_SECOND / unitsPerSecond),
     )
-
-/*
- * Arrow timestamps *with* a timezone (`ArrowType.Timestamp(unit, tz)`, which is what Parquet's
- * `isAdjustedToUTC = true` becomes) store the offset from the Unix epoch already normalized to UTC, so every
- * value identifies a single instant on the time-line and is read as an [Instant]. The field's timezone is
- * display metadata only — two files describing the same instant, one tagged `UTC` and one `Europe/Brussels`,
- * hold the same numbers and must read back equal — so it is deliberately not applied here.
- *
- * Zone-less timestamps ([TimeStampNanoVector] and friends, `isAdjustedToUTC = false`) are calendar/clock fields
- * that do *not* identify an instant, and stay [LocalDateTime]. See
- * [Parquet logical types](https://github.com/apache/parquet-format/blob/master/LogicalTypes.md#timestamp).
- */
-
-private fun TimeStampNanoTZVector.values(range: IntRange): List<Instant?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            epochToInstant(getObject(it), NANOS_PER_SECOND)
-        }
-    }
-
-private fun TimeStampMicroTZVector.values(range: IntRange): List<Instant?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            epochToInstant(getObject(it), 1_000_000L)
-        }
-    }
-
-private fun TimeStampMilliTZVector.values(range: IntRange): List<Instant?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            epochToInstant(getObject(it), 1_000L)
-        }
-    }
-
-private fun TimeStampSecTZVector.values(range: IntRange): List<Instant?> =
-    range.map {
-        if (isNull(it)) {
-            null
-        } else {
-            epochToInstant(getObject(it), 1L)
-        }
-    }
 
 private fun NullVector.values(range: IntRange): List<Nothing?> =
     range.map {
@@ -512,19 +482,15 @@ private fun readField(
 
             is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampNanoTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-
             is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-
-            is TimeStampMicroTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampMilliTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
-
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
-            is TimeStampSecTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            // Every zone-tagged unit shares one reader; see [instantValues] for why the zone is not applied.
+            is TimeStampNanoTZVector, is TimeStampMicroTZVector, is TimeStampMilliTZVector, is TimeStampSecTZVector ->
+                (vector as TimeStampVector).instantValues(range).withTypeNullable(field.isNullable, nullability)
 
             is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
