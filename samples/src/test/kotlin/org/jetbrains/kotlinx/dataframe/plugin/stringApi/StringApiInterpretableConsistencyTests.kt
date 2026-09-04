@@ -52,6 +52,7 @@ class StringApiInterpretableConsistencyTests {
         val ignore = setOf(
             "Parse", // own interpreter
             "Convert0", // own interpreter
+            "Select0", // own interpreter
             "Under0", // own interpreter Under4
             "DataFrameXs", // no String overload at all
             "GroupByXs", // no String overload at all
