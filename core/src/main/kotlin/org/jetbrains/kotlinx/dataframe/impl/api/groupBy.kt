@@ -13,11 +13,11 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
-import java.util.stream.Collectors
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -86,16 +86,11 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
 
     val groupSizes = IntArray(nGroups) { groups[it].size }
-    // Preserve the existing slicing behavior for hierarchical columns.
-    val columnGroupResults: List<Array<AnyCol>> = columns().map { column ->
-        if (column is ValueColumn<*>) {
-            processValueColumnForGroups(column, nRows, nGroups, groupSizes, rowToGroup)
-        } else {
-            Array(nGroups) { groupIndex -> column[groups[groupIndex]] }
-        }
+    val groupedColumns: List<ColumnGroupByResult> = columns().map { column ->
+        distributeColumnValuesIntoGroups(column, nRows, nGroups, groupSizes, rowToGroup, groups)
     }
     val groupDataFrames: List<DataFrame<T>> = List(nGroups) { groupIndex ->
-        columnGroupResults.map { it[groupIndex] }.toDataFrame().cast<T>()
+        groupedColumns.map { it[groupIndex] }.toDataFrame().cast<T>()
     }
 
     val groupedColumnName = keyColumnsDf.nameGenerator().addUnique(GroupBy.groupedColumnAccessor.name())
@@ -109,13 +104,41 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     return GroupByImpl(df, groupedColumn, columns)
 }
 
-private fun processValueColumnForGroups(
+internal typealias ColumnGroupByResult = Array<AnyCol>
+
+private fun distributeColumnValuesIntoGroups(
+    column: AnyCol,
+    nRows: Int,
+    nGroups: Int,
+    groupSizes: IntArray,
+    rowToGroup: IntArray,
+    groups: List<List<Int>>,
+): ColumnGroupByResult =
+    when (column) {
+        is ValueColumn<*> -> distributeColumnValuesIntoGroups(column, nRows, nGroups, groupSizes, rowToGroup)
+
+        is ColumnGroup<*> -> {
+            val childResults: List<ColumnGroupByResult> = column.columns().map { child ->
+                distributeColumnValuesIntoGroups(child, nRows, nGroups, groupSizes, rowToGroup, groups)
+            }
+            Array(nGroups) { groupIndex ->
+                DataColumn.createColumnGroup(
+                    name = column.name(),
+                    df = childResults.map { it[groupIndex] }.toDataFrame(),
+                ) as AnyCol
+            }
+        }
+
+        else -> Array(nGroups) { groupIndex -> column[groups[groupIndex]] }
+    }
+
+private fun distributeColumnValuesIntoGroups(
     column: ValueColumn<*>,
     nRows: Int,
     nGroups: Int,
     groupSizes: IntArray,
     rowToGroup: IntArray,
-): Array<AnyCol> {
+): ColumnGroupByResult {
     @Suppress("UNCHECKED_CAST")
     val values = column.values() as List<Any?>
     val type = column.type()
@@ -137,13 +160,13 @@ private fun processValueColumnForGroups(
         } else {
             DataColumn.createValueColumn(
                 name = column.name(),
-                values = groupValues[groupIndex] as List<Nothing>,
+                values = groupValues[groupIndex],
                 type = if (groupNullable[groupIndex] == type.isMarkedNullable) {
                     type
                 } else {
                     type.withNullability(groupNullable[groupIndex])
                 },
             )
-        } as AnyCol
+        }
     }
 }
