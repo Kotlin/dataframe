@@ -31,7 +31,11 @@ class GroupByOptimizationTest {
 
     @Test
     fun `groupBy preserves hierarchical and frame columns`() {
-        val frameColumn = DataColumn.createFrameColumn(
+        val nestedFrameColumn = DataColumn.createFrameColumn(
+            name = "nestedFrames",
+            groups = List(4) { index -> dataFrameOf("nestedInner")(index, index + 1) },
+        )
+        val topLevelFrameColumn = DataColumn.createFrameColumn(
             name = "frames",
             groups = List(4) { index -> dataFrameOf("inner")(index, index + 1) },
         )
@@ -39,8 +43,10 @@ class GroupByOptimizationTest {
             "nestedKey" to listOf(1, 2, 1, 2),
             "nestedValue" to listOf("a", "b", "c", "d"),
             "value" to listOf(10, 20, 30, 40),
-        ).group { "nestedKey" and "nestedValue" }.into("nested")
-            .addAll(frameColumn)
+        ).addAll(nestedFrameColumn)
+            .group { "nestedValue" and "nestedFrames" }.into("details")
+            .group { "nestedKey" and "details" }.into("nested")
+            .addAll(topLevelFrameColumn)
 
         listOf(false, true).forEach { moveToTop ->
             val grouped = df.groupBy(moveToTop) { it["nested"]["nestedKey"] }
@@ -55,7 +61,7 @@ class GroupByOptimizationTest {
         val df = dataFrameOf(
             DataColumn.createValueColumn("key", listOf(1, 2)),
             DataColumn.createValueColumn("frame", listOf(frame, null)),
-        )
+        ).group { cols("frame") }.into("nested")
 
         shouldNotThrowAny {
             df.groupBy("key")
