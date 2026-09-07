@@ -4,7 +4,7 @@ kotlinJupyter = "0.19.0-951"
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 kotlinpoet = "2.3.0"
 
 # The jvmToolchain version. Gradle should run with this JDK version.
