@@ -87,14 +87,14 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
 
     val groupSizes = IntArray(nGroups) { groups[it].size }
     // Preserve the existing slicing behavior for hierarchical columns.
-    val columnGroupResults: List<Array<AnyCol>> = columns().parallelStream().map { column ->
+    val columnGroupResults: List<Array<AnyCol>> = columns().map { column ->
         if (column is ValueColumn<*>) {
             processValueColumnForGroups(column, nRows, nGroups, groupSizes, rowToGroup)
         } else {
             Array(nGroups) { groupIndex -> column[groups[groupIndex]] }
         }
-    }.collect(Collectors.toList())
-    val groupDataFrames = List(nGroups) { groupIndex ->
+    }
+    val groupDataFrames: List<DataFrame<T>> = List(nGroups) { groupIndex ->
         columnGroupResults.map { it[groupIndex] }.toDataFrame().cast<T>()
     }
 
