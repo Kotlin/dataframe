@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import kotlin.random.Random
 
-/** Measures the current groupBy implementation against the scenarios recorded in GROUP_BY_PERFORMANCE.md. */
 @State(Scope.Benchmark)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
