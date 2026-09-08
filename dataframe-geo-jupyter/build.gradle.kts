@@ -19,15 +19,11 @@ repositories {
     mavenLocal()
 }
 
-// https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central
-// jai core dependency should be excluded from geotools dependencies and added separately
-fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core")
-
 dependencies {
+    // deliberately declares no GeoTools/JTS of its own: it resolves `GeoDataFrame.crs` purely through
+    // dataframe-geo's `api` scope, so this module fails to compile if those scopes are ever narrowed again (#1920)
     implementation(projects.dataframeGeo)
     implementation(projects.dataframeJupyter)
-
-    implementation(libs.geotools.referencing) { excludeJaiCore() }
 
     // logger, need it for geotools
     implementation(libs.log4j.core)

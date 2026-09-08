@@ -33,17 +33,25 @@ dependencies {
     api(projects.core)
 
     // Geotools
-    implementation(libs.geotools.main) { excludeJaiCore() }
+    // `api` scope for everything whose types appear in our public API, so that consumers can use it
+    // without declaring GeoTools themselves (#1920):
+    //  - gt-api holds `CoordinateReferenceSystem` (GeoDataFrame.crs, applyCrs, DEFAULT_CRS, AnyFrame.toGeo)
+    //  - gt-main holds `ReferencedEnvelope` (bounds) and `SimpleFeatureCollection` (to/from SimpleFeatureCollection)
+    //  - gt-referencing holds `CRS`, which is not in our signatures but which consumers need to build a CRS at all
+    api(libs.geotools.api) { excludeJaiCore() }
+    api(libs.geotools.main) { excludeJaiCore() }
+    api(libs.geotools.referencing) { excludeJaiCore() }
+    // used internally only; `implementation` still puts them on the consumer's runtime classpath
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
     implementation(libs.geotools.geojson) { excludeJaiCore() }
-    implementation(libs.geotools.referencing) { excludeJaiCore() }
     implementation(libs.geotools.epsg.hsql) { excludeJaiCore() }
 
     // JAI
     implementation(libs.jai.core)
 
     // JTS
-    implementation(libs.jts.core)
+    // `Geometry` and friends are the geometry model of WithGeometry and the jts/ helpers
+    api(libs.jts.core)
     implementation(libs.jts.io.common)
 
     // Ktor
