@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -50,9 +51,12 @@ import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
+import org.jetbrains.kotlinx.dataframe.api.mapToFrames
+import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -82,6 +86,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -951,6 +956,52 @@ class Modify : TestBase() {
             "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             +"city"
         }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapOnColumn() {
+        // SampleStart
+        // A column of last name lengths; it keeps the name of the original column,
+        // so it is renamed here
+        df.name.lastName.map { it.length }.rename("lastNameLength")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapIndexedOnColumn() {
+        // SampleStart
+        // "1. Alice", "2. Bob", ...
+        df.name.firstName.mapIndexed { i, firstName -> "${i + 1}. $firstName" }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapOnGroupBy() {
+        // SampleStart
+        // The number of people per city, as a list, in the order of the groups
+        df.groupBy { city }.map { group.rowsCount() }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapToRowsOnGroupBy() {
+        // SampleStart
+        // The oldest person of every city, one row per city
+        df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapToFramesOnGroupBy() {
+        // SampleStart
+        // The two oldest people of every city, as a frame column
+        df.groupBy { city }.mapToFrames { group.sortByDesc { age }.take(2) }
         // SampleEnd
     }
 

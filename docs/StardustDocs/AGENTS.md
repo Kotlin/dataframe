@@ -27,6 +27,29 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
   `snippets/kdocs/`, and the `api`/`io`/`guides`/`modify` iframe HTML) and the generated
   `topics/_shadow_resources.md`. A CI bot regenerates and auto-commits these on `master`.
 
+## Adding example code to a topic
+
+**Never hand-write a ` ```kotlin ` block in a topic.** All Kotlin in the docs must be a Korro sample, so that it
+is compiled and run on every build — a hand-written block is the way a hallucinated or long-dead API reaches the
+website. Only `text`-fenced pseudo-grammar (`operation { columnMapping }: DataFrame`) is written by hand.
+
+To add one:
+
+1. **Find which module owns the topic.** `:core`'s korro block takes `topics/*.md` + `topics/concepts/*.md`
+   wholesale; `:samples` has an explicit `include(...)` allow-list in `samples/build.gradle.kts`. If the page
+   already has an `<!---IMPORT ...-->` line, the class it names tells you the owner. Don't split one topic
+   across both modules — both korro tasks would write the same file.
+2. **Add a `@Test @TransformDataFrameExpressions fun` to that module's sample class**, with the body wrapped in
+   `// SampleStart` / `// SampleEnd`. New pages should go to `:samples` (migration #898); an existing `:core`
+   page keeps its samples next to its siblings.
+3. **Put `<!---FUN funName-->` / `<!---END-->` in the topic** and run korro to fill it in
+   (`./gradlew core:korro`, or `samples:korro`). Suffix the function `_properties` / `_strings` to get tabs.
+4. **Run it with `DATAFRAME_SAVE_OUTPUTS=1`** if you want the rendered result: korro then also injects an
+   `<inline-frame>` and writes the matching `resources/snippets/*.html`.
+5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
+   did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
+   topic you edited and the snippet files for your own new samples.
+
 ## How content is injected
 
 - **Korro** (in `:samples` and `:core`) reads the topic markdown, runs the sample tests, and injects code + output.

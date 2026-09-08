@@ -628,6 +628,10 @@ To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name 
 Each of these methods returns a new DataFrame that includes the grouping key columns (except for [`concat`](concat.md)) 
 along with the columns of values aggregated from the corresponding groups.
 
+To compute something per key–group pair yourself instead of aggregating, use
+[`map` / `mapToRows` / `mapToFrames`](map.md#map-on-groupby): they hand every key–group pair to a lambda and
+collect the results into a `List`, a [`DataFrame`](DataFrame.md), or a [FrameColumn](DataColumn.md#framecolumn).
+
 ### Examples of aggregation
 #### concat on GroupBy {collapsible="true"}
 [`concat`](concat.md) can be used to union all data groups of `GroupBy` into the original [`DataFrame`](DataFrame.md) 
