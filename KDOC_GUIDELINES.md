@@ -446,6 +446,11 @@ doc comment with a doubled `*/` terminator, which then fails
 `runKtlintFormatOverGeneratedMainSourcesSourceSet` with "Expecting a top level declaration".
 Always write `@param [T] ...`.
 
+A KDoc-snippet that consists only of `@param` lines is included in the middle of the function's own
+`@param` list, so a leading `{@comment}` in it leaves two blank lines there. Put the `@comment` at the
+end of such a snippet instead. Don't move the note into a plain `/* */` comment above the KDoc either —
+ktlint's `no-consecutive-comments` rejects a block comment directly in front of a KDoc.
+
 ## KDoc-helpers Structure
 
 Sometimes, you do not need KDoc-helpers at all —
@@ -651,6 +656,9 @@ But keep these things in mind:
   alternate,
   like `**a**__b__`.
 - Add one extra newline if you want to put something on a new line. Otherwise, they'll render on the same line.
+- KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
+  `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
+  `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in you code samples.
 
 

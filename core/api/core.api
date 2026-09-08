@@ -5387,6 +5387,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Do
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Fill {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Map {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$MinMax {
 }
 
