@@ -35,8 +35,8 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
  *
  *
  *
- * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
- * and is expected to return a [<code>Boolean</code>][Boolean] value.
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]
+ * as both `this` and `it` and is expected to return a [<code>Boolean</code>][Boolean] value.
  *
  * It allows you to define conditions using the row's values directly,
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
