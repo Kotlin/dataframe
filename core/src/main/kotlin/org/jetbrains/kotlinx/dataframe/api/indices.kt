@@ -1,10 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.indices
 
 // region DataFrame
@@ -41,7 +42,14 @@ public fun DataFrame<*>.indices(): IntRange = 0 until rowsCount()
  *
  * They are listed in the same order as the rows in this [DataFrame].
  *
- * {@include [SelectingRows.RowFilterSnippet] {@set [SelectingRows.FILTER_PARAM] [filter]}}
+ * The [filter] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
+ * and is expected to return a [Boolean] value.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [extension properties][AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
+ *
+ * For more information, {@include [DocumentationUrls.DataRow.RowFilter]}
  *
  * {@include [CommonIndicesDocs]}
  *

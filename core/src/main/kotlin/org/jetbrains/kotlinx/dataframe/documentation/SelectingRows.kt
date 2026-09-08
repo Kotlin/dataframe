@@ -32,11 +32,10 @@ internal interface SelectingRows {
      * {@comment
      *    Row filter KDoc-snippet.
      *    Include it into KDoc with `@include [SelectingRows.RowFilterSnippet]`.
-     *    The filter parameter is called `predicate` unless [FILTER_PARAM] says otherwise.
      * }
      *
-     * The {@get [FILTER_PARAM] [predicate\]} is a [RowFilter] — a lambda that receives each [DataRow]
-     * as both `this` and `it` and is expected to return a [Boolean] value.
+     * The [predicate\] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
+     * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
      * including through [extension properties][AccessApis.ExtensionPropertiesApi]
@@ -46,13 +45,6 @@ internal interface SelectingRows {
      */
     @ExcludeFromSources
     typealias RowFilterSnippet = Nothing
-
-    /*
-     * The key for a @set that names the row filter parameter in [RowFilterSnippet].
-     * Leave it unset when the parameter is called `predicate`.
-     */
-    @ExcludeFromSources
-    typealias FILTER_PARAM = Nothing
 
     /**
      * {@comment
