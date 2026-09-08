@@ -46,9 +46,21 @@ To add one:
    (`./gradlew core:korro`, or `samples:korro`). Suffix the function `_properties` / `_strings` to get tabs.
 4. **Run it with `DATAFRAME_SAVE_OUTPUTS=1`** if you want the rendered result: korro then also injects an
    `<inline-frame>` and writes the matching `resources/snippets/*.html`.
+   **Only annotate a sample with `@TransformDataFrameExpressions` when its last expression is a `DataFrame`
+   or a `GroupBy`.** The expressions converter renders nothing else, and it fails in two different ways:
+   a sample ending in a `DataColumn` or a `List` *fails* in `samplesTest` (see `map`, `mapToColumn` there),
+   while a sample that ends in one of those *after* a renderable step silently falls back to rendering that
+   step — so the page shows an `<inline-frame>` of the intermediate `groupBy` under an example whose result
+   is a `List`. Two such samples then render byte-identical frames. Without the annotation korro still
+   injects the code block (`convertColumnTo` in `Modify.kt` is the precedent), just no `<inline-frame>`;
+   say what the result is in a comment inside the sample instead.
 5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
    did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
    topic you edited and the snippet files for your own new samples.
+   Those two are the one exception to "don't hand-edit `resources/**`" above: the snippet a new sample of yours
+   produces is committed together with the topic that embeds it, so the page is not broken until the CI bot next
+   regenerates everything on `master` (that is how the doc PRs in `git log -- resources/snippets` do it).
+   Everything else under `resources/**` stays CI-owned.
 
 ## How content is injected
 

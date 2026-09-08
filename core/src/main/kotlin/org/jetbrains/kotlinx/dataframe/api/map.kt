@@ -34,7 +34,7 @@ import kotlin.reflect.typeOf
  *
  * ## The Map Operation
  *
- * Computes a new value for every value, row, or group of the receiver, and collects the results.
+ * Computes a new value for every value, row, or key–group pair of the receiver, and collects the results.
  *
  * The functions of this family share the name but differ in what they go over and what they give back:
  *
@@ -68,18 +68,24 @@ internal interface MapDocs {
      * so the new column has as many values as this one, in the same order.
      * The new column has the same name as this one.
      *
-     * The [type][DataColumn.type] of the new column comes from {@get [TYPE_SOURCE]},
-     * and [infer\] decides whether that type is used as it is or adjusted to the computed values.
-     * That type also decides what the new column is:
-     * a column of [DataRow]s is a [ColumnGroup], a column of [DataFrame]s is a [FrameColumn],
-     * and any other column is a [ValueColumn].
+     * Which kind of column you get follows {@get [TYPE_SOURCE]}, and not the computed values:
+     * a [DataFrame] type gives a [FrameColumn], a [DataRow] type gives a [ColumnGroup],
+     * and any other type gives a [ValueColumn].
+     * A nullable [DataFrame] type belongs to the last group, because a [FrameColumn] cannot hold `null`.
+     *
+     * [infer\] only concerns a [ValueColumn]: it decides whether the [type][DataColumn.type] of that column
+     * is {@get [TYPE_SOURCE]} as it is, or the type of the computed values.
+     * For a [ColumnGroup] and a [FrameColumn], [infer\] changes nothing.
+     *
+     * The computed values have to fit {@get [TYPE_SOURCE]}.
+     * A [ValueColumn] can never have a [DataFrame] type, so a call that would give it one —
+     * computing dataframes with [Infer.Type], or under a nullable [DataFrame] type —
+     * fails with an [IllegalArgumentException].
      */
     @ExcludeFromSources
     interface CommonDataColumnSnippet {
 
-        /*
-         * The key for a @set that names where the type of the new column comes from.
-         */
+        // the key for a @set that names where the type of the new column comes from
         @ExcludeFromSources
         typealias TYPE_SOURCE = Nothing
     }
@@ -88,7 +94,8 @@ internal interface MapDocs {
      * @param [type\] The type to give to the new column.
      * The computed values are put into the column as they are, without any conversion,
      * so [type\] has to fit them.
-     * With [Infer.Type] it is only an upper bound, and the actual type is taken from the computed values.
+     * With [Infer.Type] it is only an upper bound for a [ValueColumn],
+     * whose own type is then the type of the computed values.
      * Note that [type\] and the type argument `R` are independent: the result is a `DataColumn<R>` for the
      * compiler, while its [type][DataColumn.type] at runtime is [type\].
      * Keep the two in agreement unless that difference is exactly what you are after.
@@ -135,22 +142,24 @@ internal inline fun <C, reified R> ColumnReference<C>.map(
  *
  * @include [MapDocs.CommonDataColumnSnippet] {@set [MapDocs.CommonDataColumnSnippet.TYPE_SOURCE] the reified type argument `R`}
  *
- * Use [mapIndexed] when the position of a value matters,
- * and the overload with an explicit `type` argument when the type is only known at runtime.
- *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [mapIndexed] — the same, and the position of every value is given as well.
+ * - the overload with an explicit `type` argument — when the type of the new column
+ *   is only known at runtime.
+ * - [convert][DataFrame.convert] — computes new values for the selected columns of a [DataFrame]
+ *   and replaces the old ones, instead of returning a single new column.
  *
  * ### Example
  *
  * ```kotlin
- * // A column of name lengths, computed from a column of names.
- * // It has the same name as the original column, so it is usually renamed on the spot.
- * val lengths = names.map { it.length }.rename("nameLength")
+ * // The lengths of the last names. The new column has the name of the original one,
+ * // so it is usually renamed on the spot.
+ * df.name.lastName.map { it.length }.rename("lastNameLength")
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnColumn]}
+ * For more information: {@include [DocumentationUrls.Map.OnColumn]}
  *
- * @param [R] The type of the values of the new column.
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column from a value of this column.
  * @return A new [DataColumn] with the computed values.
@@ -167,22 +176,20 @@ public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, t
  *
  * @include [MapDocs.CommonDataColumnSnippet] {@set [MapDocs.CommonDataColumnSnippet.TYPE_SOURCE] the [type] argument}
  *
- * Use this overload when the type of the new column is only known at runtime;
- * otherwise, use the [map] overload that takes the type from its reified type argument.
- *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [mapIndexed] — the same, and the position of every value is given as well.
+ * - the overload without a `type` argument — when the type of the new column is known at compile time.
  *
  * ### Example
  *
  * ```kotlin
- * // The type of the new column is taken from another column
- * // instead of being named at compile time
- * val filled = values.map(fallback.type()) { it ?: 0 }
+ * // A column of ages typed `Number` on purpose, even though every value is an `Int`
+ * df.age.map(typeOf<Number>()) { it }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnColumn]}
+ * For more information: {@include [DocumentationUrls.Map.OnColumn]}
  *
- * @param [R] The element type of the resulting [DataColumn], as inferred from [transform].
  * @include [MapDocs.TypeParamSnippet]
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column from a value of this column.
@@ -206,18 +213,21 @@ public inline fun <T, R> DataColumn<T>.map(
  *
  * The position of the first value is `0`.
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [map][DataColumn.map] — the same, without the positions.
+ * - the overload with an explicit `type` argument — when the type of the new column
+ *   is only known at runtime.
  *
  * ### Example
  *
  * ```kotlin
- * // A column that numbers the names: "1. Alice", "2. Bob", ...
- * val numbered = names.mapIndexed { i, name -> "\${i + 1}. \$name" }
+ * // The first names, numbered: "1. Alice", "2. Bob", ...
+ * df.name.firstName.mapIndexed { i, firstName -> "\${i + 1}. \$firstName" }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnColumn]}
+ * For more information: {@include [DocumentationUrls.Map.OnColumn]}
  *
- * @param [R] The type of the values of the new column.
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column
  * from the position of a value of this column and that value.
@@ -240,22 +250,20 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
  *
  * The position of the first value is `0`.
  *
- * Use this overload when the type of the new column is only known at runtime;
- * otherwise, use the [mapIndexed] overload that takes the type from its reified type argument.
- *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [map][DataColumn.map] — the same, without the positions.
+ * - the overload without a `type` argument — when the type of the new column is known at compile time.
  *
  * ### Example
  *
  * ```kotlin
- * // Fill the gaps from another column of the same size,
- * // and take the type of the new column from that column
- * val filled = values.mapIndexed(fallback.type()) { i, value -> value ?: fallback[i] }
+ * // The positions of the rows, in a column typed `Number` on purpose
+ * df.age.mapIndexed(typeOf<Number>()) { i, _ -> i }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnColumn]}
+ * For more information: {@include [DocumentationUrls.Map.OnColumn]}
  *
- * @param [R] The element type of the resulting [DataColumn], as inferred from [transform].
  * @include [MapDocs.TypeParamSnippet]
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column
@@ -286,16 +294,18 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
  * so inside it `age` and `it.age` mean the same thing.
  * For more information: {@include [DocumentationUrls.DataRow.RowExpressions]}
  *
- * The result is an ordinary [List], not a [DataFrame] and not a [DataColumn].
- * Use [mapToColumn] to get a [DataColumn], and [mapToFrame] to get a [DataFrame].
+ * The result is an ordinary [List], and not a [DataFrame] or a [DataColumn].
  *
- * When the receiver is a [ColumnGroup], this function is the one that is called, not [DataColumn.map],
- * because a [ColumnGroup] is also a [DataFrame].
- * The result is then a [List] with one element per row of the group.
+ * A [ColumnGroup] is also a [DataFrame], so `map` on a column group is this function,
+ * and its result is a [List] with one element per row of the group.
  * To get a [DataColumn] of the same size instead — a column of the [DataRow]s of the group —
  * call [asDataColumn][ColumnGroup.asDataColumn] first, and then [map][DataColumn.map].
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [mapToColumn] — the same, but the results are collected into a [DataColumn].
+ * - [mapToFrame] — a new [DataFrame] of several computed columns at once.
+ * - [rows][DataFrame.rows] — the rows themselves, when nothing has to be computed.
  *
  * ### Example
  *
@@ -304,10 +314,8 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
  * df.map { 2021 - age }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOverRows]}
+ * For more information: {@include [DocumentationUrls.Map.OverRows]}
  *
- * @param [T] The schema marker type of this [DataFrame].
- * @param [R] The type of the elements of the resulting [List].
  * @param [transform] A [RowExpression] that computes an element of the list from a row of this [DataFrame].
  * @return A [List] with one computed element per row of this [DataFrame].
  */
@@ -320,11 +328,14 @@ public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<
  * [body] is called once for every row, from the first one to the last one,
  * so the new column has one value per row, in row order.
  * The new column is standalone: this [DataFrame] is not changed and does not contain it.
- * Use [add][DataFrame.add] to get a [DataFrame] with the new column in it.
  *
  * @include [AddExpressionDocs]
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [add][DataFrame.add] — the same, but the result is this [DataFrame] with the new column in it.
+ * - [map][DataFrame.map] — the same, but the results are collected into a [List].
+ * - [expr][ColumnsSelectionDsl.expr] — the same inside the Columns Selection DSL.
  *
  * ### Example
  *
@@ -333,10 +344,8 @@ public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<
  * val yearOfBirth = df.mapToColumn("year of birth") { 2021 - age }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapToColumn]}
+ * For more information: {@include [DocumentationUrls.Map.ToColumn]}
  *
- * @param [T] The schema marker type of this [DataFrame].
- * @param [R] The type of the values of the new column.
  * @param [name] The name to give to the new column.
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].
  * @param [body] An [AddExpression] that computes a value of the new column from a row of this [DataFrame].
@@ -419,7 +428,11 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
  * Every column computed from a row expression has one value per row of this [DataFrame], in row order.
  * An empty [body] describes no columns, so it gives a [DataFrame] with no columns and no rows.
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [add][DataFrame.add] — the same [AddDsl], but the columns of this [DataFrame] are kept as well.
+ * - [mapToColumn] — a single new column instead of a whole [DataFrame].
+ * - [select][DataFrame.select] — a [DataFrame] of chosen columns, when nothing has to be computed.
  *
  * ### Example
  *
@@ -435,9 +448,8 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
  * }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapToFrame]}
+ * For more information: {@include [DocumentationUrls.Map.ToFrame]}
  *
- * @param [T] The schema marker type of this [DataFrame].
  * @param [body] An [AddDsl] expression that describes the columns of the new [DataFrame].
  * @return A new [DataFrame] with the described columns.
  */
@@ -462,22 +474,23 @@ public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): DataF
  * so the list can be shorter than the number of key–group pairs.
  * Apart from that, the list has one element per pair, in the same order.
  *
- * Use [mapToRows] to get a [DataFrame] of rows, and [mapToFrames] to get a [FrameColumn] of dataframes.
- *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [mapToRows][GroupBy.mapToRows] — the same, but every result is a row, collected into a [DataFrame].
+ * - [mapToFrames][GroupBy.mapToFrames] — the same, but every result is a [DataFrame],
+ *   collected into a [FrameColumn].
+ * - [aggregate][Grouped.aggregate] — computes named values per group and returns them as a [DataFrame]
+ *   next to the key columns.
  *
  * ### Example
  *
  * ```kotlin
- * // The size of every group, as a list, in the order of the groups
+ * // The number of people per city, as a list, in the order of the groups: [1, 1, 2, 1, 1, 1]
  * df.groupBy { city }.map { group.rowsCount() }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnGroupBy]}
+ * For more information: {@include [DocumentationUrls.Map.OnGroupBy]}
  *
- * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
- * @param [G] The schema marker type of the groups.
- * @param [R] The type of the elements of the resulting [List].
  * @param [body] A [Selector] that computes an element of the list from a key–group pair.
  * @return A [List] with one computed element per key–group pair, without the `null` results.
  */
@@ -496,10 +509,15 @@ public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>,
  * A pair for which [body] returns `null` gives no row,
  * so the result can have fewer rows than the number of key–group pairs.
  * Apart from that, the result has one row per pair, in the same order.
- * Its columns are the columns of the returned rows — so if [body] returns `null` for every pair,
- * the result has no rows and no columns at all.
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * The columns of the result are the columns of the returned rows.
+ * If [body] returns `null` for every pair, the result has no rows and no columns at all,
+ * even though its type still says `DataFrame<G>` — so a result with no rows can carry no schema.
+ *
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [map][GroupBy.map] — the same, but every result is kept, of any type, in a [List].
+ * - [concat][GroupBy.concat] — all rows of all groups, without computing anything.
  *
  * ### Example
  *
@@ -508,10 +526,8 @@ public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>,
  * df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnGroupBy]}
+ * For more information: {@include [DocumentationUrls.Map.OnGroupBy]}
  *
- * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
- * @param [G] The schema marker type of the groups.
  * @param [body] A [Selector] that computes a row of the result from a key–group pair, or `null` for no row.
  * @return A [DataFrame] with one computed row per key–group pair, without the `null` results.
  */
@@ -528,19 +544,22 @@ public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, Dat
  *
  * Call `concat()` on the result to get all of those dataframes back as one [DataFrame].
  *
- * See also {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * See also:
+ * - {@include [MapDocsLink]} — an overview of the whole `map` family.
+ * - [mapToRows][GroupBy.mapToRows] — the same, but every result is a single row instead of a whole [DataFrame].
+ * - [updateGroups][GroupBy.updateGroups] — the same computation over the groups,
+ *   but the result is a [GroupBy] with its key columns, and not a bare [FrameColumn].
  *
  * ### Example
  *
  * ```kotlin
- * // A frame column in which every group keeps only its two oldest people
- * df.groupBy { city }.mapToFrames { group.sortByDesc { age }.take(2) }
+ * // The two oldest people with each first name, as a frame column:
+ * // only the group of "Charlie" has a third person to leave out
+ * df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
  * ```
  *
- * For more information: {@include [DocumentationUrls.MapOnGroupBy]}
+ * For more information: {@include [DocumentationUrls.Map.OnGroupBy]}
  *
- * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
- * @param [G] The schema marker type of the groups.
  * @param [body] A [Selector] that computes a [DataFrame] from a key–group pair.
  * @return A [FrameColumn] with one computed [DataFrame] per key–group pair.
  */

@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -78,18 +81,53 @@ class MapTests {
     }
 
     @Test
-    fun `map returns a column group for rows and a frame column for dataframes`() {
-        // a value of the new column is a DataRow, so the new column is a ColumnGroup
+    fun `map returns a column group when R is a row type`() {
+        // R is inferred as DataRow, so the new column is a ColumnGroup
         val rows = age.map { dataFrameOf("doubled")(it * 2)[0] }
+
         rows.kind() shouldBe ColumnKind.Group
         rows.asColumnGroup()["doubled"].values() shouldBe listOf(30, 90, 40, 40)
+    }
 
-        // a value of the new column is a DataFrame, so the new column is a FrameColumn
-        val frames = age.map { dataFrameOf("doubled")(it * 2) }
-        frames.kind() shouldBe ColumnKind.Frame
+    @Test
+    fun `map returns a frame column when R is a frame type`() {
+        // R is inferred as DataFrame, so the new column is a FrameColumn
+        age.map { dataFrameOf("doubled")(it * 2) }.kind() shouldBe ColumnKind.Frame
+    }
 
-        // any other value gives an ordinary ValueColumn
+    @Test
+    fun `map returns a value column for any other R`() {
         age.map { it * 2 }.kind() shouldBe ColumnKind.Value
+    }
+
+    @Test
+    fun `the kind of the new column follows R and not the computed values`() {
+        // every computed value is a DataRow, but R is Any, which is not a row type,
+        // so the result is a ValueColumn that happens to hold rows
+        val rowsAsAny = age.map<Int, Any> { dataFrameOf("doubled")(it * 2)[0] }
+
+        rowsAsAny.kind() shouldBe ColumnKind.Value
+        rowsAsAny.type() shouldBe typeOf<Any>()
+    }
+
+    @Test
+    fun `a nullable row type still gives a column group`() {
+        age.map<Int, AnyRow?> { dataFrameOf("doubled")(it * 2)[0] }.kind() shouldBe ColumnKind.Group
+    }
+
+    @Test
+    fun `R has to fit the computed values`() {
+        // a ValueColumn is never allowed to have a frame type, and `Infer.Type` gives it one here:
+        // the kind comes from `Any` before `infer`, and the type from the computed dataframes after it
+        shouldThrow<IllegalArgumentException> {
+            age.map<Int, Any>(Infer.Type) { dataFrameOf("doubled")(it * 2) }
+        }
+
+        // the same for a nullable frame type: it is not a frame type, so no FrameColumn is created,
+        // and `Infer.Nulls` then drops the nullability, leaving a ValueColumn with a frame type
+        shouldThrow<IllegalArgumentException> {
+            age.map<Int, AnyFrame?> { dataFrameOf("doubled")(it * 2) }
+        }
     }
 
     @Test
@@ -100,6 +138,9 @@ class MapTests {
 
         // the given type is the type of the column, even though every value is an Int
         asNumber.type() shouldBe typeOf<Number>()
+
+        // the name is the name of the original column here too
+        asNumber.name() shouldBe "age"
 
         // the values themselves are put into the column unchanged, without any conversion
         asNumber.values() shouldBe listOf(15, 45, 20, 20)
@@ -162,19 +203,16 @@ class MapTests {
     }
 
     @Test
-    fun `on a column group map goes over the rows while asDataColumn gives a column of rows`() {
+    fun `asDataColumn map on a column group gives a column of the rows of the group`() {
         val group = df.getColumnGroup("name")
 
-        // `asDataFrame` only widens the static type of the group; `map` is then DataFrame.map,
-        // and the explicit type asserts that the result is a List with one element per row of the group
-        val fullNames: List<String> = group.asDataFrame().map { "${it["firstName"]} ${it["lastName"]}" }
-        fullNames shouldBe listOf("Alice Cooper", "Bob Dylan", "Charlie Daniels")
-
-        // a ColumnGroup is not a DataColumn statically, so DataColumn.map needs `asDataColumn` first;
-        // it gives a column of the rows of the group, with the same name and size as the group
+        // the explicit type asserts that this is a column of the rows themselves,
+        // which is what `asDataColumn` is for; it keeps the name and the size of the group
         val rows: DataColumn<DataRow<*>> = group.asDataColumn().map { it }
+
         rows.name() shouldBe "name"
         rows.size() shouldBe 3
+        rows[0]["firstName"] shouldBe "Alice"
     }
 
     @Test
@@ -186,6 +224,15 @@ class MapTests {
 
         // the new column is not part of `df`
         df.columnNames() shouldBe listOf("name", "age", "city")
+    }
+
+    @Test
+    fun `mapToColumn with Infer None keeps the declared type of the new column`() {
+        // no null is computed, yet the declared nullable type is kept: the values are not looked at
+        df.mapToColumn<_, Int?>("age or null", Infer.None) { "age"<Int>() }.type() shouldBe typeOf<Int?>()
+
+        // with the default `infer` the same call gives a non-nullable column
+        df.mapToColumn<_, Int?>("age or null") { "age"<Int>() }.type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -314,6 +361,21 @@ class MapTests {
 
         // `concat()` puts those dataframes back together into one dataframe
         firstRows.concat() shouldBe dataFrameOf("k", "v")("b", 1, "a", 2)
+    }
+
+    @Test
+    fun `KDoc example - mapToFrames can drop rows inside the groups`() {
+        // the same data and the same call as on the `map` page of the documentation website
+        val people = dataFrameOf(
+            "firstName" to listOf("Alice", "Alice", "Charlie", "Charlie", "Charlie"),
+            "age" to listOf(15, 20, 20, 40, 30),
+        )
+
+        val twoOldest = people.groupBy("firstName").mapToFrames { it.group.sortByDesc("age").take(2) }
+
+        // the group of "Alice" has two rows and keeps both; the group of "Charlie" has three and loses one
+        twoOldest.toList().map { it.rowsCount() } shouldBe listOf(2, 2)
+        twoOldest.concat()["age"].values() shouldBe listOf(20, 15, 40, 30)
     }
 
     @Test

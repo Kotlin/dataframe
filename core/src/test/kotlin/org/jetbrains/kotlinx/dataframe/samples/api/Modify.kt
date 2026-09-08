@@ -102,11 +102,17 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
+import org.jetbrains.kotlinx.dataframe.explainer.SamplesDisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
@@ -978,11 +984,12 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    // no @TransformDataFrameExpressions: the result is a List, which the expressions converter
+    // cannot render, so it would fall back to rendering the `groupBy` above it
     @Test
-    @TransformDataFrameExpressions
     fun mapOnGroupBy() {
         // SampleStart
-        // The number of people per city, as a list, in the order of the groups
+        // The number of people per city, as a list, in the order of the groups: [1, 1, 2, 1, 1, 1]
         df.groupBy { city }.map { group.rowsCount() }
         // SampleEnd
     }
@@ -996,13 +1003,23 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    // the expressions converter cannot render a FrameColumn and would fall back to rendering the `groupBy`
+    // above it, so the frame column itself is rendered here, as in `JoinWith`
     @Test
     @TransformDataFrameExpressions
     fun mapToFramesOnGroupBy() {
-        // SampleStart
-        // The two oldest people of every city, as a frame column
-        df.groupBy { city }.mapToFrames { group.sortByDesc { age }.take(2) }
+        val twoOldest =
+            // SampleStart
+            // The two oldest people with each first name, as a frame column:
+            // only the group of "Charlie" has a third person to leave out
+            df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
         // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions() +
+                WritersideStyle +
+                dataFrameOf(twoOldest).toHtml(SamplesDisplayConfiguration, getFooter = WritersideFooter),
+        )
     }
 
     @Test

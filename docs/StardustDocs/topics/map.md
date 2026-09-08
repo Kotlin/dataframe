@@ -4,7 +4,8 @@
 
 Computes a new value for every value, row, or key–group pair of the receiver, and collects the results
 into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
-a [DataFrame](DataFrame.md), a [DataColumn](DataColumn.md), or a [FrameColumn](DataColumn.md#framecolumn).
+a [`DataFrame`](DataFrame.md), a [`DataColumn`](DataColumn.md),
+or a [`FrameColumn`](DataColumn.md#framecolumn).
 
 **Related operations**: [](addRemove.md)
 
@@ -18,7 +19,7 @@ All `map` operations share the name but differ in what they go over and what the
 | [`map`](#map-on-datacolumn) / [`mapIndexed`](#map-on-datacolumn) | values of a [`DataColumn`](DataColumn.md) | a [`DataColumn`](DataColumn.md) of the same size |
 | [`map`](#map-on-groupby) | key–group pairs of a [`GroupBy`](groupBy.md) | `List` |
 | [`mapToRows`](#map-on-groupby) | key–group pairs of a [`GroupBy`](groupBy.md) | a [`DataFrame`](DataFrame.md) |
-| [`mapToFrames`](#map-on-groupby) | key–group pairs of a [`GroupBy`](groupBy.md) | a [FrameColumn](DataColumn.md#framecolumn) |
+| [`mapToFrames`](#map-on-groupby) | key–group pairs of a [`GroupBy`](groupBy.md) | a [`FrameColumn`](DataColumn.md#framecolumn) |
 
 Each result keeps the order of the values, rows, or key–group pairs it was computed from.
 
@@ -42,7 +43,7 @@ df.map { 2021 - it.age }
 
 See [row expressions](DataRow.md#row-expressions)
 
-A [ColumnGroup](DataColumn.md#columngroup) is also a [`DataFrame`](DataFrame.md), so `map` on a column group is
+A [`ColumnGroup`](DataColumn.md#columngroup) is also a [`DataFrame`](DataFrame.md), so `map` on a column group is
 this operation: it goes over the rows of the group and returns a `List`.
 To get a [`DataColumn`](DataColumn.md) of the same size instead — a column of the rows of the group —
 call `asDataColumn()` on the group first, and then [`map`](#map-on-datacolumn).
@@ -80,14 +81,15 @@ See [row expressions](DataRow.md#row-expressions)
 The new column is standalone: the original [`DataFrame`](DataFrame.md) is not changed and does not contain it.
 Use [`add`](add.md) to get a [`DataFrame`](DataFrame.md) with the new column in it.
 
-Inside the row expression, `prev()!!.newValue()` gives the value already computed for the preceding row,
-which is how running totals and other recurrences are expressed — see [`add`](add.md).
+Inside the row expression, `prev()?.newValue()` gives the value already computed for the preceding row —
+`null` for the first row, where there is no preceding one. This is how running totals and other
+recurrences are expressed; see [`add`](add.md).
 
 ## mapToFrame
 
 Maps the rows of a [`DataFrame`](DataFrame.md) into a new [`DataFrame`](DataFrame.md) made of the described columns.
 
-```kotlin
+```text
 mapToFrame { 
     columnMapping
     columnMapping
@@ -128,12 +130,11 @@ df.mapToFrame {
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html" width="100%"/>
 <!---END-->
 
-> The result holds **only** the described columns, in the order in which they are described.
-> This is what makes `mapToFrame` different from [`add`](add.md), where the columns of the original
-> [`DataFrame`](DataFrame.md) are part of the result as well.
-> In the example above, `city` is in the result only because of the `+city` line,
-> and `name` and `age` are not in it at all.
-> {style="warning"}
+The result holds **only** the described columns, in the order in which they are described.
+This is what makes `mapToFrame` different from [`add`](add.md), where the columns of the original
+[`DataFrame`](DataFrame.md) are part of the result as well.
+In the example above, `city` is in the result only because of the `+city` line,
+and `name` and `age` are not in it at all.
 
 ## map on DataColumn
 
@@ -172,20 +173,27 @@ df.name.firstName.mapIndexed { i, firstName -> "${i + 1}. $firstName" }
 
 <!---END-->
 
-What the new column is follows the type of the computed values:
-a column of [`DataRow`](DataRow.md)s is a [ColumnGroup](DataColumn.md#columngroup),
-a column of [`DataFrame`](DataFrame.md)s is a [FrameColumn](DataColumn.md#framecolumn),
-and any other column is a [ValueColumn](DataColumn.md#valuecolumn).
+Which kind of column you get follows the type of the new column — the type argument, or the `type` given
+explicitly — and not the computed values:
+a [`DataFrame`](DataFrame.md) type gives a [`FrameColumn`](DataColumn.md#framecolumn),
+a [`DataRow`](DataRow.md) type gives a [`ColumnGroup`](DataColumn.md#columngroup),
+and any other type gives a [`ValueColumn`](DataColumn.md#valuecolumn).
+A nullable [`DataFrame`](DataFrame.md) type belongs to the last group, because a
+[`FrameColumn`](DataColumn.md#framecolumn) cannot hold `null`.
+
+`infer` only concerns a [`ValueColumn`](DataColumn.md#valuecolumn): it decides whether the type of that
+column is the given one as it is, or the type of the computed values. For a
+[`ColumnGroup`](DataColumn.md#columngroup) and a [`FrameColumn`](DataColumn.md#framecolumn) it changes nothing.
 
 The overloads with an explicit `type` are for the cases where the type of the new column is only known
-at runtime. The given type is used as the type of the new column, and the computed values are put into it
-as they are, without any conversion — so it has to fit them. With `Infer.Type`
-the given type is only an upper bound, and the actual type is taken from the computed values.
+at runtime. The computed values are put into the column as they are, without any conversion, so the type
+has to fit them: a [`ValueColumn`](DataColumn.md#valuecolumn) can never have a
+[`DataFrame`](DataFrame.md) type, and a call that would give it one fails with an `IllegalArgumentException`.
 
 ## map on GroupBy
 
-Maps the key–group pairs of a [`GroupBy`](groupBy.md) — see
-[`GroupBy` transformation](groupBy.md#transformation) for what a key–group pair is.
+Maps the key–group pairs of a [`GroupBy`](groupBy.md): every row of a `GroupBy` is one key–group pair —
+the key values, and the group of rows that belongs to them (see [`groupBy`](groupBy.md)).
 
 ```text
 map { GroupWithKey -> value }: List<Value>
@@ -200,11 +208,10 @@ are available as `key` (a [`DataRow`](DataRow.md)) and the rows of the group as 
 <!---FUN mapOnGroupBy-->
 
 ```kotlin
-// The number of people per city, as a list, in the order of the groups
+// The number of people per city, as a list, in the order of the groups: [1, 1, 2, 1, 1, 1]
 df.groupBy { city }.map { group.rowsCount() }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapOnGroupBy.html" width="100%"/>
 <!---END-->
 
 <!---FUN mapToRowsOnGroupBy-->
@@ -220,8 +227,9 @@ df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
 <!---FUN mapToFramesOnGroupBy-->
 
 ```kotlin
-// The two oldest people of every city, as a frame column
-df.groupBy { city }.mapToFrames { group.sortByDesc { age }.take(2) }
+// The two oldest people with each first name, as a frame column:
+// only the group of "Charlie" has a third person to leave out
+df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
 ```
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapToFramesOnGroupBy.html" width="100%"/>
@@ -233,4 +241,4 @@ call `concat()` on it to get all of those dataframes back as one [`DataFrame`](D
 
 > `map` and `mapToRows` leave out the pairs for which the lambda returns `null`,
 > so their results can be shorter than the number of key–group pairs.
-> {style="warning"}
+> {style="note"}

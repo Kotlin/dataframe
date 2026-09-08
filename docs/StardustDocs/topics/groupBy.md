@@ -13,7 +13,7 @@ Each row in a `GroupBy` corresponds to a keys/group combination.
 ```text
 groupBy(moveToTop = true) { columns }
       [ transformations ]
-      reducer | aggregator | pivot
+      reducer | aggregator | pivot | mapper
 
 transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey() | .sortByKeyDesc() | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
@@ -24,6 +24,8 @@ reducer = .minBy { column } | .maxBy { column } | .medianBy { rowExpression } | 
           .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } 
 
 aggregator = .count() | .countDistinct() | .concat() | .concatWithKeys() | .toDataFrame() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+
+mapper = .map { GroupWithKey -> value } | .mapToRows { GroupWithKey -> DataRow? } | .mapToFrames { GroupWithKey -> DataFrame }
 
 pivot = .pivot { columns }
       [ .default(defaultValue) ]
@@ -628,9 +630,10 @@ To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name 
 Each of these methods returns a new DataFrame that includes the grouping key columns (except for [`concat`](concat.md)) 
 along with the columns of values aggregated from the corresponding groups.
 
-To compute something per key–group pair yourself instead of aggregating, use
-[`map` / `mapToRows` / `mapToFrames`](map.md#map-on-groupby): they hand every key–group pair to a lambda and
-collect the results into a `List`, a [`DataFrame`](DataFrame.md), or a [FrameColumn](DataColumn.md#framecolumn).
+To compute something per keys/group combination yourself instead of aggregating, use
+[`map`](map.md#map-on-groupby), [`mapToRows`](map.md#map-on-groupby),
+or [`mapToFrames`](map.md#map-on-groupby): they hand every combination to a lambda and collect the results
+into a `List`, a [`DataFrame`](DataFrame.md), or a [`FrameColumn`](DataColumn.md#framecolumn).
 
 ### Examples of aggregation
 #### concat on GroupBy {collapsible="true"}
