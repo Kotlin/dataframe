@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -14,16 +17,13 @@ import org.junit.Test
 /**
  * Tests the behavior of the `indices` API:
  *
- * - on a [org.jetbrains.kotlinx.dataframe.DataFrame] without arguments: the index of every row,
- * including a [org.jetbrains.kotlinx.dataframe.DataFrame] without rows.
+ * - on a [DataFrame] without arguments: the index of every row, including a [DataFrame] without rows.
  *
- * - on a [org.jetbrains.kotlinx.dataframe.DataFrame] with a
- * [org.jetbrains.kotlinx.dataframe.RowFilter]: the indices of the matching rows,
- * their order, and the cases where nothing matches.
+ * - on a [DataFrame] with a [RowFilter]: the indices of the matching rows, their order,
+ * and the cases where nothing matches.
  *
  * - on a column, as the `indices()` function and the `indices` property: the index of every
- * element, and what an element is for a [org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- * and for a [FrameColumn].
+ * element, and what an element is for a [ColumnGroup] and for a [FrameColumn].
  */
 class IndicesTests : TestBase() {
 
@@ -41,7 +41,8 @@ class IndicesTests : TestBase() {
 
     @Test
     fun `indices of a dataframe without rows is empty`() {
-        df.take(0).indices().toList() shouldBe emptyList()
+        // asserted as a range, like the non-empty case, so the return type stays part of the contract
+        df.take(0).indices() shouldBe IntRange.EMPTY
     }
 
     @Test
@@ -49,6 +50,11 @@ class IndicesTests : TestBase() {
         // the type annotation asserts the return type, which is part of the contract
         val moscow: List<Int> = df.indices { city == "Moscow" }
         moscow shouldBe listOf(2, 6)
+    }
+
+    @Test
+    fun `indices with a filter written through the string API`() {
+        df.indices { "city"<String?>() == "Moscow" } shouldBe listOf(2, 6)
     }
 
     @Test
@@ -96,7 +102,7 @@ class IndicesTests : TestBase() {
 
     @Test
     fun `indices of a column without elements is empty`() {
-        df.take(0).age.indices().toList() shouldBe emptyList()
+        df.take(0).age.indices() shouldBe IntRange.EMPTY
     }
 
     @Test

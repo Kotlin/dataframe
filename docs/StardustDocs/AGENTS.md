@@ -37,16 +37,12 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 - The site itself is built/previewed by WriterSide (IDE plugin or CI builder) from `project.ihp` + `d.tree` +
   `cfg/build-script.xml`; Gradle only produces the injected snippets/iframes.
 
-## Adding a `:samples` snippet to a topic that `:core` already owns
+## Gotchas
 
-A topic may carry more than one `<!---IMPORT-->` line, one per owning module — `rename.md` imports both
-`samples.api.Modify` (`:core`) and `samples.api.RenameToCamelCase` (`:samples`). Both korro configs run over
-the same file, and because each has `ignoreMissing = true`, each leaves the other's `<!---FUN-->` blocks
-alone. So a new sample for a `:core`-owned topic goes to `:samples`: add the class, add a second
-`<!---IMPORT-->` next to your section, and add the topic to the `korro { docs { ... } }` include list in
-`samples/build.gradle.kts` — do not move the existing samples.
-
-`:samples:korro` runs the whole `:samples:test` (`KorroGenerateTask` depends on `test`), so one invocation
-rewrites a few hundred files under `resources/**` and `images/**` and edits topics you never opened
-(`topics/concepts/apiLevels.md` among them). Snapshot `git status` before the run, keep your topic and the
-snippets your own samples produced, and `git checkout --` the rest.
+- **One topic, one module.** A page importing samples from both `:core` and `:samples` builds, but don't:
+  it works against the #898 migration and blocks iframes, since `DataFrameSampleHelper` lives only in
+  `:samples`. Adding a sample to a `:core`-owned topic means moving that topic's samples over first.
+- **A new iframe needs `:samples:updateShadowResources`** on top of the generated HTML — without the
+  `<resource>` entry in `_shadow_resources.md` the page silently shows no table.
+- After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
+  — check the real set with `git diff --ignore-cr-at-eol`.

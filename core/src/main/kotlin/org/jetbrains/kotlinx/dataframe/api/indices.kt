@@ -27,11 +27,10 @@ private typealias CommonIndicesDocs = Nothing
 
 /**
  * Returns the indices of all rows in this [DataFrame],
- * from `0` to the number of rows minus one.
+ * from `0` to the number of rows minus one,
+ * or an empty range if this [DataFrame] has no rows.
  *
- * The range is empty if this [DataFrame] has no rows.
- *
- * @include [CommonIndicesDocs]
+ * {@include [CommonIndicesDocs]}
  *
  * @return An [IntRange] with the index of every row in this [DataFrame].
  */
@@ -44,16 +43,14 @@ public fun DataFrame<*>.indices(): IntRange = 0 until rowsCount()
  *
  * {@include [SelectingRows.RowFilterSnippet] {@set [SelectingRows.FILTER_PARAM] [filter]}}
  *
- * @include [CommonIndicesDocs]
+ * {@include [CommonIndicesDocs]}
  *
- * {@comment The example below is backed by `IndicesTests` in core's test source set.}
  * ### Example
  * ```kotlin
- * // The indices of the rows where the "city" value is "Moscow"
+ * // The indices of the rows where the "city" column is "Moscow"
  * df.indices { city == "Moscow" }
  * ```
  *
- * @param [T] The schema marker type of this [DataFrame].
  * @param [filter] A [RowFilter] that returns `true` for the rows whose indices should be returned.
  * @return A [List] with the index of every row that satisfies the [filter],
  * empty if no row satisfies it.
