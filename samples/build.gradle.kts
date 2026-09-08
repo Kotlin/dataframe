@@ -125,6 +125,7 @@ korro {
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("indexing.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")

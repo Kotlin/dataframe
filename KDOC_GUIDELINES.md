@@ -117,6 +117,17 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
+A snippet that names a parameter only fits functions that use that name. Give it a `@set` key with a
+default instead of forking the snippet: `` The {@get [FILTER_PARAM] [predicate\]} is a [RowFilter] `` keeps
+every existing `@include` unchanged and lets a function with a differently named parameter write
+`{@include [SelectingRows.RowFilterSnippet] {@set [SelectingRows.FILTER_PARAM] [filter]}}`. The default
+still needs the escape; the value passed by `@set` does not, since it is written where the parameter exists.
+
+The two paths render slightly differently: a `@set` value goes through `ReferenceCodeSpanDocProcessor`
+and comes out as a code-span link (`` [`filter`][filter] ``), while the escaped default stays a plain
+`[predicate]`. Harmless, but if you need them identical, define the default through a `@set` helper in
+the style of `SelectingRows.SetDefaultOperationArg` so both take the same processor.
+
 Also, you can use 
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
