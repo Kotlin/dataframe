@@ -82,6 +82,7 @@
         <toc-element topic="info.md">
             <toc-element topic="columnsCount.md"/>
             <toc-element topic="rowsCount.md"/>
+            <toc-element topic="isEmpty.md"/>
             <toc-element topic="countDistinct.md"/>
             <toc-element topic="columnNames.md"/>
             <toc-element topic="columnTypes.md"/>

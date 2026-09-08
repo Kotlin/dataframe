@@ -6,6 +6,7 @@ General information about [`DataFrame`](DataFrame.md):
 * [`count`](count.md) / [`rowsCount()`](rowsCount.md) — number of rows
 * [`countDistinct()`](countDistinct.md) — number of distinct rows
 * [`columnsCount()`](columnsCount.md) — number of columns
+* [`isEmpty()`](isEmpty.md) / [`isNotEmpty()`](isEmpty.md#isnotempty) — whether there are no rows or no columns
 * [`columnNames()`](columnNames.md) — list of column names
 * [`columnTypes()`](columnTypes.md) — list of column types
 * [`head(n)`](head.md) — first n rows (default 5)

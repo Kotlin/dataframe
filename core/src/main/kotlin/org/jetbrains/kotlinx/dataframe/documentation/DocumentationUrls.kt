@@ -239,6 +239,12 @@ public interface DocumentationUrls {
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
     public typealias CountDistinct = Nothing
 
+    /** [See `isEmpty` on the documentation website.]({@include [Url]}/isempty.html) */
+    public typealias IsEmpty = Nothing
+
+    /** [See `isNotEmpty` on the documentation website.]({@include [Url]}/isempty.html#isnotempty) */
+    public typealias IsNotEmpty = Nothing
+
     /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
     public typealias ValueCounts = Nothing
 
