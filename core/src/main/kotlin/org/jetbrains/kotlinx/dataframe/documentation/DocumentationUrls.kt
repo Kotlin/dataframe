@@ -496,6 +496,9 @@ public interface DocumentationUrls {
     /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
     public typealias SortWith = Nothing
 
+    /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
+    public typealias Indices = Nothing
+
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing
 
