@@ -1,3 +1,4 @@
+<div align="center">
 <picture>
   <source
     media="(prefers-color-scheme: dark)"
@@ -8,6 +9,8 @@
     src="docs/imgs/kotlin-dataframe-logo-full-light.svg"
   >
 </picture>
+
+</div>
 
 # Kotlin DataFrame: typesafe in-memory structured data processing for JVM
 
