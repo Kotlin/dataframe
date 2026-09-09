@@ -1389,6 +1389,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("Cols0")
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
