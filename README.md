@@ -1,3 +1,14 @@
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="docs/imgs/kotlin-dataframe-logo-full-dark.svg"
+  >
+  <img
+    alt="Kotlin DataFrame"
+    src="docs/imgs/kotlin-dataframe-logo-full-light.svg"
+  >
+</picture>
+
 # Kotlin DataFrame: typesafe in-memory structured data processing for JVM
 
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
