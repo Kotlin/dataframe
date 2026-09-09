@@ -20,10 +20,9 @@
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Kotlin DataFrame provides type-safe, in-memory processing of tabular data on the JVM. 
-It reconciles Kotlin’s static typing with the dynamic nature of data 
-by combining the full power of the Kotlin language 
-by using [the interactive compiler plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) 
+Kotlin DataFrame provides type-safe, in-memory processing of structured tabular data on the JVM.
+It reconciles Kotlin's static typing with the dynamic nature of data using the full power of the Kotlin language
+by using [the interactive compiler plugin](https://kotlin.github.io/dataframe/compiler-plugin.html)
 that provides dynamic type-safe access to columns.
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
