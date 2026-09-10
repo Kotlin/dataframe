@@ -4191,7 +4191,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]` { myColumn } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allColsFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]` { myColumn } }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4254,7 +4254,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`("pathTo"["myColumn"]) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allColsFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`("pathTo"["myColumn"]) }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4316,7 +4316,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`("myColumn") }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allColsFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`("myColumn") }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4378,7 +4378,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`(myColumn) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allColsFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`(myColumn) }`
      *
      * #### Flavors of All (Cols):
      *
@@ -4440,7 +4440,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`(Type::myColumn) }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["someColGroup"].`[<code>allColsFrom</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.allColsFrom]`(Type::myColumn) }`
      *
      * #### Flavors of All (Cols):
      *

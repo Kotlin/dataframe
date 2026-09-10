@@ -256,8 +256,8 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
  * It must be followed by one of the positioning methods
  * to produce a new [<code>DataFrame</code>][DataFrame] with the updated column structure.
  *
- * Use the following methods to finalize the move:
- * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a one column group.
+ * Use the following methods to finalize the grouping:
+ * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a single column group.
  * - [<code>into { groupNameExpression }</code>][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *
