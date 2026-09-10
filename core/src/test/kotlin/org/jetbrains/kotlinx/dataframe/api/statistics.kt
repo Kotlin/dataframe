@@ -693,7 +693,7 @@ class StatisticsTests {
             "workExperienceYears",
             "dependentsCount",
             "annualIncome",
-        ) // TODO: why is here weight presented? looks like inconsitency
+        ) // TODO: why is here weight presented? looks like inconsistency
 
         val min41 = res4["age"][0] as Int
         min41 shouldBe 15

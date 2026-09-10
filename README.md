@@ -155,7 +155,7 @@ Or manually specify the version:
 > Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
 >
 > Use specified `1.0.0-rc01n` version in Kotlin Notebook.
-> Due to [an known issue](https://github.com/Kotlin/dataframe/issues/1116),
+> Due to [a known issue](https://github.com/Kotlin/dataframe/issues/1116),
 > common `dataframe:1.0.0-rc01` version works incorrectly in Notebook.
 >
 > If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
