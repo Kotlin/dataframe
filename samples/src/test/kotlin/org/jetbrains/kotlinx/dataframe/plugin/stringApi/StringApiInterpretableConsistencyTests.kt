@@ -49,7 +49,10 @@ class StringApiInterpretableConsistencyTests {
             .split { annotationArguments }.inward("delegateInterpreter", "stringArgument", "targetArgument")
             .rename { annotationArguments }.to("adapter")
 
-        val ignore = setOf(
+        // we try to make sure not to miss String APIs that need @StringApiInterpretable
+        // so, if there's @Interpretable, does it have String API overload?
+        // if yes, maybe annotation there should be added.
+        val doNotNeedStringApiInterpretableAdapter = setOf(
             "Parse", // own interpreter
             "Convert0", // own interpreter
             "Select0", // own interpreter
@@ -87,7 +90,7 @@ class StringApiInterpretableConsistencyTests {
                 val parametersOfCslDslOverload = parameters.map { it.name }
                 stringOverload.adapter.targetArgument !in parametersOfCslDslOverload
             }
-            .filter { interpreter !in ignore }
+            .filter { interpreter !in doNotNeedStringApiInterpretableAdapter }
 
         remainingInconsistentApis.asClue {
             remainingInconsistentApis.rowsCount() shouldBe 0
