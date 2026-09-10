@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -77,6 +78,8 @@ public fun <T, C : Number?> DataFrame<T>.stdFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.std(skipNaN, ddof).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "Std1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.stdFor(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
@@ -135,6 +138,8 @@ public fun <T, C : Number?> Grouped<T>.stdFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByStd0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.stdFor(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
@@ -175,6 +180,8 @@ public fun <T, C : Number?> Grouped<T>.std(
     ddof: Int = ddofDefault,
 ): DataFrame<T> = std(name, skipNaN, ddof) { columns.toColumnSet() }
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByStd2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.std(
     vararg columns: String,
     name: String? = null,

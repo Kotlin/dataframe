@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -180,6 +181,8 @@ public fun <A, B> DataFrame<A>.join(
  * @param type [<code>JoinType</code>][JoinType] defining how the resulting rows are constructed.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("Join0", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     vararg columns: String,
@@ -293,6 +296,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("InnerJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     innerJoin(other) { columns.toColumnSet() }
 
@@ -403,6 +408,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("LeftJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     leftJoin(other) { columns.toColumnSet() }
 
@@ -513,6 +520,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("RightJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     rightJoin(other) { columns.toColumnSet() }
 
@@ -623,6 +632,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("FullJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     fullJoin(other) { columns.toColumnSet() }
 
@@ -733,6 +744,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("FilterJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     filterJoin(other) { columns.toColumnSet() }
 
@@ -843,6 +856,8 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  * @param columns [<code>Column Names</code>][String] specifying join columns.
  * @return joined [<code>DataFrame</code>][DataFrame].
  */
+@Refine
+@StringApiInterpretable("ExcludeJoin", stringArgument = "columns", targetArgument = "selector")
 public fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     excludeJoin(other) { columns.toColumnSet() }
 

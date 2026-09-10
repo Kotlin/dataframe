@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.unfoldImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -26,6 +27,8 @@ public fun <T> DataFrame<T>.unfold(
     columns: ColumnsSelector<T, *>,
 ): DataFrame<T> = replace(columns).with { it.unfoldImpl(it.type()) { properties(roots = roots, maxDepth) } }
 
+@Refine
+@StringApiInterpretable(interpreter = "DataFrameUnfold", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.unfold(vararg columns: String): DataFrame<T> = unfold { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

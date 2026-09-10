@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
@@ -783,6 +784,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column.
  */
+@Refine
+@StringApiInterpretable(interpreter = "Min1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1706,6 +1709,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMin0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1859,6 +1864,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMin2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.min(
     vararg columns: String,
     name: String? = null,
