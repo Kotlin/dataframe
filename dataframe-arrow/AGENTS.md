@@ -61,12 +61,23 @@ still matches the criteria and is reused (`./gradlew --stop`, then `JAVA_HOME=<j
 Implementation is in `arrowReadingImpl.kt`, `ArrowWriterImpl.kt`, and `arrowTypesMatching.kt` (Arrow ↔ Kotlin type
 mapping); `ConvertingMismatch.kt` defines the mismatch model. Follow the `api → impl` split when editing.
 
-**Never convert a date-time column with `core`'s plain `convertTo`/`convertToLocalDateTime` in the writer.** Those
-resolve a `LocalDateTime` against `TimeZone.currentSystemDefault()`, so the same frame would write different bytes
-on a laptop and on CI. Arrow and Parquet define a timestamp as an offset from `1970-01-01T00:00:00Z`, so
-`ArrowWriterImpl` routes every such conversion through `convertToInstantInUtc` / `convertToLocalDateTimeInUtc`,
-which pin UTC. `ArrowTimestampTzTest.writing does not depend on the default time zone` guards this by running the
-round trip under four shifted default zones.
+**Never convert a date-time column with `core`'s plain `convertTo`/`convertToLocalDateTime` in the writer.** They
+resolve against the JVM default time zone, so the output would depend on the machine. Arrow and Parquet define a
+timestamp as an offset from `1970-01-01T00:00:00Z`, so `ArrowWriterImpl` routes these conversions through its own
+`convertToInstantInUtc` / `convertToLocalDateTimeInUtc`, which pin UTC for every source that needs a zone
+(local date-times, dates, and numbers read as epoch millis). Guarded by
+`ArrowTimestampTzTest.writing does not depend on the default time zone`, which writes one column of each under
+four shifted default zones. The `core`-side root cause is tracked as
+[#2072](https://github.com/Kotlin/dataframe/issues/2072) — if it is fixed there with a UTC default, these two
+local helpers become redundant. The `Date(DAY)` and `Time(unit)` branches are **not** pinned yet: same bug, only
+reachable with an explicit target `Schema`.
+
+Two more writer invariants, one test each:
+
+- `an instant at the bottom of the target unit round-trips` — the `Long.MIN_VALUE` boundary of a timestamp unit is
+  representable and must not be rejected as out of range.
+- `a write that fails leaves no leaked buffers behind` — a vector is allocated before it is filled, so any throw in
+  between must close it, or `RootAllocator.close()` reports a leak and masks the real error.
 
 The Arrow ↔ Kotlin type mapping is published as a table in `docs/StardustDocs/topics/dataSources/ApacheArrow.md`
 and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit.

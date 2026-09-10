@@ -293,8 +293,14 @@ public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = Nullability
  * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
  * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
  * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
- * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
- * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
+ * [kotlinx.datetime.LocalDateTime].
+ *
+ * A zone name may still be stored alongside such a column — Parquet's logical type itself keeps only
+ * `isAdjustedToUTC`, but PyArrow puts the original zone into the file's `ARROW:schema` metadata, and in Arrow
+ * IPC/Feather it is part of the schema as `Timestamp(unit, tz)`. It is display metadata: the values are already
+ * normalized to UTC, so applying it would change nothing about which instant they name, and it is deliberately
+ * neither applied nor returned. Only the instant comes back; use
+ * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
 public fun DataFrame.Companion.readParquet(
     vararg urls: URL,
@@ -321,8 +327,14 @@ public fun DataFrame.Companion.readParquet(
  * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
  * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
  * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
- * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
- * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
+ * [kotlinx.datetime.LocalDateTime].
+ *
+ * A zone name may still be stored alongside such a column — Parquet's logical type itself keeps only
+ * `isAdjustedToUTC`, but PyArrow puts the original zone into the file's `ARROW:schema` metadata, and in Arrow
+ * IPC/Feather it is part of the schema as `Timestamp(unit, tz)`. It is display metadata: the values are already
+ * normalized to UTC, so applying it would change nothing about which instant they name, and it is deliberately
+ * neither applied nor returned. Only the instant comes back; use
+ * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
 public fun DataFrame.Companion.readParquet(
     vararg strUrls: String,
@@ -341,8 +353,14 @@ public fun DataFrame.Companion.readParquet(
  * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
  * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
  * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
- * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
- * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
+ * [kotlinx.datetime.LocalDateTime].
+ *
+ * A zone name may still be stored alongside such a column — Parquet's logical type itself keeps only
+ * `isAdjustedToUTC`, but PyArrow puts the original zone into the file's `ARROW:schema` metadata, and in Arrow
+ * IPC/Feather it is part of the schema as `Timestamp(unit, tz)`. It is display metadata: the values are already
+ * normalized to UTC, so applying it would change nothing about which instant they name, and it is deliberately
+ * neither applied nor returned. Only the instant comes back; use
+ * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
 public fun DataFrame.Companion.readParquet(
     vararg paths: Path,
@@ -369,8 +387,14 @@ public fun DataFrame.Companion.readParquet(
  * Timestamp columns flagged `isAdjustedToUTC = true` count time units since `1970-01-01T00:00:00Z`, so they
  * identify a single point on the time-line and are read as [kotlin.time.Instant] in every supported precision
  * (`MILLIS`, `MICROS`, `NANOS`). Zone-less timestamps identify no such point and stay
- * [kotlinx.datetime.LocalDateTime]. The original time zone is not stored in the file, so only the instant
- * survives; use `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values.
+ * [kotlinx.datetime.LocalDateTime].
+ *
+ * A zone name may still be stored alongside such a column — Parquet's logical type itself keeps only
+ * `isAdjustedToUTC`, but PyArrow puts the original zone into the file's `ARROW:schema` metadata, and in Arrow
+ * IPC/Feather it is part of the schema as `Timestamp(unit, tz)`. It is display metadata: the values are already
+ * normalized to UTC, so applying it would change nothing about which instant they name, and it is deliberately
+ * neither applied nor returned. Only the instant comes back; use
+ * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
 public fun DataFrame.Companion.readParquet(
     vararg files: File,

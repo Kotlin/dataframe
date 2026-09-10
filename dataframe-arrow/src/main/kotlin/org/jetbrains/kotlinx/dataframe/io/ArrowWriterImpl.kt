@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.apache.arrow.memory.RootAllocator
@@ -63,9 +65,11 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
+import java.math.BigInteger
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import kotlin.time.Instant as StdlibInstant
 
@@ -81,33 +85,70 @@ private fun AnyCol.isInstantColumn(): Boolean =
 private fun AnyCol.isLocalDateTimeColumn(): Boolean =
     type().isSubtypeOf(typeOf<LocalDateTime?>()) || type().isSubtypeOf(typeOf<JavaLocalDateTime?>())
 
+private fun AnyCol.isLocalDateColumn(): Boolean =
+    type().isSubtypeOf(typeOf<LocalDate?>()) || type().isSubtypeOf(typeOf<JavaLocalDate?>())
+
+/**
+ * Whether [this] holds a number that `core` interprets as a count of milliseconds since the epoch — the only
+ * date-time meaning it gives a plain number (see `Long.toLocalDateTime` in `core`'s `convert.kt`).
+ */
+private fun AnyCol.isEpochNumberColumn(): Boolean =
+    type().isSubtypeOf(typeOf<Byte?>()) ||
+        type().isSubtypeOf(typeOf<Short?>()) ||
+        type().isSubtypeOf(typeOf<Int?>()) ||
+        type().isSubtypeOf(typeOf<Long?>())
+
 /**
  * Converts [this] to [instants][StdlibInstant], resolving a zone-less source against **UTC**.
  *
  * The pinned zone is the point. A plain `convertTo<Instant>()` resolves a `LocalDateTime` with
- * `TimeZone.currentSystemDefault()`, so the very same frame would produce different bytes on a developer's laptop
- * and on CI. Arrow and Parquet define a timestamp as an offset from `1970-01-01T00:00:00Z`, so UTC is both the
- * correct reference and the only deterministic one. Sources that are neither a local date-time nor an instant
- * (a `String`, a `Long`) still go through the generic converter.
+ * `TimeZone.currentSystemDefault()` and starts a `LocalDate`'s day in it, so the very same frame would produce
+ * different bytes on a developer's laptop and on CI. Arrow and Parquet define a timestamp as an offset from
+ * `1970-01-01T00:00:00Z`, so UTC is both the correct reference and the only deterministic one. Sources with no
+ * zone to resolve at all — an epoch number, which `core` reads as epoch milliseconds, or a `String`, which
+ * carries its own offset — still go through the generic converter.
  */
 private fun AnyCol.convertToInstantInUtc(): DataColumn<StdlibInstant?> =
-    if (isLocalDateTimeColumn()) {
-        convertToLocalDateTime().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
-    } else {
-        convertTo<StdlibInstant?>()
+    when {
+        isLocalDateTimeColumn() -> convertToLocalDateTime().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
+        isLocalDateColumn() -> convertToLocalDate().map(Infer.None) { it?.atStartOfDayIn(TimeZone.UTC) }
+        else -> convertTo<StdlibInstant?>()
     }
 
 /**
  * Converts [this] to [LocalDateTime]s, reading an instant source against **UTC**.
  *
- * The mirror image of [convertToInstantInUtc], and pinned to UTC for the same reason.
+ * The mirror image of [convertToInstantInUtc], and pinned to UTC for the same reason. A number needs the same
+ * treatment on this side: `core` turns it into an instant with `fromEpochMilliseconds` — zone-free — but then
+ * splits that instant into date-time fields in the system default zone, so the zone is re-applied here.
+ * A `LocalDate` needs none: it becomes a `LocalDateTime` through `atTime(0, 0)`, which involves no zone.
  */
 private fun AnyCol.convertToLocalDateTimeInUtc(): DataColumn<LocalDateTime?> =
-    if (isInstantColumn()) {
-        convertTo<StdlibInstant?>().map(Infer.None) { it?.toLocalDateTime(TimeZone.UTC) }
-    } else {
-        convertToLocalDateTime()
+    when {
+        isInstantColumn() -> convertTo<StdlibInstant?>().map(Infer.None) { it?.toLocalDateTime(TimeZone.UTC) }
+
+        isEpochNumberColumn() ->
+            convertToLong().map(Infer.None) {
+                it?.let { millis -> StdlibInstant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.UTC) }
+            }
+
+        else -> convertToLocalDateTime()
     }
+
+/**
+ * `[epochSeconds] * [unitsPerSecond] + [subSecondUnits]` evaluated without an intermediate bound, or `null` when
+ * the sum itself does not fit into a `Long`.
+ *
+ * Reached only from the overflow branch in [ArrowWriterImpl.infillTimeStampVector], one row at a time, so the
+ * [BigInteger] allocation never touches the common path.
+ */
+private fun exactEpochUnitsOrNull(epochSeconds: Long, unitsPerSecond: Long, subSecondUnits: Long): Long? {
+    val exact = BigInteger.valueOf(epochSeconds)
+        .multiply(BigInteger.valueOf(unitsPerSecond))
+        .add(BigInteger.valueOf(subSecondUnits))
+    // bitLength() excludes the sign bit, so anything representable as a signed 64-bit integer reports 63 or less.
+    return if (exact.bitLength() < Long.SIZE_BITS) exact.toLong() else null
+}
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -240,8 +281,10 @@ internal class ArrowWriterImpl(
      * `1970-01-01T00:00:00Z`, which is why both sides convert against [TimeZone.UTC] and never against the
      * machine's default zone.
      *
-     * Values finer than the vector's unit are truncated towards the epoch — a lossy step, so the first row where
-     * it happens is reported as [ConvertingMismatch.PrecisionReduced].
+     * A value finer than the vector's unit simply loses its trailing fractional digits, which rounds it **down**
+     * — towards the past, not towards the epoch. A pre-epoch value therefore moves *away* from the epoch:
+     * `1962-06-05T04:03:02.123456789Z` becomes `1962-06-05T04:03:02.123456Z` in a `MICROSECOND` vector. That is
+     * lossy either way, so the first row where it happens is reported as [ConvertingMismatch.PrecisionReduced].
      */
     private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol) {
         val arrowType = vector.field.type as ArrowType.Timestamp
@@ -266,14 +309,19 @@ internal class ArrowWriterImpl(
             }
             // An Arrow NANOSECOND timestamp is an int64 nanosecond count, so it only spans 1677-2262; anything
             // outside that would wrap around into a plausible-looking wrong date, so fail loudly instead.
+            val subSecondUnits = nanos / nanosPerUnit
             val epochUnits = try {
-                Math.addExact(Math.multiplyExact(value.epochSeconds, unitsPerSecond), nanos / nanosPerUnit)
+                Math.addExact(Math.multiplyExact(value.epochSeconds, unitsPerSecond), subSecondUnits)
             } catch (e: ArithmeticException) {
-                throw IllegalArgumentException(
-                    "Value $value in column \"${column.name}\" (row $i) is out of range for an Arrow " +
-                        "${arrowType.unit} timestamp; use a coarser time unit in the target schema",
-                    e,
-                )
+                // The product alone can overflow while the sum does not: the seconds are floored, so for an
+                // instant near the bottom of the range `epochSeconds * unitsPerSecond` lands below
+                // `Long.MIN_VALUE` and only the sub-second part brings it back. Redo it without a bound.
+                exactEpochUnitsOrNull(value.epochSeconds, unitsPerSecond, subSecondUnits)
+                    ?: throw IllegalArgumentException(
+                        "Value $value in column \"${column.name}\" (row $i) is out of range for an Arrow " +
+                            "${arrowType.unit} timestamp; use a coarser time unit in the target schema",
+                        e,
+                    )
             }
             vector.set(i, epochUnits)
         }
@@ -505,13 +553,23 @@ internal class ArrowWriterImpl(
             actualField.createVector(allocator)!!
         }
 
-        if (convertedColumn == null) {
-            check(actualField.isNullable)
-            allocateVector(vector, dataFrame.rowsCount())
-            infillWithNulls(vector, dataFrame.rowsCount())
-        } else {
-            allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
-            infillVector(vector, convertedColumn)
+        // The vector owns off-heap buffers the moment it is allocated, and nothing else has a reference to it
+        // yet, so a failure while filling it would strand them: [allocateVectorSchemaRoot] can only close the
+        // vectors it has already collected, and [close] would then refuse to close a non-empty allocator with
+        // "Memory was leaked by query", hiding the real cause. Catches [Throwable] because [infillVector] and
+        // [allocateVector] both throw [NotImplementedError], which is an [Error].
+        try {
+            if (convertedColumn == null) {
+                check(actualField.isNullable)
+                allocateVector(vector, dataFrame.rowsCount())
+                infillWithNulls(vector, dataFrame.rowsCount())
+            } else {
+                allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
+                infillVector(vector, convertedColumn)
+            }
+        } catch (e: Throwable) {
+            vector.close()
+            throw e
         }
         return vector
     }

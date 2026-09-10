@@ -178,9 +178,12 @@ Writers such as PyArrow, Polars and pandas set `isAdjustedToUTC = true` for ever
 columns are read as `Instant`. `MILLIS`, `MICROS` and `NANOS` are all supported, and the full precision is kept —
 a `NANOS` column keeps all nine fractional digits.
 
-> Normalizing to UTC is lossy by design: the original zone is **not** stored in the file, so a column written from
-> `Europe/Brussels` values and one written from UTC values are indistinguishable after the fact — only the instant
-> survives. Parquet also has no seconds precision (`MILLIS`, `MICROS` and `NANOS` only).
+> Normalizing to UTC is lossy by design: a column written from `Europe/Brussels` values and one written from UTC
+> values hold the same numbers, so they read back as the same instants. A zone name may still travel beside them —
+> the Parquet logical type records only `isAdjustedToUTC`, but PyArrow writes the original zone into the file's
+> `ARROW:schema` metadata, and in Arrow IPC/Feather it is part of the schema. Kotlin DataFrame treats that name as
+> display metadata and does **not** apply it, so only the instant is returned. Parquet also has no seconds
+> precision (`MILLIS`, `MICROS` and `NANOS` only).
 > {style="note"}
 
 An `Instant` names a point on the time-line but no wall clock, so reading one on somebody's clock takes an explicit

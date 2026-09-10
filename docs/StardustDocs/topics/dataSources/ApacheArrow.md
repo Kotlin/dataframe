@@ -126,5 +126,7 @@ a time zone, and the column is converted accordingly.
 > data stays inside that window.
 > {style="note"}
 
-Conversions between local date-times and instants are always resolved against **UTC**, never against the JVM's
-default time zone, so the same [`DataFrame`](DataFrame.md) always writes the same bytes.
+Writing a `Timestamp` field resolves every conversion it needs against **UTC**, never against the JVM's default
+time zone — a local date-time to an instant and back, a `LocalDate` to the start of its day, a number to
+calendar-and-clock fields (a number is read as epoch milliseconds). The result therefore depends only on the
+[`DataFrame`](DataFrame.md) and the target schema, not on the environment it is written in.

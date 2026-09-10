@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.asClue
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -316,6 +318,10 @@ internal class ArrowTimestampTzTest {
         val frame = dataFrameOf(
             DataColumn.createValueColumn("moment", listOf(truncatedToMicros[0]), typeOf<Instant?>()),
             DataColumn.createValueColumn("local", localDateTimes, typeOf<LocalDateTime?>()),
+            // A date carries no time of day, and a number carries neither date nor zone, so both need a zone
+            // supplied to become a timestamp at all — the two remaining places a system default could leak in.
+            DataColumn.createValueColumn("date", listOf(LocalDate(2024, 1, 1)), typeOf<LocalDate?>()),
+            DataColumn.createValueColumn("epochMillis", listOf(1_704_110_400_123L), typeOf<Long?>()),
         )
         val targetSchema = Schema(
             listOf(
@@ -323,6 +329,8 @@ internal class ArrowTimestampTzTest {
                 // exactly where a system-default zone would leak in.
                 Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, null)), null),
                 Field("local", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC")), null),
+                Field("date", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC")), null),
+                Field("epochMillis", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MILLISECOND, null)), null),
             ),
         )
 
@@ -337,6 +345,10 @@ internal class ArrowTimestampTzTest {
         perZone.forEach { df ->
             df["moment"].values().toList() shouldBe listOf(LocalDateTime(2024, 1, 1, 12, 0, 0, 123_456_000))
             df["local"].values().toList() shouldBe listOf(Instant.parse("2024-01-01T12:00:00.123Z"))
+            // Midnight UTC, not midnight wherever the writing machine happens to stand.
+            df["date"].values().toList() shouldBe listOf(Instant.parse("2024-01-01T00:00:00Z"))
+            // 1_704_110_400_123 is 2024-01-01T12:00:00.123Z; Arrow counts from that same epoch.
+            df["epochMillis"].values().toList() shouldBe listOf(LocalDateTime(2024, 1, 1, 12, 0, 0, 123_000_000))
         }
     }
 
@@ -378,6 +390,62 @@ internal class ArrowTimestampTzTest {
 
         message shouldContain "out of range"
         message shouldContain "NANOSECOND"
+    }
+
+    /**
+     * The instant at the very bottom of a unit's range is representable and must survive the round trip.
+     *
+     * `epochSeconds * unitsPerSecond` alone overflows there — the seconds are rounded *down*, so the product
+     * lands below `Long.MIN_VALUE` and only adding the sub-second remainder brings it back to exactly
+     * `Long.MIN_VALUE`. Multiplying and adding in one exact step would reject a value the format can hold.
+     */
+    @Test
+    fun `an instant at the bottom of the target unit round-trips`() {
+        mapOf(
+            TimeUnit.MILLISECOND to 1_000L,
+            TimeUnit.MICROSECOND to 1_000_000L,
+            TimeUnit.NANOSECOND to 1_000_000_000L,
+        ).forEach { (unit, unitsPerSecond) ->
+            val boundary = Instant.fromEpochSeconds(
+                epochSeconds = Long.MIN_VALUE.floorDiv(unitsPerSecond),
+                nanosecondAdjustment = Long.MIN_VALUE.mod(unitsPerSecond) * (1_000_000_000L / unitsPerSecond),
+            )
+            val frame = dataFrameOf(
+                DataColumn.createValueColumn("moment", listOf(boundary), typeOf<Instant?>()),
+            )
+            val targetSchema = Schema(
+                listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(unit, "UTC")), null)),
+            )
+
+            val bytes = frame.arrowWriter(targetSchema).use { it.saveArrowFeatherToByteArray() }
+
+            "$unit, $boundary".asClue {
+                DataFrame.readArrowFeather(bytes)["moment"].values().toList() shouldBe listOf(boundary)
+            }
+        }
+    }
+
+    /**
+     * A write that fails part-way must not strand off-heap buffers.
+     *
+     * Each vector is allocated before it is filled, so a failure in between leaves an allocated-but-orphaned
+     * vector behind — and `RootAllocator.close()` refuses to close a non-empty allocator
+     * (`BaseAllocator.checkClosed`), turning a clear `IllegalArgumentException` into a confusing
+     * `IllegalStateException: Memory was leaked by query` (or, inside `use {}`, into a suppressed one).
+     */
+    @Test
+    fun `a write that fails leaves no leaked buffers behind`() {
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant?>()),
+        )
+        val targetSchema = Schema(
+            listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")), null)),
+        )
+
+        val writer = frame.arrowWriter(targetSchema)
+
+        shouldThrow<IllegalArgumentException> { writer.saveArrowFeatherToByteArray() }
+        shouldNotThrowAny { writer.close() }
     }
 
     @Test
