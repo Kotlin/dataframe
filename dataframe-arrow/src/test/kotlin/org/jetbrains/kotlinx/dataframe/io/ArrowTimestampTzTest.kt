@@ -420,6 +420,31 @@ internal class ArrowTimestampTzTest {
     }
 
     /**
+     * Degrading to `null` needs somewhere to put the `null`, and a vector is only nullable if either the target
+     * field or the source column says so — a non-nullable column into a `nullable = false` field leaves nowhere.
+     * Writing anyway produced a file contradicting its own schema, which `NullabilityOptions.Checking` refuses
+     * with *"should be not nullable but has nulls"*; so a loyal mode has no degraded form here, and refuses too.
+     */
+    @Test
+    fun `an instant out of range for a non-nullable target field is refused in every mode`() {
+        val notNullFrame = dataFrameOf(
+            DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant>()),
+        )
+        val notNullSchema = Schema(
+            listOf(Field("moment", FieldType(false, ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC"), null), null)),
+        )
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        shouldThrow<ConvertingException> {
+            notNullFrame
+                .arrowWriter(notNullSchema, ArrowWriter.Mode.LOYAL, mismatchSubscriber = { mismatches += it })
+                .use { it.saveArrowFeatherToByteArray() }
+        }
+
+        mismatches shouldBe listOf(ConvertingMismatch.ValueOutOfRange("moment", 0, "NANOSECOND"))
+    }
+
+    /**
      * The instant at the very bottom of a unit's range is representable and must survive the round trip.
      *
      * `epochSeconds * unitsPerSecond` alone overflows there — the seconds are rounded *down*, so the product

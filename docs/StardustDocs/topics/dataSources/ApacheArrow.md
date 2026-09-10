@@ -133,7 +133,8 @@ a time zone, and the column is converted accordingly.
 
 An instant outside the target unit's range — the year 2500 in a `Timestamp(NANOSECOND, "UTC")` field — is
 reported as `ConvertingMismatch.ValueOutOfRange`, then refused with a `ConvertingException` under
-`ArrowWriter.Mode.STRICT` (the default) or written as `null` under `ArrowWriter.Mode.LOYAL`.
+`ArrowWriter.Mode.STRICT` (the default) or written as `null` under `ArrowWriter.Mode.LOYAL`. Dropping it needs a
+nullable field, so a non-nullable one is refused in either mode.
 
 Writing a `Timestamp` field resolves every conversion it needs against **UTC**, never against the JVM's default
 time zone — a local date-time to an instant and back, a `LocalDate` to the start of its day, a number to

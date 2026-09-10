@@ -291,6 +291,7 @@ internal class ArrowWriterImpl(
      * treated as any other value that does not fit the target field: reported as
      * [ConvertingMismatch.ValueOutOfRange], and refused with a [ConvertingException] when [strictType] is on
      * (the default, [ArrowWriter.Mode.STRICT]) or written as `null` when it is off ([ArrowWriter.Mode.LOYAL]).
+     * Dropping it needs a nullable [vector] to drop it into, so a non-nullable one is refused in either mode.
      */
     private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol, strictType: Boolean) {
         val arrowType = vector.field.type as ArrowType.Timestamp
@@ -328,8 +329,11 @@ internal class ArrowWriterImpl(
             if (epochUnits == null) {
                 // Same contract as every other value the target field cannot hold: refuse in a strict mode,
                 // report and degrade in a loyal one. Reported once per column, like [PrecisionReduced] below.
+                // A non-nullable vector has no degraded form to fall back on — writing `null` into it would
+                // produce a file contradicting its own schema, which `NullabilityOptions.Checking` then refuses
+                // to read — so there the value is refused whatever the mode.
                 val mismatch = ConvertingMismatch.ValueOutOfRange(column.name, i, arrowType.unit.name)
-                if (strictType) {
+                if (strictType || !vector.field.isNullable) {
                     mismatchSubscriber(mismatch)
                     throw ConvertingException(mismatch)
                 }

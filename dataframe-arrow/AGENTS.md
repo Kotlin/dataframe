@@ -78,7 +78,10 @@ degraded and written anyway (in a loyal one) — never thrown past the subscribe
 `Mode.LOYAL` callers cannot catch by the documented type. This holds for out-of-range timestamps
 (`ConvertingMismatch.ValueOutOfRange`, gated on `mode.strictType`) as it does for the older type/nullability
 mismatches. Note `Mode.STRICT` is the default of `arrowWriter(targetSchema, …)`, and the only mode the no-schema
-`writeArrow*`/`saveArrow*ToByteArray` path uses.
+`writeArrow*`/`saveArrow*ToByteArray` path uses. **A degraded form has to be legal for the target field:** a value
+dropped to `null` needs a nullable vector (the field is only widened to nullable when the *source column* has
+nulls), so into a non-nullable one an out-of-range value is refused in either mode — writing it would emit a file
+that `NullabilityOptions.Checking` then refuses to read back.
 
 Three more writer invariants, one test each:
 
