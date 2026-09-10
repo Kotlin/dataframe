@@ -1,21 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.plugin.stringApi
 
-import com.lemonappdev.konsist.api.Konsist
-import com.lemonappdev.konsist.api.declaration.KoAnnotationDeclaration
-import com.lemonappdev.konsist.api.declaration.KoParameterDeclaration
-import com.lemonappdev.konsist.api.declaration.KoTypeParameterDeclaration
-import com.lemonappdev.konsist.api.declaration.type.KoTypeDeclaration
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
@@ -23,8 +12,15 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.util.DataFrameApi
+import org.jetbrains.kotlinx.dataframe.util.annotationArguments
+import org.jetbrains.kotlinx.dataframe.util.annotations
+import org.jetbrains.kotlinx.dataframe.util.dataFrameApi
+import org.jetbrains.kotlinx.dataframe.util.interpretableFunctions
+import org.jetbrains.kotlinx.dataframe.util.interpreter
+import org.jetbrains.kotlinx.dataframe.util.name
+import org.jetbrains.kotlinx.dataframe.util.parameters
+import org.jetbrains.kotlinx.dataframe.util.stringApiFunctions
 import org.junit.Ignore
 import org.junit.Test
 
@@ -96,83 +92,4 @@ class StringApiInterpretableConsistencyTests {
             remainingInconsistentApis.rowsCount() shouldBe 0
         }
     }
-
-    private fun dataFrameApi(): DataFrame<DataFrameApi> {
-        val scope = Konsist.scopeFromDirectories(listOf("core"))
-            .functions()
-            .filter { !it.path.contains("generated") }
-
-        return scope.toDataFrame()
-            .filter { it.hasPublicModifier }
-            .filter { !annotations.any { it.name in setOf("Deprecated", "AccessApiOverload") } }
-            .select {
-                cols(
-                    receiverType,
-                    name,
-                    parameters,
-                    returnType,
-                    annotations,
-                    projectPath,
-                    isTopLevel,
-                    typeParameters,
-                )
-            }
-            .convert { projectPath }.with { it.removePrefix("projectPath: ") }
-            .cast<DataFrameApi>()
-    }
-
-    @DataSchema
-    data class DataFrameApi(
-        val receiverType: KoTypeDeclaration?,
-        val name: String,
-        val parameters: List<KoParameterDeclaration>,
-        val returnType: KoTypeDeclaration?,
-        val annotations: List<KoAnnotationDeclaration>,
-        val projectPath: String,
-        val isTopLevel: Boolean,
-        val typeParameters: List<KoTypeParameterDeclaration>,
-    )
-
-    private fun DataFrame<DataFrameApi>.interpretableFunctions(): DataFrame<InterpretableFunctions> =
-        select {
-            annotations and receiverType and name and parameters and returnType
-        }
-            .filter { annotations.any { it.name == "Interpretable" } }
-            .insert("interpreter") {
-                annotations
-                    .single { it.name == "Interpretable" }
-                    .arguments.single().value
-            }.at(0)
-            .cast<InterpretableFunctions>()
-
-    @DataSchema
-    data class InterpretableFunctions(
-        val interpreter: String?,
-        val annotations: List<KoAnnotationDeclaration>,
-        val receiverType: KoTypeDeclaration?,
-        val name: String,
-        val parameters: List<KoParameterDeclaration>,
-        val returnType: KoTypeDeclaration?,
-    )
-
-    private fun DataFrame<DataFrameApi>.stringApiFunctions(): DataFrame<StringApiFunctions> =
-        insert("annotationArguments") {
-            annotations.singleOrNull { it.name == "StringApiInterpretable" }
-                ?.arguments?.map { it.value }
-        }.at(0)
-            .dropNulls { annotationArguments }
-            .cast<StringApiFunctions>()
-
-    @DataSchema
-    data class StringApiFunctions(
-        val annotationArguments: List<String?>,
-        val receiverType: KoTypeDeclaration?,
-        val name: String,
-        val parameters: List<KoParameterDeclaration>,
-        val returnType: KoTypeDeclaration?,
-        val annotations: List<KoAnnotationDeclaration>,
-        val projectPath: String,
-        val isTopLevel: Boolean,
-        val typeParameters: List<KoTypeParameterDeclaration>,
-    )
 }
