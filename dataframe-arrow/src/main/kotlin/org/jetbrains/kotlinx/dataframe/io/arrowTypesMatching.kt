@@ -90,8 +90,9 @@ internal val TimeUnit.perSecond: Long
  *
  * Microseconds, not nanoseconds, for range: an Arrow nanosecond timestamp is an `int64` count of nanoseconds since
  * the epoch, which only spans 1677–2262, while a microsecond one reaches roughly ±292 277 years around it. That
- * still does not cover the whole [StdlibInstant] range — an instant beyond it fails with an
- * `IllegalArgumentException` rather than silently wrapping — but it covers every instant a file is likely to hold.
+ * still does not cover the whole [StdlibInstant] range — an instant beyond it is reported as
+ * [ConvertingMismatch.ValueOutOfRange] and refused rather than silently wrapping — but it covers every instant a
+ * file is likely to hold.
  * It is also the precision pandas, Polars and PyArrow emit by default. The trade-off is that a sub-microsecond
  * instant loses its last three digits on write; that is reported as [ConvertingMismatch.PrecisionReduced], and an
  * explicit target [Schema] with `Timestamp(NANOSECOND, "UTC")` avoids it.

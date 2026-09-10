@@ -285,8 +285,14 @@ internal class ArrowWriterImpl(
      * — towards the past, not towards the epoch. A pre-epoch value therefore moves *away* from the epoch:
      * `1962-06-05T04:03:02.123456789Z` becomes `1962-06-05T04:03:02.123456Z` in a `MICROSECOND` vector. That is
      * lossy either way, so the first row where it happens is reported as [ConvertingMismatch.PrecisionReduced].
+     *
+     * A value outside the unit's *range* has no such truncated form — a `Long` of nanoseconds only spans
+     * 1677–2262, and storing it anyway would wrap it around into a plausible-looking wrong date. It is therefore
+     * treated as any other value that does not fit the target field: reported as
+     * [ConvertingMismatch.ValueOutOfRange], and refused with a [ConvertingException] when [strictType] is on
+     * (the default, [ArrowWriter.Mode.STRICT]) or written as `null` when it is off ([ArrowWriter.Mode.LOYAL]).
      */
-    private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol) {
+    private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol, strictType: Boolean) {
         val arrowType = vector.field.type as ArrowType.Timestamp
         val unitsPerSecond = arrowType.unit.perSecond
         val nanosPerUnit = NANOS_PER_SECOND / unitsPerSecond
@@ -298,6 +304,7 @@ internal class ArrowWriterImpl(
         }
 
         var firstTruncatedRow: Int? = null
+        var firstOutOfRangeRow: Int? = null
         instants.forEachIndexed { i, value ->
             if (value == null) {
                 vector.setNull(i)
@@ -308,7 +315,7 @@ internal class ArrowWriterImpl(
                 firstTruncatedRow = i
             }
             // An Arrow NANOSECOND timestamp is an int64 nanosecond count, so it only spans 1677-2262; anything
-            // outside that would wrap around into a plausible-looking wrong date, so fail loudly instead.
+            // outside that would wrap around into a plausible-looking wrong date, so drop the value instead.
             val subSecondUnits = nanos / nanosPerUnit
             val epochUnits = try {
                 Math.addExact(Math.multiplyExact(value.epochSeconds, unitsPerSecond), subSecondUnits)
@@ -317,20 +324,36 @@ internal class ArrowWriterImpl(
                 // instant near the bottom of the range `epochSeconds * unitsPerSecond` lands below
                 // `Long.MIN_VALUE` and only the sub-second part brings it back. Redo it without a bound.
                 exactEpochUnitsOrNull(value.epochSeconds, unitsPerSecond, subSecondUnits)
-                    ?: throw IllegalArgumentException(
-                        "Value $value in column \"${column.name}\" (row $i) is out of range for an Arrow " +
-                            "${arrowType.unit} timestamp; use a coarser time unit in the target schema",
-                        e,
-                    )
+            }
+            if (epochUnits == null) {
+                // Same contract as every other value the target field cannot hold: refuse in a strict mode,
+                // report and degrade in a loyal one. Reported once per column, like [PrecisionReduced] below.
+                val mismatch = ConvertingMismatch.ValueOutOfRange(column.name, i, arrowType.unit.name)
+                if (strictType) {
+                    mismatchSubscriber(mismatch)
+                    throw ConvertingException(mismatch)
+                }
+                if (firstOutOfRangeRow == null) {
+                    firstOutOfRangeRow = i
+                }
+                vector.setNull(i)
+                return@forEachIndexed
             }
             vector.set(i, epochUnits)
         }
         firstTruncatedRow?.let {
             mismatchSubscriber(ConvertingMismatch.PrecisionReduced(column.name, it, arrowType.unit.name))
         }
+        firstOutOfRangeRow?.let {
+            mismatchSubscriber(ConvertingMismatch.ValueOutOfRange(column.name, it, arrowType.unit.name))
+        }
     }
 
-    private fun infillVector(vector: FieldVector, column: AnyCol) {
+    /**
+     * Fills [vector] with [column]'s content. [strictType] is only consulted for a value the target field cannot
+     * hold at all — see [infillTimeStampVector]; it is passed down to the children of a struct unchanged.
+     */
+    private fun infillVector(vector: FieldVector, column: AnyCol, strictType: Boolean) {
         when (vector) {
             is VarCharVector ->
                 column.convertToString()
@@ -425,7 +448,7 @@ internal class ArrowWriterImpl(
 
             // One branch for all eight timestamp vectors: they differ only in their unit and in whether they
             // carry a time zone, and both are read off the field. See [infillTimeStampVector].
-            is TimeStampVector -> infillTimeStampVector(vector, column)
+            is TimeStampVector -> infillTimeStampVector(vector, column, strictType)
 
             is TimeNanoVector ->
                 column.convertToLocalTime()
@@ -462,7 +485,7 @@ internal class ArrowWriterImpl(
                 }
 
                 column.columns().forEach { childColumn ->
-                    infillVector(vector.getChild(childColumn.name()), childColumn)
+                    infillVector(vector.getChild(childColumn.name()), childColumn, strictType)
                 }
 
                 column.indices.forEach { i -> vector.setIndexDefined(i) }
@@ -565,7 +588,7 @@ internal class ArrowWriterImpl(
                 infillWithNulls(vector, dataFrame.rowsCount())
             } else {
                 allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
-                infillVector(vector, convertedColumn)
+                infillVector(vector, convertedColumn, strictType)
             }
         } catch (e: Throwable) {
             vector.close()

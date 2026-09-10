@@ -72,15 +72,26 @@ four shifted default zones. The `core`-side root cause is tracked as
 local helpers become redundant. The `Date(DAY)` and `Time(unit)` branches are **not** pinned yet: same bug, only
 reachable with an explicit target `Schema`.
 
-Two more writer invariants, one test each:
+**Every write failure goes through the `ConvertingMismatch` subscriber.** A value the target field cannot hold is
+reported to `mismatchSubscriber` and then either refused as a `ConvertingException` (in a strict `Mode`) or
+degraded and written anyway (in a loyal one) — never thrown past the subscriber as a bare exception, which
+`Mode.LOYAL` callers cannot catch by the documented type. This holds for out-of-range timestamps
+(`ConvertingMismatch.ValueOutOfRange`, gated on `mode.strictType`) as it does for the older type/nullability
+mismatches. Note `Mode.STRICT` is the default of `arrowWriter(targetSchema, …)`, and the only mode the no-schema
+`writeArrow*`/`saveArrow*ToByteArray` path uses.
+
+Three more writer invariants, one test each:
 
 - `an instant at the bottom of the target unit round-trips` — the `Long.MIN_VALUE` boundary of a timestamp unit is
   representable and must not be rejected as out of range.
 - `a write that fails leaves no leaked buffers behind` — a vector is allocated before it is filled, so any throw in
   between must close it, or `RootAllocator.close()` reports a leak and masks the real error.
+- `a frame column has no list mapping on write` — the writer implements no list vectors, so a `FrameColumn` is
+  *not* writable: a top-level one degrades to `Utf8`, a nested one fails on allocation.
 
 The Arrow ↔ Kotlin type mapping is published as a table in `docs/StardustDocs/topics/dataSources/ApacheArrow.md`
-and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit.
+and pinned by `ArrowTypeMappingTest`; change the code, the test and the table in the same commit. The read and
+write tables are **not** symmetric — reading builds lists and frame columns, writing has no list mapping at all.
 
 **Legacy/deprecated:** `arrowReading.kt` also defines `ArrowFeather`, an implementation of the old
 `SupportedDataFrameFormat` SPI registered in

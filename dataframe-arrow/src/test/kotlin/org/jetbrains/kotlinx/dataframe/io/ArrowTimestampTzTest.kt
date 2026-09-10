@@ -375,21 +375,48 @@ internal class ArrowTimestampTzTest {
     }
 
     /** A nanosecond Arrow timestamp is an `int64` nanosecond count, so it cannot hold the year 2500. */
-    @Test
-    fun `an instant out of range for the target unit fails loudly`() {
-        val frame = dataFrameOf(
-            DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant?>()),
-        )
-        val targetSchema = Schema(
-            listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")), null)),
-        )
+    private val outOfRangeFrame = dataFrameOf(
+        DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant?>()),
+    )
 
-        val message = shouldThrow<IllegalArgumentException> {
-            frame.arrowWriter(targetSchema).use { it.saveArrowFeatherToByteArray() }
+    private val nanoTargetSchema = Schema(
+        listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")), null)),
+    )
+
+    /**
+     * An out-of-range value follows the writer's usual mismatch contract instead of throwing past it: it is
+     * reported to the subscriber, and refused as a [ConvertingException] — the failure type callers catch — only
+     * because [ArrowWriter.Mode.STRICT] is the default mode here.
+     */
+    @Test
+    fun `an instant out of range for the target unit fails loudly in a strict mode`() {
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        val message = shouldThrow<ConvertingException> {
+            outOfRangeFrame.arrowWriter(nanoTargetSchema, mismatchSubscriber = { mismatches += it })
+                .use { it.saveArrowFeatherToByteArray() }
         }.message
 
         message shouldContain "out of range"
         message shouldContain "NANOSECOND"
+        mismatches shouldBe listOf(ConvertingMismatch.ValueOutOfRange("moment", 0, "NANOSECOND"))
+    }
+
+    /**
+     * [ArrowWriter.Mode.LOYAL] is the mode that degrades and reports rather than aborting, so the same value is
+     * written as `null` and the rest of the export survives. Without this, one unrepresentable instant killed the
+     * whole write and never reached the subscriber.
+     */
+    @Test
+    fun `an instant out of range for the target unit is dropped in a loyal mode`() {
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        val bytes = outOfRangeFrame
+            .arrowWriter(nanoTargetSchema, ArrowWriter.Mode.LOYAL, mismatchSubscriber = { mismatches += it })
+            .use { it.saveArrowFeatherToByteArray() }
+
+        mismatches shouldBe listOf(ConvertingMismatch.ValueOutOfRange("moment", 0, "NANOSECOND"))
+        DataFrame.readArrowFeather(bytes)["moment"].values().toList() shouldBe listOf(null)
     }
 
     /**
@@ -430,21 +457,14 @@ internal class ArrowTimestampTzTest {
      *
      * Each vector is allocated before it is filled, so a failure in between leaves an allocated-but-orphaned
      * vector behind — and `RootAllocator.close()` refuses to close a non-empty allocator
-     * (`BaseAllocator.checkClosed`), turning a clear `IllegalArgumentException` into a confusing
+     * (`BaseAllocator.checkClosed`), turning a clear [ConvertingException] into a confusing
      * `IllegalStateException: Memory was leaked by query` (or, inside `use {}`, into a suppressed one).
      */
     @Test
     fun `a write that fails leaves no leaked buffers behind`() {
-        val frame = dataFrameOf(
-            DataColumn.createValueColumn("moment", listOf(Instant.parse("2500-01-01T00:00:00Z")), typeOf<Instant?>()),
-        )
-        val targetSchema = Schema(
-            listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")), null)),
-        )
+        val writer = outOfRangeFrame.arrowWriter(nanoTargetSchema)
 
-        val writer = frame.arrowWriter(targetSchema)
-
-        shouldThrow<IllegalArgumentException> { writer.saveArrowFeatherToByteArray() }
+        shouldThrow<ConvertingException> { writer.saveArrowFeatherToByteArray() }
         shouldNotThrowAny { writer.close() }
     }
 

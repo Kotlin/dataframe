@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.asClue
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -13,8 +15,10 @@ import org.apache.arrow.vector.types.TimeUnit
 import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -36,10 +40,12 @@ import java.time.LocalTime as JavaLocalTime
  * changes, update that table in the same commit** — and vice versa. Each case below is one row of it.
  *
  * The source of truth is `readField` in `arrowReadingImpl.kt` for reading and `KType.toArrowField` in
- * `arrowTypesMatching.kt` for writing. `Struct` / `List` / `LargeList` rows are deliberately not covered here:
- * they map to [org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] / [org.jetbrains.kotlinx.dataframe.columns.FrameColumn]
- * rather than to a value type, and are already covered by `ArrowKtTest` (`books.parquet`, `lists.parquet`,
- * `orders_nested.parquet`, `large_list_sample.parquet`) and `ArrowNullableStructTest`.
+ * `arrowTypesMatching.kt` for writing. The `Struct` / `List` / `LargeList` **read** rows are not in the case lists
+ * below: they map to [org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] /
+ * [org.jetbrains.kotlinx.dataframe.columns.FrameColumn] rather than to a value type, and are already covered by
+ * `ArrowKtTest` (`books.parquet`, `lists.parquet`, `orders_nested.parquet`, `large_list_sample.parquet`) and
+ * `ArrowNullableStructTest`. The **write** side has no list mapping at all — that is what the last test here
+ * pins, and what the table says.
  */
 internal class ArrowTypeMappingTest {
 
@@ -174,6 +180,38 @@ internal class ArrowTypeMappingTest {
                 kotlinType.toArrowField("value", ignoreMismatchMessage).type shouldBe expected
             }
         }
+    }
+
+    /**
+     * The write table has no `FrameColumn` row, and this is why: `AnyCol.toArrowField` special-cases only a
+     * [org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], so a top-level frame column degrades to its
+     * `toString()` like any other unmapped type, and a nested one gets an `ArrowType.List` field that the writer
+     * then cannot allocate — it implements no list vectors (see the `TODO` in `ArrowWriterImpl.infillVector`).
+     *
+     * Reading a `List` *is* supported, so the two tables are deliberately asymmetric here. Pinned so that the
+     * table cannot claim the round trip works.
+     */
+    @Test
+    fun `a frame column has no list mapping on write`() {
+        val nested = dataFrameOf("x")(1, 2)
+        val frameColumn = DataColumn.createFrameColumn("nested", listOf(nested, nested))
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        // Top level: no ArrowType.List field is even built, the frame type falls through to Utf8...
+        val topLevel = dataFrameOf(frameColumn)
+        topLevel.columns().toArrowSchema { mismatches += it }.findField("nested").type shouldBe ArrowType.Utf8()
+        mismatches shouldBe listOf(ConvertingMismatch.SavedAsString("nested", DataFrame::class.java))
+
+        // ...so the write succeeds, and reads back as the nested frame's toString() rather than as a frame.
+        val readBack = DataFrame.readArrowFeather(topLevel.saveArrowFeatherToByteArray())["nested"]
+        readBack.type() shouldBe typeOf<String>()
+        readBack.values().toList() shouldBe List(2) { nested.toString() }
+
+        // Nested in a column group the field *is* a List of Struct, and that is where the write gives up.
+        val grouped = dataFrameOf(DataColumn.createColumnGroup("g", dataFrameOf(frameColumn)))
+        grouped.columns().toArrowSchema().findField("g").children.single().type shouldBe ArrowType.List()
+        shouldThrow<IllegalArgumentException> { grouped.saveArrowFeatherToByteArray() }
+            .message shouldContain "Can not allocate"
     }
 
     /**

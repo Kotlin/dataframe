@@ -99,6 +99,26 @@ public sealed class ConvertingMismatch(
             "Column \"$column\" holds a value finer than $unit in row $row, saved with the trailing digits dropped"
     }
 
+    /**
+     * A date-time value did not fit the target field's **range** at all — for example an instant in the year 2500
+     * saved into a `Timestamp(NANOSECOND, …)` field, which is an `int64` nanosecond count and so only spans
+     * 1677–2262.
+     *
+     * Unlike [PrecisionReduced] the value cannot be stored in any form, so it is dropped: written as `null`, or
+     * refused with a [ConvertingException] when the mode has `strictType` on. Reported once per column, for the
+     * first row where it happens. Supply a target `Schema` with a coarser time unit to avoid it.
+     */
+    public data class ValueOutOfRange(
+        override val column: String,
+        override val row: Int?,
+        /** Arrow time unit whose range the value exceeded, e.g. `"NANOSECOND"`. */
+        public val unit: String,
+    ) : ConvertingMismatch(column, row, null) {
+        override fun toString(): String =
+            "Column \"$column\" holds a value out of range for an Arrow $unit timestamp in row $row, " +
+                "use a coarser time unit in the target schema"
+    }
+
     public sealed class NullableMismatch(column: String, row: Int?) : ConvertingMismatch(column, row, null) {
         public data class NullValueIgnored(override val column: String, override val row: Int?) :
             NullableMismatch(column, row) {

@@ -113,11 +113,16 @@ mapped — see [](Parquet.md#timestamps-and-time-zones).
 | `LocalTime` (`kotlinx.datetime` or `java.time`) | `Time(NANOSECOND)` |
 | `Instant` (`kotlin.time` or `java.time`) | `Timestamp(MICROSECOND, "UTC")` |
 | [`ColumnGroup`](DataColumn.md#columngroup) | `Struct` |
-| [`FrameColumn`](DataColumn.md#framecolumn) | `List` of `Struct` |
 
 Any other type is written as `Utf8` (its `toString()`), reported through the `ConvertingMismatch` subscriber.
 When you supply an explicit target `Schema`, `Timestamp` fields are also accepted in every unit, with or without
 a time zone, and the column is converted accordingly.
+
+> Writing has **no** `List` mapping, so a [`FrameColumn`](DataColumn.md#framecolumn) cannot be written: a
+> top-level one degrades to `Utf8` (the nested frame's `toString()`, reported as
+> `ConvertingMismatch.SavedAsString`), and one nested in a [`ColumnGroup`](DataColumn.md#columngroup) fails with
+> `IllegalArgumentException`.
+> {style="warning"}
 
 > An `Instant` is written at **microsecond** precision, so an instant carrying nanoseconds loses its last three
 > digits — reported as `ConvertingMismatch.PrecisionReduced`. The unit is microseconds rather than nanoseconds for
@@ -125,6 +130,10 @@ a time zone, and the column is converted accordingly.
 > 1677–2262. Pass a target `Schema` with `Timestamp(NANOSECOND, "UTC")` when you need the full precision and your
 > data stays inside that window.
 > {style="note"}
+
+An instant outside the target unit's range — the year 2500 in a `Timestamp(NANOSECOND, "UTC")` field — is
+reported as `ConvertingMismatch.ValueOutOfRange`, then refused with a `ConvertingException` under
+`ArrowWriter.Mode.STRICT` (the default) or written as `null` under `ArrowWriter.Mode.LOYAL`.
 
 Writing a `Timestamp` field resolves every conversion it needs against **UTC**, never against the JVM's default
 time zone — a local date-time to an instant and back, a `LocalDate` to the start of its day, a number to
