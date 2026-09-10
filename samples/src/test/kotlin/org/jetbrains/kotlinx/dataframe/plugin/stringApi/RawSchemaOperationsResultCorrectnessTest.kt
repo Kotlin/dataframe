@@ -69,7 +69,7 @@ import org.junit.Test
 @Suppress("FunctionName", "TestFunctionName")
 class RawSchemaOperationsResultCorrectnessTest : CommonTestData() {
     @Test
-    @Ignore
+    @Ignore // need to investigate failure on plugin side
     fun DataFrameCumSum() {
         dfRaw.cumSum("value") matches df.cumSum { value }.select { value.cast<Any?>() }
     }
@@ -82,7 +82,7 @@ class RawSchemaOperationsResultCorrectnessTest : CommonTestData() {
     }
 
     @Test
-    @Ignore
+    @Ignore // need to investigate failure on plugin side
     fun DataFrameUnfold() {
         recordsRaw.unfold("ab") matches records.unfold { ab }.select { ab.cast<Any?>() }
     }
