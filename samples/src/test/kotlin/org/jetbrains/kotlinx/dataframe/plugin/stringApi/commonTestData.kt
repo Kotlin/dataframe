@@ -11,22 +11,11 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.first
 
 abstract class CommonTestData {
+    @Suppress("ktlint:standard:argument-list-wrapping")
     val df: DataFrame<Df> = dataFrameOf("key", "value", "other", "nullable", "nan")(
-        "a",
-        1,
-        10,
-        1,
-        Double.NaN,
-        "a",
-        2,
-        20,
-        null,
-        2.0,
-        "b",
-        3,
-        30,
-        3,
-        Double.NaN,
+        "a", 1, 10, 1, Double.NaN,
+        "a", 2, 20, null, 2.0,
+        "b", 3, 30, 3, Double.NaN,
     ).cast<Df>()
     val dfRaw: DataFrame<Any> = df.cast<Any>()
 
