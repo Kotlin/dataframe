@@ -30,6 +30,7 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.commonTestUtils)
 }
 
 tasks.withType<KotlinCompile> {
