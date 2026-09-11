@@ -420,10 +420,19 @@ For complex operations, write a **complete** example with all steps.
 
 For methods with Columns Selection DSL, add several examples with different CS DSL selection methods.
 
+Keep deprecated API out of the examples, even when documenting a legacy function — check for
+`@Deprecated` before copying a call from an old test.
+
 Start the section with
 
 ```
 ### Examples
+```
+
+or, when the KDoc has exactly one example, with
+
+```
+### Example
 ```
 
 #### Data tables in examples
