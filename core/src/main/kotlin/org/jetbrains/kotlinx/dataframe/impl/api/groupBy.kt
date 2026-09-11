@@ -143,6 +143,8 @@ private fun distributeColumnValuesIntoGroups(
     val values = column.values() as List<Any?>
     val type = column.type()
     val canBecomeFrameColumn = type.isSubtypeOf(typeOf<AnyFrame?>())
+    val nonNullableType = type.withNullability(false)
+    val nullableType = type.withNullability(true)
     val groupValues = Array<MutableList<Any?>>(nGroups) { ArrayList(groupSizes[it]) }
     val groupNullable = BooleanArray(nGroups)
 
@@ -161,11 +163,7 @@ private fun distributeColumnValuesIntoGroups(
             DataColumn.createValueColumn(
                 name = column.name(),
                 values = groupValues[groupIndex],
-                type = if (groupNullable[groupIndex] == type.isMarkedNullable) {
-                    type
-                } else {
-                    type.withNullability(groupNullable[groupIndex])
-                },
+                type = if (groupNullable[groupIndex]) nullableType else nonNullableType,
             )
         }
     }
