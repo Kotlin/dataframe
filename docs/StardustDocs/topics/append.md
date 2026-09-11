@@ -19,8 +19,9 @@ must be a multiple of the number of columns.
 Every appended value must be accepted by the corresponding column:
 
 * a [`ValueColumn`](DataColumn.md#valuecolumn) accepts `null` or a value compatible with its type;
-* a [`ColumnGroup`](DataColumn.md#columngroup) accepts `null`, a [`DataRow`](DataRow.md), or a `List` whose values
-follow the nested column order;
+* a [`ColumnGroup`](DataColumn.md#columngroup) accepts `null`; a [`DataRow`](DataRow.md), whose values are matched
+to the nested columns by name (a nested column whose name is absent from the row receives `null`); or a `List`
+whose values follow the nested column order;
 * a [`FrameColumn`](DataColumn.md#framecolumn) accepts `null` or a [`DataFrame`](DataFrame.md).
 
 `append` does not modify the original [`DataFrame`](DataFrame.md).
@@ -124,7 +125,7 @@ implement `DataRowSchema`:
 data class Person(val name: String, val age: Int)
 ```
 
-When the annotated class is used as the [`DataFrame`](DataFrame.md) schema type, 
+When the annotated class is used as the [`DataFrame`](DataFrame.md) schema type,
 its instances can be passed directly to the type-safe `append` overload:
 
 <!---FUN appendDataSchema-->
@@ -181,18 +182,31 @@ in the [`ColumnGroup`](DataColumn.md#columngroup).
 
 ### [`DataRow`](DataRow.md)
 
-A [`DataRow`](DataRow.md) containing values of compatible types can be used
-to supply values to a [`ColumnGroup`](DataColumn.md#columngroup):
+A [`DataRow`](DataRow.md) can be used to supply values to a [`ColumnGroup`](DataColumn.md#columngroup).
+Its values are matched to the nested columns by name, not by position, and must be compatible with the
+corresponding nested columns:
 
 <!---FUN appendColumnGroupRow-->
 
 ```kotlin
-val bobRow = dataFrameOf("firstName", "lastName")("Bob", "Dylan")[0]
+val bobRow = dataFrameOf("lastName", "firstName")("Dylan", "Bob")[0]
 columnGroupDf.append(bobRow, 30)
 ```
 
 <!---END-->
 <inline-frame src="./resources/appendColumnGroupRow.html" width="100%" height="500px"></inline-frame>
+
+If a nested column's name is absent from the row, `null` is appended to that column:
+
+<!---FUN appendColumnGroupRowWithMissingColumn-->
+
+```kotlin
+val bobRow = dataFrameOf("firstName")("Bob")[0]
+columnGroupDf.append(bobRow, 30)
+```
+
+<!---END-->
+<inline-frame src="./resources/appendColumnGroupRowWithMissingColumn.html" width="100%" height="500px"></inline-frame>
 
 ### `null` with [`ColumnGroup`](DataColumn.md#columngroup)
 
