@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
@@ -174,6 +175,31 @@ class SingleTests : ColumnsSelectionDslTests() {
     @Test
     fun `singleOrNull on DataFrame with more than one matching row returns null`() {
         df.singleOrNull { age == 20 } shouldBe null
+    }
+
+    @Test
+    fun `single on empty DataFrame with predicate throws`() {
+        shouldThrow<NoSuchElementException> {
+            df.drop(df.nrow).single { isHappy }
+        }
+    }
+
+    @Test
+    fun `singleOrNull on empty DataFrame with predicate returns null`() {
+        df.drop(df.nrow).singleOrNull { isHappy } shouldBe null
+    }
+
+    @Test
+    fun `single on DataFrame with predicate on a nested column`() {
+        // lastName lives inside the `name` column group
+        val row: DataRow<Person> = df.single { name.lastName == "Dylan" }
+        row.age shouldBe 45
+    }
+
+    @Test
+    fun `single on DataFrame with predicate that uses the row as it`() {
+        val row: DataRow<Person> = df.single { it.age == 45 }
+        row.name.lastName shouldBe "Dylan"
     }
 
     // endregion

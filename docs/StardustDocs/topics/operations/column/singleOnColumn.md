@@ -14,8 +14,11 @@ Discover `single` operation in Kotlin Dataframe.
 </link-summary>
 
 
-Returns the only value in this [`DataColumn`](DataColumn.md).
-If the [`DataColumn`](DataColumn.md) is empty or contains more than one value, throws an exception.
+Returns the single value in this [`DataColumn`](DataColumn.md).
+Throws [`NoSuchElementException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-no-such-element-exception/)
+if the [`DataColumn`](DataColumn.md) is empty, and
+[`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
+if it contains more than one value.
 
 <!---FUN singleOnColumnDf-->
 
