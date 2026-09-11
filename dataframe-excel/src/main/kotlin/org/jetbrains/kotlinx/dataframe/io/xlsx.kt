@@ -6,6 +6,7 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.hssf.usermodel.HSSFWorkbookFactory
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DataFormatter
@@ -22,6 +23,7 @@ import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.util.TempFile
 import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -77,6 +79,21 @@ internal class DefaultReadExcelMethod(path: String?) :
 
 private const val READ_EXCEL = "readExcel"
 private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
+
+/**
+ * Some fat JAR packagers overwrite one descriptor with the other,
+ * so register both XLS and XLSX workbook providers explicitly.
+ */
+private object PoiWorkbookFactory {
+    init {
+        WorkbookFactory.addProvider(HSSFWorkbookFactory())
+        WorkbookFactory.addProvider(XSSFWorkbookFactory())
+    }
+
+    fun create(inputStream: InputStream): Workbook = WorkbookFactory.create(inputStream)
+
+    fun create(inputStream: InputStream, password: String?): Workbook = WorkbookFactory.create(inputStream, password)
+}
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -146,7 +163,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = PoiWorkbookFactory.create(url.openStream())
     return wb.use {
         readExcel(
             wb,
@@ -174,7 +191,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = PoiWorkbookFactory.create(url.openStream())
     return wb.use {
         readExcel(
             wb,
@@ -291,7 +308,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = PoiWorkbookFactory.create(inputStream, /* password = */ null)
         return wb.use {
             readExcel(
                 it,
@@ -322,7 +339,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = PoiWorkbookFactory.create(inputStream, /* password = */ null)
         return wb.use {
             readExcel(
                 it,
@@ -453,7 +470,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = PoiWorkbookFactory.create(inputStream)
     return wb.use {
         readExcel(
             it,
@@ -481,7 +498,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = PoiWorkbookFactory.create(inputStream)
     return wb.use {
         readExcel(
             it,
