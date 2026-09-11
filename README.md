@@ -1,4 +1,16 @@
-# Kotlin DataFrame: typesafe in-memory structured data processing for JVM
+
+<picture>
+  <source
+    media="(prefers-color-scheme: dark)"
+    srcset="docs/imgs/kotlin-dataframe-logo-full-dark.svg"
+  >
+  <img
+    alt="Kotlin DataFrame"
+    src="docs/imgs/kotlin-dataframe-logo-full-light.svg"
+  >
+</picture>
+
+# 
 
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component beta stability](https://img.shields.io/badge/project-beta-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
@@ -8,9 +20,11 @@
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full
-power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and
-REPL.
+Kotlin DataFrame provides type-safe, in-memory processing of tabular data on the JVM.
+It reconciles Kotlin's static typing with the dynamic nature of data, 
+utilizing the full power of the Kotlin language
+with [the interactive compiler plugin](https://kotlin.github.io/dataframe/compiler-plugin.html)
+that provides type-safe access to columns evaluating structure changes in compile time on-the-fly
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — the data processing pipeline is organized in a chain of `DataFrame` transformation operations.
