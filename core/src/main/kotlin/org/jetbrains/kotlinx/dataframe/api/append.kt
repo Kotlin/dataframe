@@ -22,8 +22,9 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * of the number of columns.
  *
  * Every appended value must be accepted by the corresponding column. A [ValueColumn] accepts `null` or a value of
- * its declared type. A [ColumnGroup] accepts `null`, a [DataRow], or a [List]
- * whose values follow the group's column order. A [FrameColumn] accepts `null` or a [DataFrame].
+ * its declared type. A [ColumnGroup] accepts `null`; a [DataRow], whose values are matched to the group's columns by
+ * name (a group column whose name is absent from the row receives `null`); or a [List] whose values follow the
+ * group's column order. A [FrameColumn] accepts `null` or a [DataFrame].
  *
  * @include [AppendingNullsToHierarchicalColumns]
  *
