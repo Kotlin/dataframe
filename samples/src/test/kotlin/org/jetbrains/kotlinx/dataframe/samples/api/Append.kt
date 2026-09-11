@@ -121,7 +121,7 @@ class Append : DataFrameSampleHelper("append", "api") {
     @Test
     fun appendColumnGroupRow() {
         // SampleStart
-        val bobRow = dataFrameOf("firstName", "lastName")("Bob", "Dylan")[0]
+        val bobRow = dataFrameOf("lastName", "firstName")("Dylan", "Bob")[0]
         columnGroupDf.append(bobRow, 30)
             // SampleEnd
             .also {
@@ -129,6 +129,25 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "name" to columnOf(
                         "firstName" to columnOf("Alice", "Bob"),
                         "lastName" to columnOf("Cooper", "Dylan"),
+                    ),
+                    "age" to columnOf(20, 30),
+                )
+            }
+            .toHtmlWithOpenedNestedDfs()
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun appendColumnGroupRowWithMissingColumn() {
+        // SampleStart
+        val bobRow = dataFrameOf("firstName")("Bob")[0]
+        columnGroupDf.append(bobRow, 30)
+            // SampleEnd
+            .also {
+                it shouldBe dataFrameOf(
+                    "name" to columnOf(
+                        "firstName" to columnOf("Alice", "Bob"),
+                        "lastName" to columnOf("Cooper", null),
                     ),
                     "age" to columnOf(20, 30),
                 )
