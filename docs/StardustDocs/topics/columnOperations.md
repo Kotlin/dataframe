@@ -7,3 +7,4 @@
 * [`between`](between.md) — returns a Boolean [`DataColumn`](DataColumn.md) indicating whether each value lies between two bounds
 * [`first`](firstOnColumn.md) — Returns the first value in this [`DataColumn`](DataColumn.md)
 * [`last`](lastOnColumn.md) — Returns the last value in this [`DataColumn`](DataColumn.md)
+* [`single`](singleOnColumn.md) — Returns the only value in this [`DataColumn`](DataColumn.md)

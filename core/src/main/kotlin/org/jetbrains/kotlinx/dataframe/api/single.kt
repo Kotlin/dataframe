@@ -5,8 +5,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -19,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -33,12 +37,38 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns the single value in this [DataColumn].
+ *
+ * For more information: {@include [DocumentationUrls.SingleOnColumn]}
+ *
+ * See also [first], [last], [take], [takeLast].
+ *
+ * @return The single value in this [DataColumn].
+ *
+ * @throws [NoSuchElementException] if the [DataColumn] is empty.
+ * @throws [IllegalArgumentException] if the [DataColumn] contains more than one value.
+ */
 public fun <C> DataColumn<C>.single(): C = values.single()
 
 // endregion
 
 // region DataFrame
 
+/**
+ * Returns the single [row][DataRow] in this [DataFrame].
+ *
+ * For more information: {@include [DocumentationUrls.Single]}
+ *
+ * See also [singleOrNull][DataFrame.singleOrNull],
+ * [first][DataFrame.first],
+ * [last][DataFrame.last].
+ *
+ * @return A [DataRow] containing the single row in this [DataFrame].
+ *
+ * @throws [NoSuchElementException] if the [DataFrame] contains no rows.
+ * @throws [IllegalArgumentException] if the [DataFrame] contains more than one row.
+ */
 public fun <T> DataFrame<T>.single(): DataRow<T> =
     when (nrow) {
         0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
@@ -46,11 +76,85 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
         else -> throw IllegalArgumentException("DataFrame has more than one row.")
     }
 
+/**
+ * Returns the single [row][DataRow] in this [DataFrame].
+ * Returns `null` if the [DataFrame] contains no rows or contains more than one row.
+ *
+ * For more information: {@include [DocumentationUrls.SingleOrNull]}
+ *
+ * See also [single][DataFrame.single],
+ * [firstOrNull][DataFrame.firstOrNull],
+ * [lastOrNull][DataFrame.lastOrNull].
+ *
+ * @return A [DataRow] containing the single row in this [DataFrame],
+ * or `null` if the [DataFrame] contains no rows or contains more than one row.
+ */
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
+/**
+ * Returns the single [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ *
+ * Exactly one row has to match the [predicate].
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions,
+ * // find the only transaction made with the given id
+ * df.single { id == 137 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.Single]}
+ *
+ * See also [singleOrNull][DataFrame.singleOrNull],
+ * [first][DataFrame.first],
+ * [last][DataFrame.last].
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the single row
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [DataRow] containing the single row that matches the given [predicate].
+ *
+ * @throws [NoSuchElementException] if the [DataFrame] contains no rows matching the [predicate].
+ * @throws [IllegalArgumentException] if the [DataFrame] contains more than one row
+ * matching the [predicate].
+ */
 public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
     rows().single { predicate(it, it) }
 
+/**
+ * Returns the single [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
+ * Returns `null` if the [DataFrame] contains no rows matching the [predicate]
+ * (including the case when the [DataFrame] is empty)
+ * or contains more than one row matching the [predicate].
+ *
+ * @include [SelectingRows.RowFilterSnippet]
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions,
+ * // find the only transaction made with the given id,
+ * // or 'null' if there is no such transaction or there is more than one
+ * df.singleOrNull { id == 137 }
+ * ```
+ *
+ * For more information: {@include [DocumentationUrls.SingleOrNull]}
+ *
+ * See also [single][DataFrame.single],
+ * [firstOrNull][DataFrame.firstOrNull],
+ * [lastOrNull][DataFrame.lastOrNull].
+ *
+ * @param [predicate] A [row filter][RowFilter] used to get the single row
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [DataRow] containing the single row that matches the given [predicate],
+ * or `null` if there is no such row or there is more than one.
+ */
 public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
