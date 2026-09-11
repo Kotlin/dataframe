@@ -60,7 +60,7 @@ internal interface ExpressionsGivenRow {
     /**
      * Provide a new value for every selected cell given its row using a [row expression][DfRowExpression].
      *
-     * Fore more information, {@include [DocumentationUrls.DataRow.RowExpression]}
+     * For more information, {@include [DocumentationUrls.DataRow.RowExpression]}
      */
     interface RowExpression {
 
@@ -84,7 +84,7 @@ internal interface ExpressionsGivenRow {
     /** Provide a new value for every selected cell given its row and its previous value using a
      * [row value expression][DfRowValueExpression].
      *
-     * Fore more information, {@include [DocumentationUrls.DataRow.RowValueExpression]}
+     * For more information, {@include [DocumentationUrls.DataRow.RowValueExpression]}
      */
     interface RowValueExpression {
 
