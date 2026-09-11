@@ -63,4 +63,4 @@ public inline fun <reified T : DataRowSchema> dataFrameOf(vararg rows: T): DataF
  * @return A new [DataFrame] containing the existing and appended rows, or this [DataFrame] if [rows] is empty.
  */
 public inline fun <reified T : DataRowSchema> DataFrame<T>.append(vararg rows: T): DataFrame<T> =
-    listOf(this, rows.asIterable().toDataFrame()).concat()
+    if (rows.isEmpty()) this else listOf(this, rows.asIterable().toDataFrame()).concat()
