@@ -886,6 +886,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      *
      * For more information: [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
      *
+     * See also [<code>schema</code>][GroupBy.schema] — the schema of this [<code>GroupBy</code>][GroupBy] as a [<code>DataFrame</code>][DataFrame].
+     *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.
      * @return A new [<code>DataFrame</code>][DataFrame] that includes the grouping key columns together
