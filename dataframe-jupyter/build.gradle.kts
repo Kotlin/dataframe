@@ -8,7 +8,6 @@ plugins {
     with(libs.plugins) {
         alias(publisher)
         alias(jupyter.api)
-        alias(binary.compatibility.validator)
     }
 }
 

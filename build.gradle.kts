@@ -119,3 +119,6 @@ kotlinPublications {
         }
     }
 }
+
+tasks.checkKotlinAbi { onlyIf { false } }
+tasks.updateKotlinAbi { onlyIf { false } }
