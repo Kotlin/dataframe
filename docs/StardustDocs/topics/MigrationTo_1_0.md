@@ -82,7 +82,7 @@ In version 1.1, they will be returned and will operate on the new stdlib `kotlin
 </tr>
 <tr>
 <td><code>col.convertToStdlibInstant()</code></td>
-<td>Will be renamed back into <code>convertToInstant() in 1.1</code></td>
+<td>Will be renamed back into <code>convertToInstant()</code> in 1.1</td>
 </tr>
 <tr>
 <td rowspan="2"><code>df.convert { columns }.toInstant()</code></td>
@@ -91,7 +91,7 @@ In version 1.1, they will be returned and will operate on the new stdlib `kotlin
 </tr>
 <tr>
 <td><code>df.convert { columns }.convertToStdlibInstant()</code></td>
-<td>Will be renamed back into <code>convertToInstant() in 1.1</code></td>
+<td>Will be renamed back into <code>convertToInstant()</code> in 1.1</td>
 </tr>
 <tr>
 <td rowspan="2"><code>ColType.Instant</code></td>

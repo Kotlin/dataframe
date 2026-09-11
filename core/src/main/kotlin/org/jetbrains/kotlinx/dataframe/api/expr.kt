@@ -48,7 +48,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * For more information: {@include [DocumentationUrls.Expr]}
  *
- * ### Check out: [Usage][ExprColumnsSelectionDsl.Grammar]
+ * ### Check out: [Grammar][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *
