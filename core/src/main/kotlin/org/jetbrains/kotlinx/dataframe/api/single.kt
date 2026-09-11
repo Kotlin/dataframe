@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -42,9 +41,14 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.SingleOnColumn]}
  *
- * See also [first], [last], [take], [takeLast].
+ * See also [firstOrNull][DataColumn.firstOrNull], that returns `null` instead of throwing
+ * when the [DataColumn] is empty,
+ * and [first][DataColumn.first], [last][DataColumn.last], [take][DataColumn.take],
+ * [takeLast][DataColumn.takeLast], that do not require the [DataColumn]
+ * to contain exactly one value.
  *
  * @return The single value in this [DataColumn].
+ * It can be `null` if the [DataColumn] contains exactly one value and that value is `null`.
  *
  * @throws [NoSuchElementException] if the [DataColumn] is empty.
  * @throws [IllegalArgumentException] if the [DataColumn] contains more than one value.
@@ -60,9 +64,9 @@ public fun <C> DataColumn<C>.single(): C = values.single()
  *
  * For more information: {@include [DocumentationUrls.Single]}
  *
- * See also [singleOrNull][DataFrame.singleOrNull],
- * [first][DataFrame.first],
- * [last][DataFrame.last].
+ * See also [singleOrNull][DataFrame.singleOrNull], that returns `null` instead of throwing,
+ * and [first][DataFrame.first], [last][DataFrame.last],
+ * that do not require the [DataFrame] to contain exactly one matching row.
  *
  * @return A [DataRow] containing the single row in this [DataFrame].
  *
@@ -82,9 +86,9 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
  *
  * For more information: {@include [DocumentationUrls.SingleOrNull]}
  *
- * See also [single][DataFrame.single],
- * [firstOrNull][DataFrame.firstOrNull],
- * [lastOrNull][DataFrame.lastOrNull].
+ * See also [single][DataFrame.single], that throws instead of returning `null`,
+ * and [firstOrNull][DataFrame.firstOrNull], [lastOrNull][DataFrame.lastOrNull],
+ * that do not require the [DataFrame] to contain exactly one matching row.
  *
  * @return A [DataRow] containing the single row in this [DataFrame],
  * or `null` if the [DataFrame] contains no rows or contains more than one row.
@@ -93,8 +97,6 @@ public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
 /**
  * Returns the single [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
- *
- * Exactly one row has to match the [predicate].
  *
  * @include [SelectingRows.RowFilterSnippet]
  *
@@ -109,9 +111,9 @@ public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
  *
  * For more information: {@include [DocumentationUrls.Single]}
  *
- * See also [singleOrNull][DataFrame.singleOrNull],
- * [first][DataFrame.first],
- * [last][DataFrame.last].
+ * See also [singleOrNull][DataFrame.singleOrNull], that returns `null` instead of throwing,
+ * and [first][DataFrame.first], [last][DataFrame.last],
+ * that do not require the [DataFrame] to contain exactly one matching row.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the single row
  * that satisfies a condition specified in this filter.
@@ -122,8 +124,7 @@ public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
  * @throws [IllegalArgumentException] if the [DataFrame] contains more than one row
  * matching the [predicate].
  */
-public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
-    rows().single { predicate(it, it) }
+public inline fun <T> DataFrame<T>.single(predicate: RowFilter<T>): DataRow<T> = rows().single { predicate(it, it) }
 
 /**
  * Returns the single [row][DataRow] in this [DataFrame] that satisfies the given [predicate].
@@ -145,9 +146,9 @@ public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>):
  *
  * For more information: {@include [DocumentationUrls.SingleOrNull]}
  *
- * See also [single][DataFrame.single],
- * [firstOrNull][DataFrame.firstOrNull],
- * [lastOrNull][DataFrame.lastOrNull].
+ * See also [single][DataFrame.single], that throws instead of returning `null`,
+ * and [firstOrNull][DataFrame.firstOrNull], [lastOrNull][DataFrame.lastOrNull],
+ * that do not require the [DataFrame] to contain exactly one matching row.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the single row
  * that satisfies a condition specified in this filter.
@@ -155,7 +156,7 @@ public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>):
  * @return A [DataRow] containing the single row that matches the given [predicate],
  * or `null` if there is no such row or there is more than one.
  */
-public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
 // endregion

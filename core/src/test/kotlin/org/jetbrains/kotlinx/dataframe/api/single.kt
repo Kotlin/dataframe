@@ -5,12 +5,12 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 /**
@@ -20,14 +20,17 @@ import org.junit.Test
  * - [ColumnsSelectionDsl]: selecting the only column or the only column matching a condition, with invocations
  * on illegal types, and in case when no column matches the condition.
  *
- * - [DataColumn]: getting the only value, verifying behavior on empty columns
- * and on columns with more than one value.
+ * - [DataColumn]: getting the only value, including a single `null` value,
+ * and verifying behavior on empty columns and on columns with more than one value.
  *
  * - [DataFrame]: getting the only [row][DataRow] or the only matching [row][DataRow],
  * verifying behavior on empty DataFrames, on DataFrames with more than one row,
- * and on DataFrames without rows matching the predicate or with several of them.
+ * and on DataFrames without rows matching the predicate or with several of them,
+ * as well as the messages of the thrown exceptions.
  */
 class SingleTests : ColumnsSelectionDslTests() {
+
+    private val emptyDf = df.take(0)
 
     // region ColumnsSelectionDsl
 
@@ -85,7 +88,7 @@ class SingleTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `single on empty DataColumn throws`() {
-        val empty: DataColumn<Int> = df.drop(df.nrow).age
+        val empty: DataColumn<Int> = emptyDf.age
         shouldThrow<NoSuchElementException> {
             empty.single()
         }
@@ -97,6 +100,14 @@ class SingleTests : ColumnsSelectionDslTests() {
         shouldThrow<IllegalArgumentException> {
             ages.single()
         }
+    }
+
+    @Test
+    fun `single on DataColumn with a single null value returns null`() {
+        // `weight` is nullable, and the third row, Charlie Daniels, has no weight
+        val weights: DataColumn<Int?> = df[2..2].weight
+        val weight: Int? = weights.single()
+        weight shouldBe null
     }
 
     // endregion
@@ -112,15 +123,15 @@ class SingleTests : ColumnsSelectionDslTests() {
     @Test
     fun `single on empty DataFrame throws`() {
         shouldThrow<NoSuchElementException> {
-            df.drop(df.nrow).single()
-        }
+            emptyDf.single()
+        }.message shouldBe "DataFrame has no rows. Use `singleOrNull`."
     }
 
     @Test
     fun `single on DataFrame with more than one row throws`() {
         shouldThrow<IllegalArgumentException> {
             df.single()
-        }
+        }.message shouldBe "DataFrame has more than one row."
     }
 
     @Test
@@ -131,7 +142,7 @@ class SingleTests : ColumnsSelectionDslTests() {
 
     @Test
     fun `singleOrNull on empty DataFrame returns null`() {
-        df.drop(df.nrow).singleOrNull() shouldBe null
+        emptyDf.singleOrNull() shouldBe null
     }
 
     @Test
@@ -180,13 +191,13 @@ class SingleTests : ColumnsSelectionDslTests() {
     @Test
     fun `single on empty DataFrame with predicate throws`() {
         shouldThrow<NoSuchElementException> {
-            df.drop(df.nrow).single { isHappy }
+            emptyDf.single { isHappy }
         }
     }
 
     @Test
     fun `singleOrNull on empty DataFrame with predicate returns null`() {
-        df.drop(df.nrow).singleOrNull { isHappy } shouldBe null
+        emptyDf.singleOrNull { isHappy } shouldBe null
     }
 
     @Test
@@ -194,6 +205,27 @@ class SingleTests : ColumnsSelectionDslTests() {
         // lastName lives inside the `name` column group
         val row: DataRow<Person> = df.single { name.lastName == "Dylan" }
         row.age shouldBe 45
+    }
+
+    @Test
+    fun `single on DataFrame with predicate on a nullable column`() {
+        // Charlie Chaplin is the only 40-year-old, and that row has no weight
+        val row: DataRow<Person> = df.single { age == 40 && weight == null }
+        row.name.lastName shouldBe "Chaplin"
+    }
+
+    @Test
+    fun `single on DataFrame with more than one row matching on a nullable column throws`() {
+        // the weights of both Charlie Daniels and Charlie Chaplin are unknown
+        shouldThrow<IllegalArgumentException> {
+            df.single { weight == null }
+        }
+    }
+
+    @Test
+    fun `single on DataFrame with predicate written with the String column access API`() {
+        val row: DataRow<Person> = df.single { "age"<Int>() == 45 }
+        row.name.lastName shouldBe "Dylan"
     }
 
     @Test

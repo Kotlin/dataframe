@@ -39,11 +39,10 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 
 ## Adding a new topic under an already-included folder
 
-`:samples`' korro `docs` include list (in `samples/build.gradle.kts`) is glob-based for several folders —
-`operations/column/*.md`, `operations/utils/*.md`, `guides/*.md`, `concepts/*.md`, `io/*.md`, `schemas/*.md`,
-`info/*.md`, `collectionsInterop/*.md`, `dataSources/**`. A new topic dropped into one of those folders is
-picked up with no build-file change; only a topic at another path needs a new `include(...)` line. Still
-required for a new page: a `<toc-element>` in `d.tree` (otherwise it is not published) and a bullet on the
+Several entries in `:samples`' korro `docs` include list (`samples/build.gradle.kts`) are globs over a whole
+folder, so a new topic dropped into one of those folders is picked up with no build-file change; a topic at
+any other path needs its own `include(...)` line — check that list before adding one. Still required for a
+new page either way: a `<toc-element>` in `d.tree` (otherwise it is not published) and a bullet on the
 group's overview page (for example `columnOperations.md`).
 
 A `<title>` collision is fine: `first.md` (rows) and `operations/column/firstOnColumn.md` (column) both

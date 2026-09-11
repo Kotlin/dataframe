@@ -41,4 +41,6 @@ df
 <!---END-->
 
 Use [`first`](firstOnColumn.md) or [`last`](lastOnColumn.md)
-when the [`DataColumn`](DataColumn.md) may contain more than one value.
+when the [`DataColumn`](DataColumn.md) may contain more than one value,
+and [`firstOrNull`](firstOnColumn.md#firstornull) when it may be empty —
+there is no `singleOrNull` for a [`DataColumn`](DataColumn.md).
