@@ -13,6 +13,8 @@ import kotlin.reflect.typeOf
 
 class AppendTests {
 
+    private data class ExplicitSchemaPerson(val name: String, val age: Int) : DataRowSchema
+
     // region append
 
     @Test
@@ -54,12 +56,118 @@ class AppendTests {
     }
 
     @Test
+    fun `DataRowSchema append zero rows returns the original dataframe`() {
+        val df = dataFrameOf(ExplicitSchemaPerson("Alice", 20))
+
+        val result = df.append()
+
+        (result === df) shouldBe true
+    }
+
+    @Test
     fun `append adds null as a value to a value column`() {
         val df = dataFrameOf("name", "age")("Alice", 20)
 
         val result = df.append(null, 30)
 
         result shouldBe dataFrameOf("name", "age")("Alice", 20, null, 30)
+    }
+
+    @Test
+    fun `append adds list values to a column group by column order`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+
+        val result = df.append(listOf("Bob", "Dylan"), 30)
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", "Bob"),
+                "lastName" to columnOf("Cooper", "Dylan"),
+            ),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `append matches data row values to column group columns by name`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+        val row = dataFrameOf("lastName", "firstName")("Dylan", "Bob")[0]
+
+        val result = df.append(row, 30)
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", "Bob"),
+                "lastName" to columnOf("Cooper", "Dylan"),
+            ),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `append uses null for column group columns absent from a data row`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+        val row = dataFrameOf("first", "last")("Bob", "Dylan")[0]
+
+        val result = df.append(row, 30)
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", null),
+                "lastName" to columnOf("Cooper", null),
+            ),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `append null to a column group adds null to every nested column`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+
+        val result = df.append(null, 30)
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", null),
+                "lastName" to columnOf("Cooper", null),
+            ),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `append adds a dataframe to a frame column`() {
+        val alice = dataFrameOf("name", "age")("Alice", 20)
+        val bob = dataFrameOf("name", "age")("Bob", 30)
+        val df = dataFrameOf(columnOf(alice) named "people")
+
+        val result = df.append(bob)
+
+        result shouldBe dataFrameOf(columnOf(alice, bob) named "people")
     }
 
     @Test

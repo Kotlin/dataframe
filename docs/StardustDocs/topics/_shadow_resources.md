@@ -2,6 +2,7 @@
 <resource src="notebook_test_any_3.html"></resource>
 <resource src="appendColumnGroupList.html"></resource>
 <resource src="appendColumnGroupRow.html"></resource>
+<resource src="appendColumnGroupRowWithMissingColumn.html"></resource>
 <resource src="appendDataSchema.html"></resource>
 <resource src="appendDf.html"></resource>
 <resource src="appendFrameColumn.html"></resource>
