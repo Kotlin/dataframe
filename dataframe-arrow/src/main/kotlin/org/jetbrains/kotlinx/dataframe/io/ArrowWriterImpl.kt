@@ -312,9 +312,6 @@ internal class ArrowWriterImpl(
                 return@forEachIndexed
             }
             val nanos = value.nanosecondsOfSecond.toLong()
-            if (nanos % nanosPerUnit != 0L && firstTruncatedRow == null) {
-                firstTruncatedRow = i
-            }
             // An Arrow NANOSECOND timestamp is an int64 nanosecond count, so it only spans 1677-2262; anything
             // outside that would wrap around into a plausible-looking wrong date, so drop the value instead.
             val subSecondUnits = nanos / nanosPerUnit
@@ -342,6 +339,12 @@ internal class ArrowWriterImpl(
                 }
                 vector.setNull(i)
                 return@forEachIndexed
+            }
+            // Only a row that is actually written can have lost digits: a row dropped just above went in as
+            // `null`, and reporting it as [PrecisionReduced] too would claim it was "saved with the trailing
+            // digits dropped".
+            if (nanos % nanosPerUnit != 0L && firstTruncatedRow == null) {
+                firstTruncatedRow = i
             }
             vector.set(i, epochUnits)
         }
@@ -601,14 +604,25 @@ internal class ArrowWriterImpl(
         return vector
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> =
-        this.map {
+    /**
+     * Allocates a vector per column of [this], appending each one to [destination] as soon as it is created.
+     *
+     * They land in [destination] one at a time on purpose: a failure half-way through leaves the vectors already
+     * allocated reachable for [allocateVectorSchemaRoot]'s cleanup, which a `map` into a list it only receives on
+     * success would not.
+     */
+    private fun List<AnyCol>.allocateVectorsInto(destination: MutableList<FieldVector>) {
+        forEach {
             val field = it.toArrowField(mismatchSubscriber)
-            allocateVectorAndInfill(field = field, column = it, strictType = true, strictNullable = true)
+            destination.add(
+                allocateVectorAndInfill(field = field, column = it, strictType = true, strictNullable = true),
+            )
         }
+    }
 
     override fun allocateVectorSchemaRoot(): VectorSchemaRoot {
         val mainVectors = LinkedHashMap<String, FieldVector>()
+        val widenedVectors = ArrayList<FieldVector>()
         try {
             for (field in targetSchema.fields) {
                 val column = dataFrame.getColumnOrNull(field.name)
@@ -626,24 +640,27 @@ internal class ArrowWriterImpl(
                 val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
                 mainVectors[field.name] = vector
             }
-        } catch (e: Exception) {
-            mainVectors.values.forEach { it.close() } // Clear buffers before throwing exception
+
+            val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
+            if (!mode.restrictWidening) {
+                otherColumns.allocateVectorsInto(widenedVectors)
+                otherColumns.forEach {
+                    mismatchSubscriber(ConvertingMismatch.WideningMismatch.AddedColumn(it.name))
+                }
+            } else {
+                otherColumns.forEach {
+                    mismatchSubscriber(ConvertingMismatch.WideningMismatch.RejectedColumn(it.name))
+                }
+            }
+        } catch (e: Throwable) {
+            // Clear the buffers of every vector allocated so far — both phases — before throwing, or
+            // [close] refuses to close a non-empty allocator and reports "Memory was leaked by query"
+            // instead of the real cause. Catches [Throwable], not [Exception]: a target field of a type the
+            // writer does not implement reaches this as a [NotImplementedError], which is an [Error].
+            (mainVectors.values + widenedVectors).forEach { it.close() }
             throw e
         }
-        val vectors = ArrayList<FieldVector>()
-        vectors.addAll(mainVectors.values)
-        val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
-        if (!mode.restrictWidening) {
-            vectors.addAll(otherColumns.toVectors())
-            otherColumns.forEach {
-                mismatchSubscriber(ConvertingMismatch.WideningMismatch.AddedColumn(it.name))
-            }
-        } else {
-            otherColumns.forEach {
-                mismatchSubscriber(ConvertingMismatch.WideningMismatch.RejectedColumn(it.name))
-            }
-        }
-        return VectorSchemaRoot(vectors)
+        return VectorSchemaRoot(mainVectors.values + widenedVectors)
     }
 
     override fun close() {

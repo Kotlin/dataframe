@@ -83,12 +83,20 @@ dropped to `null` needs a nullable vector (the field is only widened to nullable
 nulls), so into a non-nullable one an out-of-range value is refused in either mode — writing it would emit a file
 that `NullabilityOptions.Checking` then refuses to read back.
 
-Three more writer invariants, one test each:
+One known gap in that contract: a `ColumnGroup`'s columns are converted *inside* `infillVector`, outside the
+`try/catch` that gates conversion failures on the mode — so a nested column that cannot be converted throws
+`CellConversionException` past the subscriber and aborts the whole write even in `Mode.LOYAL`. Pre-existing and
+not timestamp-specific (any child vector does it, e.g. `is IntVector -> column.convertToInt()`); tracked as
+[#2075](https://github.com/Kotlin/dataframe/issues/2075).
+
+Three more writer invariants, with a test each:
 
 - `an instant at the bottom of the target unit round-trips` — the `Long.MIN_VALUE` boundary of a timestamp unit is
   representable and must not be rejected as out of range.
-- `a write that fails leaves no leaked buffers behind` — a vector is allocated before it is filled, so any throw in
-  between must close it, or `RootAllocator.close()` reports a leak and masks the real error.
+- `a write that fails leaves no leaked buffers behind` (plus `… with an Error …`) — a vector is allocated before
+  it is filled, so any throw in between must close it, and every vector allocated for an earlier field must be
+  closed too, or `RootAllocator.close()` reports a leak and masks the real error. Both cleanups catch `Throwable`,
+  not `Exception`: an unsupported target field arrives as `NotImplementedError`.
 - `a frame column has no list mapping on write` — the writer implements no list vectors, so a `FrameColumn` is
   *not* writable: a top-level one degrades to `Utf8`, a nested one fails on allocation.
 

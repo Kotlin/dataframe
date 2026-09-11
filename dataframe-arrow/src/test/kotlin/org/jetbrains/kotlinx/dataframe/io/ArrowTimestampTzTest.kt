@@ -420,6 +420,37 @@ internal class ArrowTimestampTzTest {
     }
 
     /**
+     * A row dropped as out of range went in as `null`, so it did not lose *trailing* digits — reporting it as
+     * [ConvertingMismatch.PrecisionReduced] on top of [ConvertingMismatch.ValueOutOfRange] told the caller a
+     * value was "saved with the trailing digits dropped" that was not saved at all.
+     *
+     * Needs a unit coarser than `NANOSECOND` to show up: at nanosecond precision no instant is finer than the
+     * unit, so the row that overflows can never raise the truncation flag as well.
+     */
+    @Test
+    fun `a dropped out-of-range row is not also reported as precision loss`() {
+        // Year ~316 900 — past the ±292 277 years a microsecond int64 reaches — and finer than a microsecond.
+        val farFuture = Instant.fromEpochSeconds(
+            epochSeconds = 10_000_000_000_000L,
+            nanosecondAdjustment = 123_456_789L,
+        )
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("moment", listOf(farFuture), typeOf<Instant?>()),
+        )
+        val microTargetSchema = Schema(
+            listOf(Field("moment", FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, "UTC")), null)),
+        )
+        val mismatches = mutableListOf<ConvertingMismatch>()
+
+        val bytes = frame
+            .arrowWriter(microTargetSchema, ArrowWriter.Mode.LOYAL, mismatchSubscriber = { mismatches += it })
+            .use { it.saveArrowFeatherToByteArray() }
+
+        mismatches shouldBe listOf(ConvertingMismatch.ValueOutOfRange("moment", 0, "MICROSECOND"))
+        DataFrame.readArrowFeather(bytes)["moment"].values().toList() shouldBe listOf(null)
+    }
+
+    /**
      * Degrading to `null` needs somewhere to put the `null`, and a vector is only nullable if either the target
      * field or the source column says so — a non-nullable column into a `nullable = false` field leaves nowhere.
      * Writing anyway produced a file contradicting its own schema, which `NullabilityOptions.Checking` refuses
@@ -490,6 +521,33 @@ internal class ArrowTimestampTzTest {
         val writer = outOfRangeFrame.arrowWriter(nanoTargetSchema)
 
         shouldThrow<ConvertingException> { writer.saveArrowFeatherToByteArray() }
+        shouldNotThrowAny { writer.close() }
+    }
+
+    /**
+     * The same invariant reached through an [Error] rather than an exception, and with a field that already
+     * succeeded before it.
+     *
+     * A target field of a type the writer does not implement arrives as a [NotImplementedError], and the vectors
+     * of the fields *before* it are already allocated and collected by then — so a cleanup that caught only
+     * `Exception` left all of them open, and `close()` reported "Memory was leaked by query" instead of the real
+     * cause. `Duration` is such a type: it can be read back into a frame but not written.
+     */
+    @Test
+    fun `a write that fails with an Error leaves no leaked buffers behind`() {
+        val frame = dataFrameOf(
+            DataColumn.createValueColumn("supported", listOf(1, 2), typeOf<Int>()),
+            DataColumn.createValueColumn("unsupported", listOf("a", "b"), typeOf<String>()),
+        )
+        val schema = Schema(
+            listOf(
+                Field("supported", FieldType.nullable(ArrowType.Int(32, true)), null),
+                Field("unsupported", FieldType.nullable(ArrowType.Duration(TimeUnit.MILLISECOND)), null),
+            ),
+        )
+        val writer = frame.arrowWriter(schema)
+
+        shouldThrow<NotImplementedError> { writer.saveArrowFeatherToByteArray() }
         shouldNotThrowAny { writer.close() }
     }
 

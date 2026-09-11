@@ -4,7 +4,7 @@ Guidance for this folder. See the root `AGENTS.md` for repo-wide build/style rul
 
 ## Read this before using anything here
 
-**Most of this folder is dead code.** Three of the six modules are disabled, and none of the three is registered
+**Most of this folder is dead code.** Three of the five modules are disabled, and none of the three is registered
 in `settings.gradle.kts` — so nothing in them is compiled, tested, or published by the normal build. Code in a
 disabled module can be arbitrarily out of date and **nothing will fail to tell you**. Do not cite it as evidence
 of how anything currently behaves, and do not change it expecting an effect.
@@ -16,9 +16,10 @@ of how anything currently behaves, and do not change it expecting an effect.
 | `dataframe-gradle-plugin` | **Disabled** for the same reason (it drove `symbol-processor` to generate schemas from a data sample). |
 | `expressions-converter` | Active, in `settings.gradle.kts`. |
 | `public-api-modifier` | Active, in `settings.gradle.kts`. |
-| `keywords-generator` | Separate build with its own Kotlin version. |
 
-Plugins that are still used are being migrated to convention plugins in `build-logic/`.
+Plugins that are still used are being migrated to convention plugins in `build-logic/` — `keywords-generator`
+already went that way and is no longer here at all; it lives in `build-logic` as `dfbuild.keywordsGenerator`.
+(A stale `plugins/keywords-generator/build/` may still sit in your checkout; it is untracked leftovers.)
 
 ## If you came here looking for the compiler plugin
 

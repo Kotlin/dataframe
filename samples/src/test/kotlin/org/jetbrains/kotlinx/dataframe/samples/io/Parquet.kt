@@ -118,7 +118,7 @@ class Parquet {
     }
 
     /**
-     * A `isAdjustedToUTC = true` timestamp column is read as an [kotlin.time.Instant], which names a point on the
+     * An `isAdjustedToUTC = true` timestamp column is read as a [kotlin.time.Instant], which names a point on the
      * time-line but no wall clock. Turning it into a reading on someone's clock takes an explicit zone.
      *
      * `@Ignore`d because it needs a Parquet file with a timestamp column; what matters for the docs is that the

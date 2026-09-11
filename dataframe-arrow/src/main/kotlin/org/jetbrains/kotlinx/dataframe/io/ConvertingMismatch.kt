@@ -105,8 +105,10 @@ public sealed class ConvertingMismatch(
      * 1677–2262.
      *
      * Unlike [PrecisionReduced] the value cannot be stored in any form, so it is dropped: written as `null`, or
-     * refused with a [ConvertingException] when the mode has `strictType` on. Reported once per column, for the
-     * first row where it happens. Supply a target `Schema` with a coarser time unit to avoid it.
+     * refused with a [ConvertingException] when the mode has `strictType` on. Dropping it needs a nullable target
+     * field to drop it into — writing `null` into a non-nullable one would emit a file contradicting its own
+     * schema — so there it is refused whatever the mode. Reported once per column, for the first row where it
+     * happens. Supply a target `Schema` with a coarser time unit to avoid it.
      */
     public data class ValueOutOfRange(
         override val column: String,
