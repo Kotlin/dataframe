@@ -117,6 +117,8 @@ korro {
                 include("info/*.md")
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
+                include("append.md")
+                include("appendNulls.md")
                 include("groupBy.md")
                 include("pivot.md")
                 include("countDistinct.md")

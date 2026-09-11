@@ -16,7 +16,7 @@ On the other hand, the Kotlin DataFrame library follows `Kotlin Collections` nam
 as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/) of rows. The slight naming difference with `Kotlin Collection` is that all operations are named in imperative way: `sortBy`, `shuffle` etc. 
 
 **Pairs of column/row operations:**
-* [add](add.md) columns / [append](append.md) rows
+* [add](add.md) columns / [append](append.md) and [appendNulls](appendNulls.md) rows
 * [remove](remove.md) columns / [drop](drop.md) rows
 * [select](select.md) columns / [filter](filter.md) rows
 * [group](group.md) columns / [groupBy](groupBy.md) for rows
@@ -42,6 +42,7 @@ as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://ko
 
 **Vertical (row) operations:**
 * [append](append.md) — add rows
+* [appendNulls](appendNulls.md) — add rows filled with null values
 * [concat](concat.md) — union rows from several [`DataFrame`](DataFrame.md) objects
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
@@ -81,4 +82,5 @@ as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://ko
 * [Explode/implode columns](explodeImplode.md)
 * [Pivot/gather columns](pivotGather.md)
 * [Append values](append.md)
+* [Append null-filled rows](appendNulls.md)
 * [Adjust schema](adjustSchema.md) 
