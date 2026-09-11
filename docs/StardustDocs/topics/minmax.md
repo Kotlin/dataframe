@@ -59,3 +59,8 @@ The following automatic type conversions are performed for the `min` and `max` o
 | Double -> Double                 | null                   |
 | Float -> Float                   | null                   |
 | Nothing -> Nothing               | null                   |
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
+> Count statistics manually with Kotlin standard library methods
+> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+> {style="warning"}
