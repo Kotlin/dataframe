@@ -13,8 +13,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
  * [ColumnAccessor] is covariant in its value type, so a `ColumnAccessor<Double>` is already
  * accepted where a `ColumnAccessor<Double?>` is expected; what changes here is the declared type
  * of the accessor itself. Reading a value with `getValue(row)` then gives `T?` instead of `T`.
- * Without this cast, a `null` from the column arrives as a `null` in the non-nullable type `T`
- * and fails later, at the first use of the value.
+ *
+ * Without this cast, a `null` from the column arrives typed as the non-nullable `T`, so the compiler
+ * cannot require a null check. The value then travels on until something uses it as a `T`, and that
+ * use may throw a [NullPointerException] — for a primitive type such as `Double` it always does.
  *
  * See also [castToNullable][ColumnReference.castToNullable], which marks any [ColumnReference]
  * as nullable but returns a [ColumnReference] instead of a [ColumnAccessor],
@@ -24,13 +26,17 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
  * ```kotlin
  * // `other` has no "score" column, so after `concat` the score of its rows is `null`:
  * val df = scores.concat(other)
+ * val row = df.last()
  *
  * // the accessor for the "score" column, and the same accessor typed as `Double?`:
  * val score by column<Double>()
  * val scoreOrNull = score.nullable()
  *
- * // the missing scores can now be handled instead of failing later:
- * df.filter { scoreOrNull.getValue(this) != null }
+ * // typed as `Double`, the `null` is invisible to the compiler and throws when the value is used:
+ * score.getValue(row) > 0.0 // NullPointerException
+ *
+ * // typed as `Double?`, the same `null` has to be handled:
+ * scoreOrNull.getValue(row)?.let { it > 0.0 } == true // false
  * ```
  *
  * @param [T] The value type of the column this accessor points to.

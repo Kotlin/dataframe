@@ -420,18 +420,19 @@ For complex operations, write a **complete** example with all steps.
 
 For methods with Columns Selection DSL, add several examples with different CS DSL selection methods.
 
-Keep deprecated API out of the examples, even when documenting a legacy function. Around the Column
-Accessors API, for instance, almost everything that reads through an accessor (`df[accessor]`,
-`row[accessor]`, `accessor()`) is deprecated, while `accessor.getValue(row)` is not — check the
-annotations before copying a call from an old test. The deprecation messages are constants in
-[`util/deprecationMessages.kt`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/util/deprecationMessages.kt)
-(`DEPRECATED_ACCESS_API`, `DEPRECATED_DATA_ROW_COLUMN_REFERENCE_GET`), so a grep for the constant
-shows the whole affected surface at once.
+Keep deprecated API out of the examples, even when documenting a legacy function — check for
+`@Deprecated` before copying a call from an old test.
 
 Start the section with
 
 ```
 ### Examples
+```
+
+or, when the KDoc has exactly one example, with
+
+```
+### Example
 ```
 
 #### Data tables in examples
