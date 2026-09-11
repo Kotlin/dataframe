@@ -10,13 +10,6 @@ import org.junit.Test
 
 class SchemaTests {
 
-    // the schema marker of the `compileTimeSchema` KDoc example, annotated exactly as it is there
-    @DataSchema
-    interface Person {
-        val name: String
-        val age: Int
-    }
-
     @Test
     fun `columns order test`() {
         val row = dataFrameOf("c", "b")(4, 5).first()
@@ -110,7 +103,8 @@ class SchemaTests {
             |name: String
             |age: Int
             """.trimMargin()
-        // without ordering, the order comes from the type argument and not from the columns
+        // unordered, the marker is an interface, so the order is the one reflection reports
+        // the properties in — neither the declaration order nor the order of the columns
         df.compileTimeSchema(ordered = false).toString() shouldBe
             """
             |age: Int
@@ -123,6 +117,20 @@ class SchemaTests {
         val df = dataFrameOf("name")("Alice").cast<Person>()
         df.schema().columns.keys shouldBe setOf("name")
         df.compileTimeSchema().columns.keys shouldBe setOf("age", "name")
+    }
+
+    @Test
+    fun `a column the runtime schema does not have comes first when ordered`() {
+        // `age` has no counterpart among the columns, so it has no position to be sorted into
+        val df = dataFrameOf("name")("Alice").cast<Person>()
+        df.compileTimeSchema().columns.keys.toList() shouldBe listOf("age", "name")
+    }
+
+    @Test
+    fun `unordered, a data class marker keeps its primary constructor order`() {
+        // the marker has a primary constructor, so that order wins over the reflection order
+        val df = dataFrameOf("name", "age")("Alice", 15).cast<PersonRecord>()
+        df.compileTimeSchema(ordered = false).columns.keys.toList() shouldBe listOf("name", "age")
     }
 
     @Test
@@ -144,6 +152,19 @@ private interface Nested {
     val c: Int
 }
 
+// the schema marker of the `compileTimeSchema` KDoc example, annotated exactly as it is there
+@DataSchema
+private interface Person {
+    val name: String
+    val age: Int
+}
+
+// same properties, but as a marker that has a primary constructor to take the column order from
+@DataSchema
+private data class PersonRecord(val name: String, val age: Int)
+
+// `SchemaKDocExampleTests` cannot host the `compileTimeSchema` example: it extends `TestBase`,
+// which brings its own sample `Person` schema into scope and shadows the marker declared here.
 class SchemaKDocExampleTests : TestBase() {
 
     @Test

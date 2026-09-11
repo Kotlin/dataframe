@@ -17,16 +17,11 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 internal interface SchemaDocs {
 
     /**
-     * A [DataFrame] has two schemas that do not have to agree.
-     * [schema][DataFrame.schema] gives the **runtime** one, read from the columns the [DataFrame]
-     * holds; [compileTimeSchema][DataFrame.compileTimeSchema] gives the **compile-time** one,
+     * A [DataFrame] has two schemas that do not have to agree:
+     * the **runtime** one, read from the columns it holds, and the **compile-time** one,
      * read from the type argument `T` of `DataFrame<T>`.
-     * The two differ when the type of a [DataFrame] does not fit its columns,
-     * for example after a [cast] to a schema the data does not have;
-     * comparing the two is how you notice.
-     *
-     * The runtime schema is also reachable from a [DataRow] — [schema][DataRow.schema] —
-     * and from a [GroupBy] — [schema][GroupBy.schema].
+     * They differ when the type does not fit the columns, for example after a [cast]
+     * to a schema the data does not have; comparing them is how you notice.
      *
      * Use [print][DataFrameSchema.print] to write a schema out as a tree,
      * and [compare][DataFrameSchema.compare] to relate two schemas to each other.
@@ -37,8 +32,7 @@ internal interface SchemaDocs {
     /**
      * {@comment The input of the `schema` examples below. KDoc-snippet.
      *    Every output that follows it is an expected value in `SchemaKDocExampleTests`.}
-     * The examples below use the [DataFrame] from the
-     * [`schema` page on the documentation website]({@include [DocumentationUrls.Url]}/schema.html):
+     * The examples below use the same [DataFrame] as the `schema` page on the documentation website:
      * a `name` [column group][ColumnGroup] holding `firstName` and `lastName`,
      * and the columns `age`, `city`, `weight` and `isHappy`.
      */
@@ -60,7 +54,6 @@ internal interface SchemaDocs {
  * For more information: {@include [DocumentationUrls.Schema]}
  *
  * ### Example
- *
  * @include [SchemaDocs.ExampleDataSnippet]
  *
  * ```kotlin
@@ -69,6 +62,8 @@ internal interface SchemaDocs {
  * ```
  *
  * @return The [DataFrameSchema] of the [DataFrame] this row is part of.
+ * @see [DataFrame.schema]
+ * @see [DataFrame.compileTimeSchema]
  */
 public fun DataRow<*>.schema(): DataFrameSchema = owner.schema()
 
@@ -90,7 +85,6 @@ public fun DataRow<*>.schema(): DataFrameSchema = owner.schema()
  * For more information: {@include [DocumentationUrls.Schema]}
  *
  * ### Example
- *
  * @include [SchemaDocs.ExampleDataSnippet]
  *
  * ```kotlin
@@ -110,6 +104,9 @@ public fun DataRow<*>.schema(): DataFrameSchema = owner.schema()
  * ```
  *
  * @return The [DataFrameSchema] of this [DataFrame].
+ * @see [DataFrame.compileTimeSchema]
+ * @see [DataRow.schema]
+ * @see [GroupBy.schema]
  */
 @RequiredByIntellijPlugin
 public fun DataFrame<*>.schema(): DataFrameSchema = extractSchema()
@@ -130,7 +127,6 @@ public fun DataFrame<*>.schema(): DataFrameSchema = extractSchema()
  * For more information: {@include [DocumentationUrls.Schema]}
  *
  * ### Example
- *
  * @include [SchemaDocs.ExampleDataSnippet]
  *
  * ```kotlin
@@ -152,6 +148,8 @@ public fun DataFrame<*>.schema(): DataFrameSchema = extractSchema()
  * ```
  *
  * @return The [DataFrameSchema] of this [GroupBy] as a [DataFrame].
+ * @see [GroupBy.toDataFrame]
+ * @see [DataFrame.schema]
  */
 public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
 
@@ -165,7 +163,7 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  *
  * [T] is a schema marker — a [DataSchema] declaration you wrote yourself,
  * or the one the compiler plugin produced for the result of an operation.
- * When [T] declares no properties, as in `DataFrame<*>`, the returned schema has no columns.
+ * When [T] is not a schema marker, as in `DataFrame<*>`, the returned schema has no columns.
  *
  * @include [SchemaDocs.SchemaSourcesSnippet]
  *
@@ -174,8 +172,7 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  * On schema markers and the plugin that writes them: {@include [DocumentationUrls.CompilerPlugin]}
  *
  * ### Example
- *
- * {@comment Both outputs below are expected values in `SchemaTests`.}
+ * {@comment Both outputs below are expected values in `SchemaKDocExampleTests`.}
  * ```kotlin
  * @DataSchema
  * interface Person {
@@ -188,15 +185,18 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  * // name: String, age: Int — sorted like the columns of df
  * df.compileTimeSchema()
  *
- * // age: Int, name: String — the order T gives them in, which here is not the order of df
+ * // age: Int, name: String — the compiler-plugin representation order, not the order of df
  * df.compileTimeSchema(ordered = false)
  * ```
  *
- * @param [T] The schema marker of this [DataFrame]; its properties become the columns of the result.
  * @param [ordered] If `true` (the default), the columns are sorted to match the order of the
- *   [runtime schema][DataFrame.schema], so that the two schemas are easy to compare.
- *   If `false`, the order comes from [T] and does not have to match the [DataFrame].
+ *   [runtime schema][DataFrame.schema], so that the two schemas are easy to compare;
+ *   a column the runtime schema does not have comes first.
+ *   If `false`, the columns are ordered as they are represented in the compiler plugin:
+ *   by the primary constructor for a `data class` marker, and otherwise in the order
+ *   reflection reports the properties of [T] in — which is not their declaration order.
  * @return The [DataFrameSchema] that follows from the type argument [T] of this [DataFrame].
+ * @see [DataFrame.schema]
  */
 public inline fun <reified T> DataFrame<T>.compileTimeSchema(ordered: Boolean = true): DataFrameSchema =
     compileTimeSchemaImpl(if (ordered) schema() else null, T::class)
