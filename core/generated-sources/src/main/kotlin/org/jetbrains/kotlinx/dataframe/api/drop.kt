@@ -148,7 +148,7 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -181,7 +181,7 @@ public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> =
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *

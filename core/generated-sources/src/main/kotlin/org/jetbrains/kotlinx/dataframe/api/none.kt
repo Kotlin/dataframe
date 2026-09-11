@@ -39,7 +39,7 @@ public fun <T> DataColumn<T>.none(predicate: Predicate<T>): Boolean = values.non
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * ### Example
  * ```kotlin
