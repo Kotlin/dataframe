@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -50,9 +51,12 @@ import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
+import org.jetbrains.kotlinx.dataframe.api.mapToFrames
+import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -82,6 +86,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -97,11 +102,17 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
+import org.jetbrains.kotlinx.dataframe.explainer.SamplesDisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
@@ -952,6 +963,63 @@ class Modify : TestBase() {
             +"city"
         }
         // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapOnColumn() {
+        // SampleStart
+        // A column of last name lengths; it keeps the name of the original column,
+        // so it is renamed here
+        df.name.lastName.map { it.length }.rename("lastNameLength")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapIndexedOnColumn() {
+        // SampleStart
+        // "1. Alice", "2. Bob", ...
+        df.name.firstName.mapIndexed { i, firstName -> "${i + 1}. $firstName" }
+        // SampleEnd
+    }
+
+    // no @TransformDataFrameExpressions: the result is a List, which the expressions converter
+    // cannot render, so it would fall back to rendering the `groupBy` above it
+    @Test
+    fun mapOnGroupBy() {
+        // SampleStart
+        // The number of people per city, as a list, in the order of the groups: [1, 1, 2, 1, 1, 1]
+        df.groupBy { city }.map { group.rowsCount() }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun mapToRowsOnGroupBy() {
+        // SampleStart
+        // The oldest person of every city, one row per city
+        df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
+        // SampleEnd
+    }
+
+    // the expressions converter cannot render a FrameColumn and would fall back to rendering the `groupBy`
+    // above it, so the frame column itself is rendered here, as in `JoinWith`
+    @Test
+    @TransformDataFrameExpressions
+    fun mapToFramesOnGroupBy() {
+        val twoOldest =
+            // SampleStart
+            // The two oldest people with each first name, as a frame column:
+            // only the group of "Charlie" has a third person to leave out
+            df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
+        // SampleEnd
+
+        PluginCallbackProxy.overrideHtmlOutput(
+            manualOutput = DataFrameHtmlData.tableDefinitions() +
+                WritersideStyle +
+                dataFrameOf(twoOldest).toHtml(SamplesDisplayConfiguration, getFooter = WritersideFooter),
+        )
     }
 
     @Test
