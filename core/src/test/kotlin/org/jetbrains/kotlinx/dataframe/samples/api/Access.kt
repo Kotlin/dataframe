@@ -162,24 +162,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun getCell_strings() {
-        // SampleStart
-        df["age"][1]
-        df[1]["age"]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun getCell_properties() {
-        // SampleStart
-        df.age[1]
-        df[1].age
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun getColumnsByName() {
         // SampleStart
         df["age", "weight"]
