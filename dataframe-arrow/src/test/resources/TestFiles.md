@@ -15,6 +15,8 @@ schema and **how it was produced** here so the data stays reproducible and revie
 | `lists.parquet` | List columns incl. nullable list and list-with-nulls. | `id, numbers: list<long>, strings: list<string>, nullable_list: list<long>?, list_with_nulls: list<long?>`. | Pre-generated externally. |
 | `lists_all_types.parquet` | Lists of every supported primitive element type. | `list<...>` per primitive. | Pre-generated externally. |
 | `large_list_sample.parquet` | `LargeListVector` read path. | `numbers: list<long>, tags: list<string>?`. | Pre-generated externally. |
+| `timestamps_utc_and_local.parquet` | Timestamps flagged `isAdjustedToUTC = true`, i.e. Arrow `TimeStamp*TZVector`, read as `kotlin.time.Instant` (reproduces [#926](https://github.com/Kotlin/dataframe/issues/926)). | `timestamp_utc: optional int64 (TIMESTAMP(isAdjustedToUTC=true, MICROS))`, `timestamp_local: … (isAdjustedToUTC=false, MICROS)`, `timestamp_brussels: … (true, MICROS)`, `timestamp_nanos: … (true, NANOS)`, `timestamp_millis: … (true, MILLIS)`. 3 rows: normal, all-null, pre-1970. | Written by **Polars/PyArrow** — deliberately a third-party writer, so the test proves interop rather than round-tripping our own encoder. Regenerate with `dataframe-arrow/src/test/generators/timestamps_tz.py` (see its header for the exact versions and command). That one script produces **three** fixtures: this file, `timestamps_zoned.parquet` below, and `timestamps_utc_and_local.feather` in the Feather/IPC table. |
+| `timestamps_zoned.parquet` | A **non-UTC** zone name surviving in the Parquet `ARROW:schema` metadata; the instants must still read back unchanged. | `timestamp_berlin: optional int64 (TIMESTAMP(isAdjustedToUTC=true, MICROS))`, Arrow schema `timestamp[us, tz=Europe/Berlin]`. 3 rows, same instants as `timestamp_utc` above. | Same generator script. |
 
 ### `nullable_nested_struct.parquet` — schema & head
 
@@ -36,7 +38,8 @@ timestamp    record_channel_1   record_channel_2
 
 ## Arrow Feather (`*.feather`) / IPC (`*.ipc`)
 
-Loaded via `testArrowFeather(name)` / `testArrowIPC(name)` (which append `.feather` / `.ipc`).
+Mostly loaded via `testArrowFeather(name)` / `testArrowIPC(name)`, which append `.feather` / `.ipc`; fixtures whose
+name already carries the extension are read by full name instead.
 
 | File | Purpose |
 |------|---------|
@@ -46,6 +49,7 @@ Loaded via `testArrowFeather(name)` / `testArrowIPC(name)` (which append `.feath
 | `test-with-nulls.arrow.feather` / `.ipc` | Nullable columns containing nulls. |
 | `test-illegal.arrow.feather` / `.ipc` | Malformed/edge-case input handling. |
 | `multiple_batches_concat.feather` | Multi-batch Feather concatenation (nested `person` group). |
+| `timestamps_utc_and_local.feather` | The `timestamps_utc_and_local.parquet` columns in Arrow random-access form, so the same PyArrow-interop assertions still run where the `arrow-dataset` JNI library is unavailable (Android, or any machine where the native library fails to load). Written **uncompressed** — the module has no `arrow-compression` dependency. Same generator script as the Parquet fixture. |
 
 Note: several Arrow/nested cases are exercised **without** a committed file — they are built in code with `RootAllocator`
 + `VectorSchemaRoot` and round-tripped through in-memory Feather/IPC bytes (see `ArrowNullableStructTest` for the
