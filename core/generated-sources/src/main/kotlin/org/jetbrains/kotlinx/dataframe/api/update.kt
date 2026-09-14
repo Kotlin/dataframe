@@ -455,7 +455,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * Provide a new value for every selected cell given its row and its previous value using a
  * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
- * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
+ * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  *
  * For example:
  *
@@ -688,7 +688,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * Provide a new value for every selected cell given its row and its previous value using a
  * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
- * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
+ * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  *
  * For example:
  *
@@ -729,7 +729,7 @@ public fun <T, C> DataFrame<T>.update(
  * Provide a new value for every selected cell given its row and its previous value using a
  * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
- * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
+ * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  *
  * For example:
  *
@@ -775,7 +775,7 @@ public fun <T, C> DataFrame<T>.update(
  * Provide a new value for every selected cell given its row and its previous value using a
  * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
- * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
+ * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  *
  * For example:
  *

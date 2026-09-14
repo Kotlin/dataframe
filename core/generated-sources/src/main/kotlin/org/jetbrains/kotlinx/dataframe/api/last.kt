@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
  *
- * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @return The last value in this [<code>DataColumn</code>][DataColumn].
  *
@@ -49,7 +49,7 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
- * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @return The last value in this [<code>DataColumn</code>][DataColumn], or `null` if the [<code>DataColumn</code>][DataColumn] is empty.
  */
@@ -67,7 +67,7 @@ public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
  *
  * For more information: [See `last` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html)
  *
- * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>lastOrNull</code>][lastOrNull], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -96,7 +96,7 @@ public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.
  *
  * For more information: [See `lastOrNull` on the documentation website.](https://kotlin.github.io/dataframe/lastoncolumn.html#lastornull)
  *
- * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>last</code>][last], [<code>first</code>][first], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -126,7 +126,7 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -146,7 +146,8 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * [<code>first</code>][DataFrame.first],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeLast</code>][DataFrame.takeLast],
- * [<code>takeWhile</code>][DataFrame.takeWhile].
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>single</code>][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -169,7 +170,7 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -188,7 +189,8 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * [<code>first</code>][DataFrame.first],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeLast</code>][DataFrame.takeLast],
- * [<code>takeWhile</code>][DataFrame.takeWhile].
+ * [<code>takeWhile</code>][DataFrame.takeWhile],
+ * [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -210,7 +212,8 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
  * See also [<code>last</code>][DataFrame.last],
  * [<code>first</code>][DataFrame.first],
  * [<code>take</code>][DataFrame.take],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @return A [<code>DataRow</code>][DataRow] containing the last row in this [<code>DataFrame</code>][DataFrame], or `null` if the [<code>DataFrame</code>][DataFrame] is empty.
  */
@@ -224,7 +227,8 @@ public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow -
  * See also [<code>lastOrNull</code>][DataFrame.lastOrNull],
  * [<code>first</code>][DataFrame.first],
  * [<code>take</code>][DataFrame.take],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>single</code>][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @return A [<code>DataRow</code>][DataRow] containing the last row in this [<code>DataFrame</code>][DataFrame].
  *
@@ -289,7 +293,7 @@ public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNu
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -360,7 +364,7 @@ public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -444,7 +448,7 @@ public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrN
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
