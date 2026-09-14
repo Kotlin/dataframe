@@ -21,10 +21,13 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * values within a group follow the dataframe's column order. The number of [values] must be a multiple
  * of the number of columns.
  *
- * Every appended value must be accepted by the corresponding column. A [ValueColumn] accepts `null` or a value of
- * its declared type. A [ColumnGroup] accepts `null`; a [DataRow], whose values are matched to the group's columns by
- * name (a group column whose name is absent from the row receives `null`); or a [List] whose values follow the
- * group's column order. A [FrameColumn] accepts `null` or a [DataFrame].
+ * Every appended value must be compatible with the corresponding column. A [ValueColumn] accepts `null` or a value
+ * of its declared type. A [ColumnGroup] accepts `null`, a [DataRow], or a [List]. Values from a [DataRow] are matched
+ * to the group's columns by name: a group column whose name is absent from the row receives `null`, while columns
+ * present only in the [DataRow] are ignored. Values from a [List] are read in the group's column order, one value per
+ * column in the [ColumnGroup]. The list must contain at least as many values as the [ColumnGroup] has columns:
+ * a shorter list throws [IndexOutOfBoundsException], while additional values in a longer list are ignored.
+ * A [FrameColumn] accepts `null` or a [DataFrame].
  *
  * @include [AppendingNullsToHierarchicalColumns]
  *
@@ -55,7 +58,10 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * every column, in the dataframe's column order, forms one row.
  * @return A new [DataFrame] containing the existing and appended rows, or this [DataFrame] if [values] is empty.
  * @throws [IllegalArgumentException] if [values] is not empty and this [DataFrame] has no columns, the number of
- * [values] is not a multiple of the number of columns, or a value is not accepted by the corresponding column.
+ * [values] is not a multiple of the number of columns, or a value has a type incompatible with the corresponding
+ * column.
+ * @throws [IndexOutOfBoundsException] if a [List] supplied for a [ColumnGroup] contains fewer values than the
+ * [ColumnGroup] has columns.
  */
 public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     if (values.isEmpty()) return this

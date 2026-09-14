@@ -95,7 +95,7 @@ class AppendTests {
     }
 
     @Test
-    fun `append matches data row values to column group columns by name`() {
+    fun `append throws IndexOutOfBoundsException for a list shorter than its column group`() {
         val df = dataFrameOf(
             "name" to columnOf(
                 "firstName" to columnOf("Alice"),
@@ -103,7 +103,43 @@ class AppendTests {
             ),
             "age" to columnOf(20),
         )
-        val row = dataFrameOf("lastName", "firstName")("Dylan", "Bob")[0]
+
+        shouldThrow<IndexOutOfBoundsException> {
+            df.append(listOf("Bob"), 30)
+        }
+    }
+
+    @Test
+    fun `append ignores list values beyond the number of columns in a column group`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+
+        val result = df.append(listOf("Bob", "Dylan", "ignored"), 30)
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", "Bob"),
+                "lastName" to columnOf("Cooper", "Dylan"),
+            ),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `append matches data row values by name and ignores columns absent from the column group`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+            "age" to columnOf(20),
+        )
+        val row = dataFrameOf("city", "lastName", "firstName")("London", "Dylan", "Bob")[0]
 
         val result = df.append(row, 30)
 
