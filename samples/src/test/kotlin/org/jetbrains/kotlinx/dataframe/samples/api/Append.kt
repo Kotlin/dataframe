@@ -96,7 +96,6 @@ class Append : DataFrameSampleHelper("append", "api") {
         // SampleStart
         columnGroupDf
             // SampleEnd
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -114,7 +113,6 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -133,7 +131,6 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -152,7 +149,6 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -170,7 +166,6 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
@@ -268,7 +263,6 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, null),
                 )
             }
-            .toHtmlWithOpenedNestedDfs()
             .saveDfHtmlSample()
     }
 
