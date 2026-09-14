@@ -115,6 +115,7 @@
             <toc-element topic="add.md"/>
             <toc-element topic="adjustSchema.md"/>
             <toc-element topic="append.md"/>
+            <toc-element topic="appendNulls.md"/>
             <toc-element topic="cast.md"/>
             <toc-element topic="concat.md"/>
             <toc-element topic="convert.md"/>
