@@ -24,7 +24,8 @@ Every appended value must be compatible with the corresponding column:
 [`DataRow`](DataRow.md) receives `null`, while columns present only in the row are ignored. 
 Values from a `List` are read in the nested column order, one value per nested column. 
 A shorter list throws `IndexOutOfBoundsException`, while additional values in a longer list are ignored;
-* a [`FrameColumn`](DataColumn.md#framecolumn) accepts `null` or a [`DataFrame`](DataFrame.md).
+* a [`FrameColumn`](DataColumn.md#framecolumn) accepts a [`DataFrame`](DataFrame.md) or `null`, which is
+[represented by an empty dataframe](#null-with-framecolumn).
 
 `append` does not modify the original [`DataFrame`](DataFrame.md).
 When `values` is empty, it returns the original dataframe instance.
