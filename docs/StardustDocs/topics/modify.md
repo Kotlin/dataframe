@@ -47,7 +47,7 @@ as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://ko
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
-* [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
+* [filter](filter.md) — filter rows
 * [implode](implode.md) — merge column values into lists grouping by other columns
 * [reverse](reverse.md) — reverse rows 
 * [shuffle](shuffle.md) — reorder rows randomly

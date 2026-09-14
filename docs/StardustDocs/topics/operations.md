@@ -77,7 +77,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
-* [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition
+* [filter](filter.md) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
 * [flatten](flatten.md) — remove column groupings recursively
 * [forEachRow](iterate.md) / [forEachColumn](iterate.md) — iterate over rows or columns
