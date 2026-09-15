@@ -11,7 +11,7 @@ df
 ```
 
 <!---END-->
-<inline-frame src="./resources/api/indexing/indexingDf.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/indexingDf.html" width="100%" height="500px"></inline-frame>
 
 ## Access a cell by index
 
@@ -78,7 +78,7 @@ df.getRows(df.indices { city == "Moscow" })
 ```
 
 <!---END-->
-<inline-frame src="./resources/api/indexing/indicesGetRows.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/indicesGetRows.html" width="100%" height="500px"></inline-frame>
 
 See also [`rowsCount`](rowsCount.md), which returns how many rows there are rather than their indices,
 and [`filter`](filter.md), which returns the matching rows themselves.

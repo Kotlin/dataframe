@@ -1,7 +1,8 @@
 ## :samples
 
 Code samples, as well as DataFrame iframes and Kandy plot images, for the 
-[documentation website](https://github.com/Kotlin/dataframe).
+[documentation website](https://kotlin.github.io/dataframe/)
+(sources in [docs/StardustDocs](../docs/StardustDocs)).
 
 ### Korro
 

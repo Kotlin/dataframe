@@ -44,5 +44,10 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
   `:samples`. Adding a sample to a `:core`-owned topic means moving that topic's samples over first.
 - **A new iframe needs `:samples:updateShadowResources`** on top of the generated HTML — without the
   `<resource>` entry in `_shadow_resources.md` the page silently shows no table.
+- **An iframe `src` is the flat basename, never the on-disk path.** `updateShadowResources` registers
+  resources by basename only (422 `<resource src="…">` entries, not one with a slash), so a nested
+  source file is still referenced as `./resources/<file>.html`: `sliceRows.md:14` says
+  `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
+  `src` builds fine and silently renders an empty frame.
 - After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
   — check the real set with `git diff --ignore-cr-at-eol`.

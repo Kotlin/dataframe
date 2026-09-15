@@ -12,11 +12,9 @@ import org.jetbrains.kotlinx.dataframe.indices
 
 /**
  * {@comment
- *    Website link and "see also" list shared by both `indices` overloads.
+ *    "See also" list shared by both `indices` overloads.
  *    Include it into KDoc with `@include [CommonIndicesDocs]`.
  * }
- *
- * For more information: {@include [DocumentationUrls.Indices]}
  *
  * See also:
  *  - [rowsCount][DataFrame.rowsCount] — returns the number of rows in this [DataFrame].
@@ -31,7 +29,9 @@ private typealias CommonIndicesDocs = Nothing
  * from `0` to the number of rows minus one,
  * or an empty range if this [DataFrame] has no rows.
  *
- * {@include [CommonIndicesDocs]}
+ * For more information: {@include [DocumentationUrls.Indices]}
+ *
+ * @include [CommonIndicesDocs]
  *
  * @return An [IntRange] with the index of every row in this [DataFrame].
  */
@@ -49,9 +49,9 @@ public fun DataFrame<*>.indices(): IntRange = 0 until rowsCount()
  * including through [extension properties][AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * For more information, {@include [DocumentationUrls.DataRow.RowFilter]}
+ * For more information: {@include [DocumentationUrls.Indices]} {@include [DocumentationUrls.DataRow.RowFilter]}
  *
- * {@include [CommonIndicesDocs]}
+ * @include [CommonIndicesDocs]
  *
  * ### Example
  * ```kotlin
