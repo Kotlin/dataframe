@@ -89,7 +89,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      * Big numbers ([`BigInteger`][java.math.BigInteger], [`BigDecimal`][java.math.BigDecimal]) are not
      * supported; [`convert`][DataFrame.convert] them to a primitive number type first.
      *
-     * @include [CommonStatisticsDocs.NullAndNaNHandlingSnippet]
+     * @include [CommonStatisticsDocs.NullHandlingSnippet]
+     * {@get [NAN_NOTE] {@include [CommonStatisticsDocs.NaNHandlingSnippet]}}
      *
      * The result is never `null` and has the same type as the input, except for [Byte] and [Short],
      * which sum to [Int], and "mixed" [Number] input, which sums to the common type of its values.
@@ -98,7 +99,12 @@ internal interface SumDocs : CommonStatisticsDocs {
      * @include [DocumentationUrls.Sum.TypeConversion]
      */
     @ExcludeFromSources
-    typealias SupportedTypesSnippet = Nothing
+    interface SupportedTypesSnippet {
+
+        // The note about `NaN` handling. Filled in by default; must be set to nothing for the
+        // overloads of a fixed integer type, as those have no `skipNaN` parameter to refer to.
+        typealias NAN_NOTE = Nothing
+    }
 
     /**
      * {@comment Note about the behavior on empty input for the modes with a single result. KDoc-snippet.}
@@ -151,19 +157,19 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias PivotUrlsSnippet = Nothing
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @comment Version of [SelectingColumns] with correctly filled in examples
      * @include [SelectingColumns] {@include [SetSumOperationArg]}
      */
     typealias SumSelectingOptions = Nothing
 
     /**
-     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @comment Version of [SelectingColumns] with correctly filled in examples
      * @include [SelectingColumns] {@include [SetSumForOperationArg]}
      */
     typealias SumForSelectingOptions = Nothing
 
     /**
-     * {@include [SumDocs.ZeroOnEmptySnippet]}
+     * @include [SumDocs.ZeroOnEmptySnippet]
      *
      * See also:
      * - [`sumOf`][DataColumn.sumOf] — the sum of the values a selector returns for each element.
@@ -180,11 +186,9 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias DataColumnSumSnippet = Nothing
 
     /**
-     * {@comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.}
-     *
-     * {@include [SumDocs.SupportedTypesSnippet]}
-     *
-     * {@include [SumDocs.ZeroOnEmptySnippet]}
+     * @comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.
+     * @include [SumDocs.SupportedTypesSnippet]
+     * @include [SumDocs.ZeroOnEmptySnippet]
      *
      * See also:
      * - [`sum`][DataColumn.sum] — the sum of the values in this column itself.
@@ -207,10 +211,9 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
-     * {@comment The parts all [DataRow.rowSumOf] overloads have in common. KDoc-snippet.}
+     * @comment The parts all [DataRow.rowSumOf] overloads have in common. KDoc-snippet.
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     *
      * @include [SumDocs.ZeroOnEmptySnippet]
      *
      * See also:
@@ -227,8 +230,8 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias RowSumOfSnippet = Nothing
 
     /**
-     * {@comment [RowSumOfSnippet] plus the parameters that all reified [DataRow.rowSumOf] overloads
-     *    have in common. KDoc-snippet.}
+     * @comment [RowSumOfSnippet] plus the parameters that all reified [DataRow.rowSumOf] overloads
+     *    have in common. KDoc-snippet.
      *
      * @include [SumDocs.RowSumOfSnippet]
      * $[EXAMPLE]
@@ -376,8 +379,8 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
-     * @comment The parts all column-selecting [Grouped.sum] overloads have in common.
-     *    KDoc-snippet.
+     * {@comment The parts all column-selecting [Grouped.sum] overloads have in common.
+     *    KDoc-snippet.}
      *
      * Aggregates this [GroupBy] by computing a single sum of all the values
      * in the selected columns, per group.
@@ -451,8 +454,8 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
-     * @comment The parts all column-selecting [Pivot.sum] overloads have in common.
-     *    KDoc-snippet.
+     * {@comment The parts all column-selecting [Pivot.sum] overloads have in common.
+     *    KDoc-snippet.}
      *
      * Aggregates this [Pivot] by computing a single sum of all the values
      * in the selected columns, per group.
@@ -526,8 +529,8 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
-     * @comment The parts all column-selecting [PivotGroupBy.sum] overloads have in common.
-     *    KDoc-snippet.
+     * {@comment The parts all column-selecting [PivotGroupBy.sum] overloads have in common.
+     *    KDoc-snippet.}
      *
      * Aggregates this [PivotGroupBy] by computing a single sum of all the values
      * in the selected columns, per group.
@@ -562,7 +565,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     }
 
     /**
-     * {@comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.}
+     * @comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.
      *
      * @param [columns\] The [ColumnsSelector] used to select the columns to compute the sum of.
      */
@@ -570,7 +573,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias ColumnsSelectorParam = Nothing
 
     /**
-     * {@comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.}
+     * @comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.
      *
      * @param [columns\] The [ColumnsForAggregateSelector] used to select the columns
      *   to compute the sum of.
@@ -579,7 +582,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias AggregateColumnsSelectorParam = Nothing
 
     /**
-     * {@comment The `columns` parameter of the [String] overloads. KDoc-snippet.}
+     * @comment The `columns` parameter of the [String] overloads. KDoc-snippet.
      *
      * @param [columns\] The names of the columns to compute the sum of.
      */
@@ -587,7 +590,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias ColumnNamesParam = Nothing
 
     /**
-     * {@comment The `expression` parameter of the `sumOf` overloads. KDoc-snippet.}
+     * @comment The `expression` parameter of the `sumOf` overloads. KDoc-snippet.
      *
      * @param [expression\] The [RowExpression] to compute the value to sum for each row.
      */
@@ -595,7 +598,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias ExpressionParam = Nothing
 
     /**
-     * {@comment The `name` parameter of the [Grouped.sum] overloads. KDoc-snippet.}
+     * @comment The `name` parameter of the [Grouped.sum] overloads. KDoc-snippet.
      *
      * @param [name\] The name of the resulting column.
      *   If `null` (the default), the name of the selected column is used if exactly one column
@@ -673,7 +676,7 @@ public fun <T : Number?> DataColumn<T>.sum(skipNaN: Boolean = skipNaNDefault): T
  * Returns the sum of the [Short] values that the given [expression] returns
  * for each element of this [DataColumn], as an [Int].
  *
- * @include [SumDocs.DataColumnSumOfSnippet]
+ * @include [SumDocs.DataColumnSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataColumnSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all halved values in the "amount" column of `Short`s, as an `Int`
@@ -690,7 +693,7 @@ public inline fun <C, reified V : Short?> DataColumn<C>.sumOf(crossinline expres
  * Returns the sum of the [Byte] values that the given [expression] returns
  * for each element of this [DataColumn], as an [Int].
  *
- * @include [SumDocs.DataColumnSumOfSnippet]
+ * @include [SumDocs.DataColumnSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataColumnSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all halved values in the "amount" column of `Byte`s, as an `Int`
@@ -767,7 +770,7 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  * Only the values in the columns of type [Short] (or `Short?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Short` values in the first row, as an `Int`
@@ -786,7 +789,7 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  * Only the values in the columns of type [Byte] (or `Byte?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Byte` values in the first row, as an `Int`
@@ -805,7 +808,7 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  * Only the values in the columns of type [Int] (or `Int?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Int` values ("age" and "weight") in the first row
@@ -824,7 +827,7 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  * Only the values in the columns of type [Long] (or `Long?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * @include [SumDocs.ReifiedRowSumOfSnippet]
+ * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
  * ```kotlin
  * // The sum of all `Long` values in the first row
@@ -999,6 +1002,7 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
  * as an [Int].
  *
  * @include [SumDocs.DataFrameSumSnippet]
+ * {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
@@ -1019,7 +1023,7 @@ public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int
  * Returns a single sum of all the [Byte] values in the selected columns of this [DataFrame],
  * as an [Int].
  *
- * @include [SumDocs.DataFrameSumSnippet]
+ * @include [SumDocs.DataFrameSumSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataFrameSumSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  * @set [SumDocs.DataFrameSumSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
@@ -1121,7 +1125,7 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  * Returns the sum of the [Short] values that the given [expression] returns
  * for each row of this [DataFrame], as an [Int].
  *
- * @include [SumDocs.DataFrameSumOfSnippet]
+ * @include [SumDocs.DataFrameSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataFrameSumOfSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  * @set [SumDocs.DataFrameSumOfSnippet.EXAMPLE]
@@ -1141,7 +1145,7 @@ public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline express
  * Returns the sum of the [Byte] values that the given [expression] returns
  * for each row of this [DataFrame], as an [Int].
  *
- * @include [SumDocs.DataFrameSumOfSnippet]
+ * @include [SumDocs.DataFrameSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.DataFrameSumOfSnippet.SEE_ALSO_TAIL]
  * - {@include [SumDocsLink]} — an overview of all `sum` modes.
  * @set [SumDocs.DataFrameSumOfSnippet.EXAMPLE]
