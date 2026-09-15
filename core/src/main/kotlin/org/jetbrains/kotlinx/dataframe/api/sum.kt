@@ -83,7 +83,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      *
      * All primitive number types are supported: [Byte], [Short], [Int], [Long], [Float], and [Double].
      * "Mixed" [Number] input is supported too, as long as it consists solely of those primitive numbers;
-     * its values are then first converted to their common type using [UnifiedNumberTypeOptions.PRIMITIVES_ONLY],
+     * its values are then first converted to their common type using
+     * [UnifiedNumberTypeOptions.PRIMITIVES_ONLY][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.PRIMITIVES_ONLY],
      * see [number unification][UnifyingNumbers].
      * Big numbers ([`BigInteger`][java.math.BigInteger], [`BigDecimal`][java.math.BigDecimal]) are not
      * supported; [`convert`][DataFrame.convert] them to a primitive number type first.
@@ -133,7 +134,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     /**
      * {@comment The documentation website links all [Grouped] `sum` KDocs end with. KDoc-snippet.}
      *
-     * For more information: {@include [DocumentationUrls.GroupByStatistics]},
+     * For more information: {@include [DocumentationUrls.GroupByStatistics]}, and
      * {@include [DocumentationUrls.GroupByAggregationStatistics]}
      */
     @ExcludeFromSources
@@ -143,7 +144,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * {@comment The documentation website links all [Pivot] and [PivotGroupBy] `sum` KDocs end with.
      *    KDoc-snippet.}
      *
-     * For more information: {@include [DocumentationUrls.PivotStatistics]},
+     * For more information: {@include [DocumentationUrls.PivotStatistics]}, and
      * {@include [DocumentationUrls.PivotAggregationStatistics]}
      */
     @ExcludeFromSources
