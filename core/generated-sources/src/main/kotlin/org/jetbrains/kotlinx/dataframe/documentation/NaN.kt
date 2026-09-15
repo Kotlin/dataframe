@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNaNs
  * You can also use [<code>fillNaNs</code>][fillNaNs] to replace `NaNs` in certain columns with a given value or expression
  * or [<code>dropNaNs</code>][dropNaNs] to drop rows with `NaNs` in them.
  *
- * For more information: [See `NaN` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#nan)
+ * For more information: [See `NaN` on the documentation website.](https://kotlin.github.io/dataframe/nanandna.html#nan)
  *
  * @see [NA]
  */

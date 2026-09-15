@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  * You can also use [<code>fillNA</code>][fillNA] to replace `NAs` in certain columns with a given value or expression
  * or [<code>dropNA</code>][dropNA] to drop rows with `NAs` in them.
  *
- * For more information: [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#na)
+ * For more information: [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanandna.html#na)
  *
  * @see [NaN]
  */
