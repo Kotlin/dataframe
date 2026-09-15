@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionD
  *   Holds all KDoc-snippets that the summary statistics operations have in common.
  *   The KDoc-topic of each statistic (like [CommonMinMaxDocs] for `min`/`max`, or `SumDocs` for
  *   `sum`) inherits from this interface, so the snippets can be included from any of them,
- *   like `{@include [CommonMinMaxDocs.SkipNaNParam]}`.
+ *   like `{@include [CommonMinMaxDocs.SkipNanParam]}`.
  *
  *   NOTE: this cannot be @ExcludedFromSources because [CommonMinMaxDocs] and the other statistics
  *   KDoc-topics use it as supertype.
@@ -16,12 +16,29 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionD
 internal interface CommonStatisticsDocs {
 
     /**
-     * {@comment Note about how `null` and NaN values in the input are treated. KDoc-snippet.}
+     * {@comment Note about how `null` values in the input are treated. KDoc-snippet.}
      *
      * `null` values in the input are always ignored.
+     */
+    @ExcludeFromSources
+    typealias NullHandlingSnippet = Nothing
+
+    /**
+     * {@comment Note about how NaN values in the input are treated. KDoc-snippet.
+     *    Only include this in the KDoc of overloads that actually have a `skipNaN` parameter;
+     *    overloads of a fixed integer type ([Byte], [Short], [Int], [Long]) have none,
+     *    as those types have no `NaN`.}
      *
      * If the input contains {@include [NaNLink]} values, the result will be `NaN`,
      * unless [skipNaN\] is set to `true`.
+     */
+    @ExcludeFromSources
+    typealias NaNHandlingSnippet = Nothing
+
+    /**
+     * @comment [NullHandlingSnippet] and [NaNHandlingSnippet] combined. KDoc-snippet.
+     * @include [NullHandlingSnippet]
+     * @include [NaNHandlingSnippet]
      */
     @ExcludeFromSources
     typealias NullAndNaNHandlingSnippet = Nothing
@@ -50,7 +67,7 @@ internal interface CommonStatisticsDocs {
     typealias AggregateColumnsSelectorSnippet = Nothing
 
     /**
-     * {@comment The shared `skipNaN` parameter documentation. KDoc-snippet.}
+     * @comment The shared `skipNaN` parameter documentation. KDoc-snippet.
      *
      * @param [skipNaN\] If `true`, {@include [NaNLink]} values are ignored, just like `null` values.
      *   If `false` (the default), a {@include [NaNLink]} in the input is propagated to the result.
@@ -60,7 +77,7 @@ internal interface CommonStatisticsDocs {
     typealias SkipNanParam = Nothing
 
     /**
-     * {@comment The shared `separate` parameter documentation. KDoc-snippet.}
+     * @comment The shared `separate` parameter documentation. KDoc-snippet.
      *
      * @param [separate\] If `false` (the default), the resulting columns are indexed
      *   first by the pivot key(s) and then by the names of the aggregated columns.
