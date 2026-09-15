@@ -96,6 +96,20 @@ class SchemaTests {
     }
 
     @Test
+    fun `groupBy schema gives the group column the next free name when a key column takes it`() {
+        val df = dataFrameOf("group", "age")("London", 1, "Paris", 2)
+        // the key column already occupies `group`, so the groups go to `group1`
+        df.groupBy("group").schema().toString() shouldBe
+            """
+            |group: String
+            |group1: *
+            |    group: String
+            |    age: Int
+            |
+            """.trimMargin()
+    }
+
+    @Test
     fun `KDoc example -- compile-time schema comes from the type argument`() {
         val df = dataFrameOf("name", "age")("Alice", 15).cast<Person>()
         df.compileTimeSchema().toString() shouldBe
@@ -134,7 +148,15 @@ class SchemaTests {
     }
 
     @Test
-    fun `compile-time schema of a dataframe without a schema marker has no columns`() {
+    fun `a marker without the DataSchema annotation still contributes its properties`() {
+        // the annotation is not what makes a property a column; the properties of `T` are
+        val df = dataFrameOf("b", "c")(1, 2).cast<Nested>()
+        df.compileTimeSchema().columns.keys shouldBe setOf("b", "c")
+    }
+
+    @Test
+    fun `compile-time schema of an untyped dataframe has no columns`() {
+        // `T` of `DataFrame<*>` is `Any?`, and `Any` has no properties to take columns from
         val untyped = dataFrameOf("a")(1)
         untyped.compileTimeSchema().columns.keys shouldBe emptySet()
     }

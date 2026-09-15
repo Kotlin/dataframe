@@ -117,10 +117,11 @@ public fun DataFrame<*>.schema(): DataFrameSchema = extractSchema()
 
 /**
  * Returns the runtime [DataFrameSchema] of this [GroupBy] seen as a [DataFrame]:
- * the key columns, followed by a [frame column][FrameColumn] named `group` holding the groups.
+ * the key columns, followed by a [frame column][FrameColumn] holding the groups.
  *
- * This is the schema of [toDataFrame][GroupBy.toDataFrame], which is why the group column
- * carries its default name here.
+ * This is the schema of [toDataFrame][GroupBy.toDataFrame], so the group column carries its
+ * default name `group` here — unless a key column is already called `group`, in which case
+ * the groups get the next free name, `group1`.
  *
  * @include [SchemaDocs.SchemaSourcesSnippet]
  *
@@ -163,7 +164,9 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  *
  * [T] is a schema marker — a [DataSchema] declaration you wrote yourself,
  * or the one the compiler plugin produced for the result of an operation.
- * When [T] is not a schema marker, as in `DataFrame<*>`, the returned schema has no columns.
+ * The columns are the properties of [T], whether or not it carries the [DataSchema]
+ * annotation. A type with no properties therefore gives a schema with no columns —
+ * as does `DataFrame<*>`, where [T] is `Any?`.
  *
  * @include [SchemaDocs.SchemaSourcesSnippet]
  *
@@ -172,7 +175,8 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  * On schema markers and the plugin that writes them: {@include [DocumentationUrls.CompilerPlugin]}
  *
  * ### Example
- * {@comment Both outputs below are expected values in `SchemaKDocExampleTests`.}
+ * {@comment Both outputs below are expected values in `SchemaTests` — not in
+ *    `SchemaKDocExampleTests`, which cannot declare its own `Person` marker.}
  * ```kotlin
  * @DataSchema
  * interface Person {
