@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -159,6 +160,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.percentile.invoke(percentile, skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "Percentile1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.percentileFor(
     percentile: Double,
     vararg columns: String,
@@ -400,6 +403,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.percentile.invoke(percentile, skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByPercentile0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: String): DataFrame<T> =
     percentileFor(percentile) { columns.toComparableColumns() }
 
@@ -428,6 +433,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateAll(this, name, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByPercentile2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.percentile(
     percentile: Double,
     vararg columns: String,

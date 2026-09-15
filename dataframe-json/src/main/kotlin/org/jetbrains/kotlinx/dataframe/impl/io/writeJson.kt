@@ -20,9 +20,10 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.all
+import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -282,34 +283,22 @@ internal fun encodeFrameWithMetadata(
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return allColumns.filter { it.name.startsWith(VALUE_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { valueCol ->
-            // check that value in this column is not null only when other values are null
-            if (valueCol.kind() != ColumnKind.Value) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidValueColumn = rows().all { row ->
-                    if (valueCol[row] != null) {
-                        allColumns.all { col ->
-                            if (col.name != valueCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidValueColumn) {
-                    valueCol
-                } else {
-                    null
-                }
+        ?.takeIf { it.kind() == ColumnKind.Value }
+        // 'readJson' cannot have created an all-null 'value' column, consider it a regular one
+        ?.takeUnless { it.allNulls() }
+        ?.takeIf { valueCol ->
+            val otherCols = allColumns - valueCol
+            // It's a valid 'value' column only if for each non-null value,
+            // the corresponding cells in the other columns are all null.
+            val isValidValueColumn = this.all { row ->
+                valueCol[row] == null || otherCols.all { it[row] == null }
             }
+
+            isValidValueColumn
         }
 }
 
@@ -322,33 +311,22 @@ internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
 internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return columns().filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { arrayCol ->
-            if (arrayCol.kind() == ColumnKind.Group) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidArrayColumn = rows().all { row ->
-                    if (arrayCol[row] != null) {
-                        allColumns.all { col ->
-                            if (col.name != arrayCol.name) {
-                                col[row] == null
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidArrayColumn) {
-                    arrayCol
-                } else {
-                    null
-                }
+        ?.takeUnless { it.kind() == ColumnKind.Group }
+        // 'readJson' cannot have created an all-null 'array' column, consider it a regular one
+        ?.takeUnless { it.allNulls() }
+        ?.takeIf { arrayCol ->
+            val otherCols = allColumns - arrayCol
+            // It's a valid 'array' column only if for each non-null value,
+            // the corresponding cells in the other columns are all null.
+            // TODO `readJson` turns arrays into empty lists instead of `null`, issue #2048
+            val isValidArrayColumn = this.all { row ->
+                arrayCol[row] == null || otherCols.all { it[row] == null }
             }
+            isValidArrayColumn
         }
 }
 
