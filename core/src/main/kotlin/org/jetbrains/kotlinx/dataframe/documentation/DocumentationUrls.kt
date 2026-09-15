@@ -82,13 +82,13 @@ public interface DocumentationUrls {
         public typealias FillNA = Nothing
     }
 
-    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
+    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanandna.html) */
     public interface NanAndNa {
 
-        /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
+        /** [See `NaN` on the documentation website.]({@include [Url]}/nanandna.html#nan) */
         public typealias NaN = Nothing
 
-        /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
+        /** [See `NA` on the documentation website.]({@include [Url]}/nanandna.html#na) */
         public typealias NA = Nothing
     }
 
