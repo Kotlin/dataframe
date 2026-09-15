@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.LastOnColumn]}
  *
- * See also [lastOrNull], [first], [take], [takeLast].
+ * See also [lastOrNull], [first], [take], [takeLast], [single].
  *
  * @return The last value in this [DataColumn].
  *
@@ -49,7 +49,7 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
  *
  * For more information: {@include [DocumentationUrls.LastOrNullOnColumn]}
  *
- * See also [last], [first], [take], [takeLast].
+ * See also [last], [first], [take], [takeLast], [single].
  *
  * @return The last value in this [DataColumn], or `null` if the [DataColumn] is empty.
  */
@@ -67,7 +67,7 @@ public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
  *
  * For more information: {@include [DocumentationUrls.LastOnColumn]}
  *
- * See also [lastOrNull], [first], [take], [takeLast].
+ * See also [lastOrNull], [first], [take], [takeLast], [single].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -96,7 +96,7 @@ public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.
  *
  * For more information: {@include [DocumentationUrls.LastOrNullOnColumn]}
  *
- * See also [last], [first], [take], [takeLast].
+ * See also [last], [first], [take], [takeLast], [single].
  *
  * @param [predicate] A lambda expression used to get the last value
  * that satisfies a condition specified in this expression.
@@ -135,7 +135,8 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * [first][DataFrame.first],
  * [take][DataFrame.take],
  * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * [takeWhile][DataFrame.takeWhile],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -166,7 +167,8 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * [first][DataFrame.first],
  * [take][DataFrame.take],
  * [takeLast][DataFrame.takeLast],
- * [takeWhile][DataFrame.takeWhile].
+ * [takeWhile][DataFrame.takeWhile],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -188,7 +190,8 @@ public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
  * See also [last][DataFrame.last],
  * [first][DataFrame.first],
  * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @return A [DataRow] containing the last row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -202,7 +205,8 @@ public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow -
  * See also [lastOrNull][DataFrame.lastOrNull],
  * [first][DataFrame.first],
  * [take][DataFrame.take],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @return A [DataRow] containing the last row in this [DataFrame].
  *

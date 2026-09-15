@@ -201,6 +201,7 @@
             <toc-element topic="between.md"/>
             <toc-element topic="firstOnColumn.md"/>
             <toc-element topic="lastOnColumn.md"/>
+            <toc-element topic="singleOnColumn.md"/>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="Utils.md">
