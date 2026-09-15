@@ -82,7 +82,7 @@ public fun <T> DataFrame<T>.count(): Int = rowsCount()
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * See also:
  * - [<code>filter</code>][DataFrame.filter] — filters rows using a [<code>RowFilter</code>][RowFilter] condition.
@@ -151,7 +151,7 @@ public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * Returns a new [<code>DataFrame</code>][DataFrame] where each row corresponds to a group.
  * The resulting frame contains:
@@ -234,7 +234,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  * Returns a single [<code>DataRow</code>][DataRow] where:
  * - each column corresponds to a [<code>pivot</code>][pivot] group — if multiple pivot keys were used,

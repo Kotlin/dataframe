@@ -4,9 +4,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -19,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleOrNullWithTransformerImpl
@@ -33,12 +36,43 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
+/**
+ * Returns the single value in this [<code>DataColumn</code>][DataColumn].
+ *
+ * For more information: [See `single` on the documentation website.](https://kotlin.github.io/dataframe/singleoncolumn.html)
+ *
+ * See also [<code>firstOrNull</code>][DataColumn.firstOrNull], that returns `null` instead of throwing
+ * when the [<code>DataColumn</code>][DataColumn] is empty,
+ * and [<code>first</code>][DataColumn.first], [<code>last</code>][DataColumn.last], [<code>take</code>][DataColumn.take],
+ * [<code>takeLast</code>][DataColumn.takeLast], that do not require the [<code>DataColumn</code>][DataColumn]
+ * to contain exactly one value.
+ *
+ * @return The single value in this [<code>DataColumn</code>][DataColumn].
+ * It can be `null` if the [<code>DataColumn</code>][DataColumn] contains exactly one value and that value is `null`.
+ *
+ * @throws [NoSuchElementException] if the [<code>DataColumn</code>][DataColumn] is empty.
+ * @throws [IllegalArgumentException] if the [<code>DataColumn</code>][DataColumn] contains more than one value.
+ */
 public fun <C> DataColumn<C>.single(): C = values.single()
 
 // endregion
 
 // region DataFrame
 
+/**
+ * Returns the single [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame].
+ *
+ * For more information: [See `single` on the documentation website.](https://kotlin.github.io/dataframe/single.html)
+ *
+ * See also [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` instead of throwing,
+ * and [<code>first</code>][DataFrame.first], [<code>last</code>][DataFrame.last],
+ * that do not require the [<code>DataFrame</code>][DataFrame] to contain exactly one matching row.
+ *
+ * @return A [<code>DataRow</code>][DataRow] containing the single row in this [<code>DataFrame</code>][DataFrame].
+ *
+ * @throws [NoSuchElementException] if the [<code>DataFrame</code>][DataFrame] contains no rows.
+ * @throws [IllegalArgumentException] if the [<code>DataFrame</code>][DataFrame] contains more than one row.
+ */
 public fun <T> DataFrame<T>.single(): DataRow<T> =
     when (nrow) {
         0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
@@ -46,12 +80,105 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
         else -> throw IllegalArgumentException("DataFrame has more than one row.")
     }
 
+/**
+ * Returns the single [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame].
+ * Returns `null` if the [<code>DataFrame</code>][DataFrame] contains no rows or contains more than one row.
+ *
+ * For more information: [See `singleOrNull` on the documentation website.](https://kotlin.github.io/dataframe/single.html#singleornull)
+ *
+ * See also [<code>single</code>][DataFrame.single], that throws instead of returning `null`,
+ * and [<code>firstOrNull</code>][DataFrame.firstOrNull], [<code>lastOrNull</code>][DataFrame.lastOrNull],
+ * that do not require the [<code>DataFrame</code>][DataFrame] to contain exactly one matching row.
+ *
+ * @return A [<code>DataRow</code>][DataRow] containing the single row in this [<code>DataFrame</code>][DataFrame],
+ * or `null` if the [<code>DataFrame</code>][DataFrame] contains no rows or contains more than one row.
+ */
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
-public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
-    rows().single { predicate(it, it) }
+/**
+ * Returns the single [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
+ *
+ *
+ *
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
+ *
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions,
+ * // find the only transaction made with the given id
+ * df.single { id == 137 }
+ * ```
+ *
+ * For more information: [See `single` on the documentation website.](https://kotlin.github.io/dataframe/single.html)
+ *
+ * See also [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` instead of throwing,
+ * and [<code>first</code>][DataFrame.first], [<code>last</code>][DataFrame.last],
+ * that do not require the [<code>DataFrame</code>][DataFrame] to contain exactly one matching row.
+ *
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the single row
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [<code>DataRow</code>][DataRow] containing the single row that matches the given [<code>predicate</code>][predicate].
+ *
+ * @throws [NoSuchElementException] if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate].
+ * @throws [IllegalArgumentException] if the [<code>DataFrame</code>][DataFrame] contains more than one row
+ * matching the [<code>predicate</code>][predicate].
+ */
+public inline fun <T> DataFrame<T>.single(predicate: RowFilter<T>): DataRow<T> = rows().single { predicate(it, it) }
 
-public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
+/**
+ * Returns the single [<code>row</code>][DataRow] in this [<code>DataFrame</code>][DataFrame] that satisfies the given [<code>predicate</code>][predicate].
+ * Returns `null` if the [<code>DataFrame</code>][DataFrame] contains no rows matching the [<code>predicate</code>][predicate]
+ * (including the case when the [<code>DataFrame</code>][DataFrame] is empty)
+ * or contains more than one row matching the [<code>predicate</code>][predicate].
+ *
+ *
+ *
+ * The [predicate] is a [<code>RowFilter</code>][org.jetbrains.kotlinx.dataframe.RowFilter] — a lambda that receives each [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] as both `this` and `it`
+ * and is expected to return a [<code>Boolean</code>][Boolean] value.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
+ *
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ *
+ *
+ *
+ * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * ### Example
+ * ```kotlin
+ * // In a DataFrame of financial transactions,
+ * // find the only transaction made with the given id,
+ * // or 'null' if there is no such transaction or there is more than one
+ * df.singleOrNull { id == 137 }
+ * ```
+ *
+ * For more information: [See `singleOrNull` on the documentation website.](https://kotlin.github.io/dataframe/single.html#singleornull)
+ *
+ * See also [<code>single</code>][DataFrame.single], that throws instead of returning `null`,
+ * and [<code>firstOrNull</code>][DataFrame.firstOrNull], [<code>lastOrNull</code>][DataFrame.lastOrNull],
+ * that do not require the [<code>DataFrame</code>][DataFrame] to contain exactly one matching row.
+ *
+ * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the single row
+ * that satisfies a condition specified in this filter.
+ *
+ * @return A [<code>DataRow</code>][DataRow] containing the single row that matches the given [<code>predicate</code>][predicate],
+ * or `null` if there is no such row or there is more than one.
+ */
+public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
 // endregion
