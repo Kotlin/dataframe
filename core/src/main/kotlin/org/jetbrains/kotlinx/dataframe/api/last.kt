@@ -136,7 +136,7 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
  * [take][DataFrame.take],
  * [takeLast][DataFrame.takeLast],
  * [takeWhile][DataFrame.takeWhile],
- * [single][DataFrame.single], that fails unless there is exactly one row to return.
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.
@@ -168,7 +168,7 @@ public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<
  * [take][DataFrame.take],
  * [takeLast][DataFrame.takeLast],
  * [takeWhile][DataFrame.takeWhile],
- * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the last value
  * that satisfies a condition specified in this filter.

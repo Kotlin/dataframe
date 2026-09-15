@@ -25,7 +25,14 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
   config; and the explicitly-kept `resources/**/manual/**` snippets.
 - **Do NOT hand-edit (generated, auto-regenerated):** everything else under `resources/**` (Korro `snippets/`,
   `snippets/kdocs/`, and the `api`/`io`/`guides`/`modify` iframe HTML) and the generated
-  `topics/_shadow_resources.md`. A CI bot regenerates and auto-commits these on `master`.
+  `topics/_shadow_resources.md`. Fix the source (the sample, the KDoc, the topic) and re-run the generating
+  task instead; a hand-edit here is overwritten by the next run.
+- **"Generated" does not mean "keep it out of the PR".** Only `resources/snippets/**` is regenerated and
+  auto-committed on `master` by the CI bot. The `api`/`io`/`guides`/`modify` iframe HTML and
+  `topics/_shadow_resources.md` are **not** covered by that bot — they have always been committed by the
+  author of the PR that adds the sample. So when you add a new sample or page, run the generating task and
+  commit its output together with the rest of the change; without it the published page renders with a
+  missing resource.
 
 ## How content is injected
 
