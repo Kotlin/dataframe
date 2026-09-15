@@ -85,7 +85,11 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   `src/main/kotlin/…`. The one reason to open a generated file is the KDoc: it is the **fully-expanded**
   documentation (all `{@include …}`/`@set`/`@get` resolved, URLs inlined). If you specifically need a symbol's
   final rendered docs, open that single generated file deliberately — don't explore. A CI bot regenerates and
-  auto-commits all of these on `master` after merge — you don't run/commit generation yourself.
+  auto-commits `generated-sources/`, the accessors and `docs/StardustDocs/resources/snippets/` on `master` after
+  merge — you don't run or commit those yourself. **One exception:** the iframe HTML under
+  `docs/StardustDocs/resources/` outside `snippets/` (`api`/`io`/`guides`/`modify`) and
+  `docs/StardustDocs/topics/_shadow_resources.md` are *not* covered by that bot — the PR that adds the sample
+  runs the generating task and commits their output itself. See `docs/StardustDocs/AGENTS.md`.
 - For KDocs: never write from scratch — reuse/`@include` an existing operation's KDoc and adapt it. Reusable KDoc
   fragments are written once as `internal`/`private` interfaces and `typealias … = Nothing` declarations and
   composed via `@include`; this pattern is used in every KoDEx module (the shared cross-module fragment library
