@@ -28,6 +28,9 @@ around it. If the two ever disagree, the guidelines win.
   add samples to `:core`.
 - **No deprecated API.** If an existing sample or page section uses deprecated API, rewrite it with
   the current replacement — or delete it if the replacement makes it redundant.
+- **Do not run or build the website yourself, do not deploy, and do not commit or push anything.**
+  Leave all changes in the working tree and let the user review them. Only run the Gradle tasks
+  listed in step 5 and the ktlint/validation commands.
 
 ## Procedure
 
@@ -58,16 +61,20 @@ structure, tone and formatting.
   them to be documented.
 - Check whether the page already exists, and whether it still pulls samples from `:core`
   (`core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt`, which is what
-  `core/build.gradle.kts` korro config covers). If so, migration is part of the job — see step 6.
+  `core/build.gradle.kts` korro config covers). If so, migration is part of the job — see step 7.
 
 ### 3. Write the topic
 
 Create/update `docs/StardustDocs/topics/<operation>.md` and register it in
 `docs/StardustDocs/d.tree` if new (place it next to related operations).
 
-Follow the structure from the guidelines: title → what it does, then what it returns → signature(s)
-/ operation grammar → important notes → *See also* links → parameters → examples. Multi-step
-operations get one subsection per step, each with the same structure.
+Follow the structure from the guidelines: title → Writerside summaries → what it does, then what it
+returns → signature(s) / operation grammar → important notes → *See also* links → parameters →
+examples. Multi-step operations get one subsection per step, each with the same structure.
+
+If the page has no Writerside summaries yet, add all three right after the title (and the Korro
+`IMPORT`), using the standard operation template with the same text in each — see
+*Writerside summaries* in the guidelines. Keep existing meaningful custom summaries as they are.
 
 Link on first mention (`[`DataFrame`](DataFrame.md)`, `[column selectors](ColumnSelectors.md)`, …),
 follow `docs/StardustDocs/topics/concepts/spellingConventions.md`, and keep the language plain.
@@ -112,6 +119,16 @@ Then add both the topic path and the test path to the Korro config in `samples/b
 (`korro { docs { from(...) }; samples { from(...) } }`) — a glob that already covers the path is
 enough.
 
+When the test file is written, run ktlint over it and fix what it reports:
+
+```bash
+./gradlew :samples:ktlintFormat
+./gradlew :samples:ktlintCheck
+```
+
+Note the deliberate `chain-method-continuation = disabled` style from `AGENTS.md`: group chained
+operations on one line so the chain reads like a sentence.
+
 ### 5. Generate and verify
 
 Run, in this order (`korro` **must** run after `test`):
@@ -130,11 +147,29 @@ Then verify, and report honestly if anything failed:
   reference (note tab-generated names get the `_properties` / `_strings` suffix);
 - `_shadow_resources.md` was updated.
 
-Mention to the user that they can review the rendered page locally per
-`docs/README.md#running-the-documentation-website-locally` (don't run the website yourself unless
-asked).
+Do **not** build, run, or deploy the website. Just point the user to
+`docs/README.md#running-the-documentation-website-locally` so they can review the rendered page.
 
-### 6. Migrating old `:core` samples of the page
+### 6. Validate links and anchors
+
+Once the topic text is final, check every link you wrote or touched:
+
+- Markdown links to other topics (`[…](someTopic.md)`, `[…](concepts/x.md)`) — the target file must
+  exist under `docs/StardustDocs/topics/` (and subfolders), with the path relative to the current topic.
+- Anchors (`someTopic.md#section-anchor`, `#local-anchor`) — the heading must exist in the target
+  file; Writerside anchors are the lowercased heading with spaces replaced by `-` and punctuation
+  dropped. Also accept explicit `{id="..."}` anchors.
+- `<inline-frame src="./resources/x.html">` — the file must exist in `docs/StardustDocs/resources/` 
+  (and subfolders).
+- `<img src="...">` — the file must exist in `docs/StardustDocs/images/`.
+- `topic="x.md"` entries you added to `d.tree` must point at existing files, and the new topic must
+  be reachable from the tree.
+- Links in the surrounding prose that you rewrote while editing (e.g. renamed sections) still
+  resolve.
+
+Fix every broken one, and report any you could not resolve.
+
+### 7. Migrating old `:core` samples of the page
 
 If the page still uses samples generated from `:core` tests:
 
@@ -148,5 +183,7 @@ If the page still uses samples generated from `:core` tests:
 ## Reporting
 
 Summarize: which topic file(s) and test file(s) you changed, the template you followed, which Gradle
-tasks you ran and their result, and anything you deliberately left out (e.g. an overload you could
-not sensibly exemplify) so the user can decide.
+tasks you ran and their result, the link/anchor validation result, and anything you deliberately
+left out (e.g. an overload you could not sensibly exemplify) so the user can decide.
+
+Leave the changes uncommitted — the user commits and deploys.
