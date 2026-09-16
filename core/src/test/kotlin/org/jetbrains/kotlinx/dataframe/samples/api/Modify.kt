@@ -77,9 +77,6 @@ import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByDesc
-import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -321,56 +318,6 @@ class Modify : TestBase() {
         // a.b.e -> be
         // c.d.e -> de
         df.move { colsAtAnyDepth().nameContains("e") }.toTop { it.parentName + it.name() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortBy_properties() {
-        // SampleStart
-        df.sortBy { age }
-        df.sortBy { age and name.firstName.desc() }
-        df.sortBy { weight.nullsLast() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortBy_strings() {
-        // SampleStart
-        df.sortBy("age")
-        df.sortBy { "age" and "name"["firstName"].desc() }
-        df.sortBy { "weight".nullsLast() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortByDesc_properties() {
-        // SampleStart
-        df.sortByDesc { age and weight }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortByDesc_strings() {
-        // SampleStart
-        df.sortByDesc("age", "weight")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun sortWith() {
-        // SampleStart
-        df.sortWith { row1, row2 ->
-            when {
-                row1.age < row2.age -> -1
-                row1.age > row2.age -> 1
-                else -> row1.name.firstName.compareTo(row2.name.firstName)
-            }
-        }
         // SampleEnd
     }
 
