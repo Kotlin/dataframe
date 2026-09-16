@@ -35,3 +35,10 @@ jobs:
 
       - name: Update summary
         run: cat ./build/reports/dependency-updates.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for dependency updates
+        run: |
+          if ! grep -q "^# No updates available" ./build/reports/dependency-updates.md; then
+            echo "::error::Dependency updates are available! Check the step summary for details."
+            exit 1
+          fi
