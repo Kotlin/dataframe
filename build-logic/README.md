@@ -86,5 +86,5 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     - There's also `replaceOutdatedDependencies` to replace outdated dependencies directly in the
       `/gradle/libs.versions.toml` file, but be careful.
     - Comment `#ignoreUpdates` in `/gradle/libs.versions.toml` to ignore updates for specific dependencies.
-    - `/.github/workflows/check-dependency-updates.yml` is a Github Action which runs `checkDependencyUpdates`. 
+    - `/.github/workflows/check-dependency-updates.yml` is a GitHub Action which runs `checkDependencyUpdates`. 
   

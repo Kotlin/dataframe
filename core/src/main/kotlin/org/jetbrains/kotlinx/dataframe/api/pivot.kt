@@ -555,8 +555,8 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
 internal typealias PivotCountsCommonDescription = Nothing
 
 /**
- * * **Cells** contain a [Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [DataFrame].
+ * * **Cells** contain an [Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [DataFrame].
  */
 @ExcludeFromSources
 internal typealias PivotCountsResultCellDescription = Nothing
@@ -576,7 +576,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
  * For more information: {@include [DocumentationUrls.PivotCounts]}
  *
  * See also: [pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then
+ * but checks if there is any matching row instead of counting them
  * to produce a [Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
@@ -791,7 +791,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * For more information: {@include [DocumentationUrls.PivotCounts]}
  *
  * See also: [pivotMatches][GroupBy.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then.
+ * but checks if there is any matching row instead of counting them.
  *
  * ### This `pivotCounts` Overload
  */

@@ -82,7 +82,7 @@ internal fun interface RetrievableMarker {
     operator fun invoke(getRefMarker: GetRefMarker, produceAdditionalMarker: ProduceAdditionalMarker): MarkerResult
 }
 
-/** Either a [OpenApiTypeResult.UsingRef], [OpenApiTypeResult.CannotFindRefMarker], [OpenApiTypeResult.OpenApiType],
+/** Either an [OpenApiTypeResult.UsingRef], [OpenApiTypeResult.CannotFindRefMarker], [OpenApiTypeResult.OpenApiType],
  * or [OpenApiTypeResult.Enum]. */
 internal sealed interface OpenApiTypeResult {
 
