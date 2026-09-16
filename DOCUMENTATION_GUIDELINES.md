@@ -116,17 +116,43 @@ fun selectTwoCols() {
 #### Structure
 
 1) Title
-2) Operation description.
+2) [Writerside summaries](#writerside-summaries)
+3) Operation description.
    1) First — what it actually does ("Adds ...", "Computes ...", "Removes...", "Sorts ...").
    2) Then — what it returns ("Returns ...").
-3) Method(s) signature. For complex operations — complete operation grammar.
-4) Any important notes.
-5) See also section — links to reverse or generally reversed operations.
-6) Parameters description.
-7) Examples (code sample with outputs).
+4) Method(s) signature. For complex operations — complete operation grammar.
+5) Any important notes.
+6) See also section — links to reverse or generally reversed operations.
+7) Parameters description.
+8) Examples (code sample with outputs).
 
 If the operation is complex and consists of several steps, each step can be described in a separate subsection
 keeping this structure.
+
+#### Writerside summaries
+
+Every topic must have [Writerside summaries](https://www.jetbrains.com/help/writerside/inject-summary.html)
+right after the title (and the Korro `IMPORT` directive, if any).
+They are used for the page metadata, cards, and link previews.
+
+For operation topics, use the same template for all pages, with the operation name substituted:
+
+```xml
+<web-summary>
+Discover `operationName` operation for Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover `operationName` operation for Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover `operationName` operation for Kotlin DataFrame.
+</link-summary>
+```
+
+All three summaries have the same text.
+If a topic has no summaries yet, add them; if it already has meaningful custom ones, keep them.
 
 ### Guide topics
 
