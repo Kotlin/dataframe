@@ -88,7 +88,30 @@ describe its possible values and how they affect the operation result.
 * Show an initial dataset for examples first.
 * The required number of examples depends on the complexity of the operation, number of overloads, and other factors.
 
+##### Extended formatting
 
+Coloring (and formatting in general) of output dataframes helps better understand the result.
+It's done by using [`.format` and `.formatHeader`](docs/StardustDocs/topics/format.md) methods.
+Use them to highlight important columns and rows.
+
+Highlight rows for rows-oriented operations (e.g., `filter`),
+and column headers for columns-oriented operations (e.g., `select`); 
+some operations are both rows- and columns-oriented (e.g., `join`).
+There's a default formatting for headers for selected columns: 
+[`.defaultHeaderFormatting { }`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/util/defaultHeaderFormatting.kt).
+
+Place formatting out of the sample, after `// SampleEnd`:
+
+```kotlin
+@Test
+fun selectTwoCols() {
+    // SampleStart
+    df.select { col1 and col2 }
+    // SampleEnd
+        .defaultHeaderFormatting { col1 and col2 }
+        .saveDfHtmlSample()
+}
+```
 
 #### Structure
 
@@ -141,7 +164,7 @@ primarily. For operation documentation, show both APIs if possible.
 [Korro](https://github.com/devcrocod/korro) is a tool for extracting code samples from the source code.
 
 1) Write a sample inside a test method.
-2) Use `//SampleStart` and `//SampleEnd` comments to mark sample code. 
+2) Use `// SampleStart` and `// SampleEnd` comments to mark sample code. 
 If not specified, the whole body is used (not recommended!).
 * Provide a test class path inside `IMPORT` korro directive (at the beginning of the topic file): 
 ```markdown
@@ -179,7 +202,7 @@ after the code sample (after `<!---END-->` for this sample).
     Subfolder names are defined by `DataFrameSampleHelper` arguments.
 * Use `.saveSample()` for saving text sample from the `String` or 
 [`CodeString`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/generateCode.kt).
-  * Text samples are saved into a temporary build folder and exported automatically while running `korro`.
+   * Text samples are saved into a temporary build folder and exported automatically while running `korro`.
 
 #### Migration from `:core`
 
@@ -192,10 +215,16 @@ We want to migrate all samples to the new way of saving HTML samples using [Samp
 
 All samples should be placed as tests in the [:samples](/samples) module only!
 
+To migrate to new samples, replace remove all old Korro marks and samples, and replace 
+them with new samples wrote in `:samples` tests (with fresh Korro marks) 
+and outputs created using [Sample Helper](#sample-helper).
+
 ## Standard operation documentation writing workflow
 
+0) Find a completed similar operation topic! Use it as a template, do not create a new one from scratch.
+   When writing / updating with agents, provide that topic as a context.
 1) Create a topic as `.md` file in [docs/StardustDocs/topics](docs/StardustDocs/topics) if it doesn't exist yet.
-Add it to the [site map](docs/StardustDocs/d.tree).
+   Add it to the [site map](docs/StardustDocs/d.tree).
 2) Write the topic content following rules and structure.
    * Find KDoc operation in the [generated source folder](core/generated-sources) if it exists and well-written. 
    Try to reuse it for the page. 
@@ -214,7 +243,7 @@ Add it to the [site map](docs/StardustDocs/d.tree).
 5) Run Gradle tasks of `:sample module`: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
 6) Check if code samples appear in the topic, HTML frames are added to resources.
 7) Run `updateShadowResources` Gradle task. This will update 
-  a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build wesbite correctly.
+   a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build wesbite correctly.
 8) Check the resulting page manually, 
-  by [running the website manually](docs/README.md#running-the-documentation-website-locally).
+   by [running the website manually](docs/README.md#running-the-documentation-website-locally).
 
