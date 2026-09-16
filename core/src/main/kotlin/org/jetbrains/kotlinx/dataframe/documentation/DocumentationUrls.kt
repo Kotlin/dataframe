@@ -305,7 +305,7 @@ public interface DocumentationUrls {
     /** [See "`Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
     public typealias PivotAggregation = Nothing
 
-    /** [See "Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    /** [See "`Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
     public typealias PivotAggregationStatistics = Nothing
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
