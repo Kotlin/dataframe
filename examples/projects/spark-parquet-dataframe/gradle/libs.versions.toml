@@ -5,7 +5,7 @@ ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 kandy = "0.8.5"
 log4j = "2.26.1"
-spark4 = "4.1.2"
+spark4 = "4.2.0"
 
 
 [libraries]
