@@ -356,6 +356,9 @@ and outputs created using [Sample Helper](#sample-helper).
 4) Add the test file and topic file pathes to Korro config in the
    [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
 5) Run Gradle tasks of `:sample module`: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
+   * It's very important to run `clean` **before** `build`, `test` and `korro`:
+   otherwise stale artifacts from a previous build (outdated korro output lines, sample outputs,
+   removed or renamed samples) may survive and end up in the documentation.
 6) Check if code samples appear in the topic, HTML frames are added to resources.
 7) Run `updateShadowResources` Gradle task. This will update 
    a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build wesbite correctly.
