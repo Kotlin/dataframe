@@ -51,7 +51,7 @@ as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://ko
 * [implode](implode.md) — merge column values into lists grouping by other columns
 * [reverse](reverse.md) — reverse rows 
 * [shuffle](shuffle.md) — reorder rows randomly
-* [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
+* [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortWith.md) — sort rows
 * [split](split.md) — split values into new rows
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 

@@ -126,6 +126,8 @@ korro {
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("sortBy.md")
+                include("sortWith.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
@@ -164,9 +166,6 @@ korro {
 
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
-        }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
         }
         funSuffix("_strings") {
             replaceText("NAME", "Strings")

@@ -148,6 +148,7 @@
             <toc-element topic="select.md"/>
             <toc-element topic="sliceRows.md"/>
             <toc-element topic="sortBy.md"/>
+            <toc-element topic="sortWith.md"/>
             <toc-element topic="split.md"/>
             <toc-element topic="toList.md"/>
             <toc-element topic="unfold.md"/>

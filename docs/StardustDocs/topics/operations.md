@@ -113,7 +113,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [select](select.md) — select subset of columns
 * [shuffle](shuffle.md) — reorder rows randomly 
 * [single](single.md) / [singleOrNull](single.md#singleornull) — get single row by condition
-* [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
+* [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortWith.md) — sort rows
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
