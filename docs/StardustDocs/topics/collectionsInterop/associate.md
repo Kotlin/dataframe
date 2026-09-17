@@ -20,6 +20,9 @@ using a [row expression](DataRow.md#row-expressions).
 
 If multiple rows produce the same key, only the last value for that key is kept. This matches the behavior of Kotlin’s standard [`kotlin.collections.associate`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/associate.html) function.
 
+The keys are in the same order as the rows. A key that occurs in several rows appears
+at the position of its first row, with the value of its last one.
+
 ```kotlin
 df.associate { pairSelector }
 
