@@ -12,6 +12,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * - For column groups, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the nested columns.
  * - For frame columns, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the contained dataframes.
  *
+ * Use [<code>schema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.schema] to read the schema of a
+ * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from its columns, and
+ * [<code>compileTimeSchema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.compileTimeSchema] to get the one
+ * that follows from its type.
+ *
  * Use [<code>compare</code>][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
  * to compare this schema with another schema using different [<code>comparison modes</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode].
  * The comparison ignores column order and can report how the schemas are related.
