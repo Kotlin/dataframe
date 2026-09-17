@@ -71,7 +71,9 @@ To add one:
      right after `<!---END-->`; korro does not inject it in this module.
    In both modules the generated HTML only reaches the site once it is registered in
    `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
-   `<resource>` lines, otherwise the iframe is on the page but the table is not.
+   `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an
+   `<inline-frame>` is a **flat filename**, while `SampleHelper` writes the file to
+   `resources/<subFolder>/<sampleName>/`, so that index is what makes the two meet.
 5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
    did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
    topic you edited and the snippet files for your own new samples.
