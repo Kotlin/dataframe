@@ -69,12 +69,36 @@ Create/update `docs/StardustDocs/topics/<operation>.md` and register it in
 `docs/StardustDocs/d.tree` if new (place it next to related operations).
 
 Follow the structure from the guidelines: title → Writerside summaries → what it does, then what it
-returns → signature(s) / operation grammar → important notes → *See also* links → parameters →
-examples. Multi-step operations get one subsection per step, each with the same structure.
+returns → signature(s) / operation grammar → important notes → *See also* links → `### Parameters` →
+`### Examples` → ``### `funName` on `DataColumn` `` (if such an overload exists). Multi-step
+operations get one subsection per step, each with the same structure.
 
 If the page has no Writerside summaries yet, add all three right after the title (and the Korro
 `IMPORT`), using the standard operation template with the same text in each — see
 *Writerside summaries* in the guidelines. Keep existing meaningful custom summaries as they are.
+
+Header and signature rules (see *Structure* in the guidelines for the details):
+
+- Parameters and examples are **headers** (`### Parameters`, `### Examples`), never bold paragraphs.
+- A separate [`DataColumn`](docs/StardustDocs/topics/concepts/DataColumn.md) overload goes at the end
+  of the operation section under ``### `funName` on `DataColumn` ``, with its own description,
+  signature, parameters, and examples.
+- Signatures are pseudocode **with types**, in a `kotlin` code block, e.g.
+  `sortWith(comparator: Comparator<DataRow>)` / `sortWith { row1: DataRow, row2: DataRow -> Int }`.
+- Types go in the **parameter descriptions too**, not only in the signature — as pseudocode (same
+  style as the signature) or in words; for lambdas say what they receive and what they must return.
+- For columns arguments, state in the description how columns can be selected: by string names
+  and/or with the [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md) (link it).
+  Check the actual overloads: some operations are DSL-only; in some the string and DSL overloads
+  work differently (e.g. `rename`) and must be described separately; some use a specialized DSL
+  (`SortDsl`, `PivotDsl`, …) — name it, link its section, and say what it adds on top of the
+  Columns Selection DSL.
+- If the page describes several operations: each gets its own `##` section; don't add a list of the
+  page's operations anywhere; and write *See also* only once — in the first operation section, in its
+  usual place (after the description/notes, before `### Parameters`) — linking **only** to operations
+  not described on this page.
+- The input dataframe goes inside `### Examples`, immediately before the first example of the page
+  ("The following dataframe will be used in the examples below:"), not earlier on the page.
 
 Link on first mention (`[`DataFrame`](DataFrame.md)`, `[column selectors](ColumnSelectors.md)`, …),
 follow `docs/StardustDocs/topics/concepts/spellingConventions.md`, and keep the language plain.
