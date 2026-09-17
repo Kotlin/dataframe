@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `tail` operation in Kotlin Dataframe.
+Discover `tail` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `tail` operation in Kotlin Dataframe.
+Discover `tail` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `tail` operation in Kotlin Dataframe.
+Discover `tail` operation in Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.info.TailSamples-->

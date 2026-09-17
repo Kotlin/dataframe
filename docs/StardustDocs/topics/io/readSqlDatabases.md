@@ -54,7 +54,7 @@ Also, there are a few **extension functions** available on `Connection`,
 > **NOTE:** This is an experimental module, and for now, 
 > we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
 > 
-> Moreover, since release 0.15 we support the possibility to register a custom SQL database; read more in our [guide](readSqlFromCustomDatabase.md).
+> Moreover, since release 0.15 you can register a custom SQL database; read more in our [guide](readSqlFromCustomDatabase.md).
 >
 > Additionally, support for JSON and date-time types is limited. 
 > 
@@ -166,8 +166,8 @@ Next, import the Kotlin DataFrame library in the cell below.
 %use dataframe
 ```
 
-**NOTE:** The order of cell execution is important, 
-the dataframe library is waiting for a JDBC driver to force classloading.
+**NOTE:** The order of cell execution is important: 
+the JDBC driver must be added before the dataframe library, which forces the driver to be classloaded.
 
 Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
 

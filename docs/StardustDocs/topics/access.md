@@ -20,4 +20,4 @@ df.values() // Sequence<Any?>
 * [Get row indices](indexing.md#row-indices)
 * [Iterate over data](iterate.md)
 * [Get a single row](getRow.md)
-* [Get single column](getColumns.md)
+* [Get a single column](getColumns.md)

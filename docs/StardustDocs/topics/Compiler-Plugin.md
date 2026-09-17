@@ -16,7 +16,7 @@ a powerful tool providing on-the-fly type-safe column-accessors for dataframes.
 </link-summary>
 
 
-> Now available in Gradle (IDEA 2025.2+) and Maven (IDEA 2025.3+) projects, is coming soon to Kotlin Toolchain.
+> Now available in Gradle (IDEA 2025.2+) and Maven (IDEA 2025.3+) projects, and coming soon to Kotlin Toolchain.
 
 **Kotlin DataFrame Compiler Plugin** is a Kotlin compiler plugin that automatically generates  
 **[type-safe extension properties](extensionPropertiesApi.md)** for your dataframes,  
@@ -40,7 +40,7 @@ We recommend using an up-to-date IntelliJ IDEA and Kotlin version for the best e
 
 <tab title="Gradle">
 
-Setup plugins in build.gradle.kts:
+Set up the plugins in `build.gradle.kts`:
 
 ```kotlin
 kotlin("jvm") version "%compilerPluginKotlinVersion%"
@@ -119,9 +119,9 @@ Sync the project.
 
 ### Static interpretation of DataFrame API
 
-Plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
+The plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
 It updates the return type of the function call to provide properties that match column names and types.
-The goal is to reflect the result of operations you apply to dataframe in types and have convenient typed API 
+The goal is to reflect the result of the operations you apply to a dataframe in types and to have a convenient typed API 
 
 ```kotlin
 val weatherData = dataFrameOf(
@@ -140,7 +140,7 @@ is displayed when you hover on an expression or variable:
 
 ### @DataSchema declarations
 
-Untyped DataFrame can be assigned a data schema - top-level interface or data class that describes names and types of columns in the dataframe.
+An untyped DataFrame can be assigned a data schema — a top-level interface or data class that describes the names and types of the columns in the dataframe.
 
 ```kotlin
 @DataSchema
@@ -172,4 +172,4 @@ fun main() {
   — an IntelliJ IDEA Gradle project showcasing simple DataFrame expressions using the Compiler Plugin.
 * [Kotlin DataFrame in the IntelliJ IDEA Maven project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-maven-example)   
   — an IntelliJ IDEA Maven project showcasing simple DataFrame expressions using the Compiler Plugin.
-* [](compilerPluginExamples.md) — few examples of Compiler Plugin usages.
+* [](compilerPluginExamples.md) — a few examples of Compiler Plugin usage.
