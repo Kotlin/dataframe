@@ -225,6 +225,24 @@ Discover `operationName` operation for Kotlin DataFrame.
 All three summaries have the same text.
 If a topic has no summaries yet, add them; if it already has meaningful custom ones, keep them.
 
+#### Links from KDocs (`DocumentationUrls`)
+
+Operation KDocs link to the documentation website through
+[`DocumentationUrls`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt):
+KDoc snippets with URLs like `{@include [Url]}/sortwith.html#sortwith-on-datacolumn`,
+included into KDocs as `For more information: {@include [DocumentationUrls.SortWith]}`.
+
+Nothing checks these URLs automatically, so a stale one silently leads to a missing page or section.
+Whenever a topic or a section is added, renamed, moved, or split,
+open `DocumentationUrls.kt` and verify every URL that points to the affected page:
+
+* the page part is the topic file name in lowercase with the `.html` extension
+  (`sortWith.md` → `sortwith.html`);
+* the anchor part is the Writerside anchor of the section
+  (the heading in lowercase, punctuation dropped, spaces replaced with `-`);
+* if a new operation topic has no entry yet and its KDoc refers to the website, add one
+  following the style of the neighboring declarations.
+
 ### Guide topics
 
 Guide pages don't have strict structure rules.
