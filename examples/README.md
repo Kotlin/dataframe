@@ -46,7 +46,7 @@ ___
 * puzzles ([notebook](notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
 complex problems where need to think. This notebook will show you how to solve these tasks with the Kotlin 
-Dataframe in a laconic, beautiful style.
+DataFrame in a laconic, beautiful style.
 ___
 * movies ([notebook](notebooks/movies/movies.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/89IMYb1zbHZxHfwAta6eKP)) &ndash;
 In this notebook you can see the basic operations of the Kotlin DataFrame on data from [movielens](https://movielens.org/).

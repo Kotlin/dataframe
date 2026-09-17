@@ -53,7 +53,7 @@ Here is a list of links for each database supported in Kotlin DataFrame:
 | [PostgreSQL](readSqlTypeMapping_PostgreSQL.md) | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).                                                |
 | [MS SQL Server](readSqlTypeMapping_MsSql.md)   | Default `DbType`, no overrides.                                                                                        |
 | [H2](readSqlTypeMapping_H2.md)                 | Default `DbType` in `Regular` mode; other modes delegate to another dialect.                                           |
-| [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Allows to provide custom converters. |
+| [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Accepts user-provided converters.    |
 | [DuckDB](readSqlTypeMapping_DuckDB.md)         | `AdvancedDbType` with its own converters.                                                                              |
 
 ## Extending the mapping
