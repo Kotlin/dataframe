@@ -60,7 +60,36 @@ The following automatic type conversions are performed for the `mean` operation:
 | Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
 | Nothing -> Double                                                          | Double.NaN             |
 
-> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
-> Count statistics manually with Kotlin standard library methods
-> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.MeanSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported:
+> `mean` throws an exception at runtime for such columns.
+> Compute the mean manually with Kotlin standard library methods and Java big number arithmetic,
+> or [`convert`](convert.md) the column to a primitive type first.
 > {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact mean can be computed with Java `BigDecimal` arithmetic:
+
+<!---FUN meanBigNumbersManually-->
+
+```kotlin
+// exact mean, computed with Java `BigDecimal` arithmetic
+val amounts = df.amount.toList()
+amounts.fold(BigDecimal.ZERO, BigDecimal::add)
+    .divide(amounts.size.toBigDecimal(), MathContext.DECIMAL128)
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first — at the cost of precision:
+
+<!---FUN meanBigNumbersConverted-->
+
+```kotlin
+// approximate mean, computed after converting the column to `Double`
+df.convert { amount }.toDouble().mean { amount }
+```
+
+<!---END-->

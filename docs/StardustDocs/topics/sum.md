@@ -57,7 +57,34 @@ The following automatic type conversions are performed for the `sum` operation:
 | Number -> Conversion([Common number type](numberUnification.md)) -> Number | 0.0                    |
 | Nothing -> Double                                                          | 0.0                    |
 
-> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
-> Count statistics manually with Kotlin standard library methods
-> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SumSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported:
+> `sum` throws an exception at runtime for such columns.
+> Compute the sum manually with Kotlin standard library methods and Java big number arithmetic,
+> or [`convert`](convert.md) the column to a primitive type first.
 > {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact sum can be computed with Java `BigDecimal` arithmetic:
+
+<!---FUN sumBigNumbersManually-->
+
+```kotlin
+// exact sum, computed with Java `BigDecimal` arithmetic
+df.amount.toList().fold(BigDecimal.ZERO, BigDecimal::add)
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first — at the cost of precision:
+
+<!---FUN sumBigNumbersConverted-->
+
+```kotlin
+// approximate sum, computed after converting the column to `Double`
+df.convert { amount }.toDouble().sum { amount }
+```
+
+<!---END-->

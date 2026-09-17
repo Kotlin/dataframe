@@ -20,8 +20,6 @@ The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
 When the number of values is even, the median is the low of the two middle values.
-NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
-They will not be interpolated.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -71,7 +69,37 @@ The following automatic type conversions are performed for the `median` operatio
 | Float -> Double                  | null                   |
 | Nothing -> Nothing               | null                   |
 
-> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
-> Count statistics manually with Kotlin standard library methods
-> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.MedianSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not explicitly supported.
+> They are self-comparable, so some overloads (like `df.median()`) still select a middle value
+> without interpolating it, while others (like `df.median { bigDecimalCol }`) throw at runtime.
+> Don't rely on this: compute the median manually with Kotlin standard library methods
+> and Java big number arithmetic, or [`convert`](convert.md) the column to a primitive type first.
 > {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact median can be selected from the sorted values:
+
+<!---FUN medianBigNumbersManually-->
+
+```kotlin
+// exact median: the lower of the two middle values, selected from the sorted values
+val amounts = df.amount.toList().sorted()
+amounts[(amounts.size - 1) / 2]
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first —
+this interpolates the median, at the cost of precision:
+
+<!---FUN medianBigNumbersConverted-->
+
+```kotlin
+// approximate, interpolated median, computed after converting the column to `Double`
+df.convert { amount }.toDouble().median { amount }
+```
+
+<!---END-->

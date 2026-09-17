@@ -25,8 +25,6 @@ The operation is also available for self-comparable columns
 In this case, the return type remains `T?`.
 The index of the result of the operation on these types is rounded using
 [Quantile Estimation Method](#quantile-estimation-methods) R3.
-NOTE: This logic also applies to other self-comparable `Number` types, like `BigDecimal`.
-They will not be interpolated.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -93,7 +91,39 @@ The following automatic type conversions are performed for the `percentile` oper
 | Float -> Double                  | null                   |
 | Nothing -> Nothing               | null                   |
 
-> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
-> Count statistics manually with Kotlin standard library methods
-> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.PercentileSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not explicitly supported.
+> They are self-comparable, so some overloads (like `df.percentile(25.0)`) still select a value
+> without interpolating it, while others (like `df.percentile(25.0) { bigDecimalCol }`) throw at runtime.
+> Don't rely on this: compute the percentile manually with Kotlin standard library methods
+> and Java big number arithmetic, or [`convert`](convert.md) the column to a primitive type first.
 > {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact percentile can be selected from the sorted values
+with the same [closest rank method](#quantile-estimation-methods) R3 that DataFrame uses:
+
+<!---FUN percentileBigNumbersManually-->
+
+```kotlin
+// exact 25th percentile: the closest rank (R3) of the sorted values
+val amounts = df.amount.toList().sorted()
+val rank = round(0.25 * amounts.size).toInt().coerceIn(1, amounts.size)
+amounts[rank - 1]
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first —
+this interpolates the percentile, at the cost of precision:
+
+<!---FUN percentileBigNumbersConverted-->
+
+```kotlin
+// approximate, interpolated 25th percentile, computed after converting the column to `Double`
+df.convert { amount }.toDouble().percentile(25.0) { amount }
+```
+
+<!---END-->

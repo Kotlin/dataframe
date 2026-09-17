@@ -11,6 +11,9 @@ or they return `null` when using the `-orNull` overloads.
 They are available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 which includes all primitive number columns, but no mix of different number types.
+Unlike [`sum`](sum.md), [`mean`](mean.md), [`std`](std.md), and [`cumSum`](cumSum.md),
+`min` and `max` only compare values instead of computing with them,
+so `java.math.BigDecimal` and `java.math.BigInteger` columns are supported as well.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
@@ -59,8 +62,3 @@ The following automatic type conversions are performed for the `min` and `max` o
 | Double -> Double                 | null                   |
 | Float -> Float                   | null                   |
 | Nothing -> Nothing               | null                   |
-
-> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
-> Count statistics manually with Kotlin standard library methods
-> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
-> {style="warning"}

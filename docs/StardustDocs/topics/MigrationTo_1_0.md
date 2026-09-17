@@ -42,16 +42,25 @@ See [](read.md#read-from-csv).
 
 ### Deprecation of `BigDecimal` and `BigInteger` statistics
 
-All Kotlin DataFrame [statistical operations](summaryStatistics.md) for `java.math.BigDecimal` and `java.math.BigInteger` 
-columns are deprecated due to their type-specific arithmetic semantics 
-and to maintain consistent behavior across numeric types.
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.MigrationTo10Samples-->
 
-Calling these operations on columns of either type now throws an exception at runtime. 
-Convert the column to a list and use Kotlin standard library functions and 
+The [statistical operations](summaryStatistics.md) that compute with values —
+[`sum`](sum.md), [`mean`](mean.md), [`std`](std.md), and [`cumSum`](cumSum.md) —
+no longer support `java.math.BigDecimal` and `java.math.BigInteger` columns,
+due to their type-specific arithmetic semantics
+and to maintain consistent behavior across numeric types.
+Calling them on columns of either type now throws an exception at runtime.
+
+Convert the column to a list and use Kotlin standard library functions and
 Java big numbers arithmetic instead.
 Alternatively, you can [`convert`](convert.md) them to primitive types before calling the statistical operations.
 
-The following examples assume that `bigIntCol` and `bigDecimalCol` are 
+The operations that only compare values — [`min`/`max`](minmax.md), including their `by` overloads —
+keep working with big numbers.
+[`median`](median.md) and [`percentile`](percentile.md) are no longer explicitly supported for big numbers:
+some of their overloads still return a non-interpolated value, while others throw at runtime.
+
+The following examples assume that `bigIntCol` and `bigDecimalCol` are
 nullable columns of `BigInteger` and `BigDecimal`.
 
 | 0.15                                     | 1.0                                                                                                                                                     |
@@ -59,8 +68,6 @@ nullable columns of `BigInteger` and `BigDecimal`.
 | `df.bigIntCol.sum()`                     | `df.bigIntCol.toList().filterNotNull().sumOf { it }`                                                                                                    |
 | `df.bigDecimalCol.sum()`                 | `df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                                                                                                |
 | `df.sum { bigIntCol and bigDecimalCol }` | `df.bigIntCol.toList().filterNotNull().sumOf { it }.toBigDecimal() + df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                            |
-| `df.bigIntCol.minOrNull()`               | `df.bigIntCol.toList().filterNotNull().minOrNull()`                                                                                                     |
-| `df.bigDecimalCol.maxOrNull()`           | `df.bigDecimalCol.toList().filterNotNull().maxOrNull()`                                                                                                 |
 | `df.bigIntCol.mean()`                    | `df.bigIntCol.toList().filterNotNull().let { values -> values.sumOf { it }.toBigDecimal().divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }` |
 | `df.bigDecimalCol.mean()`                | `df.bigDecimalCol.toList().filterNotNull().let { values -> values.sumOf { it }.divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }`            |
 
@@ -73,9 +80,13 @@ Java arithmetics:
 
 All other Kotlin DataFrame operations continue to work as usual:
 
+<!---FUN bigNumbersFilter-->
+
 ```kotlin
-df.filter { bigDecimalCol != null && bigDecimalCol > BigDecimal.valueOf(150.0) }
+df.filter { bigDecimalCol?.let { it > BigDecimal.valueOf(150.0) } == true }
 ```
+
+<!---END-->
 
 ### Column name repair standardization and `NameRepairStrategy` deprecation
 
