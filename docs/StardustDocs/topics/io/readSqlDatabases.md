@@ -167,7 +167,7 @@ Next, import the Kotlin DataFrame library in the cell below.
 ```
 
 **NOTE:** The order of cell execution is important: 
-the JDBC driver must be added before the dataframe library, which forces the driver to be classloaded.
+the JDBC driver must be added before the DataFrame library, which forces the driver to be class-loaded.
 
 Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
 
