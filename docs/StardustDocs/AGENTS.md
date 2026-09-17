@@ -27,12 +27,18 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
   `snippets/kdocs/`, and the `api`/`io`/`guides`/`modify` iframe HTML) and the generated
   `topics/_shadow_resources.md`. Fix the source (the sample, the KDoc, the topic) and re-run the generating
   task instead; a hand-edit here is overwritten by the next run.
-- **"Generated" does not mean "keep it out of the PR".** Only `resources/snippets/**` is regenerated and
-  auto-committed on `master` by the CI bot. The `api`/`io`/`guides`/`modify` iframe HTML and
-  `topics/_shadow_resources.md` are **not** covered by that bot — they have always been committed by the
-  author of the PR that adds the sample. So when you add a new sample or page, run the generating task and
-  commit its output together with the rest of the change; without it the published page renders with a
-  missing resource.
+- **"Generated" does not mean "keep it out of the PR".** Two workflows auto-commit generated output —
+  `generated-sources-master.yml` (on `master`) and `generated-sources.yml` ("Preview Generated Code", on
+  `pull_request`). Both run `processKDocsMain korro syncExampleFolders` and stage `*/generated-sources`,
+  `docs/StardustDocs/resources/snippets`, `docs/StardustDocs/topics` and `examples/projects`. So the Korro
+  `<!---FUN …-->` output injected into `topics/*.md` **is** bot-maintained — don't hand-maintain it.
+  There are exactly two exceptions, and they must ride along in your PR:
+  - the `api`/`io`/`guides`/`modify` iframe HTML — its path is never staged;
+  - `topics/_shadow_resources.md` — its path *is* staged, but `updateShadowResources` is not in that task
+    list, so the bot can never produce a change for it.
+
+  For both, run the generating task yourself and commit the output together with the rest of the change;
+  without it the published page renders with a missing resource.
 
 ## How content is injected
 

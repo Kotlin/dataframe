@@ -212,7 +212,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * NOTE: For [column groups][ColumnsSelectionDsl], `single` is named `singleCol` instead to avoid confusion.
+     * NOTE: For [column groups][ColumnGroup], `single` is named `singleCol` instead to avoid confusion.
      *
      * For more information: {@include [DocumentationUrls.FirstLastSingleCols]}
      *

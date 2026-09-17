@@ -84,12 +84,13 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   `**/generated-dataschema-accessors/**`) just doubles every hit and bloats context — do code work from
   `src/main/kotlin/…`. The one reason to open a generated file is the KDoc: it is the **fully-expanded**
   documentation (all `{@include …}`/`@set`/`@get` resolved, URLs inlined). If you specifically need a symbol's
-  final rendered docs, open that single generated file deliberately — don't explore. A CI bot regenerates and
-  auto-commits `generated-sources/`, the accessors and `docs/StardustDocs/resources/snippets/` on `master` after
-  merge — you don't run or commit those yourself. **One exception:** the iframe HTML under
-  `docs/StardustDocs/resources/` outside `snippets/` (`api`/`io`/`guides`/`modify`) and
-  `docs/StardustDocs/topics/_shadow_resources.md` are *not* covered by that bot — the PR that adds the sample
-  runs the generating task and commits their output itself. See `docs/StardustDocs/AGENTS.md`.
+  final rendered docs, open that single generated file deliberately — don't explore. A CI bot runs
+  `processKDocsMain korro syncExampleFolders` and auto-commits `*/generated-sources`, the accessors,
+  `docs/StardustDocs/resources/snippets/`, `docs/StardustDocs/topics/` and `examples/projects` — you don't run
+  or commit those yourself. **Two exceptions,** which the PR that adds the sample must carry itself: the iframe
+  HTML under `docs/StardustDocs/resources/` outside `snippets/` (`api`/`io`/`guides`/`modify`), whose path is
+  never staged, and `docs/StardustDocs/topics/_shadow_resources.md`, whose path is staged but whose generating
+  task (`updateShadowResources`) the bot never runs. See `docs/StardustDocs/AGENTS.md`.
 - For KDocs: never write from scratch — reuse/`@include` an existing operation's KDoc and adapt it. Reusable KDoc
   fragments are written once as `internal`/`private` interfaces and `typealias … = Nothing` declarations and
   composed via `@include`; this pattern is used in every KoDEx module (the shared cross-module fragment library
