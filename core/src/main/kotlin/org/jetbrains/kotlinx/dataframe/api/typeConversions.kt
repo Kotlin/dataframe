@@ -258,7 +258,7 @@ public enum class Infer {
 
     /**
      * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using an optionally provided
-     * base type as an upper bound.
+     * upper bound type as a hint to speed up the search.
      *
      * This is the least efficient but safest option.
      *
