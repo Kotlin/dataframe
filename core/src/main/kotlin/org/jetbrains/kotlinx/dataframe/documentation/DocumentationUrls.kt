@@ -421,6 +421,15 @@ public interface DocumentationUrls {
     /** [See `lastOrNull` on the documentation website.]({@include [Url]}/lastoncolumn.html#lastornull) */
     public typealias LastOrNullOnColumn = Nothing
 
+    /** [See `single` on the documentation website.]({@include [Url]}/single.html) */
+    public typealias Single = Nothing
+
+    /** [See `single` on the documentation website.]({@include [Url]}/singleoncolumn.html) */
+    public typealias SingleOnColumn = Nothing
+
+    /** [See `singleOrNull` on the documentation website.]({@include [Url]}/single.html#singleornull) */
+    public typealias SingleOrNull = Nothing
+
     /** [See First (Col), Last (Col), Single (Col) on the documentation website.]({@include [Url]}/columnselectors.html#first-col-last-col-single-col) */
     public typealias FirstLastSingleCols = Nothing
 
