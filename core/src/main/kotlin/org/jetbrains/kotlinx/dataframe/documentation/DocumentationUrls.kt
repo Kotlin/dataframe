@@ -254,6 +254,9 @@ public interface DocumentationUrls {
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
 
+    /** [See `schema` on the documentation website.]({@include [Url]}/schema.html) */
+    public typealias Schema = Nothing
+
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
     public typealias Format = Nothing
 
