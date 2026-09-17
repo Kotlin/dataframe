@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `shuffle` operation in Kotlin Dataframe.
+Discover `shuffle` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `shuffle` operation in Kotlin Dataframe.
+Discover `shuffle` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `shuffle` operation in Kotlin Dataframe.
+Discover `shuffle` operation in Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.utils.ShuffleSamples-->

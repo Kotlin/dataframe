@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `last` operation in Kotlin Dataframe.
+Discover `last` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `last` operation in Kotlin Dataframe.
+Discover `last` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `last` operation in Kotlin Dataframe.
+Discover `last` operation in Kotlin DataFrame.
 </link-summary>
 
 

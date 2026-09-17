@@ -336,7 +336,7 @@ Use the [Extension Properties API](concepts/extensionPropertiesApi.md) to preven
 > it is excepted each time it is encountered (including inside [Column Groups](DataColumn.md#columngroup)).
 > You could say the receiver `ColumnSet` is [simplified](ColumnSelectors.md#simplify) before the operation is performed:
 >
-> `cols(a, a, a. b, a. b).except(a. b) == cols(a).except(a. b)`
+> `cols(a, a, a.b, a.b).except(a.b) == cols(a).except(a.b)`
  
 
 **Directly in the DSL:** `allExcept {}`
@@ -983,7 +983,7 @@ All functions described above for selecting columns in various ways return a `Co
 - **`ColumnAccessor`** — a specialized `SingleColumn` with a defined path and type argument.  
   It can also be renamed during selection.
   - **`ColumnPath`** — a wrapper for a [`DataColumn`](DataColumn.md) path
-    in a [`DataFrame`](DataFrame.md) also can serve as a `ColumnAccessor`.
+    in a [`DataFrame`](DataFrame.md) that can also serve as a `ColumnAccessor`.
 ```kotlin
 // Select all columns from the group by path "group2"/"info":
 df.select { pathOf("group2", "info").allCols() }
