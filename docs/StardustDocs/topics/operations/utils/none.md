@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `none` operation in Kotlin Dataframe.
+Discover `none` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `none` operation in Kotlin Dataframe.
+Discover `none` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `none` operation in Kotlin Dataframe.
+Discover `none` operation in Kotlin DataFrame.
 </link-summary>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.utils.NoneSamples-->

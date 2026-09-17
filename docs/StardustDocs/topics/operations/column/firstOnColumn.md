@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `first` operation in Kotlin Dataframe.
+Discover `first` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `first` operation in Kotlin Dataframe.
+Discover `first` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `first` operation in Kotlin Dataframe.
+Discover `first` operation in Kotlin DataFrame.
 </link-summary>
 
 

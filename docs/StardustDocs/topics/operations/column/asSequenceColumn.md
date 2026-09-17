@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `asSequence` operation in Kotlin Dataframe.
+Discover `asSequence` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `asSequence` operation in Kotlin Dataframe.
+Discover `asSequence` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `asSequence` operation in Kotlin Dataframe.
+Discover `asSequence` operation in Kotlin DataFrame.
 </link-summary>
 
 

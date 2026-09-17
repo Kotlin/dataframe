@@ -84,7 +84,7 @@ rendering Kotlin dataframes in the Kotlin notebooks plugin of IntelliJ IDEA.
 ```json
 {
     "kind": "ValueColumn"|"ColumnGroup"|"FrameColumn"
-    "type": FQN + nullability identifier (?), e.g "Kotlin.String?" // Only available if kind == "ValueColumn"
+    "type": FQN + nullability identifier (?), e.g. "kotlin.String?" // Only available if kind == "ValueColumn"
 }
 ```
 
