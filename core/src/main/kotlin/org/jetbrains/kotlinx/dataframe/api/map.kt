@@ -51,7 +51,8 @@ import kotlin.reflect.typeOf
  * Each result keeps the order of the values, rows, or key–group pairs it was computed from.
  *
  * See also:
- * - [add][DataFrame.add] — computes a new column in the same way, and returns the [DataFrame] with that column in it.
+ * - [add][DataFrame.add] — computes a new column in the same way, and returns the [DataFrame]
+ *   with that column added to it, next to the ones it already had.
  * - [expr][ColumnsSelectionDsl.expr] — the same as [mapToColumn][DataFrame.mapToColumn],
  *   for use inside the Columns Selection DSL.
  * - [convert][DataFrame.convert] — computes new values for the selected columns and replaces the old ones.
@@ -78,9 +79,13 @@ internal interface MapDocs {
      * For a [ColumnGroup] and a [FrameColumn], [infer\] changes nothing.
      *
      * The computed values have to fit {@get [TYPE_SOURCE]}.
-     * A [ValueColumn] can never have a [DataFrame] type, so a call that would give it one —
-     * computing dataframes with [Infer.Type], or under a nullable [DataFrame] type —
-     * fails with an [IllegalArgumentException].
+     * A [ValueColumn] can never have a non-nullable [DataFrame] type,
+     * so a call that would give it one fails with an [IllegalArgumentException].
+     * That happens when the computed values are dataframes and [Infer.Type] derives a [DataFrame] type for them,
+     * and also under a nullable [DataFrame] type when none of the computed values is `null`:
+     * the default [Infer.Nulls] then drops the nullability and leaves exactly that forbidden type.
+     * With at least one `null` among them the same call succeeds
+     * and gives a [ValueColumn] of the nullable [DataFrame] type.
      */
     @ExcludeFromSources
     interface CommonDataColumnSnippet {
@@ -94,8 +99,8 @@ internal interface MapDocs {
      * @param [type\] The type to give to the new column.
      * The computed values are put into the column as they are, without any conversion,
      * so [type\] has to fit them.
-     * With [Infer.Type] it is only an upper bound for a [ValueColumn],
-     * whose own type is then the type of the computed values.
+     * With [Infer.Type] the [type][DataColumn.type] of a [ValueColumn] comes from the computed values instead,
+     * and [type\] is only used when the column is empty and there are no values to take it from.
      * Note that [type\] and the type argument `R` are independent: the result is a `DataColumn<R>` for the
      * compiler, while its [type][DataColumn.type] at runtime is [type\].
      * Keep the two in agreement unless that difference is exactly what you are after.
@@ -553,8 +558,8 @@ public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, Dat
  * ### Example
  *
  * ```kotlin
- * // The two oldest people with each first name, as a frame column:
- * // only the group of "Charlie" has a third person to leave out
+ * // The two oldest people for each first name, as a frame column:
+ * // every frame keeps all the columns of the original, including the first name it was grouped by
  * df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
  * ```
  *

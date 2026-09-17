@@ -116,18 +116,24 @@ class MapTests {
     }
 
     @Test
-    fun `R has to fit the computed values`() {
+    fun `a ValueColumn may not end up with a non-nullable DataFrame type`() {
         // a ValueColumn is never allowed to have a frame type, and `Infer.Type` gives it one here:
         // the kind comes from `Any` before `infer`, and the type from the computed dataframes after it
         shouldThrow<IllegalArgumentException> {
             age.map<Int, Any>(Infer.Type) { dataFrameOf("doubled")(it * 2) }
         }
 
-        // the same for a nullable frame type: it is not a frame type, so no FrameColumn is created,
-        // and `Infer.Nulls` then drops the nullability, leaving a ValueColumn with a frame type
+        // a nullable frame type is not a frame type either, so no FrameColumn is created; with no `null`
+        // among the values the default `Infer.Nulls` drops the nullability, leaving the forbidden type
         shouldThrow<IllegalArgumentException> {
             age.map<Int, AnyFrame?> { dataFrameOf("doubled")(it * 2) }
         }
+
+        // one `null` is enough for the nullability to survive, and then the same declared type is fine
+        val withNull = age.map<Int, AnyFrame?> { if (it == 15) null else dataFrameOf("doubled")(it * 2) }
+
+        withNull.kind() shouldBe ColumnKind.Value
+        withNull.type() shouldBe typeOf<AnyFrame?>()
     }
 
     @Test
@@ -148,9 +154,24 @@ class MapTests {
     }
 
     @Test
-    fun `map with an explicit type and Infer Type uses that type as an upper bound only`() {
-        // Number is only the upper bound here; the actual type comes from the values
+    fun `map with an explicit type and Infer Type takes the type from the values`() {
+        // the given type is not an upper bound: it plays no part at all as long as there are values,
+        // so a type that no value fits gives the same result as one that all of them fit
         age.map(typeOf<Number>(), Infer.Type) { it }.type() shouldBe typeOf<Int>()
+        age.map(typeOf<String>(), Infer.Type) { it }.type() shouldBe typeOf<Int>()
+
+        // it does not narrow a type argument either
+        val lists = columnOf(listOf(1, 2), listOf(3))
+
+        lists.map(typeOf<List<Number>>(), Infer.Type) { it }.type() shouldBe typeOf<List<Int>>()
+    }
+
+    @Test
+    fun `map with an explicit type and Infer Type falls back to that type for an empty column`() {
+        val empty = columnOf(*emptyArray<Int>())
+
+        // there is nothing to derive the type from, and only here the given type survives
+        empty.map(typeOf<String>(), Infer.Type) { it }.type() shouldBe typeOf<String>()
     }
 
     @Test
@@ -376,6 +397,9 @@ class MapTests {
         // the group of "Alice" has two rows and keeps both; the group of "Charlie" has three and loses one
         twoOldest.toList().map { it.rowsCount() } shouldBe listOf(2, 2)
         twoOldest.concat()["age"].values() shouldBe listOf(20, 15, 40, 30)
+
+        // every frame keeps the columns of the original, the grouping key column among them
+        twoOldest.toList().map { it.columnNames() } shouldBe List(2) { listOf("firstName", "age") }
     }
 
     @Test

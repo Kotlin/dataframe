@@ -39,21 +39,39 @@ To add one:
    wholesale; `:samples` has an explicit `include(...)` allow-list in `samples/build.gradle.kts`. If the page
    already has an `<!---IMPORT ...-->` line, the class it names tells you the owner. Don't split one topic
    across both modules — both korro tasks would write the same file.
-2. **Add a `@Test @TransformDataFrameExpressions fun` to that module's sample class**, with the body wrapped in
-   `// SampleStart` / `// SampleEnd`. New pages should go to `:samples` (migration #898); an existing `:core`
-   page keeps its samples next to its siblings.
+2. **Add the sample to that module's sample class**, with the body wrapped in `// SampleStart` / `// SampleEnd`.
+   New pages should go to `:samples` (migration #898); an existing `:core` page keeps its samples next to its
+   siblings. In `:core` a sample is a `@Test @TransformDataFrameExpressions fun` — see step 4 for when that
+   annotation is allowed. In `:samples` it is a plain `@Test fun`: the annotation is not used there at all
+   (it appears in nine `core/src/test` files and in none under `samples/`), and rendered output comes from
+   `SampleHelper` instead.
 3. **Put `<!---FUN funName-->` / `<!---END-->` in the topic** and run korro to fill it in
    (`./gradlew core:korro`, or `samples:korro`). Suffix the function `_properties` / `_strings` to get tabs.
-4. **Run it with `DATAFRAME_SAVE_OUTPUTS=1`** if you want the rendered result: korro then also injects an
-   `<inline-frame>` and writes the matching `resources/snippets/*.html`.
-   **Only annotate a sample with `@TransformDataFrameExpressions` when its last expression is a `DataFrame`
-   or a `GroupBy`.** The expressions converter renders nothing else, and it fails in two different ways:
-   a sample ending in a `DataColumn` or a `List` *fails* in `samplesTest` (see `map`, `mapToColumn` there),
-   while a sample that ends in one of those *after* a renderable step silently falls back to rendering that
-   step — so the page shows an `<inline-frame>` of the intermediate `groupBy` under an example whose result
-   is a `List`. Two such samples then render byte-identical frames. Without the annotation korro still
-   injects the code block (`convertColumnTo` in `Modify.kt` is the precedent), just no `<inline-frame>`;
-   say what the result is in a comment inside the sample instead.
+4. **Get the rendered result.** The two modules do this differently.
+   - **`:core`** — run with `DATAFRAME_SAVE_OUTPUTS=1`; korro then injects the `<inline-frame>` itself and
+     writes the matching `resources/snippets/*.html`.
+     **Only annotate a sample with `@TransformDataFrameExpressions` when its last expression is a `DataFrame`
+     or a `GroupBy`.** The expressions converter renders nothing else, and it fails in two different ways:
+     a sample ending in a `DataColumn` or a `List` *fails* in `samplesTest`, while a sample that ends in one of
+     those *after* a renderable step silently falls back to rendering that step — so the page shows an
+     `<inline-frame>` of the intermediate `groupBy` under an example whose result is a `List`. Two such samples
+     then render byte-identical frames.
+     Dropping the annotation does **not** rescue such a sample: `TestBase.save()` runs for every `@Test` under
+     `DATAFRAME_SAVE_OUTPUTS` and then errors with `function doesn't have any dataframe expression`, so the test
+     fails either way (`convertColumnTo` in `Modify.kt` is one of the pre-existing `samplesTest` failures, not a
+     precedent to copy).
+     The ways out, best first: **move the page to `:samples`**, where a sample renders its result whatever its
+     type and no annotation is involved — that is the direction of #898 anyway, and `groupBy.md`, `pivot.md`,
+     `countDistinct.md` and `filter.md` already went that way; end the sample in a `DataFrame`; or, only while
+     the page is still `:core`-owned, render the result by hand with `PluginCallbackProxy.overrideHtmlOutput`,
+     as `JoinWith.kt` does. The `map` page went the first route in #2066: its samples moved to
+     `samples/…/api/MapSamples.kt`, and `saveDfHtmlSample()` there renders a `DataColumn` and a `FrameColumn`
+     with no annotation and no manual HTML at all.
+   - **`:samples`** — run the samples as tests to produce the HTML, then add the `<inline-frame>` line by hand
+     right after `<!---END-->`; korro does not inject it in this module.
+   In both modules the generated HTML only reaches the site once it is registered in
+   `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
+   `<resource>` lines, otherwise the iframe is on the page but the table is not.
 5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
    did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
    topic you edited and the snippet files for your own new samples.

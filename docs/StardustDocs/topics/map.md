@@ -1,6 +1,6 @@
 [//]: # (title: map)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.MapSamples-->
 
 Computes a new value for every value, row, or key–group pair of the receiver, and collects the results
 into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
@@ -127,8 +127,8 @@ df.mapToFrame {
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/mapMany_properties.html" width="100%" height="500px"></inline-frame>
 
 The result holds **only** the described columns, in the order in which they are described.
 This is what makes `mapToFrame` different from [`add`](add.md), where the columns of the original
@@ -158,6 +158,7 @@ df.name.lastName.map { it.length }.rename("lastNameLength")
 ```
 
 <!---END-->
+<inline-frame src="./resources/mapOnColumn.html" width="100%" height="500px"></inline-frame>
 
 The new column has the same name as the original one, so it is usually renamed on the spot
 or given a name by the operation it is passed to.
@@ -172,6 +173,7 @@ df.name.firstName.mapIndexed { i, firstName -> "${i + 1}. $firstName" }
 ```
 
 <!---END-->
+<inline-frame src="./resources/mapIndexedOnColumn.html" width="100%" height="500px"></inline-frame>
 
 Which kind of column you get follows the type of the new column — the type argument, or the `type` given
 explicitly — and not the computed values:
@@ -187,8 +189,14 @@ column is the given one as it is, or the type of the computed values. For a
 
 The overloads with an explicit `type` are for the cases where the type of the new column is only known
 at runtime. The computed values are put into the column as they are, without any conversion, so the type
-has to fit them: a [`ValueColumn`](DataColumn.md#valuecolumn) can never have a
-[`DataFrame`](DataFrame.md) type, and a call that would give it one fails with an `IllegalArgumentException`.
+has to fit them.
+
+A [`ValueColumn`](DataColumn.md#valuecolumn) can never have a non-nullable [`DataFrame`](DataFrame.md) type,
+so a call that would give it one fails with an `IllegalArgumentException`. That happens when the computed
+values are dataframes and `Infer.Type` derives a [`DataFrame`](DataFrame.md) type for them, and also under a
+nullable [`DataFrame`](DataFrame.md) type when none of the computed values is `null`: the default
+`Infer.Nulls` then drops the nullability and leaves exactly that forbidden type. With at least one `null`
+among them the same call succeeds and gives a [`ValueColumn`](DataColumn.md#valuecolumn) of the nullable type.
 
 ## map on GroupBy
 
@@ -221,19 +229,19 @@ df.groupBy { city }.map { group.rowsCount() }
 df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapToRowsOnGroupBy.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/mapToRowsOnGroupBy.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN mapToFramesOnGroupBy-->
 
 ```kotlin
-// The two oldest people with each first name, as a frame column:
-// only the group of "Charlie" has a third person to leave out
+// The two oldest people for each first name, as a frame column:
+// every frame keeps all the columns of the original, including the first name it was grouped by
 df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapToFramesOnGroupBy.html" width="100%"/>
 <!---END-->
+<inline-frame src="./resources/mapToFramesOnGroupBy.html" width="100%" height="500px"></inline-frame>
 
 `mapToFrames` names the new column after [`GroupBy.groups`](groupBy.md) (`"group"` by default);
 call `concat()` on it to get all of those dataframes back as one [`DataFrame`](DataFrame.md).
