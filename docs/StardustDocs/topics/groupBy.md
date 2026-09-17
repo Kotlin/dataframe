@@ -33,7 +33,7 @@ pivot = .pivot { columns }
 ```
 
 See [`column selectors`](ColumnSelectors.md) for how to select the columns for this operation,
-[`groupBy transformations`](#transformation), [`groupBy reducing`](#reducing), [`groupBy aggregations`](#aggregation), 
+[`groupBy transformations`](#transformation), [`groupBy reducing`](#reducing), [`groupBy aggregations`](#aggregation), [`groupBy mapping`](#mapping),
 and [`pivot+groupBy`](pivot.md#pivot-groupby).
 
 <!---FUN groupByDf-->
@@ -630,11 +630,6 @@ To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name 
 Each of these methods returns a new DataFrame that includes the grouping key columns (except for [`concat`](concat.md)) 
 along with the columns of values aggregated from the corresponding groups.
 
-To compute something per keys/group combination yourself instead of aggregating, use
-[`map`](map.md#map-on-groupby), [`mapToRows`](map.md#map-on-groupby),
-or [`mapToFrames`](map.md#map-on-groupby): they hand every combination to a lambda and collect the results
-into a `List`, a [`DataFrame`](DataFrame.md), or a [`FrameColumn`](DataColumn.md#framecolumn).
-
 ### Examples of aggregation
 #### concat on GroupBy {collapsible="true"}
 [`concat`](concat.md) can be used to union all data groups of `GroupBy` into the original [`DataFrame`](DataFrame.md) 
@@ -1201,6 +1196,93 @@ df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
 </tab></tabs>
 <!---END-->
 <inline-frame src="resources/percentileOnGroupBy_properties.html" width="100%"/>
+
+## Mapping
+
+Aggregation turns each group into values that end up next to the grouping keys. Mapping does not:
+it hands every keys/group combination to a lambda and collects whatever that lambda returns.
+
+Every combination arrives as a `GroupWithKey`, so the key values are available as `key`
+(a [`DataRow`](DataRow.md)) and the rows of the group as `group` (a [`DataFrame`](DataFrame.md)).
+
+The following mapping methods are available:
+* [`map`](map.md#map-on-groupby) — returns a `List` with one computed value per keys/group combination.
+* [`mapToRows`](map.md#map-on-groupby) — computes a [`row`](DataRow.md) per combination
+and collects them into a [`DataFrame`](DataFrame.md).
+* [`mapToFrames`](map.md#map-on-groupby) — computes a [`DataFrame`](DataFrame.md) per combination
+and collects them into a [FrameColumn](DataColumn.md#framecolumn).
+
+Unlike the aggregation methods above, the result does not carry the grouping key columns:
+what the lambda returns is what you get. `map` and `mapToRows` leave out the combinations for which
+the lambda returns `null`, so their results can be shorter than the number of combinations.
+
+### Examples of mapping
+
+#### map on GroupBy {collapsible="true"}
+The number of people per city, as a `List` in the order of the groups:
+
+<!---FUN groupByMap-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.map { group.rowsCount() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").map { group.rowsCount() }
+```
+
+</tab></tabs>
+<!---END-->
+
+#### mapToRows on GroupBy {collapsible="true"}
+The oldest person of every city, one [`row`](DataRow.md) per city:
+
+<!---FUN groupByMapToRows-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").mapToRows { group.sortByDesc("age").firstOrNull() }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/groupByMapToRows_properties.html" width="100%"/>
+
+#### mapToFrames on GroupBy {collapsible="true"}
+The two oldest people for each first name, as a [FrameColumn](DataColumn.md#framecolumn).
+Every frame keeps all the columns of the original, including the one it was grouped by:
+
+<!---FUN groupByMapToFrames-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="resources/groupByMapToFrames_properties.html" width="100%"/>
 
 ## Pivot + GroupBy
 A `GroupBy` can be pivoted with the [`pivot`](pivot.md#pivot-groupby) method. It produces a `PivotGroupBy`

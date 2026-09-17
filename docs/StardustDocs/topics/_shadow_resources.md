@@ -120,6 +120,8 @@
 <resource src="groupByFirst_properties.html"></resource>
 <resource src="groupByInto_properties.html"></resource>
 <resource src="groupByLast_properties.html"></resource>
+<resource src="groupByMapToFrames_properties.html"></resource>
+<resource src="groupByMapToRows_properties.html"></resource>
 <resource src="groupByMaxBy_properties.html"></resource>
 <resource src="groupByMedianBy_properties.html"></resource>
 <resource src="groupByMinBy_properties.html"></resource>
