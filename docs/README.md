@@ -4,7 +4,7 @@ This folder holds the source code of our documentation website:
 [kotlin.github.io/dataframe](https://kotlin.github.io/dataframe).
 
 It's built using [Writerside](https://www.jetbrains.com/writerside/) and published
-by a [Github Action](../.github/workflows/main.yml).
+by a [GitHub Action](../.github/workflows/main.yml).
 The file structure largely mirrors the default Writerside structure.
 For instance, if you want to add a new page to the website, this needs to be stored as an `.md` file in the
 [StardustDocs/topics](./StardustDocs/topics) folder,
