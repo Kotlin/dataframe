@@ -11,8 +11,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  *
  * ## Access APIs
  *
- * Accessing and specifying columns is the one of the most important parts of the API,
- * used in the most of [DataFrame] operations.
+ * Accessing and specifying columns is one of the most important parts of the API,
+ * used in most [DataFrame] operations.
  *
  * In the Kotlin DataFrame library, we provide two different ways to access columns —
  * the {@include [StringApiLink]} and the {@include [ExtensionPropertiesApiLink]}.
