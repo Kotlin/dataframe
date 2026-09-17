@@ -73,7 +73,10 @@ To add one:
    `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
    `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an
    `<inline-frame>` is a **flat filename**, while `SampleHelper` writes the file to
-   `resources/<subFolder>/<sampleName>/`, so that index is what makes the two meet.
+   `resources/<subFolder>/<sampleName>/`, so that index is what makes the two meet. Since it is keyed by the
+   bare filename, a sample function name has to be unique across **all** sample classes, not just its own —
+   two classes using one name write two different files that collapse into a single `<resource>` entry. When
+   the same operation is illustrated on more than one page, prefix the function with the page it belongs to.
 5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
    did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
    topic you edited and the snippet files for your own new samples.
