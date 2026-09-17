@@ -36,8 +36,8 @@ The goal of data wrangling is to ensure quality and useful data.
 * [**Hierarchical**](hierarchical.md) — the Kotlin DataFrame library provides an ability to read and present data from different sources, 
 including not only plain **CSV** but also **JSON** or **[SQL databases](readSqlDatabases.md)**.
 This is why it was designed to be hierarchical and allows nesting of columns and cells.
-* **Functional** — the data processing pipeline is organized in a chain of [`DataFrame`](DataFrame.md)  transformation operations.
-* **Immutable** — every operation returns a new instance of [`DataFrame`](DataFrame.md)  reusing underlying storage wherever it's possible.
+* **Functional** — the data processing pipeline is organized in a chain of [`DataFrame`](DataFrame.md) transformation operations.
+* **Immutable** — every operation returns a new instance of [`DataFrame`](DataFrame.md) reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
 * [**Interoperable**](collectionsInterop.md) — convertible with Kotlin data classes and collections.

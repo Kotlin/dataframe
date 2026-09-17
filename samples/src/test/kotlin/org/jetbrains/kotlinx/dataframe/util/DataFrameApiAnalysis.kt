@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
 
 /**
- * Make sure to add `import org.jetbrains.kotlinx.dataframe.util.*` for to use generated properties, if needed.
+ * Make sure to add `import org.jetbrains.kotlinx.dataframe.util.*` to use generated properties, if needed.
  * https://youtrack.jetbrains.com/issue/KTIJ-35709/Compiler-plugin-generated-properties-are-not-recommended-for-import-in-other-packages
  */
 fun dataFrameApi(): DataFrame<DataFrameApi> {
