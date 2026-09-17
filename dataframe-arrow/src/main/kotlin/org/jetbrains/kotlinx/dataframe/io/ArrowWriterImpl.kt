@@ -1,7 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
@@ -23,6 +27,7 @@ import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VariableWidthVector
@@ -36,7 +41,10 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.convertToByte
@@ -57,8 +65,90 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.values
+import java.math.BigInteger
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import kotlin.time.Instant as StdlibInstant
+
+/**
+ * Whether [this] holds one of the three supported instant types — `kotlin.time`, `java.time`, or the deprecated
+ * `kotlinx.datetime` one. Converting between them never involves a time zone.
+ */
+private fun AnyCol.isInstantColumn(): Boolean =
+    type().isSubtypeOf(typeOf<StdlibInstant?>()) ||
+        type().isSubtypeOf(typeOf<JavaInstant?>()) ||
+        type().isSubtypeOf(deprecatedInstantType)
+
+private fun AnyCol.isLocalDateTimeColumn(): Boolean =
+    type().isSubtypeOf(typeOf<LocalDateTime?>()) || type().isSubtypeOf(typeOf<JavaLocalDateTime?>())
+
+private fun AnyCol.isLocalDateColumn(): Boolean =
+    type().isSubtypeOf(typeOf<LocalDate?>()) || type().isSubtypeOf(typeOf<JavaLocalDate?>())
+
+/**
+ * Whether [this] holds a number that `core` interprets as a count of milliseconds since the epoch — the only
+ * date-time meaning it gives a plain number (see `Long.toLocalDateTime` in `core`'s `convert.kt`).
+ */
+private fun AnyCol.isEpochNumberColumn(): Boolean =
+    type().isSubtypeOf(typeOf<Byte?>()) ||
+        type().isSubtypeOf(typeOf<Short?>()) ||
+        type().isSubtypeOf(typeOf<Int?>()) ||
+        type().isSubtypeOf(typeOf<Long?>())
+
+/**
+ * Converts [this] to [instants][StdlibInstant], resolving a zone-less source against **UTC**.
+ *
+ * The pinned zone is the point. A plain `convertTo<Instant>()` resolves a `LocalDateTime` with
+ * `TimeZone.currentSystemDefault()` and starts a `LocalDate`'s day in it, so the very same frame would produce
+ * different bytes on a developer's laptop and on CI. Arrow and Parquet define a timestamp as an offset from
+ * `1970-01-01T00:00:00Z`, so UTC is both the correct reference and the only deterministic one. Sources with no
+ * zone to resolve at all — an epoch number, which `core` reads as epoch milliseconds, or a `String`, which
+ * carries its own offset — still go through the generic converter.
+ */
+private fun AnyCol.convertToInstantInUtc(): DataColumn<StdlibInstant?> =
+    when {
+        isLocalDateTimeColumn() -> convertToLocalDateTime().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
+        isLocalDateColumn() -> convertToLocalDate().map(Infer.None) { it?.atStartOfDayIn(TimeZone.UTC) }
+        else -> convertTo<StdlibInstant?>()
+    }
+
+/**
+ * Converts [this] to [LocalDateTime]s, reading an instant source against **UTC**.
+ *
+ * The mirror image of [convertToInstantInUtc], and pinned to UTC for the same reason. A number needs the same
+ * treatment on this side: `core` turns it into an instant with `fromEpochMilliseconds` — zone-free — but then
+ * splits that instant into date-time fields in the system default zone, so the zone is re-applied here.
+ * A `LocalDate` needs none: it becomes a `LocalDateTime` through `atTime(0, 0)`, which involves no zone.
+ */
+private fun AnyCol.convertToLocalDateTimeInUtc(): DataColumn<LocalDateTime?> =
+    when {
+        isInstantColumn() -> convertTo<StdlibInstant?>().map(Infer.None) { it?.toLocalDateTime(TimeZone.UTC) }
+
+        isEpochNumberColumn() ->
+            convertToLong().map(Infer.None) {
+                it?.let { millis -> StdlibInstant.fromEpochMilliseconds(millis).toLocalDateTime(TimeZone.UTC) }
+            }
+
+        else -> convertToLocalDateTime()
+    }
+
+/**
+ * `[epochSeconds] * [unitsPerSecond] + [subSecondUnits]` evaluated without an intermediate bound, or `null` when
+ * the sum itself does not fit into a `Long`.
+ *
+ * Reached only from the overflow branch in [ArrowWriterImpl.infillTimeStampVector], one row at a time, so the
+ * [BigInteger] allocation never touches the common path.
+ */
+private fun exactEpochUnitsOrNull(epochSeconds: Long, unitsPerSecond: Long, subSecondUnits: Long): Long? {
+    val exact = BigInteger.valueOf(epochSeconds)
+        .multiply(BigInteger.valueOf(unitsPerSecond))
+        .add(BigInteger.valueOf(subSecondUnits))
+    // bitLength() excludes the sign bit, so anything representable as a signed 64-bit integer reports 63 or less.
+    return if (exact.bitLength() < Long.SIZE_BITS) exact.toLong() else null
+}
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -148,7 +238,16 @@ internal class ArrowWriterImpl(
 
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
 
-            ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
+            ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTimeInUtc()
+
+            // A timestamp *with* a timezone holds an instant; a zone-less one holds local date-time fields.
+            // See [instantValues] in `arrowReadingImpl.kt` and Parquet's `isAdjustedToUTC`.
+            is ArrowType.Timestamp ->
+                if (targetFieldType.timezone == null) {
+                    column.convertToLocalDateTimeInUtc()
+                } else {
+                    column.convertToInstantInUtc()
+                }
 
             is ArrowType.Time -> column.convertToLocalTime()
 
@@ -173,7 +272,95 @@ internal class ArrowWriterImpl(
         return result to actualField
     }
 
-    private fun infillVector(vector: FieldVector, column: AnyCol) {
+    /**
+     * Writes [column] into any of the eight Arrow timestamp vectors.
+     *
+     * Both the unit and the presence of a time zone come from the vector's own field, so this one body covers
+     * `Timestamp(SECOND … NANOSECOND, null)` and `Timestamp(SECOND … NANOSECOND, tz)` alike. A zone-tagged vector
+     * holds instants, a zone-less one holds local date-time fields; either way the stored `Long` is an offset from
+     * `1970-01-01T00:00:00Z`, which is why both sides convert against [TimeZone.UTC] and never against the
+     * machine's default zone.
+     *
+     * A value finer than the vector's unit simply loses its trailing fractional digits, which rounds it **down**
+     * — towards the past, not towards the epoch. A pre-epoch value therefore moves *away* from the epoch:
+     * `1962-06-05T04:03:02.123456789Z` becomes `1962-06-05T04:03:02.123456Z` in a `MICROSECOND` vector. That is
+     * lossy either way, so the first row where it happens is reported as [ConvertingMismatch.PrecisionReduced].
+     *
+     * A value outside the unit's *range* has no such truncated form — a `Long` of nanoseconds only spans
+     * 1677–2262, and storing it anyway would wrap it around into a plausible-looking wrong date. It is therefore
+     * treated as any other value that does not fit the target field: reported as
+     * [ConvertingMismatch.ValueOutOfRange], and refused with a [ConvertingException] when [strictType] is on
+     * (the default, [ArrowWriter.Mode.STRICT]) or written as `null` when it is off ([ArrowWriter.Mode.LOYAL]).
+     * Dropping it needs a nullable [vector] to drop it into, so a non-nullable one is refused in either mode.
+     */
+    private fun infillTimeStampVector(vector: TimeStampVector, column: AnyCol, strictType: Boolean) {
+        val arrowType = vector.field.type as ArrowType.Timestamp
+        val unitsPerSecond = arrowType.unit.perSecond
+        val nanosPerUnit = NANOS_PER_SECOND / unitsPerSecond
+
+        val instants = if (arrowType.timezone == null) {
+            column.convertToLocalDateTimeInUtc().map(Infer.None) { it?.toInstant(TimeZone.UTC) }
+        } else {
+            column.convertToInstantInUtc()
+        }
+
+        var firstTruncatedRow: Int? = null
+        var firstOutOfRangeRow: Int? = null
+        instants.forEachIndexed { i, value ->
+            if (value == null) {
+                vector.setNull(i)
+                return@forEachIndexed
+            }
+            val nanos = value.nanosecondsOfSecond.toLong()
+            // An Arrow NANOSECOND timestamp is an int64 nanosecond count, so it only spans 1677-2262; anything
+            // outside that would wrap around into a plausible-looking wrong date, so drop the value instead.
+            val subSecondUnits = nanos / nanosPerUnit
+            val epochUnits = try {
+                Math.addExact(Math.multiplyExact(value.epochSeconds, unitsPerSecond), subSecondUnits)
+            } catch (e: ArithmeticException) {
+                // The product alone can overflow while the sum does not: the seconds are floored, so for an
+                // instant near the bottom of the range `epochSeconds * unitsPerSecond` lands below
+                // `Long.MIN_VALUE` and only the sub-second part brings it back. Redo it without a bound.
+                exactEpochUnitsOrNull(value.epochSeconds, unitsPerSecond, subSecondUnits)
+            }
+            if (epochUnits == null) {
+                // Same contract as every other value the target field cannot hold: refuse in a strict mode,
+                // report and degrade in a loyal one. Reported once per column, like [PrecisionReduced] below.
+                // A non-nullable vector has no degraded form to fall back on — writing `null` into it would
+                // produce a file contradicting its own schema, which `NullabilityOptions.Checking` then refuses
+                // to read — so there the value is refused whatever the mode.
+                val mismatch = ConvertingMismatch.ValueOutOfRange(column.name, i, arrowType.unit.name)
+                if (strictType || !vector.field.isNullable) {
+                    mismatchSubscriber(mismatch)
+                    throw ConvertingException(mismatch)
+                }
+                if (firstOutOfRangeRow == null) {
+                    firstOutOfRangeRow = i
+                }
+                vector.setNull(i)
+                return@forEachIndexed
+            }
+            // Only a row that is actually written can have lost digits: a row dropped just above went in as
+            // `null`, and reporting it as [PrecisionReduced] too would claim it was "saved with the trailing
+            // digits dropped".
+            if (nanos % nanosPerUnit != 0L && firstTruncatedRow == null) {
+                firstTruncatedRow = i
+            }
+            vector.set(i, epochUnits)
+        }
+        firstTruncatedRow?.let {
+            mismatchSubscriber(ConvertingMismatch.PrecisionReduced(column.name, it, arrowType.unit.name))
+        }
+        firstOutOfRangeRow?.let {
+            mismatchSubscriber(ConvertingMismatch.ValueOutOfRange(column.name, it, arrowType.unit.name))
+        }
+    }
+
+    /**
+     * Fills [vector] with [column]'s content. [strictType] is only consulted for a value the target field cannot
+     * hold at all — see [infillTimeStampVector]; it is passed down to the children of a struct unchanged.
+     */
+    private fun infillVector(vector: FieldVector, column: AnyCol, strictType: Boolean) {
         when (vector) {
             is VarCharVector ->
                 column.convertToString()
@@ -260,11 +447,15 @@ internal class ArrowWriterImpl(
                     }
 
             is DateMilliVector ->
-                column.convertToLocalDateTime()
+                column.convertToLocalDateTimeInUtc()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
                             ?: vector.setNull(i)
                     }
+
+            // One branch for all eight timestamp vectors: they differ only in their unit and in whether they
+            // carry a time zone, and both are read off the field. See [infillTimeStampVector].
+            is TimeStampVector -> infillTimeStampVector(vector, column, strictType)
 
             is TimeNanoVector ->
                 column.convertToLocalTime()
@@ -301,7 +492,7 @@ internal class ArrowWriterImpl(
                 }
 
                 column.columns().forEach { childColumn ->
-                    infillVector(vector.getChild(childColumn.name()), childColumn)
+                    infillVector(vector.getChild(childColumn.name()), childColumn, strictType)
                 }
 
                 column.indices.forEach { i -> vector.setIndexDefined(i) }
@@ -392,25 +583,46 @@ internal class ArrowWriterImpl(
             actualField.createVector(allocator)!!
         }
 
-        if (convertedColumn == null) {
-            check(actualField.isNullable)
-            allocateVector(vector, dataFrame.rowsCount())
-            infillWithNulls(vector, dataFrame.rowsCount())
-        } else {
-            allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
-            infillVector(vector, convertedColumn)
+        // The vector owns off-heap buffers the moment it is allocated, and nothing else has a reference to it
+        // yet, so a failure while filling it would strand them: [allocateVectorSchemaRoot] can only close the
+        // vectors it has already collected, and [close] would then refuse to close a non-empty allocator with
+        // "Memory was leaked by query", hiding the real cause. Catches [Throwable] because [infillVector] and
+        // [allocateVector] both throw [NotImplementedError], which is an [Error].
+        try {
+            if (convertedColumn == null) {
+                check(actualField.isNullable)
+                allocateVector(vector, dataFrame.rowsCount())
+                infillWithNulls(vector, dataFrame.rowsCount())
+            } else {
+                allocateVector(vector, dataFrame.rowsCount(), countTotalBytes(convertedColumn))
+                infillVector(vector, convertedColumn, strictType)
+            }
+        } catch (e: Throwable) {
+            vector.close()
+            throw e
         }
         return vector
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> =
-        this.map {
+    /**
+     * Allocates a vector per column of [this], appending each one to [destination] as soon as it is created.
+     *
+     * They land in [destination] one at a time on purpose: a failure half-way through leaves the vectors already
+     * allocated reachable for [allocateVectorSchemaRoot]'s cleanup, which a `map` into a list it only receives on
+     * success would not.
+     */
+    private fun List<AnyCol>.allocateVectorsInto(destination: MutableList<FieldVector>) {
+        forEach {
             val field = it.toArrowField(mismatchSubscriber)
-            allocateVectorAndInfill(field = field, column = it, strictType = true, strictNullable = true)
+            destination.add(
+                allocateVectorAndInfill(field = field, column = it, strictType = true, strictNullable = true),
+            )
         }
+    }
 
     override fun allocateVectorSchemaRoot(): VectorSchemaRoot {
         val mainVectors = LinkedHashMap<String, FieldVector>()
+        val widenedVectors = ArrayList<FieldVector>()
         try {
             for (field in targetSchema.fields) {
                 val column = dataFrame.getColumnOrNull(field.name)
@@ -428,24 +640,27 @@ internal class ArrowWriterImpl(
                 val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
                 mainVectors[field.name] = vector
             }
-        } catch (e: Exception) {
-            mainVectors.values.forEach { it.close() } // Clear buffers before throwing exception
+
+            val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
+            if (!mode.restrictWidening) {
+                otherColumns.allocateVectorsInto(widenedVectors)
+                otherColumns.forEach {
+                    mismatchSubscriber(ConvertingMismatch.WideningMismatch.AddedColumn(it.name))
+                }
+            } else {
+                otherColumns.forEach {
+                    mismatchSubscriber(ConvertingMismatch.WideningMismatch.RejectedColumn(it.name))
+                }
+            }
+        } catch (e: Throwable) {
+            // Clear the buffers of every vector allocated so far — both phases — before throwing, or
+            // [close] refuses to close a non-empty allocator and reports "Memory was leaked by query"
+            // instead of the real cause. Catches [Throwable], not [Exception]: a target field of a type the
+            // writer does not implement reaches this as a [NotImplementedError], which is an [Error].
+            (mainVectors.values + widenedVectors).forEach { it.close() }
             throw e
         }
-        val vectors = ArrayList<FieldVector>()
-        vectors.addAll(mainVectors.values)
-        val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
-        if (!mode.restrictWidening) {
-            vectors.addAll(otherColumns.toVectors())
-            otherColumns.forEach {
-                mismatchSubscriber(ConvertingMismatch.WideningMismatch.AddedColumn(it.name))
-            }
-        } else {
-            otherColumns.forEach {
-                mismatchSubscriber(ConvertingMismatch.WideningMismatch.RejectedColumn(it.name))
-            }
-        }
-        return VectorSchemaRoot(vectors)
+        return VectorSchemaRoot(mainVectors.values + widenedVectors)
     }
 
     override fun close() {

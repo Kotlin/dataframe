@@ -82,13 +82,13 @@ public interface DocumentationUrls {
         public typealias FillNA = Nothing
     }
 
-    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
+    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanandna.html) */
     public interface NanAndNa {
 
-        /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
+        /** [See `NaN` on the documentation website.]({@include [Url]}/nanandna.html#nan) */
         public typealias NaN = Nothing
 
-        /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
+        /** [See `NA` on the documentation website.]({@include [Url]}/nanandna.html#na) */
         public typealias NA = Nothing
     }
 
@@ -308,7 +308,7 @@ public interface DocumentationUrls {
     /** [See "`Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
     public typealias PivotAggregation = Nothing
 
-    /** [See "Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    /** [See "`Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
     public typealias PivotAggregationStatistics = Nothing
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
@@ -504,6 +504,9 @@ public interface DocumentationUrls {
 
     /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
     public typealias SortWith = Nothing
+
+    /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
+    public typealias Indices = Nothing
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing

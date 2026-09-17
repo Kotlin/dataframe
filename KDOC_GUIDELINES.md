@@ -405,12 +405,16 @@ and then use add it using `@include`:
  * For more information: {@include [DocumentationUrls.Move]}
 ```
 
-To name a page in the text itself, link it inline instead of adding a second paragraph:
+Keep it to **exactly one** such paragraph per KDoc, always the colon form — never
+`For more information,` followed by the link. If a shared KDoc-snippet you `@include` already carries the
+paragraph, don't add a second one in the declaration: the rendered KDoc then says it twice. When an
+operation needs several links, they go on that one line, space-separated:
 
 ```
- * The examples below use the same [DataFrame] as the
- * [`schema` page on the documentation website]({@include [DocumentationUrls.Url]}/schema.html):
+ * For more information: {@include [DocumentationUrls.Count]} {@include [DocumentationUrls.DataRow.RowFunctions]}
 ```
+
+(see `count.kt`, `concat.kt`, `distinct.kt`).
 
 #### Columns selection information
 
