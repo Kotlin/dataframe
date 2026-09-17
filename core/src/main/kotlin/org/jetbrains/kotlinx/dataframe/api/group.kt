@@ -152,7 +152,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
 
 /**
  * Groups columns, previously selected with [group], into new or existing column groups
- * within the [DataFrame], using an [ColumnsSelectionDsl] expression to specify the target group name for each column.
+ * within the [DataFrame], using a [ColumnsSelectionDsl] expression to specify the target group name for each column.
  * The expression is applied to each selected column and determines the name of the column group
  * it will be placed into.
  *

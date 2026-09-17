@@ -124,5 +124,5 @@ to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Grad
 ## Contacting maintainers
 
 * If something cannot be done or doesn't work conveniently &mdash; submit an [issue](#submitting-issues).
-* To attract attention to your problem, raise a question, or make a new comment, mention one of us on Github: @koperagen @Jolanrensen @zaleslaw @ileasile
+* To attract attention to your problem, raise a question, or make a new comment, mention one of us on GitHub: @koperagen @Jolanrensen @zaleslaw @ileasile
 * Discussions and general inquiries &mdash; use `#datascience` channel in [KotlinLang Slack](https://kotl.in/slack).
