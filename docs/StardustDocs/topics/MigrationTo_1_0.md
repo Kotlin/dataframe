@@ -40,6 +40,42 @@ See [](read.md#read-from-csv).
 | `df.writeCSV(..)`/`df.writeTSV(..)`             | `df.writeCsv(..)`/`df.writeTsv(..)`             |
 | `df.toCSV(..)`                                  | `df.toCsvStr(..)`                               |
 
+### Deprecation of `BigDecimal` and `BigInteger` statistics
+
+All Kotlin DataFrame [statistical operations](summaryStatistics.md) for `java.math.BigDecimal` and `java.math.BigInteger` 
+columns are deprecated due to their type-specific arithmetic semantics 
+and to maintain consistent behavior across numeric types.
+
+Calling these operations on columns of either type now throws an exception at runtime. 
+Convert the column to a list and use Kotlin standard library functions and 
+Java big numbers arithmetic instead.
+Alternatively, you can [`convert`](convert.md) them to primitive types before calling the statistical operations.
+
+The following examples assume that `bigIntCol` and `bigDecimalCol` are 
+nullable columns of `BigInteger` and `BigDecimal`.
+
+| 0.15                                     | 1.0                                                                                                                                                     |
+|------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `df.bigIntCol.sum()`                     | `df.bigIntCol.toList().filterNotNull().sumOf { it }`                                                                                                    |
+| `df.bigDecimalCol.sum()`                 | `df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                                                                                                |
+| `df.sum { bigIntCol and bigDecimalCol }` | `df.bigIntCol.toList().filterNotNull().sumOf { it }.toBigDecimal() + df.bigDecimalCol.toList().filterNotNull().sumOf { it }`                            |
+| `df.bigIntCol.minOrNull()`               | `df.bigIntCol.toList().filterNotNull().minOrNull()`                                                                                                     |
+| `df.bigDecimalCol.maxOrNull()`           | `df.bigDecimalCol.toList().filterNotNull().maxOrNull()`                                                                                                 |
+| `df.bigIntCol.mean()`                    | `df.bigIntCol.toList().filterNotNull().let { values -> values.sumOf { it }.toBigDecimal().divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }` |
+| `df.bigDecimalCol.mean()`                | `df.bigDecimalCol.toList().filterNotNull().let { values -> values.sumOf { it }.divide(values.size.toBigDecimal(), MathContext.DECIMAL128) }`            |
+
+Java arithmetics:
+
+| 0.15                     | 1.0                                                                                |
+|--------------------------|------------------------------------------------------------------------------------|
+| `df.bigIntCol.sum()`     | `df.bigIntCol.toList().filterNotNull().fold(BigInteger.ZERO, BigInteger::add)`     |
+| `df.bigDecimalCol.sum()` | `df.bigDecimalCol.toList().filterNotNull().fold(BigDecimal.ZERO, BigDecimal::add)` |
+
+All other Kotlin DataFrame operations continue to work as usual:
+
+```kotlin
+df.filter { bigDecimalCol != null && bigDecimalCol > BigDecimal.valueOf(150.0) }
+```
 
 ### Column name repair standardization and `NameRepairStrategy` deprecation
 
@@ -187,7 +223,7 @@ The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `df.copy()`                                                                                              | `df.columns().toDataFrame().cast()`                                                                                           | Removed a shortcut to clarify the behaviour;                                 |
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
-| `df.sortBy { col.desc() }`                                                                               | `df.sortBy { col.reversed() }`                                                                                                | Renamed to better reflect its purpose.                                       |
+| `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 
 ## Parsing and Converting Date-Time
 

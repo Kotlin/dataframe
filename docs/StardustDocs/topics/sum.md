@@ -56,3 +56,8 @@ The following automatic type conversions are performed for the `sum` operation:
 | Float -> Float                                                             | 0.0f                   |
 | Number -> Conversion([Common number type](numberUnification.md)) -> Number | 0.0                    |
 | Nothing -> Double                                                          | 0.0                    |
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported.
+> Count statistics manually with Kotlin standard library methods
+> and Java big numbers arithmetics or [`convert`](convert.md) them to primitive types.
+> {style="warning"}
