@@ -56,7 +56,7 @@ public interface DataFrameSchema {
      *   and [<code>STRICT</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT] comparison for nested schemas.
      *
      * @param comparisonMode The [<code>mode</code>][ComparisonMode] to compare the schema's by.
-     *   By default, generated markers for leafs aren't used as supertypes: `@DataSchema(isOpen = false)`
+     *   By default, generated markers for leaves aren't used as supertypes: `@DataSchema(isOpen = false)`
      *   Setting [<code>comparisonMode</code>][comparisonMode] to [<code>ComparisonMode.STRICT_FOR_NESTED_SCHEMAS</code>][ComparisonMode.STRICT_FOR_NESTED_SCHEMAS] takes this into account
      *   for internal codegen logic.
      *
