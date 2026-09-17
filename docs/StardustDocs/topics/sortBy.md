@@ -2,14 +2,29 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SortBySamples-->
 
+<web-summary>
+Discover `sortBy` operation for Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover `sortBy` operation for Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover `sortBy` operation for Kotlin DataFrame.
+</link-summary>
+
+## sortBy
+
 Sorts the rows of a [`DataFrame`](DataFrame.md) by the values of one or several columns.
 
 Returns a new [`DataFrame`](DataFrame.md) with the same rows, reordered according to the selected columns.
 
-```text
-sortBy { sortColumns } | sortBy(columnName, ...)
+```kotlin
+sortBy { sortColumns }: DataFrame
+sortBy(vararg columnNames: String): DataFrame
 
-sortColumns = column [ .reversed() ] [ .nullsLast(flag = true) ] [ and sortColumns ]
+sortColumns = column [ .reversed() ] [ .nullsLast(flag: Boolean = true) ] [ and sortColumns ]
 ```
 
 The order in which columns are selected defines the sort priority:
@@ -17,20 +32,25 @@ rows are compared by the first selected column, ties are resolved by the second 
 
 Column values must be [`Comparable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/).
 
-**Parameters:**
-
-* `sortColumns` — columns to sort by, selected with the [Sort DSL](#sort-dsl)
-  (an extension of the [Column Selection DSL](ColumnSelectors.md) with sort-specific modifiers).
-* `columnName: String` — names of the columns to sort by; they are always sorted in ascending order.
-
 **See also:**
 
-* [`sortByDesc`](#sortbydesc) — sorts rows in descending order by default.
-* [`sortWith`](#sortwith) — sorts rows with a custom comparator.
+* [`sortWith`](sortWith.md) — sorts rows with a custom comparator.
 * [`reverse`](reverse.md) — reverses the current row order.
 * [`shuffle`](shuffle.md) — reorders rows randomly.
 * [`groupBy`](groupBy.md#transformation) — `GroupBy` has its own `sortBy`/`sortByDesc` (sorting rows inside
   each group) and `sortByGroup`/`sortByCount`/`sortByKey` (sorting the groups themselves).
+
+### Parameters
+
+* `sortColumns: SortColumnsSelector` — a lambda that selects the columns to sort by.
+  Columns here are selected with the [Sort DSL](#sort-dsl) — a specialized
+  [Columns Selection DSL](ColumnSelectors.md) that additionally allows reversing the order
+  of a particular column and changing the position of `null` values.
+* `columnNames: String` — one or several (`vararg`) names of the columns to sort by.
+  This overload accepts only [string column names](concepts/StringApi.md), without any modifiers,
+  so all of them are sorted in ascending order.
+
+### Examples
 
 The following dataframe will be used in the examples below:
 
@@ -85,10 +105,41 @@ df.sortBy { "age" and "name"["lastName"] }
 <!---END-->
 <inline-frame src="./resources/sortBySeveralColumns_properties.html" width="100%" height="500px"></inline-frame>
 
+### `sort` on `DataColumn`
+
+Sorts the values of a [`DataColumn`](DataColumn.md) in ascending order.
+
+Returns a new [`DataColumn`](DataColumn.md) with the same name and type containing the sorted values.
+
+```kotlin
+sort(): DataColumn<T>
+```
+
+Takes no parameters and accepts only columns whose value type `T` is
+[`Comparable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/).
+To sort values of any other type, use
+[`sortWith` on a `DataColumn`](sortWith.md#sortwith-on-datacolumn).
+
+#### Examples
+
+<!---FUN sortColumn-->
+
+```kotlin
+df.age.sort()
+```
+
+<!---END-->
+<inline-frame src="./resources/sortColumn.html" width="100%" height="500px"></inline-frame>
+
 ## Sort DSL
 
-The Sort DSL is a specialized [Column Selection DSL](ColumnSelectors.md) that, in addition to selecting columns,
-allows changing the sort direction of individual columns and the position of `null` values.
+The Sort DSL (`SortDsl`) is a specialized [Columns Selection DSL](ColumnSelectors.md):
+everything you can do there works here as well, and on top of that it allows changing
+the sort direction of individual columns and the position of `null` values.
+
+It's available in the `sortBy { }` and `sortByDesc { }` overloads that take a lambda;
+the overloads that take [string column names](concepts/StringApi.md) always sort
+in the default direction of the operation.
 
 ### reversed
 
@@ -183,20 +234,26 @@ Sorts the rows of a [`DataFrame`](DataFrame.md) by the values of one or several 
 
 Returns a new [`DataFrame`](DataFrame.md) with the same rows, reordered according to the selected columns.
 
-```text
-sortByDesc { sortColumns } | sortByDesc(columnName, ...)
+```kotlin
+sortByDesc { sortColumns }: DataFrame
+sortByDesc(vararg columnNames: String): DataFrame
 
-sortColumns = column [ .reversed() ] [ .nullsLast(flag = true) ] [ and sortColumns ]
+sortColumns = column [ .reversed() ] [ .nullsLast(flag: Boolean = true) ] [ and sortColumns ]
 ```
 
 It's the same operation as [`sortBy`](#sortby), except that every selected column is sorted in descending order
 by default. All [Sort DSL](#sort-dsl) modifiers work the same way,
 so `.reversed()` makes a particular column ascending again.
 
-**Parameters:**
+### Parameters
 
-* `sortColumns` — columns to sort by, selected with the [Sort DSL](#sort-dsl).
-* `columnName: String` — names of the columns to sort by; they are always sorted in descending order.
+* `sortColumns: SortColumnsSelector` — a lambda that selects the columns to sort by
+  with the [Sort DSL](#sort-dsl), the same way as in [`sortBy`](#sortby).
+* `columnNames: String` — one or several (`vararg`) names of the columns to sort by.
+  This overload accepts only [string column names](concepts/StringApi.md), without any modifiers,
+  so all of them are sorted in descending order.
+
+### Examples
 
 <!---FUN sortByDesc-->
 <tabs>
@@ -238,77 +295,20 @@ df.sortByDesc { "age" and "name"["lastName"].reversed() }
 <!---END-->
 <inline-frame src="./resources/sortByDescReversed_properties.html" width="100%" height="500px"></inline-frame>
 
-## sortWith
+### `sortDesc` on `DataColumn`
 
-Sorts the rows of a [`DataFrame`](DataFrame.md) using a custom row comparator.
+Sorts the values of a [`DataColumn`](DataColumn.md) in descending order.
 
-Returns a new [`DataFrame`](DataFrame.md) with the same rows, reordered according to the given comparator.
-
-```text
-sortWith(comparator)
-sortWith { row1, row2 -> Int }
-```
-
-**Parameters:**
-
-* `comparator: Comparator<DataRow<T>>` — a comparator of [`DataRow`](DataRow.md)s that defines the row order;
-* `{ row1, row2 -> Int }` — the same comparator given as a lambda:
-  it takes two [`DataRow`](DataRow.md)s and returns a negative, zero, or positive number
-  depending on their relative order.
-
-Use it when the ordering can't be expressed as a combination of sort columns,
-for example when it mixes several columns in a non-trivial way.
-
-<!---FUN sortWithComparator-->
+Returns a new [`DataColumn`](DataColumn.md) with the same name and type containing the sorted values.
 
 ```kotlin
-// Sort rows by "age" ascending, then by ("name"/"lastName") descending
-df.sortWith(
-    compareBy<DataRow<Person>> { it.age }
-        .thenByDescending { it.name.lastName },
-)
+sortDesc(): DataColumn<T>
 ```
 
-<!---END-->
-<inline-frame src="./resources/sortWithComparator.html" width="100%" height="500px"></inline-frame>
+Takes no parameters and accepts only columns whose value type `T` is
+[`Comparable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/).
 
-<!---FUN sortWithLambda-->
-
-```kotlin
-// Sort rows by "age" ascending, then by ("name"/"firstName") ascending
-df.sortWith { row1, row2 ->
-    when {
-        row1.age != row2.age -> row1.age.compareTo(row2.age)
-        else -> row1.name.firstName.compareTo(row2.name.firstName)
-    }
-}
-```
-
-<!---END-->
-<inline-frame src="./resources/sortWithLambda.html" width="100%" height="500px"></inline-frame>
-
-## Sorting a DataColumn
-
-A [`DataColumn`](DataColumn.md) can be sorted on its own.
-All these operations return a new [`DataColumn`](DataColumn.md) with the same name and type
-containing the sorted values.
-
-* `sort()` — sorts the values in ascending order; accepts only
-  [`Comparable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/) values.
-* `sortDesc()` — sorts the values in descending order; accepts only
-  [`Comparable`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/) values.
-* `sortWith(comparator)` — sorts the values with the given `Comparator<T>` (or a comparison lambda);
-  works with values of any type, including
-  [column groups](DataColumn.md#columngroup) and [frame columns](DataColumn.md#framecolumn).
-
-<!---FUN sortColumn-->
-
-```kotlin
-df.age.sort()
-```
-
-<!---END-->
-<inline-frame src="./resources/sortColumn.html" width="100%" height="500px"></inline-frame>
+#### Examples
 
 <!---FUN sortColumnDesc-->
 
@@ -318,13 +318,3 @@ df.age.sortDesc()
 
 <!---END-->
 <inline-frame src="./resources/sortColumnDesc.html" width="100%" height="500px"></inline-frame>
-
-<!---FUN sortColumnWith-->
-
-```kotlin
-// Sort "name"/"lastName" values by their length
-df.name.lastName.sortWith { name1, name2 -> name1.length - name2.length }
-```
-
-<!---END-->
-<inline-frame src="./resources/sortColumnWith.html" width="100%" height="500px"></inline-frame>

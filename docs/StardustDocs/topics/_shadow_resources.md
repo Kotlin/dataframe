@@ -290,8 +290,9 @@
 <resource src="sortBy_properties.html"></resource>
 <resource src="sortColumn.html"></resource>
 <resource src="sortColumnDesc.html"></resource>
-<resource src="sortColumnWith.html"></resource>
+<resource src="sortWithColumn.html"></resource>
 <resource src="sortWithComparator.html"></resource>
+<resource src="sortWithDf.html"></resource>
 <resource src="sortWithLambda.html"></resource>
 <resource src="notebook_test_tail_1.html"></resource>
 <resource src="notebook_test_tail_2.html"></resource>
