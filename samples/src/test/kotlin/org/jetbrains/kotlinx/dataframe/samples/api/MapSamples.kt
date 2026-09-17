@@ -22,6 +22,14 @@ class MapSamples : DataFrameSampleHelper("map", "api") {
     val df = peopleDf.take(7)
 
     @Test
+    fun mapDf() {
+        // SampleStart
+        df
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun map() {
         // SampleStart
         df.map { 2021 - it.age }
@@ -32,7 +40,8 @@ class MapSamples : DataFrameSampleHelper("map", "api") {
     fun mapToColumn_properties() {
         // SampleStart
         df.mapToColumn("year of birth") { 2021 - age }
-        // SampleEnd
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test

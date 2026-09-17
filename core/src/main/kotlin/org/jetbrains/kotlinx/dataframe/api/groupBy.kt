@@ -170,6 +170,19 @@ internal interface GroupByDocs {
      *
      *  See [GroupBy Aggregations][Aggregation].
      *
+     * ### Map [GroupBy] into [List][List], [DataFrame] or [FrameColumn]
+     *
+     * {@include [Indent]}
+     * [GroupBy][GroupBy]`.`[**`map`**][GroupBy.map]**`  {  `**[`GroupWithKey`][GroupWithKey]**`  ->  `**`value`**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`mapToRows`**][GroupBy.mapToRows]**`  {  `**[`GroupWithKey`][GroupWithKey]**`  ->  `**[`DataRow`][DataRow]`?`**` }`**
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`mapToFrames`**][GroupBy.mapToFrames]**`  {  `**[`GroupWithKey`][GroupWithKey]**`  ->  `**[`DataFrame`][DataFrame]**` }`**
+     *
+     *  See [GroupBy Mapping][Mapping].
+     *
      * ### Pivot [GroupBy] into [PivotGroupBy] and reduce / aggregate it
      *
      * {@include [Indent]}
@@ -332,6 +345,32 @@ internal interface GroupByDocs {
      * For more information: {@include [DocumentationUrls.GroupByAggregation]}
      */
     typealias Aggregation = Nothing
+
+    /**
+     * ### [GroupBy] mapping
+     *
+     * Instead of aggregating the groups, a [GroupBy] can be walked over key–group pair by key–group pair,
+     * with the result of a lambda collected for each of them. Every pair is given to the lambda as a
+     * [GroupWithKey], so its key values are available as [key][GroupWithKey.key] and its rows as
+     * [group][GroupWithKey.group].
+     *
+     * The following mapping methods are available:
+     * * [map][GroupBy.map] — returns a [List] with one computed value per key–group pair;
+     * * [mapToRows][GroupBy.mapToRows] — computes a [DataRow] per key–group pair and collects them
+     *   into a [DataFrame];
+     * * [mapToFrames][GroupBy.mapToFrames] — computes a [DataFrame] per key–group pair and collects them
+     *   into a [FrameColumn].
+     *
+     * Unlike [aggregation][Aggregation], the result is not a [DataFrame] with the grouping key columns:
+     * what the lambda returns is what you get. [map][GroupBy.map] and [mapToRows][GroupBy.mapToRows]
+     * leave out the pairs for which the lambda returns `null`, so their results can be shorter than
+     * the number of key–group pairs.
+     *
+     * Check out [`GroupBy grammar`][Grammar].
+     *
+     * For more information: {@include [DocumentationUrls.Map.OnGroupBy]}
+     */
+    typealias Mapping = Nothing
 
     /**
      * ### [GroupBy] pivoting

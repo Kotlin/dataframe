@@ -171,9 +171,11 @@
 <resource src="notebook_test_join_5.html"></resource>
 <resource src="notebook_test_join_6.html"></resource>
 <resource src="notebook_test_join_8.html"></resource>
+<resource src="mapDf.html"></resource>
 <resource src="mapIndexedOnColumn.html"></resource>
 <resource src="mapMany_properties.html"></resource>
 <resource src="mapOnColumn.html"></resource>
+<resource src="mapToColumn_properties.html"></resource>
 <resource src="mapToFramesOnGroupBy.html"></resource>
 <resource src="mapToRowsOnGroupBy.html"></resource>
 <resource src="noneDf.html"></resource>

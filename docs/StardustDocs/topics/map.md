@@ -23,6 +23,17 @@ All `map` operations share the name but differ in what they go over and what the
 
 Each result keeps the order of the values, rows, or key–group pairs it was computed from.
 
+Every example on this page uses the same [`DataFrame`](DataFrame.md):
+
+<!---FUN mapDf-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/mapDf.html" width="100%" height="500px"></inline-frame>
+
 ## map
 
 Maps the rows of a [`DataFrame`](DataFrame.md) into a `List` with one element per row.
@@ -75,6 +86,7 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 
 </tab></tabs>
 <!---END-->
+<inline-frame src="./resources/mapToColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 See [row expressions](DataRow.md#row-expressions)
 
