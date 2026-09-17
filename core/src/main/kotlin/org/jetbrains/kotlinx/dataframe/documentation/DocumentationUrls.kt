@@ -499,7 +499,7 @@ public interface DocumentationUrls {
     /** [See `reverse` on the documentation website.]({@include [Url]}/reverse.html) */
     public typealias Reverse = Nothing
 
-    /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
+    /** [See `sortWith` on the documentation website.]({@include [Url]}/sortwith.html#sortwith-on-datacolumn) */
     public typealias SortWith = Nothing
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
