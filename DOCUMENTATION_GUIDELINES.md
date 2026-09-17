@@ -85,7 +85,11 @@ describe its possible values and how they affect the operation result.
   * Sometimes it's also useful to show an example with the [Column Selection DSL](docs/StardustDocs/topics/columnselectors).
 * Examples should contain clear explanations (both as code comments and text in the section).
 * Use illustrative meaningful example (do not show `dropNulls` example on dataframe without `null`s).
-* Show an initial dataset for examples first.
+* Show an initial dataset for examples first: put it inside the `### Examples` section, 
+  right before the first example (and not somewhere earlier on the page), with a short lead-in like
+  "The following dataframe will be used in the examples below:".
+  If the page describes several operations, the dataset is shown once — before the very first example
+  of the page.
 * The required number of examples depends on the complexity of the operation, number of overloads, and other factors.
 
 ##### Extended formatting
@@ -120,14 +124,81 @@ fun selectTwoCols() {
 3) Operation description.
    1) First — what it actually does ("Adds ...", "Computes ...", "Removes...", "Sorts ...").
    2) Then — what it returns ("Returns ...").
-4) Method(s) signature. For complex operations — complete operation grammar.
+4) Method(s) [signature](#signatures). For complex operations — complete operation grammar.
 5) Any important notes.
 6) See also section — links to reverse or generally reversed operations.
-7) Parameters description.
-8) Examples (code sample with outputs).
+7) `### Parameters` — [parameters description](#parameters) with their types.
+8) `### Examples` — examples (code sample with outputs).
+9) The [`DataColumn` overload](#datacolumn-overloads) section, if the operation has one.
+
+Parameters and examples are always separate headers (`### Parameters`, `### Examples`),
+not bold paragraphs, so that every operation section looks the same.
 
 If the operation is complex and consists of several steps, each step can be described in a separate subsection
 keeping this structure.
+
+##### Pages with several operations
+
+If a topic describes several operations (e.g., `sortBy` and `sortByDesc`), then:
+
+* Each operation gets its own `##` section with the structure above.
+* Don't list the operations of the page anywhere: the page starts with the first operation section
+  right after the summaries, and the sections themselves describe the operations.
+* The "See also" section is written **only once** — in the first operation section, in its usual place
+  (after the operation description and notes, before `### Parameters`) —
+  and links only to operations that are **not** described on this page.
+  Don't repeat "See also" in every operation section.
+
+##### Signatures
+
+Write signatures as pseudocode with types: a Kotlin-like call with parameter names and their types,
+lambda parameters and the lambda result type. Use a `kotlin` code block:
+
+```kotlin
+sortWith(comparator: Comparator<DataRow>)
+sortWith { row1: DataRow, row2: DataRow -> Int }
+```
+
+Optional parts are wrapped in square brackets, alternatives are separated with `|`,
+like in the operation grammar of complex operations.
+
+##### Parameters
+
+Types are written not only in the signature, but in the parameter description as well:
+give each parameter its type as pseudocode (the same way as in the signature) or describe it in words.
+For lambdas, describe what the lambda receives and what it must return.
+
+```markdown
+* `keepColumns: Boolean = false` — whether the original columns are kept in the result.
+* `expression: (DataRow) -> Value` — a lambda that computes the new value for each row.
+```
+
+**Columns arguments.**
+Most operations select columns either by [string names](docs/StardustDocs/topics/concepts/StringApi.md)
+or with the [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md),
+and the parameter description must say which of them this operation supports:
+
+* Both ways — say that columns can be selected by string names or with the
+  [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md), and link the DSL page.
+* Only the DSL (no `String` overload) — say so explicitly.
+* The ways differ between overloads (like in [`rename`](docs/StardustDocs/topics/rename.md), where the
+  string overload takes the columns directly and the DSL one takes a selector) — describe each overload
+  separately, so it's clear what exactly each of them accepts.
+* The operation uses its own specialized DSL (like the Sort DSL of
+  [`sortBy`](docs/StardustDocs/topics/sortBy.md) or the Pivot DSL of
+  [`pivot`](docs/StardustDocs/topics/pivot.md)) — name that DSL, link its section, and explain what it
+  adds on top of the [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md).
+
+##### `DataColumn` overloads
+
+If the operation also has an overload for a single [`DataColumn`](docs/StardustDocs/topics/concepts/DataColumn.md),
+describe it at the end of the operation section under the header:
+
+```markdown
+### `funName` on `DataColumn`
+```
+
+with its own description, signature, parameters, and examples.
 
 #### Writerside summaries
 
