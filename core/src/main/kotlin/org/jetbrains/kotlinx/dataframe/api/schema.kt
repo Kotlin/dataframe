@@ -32,7 +32,8 @@ internal interface SchemaDocs {
     /**
      * {@comment The input of the `schema` examples below. KDoc-snippet.
      *    Every output that follows it is an expected value in `SchemaKDocExampleTests`.}
-     * The examples below use the same [DataFrame] as the `schema` page on the documentation website:
+     * The examples below use the same [DataFrame] as the
+     * [`schema` page on the documentation website]({@include [DocumentationUrls.Url]}/schema.html):
      * a `name` [column group][ColumnGroup] holding `firstName` and `lastName`,
      * and the columns `age`, `city`, `weight` and `isHappy`.
      */
@@ -91,7 +92,7 @@ public fun DataRow<*>.schema(): DataFrameSchema = owner.schema()
  * df.schema()
  * ```
  *
- * Written out, a column group is shown by indentation and a frame column by `*`:
+ * Written out, a [column group][ColumnGroup] is shown by indentation:
  *
  * ```text
  * name:
@@ -101,6 +102,23 @@ public fun DataRow<*>.schema(): DataFrameSchema = owner.schema()
  * city: String?
  * weight: Int?
  * isHappy: Boolean
+ * ```
+ *
+ * A [frame column][FrameColumn] is shown by `*`, with the columns its dataframes share
+ * indented under it:
+ *
+ * ```kotlin
+ * val nested = dataFrameOf("g")(
+ *     dataFrameOf("a", "b")(1, 2),
+ *     dataFrameOf("a", "b")(3, 4),
+ * )
+ * nested.schema()
+ * ```
+ *
+ * ```text
+ * g: *
+ *     a: Int
+ *     b: Int
  * ```
  *
  * @return The [DataFrameSchema] of this [DataFrame].
@@ -189,7 +207,8 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  * // name: String, age: Int — sorted like the columns of df
  * df.compileTimeSchema()
  *
- * // age: Int, name: String — the compiler-plugin representation order, not the order of df
+ * // age: Int, name: String — `Person` is an interface and has no constructor to take an order
+ * // from, so this is the reflection order, neither the declaration order nor the order of df
  * df.compileTimeSchema(ordered = false)
  * ```
  *
@@ -197,8 +216,12 @@ public fun GroupBy<*, *>.schema(): DataFrameSchema = toDataFrame().schema()
  *   [runtime schema][DataFrame.schema], so that the two schemas are easy to compare;
  *   a column the runtime schema does not have comes first.
  *   If `false`, the columns are ordered as they are represented in the compiler plugin:
- *   by the primary constructor for a `data class` marker, and otherwise in the order
- *   reflection reports the properties of [T] in — which is not their declaration order.
+ *   when [T] has a primary constructor, or a single constructor, its parameter order wins.
+ *   That holds for any class with such a constructor, `data` or not; a Java record is the one
+ *   exception, its constructor cannot be read.
+ *   Without such a constructor — for an interface marker, for instance — the order is the one
+ *   reflection reports the properties of [T] in, which is neither their declaration order
+ *   nor the order of the columns.
  * @return The [DataFrameSchema] that follows from the type argument [T] of this [DataFrame].
  * @see [DataFrame.schema]
  */

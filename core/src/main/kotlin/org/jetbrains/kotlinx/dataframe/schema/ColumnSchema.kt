@@ -122,15 +122,27 @@ public sealed class ColumnSchema {
      * Column schemas of different [kinds][kind] are never comparable: the result is then
      * [CompareResult.None], whatever the [comparisonMode] is.
      *
-     * For [Value] the [types][type] are compared, for [Group] and [Frame] their
-     * [DataFrameSchema]s. How strict that comparison is, is decided by the [comparisonMode];
+     * For [Value] the [types][type] are compared, and for [Group] the [DataFrameSchema] of the
+     * nested columns. How strict that comparison is, is decided by the [comparisonMode];
      * see [ComparisonMode] for what each mode means.
+     *
+     * For [Frame] the [DataFrameSchema] of the dataframes it holds is compared as well, but
+     * [nullability][nullable] counts too: two frame column schemas over the same nested schema
+     * that differ in nullability never match, whatever the [comparisonMode] is. The nullable one
+     * comes out [IsSuper][CompareResult.IsSuper] of the other, and the other
+     * [IsDerived][CompareResult.IsDerived] of it.
+     *
+     * This comparison ignores the order of the columns inside a nested schema, while [equals]
+     * requires the same columns in the same order; see
+     * [equals][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.equals]
+     * for that difference.
      *
      * @param [other] The column schema to compare this one with.
      * @param [comparisonMode] The [mode][ComparisonMode] to compare the column schemas by.
      * @return a [CompareResult] that indicates whether this column schema compared to [other] is
      *   [matching][CompareResult.Matches], [derived][CompareResult.IsDerived],
      *   [superset][CompareResult.IsSuper], or [incomparable][CompareResult.None].
+     * @see [ColumnSchema.equals]
      */
     public fun compare(other: ColumnSchema, comparisonMode: ComparisonMode = LENIENT): CompareResult {
         if (kind != other.kind) return CompareResult.None

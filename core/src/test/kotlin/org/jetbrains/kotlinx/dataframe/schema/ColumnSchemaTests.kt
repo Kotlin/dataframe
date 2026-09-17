@@ -49,6 +49,23 @@ class ColumnSchemaTests {
     }
 
     @Test
+    fun `a frame column schema is compared by its nullability too`() {
+        val schema = dataFrameOf("a")(1).schema()
+        val nullable = ColumnSchema.Frame(schema, nullable = true, contentType = null)
+        val notNull = ColumnSchema.Frame(schema, nullable = false, contentType = null)
+        // the nested schema is the same one, so nullability is the only difference left
+        for (mode in ComparisonMode.entries) {
+            nullable.compare(notNull, mode) shouldBe CompareResult.IsSuper
+            notNull.compare(nullable, mode) shouldBe CompareResult.IsDerived
+        }
+        // with the nullability equal, the same pair does match, even strictly
+        notNull.compare(
+            ColumnSchema.Frame(schema, nullable = false, contentType = null),
+            ComparisonMode.STRICT,
+        ) shouldBe CompareResult.Matches
+    }
+
+    @Test
     fun `a value column schema is compared by its type`() {
         val int = ColumnSchema.Value(typeOf<Int>())
         val number = ColumnSchema.Value(typeOf<Number>())

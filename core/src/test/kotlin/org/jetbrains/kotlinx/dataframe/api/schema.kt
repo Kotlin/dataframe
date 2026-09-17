@@ -148,6 +148,16 @@ class SchemaTests {
     }
 
     @Test
+    fun `unordered, the constructor order wins for a plain class marker as well`() {
+        // `data` is not what makes the constructor count: having the constructor is
+        val df = dataFrameOf("name", "age")("Alice", 15).cast<PersonClass>()
+        df.compileTimeSchema(ordered = false).columns.keys.toList() shouldBe listOf("name", "age")
+        // the same properties behind an interface marker, which has no constructor to order by
+        val byInterface = dataFrameOf("name", "age")("Alice", 15).cast<Person>()
+        byInterface.compileTimeSchema(ordered = false).columns.keys.toList() shouldBe listOf("age", "name")
+    }
+
+    @Test
     fun `a marker without the DataSchema annotation still contributes its properties`() {
         // the annotation is not what makes a property a column; the properties of `T` are
         val df = dataFrameOf("b", "c")(1, 2).cast<Nested>()
@@ -185,6 +195,10 @@ private interface Person {
 @DataSchema
 private data class PersonRecord(val name: String, val age: Int)
 
+// the same constructor without `data`, to show that the order does not depend on the modifier
+@DataSchema
+private class PersonClass(val name: String, val age: Int)
+
 // `SchemaKDocExampleTests` cannot host the `compileTimeSchema` example: it extends `TestBase`,
 // which brings its own sample `Person` schema into scope and shadows the marker declared here.
 class SchemaKDocExampleTests : TestBase() {
@@ -207,6 +221,21 @@ class SchemaKDocExampleTests : TestBase() {
             |city: String?
             |weight: Int?
             |isHappy: Boolean
+            """.trimMargin()
+    }
+
+    @Test
+    fun `KDoc example -- a frame column is shown by a star`() {
+        val nested = dataFrameOf("g")(
+            dataFrameOf("a", "b")(1, 2),
+            dataFrameOf("a", "b")(3, 4),
+        )
+        nested.schema().toString() shouldBe
+            """
+            |g: *
+            |    a: Int
+            |    b: Int
+            |
             """.trimMargin()
     }
 

@@ -405,6 +405,13 @@ and then use add it using `@include`:
  * For more information: {@include [DocumentationUrls.Move]}
 ```
 
+To name a page in the text itself, link it inline instead of adding a second paragraph:
+
+```
+ * The examples below use the same [DataFrame] as the
+ * [`schema` page on the documentation website]({@include [DocumentationUrls.Url]}/schema.html):
+```
+
 #### Columns selection information
 
 For any method with columns selection, add a section with information about the columns selection.
