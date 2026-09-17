@@ -163,6 +163,11 @@ Run, in this order (`korro` **must** run after `test`):
 ./gradlew :samples:updateShadowResources
 ```
 
+**Never skip `clean`, and always run it before `build`/`test`/`korro`.** Without it, stale artifacts
+from a previous build — outdated korro output lines, old sample outputs, snippets of samples you
+renamed or deleted — survive and get injected into the documentation, so the page silently shows
+wrong content.
+
 Then verify, and report honestly if anything failed:
 
 - the test run passed;
