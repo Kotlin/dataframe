@@ -241,7 +241,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         group = buildExampleProjectsGroup
         dependsOn(syncAllExampleFolders, generateAllExampleFoldersTests)
 
-        if (buildSystem == BuildSystem.MAVEN && isDev) {
+        if (buildSystem != BuildSystem.GRADLE && isDev) {
             // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
             dependsOn(":publishLocal")
         }
@@ -252,6 +252,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         useJUnitPlatform()
         filter { includeTestsMatching(testClassName) }
         testLogging { events("passed", "skipped", "failed") }
+        outputs.upToDateWhen { false }
 
         // pass down project parameters -> JUnit configuration parameters
         val props = listOf(

@@ -60,7 +60,7 @@ internal fun Project.setupGradleSyncVersionsTask(
             gradleProperties.writeText(gradlePropertiesContent.joinToString("\n"))
 
             // overwrite libs.versions.toml
-            syncLibsVersionsToml(folder, versions)
+            syncLibsVersionsToml(folder.resolve("gradle"), versions)
 
             // overwrite settings.gradle.kts
 
@@ -123,7 +123,7 @@ internal fun Project.setupGradleSyncVersionsTask(
     }
 
 internal fun syncLibsVersionsToml(folder: File, versions: Map<String, String>) {
-    val libsVersionsToml = folder.resolve("gradle/libs.versions.toml")
+    val libsVersionsToml = folder.resolve("libs.versions.toml")
     val versionRegex = """([a-zA-Z0-9-]+)\s*=\s*".+"""".toRegex()
     val newLibsVersionsTomlContent = libsVersionsToml.readText().lines().joinToString("\n") {
         val match = versionRegex.matchEntire(it) ?: return@joinToString it

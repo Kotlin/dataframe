@@ -20,10 +20,10 @@ repositories:
 
 settings:
   kotlin:
-    version: 2.4.10
+    version: 2.4.20 # TODO $libs.versions.kotlin
     dataframe:
       enabled: true
-      # If you don't use libs.versions.toml, you can specify the library version like this:
+      # If you don't use libs.versions.toml for dependencies, you can specify the library version like this:
       # version: 1.0.0-rc1
 
 # Run Ktlint format like:
@@ -40,5 +40,6 @@ mavenPlugins:
       # changes in the same commit as where the original code changes were made.
       commandlineArgs: "-classpath %classpath com.pinterest.ktlint.Main --format --relative"
     dependencies:
+      # TODO - $libs.ktlint.cli
       - com.pinterest.ktlint:ktlint-cli:1.8.0
 

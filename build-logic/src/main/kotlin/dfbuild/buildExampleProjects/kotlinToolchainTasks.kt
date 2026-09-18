@@ -29,8 +29,21 @@ internal fun Project.setupKotlinToolchainSyncVersionsTask(
 
         val sourceEditorConfig = file(".editorconfig")
 
+        val kotlinVersion = versions["kotlin"]!!
+
         doLast {
-            // TODO
+            // TODO sync ktlint version and maven exec plugin version
+            //   Requires: https://youtrack.jetbrains.com/issue/KTC-5915
+
+            // overwrite kotlin version, TODO https://youtrack.jetbrains.com/issue/KTC-5473
+            val moduleYaml = folder.resolve("module.yaml")
+            val modifiedModuleYamlText = moduleYaml
+                .readText()
+                .replace(
+                    Regex("settings:\n {2}kotlin:\n {4}version: \\S+"),
+                    "settings:\n  kotlin:\n    version: $kotlinVersion",
+                )
+            moduleYaml.writeText(modifiedModuleYamlText)
 
             // overwrite libs.versions.toml
             syncLibsVersionsToml(folder, versions)
