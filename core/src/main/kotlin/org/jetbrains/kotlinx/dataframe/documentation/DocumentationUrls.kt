@@ -137,6 +137,12 @@ public interface DocumentationUrls {
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
     public typealias Add = Nothing
 
+    /** [See `append` on the documentation website.]({@include [Url]}/append.html) */
+    public typealias Append = Nothing
+
+    /** [See `appendNulls` on the documentation website.]({@include [Url]}/appendnulls.html) */
+    public typealias AppendNulls = Nothing
+
     /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
     public typealias All = Nothing
 
