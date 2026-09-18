@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -222,7 +223,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  * // Renames all numeric columns to "camelCase"
  * df.rename { colsOf<Number>() }.toCamelCase()
  * ```
- * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
+ * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
  */
 @Interpretable("Rename")
 public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
@@ -274,8 +275,9 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
  * ```
- * @param [columns] The [<code>Columns Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
+ * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
  */
+@StringApiInterpretable(interpreter = "Rename", stringArgument = "cols", targetArgument = "columns")
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
 
 /**

@@ -16,7 +16,7 @@ Submit issues [here](https://github.com/Kotlin/dataframe/issues).
       reproduce them.
     * If the bug is in behavior, then explain what behavior you've expected and what you've got.
 * When submitting a feature request:
-    * Explain why you need the feature &mdash, your use case, and your domain.
+    * Explain why you need the feature &mdash; your use case, and your domain.
     * Explaining the problem you face is more important than suggesting a solution.
       Report your issue even if you don't have any proposed solution.
     * If there is an alternative way to do what you need, show the alternative's code.

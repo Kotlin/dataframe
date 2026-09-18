@@ -82,13 +82,13 @@ public interface DocumentationUrls {
         public typealias FillNA = Nothing
     }
 
-    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
+    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanandna.html) */
     public interface NanAndNa {
 
-        /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
+        /** [See `NaN` on the documentation website.]({@include [Url]}/nanandna.html#nan) */
         public typealias NaN = Nothing
 
-        /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
+        /** [See `NA` on the documentation website.]({@include [Url]}/nanandna.html#na) */
         public typealias NA = Nothing
     }
 
@@ -158,22 +158,22 @@ public interface DocumentationUrls {
     /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
     public typealias AsIterable = Nothing
 
-    /** [See `asSequence` on the documentation website.]({@include [Url]}//assequencecolumn.html) */
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
     public typealias AsSequenceCol = Nothing
 
-    /** [See `asSequence` on the documentation website.]({@include [Url]}//assequence.html) */
+    /** [See `asSequence` on the documentation website.]({@include [Url]}/assequence.html) */
     public typealias AsSequenceDf = Nothing
 
-    /** [See `associateBy` on the documentation website.]({@include [Url]}//associateby.html) */
+    /** [See `associateBy` on the documentation website.]({@include [Url]}/associateby.html) */
     public typealias AssociateBy = Nothing
 
-    /** [See `associate` on the documentation website.]({@include [Url]}//associate.html) */
+    /** [See `associate` on the documentation website.]({@include [Url]}/associate.html) */
     public typealias Associate = Nothing
 
-    /** [See `between` on the documentation website.]({@include [Url]}//between.html) */
+    /** [See `between` on the documentation website.]({@include [Url]}/between.html) */
     public typealias Between = Nothing
 
-    /** [See `cast` on the documentation website.]({@include [Url]}//cast.html) */
+    /** [See `cast` on the documentation website.]({@include [Url]}/cast.html) */
     public typealias Cast = Nothing
 
     /** [See `chunked` on the documentation website.]({@include [Url]}/chunked.html) */
@@ -239,6 +239,12 @@ public interface DocumentationUrls {
     /** [See `countDistinct` on the documentation website.]({@include [Url]}/countdistinct.html) */
     public typealias CountDistinct = Nothing
 
+    /** [See `isEmpty` on the documentation website.]({@include [Url]}/isempty.html) */
+    public typealias IsEmpty = Nothing
+
+    /** [See `isNotEmpty` on the documentation website.]({@include [Url]}/isempty.html#isnotempty) */
+    public typealias IsNotEmpty = Nothing
+
     /** [See `valueCounts` on the documentation website.]({@include [Url]}/valuecounts.html) */
     public typealias ValueCounts = Nothing
 
@@ -247,6 +253,9 @@ public interface DocumentationUrls {
 
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
+
+    /** [See `schema` on the documentation website.]({@include [Url]}/schema.html) */
+    public typealias Schema = Nothing
 
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
     public typealias Format = Nothing
@@ -299,7 +308,7 @@ public interface DocumentationUrls {
     /** [See "`Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
     public typealias PivotAggregation = Nothing
 
-    /** [See "Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    /** [See "`Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
     public typealias PivotAggregationStatistics = Nothing
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
@@ -495,6 +504,9 @@ public interface DocumentationUrls {
 
     /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
     public typealias SortWith = Nothing
+
+    /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
+    public typealias Indices = Nothing
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing

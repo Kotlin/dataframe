@@ -65,7 +65,7 @@ public inline fun <reified T> DataFrame<*>.castTo(
  * }
  * ```
  *
- * For more information: [See `cast` on the documentation website.](https://kotlin.github.io/dataframe//cast.html)
+ * For more information: [See `cast` on the documentation website.](https://kotlin.github.io/dataframe/cast.html)
  */
 public inline fun <reified T> DataFrame<*>.castTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: Function<DataFrame<T>>,

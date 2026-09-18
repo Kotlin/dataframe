@@ -48,9 +48,12 @@ val df = DataFrame.readJson("https://kotlin.github.io/dataframe/resources/exampl
 
 <!---END-->
 
-A JSON `null`, as well as a missing property, is read as `null`, so the corresponding column becomes nullable.
-This includes array columns: `[null, [123], []]` is read as a `List<Int>?` column holding `null`, `[123]`, and
-an empty list.
+A JSON `null` is read as `null`, so the corresponding column becomes nullable. A property that some records
+simply don't have is read as `null` as well — a [`DataFrame`](DataFrame.md) is rectangular, so every row needs
+a value in every column.
+
+This also holds for array columns: `[null, [123], []]` is read as a `List<Int>?` column holding `null`, `[123]`,
+and an empty list.
 
 When the same property holds values of different shapes across records, extra "value" and "array" columns are
 created; see [managing type clashes](read.md#manage-type-clashes) for the exact rules.
@@ -67,5 +70,5 @@ df.writeJson("example.json")
 
 <!---END-->
 
-Frames read from JSON with a type clash are written back to their original form; see
+A [`DataFrame`](DataFrame.md) read from JSON with a type clash is written back to its original form; see
 [writing to JSON](write.md#writing-to-json) for the details.

@@ -50,7 +50,7 @@ import java.time.LocalTime as JavaLocalTime
  * Used as a result of [<code>DbType.getPreprocessedValueType</code>][DbType.getPreprocessedValueType].
  *
  * ### Example
- * ```
+ * ```kotlin
  * val format = LocalDateTime.Format {
  *     year(); char('-'); monthNumber(); char('-'); day()
  *     char(' ')
@@ -58,19 +58,24 @@ import java.time.LocalTime as JavaLocalTime
  *     chars(" UTC")
  * }
  *
- * val sqliteCustom = Sqlite.withCustomConverters {
- *     // Every column declared with "MY_DATETIME" type is parsed from custom text into Instant.
+ * val sqlite = Sqlite.withCustomConverters {
+ *     // Parse a custom text representation into Instant.
  *     forType("MY_DATETIME") { raw: String? ->
  *         raw?.let { LocalDateTime.parse(it, format).toInstant(TimeZone.UTC) }
  *     }
- *     // Identity shortcut — pin the declared type LONGVARCHAR to `String?` regardless of
- *     // how SQLite's type affinity would classify it.
+ *
+ *     // Explicitly treat values columns with of `LONGVARCHAR` type as nullable strings.
+ *     // This is necessary because SQLite type affinity assigns those columns the `NUMERIC`
+ *     // base type, causing DataFrame to expect integer values.
+ *     // No conversion is performed; only the expected value type is specified.
  *     forType<String?>("LONGVARCHAR")
- *     // The "ratio" column overrides its declared type — read as Double.
- *     forColumn("ratio") { raw: String -> raw.toDouble() }
+ *
+ *     // Override conversion for a specific "time" column.
+ *     // Column-specific converters take precedence over type-specific converters.
+ *     forColumn("time") { raw: String -> raw.toDouble() }
  * }
  *
- * val df = DataFrame.readSqlTable(connection, "events", dbType = sqliteCustom)
+ * val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
  * ```
  */
 public data class SqliteCustomTypeConverter<T, R>(
@@ -94,7 +99,7 @@ public data class SqliteCustomTypeConverter<T, R>(
  *    declared type and the built-in mapping picks the wrong Kotlin type.
  *
  * ### Example
- * ```
+ * ```kotlin
  * val format = LocalDateTime.Format {
  *     year(); char('-'); monthNumber(); char('-'); day()
  *     char(' ')
@@ -102,19 +107,24 @@ public data class SqliteCustomTypeConverter<T, R>(
  *     chars(" UTC")
  * }
  *
- * val sqliteCustom = Sqlite.withCustomConverters {
- *     // Every column declared with "MY_DATETIME" type is parsed from custom text into Instant.
+ * val sqlite = Sqlite.withCustomConverters {
+ *     // Parse a custom text representation into Instant.
  *     forType("MY_DATETIME") { raw: String? ->
  *         raw?.let { LocalDateTime.parse(it, format).toInstant(TimeZone.UTC) }
  *     }
- *     // Identity shortcut — pin the declared type LONGVARCHAR to `String?` regardless of
- *     // how SQLite's type affinity would classify it.
+ *
+ *     // Explicitly treat values columns with of `LONGVARCHAR` type as nullable strings.
+ *     // This is necessary because SQLite type affinity assigns those columns the `NUMERIC`
+ *     // base type, causing DataFrame to expect integer values.
+ *     // No conversion is performed; only the expected value type is specified.
  *     forType<String?>("LONGVARCHAR")
- *     // The "ratio" column overrides its declared type — read as Double.
- *     forColumn("ratio") { raw: String -> raw.toDouble() }
+ *
+ *     // Override conversion for a specific "time" column.
+ *     // Column-specific converters take precedence over type-specific converters.
+ *     forColumn("time") { raw: String -> raw.toDouble() }
  * }
  *
- * val df = DataFrame.readSqlTable(connection, "events", dbType = sqliteCustom)
+ * val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
  * ```
  */
 public class SqliteCustomConvertersBuilder
@@ -355,6 +365,11 @@ public class Sqlite(
         // 4) DECIMAL / NUMERIC — trust the driver-reported class of the stored value.
         when (tableColumnMetadata.jdbcType) {
             Types.DECIMAL, Types.NUMERIC -> return jdbcToDfConverterFor<Any>(expectedKType)
+        }
+
+        // 5) CLOB — stored as String.
+        if ("CLOB" in declaredUpper) {
+            return jdbcToDfConverterFor<String>(expectedKType)
         }
 
         // 5) Fallback — delegate to the base [DbType] end-to-end pipeline.
@@ -598,7 +613,7 @@ public class Sqlite(
          * The converting lambda receives the raw value and returns the converted result;
          *
          * ### Example
-         * ```
+         * ```kotlin
          * val format = LocalDateTime.Format {
          *     year(); char('-'); monthNumber(); char('-'); day()
          *     char(' ')
@@ -606,16 +621,24 @@ public class Sqlite(
          *     chars(" UTC")
          * }
          *
-         * val sqliteCustom = Sqlite.withCustomConverters {
-         *     // Every column declared with "MY_DATETIME" type is parsed from custom text into Instant.
+         * val sqlite = Sqlite.withCustomConverters {
+         *     // Parse a custom text representation into Instant.
          *     forType("MY_DATETIME") { raw: String? ->
          *         raw?.let { LocalDateTime.parse(it, format).toInstant(TimeZone.UTC) }
          *     }
-         *     // The "ratio" column overrides its declared type — read as Double.
-         *     forColumn("ratio") { raw: String -> raw.toDouble() }
+         *
+         *     // Explicitly treat values columns with of `LONGVARCHAR` type as nullable strings.
+         *     // This is necessary because SQLite type affinity assigns those columns the `NUMERIC`
+         *     // base type, causing DataFrame to expect integer values.
+         *     // No conversion is performed; only the expected value type is specified.
+         *     forType<String?>("LONGVARCHAR")
+         *
+         *     // Override conversion for a specific "time" column.
+         *     // Column-specific converters take precedence over type-specific converters.
+         *     forColumn("time") { raw: String -> raw.toDouble() }
          * }
          *
-         * val df = DataFrame.readSqlTable(connection, "events", dbType = sqliteCustom)
+         * val df = DataFrame.readSqlTable(connection, "events", dbType = sqlite)
          * ```
          */
         public fun withCustomConverters(block: SqliteCustomConvertersBuilder.() -> Unit): Sqlite {

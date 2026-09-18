@@ -156,7 +156,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
+     * @param [col\] The [ColumnAccessor] pointing to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     private typealias ColGroupReferenceDocs = Nothing

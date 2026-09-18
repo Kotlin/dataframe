@@ -252,7 +252,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     private typealias FrameColReferenceDocs = Nothing
@@ -305,7 +305,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -361,7 +361,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -426,7 +426,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -483,7 +483,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -539,7 +539,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -595,7 +595,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)

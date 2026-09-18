@@ -40,7 +40,7 @@ This is why it was designed to be hierarchical and allows nesting of columns and
 * **Immutable** — every operation returns a new instance of [`DataFrame`](DataFrame.md)  reusing underlying storage wherever it's possible.
 * **Readable** — data transformation operations are defined in DSL close to natural language.
 * **Practical** — provides simple solutions for common problems and the ability to perform complex tasks.
-* [**Interoperable**](collectionsInterop.md) — convertable with Kotlin data classes and collections.
+* [**Interoperable**](collectionsInterop.md) — convertible with Kotlin data classes and collections.
   This also means conversion to/from other libraries' data structures is usually quite straightforward!
   See our [examples](https://github.com/Kotlin/dataframe/tree/master/examples/projects) 
   for some conversions between DataFrame and [Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark),

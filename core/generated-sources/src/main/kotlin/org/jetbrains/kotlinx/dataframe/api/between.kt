@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.between
  *
  * If [<code>includeBoundaries</code>][includeBoundaries] is `true` (default), values equal to [<code>left</code>][left] or [<code>right</code>][right] are also considered in range.
  *
- * For more information: [See `between` on the documentation website.](https://kotlin.github.io/dataframe//between.html)
+ * For more information: [See `between` on the documentation website.](https://kotlin.github.io/dataframe/between.html)
  *
  * @param left The lower boundary of the range.
  * @param right The upper boundary of the range.

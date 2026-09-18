@@ -54,9 +54,16 @@ object, a [`FrameColumn`](DataColumn.md#framecolumn) becomes a nested array of o
 a JSON array.
 
 There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with a
-[type clash](read.md#manage-type-clashes) can be written back to its original form: when the frame has an unnamed
-"value" or "array" column, a row is instead written as the value it holds — the "value" primitive, else the "array"
-array, else an object of the remaining columns, else — when the row holds no values at all — `null`. For example:
+[type clash](read.md#manage-type-clashes) can be written back to its original form.
+When one of its top-level columns is detected as a "value" or "array" column — it's named `value` or `array` and
+only holds a value in rows where every other column holds none — a row is written as the record it was read from:
+
+* the value of the "value" column, if the row has one;
+* otherwise the array of the "array" column, if the row has one;
+* otherwise an object of the remaining columns, if any of them holds a value;
+* otherwise `null`.
+
+For example:
 
 <!---FUN readAndWriteJson-->
 
@@ -70,9 +77,21 @@ Output:
 
 <!---END-->
 
-> A row of `null`s only is indistinguishable from a JSON `null` element, so
-> `[1,{"label":"record"},{"label":null}]` is written back as `[1,{"label":"record"},null]`.
-> Both forms are read into the exact same [`DataFrame`](DataFrame.md).
+> Only a top-level type clash is restored like this. A clash inside a
+> [`ColumnGroup`](DataColumn.md#columngroup) is written as the group's object, so its "value" and "array"
+> columns show up as ordinary properties: `[{"a":"text"},{"a":[6,7,8]}]` is written back as
+> `[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]`.
+> {style="note"}
+
+> Some JSON records are read into the exact same [`DataFrame`](DataFrame.md), so writing it back can only
+> produce one of them:
+> * a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes
+>   `[1,{"label":"record"},null]`;
+> * an empty array of objects is read as an empty nested [`DataFrame`](DataFrame.md), just like no array at all,
+>   so `[{"label":"record"},[{"a":1}],[]]` becomes `[{"label":"record"},[{"a":1}],null]`.
+>
+> Arrays of primitives don't have the latter problem: they're read into a nullable `List` column, where an empty
+> list and `null` stay distinct.
 > {style="note"}
 
 ### Write to Excel spreadsheet
@@ -175,8 +194,8 @@ implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
 > guide when using Java 9+
 > {style = "warning"}
 
-[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
-and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format)
+and [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files)
 to raw WritableByteChannel, OutputStream, File or ByteArray.
 
 Data may be saved "as is" (like exporting to new Excel file) or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)

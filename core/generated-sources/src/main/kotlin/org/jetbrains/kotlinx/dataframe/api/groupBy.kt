@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionD
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -569,6 +570,8 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  * @return A new [<code>GroupBy</code>][GroupBy] containing the unique combinations of values from the provided [<code>key columns</code>][cols],
  * together with their corresponding groups of rows.
  */
+@Refine
+@StringApiInterpretable(interpreter = "DataFrameGroupBy", stringArgument = "cols", targetArgument = "cols")
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -882,6 +885,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * in a [<code>FrameColumn</code>][FrameColumn] with that name; otherwise, a default name "group" is used.
      *
      * For more information: [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
+     *
+     * See also [<code>schema</code>][GroupBy.schema] — the schema of this [<code>GroupBy</code>][GroupBy] as a [<code>DataFrame</code>][DataFrame].
      *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.

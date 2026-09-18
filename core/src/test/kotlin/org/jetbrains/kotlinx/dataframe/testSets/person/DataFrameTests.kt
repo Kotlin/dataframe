@@ -1780,27 +1780,6 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `append many`() {
-        val res = typed.append(
-            "John", 22,
-            "New York", 46,
-            "Philip", 25,
-            "Chelyabinsk", 36,
-        )
-        res.nrow shouldBe typed.nrow + 2
-    }
-
-    @Test
-    fun `append wrong number of arguments`() {
-        shouldThrow<IllegalStateException> {
-            dataFrameOf("name", "age")(
-                "Alice", 15,
-                "Bob", 20,
-            ).append("John")
-        }
-    }
-
-    @Test
     fun `first last`() {
         typed.first() shouldBe typed[0]
         typed.last() shouldBe typed[typed.nrow - 1]

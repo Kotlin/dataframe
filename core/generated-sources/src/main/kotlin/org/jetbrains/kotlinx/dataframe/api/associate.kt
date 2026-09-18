@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
  * If multiple rows produce the same key, the last row for that key is stored,
  * consistent with Kotlin's [<code>kotlin.collections.associateBy</code>][kotlin.collections.associateBy] behavior.
  *
- * For more information: [See `associateBy` on the documentation website.](https://kotlin.github.io/dataframe//associateby.html)
+ * For more information: [See `associateBy` on the documentation website.](https://kotlin.github.io/dataframe/associateby.html)
  *
  * See also:
  * - [<code>toMap</code>][toMap] — converts a [<code>DataFrame</code>][DataFrame] into a [<code>Map</code>][Map] by using column names as keys
@@ -47,7 +47,7 @@ public inline fun <T, V> DataFrame<T>.associateBy(transform: RowExpression<T, V>
  * If multiple rows produce the same key, the last value for that key is stored,
  * consistent with Kotlin's [<code>kotlin.collections.associate</code>][kotlin.collections.associate] behavior.
  *
- * For more information: [See `associate` on the documentation website.](https://kotlin.github.io/dataframe//associate.html)
+ * For more information: [See `associate` on the documentation website.](https://kotlin.github.io/dataframe/associate.html)
  *
  * See also:
  * - [<code>toMap</code>][toMap] — converts a [<code>DataFrame</code>][DataFrame] into a [<code>Map</code>][Map] by using column names as keys

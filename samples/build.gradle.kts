@@ -71,6 +71,7 @@ dependencies {
     testImplementation(libs.kandy.samples.utils) {
         exclude("org.jetbrains.kotlinx", "dataframe")
     }
+    testImplementation(libs.konsist)
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
@@ -104,6 +105,7 @@ korro {
                 include("toHTML.md")
                 include("guides/*.md")
                 include("concepts/*.md")
+                include("io/*.md")
                 include("schemas/*.md")
                 include("operations/utils/*.md")
                 include("operations/multiple/*.md")
@@ -114,12 +116,17 @@ korro {
                 include("readSqlDatabases.md")
                 include("info/*.md")
                 include("columnArithmetics.md")
+                include("ColumnSelectors.md")
                 include("groupBy.md")
                 include("pivot.md")
                 include("countDistinct.md")
+                include("fill.md")
+                include("drop.md")
                 include("filter.md")
                 include("count.md")
                 include("valueCounts.md")
+                include("sliceRows.md")
+                include("indexing.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
@@ -139,6 +146,7 @@ korro {
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/guides/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/concepts/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/*.kt")
+                include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/io/jdbc/*.kt")
                 include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/schemas/*.kt")
             },
         )
@@ -177,6 +185,7 @@ korro {
 }
 
 tasks.test {
+    maxHeapSize = "4g"
     jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }
 

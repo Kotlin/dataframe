@@ -11,16 +11,18 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
 import org.apache.arrow.memory.RootAllocator
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
-import org.apache.arrow.vector.VectorSchemaRoot
+import org.apache.arrow.vector.TimeStampVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
-import org.apache.arrow.vector.ipc.ArrowFileWriter
 import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
-import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.FloatingPointPrecision
 import org.apache.arrow.vector.types.TimeUnit
 import org.apache.arrow.vector.types.pojo.ArrowType
@@ -55,7 +57,6 @@ import java.io.File
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
-import java.nio.channels.Channels
 import java.sql.DriverManager
 import java.util.Locale
 import kotlin.io.path.toPath
@@ -551,11 +552,19 @@ internal class ArrowKtTest {
             LocalDateTime(2013, 6, 19, 11, 20, 13),
         )
 
+        // Zone-less timestamps are local date-times; the `"UTC"`-tagged ones describe the same points in time,
+        // but as instants. Precision-specific behaviour lives in [ArrowTimestampTzTest].
+        val moments = dates.map { it.toInstant(UtcOffset.ZERO) }
+
         val dataFrame = dataFrameOf(
             "ts_nano" to dates,
+            "ts_nano_tz" to moments,
             "ts_micro" to dates,
+            "ts_micro_tz" to moments,
             "ts_milli" to dates,
+            "ts_milli_tz" to moments,
             "ts_sec" to dates,
+            "ts_sec_tz" to moments,
         )
 
         DataFrame.readArrowFeather(writeArrowTimestamp(dates)) shouldBe dataFrame
@@ -563,65 +572,46 @@ internal class ArrowKtTest {
     }
 
     private fun writeArrowTimestamp(dates: List<LocalDateTime>, streaming: Boolean = false): ByteArray {
-        RootAllocator().use { allocator ->
-            val timeStampMilli = Field(
-                "ts_milli",
-                FieldType.nullable(ArrowType.Timestamp(TimeUnit.MILLISECOND, null)),
-                null,
-            )
+        fun ts(name: String, unit: TimeUnit, zone: String? = null) =
+            Field(name, FieldType.nullable(ArrowType.Timestamp(unit, zone)), null)
+        val fields = listOf(
+            ts("ts_nano", TimeUnit.NANOSECOND),
+            ts("ts_nano_tz", TimeUnit.NANOSECOND, "UTC"),
+            ts("ts_micro", TimeUnit.MICROSECOND),
+            ts("ts_micro_tz", TimeUnit.MICROSECOND, "UTC"),
+            ts("ts_milli", TimeUnit.MILLISECOND),
+            ts("ts_milli_tz", TimeUnit.MILLISECOND, "UTC"),
+            ts("ts_sec", TimeUnit.SECOND),
+            ts("ts_sec_tz", TimeUnit.SECOND, "UTC"),
+        )
+        return arrowBytes(*fields.toTypedArray(), feather = !streaming) { root ->
+            val nano = root.getVector("ts_nano") as TimeStampNanoVector
+            val nanoTz = root.getVector("ts_nano_tz") as TimeStampNanoTZVector
+            val micro = root.getVector("ts_micro") as TimeStampMicroVector
+            val microTz = root.getVector("ts_micro_tz") as TimeStampMicroTZVector
+            val milli = root.getVector("ts_milli") as TimeStampMilliVector
+            val milliTz = root.getVector("ts_milli_tz") as TimeStampMilliTZVector
+            val sec = root.getVector("ts_sec") as TimeStampSecVector
+            val secTz = root.getVector("ts_sec_tz") as TimeStampSecTZVector
+            listOf<TimeStampVector>(nano, nanoTz, micro, microTz, milli, milliTz, sec, secTz)
+                .forEach { it.allocateNew(dates.size) }
 
-            val timeStampMicro = Field(
-                "ts_micro",
-                FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, null)),
-                null,
-            )
-
-            val timeStampNano = Field(
-                "ts_nano",
-                FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, null)),
-                null,
-            )
-
-            val timeStampSec = Field(
-                "ts_sec",
-                FieldType.nullable(ArrowType.Timestamp(TimeUnit.SECOND, null)),
-                null,
-            )
-            val schemaTimeStamp = Schema(
-                listOf(timeStampNano, timeStampMicro, timeStampMilli, timeStampSec),
-            )
-            VectorSchemaRoot.create(schemaTimeStamp, allocator).use { vectorSchemaRoot ->
-                val timeStampMilliVector = vectorSchemaRoot.getVector("ts_milli") as TimeStampMilliVector
-                val timeStampNanoVector = vectorSchemaRoot.getVector("ts_nano") as TimeStampNanoVector
-                val timeStampMicroVector = vectorSchemaRoot.getVector("ts_micro") as TimeStampMicroVector
-                val timeStampSecVector = vectorSchemaRoot.getVector("ts_sec") as TimeStampSecVector
-                timeStampMilliVector.allocateNew(dates.size)
-                timeStampNanoVector.allocateNew(dates.size)
-                timeStampMicroVector.allocateNew(dates.size)
-                timeStampSecVector.allocateNew(dates.size)
-
-                dates.forEachIndexed { index, localDateTime ->
-                    val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
-                    timeStampNanoVector[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
-                    timeStampMicroVector[index] = instant.toEpochMilli() * 1_000L
-                    timeStampMilliVector[index] = instant.toEpochMilli()
-                    timeStampSecVector[index] = instant.toEpochMilli() / 1_000L
-                }
-                vectorSchemaRoot.setRowCount(dates.size)
-                val bos = ByteArrayOutputStream()
-                bos.use { out ->
-                    val arrowWriter = if (streaming) {
-                        ArrowStreamWriter(vectorSchemaRoot, null, Channels.newChannel(out))
-                    } else {
-                        ArrowFileWriter(vectorSchemaRoot, null, Channels.newChannel(out))
-                    }
-                    arrowWriter.use { writer ->
-                        writer.start()
-                        writer.writeBatch()
-                    }
-                }
-                return bos.toByteArray()
+            dates.forEachIndexed { index, localDateTime ->
+                // `epochSecond` and `nano` split the instant without overlapping; adding `nano` on top of
+                // `toEpochMilli()` would count the sub-second part twice (harmless only while every date here
+                // happens to be whole-second).
+                val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
+                val epochNanos = instant.epochSecond * 1_000_000_000L + instant.nano
+                nano[index] = epochNanos
+                nanoTz[index] = epochNanos
+                micro[index] = epochNanos.floorDiv(1_000L)
+                microTz[index] = epochNanos.floorDiv(1_000L)
+                milli[index] = epochNanos.floorDiv(1_000_000L)
+                milliTz[index] = epochNanos.floorDiv(1_000_000L)
+                sec[index] = instant.epochSecond
+                secTz[index] = instant.epochSecond
             }
+            root.setRowCount(dates.size)
         }
     }
 

@@ -120,6 +120,9 @@ benchmark {
         register("sort") {
             include("SortingBenchmark")
         }
+        register("groupBy") {
+            include("GroupByBenchmark")
+        }
     }
 }
 

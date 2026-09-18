@@ -10,7 +10,7 @@ import kotlin.reflect.KType
  * by initializing a [JdbcToDataFrameConverter] instance for each JDBC type.
  *
  * This can be helpful for JDBC databases that support structured data, like [DuckDb]
- * or that need to a lot of type mapping.
+ * or that need a lot of type mapping.
  *
  * This API is experimental and subject to change.
  */

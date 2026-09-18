@@ -256,62 +256,34 @@ internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
     customEncoders: List<CustomEncoder> = emptyList(),
-): JsonArray {
-    val valueColumn = frame.extractValueColumn()
-    val arrayColumn = frame.extractArrayColumn()
-
-    val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
-
-    val data = frame.indices().map { rowIndex ->
-        valueColumn?.get(rowIndex)
-            ?: arrayColumn?.get(rowIndex)?.let {
-                if (arraysAreFrames) {
-                    encodeFrameWithMetadata(
-                        it as AnyFrame,
-                        rowLimit,
-                        customEncoders,
-                    )
-                } else {
-                    null
-                }
-            }
-            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, customEncoders)
-    }
-
-    return buildJsonArray { addAll(data.map { convert(it) }) }
-}
+): JsonArray =
+    encodeFrameRows(
+        frame = frame,
+        encodeArrayOfObjects = { encodeFrameWithMetadata(it, rowLimit, customEncoders) },
+        encodeObject = { objectFrame, rowIndex ->
+            encodeRowWithMetadata(objectFrame, rowIndex, rowLimit, customEncoders)
+        },
+    )
 
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return allColumns.filter { it.name.startsWith(VALUE_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { valueCol ->
-            // check that value in this column is not null only when other values are null
-            if (valueCol.kind() != ColumnKind.Value) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidValueColumn = indices().all { row ->
-                    if (!valueCol.isNullAt(row)) {
-                        allColumns.all { col ->
-                            if (col.name != valueCol.name) {
-                                col.isNullAt(row)
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidValueColumn && valueCol.holdsAnyValue()) {
-                    valueCol
-                } else {
-                    null
-                }
+        ?.takeIf { it.kind() == ColumnKind.Value }
+        // 'readJson' cannot have created an all-null 'value' column, consider it a regular one
+        ?.takeIf { it.holdsAnyValue() }
+        ?.takeIf { valueCol ->
+            val otherCols = allColumns - valueCol
+            // It's a valid 'value' column only if for each value it holds,
+            // the corresponding cells in the other columns hold no value.
+            val isValidValueColumn = indices().all { row ->
+                !valueCol.holdsValueAt(row) || otherCols.all { !it.holdsValueAt(row) }
             }
+
+            isValidValueColumn
         }
 }
 
@@ -324,42 +296,50 @@ internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
 // An unnamed `value`/`array` column always holds at least one value, as it's only created for
 // records that actually hold a value or an array.
 // A column of `null`s only was created by the user, like dataFrameOf("value" to listOf(null, null)).
-private fun AnyCol.holdsAnyValue(): Boolean = indices.any { !isNullAt(it) }
+private fun AnyCol.holdsAnyValue(): Boolean = indices.any { holdsValueAt(it) }
 
 internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return columns().filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
+    return allColumns
+        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
-        ?.let { arrayCol ->
-            if (arrayCol.kind() == ColumnKind.Group) {
-                null
-            } else {
-                // check that value in this column is not null only when other values are null
-                val isValidArrayColumn = indices().all { row ->
-                    if (!arrayCol.isNullAt(row)) {
-                        allColumns.all { col ->
-                            if (col.name != arrayCol.name) {
-                                col.isNullAt(row)
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        true
-                    }
-                }
-                if (isValidArrayColumn && arrayCol.holdsAnyValue()) {
-                    arrayCol
-                } else {
-                    null
-                }
+        // 'readJson' stores arrays either as a `List` value column or as a frame column
+        ?.takeIf { it.kind() == ColumnKind.Frame || it.isList() }
+        // 'readJson' cannot have created an all-null 'array' column, consider it a regular one
+        ?.takeIf { it.holdsAnyValue() }
+        ?.takeIf { arrayCol ->
+            val otherCols = allColumns - arrayCol
+            // It's a valid 'array' column only if for each value it holds,
+            // the corresponding cells in the other columns hold no value.
+            val isValidArrayColumn = indices().all { row ->
+                !arrayCol.holdsValueAt(row) || otherCols.all { !it.holdsValueAt(row) }
             }
+            isValidArrayColumn
         }
 }
 
-internal fun encodeFrame(frame: AnyFrame): JsonArray {
+internal fun encodeFrame(frame: AnyFrame): JsonArray =
+    encodeFrameRows(
+        frame = frame,
+        encodeArrayOfObjects = { encodeFrame(it) },
+        encodeObject = { objectFrame, rowIndex -> encodeRow(objectFrame, rowIndex) },
+    )
+
+/**
+ * Encodes each row of [frame] as the JSON record it was read from: the value of the unnamed "value" column,
+ * else the array of the unnamed "array" column, else an object built from the remaining columns with
+ * [encodeObject], else — when the row holds no values at all — `null`.
+ *
+ * Arrays of objects are encoded with [encodeArrayOfObjects], so that the caller decides whether the nested
+ * frame is written with or without metadata.
+ */
+private inline fun encodeFrameRows(
+    frame: AnyFrame,
+    encodeArrayOfObjects: (AnyFrame) -> JsonElement,
+    encodeObject: (objectFrame: AnyFrame, rowIndex: Int) -> JsonElement?,
+): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
@@ -372,20 +352,20 @@ internal fun encodeFrame(frame: AnyFrame): JsonArray {
 
     val data = frame.indices().map { rowIndex ->
         when {
-            valueColumn?.isNullAt(rowIndex) == false -> valueColumn[rowIndex]
+            valueColumn?.holdsValueAt(rowIndex) == true -> valueColumn[rowIndex]
 
-            arrayColumn?.isNullAt(rowIndex) == false ->
+            arrayColumn?.holdsValueAt(rowIndex) == true ->
                 if (arraysAreFrames) {
-                    encodeFrame(arrayColumn[rowIndex] as AnyFrame)
+                    encodeArrayOfObjects(arrayColumn[rowIndex] as AnyFrame)
                 } else {
                     JsonArray((arrayColumn[rowIndex] as List<*>).map { convert(it) })
                 }
 
             // a record that's neither a single value nor an array is encoded as an object,
             // unless it holds no values at all; then the record was `null` itself
-            hasUnnamedColumns && objectColumns.all { it.isNullAt(rowIndex) } -> null
+            hasUnnamedColumns && objectColumns.none { it.holdsValueAt(rowIndex) } -> null
 
-            else -> encodeRow(objectFrame, rowIndex)
+            else -> encodeObject(objectFrame, rowIndex)
         }
     }
 
@@ -393,14 +373,14 @@ internal fun encodeFrame(frame: AnyFrame): JsonArray {
 }
 
 /**
- * Whether the value of this column at [rowIndex] carries no data;
- * empty [FrameColumn] values and [ColumnGroup] rows filled with `null`s count as no data too.
+ * Whether the value of this column at [rowIndex] carries any data;
+ * empty [FrameColumn] values and [ColumnGroup] rows filled with `null`s carry none.
  */
-private fun AnyCol.isNullAt(rowIndex: Int): Boolean =
+private fun AnyCol.holdsValueAt(rowIndex: Int): Boolean =
     when (this) {
-        is ColumnGroup<*> -> columns().all { it.isNullAt(rowIndex) }
-        is FrameColumn<*> -> this[rowIndex].isEmpty()
-        else -> this[rowIndex] == null
+        is ColumnGroup<*> -> columns().any { it.holdsValueAt(rowIndex) }
+        is FrameColumn<*> -> !this[rowIndex].isEmpty()
+        else -> this[rowIndex] != null
     }
 
 internal fun encodeDataFrameWithMetadata(

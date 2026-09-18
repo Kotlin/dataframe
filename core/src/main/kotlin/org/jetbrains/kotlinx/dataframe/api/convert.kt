@@ -272,7 +272,7 @@ private typealias CommonConvertDocs = Nothing
  * df.convert { colsOf<String>() }.to<Double>()
  * df.convert { colsAtAnyDepth().colGroups() }.asFrame { it.add("nan") { Double.NaN } }
  * ```
- * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to convert.
  */
 @Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
@@ -289,7 +289,7 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T,
  * df.convert("person", "position").toStr()
  * df.convert("value").with { (it as Number).toDouble() }
  * ```
- * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to group.
+ * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to convert.
  */
 @Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
@@ -638,13 +638,13 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 /**
- * Converts values in this column to the specified [type].
+ * Converts values in this column to the specified [type][newType].
  *
  * For the full list of supported types, see [SupportedTypes][ConvertDocs.SupportedTypes].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
- * @param type The target type, provided as a [KType], to convert values to.
+ * @param [newType] The target type, provided as a [KType], to convert values to.
  * @return A new [DataColumn] with the values converted to [type].
  */
 @Suppress("UNCHECKED_CAST")

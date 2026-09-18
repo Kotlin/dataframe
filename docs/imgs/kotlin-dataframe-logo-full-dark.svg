@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1350 300" role="img" aria-labelledby="title desc">
+  <title id="title">Kotlin DataFrame</title>
+  <desc id="desc">Kotlin DataFrame logo for dark backgrounds</desc>
+  <defs>
+    <linearGradient id="horizontalGradient" x1="290" y1="470" x2="290" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C711E1"/>
+      <stop offset="0.5" stop-color="#C711E1"/>
+      <stop offset="1" stop-color="#E44857"/>
+    </linearGradient>
+    <linearGradient id="verticalGradient" x1="290" y1="110" x2="290" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C711E1"/>
+      <stop offset="0.5" stop-color="#7F52FF"/>
+      <stop offset="1" stop-color="#7F52FF"/>
+    </linearGradient>
+    <mask id="weaveMask">
+      <rect width="580" height="580" fill="#fff"/>
+      <rect x="240" y="150" width="100" height="60" fill="#000"/>
+      <rect x="130" y="260" width="100" height="60" fill="#000"/>
+      <rect x="350" y="260" width="100" height="60" fill="#000"/>
+      <rect x="240" y="370" width="100" height="60" fill="#000"/>
+    </mask>
+    <filter id="weaveShadowBlur" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <clipPath id="clipRowTop"><rect x="110" y="150" width="360" height="60" rx="11.9"/></clipPath>
+    <clipPath id="clipRowMiddle"><rect x="110" y="260" width="360" height="60" rx="11.9"/></clipPath>
+    <clipPath id="clipRowBottom"><rect x="110" y="370" width="360" height="60" rx="11.9"/></clipPath>
+    <clipPath id="clipColLeft"><rect x="150" y="110" width="60" height="360" rx="11.9"/></clipPath>
+    <clipPath id="clipColMiddle"><rect x="260" y="110" width="60" height="360" rx="11.9"/></clipPath>
+    <clipPath id="clipColRight"><rect x="370" y="110" width="60" height="360" rx="11.9"/></clipPath>
+    <mask id="maskOutsideHorizontalBars">
+      <rect x="-100" y="-100" width="800" height="800" fill="#fff"/>
+      <rect x="100" y="150" width="380" height="60" fill="#000"/>
+      <rect x="100" y="260" width="380" height="60" fill="#000"/>
+      <rect x="100" y="370" width="380" height="60" fill="#000"/>
+    </mask>
+  </defs>
+
+  <g transform="scale(0.5172413793)">
+    <g fill="url(#horizontalGradient)" transform="matrix(1.6111111 0 0 1.6111111 -177.22223 -177.22223)">
+      <rect x="110" y="150" width="360" height="60" rx="11.9"/>
+      <rect x="110" y="260" width="360" height="60" rx="11.9"/>
+      <rect x="110" y="370" width="360" height="60" rx="11.9"/>
+    </g>
+    <g fill="#000" opacity="0.33" transform="matrix(1.6111111 0 0 1.6111111 -177.22223 -177.22223)">
+      <g clip-path="url(#clipRowTop)"><rect x="153" y="130" width="60" height="100" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipRowTop)"><rect x="373" y="130" width="60" height="100" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipRowMiddle)"><rect x="263" y="240" width="60" height="100" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipRowBottom)"><rect x="153" y="350" width="60" height="100" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipRowBottom)"><rect x="373" y="350" width="60" height="100" filter="url(#weaveShadowBlur)"/></g>
+    </g>
+    <g fill="url(#verticalGradient)" mask="url(#weaveMask)" transform="matrix(1.6111111 0 0 1.6111111 -177.22223 -177.22223)">
+      <rect x="150" y="110" width="60" height="360" rx="11.9"/>
+      <rect x="260" y="110" width="60" height="360" rx="11.9"/>
+      <rect x="370" y="110" width="60" height="360" rx="11.9"/>
+    </g>
+    <g fill="#000" opacity="0.33" mask="url(#maskOutsideHorizontalBars)" transform="matrix(1.6111111 0 0 1.6111111 -177.22223 -177.22223)">
+      <g clip-path="url(#clipColMiddle)"><rect x="240" y="153" width="100" height="60" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipColLeft)"><rect x="130" y="263" width="100" height="60" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipColRight)"><rect x="350" y="263" width="100" height="60" filter="url(#weaveShadowBlur)"/></g>
+      <g clip-path="url(#clipColMiddle)"><rect x="240" y="373" width="100" height="60" filter="url(#weaveShadowBlur)"/></g>
+    </g>
+  </g>
+
+  <text x="350" y="150" fill="#F2F2F2" font-family="JetBrains Sans, Inter, Arial, sans-serif" font-size="96" font-weight="600" letter-spacing="-2" dominant-baseline="middle">Kotlin DataFrame</text>
+</svg>

@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -72,6 +73,8 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.mean(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "Mean1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     meanFor(skipNaN) { columns.toNumberColumns() }
 
@@ -131,6 +134,8 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.mean(skipNaN).aggregateFor(this, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMean0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     meanFor(skipNaN) { columns.toNumberColumns() }
 
@@ -156,6 +161,8 @@ public fun <T, C : Number?> Grouped<T>.mean(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.mean(skipNaN).aggregateAll(this, name, columns)
 
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMean2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.mean(
     vararg columns: String,
     name: String? = null,

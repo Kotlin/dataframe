@@ -50,7 +50,7 @@ This is required for row expressions and for some operations with a column selec
 If the specified type does not match the actual column type,
 a runtime exception may be thrown.
 
-| Columns Seletcion DSL                      | Row Expressions          |                                                                                                                                            |
+| Columns Selection DSL                      | Row Expressions          |                                                                                                                                            |
 |--------------------------------------------|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | `col("name")` / `col<T>("name")`           | `getValue<T>("name")`    | Resolves into general [`DataColumn`](DataColumn.md) / row value with the provided `"name"` and type `T`.                                   |
 | `colGroup("name")` / `colGroup<T>("name")` | `getColumnGroup("name")` | Resolves into [`ColumnGroup`](DataColumn.md#columngroup) with the provided `"name"` and type `T`. Can be used for accessing nested columns |

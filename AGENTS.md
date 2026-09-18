@@ -49,9 +49,12 @@ Dependency graph is rooted at `core`, with I/O and integration split into option
   - `dataframe-compiler-plugin-core` — a shaded subset of `:core` bundled *inside* that compiler plugin (and
     IntelliJ) to run compile-time interpreters of operations; it is not itself a compiler plugin. See its
     `AGENTS.md`.
-  - `plugins/*`: `plugins/symbol-processor` (KSP codegen for `@DataSchema`), `plugins/dataframe-gradle-plugin`,
-    and support plugins (`expressions-converter`, `public-api-modifier`, `keywords-generator` — the last is a
-    separate build with its own Kotlin version).
+  - `plugins/*` is mostly dead code — see `plugins/AGENTS.md` before touching any of it.
+    `plugins/symbol-processor` (KSP codegen for `@DataSchema`) and `plugins/dataframe-gradle-plugin` are
+    **disabled** too (KSP1 is not compatible with Kotlin 2.3+), alongside `plugins/kotlin-dataframe`; none of the
+    three is in `settings.gradle.kts`, so nothing there is compiled or tested. Still active:
+    `expressions-converter` and `public-api-modifier`. The former `keywords-generator` module has moved into
+    `build-logic` as the `dfbuild.keywordsGenerator` convention plugin.
 - **Build logic** lives in `build-logic/` and `build-settings-logic/` as convention plugins
   (e.g. `conventions.plugins.dfbuild.*`), not inline in the module build files.
 

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.Update.UPDATE_OPERATION
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -38,6 +39,8 @@ import kotlin.reflect.KProperty
  * ### Check out: [Grammar][FillNulls.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
+ *
+ * See also [dropNulls], which removes rows with `null` values instead of replacing these values.
  */
 internal interface FillNulls {
 
@@ -79,6 +82,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable(interpreter = "FillNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
 
 /**
@@ -168,6 +172,8 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * ### Check out: [Grammar][FillNaNs.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
+ *
+ * See also [dropNaNs], which removes rows with [`NaN`][NaN] values instead of replacing these values.
  */
 internal interface FillNaNs {
 
@@ -209,6 +215,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable("FillNaNs0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
 
 /**
@@ -243,6 +250,8 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  * ### Check out: [Grammar][FillNA.Grammar]
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNA]}
+ *
+ * See also [dropNA], which removes rows with [`NA`][NA] values instead of replacing these values.
  */
 internal interface FillNA {
 
@@ -284,6 +293,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
+@StringApiInterpretable(interpreter = "FillNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
 
 /**
@@ -335,6 +345,8 @@ private typealias DropColumnAccessorsParam = Nothing
  * rows are dropped if any of the selected cells are `null`.
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNulls]}
+ *
+ * See also [fillNulls], which replaces `null` values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNulls {
@@ -419,6 +431,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropColumnNamesParam]
  */
+@Refine
+@StringApiInterpretable(interpreter = "DropNulls0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -458,6 +472,8 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [`NA`][NA].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNA]}
+ *
+ * See also [fillNA], which replaces [`NA`][NA] values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNA {
@@ -524,6 +540,8 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
  * @include [DropNA.WhereAllNAParam]
  * @include [DropColumnNamesParam]
  */
+@Refine
+@StringApiInterpretable(interpreter = "DropNa0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
@@ -575,6 +593,8 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNaNs]}
+ *
+ * See also [fillNaNs], which replaces [`NaN`][NaN] values instead of removing rows.
  */
 @ExcludeFromSources
 internal interface DropNaNs {

@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -231,6 +232,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * ```
  * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
  */
+@StringApiInterpretable(interpreter = "Group0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -254,8 +256,8 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
  * It must be followed by one of the positioning methods
  * to produce a new [<code>DataFrame</code>][DataFrame] with the updated column structure.
  *
- * Use the following methods to finalize the move:
- * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a one column group.
+ * Use the following methods to finalize the grouping:
+ * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a single column group.
  * - [<code>into { groupNameExpression }</code>][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *

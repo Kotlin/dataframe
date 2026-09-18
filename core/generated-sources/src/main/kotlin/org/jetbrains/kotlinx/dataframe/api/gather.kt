@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GatherDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -168,7 +169,7 @@ internal interface GatherDocs {
  * // into a single "tag" column, omitting the key column.
  * df.gather { colsOf<String>() }.valuesInto("tag")
  * ```
- * @param [selector] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to group.
+ * @param [selector] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to gather.
  */
 @Interpretable("Gather0")
 public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
@@ -226,6 +227,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
  * ```
  * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to gather.
  */
+@StringApiInterpretable(interpreter = "Gather0", stringArgument = "columns", targetArgument = "selector")
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumnSet() }
 

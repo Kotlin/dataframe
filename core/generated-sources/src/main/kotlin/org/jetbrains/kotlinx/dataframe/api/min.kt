@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
@@ -783,6 +784,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column.
  */
+@Refine
+@StringApiInterpretable(interpreter = "Min1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> DataFrame<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1706,6 +1709,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMin0", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.minFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(skipNaN) { columns.toComparableColumns() }
 
@@ -1859,6 +1864,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "GroupByMin2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Grouped<T>.min(
     vararg columns: String,
     name: String? = null,
@@ -2127,7 +2134,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2142,10 +2149,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the minimum of each suitable column per [pivot] group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each suitable column per [<code>pivot</code>][pivot] group.
  */
 public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     delegate { min(separate, skipNaN) }
@@ -2199,7 +2206,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2216,12 +2223,12 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
- * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column per [<code>pivot</code>][pivot] group.
  */
 public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
     separate: Boolean = false,
@@ -2271,7 +2278,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2287,10 +2294,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column per [<code>pivot</code>][pivot] group.
  */
 public fun <T> Pivot<T>.minFor(
     vararg columns: String,
@@ -2355,7 +2362,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2365,11 +2372,11 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
- * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
 public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
@@ -2418,7 +2425,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2429,10 +2436,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * @param [columns] The names of the columns to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
 public fun <T> Pivot<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -2500,7 +2507,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2510,11 +2517,11 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A single [DataRow] with, per [pivot] group, the minimum of the expression's results.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the minimum of the expression's results.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -2697,7 +2704,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2712,10 +2719,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with the minimum of each suitable column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with the minimum of each suitable column per group.
  */
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     minFor(separate, skipNaN, intraComparableColumns())
@@ -2771,7 +2778,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2786,12 +2793,12 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
- * @return A [DataFrame] with the minimum of each selected column per group.
+ * @return A [<code>DataFrame</code>][DataFrame] with the minimum of each selected column per group.
  */
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
     separate: Boolean = false,
@@ -2843,7 +2850,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2859,10 +2866,10 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with the minimum of each selected column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with the minimum of each selected column per group.
  */
 public fun <T> PivotGroupBy<T>.minFor(
     vararg columns: String,
@@ -2930,7 +2937,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2940,11 +2947,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
- * @return A [DataFrame] with, per group, the smallest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
@@ -2996,7 +3003,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -3007,10 +3014,10 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * @param [columns] The names of the columns to compute the minimum of.
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with, per group, the smallest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
 public fun <T> PivotGroupBy<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -3079,7 +3086,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -3089,11 +3096,11 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [DataFrame] with, per group, the minimum of the expression's results.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the minimum of the expression's results.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,

@@ -1,11 +1,11 @@
 [versions]
-kotlinJupyter = "0.19.0-951"
+kotlinJupyter = "0.19.0-958"
 
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 
-kotlin = "2.4.0"
-kotlinpoet = "2.3.0"
+kotlin = "2.4.20"
+kotlinpoet = "2.4.0"
 
 # The jvmToolchain version. Gradle should run with this JDK version.
 # After changing it, run `./gradlew updateDaemonJvm` and commit the regenerated properties file.
@@ -24,8 +24,8 @@ typesafe-conventions = "0.11.1" # manually sync with /build-logic/settings.gradl
 maven-invoker = "3.3.0"
 maven-wrapper = "3.3.4"
 maven = "3.9.11"
-maven-surefire = "3.5.6"
-binaryCompatibilityValidator = "0.18.1"
+maven-surefire = "3.6.0"
+binaryCompatibilityValidator = "0.18.2"
 deephavenCsv = "0.19.0"
 fastDoubleParser = "2.0.1"
 commonsCsv = "1.14.1"
@@ -34,16 +34,16 @@ commonsIo = "2.22.0"
 commonsStatistics = "1.3"
 serialization = "1.11.0"
 poi = "5.5.1"
-mariadb = "3.5.9"
-h2db = "2.4.240"
-mssql = "13.4.0.jre11"
-mysql = "9.7.0"
+mariadb = "3.5.10"
+h2db = "2.5.250"
+mssql = "13.6.0.jre11"
+mysql = "26.7.0"
 postgresql = "42.7.13"
-sqlite = "3.53.2.0"
+sqlite = "3.53.4.0"
 kotlinDatetime = "0.8.0-0.6.x-compat"
-openapi = "2.1.45"
+openapi = "2.1.48"
 kotlinLogging = "8.0.4"
-sl4j = "2.0.18"
+sl4j = "2.0.19"
 log4j = "2.26.1"
 
 # ignoreUpdates
@@ -52,21 +52,22 @@ junit = "4.13.2" # Issue #426
 junit-jupiter = "5.11.3"
 # ignoreUpdates
 junit-platform = "1.11.3" # Issue #426
-kotestAsserions = "6.2.2"
+konsist = "0.17.3"
+kotestAsserions = "6.2.5"
 
-jsoup = "1.22.2"
+jsoup = "1.23.2"
 arrow = "19.0.0"
 kodex = "0.6.3"
-caupain = "1.9.1"
-plugin-publish = "2.1.1"
-shadow = "9.5.1"
+caupain = "1.10.1"
+plugin-publish = "2.2.1"
+shadow = "9.6.1"
 # ignoreUpdates
 android-gradle-api = "7.3.1" # unused for now
-ktor = "3.5.1"
+ktor = "3.6.0"
 # ignoreUpdates
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
-duckdb = "1.5.4.0"
+duckdb = "1.5.5.1"
 testcontainers = "2.0.5"
 
 # Docker image tags of the databases used in the Testcontainers tests
@@ -75,8 +76,8 @@ dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
 dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
 dockerImage-mssql = "2022-CU22-ubuntu-22.04" # available tags: https://mcr.microsoft.com/en-us/artifact/mar/mssql/server
 
-buildconfig = "6.0.10"
-benchmark = "0.4.17"
+buildconfig = "6.1.0"
+benchmark = "0.5.0"
 
 geotools = "33.5" # 34.x and higher versions are not compatible with Java 11
 jai-core = "1.1.3"
@@ -85,27 +86,27 @@ jts = "1.20.0"
 kandy = "0.8.5"
 kotlin-dl = "0.5.2"
 
-exposed = "1.3.1"
-hibernate = "7.4.4.Final"
+exposed = "1.5.0"
+hibernate = "7.4.8.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
 spark3 = "3.3.2" # ignoreUpdates
-spark4 = "4.1.2"
+spark4 = "4.2.0"
 
 multik = "0.3.1"
 
 # Used by the Android example project; keys mirror examples/projects/android-example/gradle/libs.versions.toml
-agp = "9.2.1"
+agp = "9.4.0"
 coreKtx = "1.19.0"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
-composeBom = "2026.06.01"
+composeBom = "2026.09.00"
 
 # Maven exec
-exec = "3.6.3"
+exec = "3.6.4"
 
 [libraries]
 jupyter-api = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
@@ -158,6 +159,7 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 junit-platform-runner = { group = "org.junit.platform", name = "junit-platform-runner", version.ref = "junit-platform" }
 junit-platform-suite-api = { group = "org.junit.platform", name = "junit-platform-suite-api", version.ref = "junit-platform" }
 
+konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 kotestAssertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestAsserions" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
@@ -167,6 +169,7 @@ arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", versi
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
 arrow-dataset = { group = "org.apache.arrow", name = "arrow-dataset", version.ref = "arrow" }
 
+geotools-api = { module = "org.geotools:gt-api", version.ref = "geotools" }
 geotools-main = { module = "org.geotools:gt-main", version.ref = "geotools" }
 geotools-shapefile = { module = "org.geotools:gt-shapefile", version.ref = "geotools" }
 geotools-geojson = { module = "org.geotools:gt-geojson", version.ref = "geotools" }

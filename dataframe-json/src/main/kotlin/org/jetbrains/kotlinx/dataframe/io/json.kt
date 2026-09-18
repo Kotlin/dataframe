@@ -492,15 +492,22 @@ public fun DataRow.Companion.readJsonStr(
  * By default, a row is written as a JSON object: a [ColumnGroup] becomes a nested object,
  * a [FrameColumn] becomes a nested array of objects, and a [List] value becomes a JSON array.
  *
- * There's one exception, so that a [DataFrame] read from JSON with a type clash can be written back
- * to its original form (see [TypeClashTactic]): when this frame has an unnamed `value` or `array` column,
- * a row is instead written as the value it holds. Per row, in order:
- * the `value` primitive, else the `array` array, else an object of the remaining columns,
- * else — when the row holds no values at all — `null`.
+ * There's one exception, so that a [DataFrame] read from JSON with a top-level type clash can be written back
+ * to its original form (see [TypeClashTactic]). When one of the top-level columns is detected as a `value` or
+ * `array` column — it's named `value` or `array` and only holds a value in rows where every other column holds
+ * none — a row is written as the record it was read from:
+ * - the value of the `value` column, if the row has one;
+ * - otherwise the array of the `array` column, if the row has one;
+ * - otherwise an object of the remaining columns, if any of them holds a value;
+ * - otherwise `null`.
  *
- * Note that a row of `null`s only is indistinguishable from a JSON `null` record, so
- * `[1,{"label":"record"},{"label":null}]` is written back as `[1,{"label":"record"},null]`.
- * Both forms are read into the exact same [DataFrame].
+ * Note that a type clash inside a [ColumnGroup] is not restored like this; the group is written as an object,
+ * so its `value` and `array` columns show up as ordinary properties.
+ *
+ * Note too that some JSON records are read into the exact same [DataFrame], so writing it back can only produce
+ * one of them: a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes
+ * `[1,{"label":"record"},null]`; and an empty array of objects is read as an empty nested [DataFrame], just like
+ * no array at all, so `[{"label":"record"},[{"a":1}],[]]` becomes `[{"label":"record"},[{"a":1}],null]`.
  *
  * @param prettyPrint Whether to format the output with indentation and line breaks. `false` by default.
  * @return This [DataFrame] as a JSON string.

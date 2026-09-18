@@ -181,7 +181,7 @@ public class ExplainerIrTransformer(public val pluginContext: IrPluginContext) :
         receiver: IrExpression?,
         data: ContainingDeclarations,
     ): IrCall {
-        val result = irCall(alsoReference).also {
+        val result = irCall(alsoReference, expression.type).also {
             it.typeArguments[0] = expression.type
             it.arguments[0] = expression
 

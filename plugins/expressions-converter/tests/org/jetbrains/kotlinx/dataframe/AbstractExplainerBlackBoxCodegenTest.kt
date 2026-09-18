@@ -41,7 +41,7 @@ open class AbstractExplainerBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
             commonFirWithPluginFrontendConfiguration()
             useConfigurators(::PluginAnnotationsProvider)
             useCustomRuntimeClasspathProviders(::MyClasspathProvider)
-            useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+            useFailureSuppressors(::BlackBoxCodegenSuppressor)
             useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
         }
     }
