@@ -47,8 +47,9 @@ while in row expressions they resolve to concrete value types.
 You can optionally specify the column type as a type argument of the
 `String` column accessor creation function.
 This is required for row expressions and for some operations with a column selection.
-If the specified type does not match the actual column type,
-a runtime exception may be thrown.
+The type is not verified against the column: a mismatch is reported as a plain `ClassCastException`,
+not as an error naming the column, and it can surface later than the accessor call —
+wherever the value is actually used.
 
 | Columns Selection DSL                      | Row Expressions          |                                                                                                                                            |
 |--------------------------------------------|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
