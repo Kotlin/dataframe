@@ -53,11 +53,14 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun get(indices: Iterable<Int>): FrameColumn<T> =
-        DataColumn.createFrameColumn(
+    override fun get(indices: Iterable<Int>): FrameColumn<T> {
+        val indicesList = indices.toList()
+        return DataColumn.createFrameColumn(
             name = name,
-            groups = indices.map { values[it] },
+            groups = indicesList.map { values[it] },
+            schema = schema.takeIf { indicesList.isEmpty() },
         )
+    }
 
     override fun get(columnName: String) =
         throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")
