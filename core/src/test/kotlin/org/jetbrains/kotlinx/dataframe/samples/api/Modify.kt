@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -50,9 +51,12 @@ import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
+import org.jetbrains.kotlinx.dataframe.api.mapToFrames
+import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -82,6 +86,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -97,11 +102,17 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
+import org.jetbrains.kotlinx.dataframe.explainer.SamplesDisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
+import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
+import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
@@ -899,58 +910,6 @@ class Modify : TestBase() {
     fun remove_strings() {
         // SampleStart
         df.remove("name", "weight")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun map() {
-        // SampleStart
-        df.map { 2021 - it.age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapToColumn_properties() {
-        // SampleStart
-        df.mapToColumn("year of birth") { 2021 - age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapToColumn_strings() {
-        // SampleStart
-        df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapMany_properties() {
-        // SampleStart
-        df.mapToFrame {
-            "year of birth" from { 2021 - age }
-            expr { age > 18 } into "is adult"
-            name.lastName.map { it.length } into "last name length"
-            "full name" from { name.firstName + " " + name.lastName }
-            +city
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapMany_strings() {
-        // SampleStart
-        df.mapToFrame {
-            "year of birth" from { 2021 - "age"<Int>() }
-            expr { "age"<Int>() > 18 } into "is adult"
-            "name"["lastName"]<String>().map { it.length } into "last name length"
-            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
-            +"city"
-        }
         // SampleEnd
     }
 

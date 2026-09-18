@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -24,6 +25,8 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToFrames
+import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.maxFor
@@ -986,6 +989,54 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun pivotOnGroupBy_strings() {
         // SampleStart
         df.groupBy("isHappy").pivot { "name"["firstName"]<String>() }
+        // SampleEnd
+    }
+
+    // endregion
+
+    // region mapping
+
+    @Test
+    fun groupByMap_properties() {
+        // SampleStart
+        df.groupBy { city }.map { group.rowsCount() }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByMap_strings() {
+        // SampleStart
+        df.groupBy("city").map { group.rowsCount() }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByMapToRows_properties() {
+        // SampleStart
+        df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByMapToRows_strings() {
+        // SampleStart
+        df.groupBy("city").mapToRows { group.sortByDesc("age").firstOrNull() }
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByMapToFrames_properties() {
+        // SampleStart
+        df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun groupByMapToFrames_strings() {
+        // SampleStart
+        df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
         // SampleEnd
     }
 
