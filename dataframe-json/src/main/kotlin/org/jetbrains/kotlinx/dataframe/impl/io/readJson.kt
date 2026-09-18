@@ -300,33 +300,12 @@ internal fun fromJsonListAnyColumns(
                 isLenient = isLenient,
             )
 
-            val res = when {
-                parsed.isSingleUnnamedColumn() -> {
-                    val col = (parsed.getColumn(0) as UnnamedColumn).col
-                    val elementType = col.type
-                    val columnValues = col.values
-                        .asList()
-                        .splitByIndices(startIndices.asSequence())
-                        .toList()
-                        // records that hold no array at all (like `null`) are not empty lists
-                        .mapIndexed { i, list -> if (records[i] is JsonArray) list else null }
-                    DataColumn.createValueColumn(
-                        name = ARRAY_COLUMN_NAME,
-                        values = columnValues,
-                        type = List::class.createType(
-                            arguments = listOf(KTypeProjection.invariant(elementType)),
-                            nullable = records.any { it !is JsonArray },
-                        ),
-                    )
-                }
-
-                else ->
-                    parsed.unwrapUnnamedColumns()
-                        .chunked(
-                            startIndices = startIndices,
-                            name = ARRAY_COLUMN_NAME, // will be erased
-                        )
-            }
+            val res = createArrayColumn(
+                parsed = parsed,
+                name = ARRAY_COLUMN_NAME, // will be erased
+                records = records,
+                startIndices = startIndices,
+            )
             listOf(UnnamedColumn(res))
         }
 
@@ -454,6 +433,40 @@ internal fun fromJsonListAnyColumns(
 }
 
 private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(0) is UnnamedColumn
+
+/**
+ * Collects the arrays of [records] into a single column named [name]: a `List` value column when the arrays
+ * hold single values, else a [FrameColumn] holding the objects of each array.
+ *
+ * @param parsed The contents of all arrays of [records], parsed and concatenated into one [DataFrame].
+ * @param startIndices For each record, the index in [parsed] where its array starts, so that [parsed] can be
+ *     split back into one entry per record.
+ */
+private fun createArrayColumn(
+    parsed: AnyFrame,
+    name: String,
+    records: List<*>,
+    startIndices: Iterable<Int>,
+): DataColumn<Any?> =
+    if (parsed.isSingleUnnamedColumn()) {
+        val col = (parsed.getColumn(0) as UnnamedColumn).col
+        val columnValues = col.values
+            .asList()
+            .splitByIndices(startIndices.asSequence())
+            .toList()
+            // records that hold no array at all (like `null`) are not empty lists
+            .mapIndexed { i, list -> list.takeIf { records[i] is JsonArray } }
+        DataColumn.createValueColumn(
+            name = name,
+            values = columnValues,
+            type = List::class.createType(
+                arguments = listOf(KTypeProjection.invariant(col.type)),
+                nullable = records.any { it !is JsonArray },
+            ),
+        )
+    } else {
+        parsed.unwrapUnnamedColumns().chunked(startIndices, name)
+    }
 
 /**
  * Json to DataFrame converter that creates allows creates `value` and `array` accessors
@@ -664,29 +677,12 @@ internal fun fromJsonListArrayAndValueColumns(
                             jsonPath = jsonPath.appendArrayWithWildcard(),
                         )
 
-                        val res = when {
-                            parsed.isSingleUnnamedColumn() -> {
-                                val col = (parsed.getColumn(0) as UnnamedColumn).col
-                                val elementType = col.type
-                                val columnValues =
-                                    col.values
-                                        .asList()
-                                        .splitByIndices(startIndices.asSequence())
-                                        .toList()
-                                        // records that hold no array at all (like `null`) are not empty lists
-                                        .mapIndexed { i, list -> if (records[i] is JsonArray) list else null }
-                                DataColumn.createValueColumn(
-                                    name = colName,
-                                    values = columnValues,
-                                    type = List::class.createType(
-                                        arguments = listOf(KTypeProjection.invariant(elementType)),
-                                        nullable = records.any { it !is JsonArray },
-                                    ),
-                                )
-                            }
-
-                            else -> parsed.unwrapUnnamedColumns().chunked(startIndices, colName)
-                        }
+                        val res = createArrayColumn(
+                            parsed = parsed,
+                            name = colName,
+                            records = records,
+                            startIndices = startIndices,
+                        )
                         UnnamedColumn(res)
                     }
 

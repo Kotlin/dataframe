@@ -275,15 +275,15 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
         ?.takeIf { it.kind() == ColumnKind.Value }
         // 'readJson' cannot have created an all-null 'value' column, consider it a regular one
         ?.takeIf { it.holdsAnyValue() }
-        ?.takeIf { valueCol ->
+        ?.takeUnless { valueCol ->
             val otherCols = allColumns - valueCol
-            // It's a valid 'value' column only if for each value it holds,
-            // the corresponding cells in the other columns hold no value.
-            val isValidValueColumn = indices().all { row ->
-                !valueCol.holdsValueAt(row) || otherCols.all { !it.holdsValueAt(row) }
+            // It's not a 'value' column if any of the values it holds sits next to
+            // a value in one of the other columns.
+            val isInvalidValueColumn = indices().any { row ->
+                valueCol.holdsValueAt(row) && otherCols.any { it.holdsValueAt(row) }
             }
 
-            isValidValueColumn
+            isInvalidValueColumn
         }
 }
 
@@ -309,14 +309,15 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
         ?.takeIf { it.kind() == ColumnKind.Frame || it.isList() }
         // 'readJson' cannot have created an all-null 'array' column, consider it a regular one
         ?.takeIf { it.holdsAnyValue() }
-        ?.takeIf { arrayCol ->
+        ?.takeUnless { arrayCol ->
             val otherCols = allColumns - arrayCol
-            // It's a valid 'array' column only if for each value it holds,
-            // the corresponding cells in the other columns hold no value.
-            val isValidArrayColumn = indices().all { row ->
-                !arrayCol.holdsValueAt(row) || otherCols.all { !it.holdsValueAt(row) }
+            // It's not an 'array' column if any of the arrays it holds sits next to
+            // a value in one of the other columns.
+            val isInvalidArrayColumn = indices().any { row ->
+                arrayCol.holdsValueAt(row) && otherCols.any { it.holdsValueAt(row) }
             }
-            isValidArrayColumn
+
+            isInvalidArrayColumn
         }
 }
 

@@ -89,8 +89,8 @@ Output:
 >   `[{"value":1},{"value":2},{"value":3}]`.
 > {style="note"}
 
-> Some JSON records are read into the exact same [`DataFrame`](DataFrame.md), so writing it back can only
-> produce one of them:
+> Some JSON records are read into the exact same [`DataFrame`](DataFrame.md), 
+> so writing it back can only produce:
 > * a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes
 >   `[1,{"label":"record"},null]`;
 > * an empty array of objects is read as an empty nested [`DataFrame`](DataFrame.md), just like no array at all,
