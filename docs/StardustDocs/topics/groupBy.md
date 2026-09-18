@@ -355,7 +355,7 @@ df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
 <!---END-->
 <inline-frame src="./resources/addOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
- ## Reducing
+## Reducing
 
 A `GroupBy` can be reduced into a [`DataFrame`](DataFrame.md). 
 It means that each group in this `GroupBy` is collapsed into a single representative row,

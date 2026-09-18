@@ -72,7 +72,7 @@ internal fun inferNullability(connection: Connection) {
 
     // start testing `readSQLQuery` method
 
-    // ith default inferNullability: Boolean = true
+    // with default inferNullability: Boolean = true
     @Language("SQL")
     val sqlQuery =
         """
@@ -106,7 +106,7 @@ internal fun inferNullability(connection: Connection) {
         val selectStatement = "SELECT * FROM $TEST_TABLE_NAME"
 
         st.executeQuery(selectStatement).use { rs ->
-            // ith default inferNullability: Boolean = true
+            // with default inferNullability: Boolean = true
             val df4 = DataFrame.readResultSet(rs, MsSql)
             df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
             df4.schema().columns["name"]!!.type shouldBe typeOf<String>()

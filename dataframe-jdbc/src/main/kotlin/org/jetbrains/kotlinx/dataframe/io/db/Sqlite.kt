@@ -202,7 +202,8 @@ public class SqliteCustomConvertersBuilder
  *     Use this to override every column that shares a declared type.
  *  3. The built-in SQLite conversion for BOOLEAN, DATE, DATETIME, TIME, TIMESTAMP, DECIMAL,
  *     NUMERIC.
- *     **This conversion is also applied for types that have substring of these type names**.
+ *     **This conversion is also applied to declared types that contain one of these names as a
+ *     substring**.
  *  4. The base `DbType` mapping.
  */
 public class Sqlite(
