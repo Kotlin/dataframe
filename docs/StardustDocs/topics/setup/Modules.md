@@ -298,6 +298,9 @@ dependencies {
 </tab>
 </tabs>
 
+When packaging this module into a fat JAR, merge `META-INF/services` resources as described in
+[Packaging into a fat JAR](Packaging.md).
+
 #### `dataframe-jdbc` {id="dataframe-jdbc"}
 
 Provides all logic for DataFrame to be able to work with  

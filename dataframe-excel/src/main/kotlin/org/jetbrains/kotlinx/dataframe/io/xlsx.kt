@@ -32,12 +32,14 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.util.NAME_REPAIR_STRATEGY
 import org.jetbrains.kotlinx.dataframe.io.util.READ_EXCEL_OLD
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
@@ -77,6 +79,57 @@ internal class DefaultReadExcelMethod(path: String?) :
 
 private const val READ_EXCEL = "readExcel"
 private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
+private const val POI_MISSING_WORKBOOK_PROVIDER_PREFIX =
+    "Your InputStream was neither an OLE2 stream, nor an OOXML stream"
+private const val POI_PROVIDER_LIST_MARKER = "having providers:"
+private const val OLE2_FILE_MAGIC_MARKER = "FileMagic: OLE2"
+private const val OOXML_FILE_MAGIC_MARKER = "FileMagic: OOXML"
+private const val HSSF_WORKBOOK_FACTORY = "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+private const val XSSF_WORKBOOK_FACTORY = "org.apache.poi.xssf.usermodel.XSSFWorkbookFactory"
+private const val FAT_JAR_PACKAGING_DOCUMENTATION = "https://kotlin.github.io/dataframe/packaging.html"
+
+private inline fun createWorkbook(factory: () -> Workbook): Workbook =
+    try {
+        factory()
+    } catch (exception: IOException) {
+        throw addMissingServiceDescriptorHint(exception, ::isClassAvailable)
+    }
+
+internal fun addMissingServiceDescriptorHint(
+    exception: IOException,
+    isClassAvailable: (String) -> Boolean,
+): IOException {
+    val message = exception.message ?: return exception
+    if (!message.startsWith(POI_MISSING_WORKBOOK_PROVIDER_PREFIX) || POI_PROVIDER_LIST_MARKER !in message) {
+        return exception
+    }
+
+    val expectedProvider = when {
+        OLE2_FILE_MAGIC_MARKER in message -> HSSF_WORKBOOK_FACTORY
+        OOXML_FILE_MAGIC_MARKER in message -> XSSF_WORKBOOK_FACTORY
+        else -> return exception
+    }
+    if (!isClassAvailable(expectedProvider)) return exception
+
+    return IOException(
+        "Kotlin DataFrame: The Apache POI provider required for this Excel format is present on the " +
+            "classpath but was not discovered. If this application is packaged as a fat JAR, make sure " +
+            "META-INF/services resources are merged. See $FAT_JAR_PACKAGING_DOCUMENTATION",
+        exception,
+    )
+}
+
+private fun isClassAvailable(className: String): Boolean =
+    try {
+        Class.forName(className, false, WorkbookFactory::class.java.classLoader)
+        true
+    } catch (_: ClassNotFoundException) {
+        false
+    } catch (_: LinkageError) {
+        false
+    } catch (_: SecurityException) {
+        false
+    }
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -120,7 +173,16 @@ public fun DataFrame.Companion.readExcel(
 internal typealias CommonReadExcelDocs = Nothing
 
 /**
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. {@include [DocumentationUrls.Packaging]}
+ */
+@ExcludeFromSources
+internal typealias FatJarPackaging = Nothing
+
+/**
  * @include [CommonReadExcelDocs]
+ *
+ * @include [FatJarPackaging]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -146,7 +208,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = createWorkbook { WorkbookFactory.create(url.openStream()) }
     return wb.use {
         readExcel(
             wb,
@@ -174,7 +236,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = createWorkbook { WorkbookFactory.create(url.openStream()) }
     return wb.use {
         readExcel(
             wb,
@@ -203,6 +265,8 @@ public fun DataFrame.Companion.readExcel(
 
 /**
  * @include [CommonReadExcelDocs]
+ *
+ * @include [FatJarPackaging]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -265,6 +329,8 @@ public fun DataFrame.Companion.readExcel(
 /**
  * @include [CommonReadExcelDocs]
  *
+ * @include [FatJarPackaging]
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -291,7 +357,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = createWorkbook { WorkbookFactory.create(inputStream, /* password = */ null) }
         return wb.use {
             readExcel(
                 it,
@@ -322,7 +388,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = createWorkbook { WorkbookFactory.create(inputStream, /* password = */ null) }
         return wb.use {
             readExcel(
                 it,
@@ -354,6 +420,8 @@ public fun DataFrame.Companion.readExcel(
 
 /**
  * @include [CommonReadExcelDocs]
+ *
+ * @include [FatJarPackaging]
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -429,6 +497,8 @@ public fun DataFrame.Companion.readExcel(
 /**
  * @include [CommonReadExcelDocs]
  *
+ * @include [FatJarPackaging]
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -453,7 +523,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = createWorkbook { WorkbookFactory.create(inputStream) }
     return wb.use {
         readExcel(
             it,
@@ -481,7 +551,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = createWorkbook { WorkbookFactory.create(inputStream) }
     return wb.use {
         readExcel(
             it,
