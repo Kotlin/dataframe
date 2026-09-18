@@ -1,4 +1,6 @@
 import io.github.devcrocod.korro.KorroGenerateTask
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.kotlin.dsl.libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.nio.file.Files
@@ -46,6 +48,50 @@ val dependentProjectJarPaths = dependentProjects.map {
         .artifacts.single()
         .file.absolutePath
         .replace(File.separatorChar, '/')
+}
+
+val coreProjectPath = projects.core.path
+
+val compilerPluginClasspaths = configurations.matching {
+    it.name in setOf("compileClasspath", "testCompileClasspath")
+}
+
+val configurationsThatAffectCompilerPluginResolve = setOf("api", "implementation", "compileOnly", "compileOnlyApi")
+
+fun Configuration.coreDependencyPath(visited: MutableSet<Configuration> = mutableSetOf()): List<String>? {
+    if (!visited.add(this)) return null
+
+    dependencies.filterIsInstance<ProjectDependency>().forEach { dependency ->
+        if (dependency.path == coreProjectPath) return listOf(coreProjectPath)
+
+        rootProject.project(dependency.path).configurations
+            .filter { it.name in configurationsThatAffectCompilerPluginResolve }
+            .forEach { configuration ->
+                configuration.coreDependencyPath(visited)?.let {
+                    return listOf("${dependency.path}:${configuration.name}") + it
+                }
+            }
+    }
+
+    extendsFrom.forEach { configuration ->
+        configuration.coreDependencyPath(visited)?.let {
+            return listOf("${project.path}:${configuration.name}") + it
+        }
+    }
+
+    return null
+}
+
+gradle.projectsEvaluated {
+    compilerPluginClasspaths.forEach {
+        val dependencyPath = it.coreDependencyPath()
+        require(dependencyPath == null) {
+            val fullDependencyPath = listOf("${project.path}:${it.name}") + dependencyPath.orEmpty()
+            "Module ${project.path} with DataFrame compiler plugin cannot use source dependency $coreProjectPath " +
+                "on $it. Dependency path: ${fullDependencyPath.joinToString(" -> ")}. " +
+                "Depend on the prebuilt instrumentedJars artifact instead."
+        }
+    }
 }
 
 dependencies {

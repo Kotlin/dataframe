@@ -18,8 +18,8 @@ disabled legacy copy — see the root `AGENTS.md`.)
 
 ## Structure
 
-- **No `main` sources of its own.** The module is a repackaging (`ShadowJar`) of `:core`:
-  `implementation(projects.core)` plus a shadow config that strips what the interpreters don't need
+- **No `main` sources of its own.** The module is a repackaging (`ShadowJar`) of `:core`: 
+  shadow config that strips what the interpreters don't need
   (`jupyter/**`, `io/**`, `documentation/**`, `impl/io/**`, `kotlin-reflect`/`kotlin-stdlib`, kotlinpoet,
   serialization, …). The surviving packages are the `:core` `api`, `impl/api`, `columns`, `schema`, `codeGen`,
   and `annotations` code.
