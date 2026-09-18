@@ -1549,6 +1549,24 @@ class JsonTests {
     }
 
     @Test
+    fun `a null list is written as null with metadata too`() {
+        fun AnyFrame.dataWithMetadata(): String =
+            parseJsonStr(toJsonWithMetadata(rowsCount()))[KOTLIN_DATAFRAME]!!.jsonArray.toString()
+
+        val df = DataFrame.readJsonStr("""[{"a":[1]},{"a":[]},{"a":null}]""").alsoDebug()
+        df["a"].type() shouldBe typeOf<List<Int>?>()
+
+        val expected = """[{"a":[1]},{"a":[]},{"a":null}]"""
+        df.toJson() shouldBe expected
+        df.dataWithMetadata() shouldBe expected
+
+        // a user-made nullable `List` column behaves the same
+        dataFrameOf(
+            "a" to columnOf<List<Int>?>(listOf(1), emptyList(), null),
+        ).dataWithMetadata() shouldBe expected
+    }
+
+    @Test
     fun `a column named array that holds no arrays is not an unnamed column`() {
         // a user-made `array` column of single values must not be encoded as if it held JSON arrays
         dataFrameOf(

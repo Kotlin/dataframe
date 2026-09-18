@@ -177,10 +177,11 @@ internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEnc
     return when {
         matchingEncoder != null -> matchingEncoder.encode(col[index])
 
+        // a `null` list is not an empty one, just like in `encodeRow`
         col.isList() -> col[index]?.let { list ->
             val values = (list as List<*>).map { convert(it) }
             JsonArray(values)
-        } ?: JsonArray(emptyList())
+        } ?: JsonPrimitive(null)
 
         col.typeClass in valueTypes -> convert(col[index])
 
