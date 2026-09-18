@@ -5,6 +5,7 @@ import java.io.File
 enum class BuildSystem {
     GRADLE,
     MAVEN,
+    KOTLIN_TOOLCHAIN,
 }
 
 fun File.detectBuildSystem(): BuildSystem? {
@@ -17,6 +18,9 @@ fun File.detectBuildSystem(): BuildSystem? {
             "build.gradle.kts" in files ||
             "settings.gradle" in files ||
             "build.gradle" in files -> BuildSystem.GRADLE
+
+        "project.yaml" in files ||
+            "module.yaml" in files -> BuildSystem.KOTLIN_TOOLCHAIN
 
         else -> null
     }

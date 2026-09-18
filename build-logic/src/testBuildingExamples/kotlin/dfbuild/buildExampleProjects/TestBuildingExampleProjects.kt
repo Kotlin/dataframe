@@ -7,6 +7,7 @@ import org.gradle.tooling.GradleConnector
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.junit.AssumptionViolatedException
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 /**
  * Implementations of this class are auto-generated from 'examples/projects'
@@ -44,6 +45,9 @@ abstract class TestBuildingExampleProjects {
 
             BuildSystem.MAVEN ->
                 buildMavenProject(name = name, folder = folder)
+
+            BuildSystem.KOTLIN_TOOLCHAIN ->
+                buildKotlinToolchainProject(name = name, folder = folder)
         }
     }
 
@@ -99,5 +103,41 @@ abstract class TestBuildingExampleProjects {
                     )
                 }
             }
+    }
+
+    protected fun buildKotlinToolchainProject(name: String, folder: File) {
+        val isWindows = System.getProperty("os.name").startsWith("Windows")
+        folder
+            .resolve(if (isWindows) "kotlin.bat" else "kotlin")
+            .setExecutable(true)
+
+        val launcher =
+            if (isWindows) {
+                arrayOf("cmd", "/c", "kotlin.bat")
+            } else {
+                arrayOf("./kotlin")
+            }
+
+        val process = ProcessBuilder(*launcher, "build")
+            .directory(folder)
+            .apply {
+                // TODO this may stop working if `kotlin` ever stops running on the JVM
+                environment()["KOTLIN_CLI_JAVA_OPTIONS"] =
+                    "\"-Dmaven.repo.local=${getGradleProperty("maven.repo.local")!!}\""
+            }
+            .redirectErrorStream(true)
+            .start()
+
+        check(process.waitFor(10, TimeUnit.MINUTES)) {
+            "Kotlin Toolchain command timed out"
+        }
+
+        val output = process.inputStream.bufferedReader().readText()
+        check(process.exitValue() == 0) {
+            throw BuildException(
+                "`build$name` failed. Could not build Kotlin Toolchain project in '$folder'.",
+                Exception("${process.exitValue()}: $output"),
+            )
+        }
     }
 }
