@@ -15,7 +15,7 @@ Full mapping of MySQL SQL types to Kotlin types, including aliases and driver ca
 
 The tables below list every MySQL column type ([MySQL 8.0 Data Types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html))
 and the Kotlin type produced when the column is read into a DataFrame. Aliases are
-canonicalised by MySQL at `CREATE TABLE` time, so DataFrame only ever sees the canonical
+canonicalized by MySQL at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
 Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).

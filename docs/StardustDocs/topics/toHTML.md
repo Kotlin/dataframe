@@ -8,7 +8,7 @@
 Rendering of hierarchical tables in HTML is supported by JS and CSS definitions
 that can be found in project resources.
 
-Dataframes can also be formatted before being converted to HTML.
+A `DataFrame` can also be formatted before being converted to HTML.
 See [](format.md) for how to do this.
 
 Besides that, DataFrame provides multiple APIs to customize HTML output.

@@ -108,7 +108,7 @@ kotlinPublications {
     publication {
         publicationName = "api"
         artifactId = projectName
-        description = "Data processing in Kotlin"
+        description = "Kotlin DataFrame: typesafe in-memory structured data processing for JVM"
         packageName = artifactId
     }
 
