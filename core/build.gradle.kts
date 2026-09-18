@@ -370,7 +370,7 @@ kotlinPublications {
     publication {
         publicationName = "core"
         artifactId = "dataframe-core"
-        description = "Kotlin DataFrame core API"
+        description = "Kotlin DataFrame: core API"
         packageName = artifactId
     }
 }

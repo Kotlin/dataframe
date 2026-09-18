@@ -34,7 +34,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeExcel"
         artifactId = project.name
-        description = "Excel support for Kotlin DataFrame"
+        description = "Kotlin DataFrame: Excel (XLS/XLSX) support"
         packageName = artifactId
     }
 }

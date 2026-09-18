@@ -54,7 +54,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJson"
         artifactId = project.name
-        description = "Kotlin DataFrame JSON integration"
+        description = "Kotlin DataFrame: JSON support"
         packageName = artifactId
     }
 }
