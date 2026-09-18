@@ -55,8 +55,12 @@ a value in every column.
 This also holds for array columns: `[null, [123], []]` is read as a `List<Int>?` column holding `null`, `[123]`,
 and an empty list.
 
-When the same property holds values of different shapes across records, extra "value" and "array" columns are
-created; see [managing type clashes](read.md#manage-type-clashes) for the exact rules.
+JSON elements that aren't objects have no property name to use as a column name, so they're read into the
+special [`value` and `array` columns](read.md#value-and-array-columns). 
+The same special columns are also used
+to resolve [type clashes](read.md#manage-type-clashes) 
+when the same property contains values of different shapes
+across records.
 
 ## Write
 
@@ -70,5 +74,5 @@ df.writeJson("example.json")
 
 <!---END-->
 
-A [`DataFrame`](DataFrame.md) read from JSON with a type clash is written back to its original form; see
-[writing to JSON](write.md#writing-to-json) for the details.
+A [`DataFrame`](DataFrame.md) read from JSON with a top-level type clash is written back to its original form;
+see [writing to JSON](write.md#writing-to-json) for the details and for the cases that don't round-trip.

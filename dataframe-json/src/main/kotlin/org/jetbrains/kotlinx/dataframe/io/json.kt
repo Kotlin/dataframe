@@ -129,6 +129,10 @@ public class JSON(
      *
      * A JSON `null` record, as well as a missing property, is `null` in all these columns.
      *
+     * Note that a type clash is not the only source of `value`/`array` columns; at the top level they're created
+     * for any JSON element that isn't an object.
+     * For more information: [See the "value" and "array" columns on the documentation website.](https://kotlin.github.io/dataframe/read.html#value-and-array-columns)
+     *
      * [ANY_COLUMNS] will create a [DataFrame] looking like:
      * ```
      * ⌌-------------⌍
@@ -493,16 +497,23 @@ public fun DataRow.Companion.readJsonStr(
  * a [FrameColumn] becomes a nested array of objects, and a [List] value becomes a JSON array.
  *
  * There's one exception, so that a [DataFrame] read from JSON with a top-level type clash can be written back
- * to its original form (see [TypeClashTactic]). When one of the top-level columns is detected as a `value` or
- * `array` column — it's named `value` or `array` and only holds a value in rows where every other column holds
- * none — a row is written as the record it was read from:
- * - the value of the `value` column, if the row has one;
- * - otherwise the array of the `array` column, if the row has one;
+ * to its original form (see [TypeClashTactic]). Such a clash puts the elements that aren't objects into columns
+ * named "value" and "array"
+ * ([see them on the documentation website](https://kotlin.github.io/dataframe/read.html#value-and-array-columns)),
+ * beside the objects' own properties. When one of the top-level columns is detected
+ * as such a "value" or "array" column — it's named "value" or "array" and only holds a value in rows where every
+ * other column holds none — a row is written as the record it was read from:
+ * - the value of the "value" column, if the row has one;
+ * - otherwise the array of the "array" column, if the row has one;
  * - otherwise an object of the remaining columns, if any of them holds a value;
  * - otherwise `null`.
  *
- * Note that a type clash inside a [ColumnGroup] is not restored like this; the group is written as an object,
- * so its `value` and `array` columns show up as ordinary properties.
+ * Only a *top-level* clash is restored like this:
+ * - A clash inside a [ColumnGroup] isn't: the group is written as an object, so its "value" and "array" columns
+ *   show up as ordinary properties.
+ * - A single-column [DataFrame] isn't either, since a lone "value"/"array" column is indistinguishable from one
+ *   the user named that way. So a JSON array of non-objects, which is read into just a "value" or "array" column,
+ *   doesn't round-trip: `[1,2,3]` is written back as `[{"value":1},{"value":2},{"value":3}]`.
  *
  * Note too that some JSON records are read into the exact same [DataFrame], so writing it back can only produce
  * one of them: a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes

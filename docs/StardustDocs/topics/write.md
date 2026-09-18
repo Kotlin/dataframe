@@ -53,10 +53,12 @@ Each row is written as an element of a JSON array: a [`ColumnGroup`](DataColumn.
 object, a [`FrameColumn`](DataColumn.md#framecolumn) becomes a nested array of objects, and a `List` value becomes
 a JSON array.
 
-There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with a
-[type clash](read.md#manage-type-clashes) can be written back to its original form.
-When one of its top-level columns is detected as a "value" or "array" column — it's named `value` or `array` and
-only holds a value in rows where every other column holds none — a row is written as the record it was read from:
+There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with a top-level
+[type clash](read.md#manage-type-clashes) can be written back to its original form. Such a clash puts the
+elements that aren't objects into ["value" and "array" columns](read.md#value-and-array-columns), beside the
+objects' own properties. When one of the top-level columns is detected as such a "value" or "array" column —
+it's named `value` or `array` and only holds a value in rows where every other column holds none — a row is
+written as the record it was read from:
 
 * the value of the "value" column, if the row has one;
 * otherwise the array of the "array" column, if the row has one;
@@ -77,10 +79,14 @@ Output:
 
 <!---END-->
 
-> Only a top-level type clash is restored like this. A clash inside a
-> [`ColumnGroup`](DataColumn.md#columngroup) is written as the group's object, so its "value" and "array"
-> columns show up as ordinary properties: `[{"a":"text"},{"a":[6,7,8]}]` is written back as
-> `[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]`.
+> Only a *top-level* clash is restored like this:
+> * a clash inside a [`ColumnGroup`](DataColumn.md#columngroup) isn't — the group is written as its object, so
+>   its "value" and "array" columns show up as ordinary properties: `[{"a":"text"},{"a":[6,7,8]}]` is written
+>   back as `[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]`;
+> * a single-column [`DataFrame`](DataFrame.md) isn't either, since a lone "value"/"array" column can't be told
+>   apart from one the user named that way. So a JSON array of non-objects, which is read into just a "value" or
+>   "array" column, doesn't round-trip: `[1,2,3]` is written back as
+>   `[{"value":1},{"value":2},{"value":3}]`.
 > {style="note"}
 
 > Some JSON records are read into the exact same [`DataFrame`](DataFrame.md), so writing it back can only

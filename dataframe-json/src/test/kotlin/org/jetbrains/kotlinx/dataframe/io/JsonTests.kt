@@ -1369,6 +1369,51 @@ class JsonTests {
     }
 
     @Test
+    fun `value and array columns are created for nameless json elements`() {
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            fun read(
+                @Language("json") json: String,
+            ) = DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic)
+
+            read("""[1, 2, 3]""").let {
+                it.columnNames() shouldBe listOf("value")
+                it["value"].type() shouldBe typeOf<Int>()
+            }
+            read("""[[1], [2]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"].type() shouldBe typeOf<List<Int>>()
+            }
+            read("""[[{ "a": 1 }], [{ "a": 2 }]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"] shouldBe instanceOf<FrameColumn<*>>()
+            }
+
+            // a property keeps its own name when there's no clash
+            read("""[{ "a": [1, 2] }, { "a": [3] }]""")["a"].type() shouldBe typeOf<List<Int>>()
+            read("""[{ "a": { "b": 1 } }, { "a": { "b": 2 } }]""")["a"].let {
+                it shouldBe instanceOf<ColumnGroup<*>>()
+                (it as ColumnGroup<*>).columnNames() shouldBe listOf("b")
+            }
+        }
+
+        // a top-level clash has no property to group under, so the columns end up side by side
+        DataFrame.readJsonStr("""[1, { "label": "record" }]""").let {
+            it["value"].type() shouldBe typeOf<Int?>()
+            it["label"].type() shouldBe typeOf<String?>()
+        }
+    }
+
+    @Test
+    fun `a lone value or array column is not an unnamed column`() {
+        DataFrame.readJsonStr("""[1,2,3]""").toJson() shouldBe """[{"value":1},{"value":2},{"value":3}]"""
+        DataFrame.readJsonStr("""[[1],[2]]""").toJson() shouldBe """[{"array":[1]},{"array":[2]}]"""
+
+        // as soon as a clash gives the frame a second column, the round trip holds again
+        DataFrame.readJsonStr("""[1,{"label":"record"}]""").toJson() shouldBe """[1,{"label":"record"}]"""
+        DataFrame.readJsonStr("""[{"label":"record"},[1]]""").toJson() shouldBe """[{"label":"record"},[1]]"""
+    }
+
+    @Test
     fun `null is not read as empty list in array column`() {
         // https://github.com/Kotlin/dataframe/issues/2048
         @Language("json")
