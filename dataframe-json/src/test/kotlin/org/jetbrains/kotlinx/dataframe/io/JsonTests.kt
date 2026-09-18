@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.format
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
@@ -171,7 +172,8 @@ class JsonTests {
         group.columnsCount() shouldBe 3
         group["b"].type() shouldBe typeOf<Int?>()
         group["value"].type() shouldBe typeOf<String?>()
-        group["array"].type() shouldBe typeOf<List<Int>>()
+        group["array"].type() shouldBe typeOf<List<Int>?>()
+        group["array"].values().toList() shouldBe listOf(null, null, listOf(6, 7, 8))
     }
 
     @Test
@@ -209,8 +211,8 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Double>>()
-        df[1]["a"] shouldBe emptyList<Int>()
+        df["a"].type() shouldBe typeOf<List<Double>?>()
+        df[1]["a"] shouldBe null
     }
 
     @Test
@@ -227,8 +229,8 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Double>>()
-        df[1]["a"] shouldBe emptyList<Int>()
+        df["a"].type() shouldBe typeOf<List<Double>?>()
+        df[1]["a"] shouldBe null
     }
 
     @Test
@@ -491,7 +493,8 @@ class JsonTests {
         val df = dataFrameOf("a")(listOf(1, 2, 3), null)
         val text = df.toJson()
         val df1 = DataFrame.readJsonStr(text)
-        df1["a"][1] shouldBe emptyList<Int>()
+        df1["a"][1] shouldBe null
+        df1 shouldBe df
     }
 
     @Test
@@ -499,7 +502,8 @@ class JsonTests {
         val df = dataFrameOf("a")(listOf(1, 2, 3), null)
         val text = df.toJson()
         val df1 = DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
-        df1["a"][1] shouldBe emptyList<Int>()
+        df1["a"][1] shouldBe null
+        df1 shouldBe df
     }
 
     @Test
@@ -574,8 +578,8 @@ class JsonTests {
         @Language("json")
         val mixedJson = """[{"label":"record"},0,null,null]"""
 
-        // TODO Issue #2045
-        // DataFrame.readJsonStr(mixedJson).toJson() shouldBe """[{"label":"record"},0,null,null]"""
+        // Issue #2045
+        DataFrame.readJsonStr(mixedJson).toJson() shouldBe """[{"label":"record"},0,null,null]"""
 
         // Even though `value` was created by `readJson`, taking a slice makes it all-null.
         // We can no longer tell the difference between a generated 'value' and a regular column that was named 'value'
@@ -783,7 +787,7 @@ class JsonTests {
         schema shouldNotContain "Void?"
 
         group["array1"].type() shouldBe typeOf<Int?>()
-        group["array2"].type() shouldBe typeOf<List<Int>>()
+        group["array2"].type() shouldBe typeOf<List<Int>?>()
     }
 
     @Test
@@ -865,11 +869,13 @@ class JsonTests {
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as ValueColumn<*>
-        a.type() shouldBe typeOf<List<Int?>>()
+        a.type() shouldBe typeOf<List<Int?>?>()
         a[0] shouldBe listOf(1, 2, 3)
         a[1] shouldBe listOf(null)
-        a[2..5].forEach {
-            it shouldBe emptyList<Int?>()
+        a[2] shouldBe emptyList<Int?>()
+        // json `null` and missing values are read as `null`, not as an empty list
+        a[3..5].forEach {
+            it shouldBe null
         }
     }
 
@@ -973,12 +979,12 @@ class JsonTests {
 //        ⌌-------------------------------------------------------⌍
 //        |  | a:{b:{value:Int?, array:List<Int>}, c:Int?, d:Any?}|
 //        |--|----------------------------------------------------|
-//        | 0|         { b:{ value:1, array:[] }, c:null, d:null }|
+//        | 0|       { b:{ value:1, array:null }, c:null, d:null }|
 //        | 1|  { b:{ value:null, array:[1, 2, 3] }, c:2, d:null }|
-//        | 2|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 3|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 4|      { b:{ value:null, array:[] }, c:null, d:null }|
-//        | 5|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        | 2|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 3|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 4|    { b:{ value:null, array:null }, c:null, d:null }|
+//        | 5|    { b:{ value:null, array:null }, c:null, d:null }|
 //        ⌎-------------------------------------------------------⌏
         noKeyValue.columnsCount() shouldBe 1
         noKeyValue.rowsCount() shouldBe 6
@@ -988,12 +994,12 @@ class JsonTests {
 
             it["b"].type() shouldBe typeOf<DataRow<*>>()
             it["b"]["value"].type() shouldBe typeOf<Int?>()
-            it["b"]["array"].type() shouldBe typeOf<List<Int>>()
+            it["b"]["array"].type() shouldBe typeOf<List<Int>?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe nothingType(nullable = true)
 
             it[0].let {
-                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to emptyList<Int>())
+                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to null)
                 it["c"] shouldBe null
                 it["d"] shouldBe null
             }
@@ -1004,7 +1010,8 @@ class JsonTests {
             }
             (it as ColumnGroup<*>)[2..5].forEach {
                 it.let {
-                    (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to emptyList<Int>())
+                    // json `null` and missing values are read as `null`, not as an empty list
+                    (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to null)
                     it["c"] shouldBe null
                     it["d"] shouldBe null
                 }
@@ -1359,6 +1366,256 @@ class JsonTests {
         val df = dataFrameOf("col")(listOf(1, 2, 3))
         val json = df.toJson()
         DataFrame.readJsonStr(json) shouldBe df
+    }
+
+    @Test
+    fun `value and array columns are created for nameless json elements`() {
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            fun read(
+                @Language("json") json: String,
+            ) = DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic)
+
+            read("""[1, 2, 3]""").let {
+                it.columnNames() shouldBe listOf("value")
+                it["value"].type() shouldBe typeOf<Int>()
+            }
+            read("""[[1], [2]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"].type() shouldBe typeOf<List<Int>>()
+            }
+            read("""[[{ "a": 1 }], [{ "a": 2 }]]""").let {
+                it.columnNames() shouldBe listOf("array")
+                it["array"] shouldBe instanceOf<FrameColumn<*>>()
+            }
+
+            // a property keeps its own name when there's no clash
+            read("""[{ "a": [1, 2] }, { "a": [3] }]""")["a"].type() shouldBe typeOf<List<Int>>()
+            read("""[{ "a": { "b": 1 } }, { "a": { "b": 2 } }]""")["a"].let {
+                it shouldBe instanceOf<ColumnGroup<*>>()
+                (it as ColumnGroup<*>).columnNames() shouldBe listOf("b")
+            }
+        }
+
+        // a top-level clash has no property to group under, so the columns end up side by side
+        DataFrame.readJsonStr("""[1, { "label": "record" }]""").let {
+            it["value"].type() shouldBe typeOf<Int?>()
+            it["label"].type() shouldBe typeOf<String?>()
+        }
+    }
+
+    @Test
+    fun `a lone value or array column is not an unnamed column`() {
+        DataFrame.readJsonStr("""[1,2,3]""").toJson() shouldBe """[{"value":1},{"value":2},{"value":3}]"""
+        DataFrame.readJsonStr("""[[1],[2]]""").toJson() shouldBe """[{"array":[1]},{"array":[2]}]"""
+
+        // as soon as a clash gives the frame a second column, the round trip holds again
+        DataFrame.readJsonStr("""[1,{"label":"record"}]""").toJson() shouldBe """[1,{"label":"record"}]"""
+        DataFrame.readJsonStr("""[{"label":"record"},[1]]""").toJson() shouldBe """[{"label":"record"},[1]]"""
+    }
+
+    @Test
+    fun `null is not read as empty list in array column`() {
+        // https://github.com/Kotlin/dataframe/issues/2048
+        @Language("json")
+        val json = """[null, [123], []]"""
+
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic).alsoDebug().let {
+                it.columnsCount() shouldBe 1
+                it.rowsCount() shouldBe 3
+                it.getColumn(0).let {
+                    it.type() shouldBe typeOf<List<Int>?>()
+                    it[0] shouldBe null
+                    it[1] shouldBe listOf(123)
+                    it[2] shouldBe emptyList<Int>()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `null in nested array column`() {
+        // https://github.com/Kotlin/dataframe/issues/2048
+        @Language("json")
+        val json =
+            """
+            [
+                {"a":[1,2,3]},
+                {"a":[]},
+                {"a":null},
+                {}
+            ]
+            """.trimIndent()
+
+        for (typeClashTactic in JSON.TypeClashTactic.entries) {
+            DataFrame.readJsonStr(json, typeClashTactic = typeClashTactic).alsoDebug().let {
+                it.columnsCount() shouldBe 1
+                it.rowsCount() shouldBe 4
+                it["a"].let {
+                    it.type() shouldBe typeOf<List<Int>?>()
+                    it[0] shouldBe listOf(1, 2, 3)
+                    it[1] shouldBe emptyList<Int>()
+                    it[2] shouldBe null
+                    it[3] shouldBe null
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `value column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        @Language("json")
+        val json = """[1,{"label":"record"},null]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["value"].type() shouldBe typeOf<Int?>()
+        df["label"].type() shouldBe typeOf<String?>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `array column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[{"label":"record"},[123]]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["array"].type() shouldBe typeOf<List<Int>?>()
+        df["array"][0] shouldBe null
+        df["label"].type() shouldBe typeOf<String?>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `array of objects column round trip keeps the other columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[{"label":"record"},[{"a":123}]]"""
+
+        val df = DataFrame.readJsonStr(json).alsoDebug()
+        df["array"] shouldBe instanceOf<FrameColumn<*>>()
+
+        df.toJson() shouldBe json
+    }
+
+    @Test
+    fun `value and array column round trip`() {
+        // https://github.com/Kotlin/dataframe/issues/2045, https://github.com/Kotlin/dataframe/issues/2046
+        @Language("json")
+        val json = """[1,{"label":"record"},[123],null,[]]"""
+
+        DataFrame.readJsonStr(json).alsoDebug().toJson() shouldBe json
+
+        // the example documented in docs/StardustDocs/topics/write.md
+        @Language("json")
+        val documented = """[1,{"label":"record"},[123],null]"""
+
+        DataFrame.readJsonStr(documented).toJson() shouldBe documented
+    }
+
+    @Test
+    fun `a null record and an object of nulls only are indistinguishable`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        // both jsons are read into the exact same DataFrame, so writing it back can only produce one of them
+        val nullRecord = DataFrame.readJsonStr("""[1,{"label":"record"},null]""").alsoDebug()
+        val objectOfNulls = DataFrame.readJsonStr("""[1,{"label":"record"},{"label":null}]""").alsoDebug()
+
+        objectOfNulls shouldBe nullRecord
+
+        // a row without any values is written back as a `null` record
+        nullRecord.toJson() shouldBe """[1,{"label":"record"},null]"""
+        objectOfNulls.toJson() shouldBe """[1,{"label":"record"},null]"""
+
+        // without a type clash there's no unnamed `value`/`array` column, so rows stay objects
+        DataFrame.readJsonStr("""[{"label":"record"},{"label":null}]""")
+            .toJson() shouldBe """[{"label":"record"},{"label":null}]"""
+    }
+
+    @Test
+    fun `type clash round trip with metadata`() {
+        // https://github.com/Kotlin/dataframe/issues/2046
+        // the notebook rendering path must extract the unnamed columns just like `toJson` does
+        fun AnyFrame.dataWithMetadata(): String =
+            parseJsonStr(toJsonWithMetadata(rowsCount()))[KOTLIN_DATAFRAME]!!.jsonArray.toString()
+
+        DataFrame.readJsonStr("""[{"label":"record"},[{"a":123}]]""")
+            .dataWithMetadata() shouldBe """[{"label":"record"},[{"a":123}]]"""
+
+        DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""")
+            .dataWithMetadata() shouldBe """[1,{"label":"record"},[123],null]"""
+    }
+
+    @Test
+    fun `a null list is written as null with metadata too`() {
+        fun AnyFrame.dataWithMetadata(): String =
+            parseJsonStr(toJsonWithMetadata(rowsCount()))[KOTLIN_DATAFRAME]!!.jsonArray.toString()
+
+        val df = DataFrame.readJsonStr("""[{"a":[1]},{"a":[]},{"a":null}]""").alsoDebug()
+        df["a"].type() shouldBe typeOf<List<Int>?>()
+
+        val expected = """[{"a":[1]},{"a":[]},{"a":null}]"""
+        df.toJson() shouldBe expected
+        df.dataWithMetadata() shouldBe expected
+
+        // a user-made nullable `List` column behaves the same
+        dataFrameOf(
+            "a" to columnOf<List<Int>?>(listOf(1), emptyList(), null),
+        ).dataWithMetadata() shouldBe expected
+    }
+
+    @Test
+    fun `a column named array that holds no arrays is not an unnamed column`() {
+        // a user-made `array` column of single values must not be encoded as if it held JSON arrays
+        dataFrameOf(
+            "array" to columnOf(1, null),
+            "name" to columnOf(null, "x"),
+        ).toJson() shouldBe """[{"array":1,"name":null},{"array":null,"name":"x"}]"""
+    }
+
+    @Test
+    fun `an empty array of objects is written back as null`() {
+        // a frame column cannot hold `null`, so "no array here" and "an empty array here" are both
+        // read as an empty DataFrame and can only be written back as one of the two
+        val df = DataFrame.readJsonStr("""[{"label":"record"},[{"a":1}],[]]""").alsoDebug()
+        df["array"] shouldBe instanceOf<FrameColumn<*>>()
+
+        df.toJson() shouldBe """[{"label":"record"},[{"a":1}],null]"""
+
+        // arrays of primitives are read into a nullable `List` column, so there the two stay distinct
+        DataFrame.readJsonStr("""[{"a":[1]},{"a":[]},{"a":null}]""")
+            .toJson() shouldBe """[{"a":[1]},{"a":[]},{"a":null}]"""
+    }
+
+    @Test
+    fun `a nested type clash keeps its value and array columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        // unlike a top-level clash, a clash inside a column group is written back as the group's object,
+        // so the unnamed `value`/`array` columns show up as regular properties
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":{"b":2}},{"a":[6,7,8]}]""").alsoDebug().toJson() shouldBe
+            """
+            [{"a":{"b":null,"value":"text","array":null}},{"a":{"b":2,"value":null,"array":null}},{"a":{"b":null,"value":null,"array":[6,7,8]}}]
+            """.trimIndent()
+
+        // the example documented in docs/StardustDocs/topics/write.md
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":[6,7,8]}]""").toJson() shouldBe
+            """[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]"""
+    }
+
+    @Test
+    fun `user-made value and array columns of nulls only are not unnamed columns`() {
+        // https://github.com/Kotlin/dataframe/issues/2045
+        dataFrameOf(
+            "value" to columnOf<Double?>(null, null),
+            "name" to columnOf("Alice", "Bob"),
+        ).toJson() shouldBe """[{"value":null,"name":"Alice"},{"value":null,"name":"Bob"}]"""
+
+        dataFrameOf(
+            "array" to columnOf<List<Int>?>(null, null),
+            "name" to columnOf("Alice", "Bob"),
+        ).toJson() shouldBe """[{"array":null,"name":"Alice"},{"array":null,"name":"Bob"}]"""
     }
 
     @Test

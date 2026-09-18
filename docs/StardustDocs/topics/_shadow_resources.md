@@ -253,11 +253,15 @@
 <resource src="readCsvWithJsonListsColumns.html"></resource>
 <resource src="readDatesWithSpecificDateTimeFormatter.html"></resource>
 <resource src="readDatesWithSpecificDateTimePattern.html"></resource>
+<resource src="readJsonArrayColumn.html"></resource>
+<resource src="readJsonArrayOfObjectsColumn.html"></resource>
 <resource src="readJsonFromString.html"></resource>
 <resource src="readJsonFromStringWithKeyValuePairs.html"></resource>
 <resource src="readJsonFromStringWithoutKeyValuePairs.html"></resource>
+<resource src="readJsonTopLevelTypeClash.html"></resource>
 <resource src="readJsonTypeClash.html"></resource>
 <resource src="readJsonTypeClashTactic.html"></resource>
+<resource src="readJsonValueColumn.html"></resource>
 <resource src="readJsonWithJsonInstance.html"></resource>
 <resource src="readNumbersWithColType.html"></resource>
 <resource src="readNumbersWithSpecificLocale.html"></resource>

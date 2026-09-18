@@ -441,20 +441,89 @@ has the `Double` type because it's the smallest unified number type for `Int` an
 
 ### JSON parsing options
 
+#### The "value" and "array" columns {id="value-and-array-columns"}
+
+A JSON element that isn't an object has no property name to be used as a column name, so the reader falls back to
+two fixed names:
+
+* "value" holds the JSON element if it's a primitive, else it's `null`.
+* "array" holds the JSON element as a list if it's an array, else it's `null`.
+
+They're created in two situations. The first is **at the top level**, where the elements of the JSON array are the
+rows themselves and so have no name at all. This happens regardless of the `typeClashTactic` and even when there's
+no clash to begin with.
+
+An array of primitives is read into a single "value" column:
+
+<!---FUN readJsonValueColumn-->
+
+```kotlin
+val df = DataFrame.readJsonStr("""[1, 2, 3]""")
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonValueColumn.html" width="100%" height="500px"></inline-frame>
+
+An array of arrays, into a single "array" column of lists:
+
+<!---FUN readJsonArrayColumn-->
+
+```kotlin
+val df = DataFrame.readJsonStr("""[[1], [2]]""")
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonArrayColumn.html" width="100%" height="500px"></inline-frame>
+
+And when those arrays hold objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn):
+
+<!---FUN readJsonArrayOfObjectsColumn-->
+
+```kotlin
+val df = DataFrame.readJsonStr("""[[{ "a": 1 }], [{ "a": 2 }]]""")
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonArrayOfObjectsColumn.html" width="100%" height="500px"></inline-frame>
+
+The second situation is a **type clash**, described below.
+
 #### Manage type clashes
 
-By default, if a type clash occurs when reading JSON, a new [`column group`](DataColumn.md#columngroup) is created consisting of: "value", "array", and
-any number of object properties:
-
-* "value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.
-* "array" will be set to the array of values if the JSON element is an array, else it will be `[]`.
+By default, if a type clash occurs when reading JSON — the same property holds elements of different shapes across
+records — a new [`column group`](DataColumn.md#columngroup) is created for that property, consisting of: "value",
+"array", and any number of object properties.
 
 If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
+A clash at the top level has no property to group under, so there "value", "array", and the objects' properties
+become sibling columns of the [`DataFrame`](DataFrame.md) itself:
+
+<!---FUN readJsonTopLevelTypeClash-->
+
+```kotlin
+val df = DataFrame.readJsonStr("""[1, { "label": "record" }]""")
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonTopLevelTypeClash.html" width="100%" height="500px"></inline-frame>
+
+Without a clash there's no such group: a property whose elements are all arrays simply becomes a `List` column under
+its own name, and one whose elements are all objects becomes a group of just those objects' properties.
+
+Since every one of these columns only holds a value for the elements that actually have that shape, all of them
+are nullable. A JSON `null` element, as well as a missing property, is `null` in all of them.
+
+> An empty JSON array `[]` is read as an empty list, which is different from `null`, meaning "there is no array here".
+>
+> When the arrays contain objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn) instead. There, an
+> element without an array is an empty [`DataFrame`](DataFrame.md), because frame columns cannot hold `null`.
+> {style="note"}
+
 In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
 
-For example, this is how the following JSON will be read (including `null` and `[]` values):
+For example, this is how the following JSON will be read (including `null` values):
 
 <!---FUN readJsonTypeClash-->
 

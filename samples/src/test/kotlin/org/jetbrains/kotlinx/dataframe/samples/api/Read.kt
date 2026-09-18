@@ -402,6 +402,38 @@ class Read : DataFrameSampleHelper("read", "api") {
     }
 
     @Test
+    fun readJsonValueColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[1, 2, 3]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonArrayColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[[1], [2]]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonArrayOfObjectsColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[[{ "a": 1 }], [{ "a": 2 }]]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonTopLevelTypeClash() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[1, { "label": "record" }]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun readJsonTypeClash() {
         // SampleStart
         val text = """
