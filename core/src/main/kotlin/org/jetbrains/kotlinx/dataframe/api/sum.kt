@@ -196,7 +196,9 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias DataColumnSumSnippet = Nothing
 
     /**
-     * @comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.
+     * {@comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.}
+     *
+     * The result of [expression\] is treated as the 'input' of this operation.
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      *
@@ -327,6 +329,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      *    KDoc-snippet.
      *
      * @include [SumDocs.RowExpressionSnippet]
+     *
+     * The result of the [expression\] is considered the 'input' of this operation.
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptySnippet]
      *
@@ -1366,6 +1370,8 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * a single column with the sum per group, named [resultName] (or `"sum"` if [resultName] is `null`).
  *
  * @include [SumDocs.RowExpressionSnippet]
+ *
+ * The result of the [expression\] is considered the 'input' of this operation.
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
@@ -1714,6 +1720,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
  * @include [SumDocs.RowExpressionSnippet]
+ *
+ * The result of the [expression\] is considered the 'input' of this operation.
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
