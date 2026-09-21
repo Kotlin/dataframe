@@ -117,7 +117,12 @@ there's a tab selector that allows switching between Access APIs.
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.readCsv("titanic.csv")
+val df =
+    DataFrame.readCsv(
+        "titanic.csv",
+        delimiter = ';',
+        parserOptions = ParserOptions(locale = Locale.GERMANY),
+    )
 ```
 
 <!---END-->
@@ -125,9 +130,9 @@ val df = DataFrame.readCsv("titanic.csv")
 <!---FUN extensionProperties2-->
 
 ```kotlin
-df.add("lastName") { name.split(",").last() }
-    .dropNulls { age }
-    .filter { survived && home.endsWith("NY") && age in 10..20 }
+df.add("lastName") { name.substringBefore(",") }
+    .dropNulls { age and homedest }
+    .filter { survived == 1 && homedest.endsWith("NY") && age in 10.0..20.0 }
 ```
 
 <!---END-->
@@ -139,13 +144,17 @@ df.add("lastName") { name.split(",").last() }
 <!---FUN strings-->
 
 ```kotlin
-DataFrame.readCsv("titanic.csv")
-    .add("lastName") { "name"<String>().split(",").last() }
-    .dropNulls("age")
+DataFrame.readCsv(
+    "titanic.csv",
+    delimiter = ';',
+    parserOptions = ParserOptions(locale = Locale.GERMANY),
+)
+    .add("lastName") { "name"<String>().substringBefore(",") }
+    .dropNulls("age", "homedest")
     .filter {
-        "survived"<Boolean>() &&
-            "home"<String>().endsWith("NY") &&
-            "age"<Int>() in 10..20
+        "survived"<Int>() == 1 &&
+            "homedest"<String>().endsWith("NY") &&
+            "age"<Double>() in 10.0..20.0
     }
 ```
 
