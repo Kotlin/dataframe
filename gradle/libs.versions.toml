@@ -76,7 +76,7 @@ dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
 dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
 dockerImage-mssql = "2022-CU22-ubuntu-22.04" # available tags: https://mcr.microsoft.com/en-us/artifact/mar/mssql/server
 
-buildconfig = "6.1.0"
+buildconfig = "6.1.1"
 benchmark = "0.5.0"
 
 geotools = "33.5" # 34.x and higher versions are not compatible with Java 11
@@ -87,7 +87,7 @@ kandy = "0.8.5"
 kotlin-dl = "0.5.2"
 
 exposed = "1.5.0"
-hibernate = "7.4.8.Final"
+hibernate = "7.4.10.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
