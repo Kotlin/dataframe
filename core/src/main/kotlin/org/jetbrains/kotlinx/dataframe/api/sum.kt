@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -110,10 +111,19 @@ internal interface SumDocs : CommonStatisticsDocs {
      * {@comment Note about the behavior on empty input for the modes with a single result. KDoc-snippet.}
      *
      * When there is nothing to sum, for instance, when the input is empty or contains only `null` values,
-     * the result is `0` in the result type (defaulting to [Double] if there is no number type to speak of).
+     * the result is `0` in the result type
      */
     @ExcludeFromSources
     typealias ZeroOnEmptySnippet = Nothing
+
+    /**
+     * {@comment Note about the behavior on empty input for the modes
+     *   with a single result with comment about defaulting to Double. KDoc-snippet.}
+     *
+     * @include [ZeroOnEmptySnippet] (defaulting to [Double] if there is no number type to speak of)
+     */
+    @ExcludeFromSources
+    typealias ZeroOnEmptyDefaultDoubleSnippet = Nothing
 
     /**
      * {@comment Note about the behavior on empty input for the modes with multiple results. KDoc-snippet.}
@@ -169,10 +179,10 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias SumForSelectingOptions = Nothing
 
     /**
-     * @include [SumDocs.ZeroOnEmptySnippet]
+     * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      *
      * See also:
-     * - [`sumOf`][DataColumn.sumOf] — the sum of the values a selector returns for each element.
+     * - [`sumOf`][DataColumn.sumOf] — the sum of the values an expression returns for each element.
      * - [`mean`][DataColumn.mean] — the sum divided by the number of values.
      * - [`cumSum`][DataColumn.cumSum] — the running sum of the values in this column.
      * - {@include [SumDocsLink]} — an overview of all `sum` modes.
@@ -188,7 +198,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     /**
      * @comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroOnEmptySnippet]
+     * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      *
      * See also:
      * - [`sum`][DataColumn.sum] — the sum of the values in this column itself.
@@ -284,7 +294,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      *    KDoc-snippet.
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroOnEmptySnippet]
+     * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See also:
@@ -585,6 +595,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * @comment The `columns` parameter of the [String] overloads. KDoc-snippet.
      *
      * @param [columns\] The names of the columns to compute the sum of.
+     *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
@@ -736,12 +747,14 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
  *
  * Only the values in the columns of a primitive number type (and in "mixed" [Number] columns)
  * are taken into account; all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * Since the values of different columns are summed together, the result is the sum of all those
  * values converted to their common type.
  *
  * @include [SumDocs.SupportedTypesSnippet]
- * @include [SumDocs.ZeroOnEmptySnippet]
+ * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
  *
  * See also:
  * - [`rowSumOf<Type>()`][DataRow.rowSumOf] — the sum of the values of one specific number type in this row.
@@ -769,6 +782,8 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  *
  * Only the values in the columns of type [Short] (or `Short?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -788,6 +803,8 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  *
  * Only the values in the columns of type [Byte] (or `Byte?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -807,6 +824,8 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  *
  * Only the values in the columns of type [Int] (or `Int?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -826,6 +845,8 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  *
  * Only the values in the columns of type [Long] (or `Long?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -845,6 +866,8 @@ public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> =
  *
  * Only the values in the columns of type [Float] (or `Float?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet]
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -867,6 +890,8 @@ public inline fun <reified T : Float> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of type [Double] (or `Double?`) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet]
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -891,6 +916,8 @@ public inline fun <reified T : Double> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of the given [type] (or its nullable variant) are taken into account;
  * all other columns of the row are ignored.
+ * This includes columns inside [column groups][ColumnGroup].
+ * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
  *
  * This overload takes the type as a [KType] argument; prefer the `reified` overloads, like
  * [`rowSumOf`][DataRow.rowSumOf]`<`[`Int`][Int]`>()`, whenever the type is known at compile time.
@@ -907,7 +934,7 @@ public inline fun <reified T : Double> DataRow<*>.rowSumOf(
  */
 public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Number {
     require(type.isPrimitiveOrMixedNumber()) {
-        "Type $type is not a primitive number type. Mean only supports primitive number types."
+        "Type $type is not a primitive number type. Sum only supports primitive number types."
     }
     return Aggregators.sum(skipNaN).aggregateOfRow(this) {
         colsOf(type.withNullability(true))
@@ -1357,6 +1384,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * ```
  *
  * @param [resultName] The name of the resulting column. If `null` (the default), `"sum"` is used.
+ *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
  * @include [SumDocs.SkipNanParam]
  * @include [SumDocs.ExpressionParam]
  * @return A new [DataFrame] with the group keys and a single sum per group.
