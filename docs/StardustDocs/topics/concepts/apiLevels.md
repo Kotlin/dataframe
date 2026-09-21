@@ -1,7 +1,5 @@
 [//]: # (title: Access APIs)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
-
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.concepts.AccessApis-->
 
 By nature, dataframes are dynamic objects;
@@ -119,7 +117,7 @@ there's a tab selector that allows switching between Access APIs.
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df /* : AnyFrame */ = DataFrame.readCsv("titanic.csv")
+val df = DataFrame.readCsv("titanic.csv")
 ```
 
 <!---END-->
