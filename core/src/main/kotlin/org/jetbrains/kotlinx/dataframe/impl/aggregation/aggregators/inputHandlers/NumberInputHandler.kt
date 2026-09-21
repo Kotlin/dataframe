@@ -100,8 +100,12 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.
      *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
+     *   If the input is empty, the (most complex but valid) type [Double] is returned.
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
+        if (valueTypes.isEmpty()) {
+            return typeOf<Double>().toValueType()
+        }
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
             ?: typeOf<Number>().withNullability(valueTypes.any { it.isMarkedNullable })
         if (!unifiedType.isPrimitiveOrMixedNumber() && !unifiedType.isNothing) {
