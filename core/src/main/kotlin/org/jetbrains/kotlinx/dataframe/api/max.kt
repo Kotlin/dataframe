@@ -127,7 +127,7 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * df.weight.max()
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -159,7 +159,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * df.weight.maxOrNull()
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -189,7 +189,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * df.name.firstName.maxBy { it.length }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -224,7 +224,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * df.name.firstName.maxByOrNull { it.length }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the maximum value,
  *   or `null` if there are no values to compare.
@@ -258,7 +258,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * df.name.firstName.maxOf { it.length }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The maximum of the values [selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -293,7 +293,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * df.name.firstName.maxOfOrNull { it.length }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The maximum of the values [selector] returns,
  *   or `null` if there are no values to compare.
@@ -339,7 +339,7 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value of type [T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -371,7 +371,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value of type [T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -407,7 +407,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * df.max()
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each suitable column of this [DataFrame].
  */
 @Refine
@@ -444,7 +444,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * df.maxFor(skipNaN = true) { age into "maxAge" and (weight into "maxWeight") }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
  *   to compute the maximum of.
  * @return A single [DataRow] with the maximum of each selected column.
@@ -482,7 +482,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each selected column.
  */
 @Refine
@@ -531,7 +531,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * df.max { age and weight }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns.
@@ -570,7 +570,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -620,7 +620,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * df.maxOrNull { age and weight }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns,
@@ -661,7 +661,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -710,7 +710,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * df.maxOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The maximum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -748,7 +748,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  * df.maxOfOrNull { (weight ?: 0) / age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The maximum of the values [expression] returns,
  *   or `null` if there are no values to compare.
@@ -788,7 +788,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  * df.maxBy { (weight ?: 0) / age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -826,7 +826,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column of this [DataFrame] to compare the rows by.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The first [DataRow] with the largest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -873,7 +873,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * df.maxByOrNull { age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the maximum value,
  *   or `null` if there are no values to compare.
@@ -910,7 +910,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * ```
  *
  * @param [column] The name of the column of this [DataFrame] to compare the rows by.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return The first [DataRow] with the largest value in the given column,
  *   or `null` if there are no values to compare.
  */
@@ -965,7 +965,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * df.groupBy { city }.max()
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the maximum of each suitable column per group.
  */
 @Refine
@@ -1007,7 +1007,7 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * df.groupBy { city }.maxFor { age and weight }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
  * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
@@ -1052,7 +1052,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
  */
 @Refine
@@ -1112,7 +1112,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"max"` otherwise.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
@@ -1163,7 +1163,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"max"` otherwise.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
@@ -1222,7 +1222,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * ```
  *
  * @param [name] The name of the resulting column. If `null` (the default), `"max"` is used.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
@@ -1261,7 +1261,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  * df.groupBy { city }.maxBy { age }.concat()
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to compute the value to compare for each row.
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   for which [rowExpression] returns the maximum value.
@@ -1306,7 +1306,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   that has the largest value in the given column.
  */
@@ -1357,7 +1357,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * ```
  *
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each suitable column per [pivot] group.
  */
 public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -1400,7 +1400,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * ```
  *
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
  * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
@@ -1445,7 +1445,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @param [columns] The names of the columns to compute the maximum of.
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
  */
 public fun <T> Pivot<T>.maxFor(
@@ -1501,7 +1501,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * df.pivot { city }.max { age and weight }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
  * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
  *   in the selected columns.
@@ -1543,7 +1543,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
  *   in the selected columns.
  */
@@ -1598,7 +1598,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * df.pivot { city }.maxOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A single [DataRow] with, per [pivot] group, the maximum of the expression's results.
  */
@@ -1637,7 +1637,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * df.pivot { city }.maxBy { (weight ?: 0) / age }.with { name }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivot] holding, per group,
  *   the first row where the [rowExpression] produced the maximum result.
@@ -1684,7 +1684,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [ReducedPivot] holding, per group, the first row with the largest value
  *   in the given column.
  */
@@ -1736,7 +1736,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * ```
  *
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with the maximum of each suitable column per group.
  */
 public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -1779,7 +1779,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * ```
  *
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
  * @return A [DataFrame] with the maximum of each selected column per group.
@@ -1826,7 +1826,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @param [columns] The names of the columns to compute the maximum of.
  * @include [MaxDocs.SeparateParam]
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with the maximum of each selected column per group.
  */
 public fun <T> PivotGroupBy<T>.maxFor(
@@ -1885,7 +1885,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * df.pivot { city }.groupBy { name.lastName }.max { age and weight }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
@@ -1930,7 +1930,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
@@ -1986,7 +1986,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * df.pivot { city }.groupBy { name.lastName }.maxOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the maximum of the expression's results.
  */
@@ -2026,7 +2026,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * df.pivot { city }.groupBy { name.lastName }.maxBy { (weight ?: 0) / age }.with { name.firstName }
  * ```
  *
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the maximum result.
@@ -2074,7 +2074,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MaxDocs.SkipNaNParam]
+ * @include [MaxDocs.SkipNanParam]
  * @return A [ReducedPivotGroupBy] holding, per group, the first row with the largest value
  *   in the given column.
  */
