@@ -7,13 +7,13 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -139,6 +139,20 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias ZeroCellOnEmptySnippet = Nothing
 
     /**
+     * {@comment Note about the behavior on empty input for the Pivot functions. KDoc-snippet.}
+     *
+     * Result cells for which there exists a group, but there is nothing to sum
+     * (for instance, because the group was empty or contained only `null` values)
+     * simply become `0` in the result type (defaulting to [Double] if there is no number type to speak of).
+     * For more information about the resulting types:
+     * @include [DocumentationUrls.Sum.TypeConversion]
+     *
+     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
+     */
+    @ExcludeFromSources
+    typealias ZeroCellOnEmptyPivotSnippet = Nothing
+
+    /**
      * {@comment Note about which columns the no-argument `sum` modes take into account. KDoc-snippet.}
      *
      * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
@@ -196,7 +210,9 @@ internal interface SumDocs : CommonStatisticsDocs {
     typealias DataColumnSumSnippet = Nothing
 
     /**
-     * @comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.
+     * {@comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.}
+     *
+     * The result of [expression\] is treated as the 'input' of this operation.
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      *
@@ -327,6 +343,8 @@ internal interface SumDocs : CommonStatisticsDocs {
      *    KDoc-snippet.
      *
      * @include [SumDocs.RowExpressionSnippet]
+     *
+     * The result of the [expression\] is considered the 'input' of this operation.
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptySnippet]
      *
@@ -435,7 +453,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * of each selected column of the corresponding group.
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SumDocs.ZeroCellOnEmptyPivotSnippet]
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -474,7 +492,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * the values in the selected columns of the corresponding group.
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SumDocs.ZeroCellOnEmptyPivotSnippet]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
@@ -508,7 +526,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SumDocs.ZeroCellOnEmptyPivotSnippet]
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -549,7 +567,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
      *
      * @include [SumDocs.SupportedTypesSnippet]
-     * @include [SumDocs.ZeroCellOnEmptySnippet]
+     * @include [SumDocs.ZeroCellOnEmptyPivotSnippet]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][SumDocs.SumSelectingOptions], or check out the
@@ -1366,6 +1384,8 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * a single column with the sum per group, named [resultName] (or `"sum"` if [resultName] is `null`).
  *
  * @include [SumDocs.RowExpressionSnippet]
+ *
+ * The result of the [expression\] is considered the 'input' of this operation.
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
@@ -1714,6 +1734,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
  * @include [SumDocs.RowExpressionSnippet]
+ *
+ * The result of the [expression\] is considered the 'input' of this operation.
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
