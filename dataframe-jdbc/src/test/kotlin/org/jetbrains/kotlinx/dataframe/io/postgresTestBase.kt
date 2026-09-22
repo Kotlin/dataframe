@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import org.postgresql.geometric.PGbox
@@ -398,5 +399,32 @@ abstract class PostgresTestBase {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    /**
+     * Guards the invariant behind #2087 across a wide surface of types,
+     * see [assertColumnTypesMatchValues].
+     */
+    @Test
+    fun `declared column types accept the values the driver returns`() {
+        connection.assertColumnTypesMatchValues(
+            dbType = PostgreSql,
+            ddl = POSTGRES_AUDIT_DDL,
+            insert = POSTGRES_AUDIT_INSERT,
+        )
+    }
+
+    /**
+     * Pins the column type each SQL type is read as — the claim the type-mapping page publishes,
+     * see [assertColumnTypes].
+     */
+    @Test
+    fun `columns are read as the type-mapping page documents`() {
+        connection.assertColumnTypes(
+            dbType = PostgreSql,
+            ddl = POSTGRES_AUDIT_DDL,
+            insert = POSTGRES_AUDIT_INSERT,
+            expected = POSTGRES_EXPECTED_TYPES,
+        )
     }
 }
