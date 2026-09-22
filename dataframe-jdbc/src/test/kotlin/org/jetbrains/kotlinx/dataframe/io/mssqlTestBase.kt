@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.io.db.MsSql
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -14,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import java.math.BigDecimal
 import java.sql.Connection
+import java.time.OffsetDateTime
 import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
@@ -31,7 +33,7 @@ interface Table1MSSSQL {
     val dateColumn: Date
     val datetime3Column: Instant
     val datetime2Column: Instant
-    val datetimeoffset2Column: String
+    val datetimeoffset2Column: OffsetDateTime
     val decimalColumn: BigDecimal
     val floatColumn: Double
     val imageColumn: ByteArray?
@@ -44,21 +46,27 @@ interface Table1MSSSQL {
     val nvarcharMaxColumn: String
     val realColumn: Float
     val smalldatetimeColumn: Instant
-    val smallintColumn: Int
+    val smallintColumn: Short
     val smallmoneyColumn: BigDecimal
     val timeColumn: java.sql.Time
     val timestampColumn: Instant
-    val tinyintColumn: Int
+    val tinyintColumn: Short
     val uniqueidentifierColumn: Char
     val varbinaryColumn: ByteArray
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
     val varcharMaxColumn: String
     val xmlColumn: String
-    val sqlvariantColumn: String
+    val sqlvariantColumn: Any
     val geometryColumn: ByteArray
     val geographyColumn: ByteArray
 }
+
+/**
+ * A fixed value for the `DATETIMEOFFSET(2)` column, so that both the read value and its
+ * UTC offset can be asserted literally. The offset is deliberately not UTC.
+ */
+private val DATE_TIME_OFFSET_VALUE: OffsetDateTime = OffsetDateTime.parse("2024-01-02T03:04:05.06+02:00")
 
 internal fun setUpMsSqlTestData(connection: Connection) {
     connection.createStatement().use { st ->
@@ -142,7 +150,7 @@ internal fun setUpMsSqlTestData(connection: Connection) {
             st.setDate(5, java.sql.Date(System.currentTimeMillis())) // dateColumn
             st.setTimestamp(6, java.sql.Timestamp(System.currentTimeMillis())) // datetime3Column
             st.setTimestamp(7, java.sql.Timestamp(System.currentTimeMillis())) // datetime2Column
-            st.setTimestamp(8, java.sql.Timestamp(System.currentTimeMillis())) // datetimeoffset2Column
+            st.setObject(8, DATE_TIME_OFFSET_VALUE) // datetimeoffset2Column
             st.setBigDecimal(9, BigDecimal("12345.67")) // decimalColumn
             st.setFloat(10, 123.45f) // floatColumn
             st.setNull(11, java.sql.Types.NULL) // imageColumn (assuming nullable)
@@ -203,6 +211,12 @@ abstract class MsSqlTestBase {
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][30] shouldBe "Sample1"
         result[0]["bigintColumn"] shouldBe 123456789012345L
+        // DATETIMEOFFSET is read as OffsetDateTime, keeping the stored UTC offset (see #2087)
+        result[0]["datetimeoffset2Column"] shouldBe DATE_TIME_OFFSET_VALUE
+        // SMALLINT and TINYINT are read as Short, SQL_VARIANT keeps the type of the stored value (see #2087)
+        result[0]["smallintColumn"] shouldBe 123.toShort()
+        result[0]["tinyintColumn"] shouldBe 123.toShort()
+        result[0]["sqlvariantColumn"] shouldBe "SQL_VARIANT"
         result[0]["bitColumn"] shouldBe true
         result[0]["intColumn"] shouldBe 123456
         result[0]["ntextColumn"] shouldBe "Sample1 text"
@@ -216,7 +230,7 @@ abstract class MsSqlTestBase {
         schema.columns["dateColumn"]!!.type shouldBe typeOf<Date?>()
         schema.columns["datetime3Column"]!!.type shouldBe typeOf<Instant?>()
         schema.columns["datetime2Column"]!!.type shouldBe typeOf<Instant?>()
-        schema.columns["datetimeoffset2Column"]!!.type shouldBe typeOf<String?>()
+        schema.columns["datetimeoffset2Column"]!!.type shouldBe typeOf<OffsetDateTime?>()
         schema.columns["decimalColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["floatColumn"]!!.type shouldBe typeOf<Double?>()
         schema.columns["imageColumn"]!!.type shouldBe typeOf<ByteArray?>()
@@ -229,18 +243,18 @@ abstract class MsSqlTestBase {
         schema.columns["nvarcharMaxColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["realColumn"]!!.type shouldBe typeOf<Float?>()
         schema.columns["smalldatetimeColumn"]!!.type shouldBe typeOf<Instant?>()
-        schema.columns["smallintColumn"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["smallintColumn"]!!.type shouldBe typeOf<Short?>()
         schema.columns["smallmoneyColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["timeColumn"]!!.type shouldBe typeOf<java.sql.Time?>()
         schema.columns["timestampColumn"]!!.type shouldBe typeOf<Instant?>()
-        schema.columns["tinyintColumn"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["tinyintColumn"]!!.type shouldBe typeOf<Short?>()
         schema.columns["uniqueidentifierColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["varbinaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["varbinaryMaxColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["varcharColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["varcharMaxColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["xmlColumn"]!!.type shouldBe typeOf<String?>()
-        schema.columns["sqlvariantColumn"]!!.type shouldBe typeOf<String?>()
+        schema.columns["sqlvariantColumn"]!!.type shouldBe typeOf<Any?>()
         schema.columns["geometryColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["geographyColumn"]!!.type shouldBe typeOf<ByteArray?>()
     }
@@ -312,5 +326,18 @@ abstract class MsSqlTestBase {
                 )
             }
         }
+    }
+
+    /**
+     * Guards the invariant behind #2087 across a wide surface of types,
+     * see [assertColumnTypesMatchValues].
+     */
+    @Test
+    fun `declared column types accept the values the driver returns`() {
+        connection.assertColumnTypesMatchValues(
+            dbType = MsSql,
+            ddl = MSSQL_AUDIT_DDL,
+            insert = MSSQL_AUDIT_INSERT,
+        )
     }
 }
