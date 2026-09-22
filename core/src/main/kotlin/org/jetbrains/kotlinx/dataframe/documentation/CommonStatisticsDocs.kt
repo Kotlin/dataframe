@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.Grouped
+import org.jetbrains.kotlinx.dataframe.api.Pivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 
 /**
  * @comment
@@ -85,4 +88,23 @@ internal interface CommonStatisticsDocs {
      */
     @ExcludeFromSources
     typealias SeparateParam = Nothing
+
+    /**
+     * {@comment The documentation website links all [Grouped] KDocs end with. KDoc-snippet.}
+     *
+     * For more information: {@include [DocumentationUrls.GroupByStatistics]}, and
+     * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+     */
+    @ExcludeFromSources
+    typealias GroupByUrlsSnippet = Nothing
+
+    /**
+     * {@comment The documentation website links all [Pivot] and [PivotGroupBy] KDocs end with.
+     *    KDoc-snippet.}
+     *
+     * For more information: {@include [DocumentationUrls.PivotStatistics]}, and
+     * {@include [DocumentationUrls.PivotAggregationStatistics]}
+     */
+    @ExcludeFromSources
+    typealias PivotUrlsSnippet = Nothing
 }
