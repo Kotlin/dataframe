@@ -56,8 +56,6 @@ Create a map with names as keys:
 df.associateBy { "${name.firstName} ${name.lastName}" }
 ```
 
-<!---END-->
-
 Output:
 
 ```text
@@ -68,6 +66,36 @@ Output:
   Charlie Chaplin: { name:{ firstName:Charlie, lastName:Chaplin }, age:40, city:Milan, isHappy:true },
   Bob Marley: { name:{ firstName:Bob, lastName:Marley }, age:30, city:Tokyo, weight:68, isHappy:true },
   Alice Wolf: { name:{ firstName:Alice, lastName:Wolf }, age:20, weight:55, isHappy:false },
-  Charlie Byrd: { name:{ firstName:Charlie, lastName:Byrd }, age:30, city:Moscow, weight:90, isHappy:true }
+  Charlie Byrd: { name:{ firstName:Charlie, lastName:Byrd }, age:30, city:Moscow, weight:90, isHappy:true },
+  Alice Smith: { name:{ firstName:Alice, lastName:Smith }, age:30, city:Milan, weight:52, isHappy:false },
+  Bob Brown: { name:{ firstName:Bob, lastName:Brown }, age:15, city:London, weight:60, isHappy:false },
+  Charlie Johnson: { name:{ firstName:Charlie, lastName:Johnson }, age:18, city:Dubai, weight:70, isHappy:false }
 }
 ```
+
+<!---END-->
+
+Both rules are visible at once if the city is taken as the key:
+`London` comes first, because the first person from London is in the first row,
+but it holds the last one. A row without a city gives a `null` key:
+
+<!---FUN notebook_test_associateBy_3-->
+
+```kotlin
+df.associateBy { city }
+```
+
+Output:
+
+```text
+{
+  London: { name:{ firstName:Bob, lastName:Brown }, age:15, city:London, weight:60, isHappy:false },
+  Dubai: { name:{ firstName:Charlie, lastName:Johnson }, age:18, city:Dubai, weight:70, isHappy:false },
+  Moscow: { name:{ firstName:Charlie, lastName:Byrd }, age:30, city:Moscow, weight:90, isHappy:true },
+  Milan: { name:{ firstName:Alice, lastName:Smith }, age:30, city:Milan, weight:52, isHappy:false },
+  Tokyo: { name:{ firstName:Bob, lastName:Marley }, age:30, city:Tokyo, weight:68, isHappy:true },
+  null: { name:{ firstName:Alice, lastName:Wolf }, age:20, weight:55, isHappy:false }
+}
+```
+
+<!---END-->

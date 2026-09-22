@@ -31,22 +31,6 @@ class AssociateTests {
         "age" to columnOf(15, 45, null),
     )
 
-    /** The people dataframe used by the `associate` and `associateBy` documentation pages. */
-    private val peopleDf = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-        "Alice", "Cooper", 15, "London", 54, true,
-        "Bob", "Dylan", 45, "Dubai", 87, true,
-        "Charlie", "Daniels", 20, "Moscow", null, false,
-        "Charlie", "Chaplin", 40, "Milan", null, true,
-        "Bob", "Marley", 30, "Tokyo", 68, true,
-        "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true,
-    ).group("firstName", "lastName").into("name")
-
-    private fun AnyRow.fullName(): String {
-        val name = "name"<AnyRow>()
-        return "${name["firstName"]} ${name["lastName"]}"
-    }
-
     // region associate
 
     @Test
@@ -92,21 +76,6 @@ class AssociateTests {
         val map = dfWithNulls.associate { "name"<String?>() to "age"<Int?>() }
 
         map shouldBe mapOf("Alice" to 15, null to 45, "Charlie" to null)
-    }
-
-    @Test
-    fun `documentation example - associate maps a full name to an age`() {
-        val map = peopleDf.associate { fullName() to "age"<Int>() }
-
-        map shouldBe mapOf(
-            "Alice Cooper" to 15,
-            "Bob Dylan" to 45,
-            "Charlie Daniels" to 20,
-            "Charlie Chaplin" to 40,
-            "Bob Marley" to 30,
-            "Alice Wolf" to 20,
-            "Charlie Byrd" to 30,
-        )
     }
 
     @Test
@@ -171,22 +140,6 @@ class AssociateTests {
         val map = dfWithNulls.associateBy { "name"<String?>() }
 
         map shouldBe mapOf("Alice" to dfWithNulls[0], null to dfWithNulls[1], "Charlie" to dfWithNulls[2])
-    }
-
-    @Test
-    fun `documentation example - associateBy maps a full name to the row`() {
-        val map = peopleDf.associateBy { fullName() }
-
-        map.keys.toList() shouldBe listOf(
-            "Alice Cooper",
-            "Bob Dylan",
-            "Charlie Daniels",
-            "Charlie Chaplin",
-            "Bob Marley",
-            "Alice Wolf",
-            "Charlie Byrd",
-        )
-        map["Charlie Daniels"] shouldBe peopleDf[2]
     }
 
     @Test

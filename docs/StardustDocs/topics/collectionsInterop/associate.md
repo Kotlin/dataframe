@@ -53,8 +53,6 @@ Create a map from name to age using a pair selector:
 df.associate { "${name.firstName} ${name.lastName}" to age }
 ```
 
-<!---END-->
-
 Output:
 
 ```text
@@ -65,6 +63,36 @@ Output:
   Charlie Chaplin: 40,
   Bob Marley: 30,
   Alice Wolf: 20,
-  Charlie Byrd: 30
+  Charlie Byrd: 30,
+  Alice Smith: 30,
+  Bob Brown: 15,
+  Charlie Johnson: 18
 }
 ```
+
+<!---END-->
+
+Both rules are visible at once if the city is taken as the key:
+`London` comes first, because the first person from London is in the first row,
+but it holds the last one. A row without a city gives a `null` key:
+
+<!---FUN notebook_test_associate_3-->
+
+```kotlin
+df.associate { city to "${name.firstName} ${name.lastName}" }
+```
+
+Output:
+
+```text
+{
+  London: Bob Brown,
+  Dubai: Charlie Johnson,
+  Moscow: Charlie Byrd,
+  Milan: Alice Smith,
+  Tokyo: Bob Marley,
+  null: Alice Wolf
+}
+```
+
+<!---END-->
