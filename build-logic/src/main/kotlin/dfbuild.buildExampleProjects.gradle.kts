@@ -3,6 +3,7 @@ import dfbuild.buildExampleProjects.detectBuildSystem
 import dfbuild.buildExampleProjects.generateTestCase
 import dfbuild.buildExampleProjects.isAndroid
 import dfbuild.buildExampleProjects.setupGradleSyncVersionsTask
+import dfbuild.buildExampleProjects.setupKotlinToolchainSyncVersionsTask
 import dfbuild.buildExampleProjects.setupMavenSyncVersionsTask
 import dfbuild.getVersionName
 import org.gradle.internal.extensions.stdlib.capitalized
@@ -97,6 +98,15 @@ private fun setupExampleProjectFolderSyncTask(folder: File, isDev: Boolean) {
                     versionCatalog = libs,
                     versionsToSync = versionsToSync,
                 )
+
+            BuildSystem.KOTLIN_TOOLCHAIN ->
+                setupKotlinToolchainSyncVersionsTask(
+                    name = name,
+                    folder = folder,
+                    isDev = isDev,
+                    versionCatalog = libs,
+                    versionsToSync = versionsToSync,
+                )
         }
     syncTask { group = buildExampleProjectsGroup }
     syncAllExampleFolders {
@@ -175,6 +185,10 @@ val runBuildGradleExampleFolders = tasks.register<Test>("runBuildGradleExampleFo
     group = buildExampleProjectsGroup
     description = "Builds the nested Gradle builds in /examples/projects to verify they compile correctly."
 }
+val runBuildKotlinToolchainExampleFolders = tasks.register<Test>("runBuildKotlinToolchainExampleFolders") {
+    group = buildExampleProjectsGroup
+    description = "Builds the nested Kotlin Toolchain builds in /examples/projects to verify they compile correctly."
+}
 val runBuildAndroidExampleFolders = tasks.register<Test>("runBuildAndroidExampleFolders") {
     group = buildExampleProjectsGroup
     description = "Builds the nested Android builds in /examples/projects to verify they compile correctly."
@@ -227,7 +241,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         group = buildExampleProjectsGroup
         dependsOn(syncAllExampleFolders, generateAllExampleFoldersTests)
 
-        if (buildSystem == BuildSystem.MAVEN && isDev) {
+        if (buildSystem != BuildSystem.GRADLE && isDev) {
             // Because we're including a dev Maven project, we need to publish to /build/maven to test it.
             dependsOn(":publishLocal")
         }
@@ -238,6 +252,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
         useJUnitPlatform()
         filter { includeTestsMatching(testClassName) }
         testLogging { events("passed", "skipped", "failed") }
+        outputs.upToDateWhen { false }
 
         // pass down project parameters -> JUnit configuration parameters
         val props = listOf(
@@ -260,6 +275,7 @@ private fun setupGenerateAndRunTestTasks(folder: File, isDev: Boolean) {
     when (buildSystem) {
         BuildSystem.MAVEN -> runBuildMavenExampleFolders { dependsOn(runTestBuildTask) }
         BuildSystem.GRADLE -> runBuildGradleExampleFolders { dependsOn(runTestBuildTask) }
+        BuildSystem.KOTLIN_TOOLCHAIN -> runBuildKotlinToolchainExampleFolders { dependsOn(runTestBuildTask) }
     }
     when (isAndroid) {
         true -> runBuildAndroidExampleFolders { dependsOn(runTestBuildTask) }
