@@ -112,7 +112,7 @@ dfRenamed.filter { firstName == "Nikita" }
 >   .update("firstName").with { (it as String) ... }
 > ```
 > However, we'd recommend assigning the dataframe with a new schema to a variable, 
-> run the cell and continue to work with it in the next cell.
+> running the cell, and continuing to work with it in the next cell.
 > { style = "note" }
 
 See the [](quickstart.md) in Kotlin Notebook with basic Extension Properties API examples.
