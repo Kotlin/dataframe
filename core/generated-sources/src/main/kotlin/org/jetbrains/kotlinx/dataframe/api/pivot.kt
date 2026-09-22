@@ -715,8 +715,8 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][DataFrame.pivot], [<code>groupByOther</code>][Pivot.groupByOther],
  * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
@@ -730,7 +730,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then
+ * but checks if there is any matching row instead of counting them
  * to produce a [<code>Boolean</code>][Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
@@ -748,8 +748,8 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [<code>groupByOther</code>][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [<code>count</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
@@ -763,7 +763,7 @@ internal typealias DataFramePivotCountsCommonDocs = Nothing
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][org.jetbrains.kotlinx.dataframe.api.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then
+ * but checks if there is any matching row instead of counting them
  * to produce a [<code>Boolean</code>][Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
@@ -825,8 +825,8 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot], [<code>groupByOther</code>][org.jetbrains.kotlinx.dataframe.api.Pivot.groupByOther],
  * and [<code>count</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
@@ -840,7 +840,7 @@ public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: PivotCo
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][org.jetbrains.kotlinx.dataframe.api.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then
+ * but checks if there is any matching row instead of counting them
  * to produce a [<code>Boolean</code>][Boolean] matrix.
  *
  * ### This `pivotCounts` Overload
@@ -1234,8 +1234,8 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][GroupBy.pivot]
  * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
@@ -1249,7 +1249,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][GroupBy.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then.
+ * but checks if there is any matching row instead of counting them.
  *
  * ### This `pivotCounts` Overload
  */
@@ -1266,8 +1266,8 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [<code>count</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
@@ -1281,7 +1281,7 @@ internal typealias GroupByPivotCountsCommonDocs = Nothing
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then.
+ * but checks if there is any matching row instead of counting them.
  *
  * ### This `pivotCounts` Overload
  * Select or express pivot columns using the [<code>PivotDsl</code>][PivotDsl].
@@ -1339,8 +1339,8 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  *   each combination is represented in dedicated key columns that store
  *   a distinct set of values for each row
  *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Int</code>][Int] value indicating number a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
+ *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function combines [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivot]
  * and [<code>count</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.count] operations into a single call.
@@ -1354,7 +1354,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: PivotC
  * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
  *
  * See also: [<code>pivotMatches</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.pivotMatches], which performs a similar operation
- * but check if there is any matching row instead of counting then.
+ * but checks if there is any matching row instead of counting them.
  *
  * ### This `pivotCounts` Overload
  *
@@ -1922,8 +1922,8 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      *
      * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
      * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
-     * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
-     * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+     * to creating a [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+     * a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
      * in the resulting [<code>DataFrame</code>][DataFrame] while preserving the original structure at higher levels.
      *
      *

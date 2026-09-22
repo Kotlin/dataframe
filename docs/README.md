@@ -4,7 +4,7 @@ This folder holds the source code of our documentation website:
 [kotlin.github.io/dataframe](https://kotlin.github.io/dataframe).
 
 It's built using [Writerside](https://www.jetbrains.com/writerside/) and published
-by a [Github Action](../.github/workflows/main.yml).
+by a [GitHub Action](../.github/workflows/main.yml).
 The file structure largely mirrors the default Writerside structure.
 For instance, if you want to add a new page to the website, this needs to be stored as an `.md` file in the
 [StardustDocs/topics](./StardustDocs/topics) folder,
@@ -59,6 +59,6 @@ Elements annotated with `@ExportAsHtml` will have their generated content be cop
 ### Korro code samples
 Code samples for the documentation website reside in [core/.../test/.../samples/api](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api)
 (for samples that depend solely on `dataframe-core`),
-and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples can depend on other I/O modules)
+and [samples/.../samples/api](../samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples that may depend on other I/O modules)
 and they are copied over to Markdown files in [docs/StardustDocs/topics](./StardustDocs/topics)
 by [Korro](https://github.com/devcrocod/korro).

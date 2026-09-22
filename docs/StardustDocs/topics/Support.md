@@ -7,7 +7,7 @@
    file an issue in our [DataFrame GitHub repository](https://github.com/Kotlin/dataframe).
 
 * <img src="https://kotlinlang.org/docs/images/slack.svg" alt="Slack logo" height="24"/> 
-[**Community**](https://github.com/Kotlin/dataframe/issues)
+[**Community**](https://kotlinlang.slack.com/archives/C4W52CFEZ)
 
   Peer-to-peer support is available on the Kotlin Slack
   [#datascience](https://kotlinlang.slack.com/archives/C4W52CFEZ) channel

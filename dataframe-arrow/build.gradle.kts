@@ -34,7 +34,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeArrow"
         artifactId = project.name
-        description = "Apache Arrow support for Kotlin DataFrame"
+        description = "Kotlin DataFrame: Apache Arrow and Parquet support"
         packageName = artifactId
     }
 }

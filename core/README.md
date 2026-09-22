@@ -5,6 +5,9 @@ It contains the DataFrame API and its implementation, as well as plenty of JUnit
 
 I/O operations are split off into other modules, like [:dataframe-excel](../dataframe-excel), [:dataframe-jdbc](../dataframe-jdbc), or [:dataframe-json](../dataframe-json).
 
+See the [documentation website](https://kotlin.github.io/dataframe/) for how this API is meant to be used, and
+[Operations](https://kotlin.github.io/dataframe/operations.html) for the reference of everything in it.
+
 At the moment, these integrations are still part of the `:core` module:
 
 - (deprecated) csv/tsv

@@ -626,6 +626,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      *
      * For more information: {@include [DocumentationUrls.GroupByAggregation]}
      *
+     * See also [schema][GroupBy.schema] — the schema of this [GroupBy] as a [DataFrame].
+     *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.
      * @return A new [DataFrame] that includes the grouping key columns together

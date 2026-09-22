@@ -273,9 +273,9 @@ private fun <T> List<ColumnWithPath<T>>.singleImpl(): ColumnWithPath<T> =
 
 /**
  * Converts [<code>this</code>][this] [<code>ColumnsResolver</code>][ColumnsResolver] to a [<code>SingleColumn</code>][SingleColumn].
- * [<code>resolveSingle</code>][resolveSingle] will return the single column of [<code>this</code>][this] if there is only one, else it will return throw an exception:
+ * [<code>resolveSingle</code>][resolveSingle] will return the single column of [<code>this</code>][this] if there is only one, else it will throw an exception:
  * In case of an empty [<code>ColumnsResolver</code>][ColumnsResolver], a [<code>NoSuchElementException</code>][NoSuchElementException] will be thrown.
- * In case of more than one column, a [<code>IllegalArgumentException</code>][IllegalArgumentException] will be thrown.
+ * In case of more than one column, an [<code>IllegalArgumentException</code>][IllegalArgumentException] will be thrown.
  * If the result is used as a [<code>ColumnSet</code>][ColumnSet], `null` will be converted to an empty list.
  */
 internal fun <T> ColumnsResolver<T>.singleImpl(): SingleColumn<T> =

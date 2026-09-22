@@ -87,6 +87,7 @@ kotlinPublications {
     publication {
         publicationName = "shadowed"
         artifactId = "dataframe-compiler-plugin-core"
+        description = "Kotlin DataFrame: minimized core API to be used only by the compiler plugin"
         packageName = artifactId
     }
 }

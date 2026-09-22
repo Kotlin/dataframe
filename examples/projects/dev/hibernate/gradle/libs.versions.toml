@@ -1,12 +1,12 @@
 [versions]
-kotlin = "2.4.20-RC2"
+kotlin = "2.4.20"
 dataframe = "1.0.0-rc01"
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
-h2db = "2.4.240"
-hibernate = "7.4.4.Final"
+h2db = "2.5.250"
+hibernate = "7.4.10.Final"
 hikari = "7.1.0"
-sl4j = "2.0.18"
+sl4j = "2.0.19"
 
 [libraries]
 dataframe = { module = "org.jetbrains.kotlinx:dataframe", version.ref = "dataframe" }
