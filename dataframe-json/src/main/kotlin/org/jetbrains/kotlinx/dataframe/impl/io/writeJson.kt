@@ -283,8 +283,8 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
         ?.takeIf { it.holdsAnyValue() }
         ?.takeUnless { valueCol ->
             val otherCols = allColumns - valueCol
-            // It's not a 'value' column if any of the values it holds sits next to
-            // a value in one of the other columns.
+            // A column is not considered a valid value column if any non-null value is joined
+            // with another value of another column in the same row.
             val isInvalidValueColumn = indices().any { row ->
                 valueCol.holdsValueAt(row) && otherCols.any { it.holdsValueAt(row) }
             }
