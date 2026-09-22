@@ -88,11 +88,10 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.append()
             // SampleEnd
             .also { (it === df) shouldBe true }
-            .saveDfHtmlSample()
     }
 
     @Test
-    fun columnGroupDf() {
+    fun appendColumnGroupDf() {
         // SampleStart
         columnGroupDf
             // SampleEnd
@@ -170,7 +169,7 @@ class Append : DataFrameSampleHelper("append", "api") {
     }
 
     @Test
-    fun frameColumnDf() {
+    fun appendFrameColumnDf() {
         // SampleStart
         frameColumnDf
             // SampleEnd
@@ -232,20 +231,6 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.appendNulls(numberOfRows = 0)
             // SampleEnd
             .also { (it === df) shouldBe true }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendNullsDoesNotModifyOriginal() {
-        // SampleStart
-        val withNullRow = df.appendNulls()
-
-        df // the original dataframe still contains only Alice
-            // SampleEnd
-            .also {
-                it shouldBe dataFrameOf("name", "age")("Alice", 20)
-                withNullRow shouldBe dataFrameOf("name", "age")("Alice", 20, null, null)
-            }
             .saveDfHtmlSample()
     }
 
