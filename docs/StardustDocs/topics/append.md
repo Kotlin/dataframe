@@ -20,9 +20,9 @@ Every appended value must be compatible with the corresponding column:
 
 * a [`ValueColumn`](DataColumn.md#valuecolumn) accepts `null` or a value compatible with its type;
 * a [`ColumnGroup`](DataColumn.md#columngroup) accepts `null`, a [`DataRow`](DataRow.md), or a `List`. Values from a
-[`DataRow`](DataRow.md) are matched to the nested columns by name: a nested column whose name is absent from the 
-[`DataRow`](DataRow.md) receives `null`, while columns present only in the row are ignored. 
-Values from a `List` are read in the nested column order, one value per nested column. 
+[`DataRow`](DataRow.md) are matched to the nested columns by name: a nested column whose name is absent from the
+[`DataRow`](DataRow.md) receives `null`, while columns present only in the row are ignored.
+Values from a `List` are read in the nested column order, one value per nested column.
 A shorter list throws `IndexOutOfBoundsException`, while additional values in a longer list are ignored;
 * a [`FrameColumn`](DataColumn.md#framecolumn) accepts a [`DataFrame`](DataFrame.md) or `null`, which is
 [represented by an empty dataframe](#null-with-framecolumn).
@@ -34,6 +34,14 @@ Passing values to a [`DataFrame`](DataFrame.md) without columns, appending an in
 or passing a value whose type is incompatible with its column results in an `IllegalArgumentException`.
 A list supplied for a [`ColumnGroup`](DataColumn.md#columngroup) that contains fewer values than the group has
 columns results in an `IndexOutOfBoundsException`.
+
+<warning>
+
+Appending `null` widens the runtime type of each affected value column to nullable, while the compile-time schema
+of the returned [`DataFrame`](DataFrame.md) is not refined. Use [`cast`](cast.md) or [`convertTo`](convertTo.md)
+with a nullable schema before accessing these values through typed accessors.
+
+</warning>
 
 <warning>
 
@@ -109,7 +117,6 @@ df.append()
 ```
 
 <!---END-->
-<inline-frame src="./resources/appendNoValues.html" width="100%" height="500px"></inline-frame>
 
 ## Append objects as rows
 
@@ -119,6 +126,7 @@ inline fun <reified T : DataRowSchema> DataFrame<T>.append(vararg rows: T): Data
 
 This overload appends one row for each object in `rows`. The [`DataFrame`](DataFrame.md) schema type `T` must
 implement `DataRowSchema`, and every object in `rows` must be an instance of `T`.
+If `rows` is empty, this overload returns the original [`DataFrame`](DataFrame.md) instance.
 
 ### With the compiler plugin
 
@@ -160,14 +168,14 @@ implementing that interface can be appended.
 
 The following dataframe is used in the examples in this section:
 
-<!---FUN columnGroupDf-->
+<!---FUN appendColumnGroupDf-->
 
 ```kotlin
 columnGroupDf
 ```
 
 <!---END-->
-<inline-frame src="./resources/columnGroupDf.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/appendColumnGroupDf.html" width="100%" height="500px"></inline-frame>
 
 ### List
 
@@ -235,14 +243,14 @@ columnGroupDf.append(null, 30)
 
 The next dataframe contains a [`FrameColumn`](DataColumn.md#framecolumn):
 
-<!---FUN frameColumnDf-->
+<!---FUN appendFrameColumnDf-->
 
 ```kotlin
 frameColumnDf
 ```
 
 <!---END-->
-<inline-frame src="./resources/frameColumnDf.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/appendFrameColumnDf.html" width="100%" height="500px"></inline-frame>
 
 ### [`DataFrame`](DataFrame.md)
 
