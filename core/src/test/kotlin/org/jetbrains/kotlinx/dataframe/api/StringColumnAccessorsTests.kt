@@ -32,6 +32,20 @@ class StringColumnAccessorsTests {
     }
 
     @Test
+    fun `a wrong accessor type is not reported at all in a column selection`() {
+        // "age" holds Int, the accessor is asked for String, and the Int column comes back as it is
+        df.select { col<String>("age") } shouldBe df.select { "age"() }
+        df.select { valueCol<String>("age") } shouldBe df.select { "age"() }
+    }
+
+    @Test
+    fun `a null value passes through a non-null accessor type`() {
+        val withNulls = dataFrameOf("weight" to columnOf(null, 68))
+
+        withNulls.associate { getValue<Int>("weight") to 1 } shouldBe mapOf(null to 1, 68 to 1)
+    }
+
+    @Test
     fun `a matching accessor type reads the column`() {
         df.associate { "name"<String>() to "age"<Int>() } shouldBe
             mapOf("Alice" to 15, "Bob" to 45, "Charlie" to 20)

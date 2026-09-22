@@ -47,9 +47,11 @@ while in row expressions they resolve to concrete value types.
 You can optionally specify the column type as a type argument of the
 `String` column accessor creation function.
 This is required for row expressions and for some operations with a column selection.
-The type is not verified against the column: a mismatch is reported as a plain `ClassCastException`,
-not as an error naming the column, and it can surface later than the accessor call —
-wherever the value is actually used.
+The type is not verified against the column, so a mismatch may go unnoticed:
+in the Columns Selection DSL, `col<T>("name")` and `valueCol<T>("name")` return the column as it is,
+and in row expressions a `null` value passes through a non-null `T` as well.
+When a mismatch does surface, it is usually a plain `ClassCastException` at the place
+where the value is used rather than at the accessor call.
 
 | Columns Selection DSL                      | Row Expressions          |                                                                                                                                            |
 |--------------------------------------------|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
