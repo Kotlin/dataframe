@@ -253,18 +253,23 @@ private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject =
         },
     )
 
+/**
+ * Unlike [encodeFrame], this is the wire format of the Kotlin Notebook plugin, described in
+ * `docs/serialization_format.md`: every row has to be an object with one entry per column of [frame].
+ * So the unnamed `value`/`array` columns are encoded as regular columns here, instead of as the JSON record
+ * they were read from.
+ */
 internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
     customEncoders: List<CustomEncoder> = emptyList(),
-): JsonArray =
-    encodeFrameRows(
-        frame = frame,
-        encodeArrayOfObjects = { encodeFrameWithMetadata(it, rowLimit, customEncoders) },
-        encodeObject = { objectFrame, rowIndex ->
-            encodeRowWithMetadata(objectFrame, rowIndex, rowLimit, customEncoders)
-        },
-    )
+): JsonArray {
+    val data = frame.indices().map { rowIndex ->
+        encodeRowWithMetadata(frame, rowIndex, rowLimit, customEncoders)
+    }
+
+    return buildJsonArray { addAll(data.map { convert(it) }) }
+}
 
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
@@ -322,26 +327,12 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
         }
 }
 
-internal fun encodeFrame(frame: AnyFrame): JsonArray =
-    encodeFrameRows(
-        frame = frame,
-        encodeArrayOfObjects = { encodeFrame(it) },
-        encodeObject = { objectFrame, rowIndex -> encodeRow(objectFrame, rowIndex) },
-    )
-
 /**
  * Encodes each row of [frame] as the JSON record it was read from: the value of the unnamed "value" column,
- * else the array of the unnamed "array" column, else an object built from the remaining columns with
- * [encodeObject], else — when the row holds no values at all — `null`.
- *
- * Arrays of objects are encoded with [encodeArrayOfObjects], so that the caller decides whether the nested
- * frame is written with or without metadata.
+ * else the array of the unnamed "array" column, else an object of the remaining columns,
+ * else — when the row holds no values at all — `null`.
  */
-private inline fun encodeFrameRows(
-    frame: AnyFrame,
-    encodeArrayOfObjects: (AnyFrame) -> JsonElement,
-    encodeObject: (objectFrame: AnyFrame, rowIndex: Int) -> JsonElement?,
-): JsonArray {
+internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
@@ -358,7 +349,7 @@ private inline fun encodeFrameRows(
 
             arrayColumn?.holdsValueAt(rowIndex) == true ->
                 if (arraysAreFrames) {
-                    encodeArrayOfObjects(arrayColumn[rowIndex] as AnyFrame)
+                    encodeFrame(arrayColumn[rowIndex] as AnyFrame)
                 } else {
                     JsonArray((arrayColumn[rowIndex] as List<*>).map { convert(it) })
                 }
@@ -367,7 +358,7 @@ private inline fun encodeFrameRows(
             // unless it holds no values at all; then the record was `null` itself
             hasUnnamedColumns && objectColumns.none { it.holdsValueAt(rowIndex) } -> null
 
-            else -> encodeObject(objectFrame, rowIndex)
+            else -> encodeRow(objectFrame, rowIndex)
         }
     }
 

@@ -1534,18 +1534,80 @@ class JsonTests {
             .toJson() shouldBe """[{"label":"record"},{"label":null}]"""
     }
 
+    /**
+     * Asserts that [this] is serialized according to `docs/serialization_format.md`: every entry of
+     * `kotlin_dataframe` — and of every nested group and frame — is an object holding exactly the columns
+     * that the accompanying metadata declares.
+     */
+    private fun AnyFrame.shouldMatchSerializationFormat(): List<JsonElement> {
+        fun checkRows(rows: List<JsonElement>, declaredColumns: List<String>) {
+            rows.forEach { row ->
+                // fails right here if a row is a bare value, a bare array or `null` instead of an object
+                row.jsonObject.keys shouldBe declaredColumns.toSet()
+
+                row.jsonObject.values.forEach { cell ->
+                    val metadata = (cell as? JsonObject)?.get(METADATA)?.jsonObject ?: return@forEach
+                    val nestedColumns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+                    when (metadata[KIND]!!.jsonPrimitive.content) {
+                        ColumnKind.Group.toString() -> checkRows(listOf(cell.jsonObject[DATA]!!), nestedColumns)
+                        ColumnKind.Frame.toString() -> checkRows(cell.jsonObject[DATA]!!.jsonArray, nestedColumns)
+                    }
+                }
+            }
+        }
+
+        val json = parseJsonStr(toJsonWithMetadata(rowsCount()))
+        val data = json[KOTLIN_DATAFRAME]!!.jsonArray
+        val columns = json[METADATA]!!.jsonObject[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
+
+        columns shouldBe columnNames()
+        checkRows(data, columns)
+        return data
+    }
+
     @Test
-    fun `type clash round trip with metadata`() {
+    fun `a type clash keeps every declared column with metadata`() {
         // https://github.com/Kotlin/dataframe/issues/2046
-        // the notebook rendering path must extract the unnamed columns just like `toJson` does
-        fun AnyFrame.dataWithMetadata(): String =
-            parseJsonStr(toJsonWithMetadata(rowsCount()))[KOTLIN_DATAFRAME]!!.jsonArray.toString()
+        // `toJsonWithMetadata` is the Kotlin Notebook plugin's wire format (docs/serialization_format.md):
+        // unlike `toJson`, it must not collapse a row to the JSON record it was read from — the plugin renders
+        // cells by looking up `metadata.columns`, so the JSON has to mirror the dataframe structure exactly
+        DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").let { df ->
+            df.shouldMatchSerializationFormat().toString() shouldBe
+                """[{"label":null,"value":1,"array":null},{"label":"record","value":null,"array":null},""" +
+                """{"label":null,"value":null,"array":[123]},{"label":null,"value":null,"array":null}]"""
 
-        DataFrame.readJsonStr("""[{"label":"record"},[{"a":123}]]""")
-            .dataWithMetadata() shouldBe """[{"label":"record"},[{"a":123}]]"""
+            // and `toJson` does collapse them, that's the point of the two being different
+            df.toJson() shouldBe """[1,{"label":"record"},[123],null]"""
+        }
 
-        DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""")
-            .dataWithMetadata() shouldBe """[1,{"label":"record"},[123],null]"""
+        // an `array` frame column becomes a NestedFrame, and the sibling `label` column is kept
+        DataFrame.readJsonStr("""[{"label":"record"},[{"a":123}]]""").let { df ->
+            val data = df.shouldMatchSerializationFormat()
+
+            data[0].jsonObject["label"]!!.jsonPrimitive.content shouldBe "record"
+            data[1].jsonObject["array"]!!
+                .jsonObject[DATA]!!
+                .jsonArray
+                .toString() shouldBe """[{"a":123}]"""
+
+            df.toJson() shouldBe """[{"label":"record"},[{"a":123}]]"""
+        }
+    }
+
+    @Test
+    fun `json with metadata mirrors the dataframe structure`() {
+        // a nested type clash, so the `value`/`array` columns sit inside a column group
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":{"b":2}},{"a":[6,7,8]}]""").shouldMatchSerializationFormat()
+
+        // arrays of objects, so `array` is a frame column nested in a group
+        DataFrame.readJsonStr("""[{"a":"text"},{"a":[{"b":2}]}]""").shouldMatchSerializationFormat()
+
+        // a single unnamed column, and one that holds no values at all
+        DataFrame.readJsonStr("""[1,2,3]""").shouldMatchSerializationFormat()
+        DataFrame.readJsonStr("""[null,null]""").shouldMatchSerializationFormat()
+
+        // a real file with groups and frame columns several levels deep
+        DataFrame.readJson(testJson("repositories")).shouldMatchSerializationFormat()
     }
 
     @Test
