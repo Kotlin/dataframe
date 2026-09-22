@@ -298,9 +298,11 @@ class AppendTests {
     fun `appendNulls rejects a negative number of rows`() {
         val df = dataFrameOf("value")(1)
 
-        shouldThrow<IllegalArgumentException> {
+        val exception = shouldThrow<IllegalArgumentException> {
             df.appendNulls(-1)
         }
+
+        exception.message shouldBe "numberOfRows must not be negative, but was: -1"
     }
 
     @Test
