@@ -8,15 +8,18 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.rowSum
 import org.jetbrains.kotlinx.dataframe.api.rowSumOf
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -203,6 +206,17 @@ class SumTests {
         row2.rowSumOf<Double>(skipNaN = true) shouldBe 1.0
         row1.rowSumOf<Double>() shouldBe 6.0
         row2.rowSumOf<Double>().shouldBeNaN()
+    }
+
+    @Test
+    fun `rowSumOf with empty input`() {
+        val df = dataFrameOf("a", "b")(1.0, 2.0)
+        df.single().rowSumOf<Int>() shouldBe 0
+        df.single().rowSumOf<Short>() shouldBe 0
+        df.single().rowSumOf<Byte>() shouldBe 0
+        df.single().rowSumOf<Float>() shouldBe 0f
+        df.convert { all() }.toFloat()
+            .single().rowSumOf<Double>() shouldBe 0.0
     }
 
     @Test

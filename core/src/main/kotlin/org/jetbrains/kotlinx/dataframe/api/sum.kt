@@ -665,7 +665,7 @@ private typealias SetSumForOperationArg = Nothing
  * @return The sum of the values in this column, as an [Int].
  */
 @JvmName("sumShort")
-public fun DataColumn<Short?>.sum(): Int = Aggregators.sum(false).aggregateSingleColumn(this) as Int
+public fun DataColumn<Short?>.sum(): Int = Aggregators.sum(false, typeOf<Short>()).aggregateSingleColumn(this) as Int
 
 /**
  * Returns the sum of the [Byte] values in this [DataColumn], as an [Int].
@@ -679,7 +679,7 @@ public fun DataColumn<Short?>.sum(): Int = Aggregators.sum(false).aggregateSingl
  * @return The sum of the values in this column, as an [Int].
  */
 @JvmName("sumByte")
-public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum(false).aggregateSingleColumn(this) as Int
+public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum(false, typeOf<Byte>()).aggregateSingleColumn(this) as Int
 
 /**
  * Returns the sum of the values in this [DataColumn].
@@ -699,7 +699,7 @@ public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum(false).aggregateSingle
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
 public fun <T : Number?> DataColumn<T>.sum(skipNaN: Boolean = skipNaNDefault): T & Any =
-    Aggregators.sum(skipNaN).aggregateSingleColumn(this) as (T & Any)
+    Aggregators.sum(skipNaN, typeOf<Double>()).aggregateSingleColumn(this) as (T & Any)
 
 /**
  * Returns the sum of the [Short] values that the given [expression] returns
@@ -716,7 +716,7 @@ public fun <T : Number?> DataColumn<T>.sum(skipNaN: Boolean = skipNaNDefault): T
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType
 public inline fun <C, reified V : Short?> DataColumn<C>.sumOf(crossinline expression: (C) -> V): Int =
-    Aggregators.sum(false).aggregateOf(this, expression) as Int
+    Aggregators.sum(false, typeOf<Short>()).aggregateOf(this, expression) as Int
 
 /**
  * Returns the sum of the [Byte] values that the given [expression] returns
@@ -733,7 +733,7 @@ public inline fun <C, reified V : Short?> DataColumn<C>.sumOf(crossinline expres
 @JvmName("sumOfByte")
 @OverloadResolutionByLambdaReturnType
 public inline fun <C, reified V : Byte?> DataColumn<C>.sumOf(crossinline expression: (C) -> V): Int =
-    Aggregators.sum(false).aggregateOf(this, expression) as Int
+    Aggregators.sum(false, typeOf<Byte>()).aggregateOf(this, expression) as Int
 
 /**
  * Returns the sum of the values that the given [expression] returns
@@ -754,7 +754,7 @@ public inline fun <C, reified V : Byte?> DataColumn<C>.sumOf(crossinline express
 public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (C) -> V,
-): V & Any = Aggregators.sum(skipNaN).aggregateOf(this, expression) as (V & Any)
+): V & Any = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateOf(this, expression) as (V & Any)
 
 // endregion
 
@@ -793,7 +793,7 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
  * @return The sum of all the numbers in this row.
  */
 public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
-    Aggregators.sum(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
+    Aggregators.sum(skipNaN, typeOf<Double>()).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
 /**
  * Returns the sum of the [Short] values in this [DataRow], as an [Int].
@@ -954,7 +954,7 @@ public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): 
     require(type.isPrimitiveOrMixedNumber()) {
         "Type $type is not a primitive number type. Sum only supports primitive number types."
     }
-    return Aggregators.sum(skipNaN).aggregateOfRow(this) {
+    return Aggregators.sum(skipNaN, type).aggregateOfRow(this) {
         colsOf(type.withNullability(true))
     }
 }
@@ -1010,7 +1010,7 @@ public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 public fun <T, C : Number?> DataFrame<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
+): DataRow<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateFor(this, columns)
 
 /**
  * @include [SumDocs.DataFrameSumForSnippet]
@@ -1062,7 +1062,7 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
 @JvmName("sumShort")
 @OverloadResolutionByLambdaReturnType
 public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int =
-    Aggregators.sum(false).aggregateAll(this, columns) as Int
+    Aggregators.sum(false, typeOf<Short>()).aggregateAll(this, columns) as Int
 
 /**
  * Returns a single sum of all the [Byte] values in the selected columns of this [DataFrame],
@@ -1083,7 +1083,7 @@ public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int
 @JvmName("sumByte")
 @OverloadResolutionByLambdaReturnType
 public fun <T, C : Byte?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int =
-    Aggregators.sum(false).aggregateAll(this, columns) as Int
+    Aggregators.sum(false, typeOf<Byte>()).aggregateAll(this, columns) as Int
 
 /**
  * Returns a single sum of all the values in the selected columns of this [DataFrame].
@@ -1108,7 +1108,7 @@ public fun <T, C : Byte?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int 
 public fun <T, C : Number?> DataFrame<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = Aggregators.sum(skipNaN).aggregateAll(this, columns) as (C & Any)
+): C & Any = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateAll(this, columns) as (C & Any)
 
 @JvmName("sumShort")
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1184,7 +1184,7 @@ public fun <T, C : Number?> DataFrame<T>.sum(
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): Int =
-    Aggregators.sum(false).aggregateOf(this, expression) as Int
+    Aggregators.sum(false, typeOf<Short>()).aggregateOf(this, expression) as Int
 
 /**
  * Returns the sum of the [Byte] values that the given [expression] returns
@@ -1204,7 +1204,7 @@ public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline express
 @JvmName("sumOfByte")
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): Int =
-    Aggregators.sum(false).aggregateOf(this, expression) as Int
+    Aggregators.sum(false, typeOf<Byte>()).aggregateOf(this, expression) as Int
 
 /**
  * Returns the sum of the values that the given [expression] returns
@@ -1229,7 +1229,7 @@ public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expressi
 public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = Aggregators.sum(skipNaN).aggregateOf(this, expression) as (C & Any)
+): C & Any = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateOf(this, expression) as (C & Any)
 
 // endregion
 
@@ -1286,7 +1286,7 @@ public fun <T> Grouped<T>.sum(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
 public fun <T, C : Number?> Grouped<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateFor(this, columns)
 
 /**
  * @include [SumDocs.GroupedSumForSnippet]
@@ -1337,7 +1337,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, name, columns)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateAll(this, name, columns)
 
 /**
  * @include [SumDocs.GroupedSumSnippet]
@@ -1415,7 +1415,7 @@ public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
     resultName: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateOf(this, resultName, expression)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateOf(this, resultName, expression)
 
 // endregion
 
@@ -1646,7 +1646,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, R>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateFor(this, separate, columns)
 
 /**
  * @include [SumDocs.PivotGroupBySumForSnippet]
@@ -1696,7 +1696,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, columns)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateAll(this, columns)
 
 /**
  * @include [SumDocs.PivotGroupBySumSnippet]
@@ -1763,7 +1763,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.sum(skipNaN).aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.sum(skipNaN, typeOf<Double>()).aggregateOf(this, expression)
 
 // endregion
 
