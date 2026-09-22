@@ -30,14 +30,27 @@ df
 <inline-frame src="./resources/singleDf.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN single-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-val dylan = df
+df
     .filter { age == 45 } // one row is left after filtering
     .single()
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df
+    .filter { "age"<Int>() == 45 } // one row is left after filtering
+    .single()
+```
+
+</tab></tabs>
 <!---END-->
+<inline-frame src="./resources/single_properties.html" width="100%" height="500px"></inline-frame>
 
 If a [condition](DataRow.md#row-conditions) is specified,
 returns the single [row](DataRow.md) that matches it,
@@ -48,18 +61,19 @@ and throws an exception if there is no matching row or if there is more than one
 <tab title="Properties">
 
 ```kotlin
-val dylan = df.single { age == 45 } // only Bob Dylan is 45
+df.single { age == 45 } // only Bob Dylan is 45
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-val dylan = df.single { "age"<Int>() == 45 } // only Bob Dylan is 45
+df.single { "age"<Int>() == 45 } // only Bob Dylan is 45
 ```
 
 </tab></tabs>
 <!---END-->
+<inline-frame src="./resources/singleCondition_properties.html" width="100%" height="500px"></inline-frame>
 
 ## singleOrNull
 
@@ -67,6 +81,8 @@ Returns the single [row](DataRow.md) in this [`DataFrame`](DataFrame.md),
 or `null` if the [`DataFrame`](DataFrame.md) is empty or has more than one row.
 
 <!---FUN singleOrNull-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 val noOne = df
@@ -74,6 +90,16 @@ val noOne = df
     .singleOrNull() // returns null
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+val noOne = df
+    .filter { "age"<Int>() > 50 } // df is empty after filtering
+    .singleOrNull() // returns null
+```
+
+</tab></tabs>
 <!---END-->
 
 If a [condition](DataRow.md#row-conditions) is specified,

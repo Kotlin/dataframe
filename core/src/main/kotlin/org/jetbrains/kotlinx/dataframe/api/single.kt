@@ -41,11 +41,13 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.SingleOnColumn]}
  *
- * See also [firstOrNull][DataColumn.firstOrNull], that returns `null` instead of throwing
- * when the [DataColumn] is empty,
- * and [first][DataColumn.first], [last][DataColumn.last], [take][DataColumn.take],
- * [takeLast][DataColumn.takeLast], that do not require the [DataColumn]
- * to contain exactly one value.
+ * None of the neighbouring operations require the [DataColumn] to contain exactly one value:
+ * [first][DataColumn.first] and [last][DataColumn.last] return the first or the last value,
+ * [firstOrNull][DataColumn.firstOrNull] returns the first value,
+ * or `null` if the [DataColumn] is empty,
+ * and [take][DataColumn.take] and [takeLast][DataColumn.takeLast]
+ * return several values as a new [DataColumn].
+ * There is no `singleOrNull` for a [DataColumn].
  *
  * @return The single value in this [DataColumn].
  * It can be `null` if the [DataColumn] contains exactly one value and that value is `null`.
@@ -66,7 +68,8 @@ public fun <C> DataColumn<C>.single(): C = values.single()
  *
  * See also [singleOrNull][DataFrame.singleOrNull], that returns `null` instead of throwing,
  * and [first][DataFrame.first], [last][DataFrame.last],
- * that do not require the [DataFrame] to contain exactly one matching row.
+ * that return the first or the last row and do not require the [DataFrame]
+ * to contain exactly one row.
  *
  * @return A [DataRow] containing the single row in this [DataFrame].
  *
@@ -88,7 +91,8 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
  *
  * See also [single][DataFrame.single], that throws instead of returning `null`,
  * and [firstOrNull][DataFrame.firstOrNull], [lastOrNull][DataFrame.lastOrNull],
- * that do not require the [DataFrame] to contain exactly one matching row.
+ * that return the first or the last row, or `null` if the [DataFrame] is empty,
+ * and do not require the [DataFrame] to contain exactly one row.
  *
  * @return A [DataRow] containing the single row in this [DataFrame],
  * or `null` if the [DataFrame] contains no rows or contains more than one row.
@@ -113,7 +117,8 @@ public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
  *
  * See also [singleOrNull][DataFrame.singleOrNull], that returns `null` instead of throwing,
  * and [first][DataFrame.first], [last][DataFrame.last],
- * that do not require the [DataFrame] to contain exactly one matching row.
+ * that return the first or the last matching row and do not require the [DataFrame]
+ * to contain exactly one matching row.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the single row
  * that satisfies a condition specified in this filter.
@@ -148,7 +153,8 @@ public inline fun <T> DataFrame<T>.single(predicate: RowFilter<T>): DataRow<T> =
  *
  * See also [single][DataFrame.single], that throws instead of returning `null`,
  * and [firstOrNull][DataFrame.firstOrNull], [lastOrNull][DataFrame.lastOrNull],
- * that do not require the [DataFrame] to contain exactly one matching row.
+ * that return the first or the last matching row, or `null` if there is none,
+ * and do not require the [DataFrame] to contain exactly one matching row.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the single row
  * that satisfies a condition specified in this filter.

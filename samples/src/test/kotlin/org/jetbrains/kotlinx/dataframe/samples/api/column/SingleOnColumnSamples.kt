@@ -32,7 +32,7 @@ class SingleOnColumnSamples : DataFrameSampleHelper("single", "api") {
     }
 
     @Test
-    fun singleOnColumn() {
+    fun singleOnColumn_properties() {
         // SampleStart
         df
             .filter { name == "Bob" } // one row is left after filtering
@@ -40,5 +40,16 @@ class SingleOnColumnSamples : DataFrameSampleHelper("single", "api") {
             .single() // returns 20
         // SampleEnd
         df.filter { name == "Bob" }.age.single() shouldBe 20
+    }
+
+    @Test
+    fun singleOnColumn_strings() {
+        // SampleStart
+        df
+            .filter { "name"<String>() == "Bob" } // one row is left after filtering
+            .age
+            .single() // returns 20
+        // SampleEnd
+        df.filter { "name"<String>() == "Bob" }.age.single() shouldBe 20
     }
 }

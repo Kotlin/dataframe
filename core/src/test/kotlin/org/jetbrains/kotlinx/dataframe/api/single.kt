@@ -235,4 +235,63 @@ class SingleTests : ColumnsSelectionDslTests() {
     }
 
     // endregion
+
+    // region the neighbouring operations named in the KDoc of `single`
+
+    // `df` has seven rows, so `single` throws on all of it; these pin what the KDoc claims
+    // the neighbours do instead, which is the reason they are listed there.
+
+    @Test
+    fun `on a DataColumn with more than one value first and last return a value, not null`() {
+        val lastNames: DataColumn<String> = df.name.lastName
+        lastNames.first() shouldBe "Cooper"
+        lastNames.last() shouldBe "Byrd"
+        // the point of the KDoc: firstOrNull does NOT return null just because there is more than one value
+        lastNames.firstOrNull() shouldBe "Cooper"
+    }
+
+    @Test
+    fun `on an empty DataColumn firstOrNull returns null`() {
+        val empty: DataColumn<Int> = emptyDf.age
+        empty.firstOrNull() shouldBe null
+    }
+
+    @Test
+    fun `on a DataColumn take and takeLast return several values as a new DataColumn`() {
+        val ages: DataColumn<Int> = df.age
+        ages.take(2).toList() shouldBe listOf(15, 45)
+        ages.takeLast(2).toList() shouldBe listOf(20, 30)
+    }
+
+    @Test
+    fun `on a DataFrame with more than one row first and last return a row`() {
+        df.first().name.lastName shouldBe "Cooper"
+        df.last().name.lastName shouldBe "Byrd"
+        df.firstOrNull()!!.name.lastName shouldBe "Cooper"
+        df.lastOrNull()!!.name.lastName shouldBe "Byrd"
+    }
+
+    @Test
+    fun `on an empty DataFrame firstOrNull and lastOrNull return null`() {
+        emptyDf.firstOrNull() shouldBe null
+        emptyDf.lastOrNull() shouldBe null
+    }
+
+    @Test
+    fun `with a predicate first and last return the first and the last matching row`() {
+        // Bob Marley and Charlie Byrd are both 30, so `single { age == 30 }` throws
+        shouldThrow<IllegalArgumentException> {
+            df.single { age == 30 }
+        }
+        df.first { age == 30 }.name.lastName shouldBe "Marley"
+        df.last { age == 30 }.name.lastName shouldBe "Byrd"
+    }
+
+    @Test
+    fun `with a predicate matching nothing firstOrNull and lastOrNull return null`() {
+        df.firstOrNull { age > 50 } shouldBe null
+        df.lastOrNull { age > 50 } shouldBe null
+    }
+
+    // endregion
 }

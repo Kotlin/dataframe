@@ -30,6 +30,8 @@ df
 <inline-frame src="./resources/singleOnColumnDf.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN singleOnColumn-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df
@@ -38,6 +40,17 @@ df
     .single() // returns 20
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df
+    .filter { "name"<String>() == "Bob" } // one row is left after filtering
+    .age
+    .single() // returns 20
+```
+
+</tab></tabs>
 <!---END-->
 
 Use [`first`](firstOnColumn.md) or [`last`](lastOnColumn.md)

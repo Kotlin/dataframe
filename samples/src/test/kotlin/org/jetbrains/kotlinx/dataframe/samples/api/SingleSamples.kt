@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.singleOrNull
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -19,36 +20,60 @@ class SingleSamples : DataFrameSampleHelper("single", "api") {
     }
 
     @Test
-    fun single() {
+    fun single_properties() {
         // SampleStart
-        val dylan = df
+        df
             .filter { age == 45 } // one row is left after filtering
             .single()
-        // SampleEnd
-        dylan.name.lastName shouldBe "Dylan"
+            // SampleEnd
+            .also { it.name.lastName shouldBe "Dylan" }
+            .toDataFrame()
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun single_strings() {
+        // SampleStart
+        df
+            .filter { "age"<Int>() == 45 } // one row is left after filtering
+            .single()
+            // SampleEnd
+            .also { it["age"] shouldBe 45 }
     }
 
     @Test
     fun singleCondition_properties() {
         // SampleStart
-        val dylan = df.single { age == 45 } // only Bob Dylan is 45
-        // SampleEnd
-        dylan.name.lastName shouldBe "Dylan"
+        df.single { age == 45 } // only Bob Dylan is 45
+            // SampleEnd
+            .also { it.name.lastName shouldBe "Dylan" }
+            .toDataFrame()
+            .saveDfHtmlSample()
     }
 
     @Test
     fun singleCondition_strings() {
         // SampleStart
-        val dylan = df.single { "age"<Int>() == 45 } // only Bob Dylan is 45
-        // SampleEnd
-        dylan["age"] shouldBe 45
+        df.single { "age"<Int>() == 45 } // only Bob Dylan is 45
+            // SampleEnd
+            .also { it["age"] shouldBe 45 }
     }
 
     @Test
-    fun singleOrNull() {
+    fun singleOrNull_properties() {
         // SampleStart
         val noOne = df
             .filter { age > 50 } // df is empty after filtering
+            .singleOrNull() // returns null
+        // SampleEnd
+        noOne shouldBe null
+    }
+
+    @Test
+    fun singleOrNull_strings() {
+        // SampleStart
+        val noOne = df
+            .filter { "age"<Int>() > 50 } // df is empty after filtering
             .singleOrNull() // returns null
         // SampleEnd
         noOne shouldBe null
