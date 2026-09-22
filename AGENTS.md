@@ -84,8 +84,20 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   `**/generated-dataschema-accessors/**`) just doubles every hit and bloats context — do code work from
   `src/main/kotlin/…`. The one reason to open a generated file is the KDoc: it is the **fully-expanded**
   documentation (all `{@include …}`/`@set`/`@get` resolved, URLs inlined). If you specifically need a symbol's
-  final rendered docs, open that single generated file deliberately — don't explore. A CI bot regenerates and
-  auto-commits all of these on `master` after merge — you don't run/commit generation yourself.
+  final rendered docs, open that single generated file deliberately — don't explore. A CI bot runs
+  `processKDocsMain korro syncExampleFolders` and auto-commits `*/generated-sources`,
+  `docs/StardustDocs/resources/snippets/`, `docs/StardustDocs/topics/` and `examples/projects` — you don't run
+  or commit those yourself. The authority for that list is the `git add` line in
+  `.github/workflows/generated-sources-master.yml`, not prose — check it there before you assume a path is
+  bot-maintained. **Three things the bot does not produce,** which the PR that needs them must carry itself:
+  the iframe HTML under `docs/StardustDocs/resources/` outside `snippets/` (`api`/`io`/`guides`/`modify`), whose
+  path is never staged; `docs/StardustDocs/topics/_shadow_resources.md`, whose path is staged but whose
+  generating task (`updateShadowResources`) the bot never runs; and the data-schema accessors under
+  `**/src/generated-dataschema-accessors/`, which **can no longer be generated at all** — the KSP/Gradle plugin
+  that produced them is deprecated (`plugins/symbol-processor`, `plugins/dataframe-gradle-plugin`, see above), so
+  they are frozen, hand-maintained sources that happen to be named "generated". Their path is not staged either;
+  only the second copy inside `*/generated-sources/src/generated-dataschema-accessors/` rides along, because it
+  sits under a staged `generated-sources` directory. See `docs/StardustDocs/AGENTS.md`.
 - For KDocs: never write from scratch — reuse/`@include` an existing operation's KDoc and adapt it. Reusable KDoc
   fragments are written once as `internal`/`private` interfaces and `typealias … = Nothing` declarations and
   composed via `@include`; this pattern is used in every KoDEx module (the shared cross-module fragment library
