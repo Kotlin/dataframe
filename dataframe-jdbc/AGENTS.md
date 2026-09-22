@@ -46,6 +46,15 @@ this chain before changing type mapping — the type variables `J → D → P` f
 4. Type **P**: `getTargetColumnSchema(...)` → `ColumnSchema` and `buildDataColumn(...)` → the final `DataColumn<P>`
    (post-processes `java.sql.Array`→Kotlin arrays).
 
+**H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
+→ `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
+value classes. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
+H2, and which field does that differs per case: `MariaDb` keys its blob branch on `jdbcType != Types.BLOB`,
+because H2 in MariaDB mode reports `Types.BLOB` and does return a real `java.sql.Blob`; `MsSql` keys its
+`Short` branch on `javaClassName`, because H2 in MSSQL mode reports `Types.SMALLINT` too but returns an
+`Integer`. Neither field is the right discriminator in general — `io/h2/*H2Test.kt` is the oracle that
+decides, so run it before believing either.
+
 Other overridable behavior: `quoteIdentifier` (per-DB identifier quoting), `buildSqlQueryWithLimit`/
 `buildSelectTableQueryWithLimit`, `configureReadStatement` (fetch size/direction, query timeout), `createConnection`
 (SQLite needs read-only set at connect time), `isSystemTable`, `buildTableMetadata`, `tableTypes`.
