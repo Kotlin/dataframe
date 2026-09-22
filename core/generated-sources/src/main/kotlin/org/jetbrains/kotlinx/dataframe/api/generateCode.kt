@@ -62,7 +62,7 @@ import org.jetbrains.kotlinx.dataframe.util.GENERATE_INTERFACES
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
  */
 public fun <T> DataFrame<T>.generateInterfaces(
     markerName: String,
@@ -114,7 +114,7 @@ public fun <T> DataFrame<T>.generateInterfaces(
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- * - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
+ * - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts. */
 public inline fun <reified T> DataFrame<T>.generateInterfaces(
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
@@ -168,7 +168,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
  */
 public fun <T> DataFrame<T>.generateDataClasses(
     markerName: String,
@@ -223,7 +223,7 @@ public fun <T> DataFrame<T>.generateDataClasses(
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- * - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts. */
+ * - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts. */
 public inline fun <reified T> DataFrame<T>.generateDataClasses(
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
@@ -278,7 +278,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
  */
 @JvmName("generateInterfacesForSchema")
 public fun DataFrameSchema.generateInterfaces(
@@ -337,7 +337,7 @@ public fun DataFrameSchema.generateInterfaces(
  *  Default is [<code>NameNormalizer.default</code>][org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer.Companion.default].
  * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
  *  - [<code>MarkerNameProvider.fromColumnName</code>][MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
- *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+ *  - [<code>MarkerNameProvider.PredefinedName</code>][org.jetbrains.kotlinx.dataframe.codeGen.MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
  */
 @JvmName("generateDataClassesForSchema")
 public fun DataFrameSchema.generateDataClasses(
