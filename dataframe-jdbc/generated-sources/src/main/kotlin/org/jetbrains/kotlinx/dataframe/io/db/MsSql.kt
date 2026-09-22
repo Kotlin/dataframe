@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
-import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
-import org.jetbrains.kotlinx.dataframe.io.db.TableMetadata
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.time.OffsetDateTime
 import java.util.Locale
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 /**
  * Represents the MSSQL database type.
@@ -16,6 +16,62 @@ import kotlin.reflect.KType
 public object MsSql : DbType("sqlserver") {
     override val driverClassName: String
         get() = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+
+    /**
+     * The class name the MSSQL driver reports for `DATETIMEOFFSET` columns,
+     * referenced by name so that this module does not need the driver on its compile classpath.
+     */
+    private const val DATE_TIME_OFFSET_CLASS_NAME = "microsoft.sql.DateTimeOffset"
+
+    /** The driver-specific `microsoft.sql.Types.SQL_VARIANT`, referenced by value for the same reason. */
+    private const val SQL_VARIANT_JDBC_TYPE = -156
+
+    /**
+     * MSSQL-specific deviations from the default type mapping, all of them cases where the default
+     * mapping and the values [<code>ResultSet.getObject</code>][ResultSet.getObject] returns disagreed (see #2087):
+     *
+     * - `DATETIMEOFFSET` is reported with the driver-specific JDBC type `-155` and
+     *   [<code>microsoft.sql.DateTimeOffset</code>][DATE_TIME_OFFSET_CLASS_NAME] as its column class, which the
+     *   default mapping has no entry for, so it fell back to [<code>String</code>][String] while the driver returned a
+     *   `DateTimeOffset`. It is read as [<code>OffsetDateTime</code>][OffsetDateTime]: a JDK type that keeps the UTC offset of the
+     *   value, and the one the default mapping already uses for
+     *   [<code>java.sql.Types.TIMESTAMP_WITH_TIMEZONE</code>][java.sql.Types.TIMESTAMP_WITH_TIMEZONE]. The driver produces it directly,
+     *   see [<code>getValueFromResultSet</code>][getValueFromResultSet].
+     * - `SMALLINT` and `TINYINT` are reported with `java.lang.Short` as their column class and the
+     *   driver does return [<code>Short</code>][Short] values, while the default mapping declared them [<code>Int</code>][Int].
+     *   [<code>Short</code>][Short] is also the smallest Kotlin type that fits MSSQL's `TINYINT`, which — unlike in most
+     *   databases — is *unsigned* (`0..255`) and so does not fit a [<code>Byte</code>][Byte].
+     * - `SQL_VARIANT` holds a value of any base type, and the class of that value differs from row to
+     *   row (an `Int` for `CAST(1 AS SQL_VARIANT)`, a `String` for a string), so the column can only
+     *   honestly be typed [<code>Any</code>][Any]. The default mapping declared it [<code>String</code>][String].
+     */
+    override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
+        val kType = when {
+            tableColumnMetadata.javaClassName == DATE_TIME_OFFSET_CLASS_NAME -> typeOf<OffsetDateTime>()
+            tableColumnMetadata.javaClassName == "java.lang.Short" -> typeOf<Short>()
+            tableColumnMetadata.jdbcType == SQL_VARIANT_JDBC_TYPE -> typeOf<Any>()
+            else -> return super.getExpectedJdbcType(tableColumnMetadata)
+        }
+        return kType.withNullability(tableColumnMetadata.isNullable)
+    }
+
+    /**
+     * Reads `DATETIMEOFFSET` columns as [<code>OffsetDateTime</code>][OffsetDateTime] directly from the driver,
+     * see [<code>getExpectedJdbcType</code>][getExpectedJdbcType]. Plain [<code>ResultSet.getObject</code>][ResultSet.getObject] would return a
+     * driver-specific `microsoft.sql.DateTimeOffset` instead.
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun <J> getValueFromResultSet(
+        rs: ResultSet,
+        columnIndex: Int,
+        tableColumnMetadata: TableColumnMetadata,
+        expectedJdbcType: KType,
+    ): J =
+        if (tableColumnMetadata.javaClassName == DATE_TIME_OFFSET_CLASS_NAME) {
+            rs.getObject(columnIndex + 1, OffsetDateTime::class.java) as J
+        } else {
+            super.getValueFromResultSet(rs, columnIndex, tableColumnMetadata, expectedJdbcType)
+        }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()

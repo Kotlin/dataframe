@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import java.math.BigInteger
 import java.sql.ResultSet
+import java.sql.Types
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -38,6 +39,24 @@ public object MariaDb : DbType("mariadb") {
         if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
             return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
         }
+
+        // A multi-bit BIT(M) column comes back as a `byte[]`, see [isMultiBit]
+        if (tableColumnMetadata.isMultiBit) {
+            return typeOf<ByteArray>().withNullability(tableColumnMetadata.isNullable)
+        }
+
+        // For TINYBLOB/BLOB/MEDIUMBLOB/LONGBLOB columns the MariaDB driver reports
+        // `java.sql.Blob` from `ResultSetMetaData.getColumnClassName`, while `ResultSet.getObject`
+        // actually returns a `byte[]`, so the column has to be typed as `ByteArray` (see #2087).
+        // For those columns the driver reports VARBINARY/LONGVARBINARY as the JDBC type, never BLOB;
+        // the `Types.BLOB` check keeps H2 in MariaDB mode working — it delegates here,
+        // reports `Types.BLOB` and does return real `java.sql.Blob` values.
+        if (tableColumnMetadata.javaClassName == "java.sql.Blob" &&
+            tableColumnMetadata.jdbcType != Types.BLOB
+        ) {
+            return typeOf<ByteArray>().withNullability(tableColumnMetadata.isNullable)
+        }
+
         return super.getExpectedJdbcType(tableColumnMetadata)
     }
 

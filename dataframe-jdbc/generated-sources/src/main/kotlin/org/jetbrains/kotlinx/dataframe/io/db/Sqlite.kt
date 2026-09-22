@@ -373,6 +373,18 @@ public class Sqlite(
             return jdbcToDfConverterFor<String>(expectedKType)
         }
 
+        // 6) BIGINT affinity — the declared column type decides the Kotlin type, so a BIGINT column
+        //    stays `Long` even though Xerial reports (and returns) an Integer whenever the stored
+        //    value happens to fit in one. Widening the value is the only consistent option here:
+        //    typing the column from the value instead would make a BIGINT column `Int` or `Long`
+        //    depending on which rows it happens to hold (see #2087).
+        if (tableColumnMetadata.jdbcType == Types.BIGINT && tableColumnMetadata.javaClassName == "java.lang.Integer") {
+            return jdbcToDfConverterFor<Any?>(expectedKType)
+                .withPreprocessor(preprocessedValueType = typeOf<Long>().withNullability(nullable)) {
+                    (it as Number?)?.toLong()
+                }
+        }
+
         // 5) Fallback — delegate to the base [DbType] end-to-end pipeline.
         return fallbackConverter(tableColumnMetadata)
     }
