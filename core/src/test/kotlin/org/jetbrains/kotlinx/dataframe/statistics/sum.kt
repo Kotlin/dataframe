@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.rowSumOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.junit.Test
@@ -136,6 +137,16 @@ class SumTests {
         shouldThrow<IllegalArgumentException> {
             columnOf<Number>(1.0, 2, 3.0.toBigDecimal()).toDataFrame().sum()[0]
         }.message?.lowercase() shouldContain "primitive"
+
+        // empty column of Number should be treated as Double
+        columnOf<Number>(1.0, 2)
+            .take(0)
+            .sum() shouldBe 0.0
+
+        // empty column in DF
+        columnOf<Number>(1.0, 2).toDataFrame()
+            .take(0)
+            .sum()[0] shouldBe 0.0
     }
 
     @Test
