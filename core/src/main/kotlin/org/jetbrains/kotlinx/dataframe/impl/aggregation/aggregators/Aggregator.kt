@@ -123,7 +123,7 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.calculateValueType(
     values: Sequence<Value?>,
     valueTypes: Set<KType>? = null,
-) = if (valueTypes != null && valueTypes.isNotEmpty()) {
+) = if (!valueTypes.isNullOrEmpty()) {
     calculateValueType(valueTypes)
 } else {
     calculateValueType(values)
