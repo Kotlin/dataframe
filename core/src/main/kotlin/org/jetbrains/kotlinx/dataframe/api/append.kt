@@ -31,6 +31,8 @@ import org.jetbrains.kotlinx.dataframe.nrow
  *
  * @include [AppendingNullsToHierarchicalColumns]
  *
+ * @include [AppendingNullsWidensColumnTypes]
+ *
  * If [values] is empty, this [DataFrame] is returned as is.
  *
  * @include [AppendImmutabilityAndPerformanceNote]
@@ -85,6 +87,8 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
  *
  * @include [AppendingNullsToHierarchicalColumns]
  *
+ * @include [AppendingNullsWidensColumnTypes]
+ *
  * If [numberOfRows] is `0`, this [DataFrame] is returned as is.
  *
  * @include [AppendImmutabilityAndPerformanceNote]
@@ -114,7 +118,9 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
  * @throws [IllegalArgumentException] if [numberOfRows] is negative.
  */
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
-    require(numberOfRows >= 0)
+    require(numberOfRows >= 0) {
+        "numberOfRows must not be negative, but was: $numberOfRows"
+    }
     if (numberOfRows == 0) return this
     if (ncol == 0) return DataFrame.empty(nrow + numberOfRows).cast()
     return columns().map { col ->
@@ -140,3 +146,11 @@ internal typealias AppendImmutabilityAndPerformanceNote = Nothing
  */
 @ExcludeFromSources
 private typealias AppendingNullsToHierarchicalColumns = Nothing
+
+/**
+ * Appending `null` widens the runtime type of each affected [ValueColumn] to nullable, while the compile-time schema
+ * of the returned [DataFrame] is not refined. Use [cast] or [convertTo] with a nullable schema before accessing these
+ * values through typed accessors.
+ */
+@ExcludeFromSources
+private typealias AppendingNullsWidensColumnTypes = Nothing
