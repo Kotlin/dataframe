@@ -7,9 +7,9 @@ We recommend using an up-to-date IntelliJ IDEA for the best experience,
 as well as the latest Kotlin plugin-, and Kotlin Toolchain plugin version.
 
 > [!WARNING]
-> For proper functionality in IntelliJ IDEA requires version 2025.2 or newer.
+> For proper functionality in IntelliJ IDEA requires version 2026.2.1 or newer.
 
-[Download Kotlin DataFrame Compiler Plugin Gradle Example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
+[Download Kotlin DataFrame Compiler Plugin Kotlin Toolchain Example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-kotlin-toolchain-example.zip)
 
 ## Formatting
 
