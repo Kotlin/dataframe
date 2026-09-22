@@ -491,8 +491,10 @@ The second situation is a **type clash**, described below.
 #### Manage type clashes
 
 By default, if a type clash occurs when reading JSON — the same property holds elements of different shapes across
-records — a new [`column group`](DataColumn.md#columngroup) is created for that property.
-This column group contains a column for each children property (across all records), and optionally
+records (objects, values or arrays) 
+— a new [`column group`](DataColumn.md#columngroup) is created for that property.
+This column group contains a column for each children object property
+(across all records), and
 "value" and "array" columns following the logic of reading row values and arrays as 
 [described above](#value-and-array-columns).
 Each value will spread out to its own column in the group, other columns will contain `null`.
@@ -504,7 +506,7 @@ For example, this is how the following JSON will be read (including `null` value
 <!---FUN readJsonTypeClash-->
 
 ```kotlin
-val text = """
+val complexClashedJson = """
     [
         { "a": "text" },
         { "a": { "b": 2 } },
@@ -512,14 +514,15 @@ val text = """
     ]
 """.trimIndent()
 
-val df = DataFrame.readJsonStr(text)
+val df = DataFrame.readJsonStr(complexClashedJson)
 ```
 
 <!---END-->
 <inline-frame src="./resources/readJsonTypeClash.html" width="100%" height="500px"></inline-frame>
 
 A clash at the top level has no property to group under, so there "value", "array", and the objects' properties
-become sibling columns of the [`DataFrame`](DataFrame.md) itself:
+become top-level columns of the [`DataFrame`](DataFrame.md) itself, 
+as in [usual standalone values reading](#value-and-array-columns):
 
 <!---FUN readJsonTopLevelTypeClash-->
 
@@ -551,7 +554,7 @@ For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` 
 <!---FUN readJsonTypeClashTactic-->
 
 ```kotlin
-val df = DataFrame.readJsonStr(text, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+val df = DataFrame.readJsonStr(complexClashedJson, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
 ```
 
 <!---END-->
