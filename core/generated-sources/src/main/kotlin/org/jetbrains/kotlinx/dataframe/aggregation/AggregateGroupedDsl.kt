@@ -28,8 +28,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  *
  * Aggregated values can be either simple values, [<code>data rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] or even
  * [<code>data frames</code>][org.jetbrains.kotlinx.dataframe.DataFrame]. Including them in the result using [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl.into] will lead
- * to creating [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
- * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
+ * to creating a [<code>value column</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn],
+ * a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], or a [<code>frame column</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] respectively
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] while preserving the original structure at higher levels.
  *
  *

@@ -61,7 +61,7 @@ import org.junit.Test
 /**
  * Making sure compiler evaluates String API overloads same as CS DSL overloads on typed input
  * User scenario when dataframe itself is typed, but user chose to use String overload for simplicity
- * => we do not loose information
+ * => we do not lose information
  * Sometimes some precision is expected to be lost, see [Merge0]
  */
 @Suppress("FunctionName", "TestFunctionName")

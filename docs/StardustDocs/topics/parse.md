@@ -83,8 +83,8 @@ You can get this list by accessing `availableParserTypes` on the [](#global-pars
 ### On a DataColumn
 
 When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Char`, `parse()` attempts to convert the column
-to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type,
-(a.k.a., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
+to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type
+(i.e., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
 
 ### Parser Options
 
@@ -234,7 +234,7 @@ Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encou
 > giving you a clear choice between Kotlin stdlib/[`kotlinx-datetime`](https://github.com/Kotlin/kotlinx-datetime)
 > and [`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html) types.
 >
-> We recommend using types,
+> We recommend using Kotlin types;
 > however, kotlinx-datetime [lacks localization support](https://github.com/Kotlin/kotlinx-datetime/discussions/253).
 >
 > If you need to provide a custom `Locale`, we recommend parsing

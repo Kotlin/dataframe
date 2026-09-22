@@ -501,7 +501,7 @@ internal class ArrowWriterImpl(
             is NullVector -> { }
 
             else -> {
-                // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
+                // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and maybe others (ListVector, FixedSizeListVector etc.)
                 throw NotImplementedError("Saving to ${vector.javaClass.canonicalName} is currently not implemented")
             }
         }

@@ -74,7 +74,7 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | Canonical     | Aliases | DataFrame column type    | Notes                                                                                       |
 |---------------|---------|--------------------------|---------------------------------------------------------------------------------------------|
 | `UUID`        | *none*  | `kotlin.uuid.Uuid`       | Preprocessed from `java.util.UUID`. Driver reports `Types.BINARY` + `java.util.UUID` class. |
-| `JAVA_OBJECT` | `OTHER` | `Any`                    | Serialised Java object; read as opaque `Any`.                                               |
+| `JAVA_OBJECT` | `OTHER` | `Any`                    | Serialized Java object; read as opaque `Any`.                                               |
 | `ENUM`        | *none*  | `String`                 | User-declared enum labels.                                                                  |
 | `GEOMETRY`    | *none*  | `String` (*unsupported*) | Only WKT text.                                                                              |
 | `JSON`        | *none*  | `String`                 | JSON text.                                                                                  |

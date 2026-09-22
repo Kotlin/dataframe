@@ -154,7 +154,7 @@ internal const val ARRAY_COLUMN_NAME: String = "array"
 internal const val VALUE_COLUMN_NAME: String = "value"
 
 /**
- * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param file Where to fetch the JSON as [InputStream] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -178,7 +178,7 @@ public fun DataFrame.Companion.readJson(
     )
 
 /**
- * @param path Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param path Where to fetch the JSON as [InputStream] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -202,7 +202,7 @@ public fun DataFrame.Companion.readJson(
     )
 
 /**
- * @param file Where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param file Where to fetch the JSON as [InputStream] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -226,7 +226,7 @@ public fun DataRow.Companion.readJson(
     ).single()
 
 /**
- * @param path Where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param path Where to fetch the JSON as [InputStream] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -250,7 +250,7 @@ public fun DataRow.Companion.readJson(
     ).single()
 
 /**
- * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param path URL or file path from where to fetch the JSON as [InputStream] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -274,7 +274,7 @@ public fun DataFrame.Companion.readJson(
     )
 
 /**
- * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param path URL or file path from where to fetch the JSON as [InputStream] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -298,7 +298,7 @@ public fun DataRow.Companion.readJson(
     ).single()
 
 /**
- * @param url Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
+ * @param url Where to fetch the JSON as [InputStream] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -324,7 +324,7 @@ public fun DataFrame.Companion.readJson(
     }
 
 /**
- * @param url Where to fetch the Json as [InputStream] to be converted to a [DataRow].
+ * @param url Where to fetch the JSON as [InputStream] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -348,7 +348,7 @@ public fun DataRow.Companion.readJson(
     ).single()
 
 /**
- * @param stream Json as [InputStream] to be converted to a [DataFrame].
+ * @param stream JSON as [InputStream] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -396,7 +396,7 @@ public fun DataFrame.Companion.readJson(
     )
 
 /**
- * @param stream Json as [InputStream] to be converted to a [DataRow].
+ * @param stream JSON as [InputStream] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -442,7 +442,7 @@ public fun DataRow.Companion.readJson(
     ).single()
 
 /**
- * @param text Json as [String] to be converted to a [DataFrame].
+ * @param text JSON as [String] to be converted to a [DataFrame].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.
@@ -467,7 +467,7 @@ public fun DataFrame.Companion.readJsonStr(
     )
 
 /**
- * @param text Json as [String] to be converted to a [DataRow].
+ * @param text JSON as [String] to be converted to a [DataRow].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[NameValueProperty]>
  *     will be created.
  * @param typeClashTactic How to handle type clashes when reading a JSON file.

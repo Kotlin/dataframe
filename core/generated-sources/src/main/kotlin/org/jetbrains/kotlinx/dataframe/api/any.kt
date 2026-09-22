@@ -42,7 +42,7 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  * [See `any` on the documentation website.](https://kotlin.github.io/dataframe/any.html)
  *
  * ### Example

@@ -143,7 +143,7 @@ Use `.filter(predicate)` for filtering instead.
 
 ### Removed functions and classes
 
-The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
+The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 
 | 0.15                                                           | 1.0                                                                          | Reason                                 |
 |----------------------------------------------------------------|------------------------------------------------------------------------------|----------------------------------------|
@@ -171,7 +171,7 @@ The next functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
 | `CompareResult.Equals` / `CompareResult.isEqual()`             | `CompareResult.Matches` / `CompareResult.matches()`                          | Renamed to better reflect its purpose. |
 | `CompareResult.isSuperOrEqual()`                               | `CompareResult.isSuperOrMatches()`                                           | Renamed to better reflect its purpose. |
 
-The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
+The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 
 | 0.15                                                                                                     | 1.0                                                                                                                           | Reason                                                                       |
 |----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
@@ -192,7 +192,7 @@ The next functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 ## Parsing and Converting Date-Time
 
 In 0.15 and up to 1.0-Beta4 we did support the [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
-types; however, they were still treated second-level in DataFrame. [`ParserOptions`](parse.md#parser-options)
+types; however, they were still treated as second-class in DataFrame. [`ParserOptions`](parse.md#parser-options)
 were still built around the Java `DataTimeFormatter`-paradigm.
 Starting from 1.0-Beta5, [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) types now become first-class
 citizens,

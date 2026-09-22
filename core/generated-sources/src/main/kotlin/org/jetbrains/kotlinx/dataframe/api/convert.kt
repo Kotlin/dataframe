@@ -457,7 +457,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * Provide a new value for every selected cell given its row and its previous value using a
  * [<code>row value expression</code>][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
- * Fore more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
+ * For more information, [See RowValueExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowvalueexpression)
  * [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
  *
  * ## Note

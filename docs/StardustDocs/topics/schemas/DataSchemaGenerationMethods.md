@@ -34,7 +34,7 @@ in cases where the schema cannot be inferred automatically from the source.
 ### Arguments {id="generateInterfaces-arguments"}
 
 * `markerName`: `String?` — The base name to use for generated interfaces.  
-  If `null`, uses the `T` type argument of `DataFrame` simple name.  
+  If `null`, uses the simple name of the `T` type argument of `DataFrame`.  
   Default: `null`.
 * `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
   in addition to `interface` declarations.  
@@ -139,10 +139,10 @@ Useful when you want to:
 ### Arguments {id="generateDataClasses-arguments"}
 
 * `markerName`: `String?` — The base name to use for generated data classes.  
-  If `null`, uses the `T` type argument of `DataFrame` simple name.  
+  If `null`, uses the simple name of the `T` type argument of `DataFrame`.  
   Default: `null`.
 * `extensionProperties`: `Boolean` – Whether to generate [extension properties](extensionPropertiesApi.md)
-  in addition to `interface` declarations.  
+  in addition to `data class` declarations.  
   Useful if you don't use the [compiler plugin](Compiler-Plugin.md), otherwise they are not needed;
   the [compiler plugin](Compiler-Plugin.md), [notebooks](SetupKotlinNotebook.md),
   and older [Gradle/KSP plugin](schemasGradle.md) generate them automatically.
@@ -193,7 +193,7 @@ data class Customer(
 
 <!---END-->
 
-By adding these interfaces to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
+By adding these data classes to your project with the [compiler plugin](Compiler-Plugin.md) enabled,  
 you'll gain full support for the [extension properties API](extensionPropertiesApi.md) and type-safe operations.
 
 Use [`cast`](cast.md) to apply the generated schema to a `DataFrame`.

@@ -71,7 +71,7 @@ that significantly enhance the development experience
 ## Configure the repository
 
 All Kotlin DataFrame modules are available from the Maven Central repository.
-To use them, add the appropriate dependency into your repositories mapping:
+To use them, add the appropriate repository to your `repositories` block:
 
 <tabs>
   <tab title="Kotlin DSL"> 

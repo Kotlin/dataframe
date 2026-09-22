@@ -120,6 +120,8 @@
 <resource src="groupByFirst_properties.html"></resource>
 <resource src="groupByInto_properties.html"></resource>
 <resource src="groupByLast_properties.html"></resource>
+<resource src="groupByMapToFrames_properties.html"></resource>
+<resource src="groupByMapToRows_properties.html"></resource>
 <resource src="groupByMaxBy_properties.html"></resource>
 <resource src="groupByMedianBy_properties.html"></resource>
 <resource src="groupByMinBy_properties.html"></resource>
@@ -173,6 +175,13 @@
 <resource src="notebook_test_join_5.html"></resource>
 <resource src="notebook_test_join_6.html"></resource>
 <resource src="notebook_test_join_8.html"></resource>
+<resource src="mapDf.html"></resource>
+<resource src="mapIndexedOnColumn.html"></resource>
+<resource src="mapMany_properties.html"></resource>
+<resource src="mapOnColumn.html"></resource>
+<resource src="mapToColumn_properties.html"></resource>
+<resource src="mapToFramesOnGroupBy.html"></resource>
+<resource src="mapToRowsOnGroupBy.html"></resource>
 <resource src="noneDf.html"></resource>
 <resource src="dfParse.html"></resource>
 <resource src="dfParseWithOptions.html"></resource>
@@ -270,6 +279,10 @@
 <resource src="notebook_test_rename_5.html"></resource>
 <resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_shuffle_2.html"></resource>
+<resource src="singleCondition_properties.html"></resource>
+<resource src="singleDf.html"></resource>
+<resource src="singleOnColumnDf.html"></resource>
+<resource src="single_properties.html"></resource>
 <resource src="drop.html"></resource>
 <resource src="dropDataColumn.html"></resource>
 <resource src="dropLast1.html"></resource>
@@ -395,7 +408,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insert.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.merge.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDefault.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDifferentWith.html"></resource>

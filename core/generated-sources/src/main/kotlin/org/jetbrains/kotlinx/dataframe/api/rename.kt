@@ -324,8 +324,8 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)
@@ -500,8 +500,8 @@ public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)
@@ -532,8 +532,8 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = to { it.renam
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)

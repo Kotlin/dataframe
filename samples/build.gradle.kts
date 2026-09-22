@@ -118,6 +118,7 @@ korro {
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
                 include("groupBy.md")
+                include("map.md")
                 include("pivot.md")
                 include("countDistinct.md")
                 include("fill.md")
@@ -126,6 +127,7 @@ korro {
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("single.md")
                 include("indexing.md")
             },
         )
