@@ -125,18 +125,19 @@ abstract class TestBuildingExampleProjects {
                 environment()["KOTLIN_CLI_JAVA_OPTIONS"] =
                     "\"-Dmaven.repo.local=${getGradleProperty("maven.repo.local")!!}\""
             }
-            .redirectErrorStream(true)
+            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+            .redirectError(ProcessBuilder.Redirect.INHERIT)
             .start()
 
-        check(process.waitFor(10, TimeUnit.MINUTES)) {
-            "Kotlin Toolchain command timed out"
+        if (!process.waitFor(10, TimeUnit.MINUTES)) {
+            process.destroyForcibly()
+            error("Kotlin Toolchain command in '$folder' timed out")
         }
 
-        val output = process.inputStream.bufferedReader().readText()
-        check(process.exitValue() == 0) {
+        if (process.exitValue() != 0) {
             throw BuildException(
                 "`build$name` failed. Could not build Kotlin Toolchain project in '$folder'.",
-                Exception("${process.exitValue()}: $output"),
+                Exception("Exit code ${process.exitValue()}, see the build output above."),
             )
         }
     }
