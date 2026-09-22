@@ -151,25 +151,6 @@ internal interface MeanDocs : CommonStatisticsDocs {
     typealias AllSuitableColumnsSnippet = Nothing
 
     /**
-     * {@comment The documentation website links all [Grouped] `mean` KDocs end with. KDoc-snippet.}
-     *
-     * For more information: {@include [DocumentationUrls.GroupByStatistics]}, and
-     * {@include [DocumentationUrls.GroupByAggregationStatistics]}
-     */
-    @ExcludeFromSources
-    typealias GroupByUrlsSnippet = Nothing
-
-    /**
-     * {@comment The documentation website links all [Pivot] and [PivotGroupBy] `mean` KDocs end with.
-     *    KDoc-snippet.}
-     *
-     * For more information: {@include [DocumentationUrls.PivotStatistics]}, and
-     * {@include [DocumentationUrls.PivotAggregationStatistics]}
-     */
-    @ExcludeFromSources
-    typealias PivotUrlsSnippet = Nothing
-
-    /**
      * @comment Version of [SelectingColumns] with correctly filled in examples
      * @include [SelectingColumns] {@include [SetMeanOperationArg]}
      */
