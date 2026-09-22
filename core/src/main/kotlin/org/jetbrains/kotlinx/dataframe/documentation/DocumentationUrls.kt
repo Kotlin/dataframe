@@ -137,6 +137,25 @@ public interface DocumentationUrls {
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
     public typealias Add = Nothing
 
+    /** [See `map` on the documentation website.]({@include [Url]}/map.html) */
+    public interface Map {
+
+        /** [See `map` on a `DataColumn` on the documentation website.]({@include [Url]}/map.html#map-on-datacolumn) */
+        public typealias OnColumn = Nothing
+
+        /** [See `map` over rows on the documentation website.]({@include [Url]}/map.html#map) */
+        public typealias OverRows = Nothing
+
+        /** [See `mapToColumn` on the documentation website.]({@include [Url]}/map.html#maptocolumn) */
+        public typealias ToColumn = Nothing
+
+        /** [See `mapToFrame` on the documentation website.]({@include [Url]}/map.html#maptoframe) */
+        public typealias ToFrame = Nothing
+
+        /** [See `map` on a `GroupBy` on the documentation website.]({@include [Url]}/map.html#map-on-groupby) */
+        public typealias OnGroupBy = Nothing
+    }
+
     /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
     public typealias All = Nothing
 
