@@ -441,7 +441,7 @@ has the `Double` type because it's the smallest unified number type for `Int` an
 
 ### JSON parsing options
 
-#### The "value" and "array" columns {id="value-and-array-columns"}
+#### The "value" and "array" columns for standalone values {id="value-and-array-columns"}
 
 A JSON element that isn't an object has no property name to be used as a column name, so the reader falls back to
 two fixed names:
@@ -453,7 +453,7 @@ They're created in two situations. The first is **at the top level**, where the 
 rows themselves and so have no name at all. This happens regardless of the `typeClashTactic` and even when there's
 no clash to begin with.
 
-An array of primitives is read into a single "value" column:
+* An array of primitives is read into a single "value" column:
 
 <!---FUN readJsonValueColumn-->
 
@@ -464,7 +464,7 @@ val df = DataFrame.readJsonStr("""[1, 2, 3]""")
 <!---END-->
 <inline-frame src="./resources/readJsonValueColumn.html" width="100%" height="500px"></inline-frame>
 
-An array of arrays, into a single "array" column of lists:
+* An array of arrays, into a single "array" column of lists:
 
 <!---FUN readJsonArrayColumn-->
 
@@ -475,7 +475,7 @@ val df = DataFrame.readJsonStr("""[[1], [2]]""")
 <!---END-->
 <inline-frame src="./resources/readJsonArrayColumn.html" width="100%" height="500px"></inline-frame>
 
-And when those arrays hold objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn):
+* When those arrays hold objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN readJsonArrayOfObjectsColumn-->
 
@@ -491,11 +491,32 @@ The second situation is a **type clash**, described below.
 #### Manage type clashes
 
 By default, if a type clash occurs when reading JSON — the same property holds elements of different shapes across
-records — a new [`column group`](DataColumn.md#columngroup) is created for that property, consisting of: "value",
-"array", and any number of object properties.
+records — a new [`column group`](DataColumn.md#columngroup) is created for that property.
+This column group contains a column for each children property (across all records), and optionally
+"value" and "array" columns following the logic of reading row values and arrays as 
+[described above](#value-and-array-columns).
+Each value will spread out to its own column in the group, other columns will contain `null`.
 
-If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
-will be `null`.
+In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
+
+For example, this is how the following JSON will be read (including `null` values):
+
+<!---FUN readJsonTypeClash-->
+
+```kotlin
+val text = """
+    [
+        { "a": "text" },
+        { "a": { "b": 2 } },
+        { "a": [ 6, 7, 8 ] }
+    ]
+""".trimIndent()
+
+val df = DataFrame.readJsonStr(text)
+```
+
+<!---END-->
+<inline-frame src="./resources/readJsonTypeClash.html" width="100%" height="500px"></inline-frame>
 
 A clash at the top level has no property to group under, so there "value", "array", and the objects' properties
 become sibling columns of the [`DataFrame`](DataFrame.md) itself:
@@ -521,28 +542,8 @@ are nullable. A JSON `null` element, as well as a missing property, is `null` in
 > element without an array is an empty [`DataFrame`](DataFrame.md), because frame columns cannot hold `null`.
 > {style="note"}
 
-In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
-
-For example, this is how the following JSON will be read (including `null` values):
-
-<!---FUN readJsonTypeClash-->
-
-```kotlin
-val text = """
-    [
-        { "a": "text" },
-        { "a": { "b": 2 } },
-        { "a": [ 6, 7, 8 ] }
-    ]
-""".trimIndent()
-
-val df = DataFrame.readJsonStr(text)
-```
-
-<!---END-->
-<inline-frame src="./resources/readJsonTypeClash.html" width="100%" height="500px"></inline-frame>
-
-This makes it more convenient to work with the data, but it can be confusing if you're not expecting it or if you
+Default type clash tactic makes it more convenient to work with the data, 
+but it can be confusing if you're not expecting it or if you
 just need the type to be an `Any`.
 
 For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` to get the following:
