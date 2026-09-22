@@ -75,11 +75,17 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 |---------------|---------|--------------------------|---------------------------------------------------------------------------------------------|
 | `UUID`        | *none*  | `kotlin.uuid.Uuid`       | Preprocessed from `java.util.UUID`. Driver reports `Types.BINARY` + `java.util.UUID` class. |
 | `JAVA_OBJECT` | `OTHER` | `Any`                    | Serialized Java object; read as opaque `Any`.                                               |
-| `ENUM`        | *none*  | `Any`                    | User-declared enum labels; the value is a `String`.                                        |
-| `GEOMETRY`    | *none*  | `Any`                    | The value is an `org.locationtech.jts.geom.Geometry` when JTS is on the classpath.         |
-| `JSON`        | *none*  | `ByteArray`              | The JSON text as raw bytes; the driver returns a `byte[]` for this column.                  |
+| `ENUM`        | *none*  | `Any`                    | User-declared enum labels. The value is always a `String`, but the driver reports the column as `Types.OTHER`, so the column type stays `Any`. |
+| `GEOMETRY`    | *none*  | `Any`                    | Read as an opaque `Any`; the class of the value depends on whether JTS is on the classpath, and is an `org.locationtech.jts.geom.Geometry` when it is. |
+| `JSON`        | *none*  | `ByteArray`              | The JSON text as raw bytes: the driver returns a `byte[]` for this column. See the note below.  |
 | `ARRAY`       | *none*  | `Array<*>`               | Element type inferred; falls back to `Any` for heterogeneous arrays.                        |
 | `ROW(...)`    | *none*  | `String` (*unsupported*) |                                                                                             |
+
+A `JSON` column arrives as raw bytes rather than as text, so reading one and using it as a `String`
+takes an explicit decode — `convert { jsonCol }.with { it.toString(Charsets.UTF_8) }`. The same applies
+to `ENUM`, `GEOMETRY` and `INTERVAL`, whose columns are typed `Any`: the value has to be cast or
+converted before it can be used as the type it really is.
+{style="note"}
 
 ## Unsupported types
 

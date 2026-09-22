@@ -17,16 +17,30 @@ public object MariaDb : DbType("mariadb") {
     override val driverClassName: String
         get() = "org.mariadb.jdbc.Driver"
 
+    /**
+     * MariaDB-specific deviations from the default type mapping:
+     *
+     * - `INT UNSIGNED` does not fit an [Int] (`0 .. 2^32 - 1`), so it is read as [Long], and
+     *   `BIGINT UNSIGNED` does not fit a [Long] (`0 .. 2^64 - 1`), so it is read as
+     *   [java.math.BigInteger]. The driver returns exactly those types for them.
+     * - `SMALLINT` is read as [Short], which is what the driver reports and returns for it.
+     * - A multi-bit `BIT(M)` column is read as [ByteArray], because that is what the driver returns
+     *   for it while reporting `byte[]` — the source-code spelling, not the `"[B"` JVM binary name
+     *   the default mapping looks for — as the column class. See [isMultiBit] and #2087.
+     * - `TINYBLOB`/`BLOB`/`MEDIUMBLOB`/`LONGBLOB` are read as [ByteArray]: the driver reports
+     *   `java.sql.Blob` as their column class while [ResultSet.getObject] returns a `byte[]` (#2087).
+     *   For those columns the driver reports `VARBINARY`/`LONGVARBINARY` as the JDBC type, never
+     *   [java.sql.Types.BLOB], and that is what the condition keys on — so H2 in MariaDB mode, which
+     *   delegates its mapping here, reports [java.sql.Types.BLOB] and does return real
+     *   [java.sql.Blob] values, keeps mapping to [java.sql.Blob].
+     *
+     * Everything else falls through to [DbType.getExpectedJdbcType].
+     *
+     * The driver is also known to report `java.lang.Integer` for a `BIGINT` column whose stored
+     * values happen to fit in an [Int]; that case is not handled here. The SQLite analogue of it is
+     * (see `Sqlite.generateConverter`), so the fix pattern exists if this turns out to bite.
+     */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
-        // Force BIGINT to always be Long, regardless of javaClassName
-        // MariaDB JDBC driver may report Integer for small BIGINT values
-        // TODO: investigate the corner case
-
-        // if (tableColumnMetadata.jdbcType == java.sql.Types.BIGINT) {
-        //    val kType = Long::class.createType(nullable = tableColumnMetadata.isNullable)
-        //    return ColumnSchema.Value(kType)
-        // }
-
         if (tableColumnMetadata.sqlTypeName == "INTEGER UNSIGNED" ||
             tableColumnMetadata.sqlTypeName == "INT UNSIGNED"
         ) {
@@ -40,17 +54,13 @@ public object MariaDb : DbType("mariadb") {
             return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
         }
 
-        // A multi-bit BIT(M) column comes back as a `byte[]`, see [isMultiBit]
+        // a multi-bit BIT(M) column comes back as a byte[], see isMultiBit
         if (tableColumnMetadata.isMultiBit) {
             return typeOf<ByteArray>().withNullability(tableColumnMetadata.isNullable)
         }
 
-        // For TINYBLOB/BLOB/MEDIUMBLOB/LONGBLOB columns the MariaDB driver reports
-        // `java.sql.Blob` from `ResultSetMetaData.getColumnClassName`, while `ResultSet.getObject`
-        // actually returns a `byte[]`, so the column has to be typed as `ByteArray` (see #2087).
-        // For those columns the driver reports VARBINARY/LONGVARBINARY as the JDBC type, never BLOB;
-        // the `Types.BLOB` check keeps H2 in MariaDB mode working — it delegates here,
-        // reports `Types.BLOB` and does return real `java.sql.Blob` values.
+        // a blob column comes back as a byte[] despite being reported as java.sql.Blob; the
+        // jdbcType check keeps H2 in MariaDB mode on java.sql.Blob. See the KDoc above.
         if (tableColumnMetadata.javaClassName == "java.sql.Blob" &&
             tableColumnMetadata.jdbcType != Types.BLOB
         ) {

@@ -340,4 +340,18 @@ abstract class MsSqlTestBase {
             insert = MSSQL_AUDIT_INSERT,
         )
     }
+
+    /**
+     * Pins the column type each SQL type is read as — the claim the type-mapping page publishes,
+     * see [assertColumnTypes].
+     */
+    @Test
+    fun `columns are read as the type-mapping page documents`() {
+        connection.assertColumnTypes(
+            dbType = MsSql,
+            ddl = MSSQL_AUDIT_DDL,
+            insert = MSSQL_AUDIT_INSERT,
+            expected = MSSQL_EXPECTED_TYPES,
+        )
+    }
 }

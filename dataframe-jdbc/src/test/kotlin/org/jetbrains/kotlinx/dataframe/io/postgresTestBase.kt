@@ -413,4 +413,18 @@ abstract class PostgresTestBase {
             insert = POSTGRES_AUDIT_INSERT,
         )
     }
+
+    /**
+     * Pins the column type each SQL type is read as — the claim the type-mapping page publishes,
+     * see [assertColumnTypes].
+     */
+    @Test
+    fun `columns are read as the type-mapping page documents`() {
+        connection.assertColumnTypes(
+            dbType = PostgreSql,
+            ddl = POSTGRES_AUDIT_DDL,
+            insert = POSTGRES_AUDIT_INSERT,
+            expected = POSTGRES_EXPECTED_TYPES,
+        )
+    }
 }

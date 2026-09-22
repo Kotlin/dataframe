@@ -67,6 +67,13 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | `timestamp with time zone [(p)]`      | `timestamptz` | `kotlin.time.Instant`            | Also preprocessed from `java.sql.Timestamp`; an `Instant` is a point in time, so no offset is carried. |
 | `interval [fields] [(p)]`             | *none*        | `org.postgresql.util.PGInterval` | PostgreSQL override.                      |
 
+Neither of the two time-zone-aware types keeps the UTC offset that was stored. A `timetz` value
+loses it outright, because the driver reports the column as a plain `time`; a `timestamptz` value
+keeps the instant it denotes but not the offset it was written with, because a `kotlin.time.Instant`
+is a point in time. Read the offset as a separate column if it matters — for example
+`SELECT timestamptzCol, to_char(timestamptzCol, 'OF') AS offset`.
+{style="warning"}
+
 ## Geometric types (PostgreSQL overrides)
 
 Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wrapper.
@@ -93,10 +100,15 @@ Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wra
 
 | Canonical | Aliases | DataFrame column type | Notes                                                                                 |
 |-----------|---------|-----------------------|---------------------------------------------------------------------------------------|
-| `uuid`    | *none*  | `Any`                 | The value is a `java.util.UUID`.                                                      |
+| `uuid`    | *none*  | `Any`                 | The value is a `java.util.UUID`; `toString()` gives the text form. See the note below. |
 | `xml`     | *none*  | `java.sql.SQLXML`     | The value is the driver's `org.postgresql.jdbc.PgSQLXML`.                             |
 | `json`    | *none*  | `Any`                 | The value is an `org.postgresql.util.PGobject`; `toString()` gives the JSON text.     |
 | `jsonb`   | *none*  | `Any`                 | The value is an `org.postgresql.util.PGobject`; `toString()` gives the JSON text.     |
+
+Unlike H2 and DuckDB, which read a `UUID` column as `kotlin.uuid.Uuid`, PostgreSQL leaves it typed
+`Any`. To get the same type here, convert the column after reading it:
+`convert { uuidCol }.with { Uuid.parse(it.toString()) }`.
+{style="note"}
 
 ## Network address types
 

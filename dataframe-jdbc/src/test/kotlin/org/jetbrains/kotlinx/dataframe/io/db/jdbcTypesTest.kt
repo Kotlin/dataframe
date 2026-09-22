@@ -357,14 +357,17 @@ class JdbcTypesTest {
  *   [java.sql.ResultSetMetaData.getColumnClassName])
  * @property expectedType the expected non-nullable Kotlin type
  * @property size the jdbc reported column display size; only matters for the few mappings that depend
- *   on the declared column width, such as PostgreSQL's `BIT(n)`
+ *   on the declared column width, namely the `BIT(n)` ones in MySQL, MariaDB and PostgreSQL.
+ *   Defaults to `1`, the width that means "not a multi-bit column" — so a new `BIT` entry added
+ *   without an explicit [size] keeps the single-bit meaning instead of silently flipping to the
+ *   multi-bit mapping
  */
 internal data class TypeMapping(
     val sqlTypeName: String,
     val jdbcType: Int,
     val javaClassName: String,
     val expectedType: KType,
-    val size: Int = 10,
+    val size: Int = 1,
 )
 
 internal const val UNKNOWN_JDBC_TYPE: Int = -9999
@@ -531,6 +534,11 @@ internal val mariaDbSpecificMappings: List<TypeMapping> = listOf(
  * `-155` is the driver-specific `microsoft.sql.Types.DATETIMEOFFSET`; the default mapping has no
  * entry for it, so without the override the column would fall back to `String` while the driver
  * returns a `microsoft.sql.DateTimeOffset` value (#2087).
+ *
+ * The two driver-specific type constants are written out as literals here on purpose, rather than
+ * shared with the private ones in `MsSql`: they are the driver's values, so an independent copy pins
+ * them, while a shared constant would make a wrong value pass this test and only fail against a real
+ * server.
  */
 internal val msSqlSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("datetimeoffset", -155, "microsoft.sql.DateTimeOffset", typeOf<OffsetDateTime>()),

@@ -333,7 +333,7 @@ public class Sqlite(
                 }
         }
 
-        // 5) Fallback — delegate to the base [DbType] end-to-end pipeline.
+        // 7) Fallback — delegate to the base [DbType] end-to-end pipeline.
         return fallbackConverter(tableColumnMetadata)
     }
 

@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import java.math.BigInteger
 import java.sql.ResultSet
-import java.sql.Types
 import java.util.Locale
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -18,6 +17,17 @@ public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
 
+    /**
+     * MySQL-specific deviations from the default type mapping:
+     *
+     * - `INT UNSIGNED` does not fit an [Int] (`0 .. 2^32 - 1`), so it is read as [Long], and
+     *   `BIGINT UNSIGNED` does not fit a [Long] (`0 .. 2^64 - 1`), so it is read as [java.math.BigInteger].
+     *   The driver returns exactly those types for them.
+     * - A multi-bit `BIT(M)` column is read as [ByteArray], because that is what the driver returns
+     *   for it while reporting `java.lang.Boolean` as the column class — see [isMultiBit] and #2087.
+     *
+     * Everything else falls through to [DbType.getExpectedJdbcType].
+     */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
@@ -59,16 +69,3 @@ public object MySql : DbType("mysql") {
         return name.split(".").joinToString(".") { "`$it`" }
     }
 }
-
-/**
- * `true` for a multi-bit `BIT(M)` column, `M > 1`, in MySQL and MariaDB.
- *
- * Both drivers return a `byte[]` for such a column, but neither reports a column class the default
- * mapping recognises as one: MySQL reports `java.lang.Boolean`, and MariaDB reports `byte[]` — the
- * source-code spelling, not the `"[B"` JVM binary name the default mapping looks for. So both used to
- * fall through to the [java.sql.Types.BIT] default, [Boolean], which does not match the values
- * (see #2087). A single-bit column really is a [Boolean] and is left alone; the declared column
- * width is the only thing in the metadata that tells the two apart.
- */
-internal val TableColumnMetadata.isMultiBit: Boolean
-    get() = jdbcType == Types.BIT && size > 1
