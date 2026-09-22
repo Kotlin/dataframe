@@ -39,6 +39,11 @@ To add one:
    wholesale; `:samples` has an explicit `include(...)` allow-list in `samples/build.gradle.kts`. If the page
    already has an `<!---IMPORT ...-->` line, the class it names tells you the owner. Don't split one topic
    across both modules — both korro tasks would write the same file.
+   A page dropped into one of the globbed folders joins the scan automatically, and korro's
+   `behavior { ignoreMissing = true }` (`samples/build.gradle.kts:90`, `TODO(#898)`) turns a
+   `<!---FUN name-->` with no matching sample into a printed `Cannot resolve FUN 'name'` on a **green**
+   build. Eight such lines already arrive from `master`, so a new one is invisible in CI — read korro's
+   own output after adding or moving a page, don't rely on the exit code.
 2. **Add the sample to that module's sample class**, with the body wrapped in `// SampleStart` / `// SampleEnd`.
    New pages should go to `:samples` (migration #898); an existing `:core` page keeps its samples next to its
    siblings. In `:core` a sample is a `@Test @TransformDataFrameExpressions fun` — see step 4 for when that
@@ -84,6 +89,11 @@ To add one:
    produces is committed together with the topic that embeds it, so the page is not broken until the CI bot next
    regenerates everything on `master` (that is how the doc PRs in `git log -- resources/snippets` do it).
    Everything else under `resources/**` stays CI-owned.
+   **Deleting a page takes two steps.** Korro stages the whole topic tree under
+   `<module>/build/korro/docs/**` (`:samples` keeps a second copy in `build/korro/check/**`) and copies it
+   back over `topics/**` at the end of the run. A page you `git rm` is therefore silently restored as an
+   untracked file by the next `core:korro` / `samples:korro`, and `--rerun-tasks` does **not** clear the
+   staging dir. Delete the staged copies as well, then re-run and confirm the page stayed gone.
 
 ## How content is injected
 
