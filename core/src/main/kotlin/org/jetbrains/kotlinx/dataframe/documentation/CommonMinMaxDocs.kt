@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.with
  * {@comment
  *    Holds all KDoc-snippets that the `min` and `max` operations have in common.
  *    Both `MinDocs` and `MaxDocs` inherit from this interface, so the snippets can be
- *    included from either of them, like `{@include [MaxDocs.SkipNaNParam]}`.
+ *    included from either of them, like `{@include [MaxDocs.SkipNanParam]}`.
  *    The snippets that all summary statistics have in common are inherited from
  *    [CommonStatisticsDocs] and can be included in the same way.
  *

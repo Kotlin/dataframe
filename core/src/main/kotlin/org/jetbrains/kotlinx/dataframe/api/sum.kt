@@ -144,6 +144,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * Result cells for which there exists a group, but there is nothing to sum
      * (for instance, because the group was empty or contained only `null` values)
      * simply become `0` in the result type (defaulting to [Double] if there is no number type to speak of).
+     *
      * For more information about the resulting types:
      * @include [DocumentationUrls.Sum.TypeConversion]
      *
@@ -157,6 +158,9 @@ internal interface SumDocs : CommonStatisticsDocs {
      *
      * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
      * the other columns are simply left out of the result.
+     *
+     * This includes columns inside [column groups][ColumnGroup].
+     * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
      */
     @ExcludeFromSources
     typealias AllSuitableColumnsSnippet = Nothing
@@ -632,6 +636,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      * @param [name\] The name of the resulting column.
      *   If `null` (the default), the name of the selected column is used if exactly one column
      *   is selected, and `"sum"` otherwise.
+     *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
      */
     @ExcludeFromSources
     typealias ResultColumnNameParam = Nothing
@@ -1562,6 +1567,8 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  * of the expression's results for the rows of the corresponding group.
  *
  * @include [SumDocs.RowExpressionSnippet]
+ *
+ * The result of [expression\] is treated as the 'input' of this operation.
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
