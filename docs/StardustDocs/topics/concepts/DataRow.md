@@ -14,7 +14,7 @@
 of a [row expression](DataRow.md#row-expressions) calculated for the current and previous rows;
 * `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows;
 * `values(): List<Any?>` — list of all cell values from the current row;
-* `valuesOf<T>(): List<T>` — list of values of the given type ;
+* `valuesOf<T>(): List<T>` — list of values of the given type;
 * `columnsCount(): Int` — number of columns;
 * `count(): Int` — equivalent to `columnsCount()`;
 * `count(predicate): Int` — number of values in the row satisfying the given predicate;

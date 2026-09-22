@@ -19,7 +19,7 @@ with format auto-detection and parsing options.
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
-The reading from SQL databases is also supported.
+Reading from SQL databases is also supported.
 Read [here](readSqlDatabases.md) to know more 
 or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
 
@@ -296,7 +296,7 @@ The result will be a dataframe with properly parsed `DateTime` columns.
 
 > Note: Although these examples focus on reading CSV files, 
 > these `ParserOptions` can be supplied to any `String`-column-handling operation 
-> (like, `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.) 
+> (like `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.). 
 > This allows you to configure the locale, null-strings, date-time patterns, and more.
 > 
 > For more details on the parse operation, see the [`parse operation`](parse.md).
@@ -641,7 +641,7 @@ B100
 C100
 ```
 
-You will get column of `Serializable` instead (common parent for `Double` and `String`).
+You will get a column of `Serializable` instead (common parent for `Double` and `String`).
 
 You can fix it by providing an additional parameter:
 
