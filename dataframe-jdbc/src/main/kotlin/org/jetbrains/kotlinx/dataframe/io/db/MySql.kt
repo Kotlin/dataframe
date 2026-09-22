@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 
 import java.math.BigInteger
 import java.sql.ResultSet
+import java.sql.Types
 import java.util.Locale
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -23,6 +24,9 @@ public object MySql : DbType("mysql") {
         }
         if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
             return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
+        }
+        if (tableColumnMetadata.isMultiBit) {
+            return typeOf<ByteArray>().withNullability(tableColumnMetadata.isNullable)
         }
         return super.getExpectedJdbcType(tableColumnMetadata)
     }
@@ -55,3 +59,16 @@ public object MySql : DbType("mysql") {
         return name.split(".").joinToString(".") { "`$it`" }
     }
 }
+
+/**
+ * `true` for a multi-bit `BIT(M)` column, `M > 1`, in MySQL and MariaDB.
+ *
+ * Both drivers return a `byte[]` for such a column, but neither reports a column class the default
+ * mapping recognises as one: MySQL reports `java.lang.Boolean`, and MariaDB reports `byte[]` — the
+ * source-code spelling, not the `"[B"` JVM binary name the default mapping looks for. So both used to
+ * fall through to the [java.sql.Types.BIT] default, [Boolean], which does not match the values
+ * (see #2087). A single-bit column really is a [Boolean] and is left alone; the declared column
+ * width is the only thing in the metadata that tells the two apart.
+ */
+internal val TableColumnMetadata.isMultiBit: Boolean
+    get() = jdbcType == Types.BIT && size > 1

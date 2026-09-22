@@ -8,11 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.db.MariaDb
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.sql.Blob
 import java.sql.Connection
 import java.sql.SQLException
 import java.util.Date
@@ -331,16 +331,22 @@ abstract class MariadbTestBase {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
-        val byteArray = "tinyblobValue".toByteArray()
-        result[0][22] shouldBe byteArray
+        // the MariaDB driver returns `byte[]` for every blob type, despite reporting `java.sql.Blob`
+        // as the column class, so all of them must be read as `ByteArray` (see #2087)
+        result[0][22] shouldBe "tinyblobValue".toByteArray()
+        result[0][23] shouldBe "blobValue".toByteArray()
+        result[0][24] shouldBe "mediumblobValue".toByteArray()
+        result[0][25] shouldBe "longblobValue".toByteArray()
 
         val schema = DataFrameSchema.readSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
         schema.columns["varbinaryCol"]!!.type shouldBe typeOf<ByteArray>()
         schema.columns["binaryCol"]!!.type shouldBe typeOf<ByteArray>()
-        schema.columns["longblobCol"]!!.type shouldBe typeOf<Blob>()
-        schema.columns["tinyblobCol"]!!.type shouldBe typeOf<Blob>()
+        schema.columns["tinyblobCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["blobCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["mediumblobCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["longblobCol"]!!.type shouldBe typeOf<ByteArray>()
         schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
         schema.columns["datetimeCol"]!!.type shouldBe typeOf<Instant>()
         schema.columns["timestampCol"]!!.type shouldBe typeOf<Instant>()
@@ -354,6 +360,10 @@ abstract class MariadbTestBase {
         val schema2 = DataFrameSchema.readSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
         schema2.columns["textCol"]!!.type shouldBe typeOf<String?>()
+        schema2.columns["tinyblobCol"]!!.type shouldBe typeOf<ByteArray?>()
+        schema2.columns["blobCol"]!!.type shouldBe typeOf<ByteArray?>()
+        schema2.columns["mediumblobCol"]!!.type shouldBe typeOf<ByteArray?>()
+        schema2.columns["longblobCol"]!!.type shouldBe typeOf<ByteArray?>()
     }
 
     @Test
@@ -502,5 +512,18 @@ abstract class MariadbTestBase {
                 conn.createStatement().execute("DROP DATABASE IF EXISTS $secondDb")
             }
         }
+    }
+
+    /**
+     * Guards the invariant behind #2087 across a wide surface of MariaDB types,
+     * see [assertColumnTypesMatchValues].
+     */
+    @Test
+    fun `declared column types accept the values the driver returns`() {
+        connection.assertColumnTypesMatchValues(
+            dbType = MariaDb,
+            ddl = MYSQL_FAMILY_AUDIT_DDL,
+            insert = MYSQL_FAMILY_AUDIT_INSERT,
+        )
     }
 }
