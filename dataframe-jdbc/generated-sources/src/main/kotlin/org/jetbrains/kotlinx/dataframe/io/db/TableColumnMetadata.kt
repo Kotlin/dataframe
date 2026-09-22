@@ -6,7 +6,12 @@ package org.jetbrains.kotlinx.dataframe.io.db
  * @property [name] the name of the column.
  * @property [sqlTypeName] the SQL data type of the column.
  * @property [jdbcType] the JDBC data type of the column produced from [<code>java.sql.Types</code>][java.sql.Types].
- * @property [size] the size of the column.
+ * @property [size] the declared width of the column, as reported by
+ *   [<code>java.sql.ResultSetMetaData.getColumnDisplaySize</code>][java.sql.ResultSetMetaData.getColumnDisplaySize], or `0` when the driver does not report one.
+ *   A few type mappings depend on it — it is what tells a `BIT(1)` column apart from a `BIT(M)` one
+ *   in MySQL, MariaDB and PostgreSQL, where the driver reports identical metadata for both but
+ *   returns values of different classes. A custom [<code>DbType</code>][DbType] branching on it should treat `0` as
+ *   "unknown" rather than as a width.
  * @property [javaClassName] the class name in Java.
  * @property [isNullable] true if column could contain nulls.
  */
