@@ -904,58 +904,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun map() {
-        // SampleStart
-        df.map { 2021 - it.age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapToColumn_properties() {
-        // SampleStart
-        df.mapToColumn("year of birth") { 2021 - age }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapToColumn_strings() {
-        // SampleStart
-        df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapMany_properties() {
-        // SampleStart
-        df.mapToFrame {
-            "year of birth" from { 2021 - age }
-            expr { age > 18 } into "is adult"
-            name.lastName.map { it.length } into "last name length"
-            "full name" from { name.firstName + " " + name.lastName }
-            +city
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mapMany_strings() {
-        // SampleStart
-        df.mapToFrame {
-            "year of birth" from { 2021 - "age"<Int>() }
-            expr { "age"<Int>() > 18 } into "is adult"
-            "name"["lastName"]<String>().map { it.length } into "last name length"
-            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
-            +"city"
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun group() {
         // SampleStart
         df.group { age and city }.into("info")

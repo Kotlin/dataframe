@@ -40,6 +40,74 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
   For both, run the generating task yourself and commit the output together with the rest of the change;
   without it the published page renders with a missing resource.
 
+## Adding example code to a topic
+
+**Never hand-write a ` ```kotlin ` block in a topic.** All Kotlin in the docs must be a Korro sample, so that it
+is compiled and run on every build — a hand-written block is the way a hallucinated or long-dead API reaches the
+website. Only `text`-fenced pseudo-grammar (`operation { columnMapping }: DataFrame`) is written by hand.
+
+To add one:
+
+1. **Find which module owns the topic.** `:core`'s korro block takes `topics/*.md` + `topics/concepts/*.md`
+   wholesale; `:samples` has an explicit `include(...)` allow-list in `samples/build.gradle.kts`. If the page
+   already has an `<!---IMPORT ...-->` line, the class it names tells you the owner. Don't split one topic
+   across both modules — both korro tasks would write the same file.
+   A page dropped into one of the globbed folders joins the scan automatically, and korro's
+   `behavior { ignoreMissing = true }` (`samples/build.gradle.kts:90`, `TODO(#898)`) turns a
+   `<!---FUN name-->` with no matching sample into a printed `Cannot resolve FUN 'name'` on a **green**
+   build. Eight such lines already arrive from `master`, so a new one is invisible in CI — read korro's
+   own output after adding or moving a page, don't rely on the exit code.
+2. **Add the sample to that module's sample class**, with the body wrapped in `// SampleStart` / `// SampleEnd`.
+   New pages should go to `:samples` (migration #898); an existing `:core` page keeps its samples next to its
+   siblings. In `:core` a sample is a `@Test @TransformDataFrameExpressions fun` — see step 4 for when that
+   annotation is allowed. In `:samples` it is a plain `@Test fun`: the annotation is not used there at all
+   (it appears in nine `core/src/test` files and in none under `samples/`), and rendered output comes from
+   `SampleHelper` instead.
+3. **Put `<!---FUN funName-->` / `<!---END-->` in the topic** and run korro to fill it in
+   (`./gradlew core:korro`, or `samples:korro`). Suffix the function `_properties` / `_strings` to get tabs.
+4. **Get the rendered result.** The two modules do this differently.
+   - **`:core`** — run with `DATAFRAME_SAVE_OUTPUTS=1`; korro then injects the `<inline-frame>` itself and
+     writes the matching `resources/snippets/*.html`.
+     **Only annotate a sample with `@TransformDataFrameExpressions` when its last expression is a `DataFrame`
+     or a `GroupBy`.** The expressions converter renders nothing else, and it fails in two different ways:
+     a sample ending in a `DataColumn` or a `List` *fails* in `samplesTest`, while a sample that ends in one of
+     those *after* a renderable step silently falls back to rendering that step — so the page shows an
+     `<inline-frame>` of the intermediate `groupBy` under an example whose result is a `List`. Two such samples
+     then render byte-identical frames.
+     Dropping the annotation does **not** rescue such a sample: `TestBase.save()` runs for every `@Test` under
+     `DATAFRAME_SAVE_OUTPUTS` and then errors with `function doesn't have any dataframe expression`, so the test
+     fails either way (`convertColumnTo` in `Modify.kt` is one of the pre-existing `samplesTest` failures, not a
+     precedent to copy).
+     The ways out, best first: **move the page to `:samples`**, where a sample renders its result whatever its
+     type and no annotation is involved — that is the direction of #898 anyway, and `groupBy.md`, `pivot.md`,
+     `countDistinct.md` and `filter.md` already went that way; end the sample in a `DataFrame`; or, only while
+     the page is still `:core`-owned, render the result by hand with `PluginCallbackProxy.overrideHtmlOutput`,
+     as `JoinWith.kt` does. The `map` page went the first route in #2066: its samples moved to
+     `samples/…/api/MapSamples.kt`, and `saveDfHtmlSample()` there renders a `DataColumn` and a `FrameColumn`
+     with no annotation and no manual HTML at all.
+   - **`:samples`** — run the samples as tests to produce the HTML, then add the `<inline-frame>` line by hand
+     right after `<!---END-->`; korro does not inject it in this module.
+   In both modules the generated HTML only reaches the site once it is registered in
+   `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
+   `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an
+   `<inline-frame>` is a **flat filename**, while `SampleHelper` writes the file to
+   `resources/<subFolder>/<sampleName>/`, so that index is what makes the two meet. Since it is keyed by the
+   bare filename, a sample function name has to be unique across **all** sample classes, not just its own —
+   two classes using one name write two different files that collapse into a single `<resource>` entry. When
+   the same operation is illustrated on more than one page, prefix the function with the page it belongs to.
+5. **Revert the collateral.** A local korro run rewrites/deletes `resources/snippets/**` for every sample that
+   did *not* run in your invocation, and can touch unrelated topics. `git checkout --` everything except the
+   topic you edited and the snippet files for your own new samples.
+   Those two are the one exception to "don't hand-edit `resources/**`" above: the snippet a new sample of yours
+   produces is committed together with the topic that embeds it, so the page is not broken until the CI bot next
+   regenerates everything on `master` (that is how the doc PRs in `git log -- resources/snippets` do it).
+   Everything else under `resources/**` stays CI-owned.
+   **Deleting a page takes two steps.** Korro stages the whole topic tree under
+   `<module>/build/korro/docs/**` (`:samples` keeps a second copy in `build/korro/check/**`) and copies it
+   back over `topics/**` at the end of the run. A page you `git rm` is therefore silently restored as an
+   untracked file by the next `core:korro` / `samples:korro`, and `--rerun-tasks` does **not** clear the
+   staging dir. Delete the staged copies as well, then re-run and confirm the page stayed gone.
+
 ## How content is injected
 
 - **Korro** (in `:samples` and `:core`) reads the topic markdown, runs the sample tests, and injects code + output.
