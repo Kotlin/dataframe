@@ -13,12 +13,12 @@ as well as the latest Kotlin plugin-, and Kotlin Toolchain plugin version.
 
 ## Formatting
 
-Like the Maven example, this project runs [ktlint](https://pinterest.github.io/ktlint/) through
-[exec-maven-plugin](https://www.mojohaus.org/exec-maven-plugin/) to format the sources in place.
-Maven binds it to the `compile` phase; the Kotlin Toolchain has no way to choose the phase yet, so run it with:
+This Kotlin Toolchain project was set up using a custom [Ktlint](https://pinterest.github.io/ktlint/) plugin
+in the [build-config](./build-config) directory.
 
-```shell
-./kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:exec-maven-plugin.exec
-```
+Checking whether the code is formatted correctly can be done by calling
+`./kotlin check ktlint`,
+or simply: `./kotlin check` (which runs all checks, including this one).
 
-See also [Kotlin DataFrame Compiler Maven Plugin Example](../kotlin-dataframe-plugin-maven-example)
+Ktlint can also auto-format the code in most cases by calling:
+`./kotlin do ktlintFormat`

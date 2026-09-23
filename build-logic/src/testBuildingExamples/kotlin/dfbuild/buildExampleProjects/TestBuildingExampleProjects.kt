@@ -105,10 +105,6 @@ abstract class TestBuildingExampleProjects {
             }
     }
 
-    /**
-     * TODO let the linter run too. This requires a project-specific command at the moment, like
-     *   `kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:exec-maven-plugin.exec`
-     */
     protected fun buildKotlinToolchainProject(name: String, folder: File) {
         val isWindows = System.getProperty("os.name").startsWith("Windows")
         folder
@@ -122,27 +118,30 @@ abstract class TestBuildingExampleProjects {
                 arrayOf("./kotlin")
             }
 
-        val process = ProcessBuilder(*launcher, "build")
-            .directory(folder)
-            .apply {
-                // TODO this may stop working if `kotlin` ever stops running on the JVM
-                environment()["KOTLIN_CLI_JAVA_OPTIONS"] =
-                    "\"-Dmaven.repo.local=${getGradleProperty("maven.repo.local")!!}\""
+        val commands = listOf("check", "build")
+        for (command in commands) {
+            val process = ProcessBuilder(*launcher, command)
+                .directory(folder)
+                .apply {
+                    // TODO this may stop working if `kotlin` ever stops running on the JVM
+                    environment()["KOTLIN_CLI_JAVA_OPTIONS"] =
+                        "\"-Dmaven.repo.local=${getGradleProperty("maven.repo.local")!!}\""
+                }
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+
+            if (!process.waitFor(10, TimeUnit.MINUTES)) {
+                process.destroyForcibly()
+                error("Kotlin Toolchain $command command in '$folder' timed out")
             }
-            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-            .redirectError(ProcessBuilder.Redirect.INHERIT)
-            .start()
 
-        if (!process.waitFor(10, TimeUnit.MINUTES)) {
-            process.destroyForcibly()
-            error("Kotlin Toolchain command in '$folder' timed out")
-        }
-
-        if (process.exitValue() != 0) {
-            throw BuildException(
-                "`build$name` failed. Could not build Kotlin Toolchain project in '$folder'.",
-                Exception("Exit code ${process.exitValue()}, see the build output above."),
-            )
+            if (process.exitValue() != 0) {
+                throw BuildException(
+                    "`build$name` failed. Could not '$command' the Kotlin Toolchain project in '$folder'.",
+                    Exception("Exit code ${process.exitValue()}, see the build output above."),
+                )
+            }
         }
     }
 }

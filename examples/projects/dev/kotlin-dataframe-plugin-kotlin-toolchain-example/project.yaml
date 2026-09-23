@@ -1,3 +1,5 @@
-mavenPlugins:
-  - org.codehaus.mojo:exec-maven-plugin:3.6.3
-  # TODO - $libs.exec
+modules:
+  - build-config
+
+plugins:
+  - ./build-config
