@@ -70,6 +70,32 @@ internal interface CommonMinMaxDocs : CommonStatisticsDocs {
     typealias NullCellOnEmptySnippet = Nothing
 
     /**
+     * {@comment Note about the behavior on empty input for the Pivot functions. KDoc-snippet.}
+     *
+     * Result cells for which there exists a group, but there is nothing left to compare
+     * (for instance, because the group was empty or contained only `null` values)
+     * simply become `null`.
+     *
+     * For more information about the resulting types:
+     * {@include [DocumentationUrls.MinMax.TypeConversion]}
+     *
+     * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
+     */
+    @ExcludeFromSources
+    typealias NullCellOnEmptyPivotSnippet = Nothing
+
+    /**
+     * {@comment Note about the type of the result for the modes with a single result. KDoc-snippet.}
+     *
+     * The result has the same type as the input values.
+     *
+     * For more information about the resulting types:
+     * {@include [DocumentationUrls.MinMax.TypeConversion]}
+     */
+    @ExcludeFromSources
+    typealias ResultTypeSnippet = Nothing
+
+    /**
      * {@comment Note about [ReducedGroupBy] being an intermediate step. KDoc-snippet.}
      *
      * This operation does not produce a result right away.

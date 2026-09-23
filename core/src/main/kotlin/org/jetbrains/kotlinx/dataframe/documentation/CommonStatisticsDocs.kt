@@ -162,9 +162,10 @@ internal interface CommonStatisticsDocs {
     typealias AllSuitableNumberColumnsSnippet = Nothing
 
     /**
-     * {@comment Note that the results of the expression are the input of the `-Of` modes. KDoc-snippet.}
+     * {@comment Note that the results of the expression are the input of the `-Of` modes. KDoc-snippet.
+     *    It does not link to the expression parameter, as its name differs between overloads.}
      *
-     * The result of the [expression\] is considered the 'input' of this operation.
+     * The result of the expression is considered the 'input' of this operation.
      */
     @ExcludeFromSources
     typealias ExpressionResultIsInputSnippet = Nothing
