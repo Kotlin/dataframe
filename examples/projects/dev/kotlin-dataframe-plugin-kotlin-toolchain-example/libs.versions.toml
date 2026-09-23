@@ -16,4 +16,3 @@ exec = { group = "org.codehaus.mojo", name = "exec-maven-plugin", version.ref = 
 
 # The Kotlin DataFrame Compiler plugin is the same version as the Kotlin plugin.
 kotlin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin" }
-exec = { group = "org.codehaus.mojo", name = "exec-maven-plugin", version = "3.6.3" }

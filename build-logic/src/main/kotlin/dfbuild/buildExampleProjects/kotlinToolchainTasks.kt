@@ -37,11 +37,16 @@ internal fun Project.setupKotlinToolchainSyncVersionsTask(
 
             // overwrite kotlin version, TODO https://youtrack.jetbrains.com/issue/KTC-5473
             val moduleYaml = folder.resolve("module.yaml")
+            val text = moduleYaml.readText()
+            val regex = Regex("settings:\n {2}kotlin:\n {4}version: \\S+")
+            require(regex.containsMatchIn(text)) {
+                "Could not find the Kotlin version block in '$moduleYaml' — has its layout changed?"
+            }
             val modifiedModuleYamlText = moduleYaml
                 .readText()
                 .replace(
-                    Regex("settings:\n {2}kotlin:\n {4}version: \\S+"),
-                    "settings:\n  kotlin:\n    version: $kotlinVersion",
+                    regex = regex,
+                    replacement = "settings:\n  kotlin:\n    version: $kotlinVersion",
                 )
             moduleYaml.writeText(modifiedModuleYamlText)
 

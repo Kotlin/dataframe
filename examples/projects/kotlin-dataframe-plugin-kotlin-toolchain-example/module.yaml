@@ -3,6 +3,7 @@ product: jvm/app
 dependencies:
   - $libs.kandy
   - $libs.dataframe
+  - $kotlin.dataframe
 
 # Alternatively, if you don't use libs.versions.toml,
 # and you just want to enable specific IO modules (core is included by default when enabling the compiler plugin):
