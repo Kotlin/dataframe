@@ -127,8 +127,9 @@ Update the `settings:` block in your `module.yaml` file as follows:
 
 ```yaml
 settings:
-  kotlin: %compilerPluginKotlinVersion%
-  dataframe: enabled
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe: enabled
 ```
 
 Doing so will enable the compiler plugin matching the Kotlin version.
@@ -139,14 +140,15 @@ In contrast to Maven and Gradle projects, this does NOT include any IO dependenc
 
 See [](SetupKotlinToolchain.md) for more details about this.
 
-If you want a specific version of the DataFrame library, you can do that in the `settings.dataframe:` block:
+If you want a specific version of the DataFrame library, you can do that in the `settings.kotlin.dataframe:` block:
 
 ```yaml
 settings:
-  kotlin: %compilerPluginKotlinVersion%
-  dataframe:
-    enabled: true
-    version: %dataframeVersion%
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe:
+      enabled: true
+      version: %dataFrameVersion%
 ```
 
 </tab>

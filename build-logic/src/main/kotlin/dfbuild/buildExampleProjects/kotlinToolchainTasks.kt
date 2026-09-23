@@ -43,7 +43,11 @@ internal fun Project.setupKotlinToolchainSyncVersionsTask(
         val kotlinVersion = versions["kotlin"]!!
 
         doLast {
-            // TODO sync ktlint version and maven exec plugin version
+            // make kotlin executable
+            folder
+                .listFiles { it.nameWithoutExtension == "kotlin" }
+                ?.forEach { it.setExecutable(true) }
+            // TODO sync ktlint version
             //   Requires: https://youtrack.jetbrains.com/issue/KTC-5915
 
             // overwrite kotlin version, TODO https://youtrack.jetbrains.com/issue/KTC-5473

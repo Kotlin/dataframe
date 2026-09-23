@@ -46,7 +46,7 @@ files) and ships the `kotlin`/`kotlin.bat` wrapper scripts. Sync rewrites its `l
 and the `settings: kotlin: version:` block in `module.yaml` (matched by regex — keep that block's layout intact).
 The ktlint (`module.yaml`) and exec-maven-plugin (`project.yaml`) versions are **not** synced yet (KTC-5915) — they
 can't reference `libs.versions.toml`, so bump them by hand. ktlint formatting is run manually via
-`./kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:exec-maven-plugin.exec` (see its `README.md`).
+`./kotlin do ktlintFormat` (see its `README.md`).
 User-facing docs: `docs/StardustDocs/topics/setup/SetupKotlinToolchain.md`.
 
 Manual: `./gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`. Don't add these projects to

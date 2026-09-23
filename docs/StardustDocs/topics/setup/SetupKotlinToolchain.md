@@ -52,8 +52,9 @@ To enable the plugin in your Kotlin Toolchain project, update the `settings:` bl
 
 ```yaml
 settings:
-  kotlin: %compilerPluginKotlinVersion%
-  dataframe: enabled
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe: enabled
 ```
 
 Doing so will enable the compiler plugin matching the Kotlin version.
@@ -67,7 +68,7 @@ In contrast to Maven and Gradle projects, this does NOT include any IO dependenc
 Enabling specific [IO modules](Modules.md#io-modules) can be done quite easily in the `dependencies:` block,
 as DataFrame is a Kotlin Toolchain 'built-in technology'.
 Additionally, if you want a specific version of the DataFrame library,
-you can do that in the `settings.dataframe:` block:
+you can do that in the `settings.kotlin.dataframe:` block:
 
 ```yaml
 dependencies:
@@ -84,10 +85,11 @@ repositories:
   - https://repo.osgeo.org/repository/release
 
 settings:
-  kotlin: %compilerPluginKotlinVersion%
-  dataframe:
-    enabled: true
-    version: %dataframeVersion%
+  kotlin:
+    version: %compilerPluginKotlinVersion%
+    dataframe:
+      enabled: true
+      version: %dataFrameVersion%
 ```
 
 ### Specifying dependencies without the compiler plugin
