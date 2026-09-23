@@ -1,0 +1,74 @@
+package dfbuild.buildExampleProjects
+
+import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.tasks.TaskProvider
+import java.io.File
+
+/**
+ * Registers a task to sync and overwrite versions and settings for the example project.
+ *
+ * This includes:
+ * - module.yaml (the Kotlin version)
+ * - libs.versions.toml
+ * - .editorconfig
+ *
+ * @param isDev if true, the `dataframe` version is replaced by the version published to mavenLocal
+ *   by `:publishLocal`, instead of the one from the root version catalog.
+ */
+internal fun Project.setupKotlinToolchainSyncVersionsTask(
+    name: String,
+    folder: File,
+    isDev: Boolean,
+    versionCatalog: VersionCatalog,
+    versionsToSync: List<String>,
+): TaskProvider<Task> =
+    tasks.register("sync$name") {
+        description = "Sync the versions in the nested Kotlin Toolchain build in ./${folder.name}"
+
+        outputs.upToDateWhen { false }
+
+        val versions = versionsToSync.associateWith {
+            versionCatalog.findVersion(it).get().requiredVersion
+        }.toMutableMap()
+
+        // override the dataframe version with the published-to-mavenLocal one
+        if (isDev && "dataframe" in versionsToSync) {
+            versions["dataframe"] = project.version.toString()
+        }
+
+        val sourceEditorConfig = file(".editorconfig")
+
+        val kotlinVersion = versions["kotlin"]!!
+
+        doLast {
+            // make kotlin executable
+            folder
+                .listFiles { it.nameWithoutExtension == "kotlin" }
+                ?.forEach { it.setExecutable(true) }
+            // TODO sync ktlint version and maven exec plugin version
+            //   Requires: https://youtrack.jetbrains.com/issue/KTC-5915
+
+            // overwrite kotlin version, TODO https://youtrack.jetbrains.com/issue/KTC-5473
+            val moduleYaml = folder.resolve("module.yaml")
+            val text = moduleYaml.readText()
+            val regex = Regex("settings:\n {2}kotlin:\n {4}version: \\S+")
+            require(regex.containsMatchIn(text)) {
+                "Could not find the Kotlin version block in '$moduleYaml' — has its layout changed?"
+            }
+            val modifiedModuleYamlText = moduleYaml
+                .readText()
+                .replace(
+                    regex = regex,
+                    replacement = "settings:\n  kotlin:\n    version: $kotlinVersion",
+                )
+            moduleYaml.writeText(modifiedModuleYamlText)
+
+            // overwrite libs.versions.toml
+            syncLibsVersionsToml(folder, versions)
+
+            // overwrite .editorconfig
+            folder.resolve(".editorconfig").writeText(sourceEditorConfig.readText())
+        }
+    }

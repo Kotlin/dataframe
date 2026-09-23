@@ -1,0 +1,27 @@
+tasks:
+  ktlintCheck:
+    action: !buildconfig.ktlint
+      ktlintClasspath:
+        dependencies:
+          # TODO - $libs.ktlint.cli
+          - com.pinterest.ktlint:ktlint-cli:1.8.0
+      moduleDir: ${module.rootDir}
+      doFormat: false
+  ktlintFormat:
+    action: !buildconfig.ktlint
+      ktlintClasspath:
+        dependencies:
+          # TODO - $libs.ktlint.cli
+          - com.pinterest.ktlint:ktlint-cli:1.8.0
+      moduleDir: ${module.rootDir}
+      doFormat: true
+
+commands:
+  # Run like: `./kotlin do ktlintFormat`
+  - name: ktlintFormat
+    performedBy: ktlintFormat
+
+checks:
+  # Run like: `./kotlin check ktlint`
+  - name: ktlint
+    performedBy: ktlintCheck

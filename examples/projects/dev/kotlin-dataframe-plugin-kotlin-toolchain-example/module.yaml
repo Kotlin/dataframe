@@ -1,0 +1,30 @@
+product: jvm/app
+
+plugins:
+  build-config: enabled
+
+dependencies:
+  - $libs.kandy
+  - $libs.dataframe
+
+# Alternatively, if you don't use libs.versions.toml,
+# and you just want to enable specific IO modules (core is included by default when enabling the compiler plugin):
+#  - $kotlin.dataframe.csv
+#  - $kotlin.dataframe.json
+#  - $kotlin.dataframe.geo
+#  - $kotlin.dataframe.arrow
+#  - $kotlin.dataframe.excel
+#  - $kotlin.dataframe.jdbc
+
+repositories:
+  # Required for dataframe-geo
+  - https://repo.osgeo.org/repository/release
+  - mavenLocal
+
+settings:
+  kotlin:
+    version: 2.4.20 # TODO $libs.versions.kotlin
+    dataframe:
+      enabled: true
+      # If you don't use libs.versions.toml for dependencies, you can specify the library version like this:
+      # version: 1.0.0-rc1
