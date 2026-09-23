@@ -105,6 +105,10 @@ abstract class TestBuildingExampleProjects {
             }
     }
 
+    /**
+     * TODO let the linter run too. This requires a project-specific command at the moment, like
+     *   `kotlin task :kotlin-dataframe-plugin-kotlin-toolchain-example:exec-maven-plugin.exec`
+     */
     protected fun buildKotlinToolchainProject(name: String, folder: File) {
         val isWindows = System.getProperty("os.name").startsWith("Windows")
         folder

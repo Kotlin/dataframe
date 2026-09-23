@@ -6,6 +6,17 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
 
+/**
+ * Registers a task to sync and overwrite versions and settings for the example project.
+ *
+ * This includes:
+ * - module.yaml (the Kotlin version)
+ * - libs.versions.toml
+ * - .editorconfig
+ *
+ * @param isDev if true, the `dataframe` version is replaced by the version published to mavenLocal
+ *   by `:publishLocal`, instead of the one from the root version catalog.
+ */
 internal fun Project.setupKotlinToolchainSyncVersionsTask(
     name: String,
     folder: File,
