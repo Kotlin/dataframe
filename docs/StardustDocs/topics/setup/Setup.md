@@ -25,6 +25,9 @@ in your Kotlin applications.
 - [**Setup on Android**](SetupAndroid.md) — use Kotlin DataFrame in your Android apps to simplify local data processing 
 and transformation.
 
+- [**Setup in Kotlin Toolchain**](SetupKotlinToolchain.md) — add Kotlin DataFrame to your Kotlin Toolchain Project
+for convenient data handling in your Kotlin applications.
+
 - [**Setup in Kotlin Notebook**](SetupKotlinNotebook.md) — one-line Kotlin DataFrame setup for powerful interactive
   [Kotlin notebooks in IntelliJ IDEA and Android Studio](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
   No configuration required, full IDE support.

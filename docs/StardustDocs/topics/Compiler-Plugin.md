@@ -68,6 +68,8 @@ kotlin.incremental=false
 
 Sync the project. This is not needed anymore from Kotlin 2.4.0+.
 
+See [](SetupGradle.md) and [](SetupCustomGradle.md) for more details.
+
 </tab>
 
 <tab title="Maven">
@@ -111,6 +113,41 @@ Setup library dependency:
 ```
 
 Sync the project.
+
+See [](SetupMaven.md) for more details.
+
+</tab>
+
+<tab title="Kotlin Toolchain">
+
+The DataFrame compiler plugin can be used with [Kotlin Toolchain](https://kotlin-toolchain.org/) starting from
+Kotlin Toolchain 0.12.0+ and IntelliJ IDEA 2026.2.1+.
+
+Update the `settings:` block in your `module.yaml` file as follows:
+
+```yaml
+settings:
+  kotlin: %compilerPluginKotlinVersion%
+  dataframe: enabled
+```
+
+Doing so will enable the compiler plugin matching the Kotlin version.
+It will also automatically add the latest (`%dataFrameVersion%`) [`dataframe-core`](Modules.md#dataframe-core)
+dependency to your project.
+
+In contrast to Maven and Gradle projects, this does NOT include any IO dependencies.
+
+See [](SetupKotlinToolchain.md) for more details about this.
+
+If you want a specific version of the DataFrame library, you can do that in the `settings.dataframe:` block:
+
+```yaml
+settings:
+  kotlin: %compilerPluginKotlinVersion%
+  dataframe:
+    enabled: true
+    version: %dataframeVersion%
+```
 
 </tab>
 
@@ -173,4 +210,6 @@ fun main() {
   — an IntelliJ IDEA Gradle project showcasing simple DataFrame expressions using the Compiler Plugin.
 * [Kotlin DataFrame in the IntelliJ IDEA Maven project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-maven-example)   
   — an IntelliJ IDEA Maven project showcasing simple DataFrame expressions using the Compiler Plugin.
+* [Kotlin DataFrame in the IntelliJ IDEA Kotlin Toolchain project example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-kotlin-toolchain-example)   
+  — an IntelliJ IDEA Kotlin Toolchain project showcasing simple DataFrame expressions using the Compiler Plugin.
 * [](compilerPluginExamples.md) — a few examples of Compiler Plugin usage.
