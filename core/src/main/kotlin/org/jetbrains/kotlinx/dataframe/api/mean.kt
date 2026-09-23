@@ -10,11 +10,13 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -133,22 +135,21 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * For more information about the resulting types:
      * @include [DocumentationUrls.Mean.TypeConversion]
      *
-     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
+     * @include [MeanDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
     typealias NanCellOnEmptyPivotSnippet = Nothing
 
     /**
      * {@comment Note about which columns the no-argument `mean` modes take into account. KDoc-snippet.}
-     *
-     * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
-     * the other columns are simply left out of the result.
-     *
-     * This includes columns inside [column groups][ColumnGroup].
-     * To include those in the mean, [flatten][DataFrame.flatten] the DataFrame first.
+     * @include [CommonStatisticsDocs.AllSuitableNumberColumnsSnippet] {@include [SetMeanStatisticArgs]}
      */
     @ExcludeFromSources
     typealias AllSuitableColumnsSnippet = Nothing
+
+    /** @include [CommonStatisticsDocs.ColumnGroupsIgnoredSnippet] {@include [SetMeanStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ColumnGroupsIgnoredSnippet = Nothing
 
     /**
      * @comment Version of [SelectingColumns] with correctly filled in examples
@@ -181,7 +182,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
     /**
      * {@comment The parts all [DataColumn.meanOf] overloads have in common. KDoc-snippet.}
      *
-     * The result of [expression\] is treated as the 'input' of this operation.
+     * @include [MeanDocs.ExpressionResultIsInputSnippet]
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanOnEmptySnippet]
      *
@@ -296,7 +297,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * @include [MeanDocs.RowExpressionSnippet]
      *
-     * The result of the [expression\] is considered the 'input' of this operation.
+     * @include [MeanDocs.ExpressionResultIsInputSnippet]
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanOnEmptySnippet]
      *
@@ -543,55 +544,45 @@ internal interface MeanDocs : CommonStatisticsDocs {
         typealias EXAMPLE = Nothing
     }
 
-    /**
-     * @comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The [ColumnsSelector] used to select the columns to compute the mean of.
-     */
+    /** @include [CommonStatisticsDocs.ColumnsSelectorParam] {@include [SetMeanStatisticArgs]} */
     @ExcludeFromSources
     typealias ColumnsSelectorParam = Nothing
 
-    /**
-     * @comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The [ColumnsForAggregateSelector] used to select the columns
-     *   to compute the mean of.
-     */
+    /** @include [CommonStatisticsDocs.AggregateColumnsSelectorParam] {@include [SetMeanStatisticArgs]} */
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
     /**
-     * @comment The `columns` parameter of the [String] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The names of the columns to compute the mean of.
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMeanStatisticArgs]}
      *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
-    /**
-     * @comment The `expression` parameter of the `meanOf` overloads. KDoc-snippet.
-     *
-     * @param [expression\] The [RowExpression] to compute the value to average for each row.
-     */
+    /** @include [CommonStatisticsDocs.ExpressionParam] {@include [SetMeanStatisticArgs]} */
     @ExcludeFromSources
     typealias ExpressionParam = Nothing
 
-    /**
-     * @comment The `name` parameter of the [Grouped.mean] overloads. KDoc-snippet.
-     *
-     * @param [name\] The name of the resulting column.
-     *   If `null` (the default), the name of the selected column is used if exactly one column
-     *   is selected, and `"mean"` otherwise.
-     *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
-     */
+    /** @include [CommonStatisticsDocs.RowValuesTypeParam] {@include [SetMeanStatisticArgs]} */
+    @ExcludeFromSources
+    typealias RowValuesTypeParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ResultColumnNameParam] {@include [SetMeanStatisticArgs]} */
     @ExcludeFromSources
     typealias ResultColumnNameParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ExpressionResultColumnNameParam] {@include [SetMeanStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ExpressionResultColumnNameParam = Nothing
 }
 
 /** [The Mean Operation][MeanDocs] */
 @ExcludeFromSources
 private typealias MeanDocsLink = Nothing
+
+/** {@set [STATISTIC] mean}{@set [STATISTIC_VERB] average}{@set [STATISTIC_COLUMN_NAME] `"mean"`} */
+@ExcludeFromSources
+private typealias SetMeanStatisticArgs = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [mean][mean]} */
 @ExcludeFromSources
@@ -650,8 +641,7 @@ public inline fun <T, reified R : Number?> DataColumn<T>.meanOf(
  *
  * Only the values in the columns of a primitive number type (and in "mixed" [Number] columns)
  * are taken into account; all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the mean, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [MeanDocs.ColumnGroupsIgnoredSnippet]
  *
  * Since the values of different columns are averaged together, the result is the mean of all those
  * values converted to their common type.
@@ -685,8 +675,7 @@ public fun DataRow<*>.rowMean(skipNaN: Boolean = skipNaNDefault): Double =
  *
  * Only the values in the columns of type [T] (or its nullable variant) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the mean, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [MeanDocs.ColumnGroupsIgnoredSnippet]
  *
  * [T] must be a primitive number type or [Number] itself.
  *
@@ -698,7 +687,7 @@ public fun DataRow<*>.rowMean(skipNaN: Boolean = skipNaNDefault): Double =
  * df[0].rowMeanOf<Double>(skipNaN = true)
  * ```
  *
- * @param [T] The type of the values to average. Only columns of this type are taken into account.
+ * @include [MeanDocs.RowValuesTypeParam]
  * @include [MeanDocs.SkipNanParam]
  * @return The mean of the values of type [T] in this row, as a [Double].
  * @throws IllegalArgumentException if [T] is not a primitive number type or [Number] itself.
@@ -722,7 +711,7 @@ public inline fun <reified T : Number> DataRow<*>.rowMeanOf(skipNaN: Boolean = s
  * @include [MeanDocs.NanCellOnEmptySnippet]
  *
  * See also:
- * - [`meanFor`][DataFrame.meanFor] — the same, but for an explicit selection of columns.
+ * - [`meanFor`][DataFrame.meanFor]` { columns }` — the same, but for an explicit selection of columns.
  * - [`mean`][DataFrame.mean]` { columns }` — a single mean of all values in the selected columns.
  * - [`sum`][DataFrame.sum] — the sum of each column.
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
@@ -1026,7 +1015,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
  *
  * @include [MeanDocs.RowExpressionSnippet]
  *
- * The result of the [expression\] is considered the 'input' of this operation.
+ * @include [MeanDocs.ExpressionResultIsInputSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
  * @include [MeanDocs.NanCellOnEmptySnippet]
  *
@@ -1044,8 +1033,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
  * df.groupBy { city }.meanOf("meanRatio") { (weight ?: 0) / age }
  * ```
  *
- * @param [name] The name of the resulting column. If `null` (the default), `"mean"` is used.
- *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
+ * @include [MeanDocs.ExpressionResultColumnNameParam]
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ExpressionParam]
  * @return A new [DataFrame] with the group keys and a single mean per group.
@@ -1177,7 +1165,7 @@ public fun <T, R : Number?> Pivot<T>.mean(
  *
  * @include [MeanDocs.RowExpressionSnippet]
  *
- * The result of [expression\] is treated as the 'input' of this operation.
+ * @include [MeanDocs.ExpressionResultIsInputSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
  * @include [MeanDocs.NanCellOnEmptySnippet]
  *
@@ -1351,7 +1339,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  *
  * @include [MeanDocs.RowExpressionSnippet]
  *
- * The result of the [expression\] is considered the 'input' of this operation.
+ * @include [MeanDocs.ExpressionResultIsInputSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
  * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
  *

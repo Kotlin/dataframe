@@ -13,11 +13,13 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -148,22 +150,21 @@ internal interface SumDocs : CommonStatisticsDocs {
      * For more information about the resulting types:
      * @include [DocumentationUrls.Sum.TypeConversion]
      *
-     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
+     * @include [SumDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
     typealias ZeroCellOnEmptyPivotSnippet = Nothing
 
     /**
      * {@comment Note about which columns the no-argument `sum` modes take into account. KDoc-snippet.}
-     *
-     * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
-     * the other columns are simply left out of the result.
-     *
-     * This includes columns inside [column groups][ColumnGroup].
-     * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+     * @include [CommonStatisticsDocs.AllSuitableNumberColumnsSnippet] {@include [SetSumStatisticArgs]}
      */
     @ExcludeFromSources
     typealias AllSuitableColumnsSnippet = Nothing
+
+    /** @include [CommonStatisticsDocs.ColumnGroupsIgnoredSnippet] {@include [SetSumStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ColumnGroupsIgnoredSnippet = Nothing
 
     /**
      * @comment Version of [SelectingColumns] with correctly filled in examples
@@ -197,7 +198,7 @@ internal interface SumDocs : CommonStatisticsDocs {
     /**
      * {@comment The parts all [DataColumn.sumOf] overloads have in common. KDoc-snippet.}
      *
-     * The result of [expression\] is treated as the 'input' of this operation.
+     * @include [SumDocs.ExpressionResultIsInputSnippet]
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptyDefaultDoubleSnippet]
      *
@@ -246,7 +247,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      *
      * @include [SumDocs.RowSumOfSnippet]
      * $[EXAMPLE]
-     * @param [T\] The type of the values to sum. Only columns of this type are taken into account.
+     * @include [SumDocs.RowValuesTypeParam]
      * @param [_kClass\] Technical parameter to distinguish this overload from the others;
      *   you never need to supply it.
      */
@@ -329,7 +330,7 @@ internal interface SumDocs : CommonStatisticsDocs {
      *
      * @include [SumDocs.RowExpressionSnippet]
      *
-     * The result of the [expression\] is considered the 'input' of this operation.
+     * @include [SumDocs.ExpressionResultIsInputSnippet]
      * @include [SumDocs.SupportedTypesSnippet]
      * @include [SumDocs.ZeroOnEmptySnippet]
      *
@@ -577,48 +578,30 @@ internal interface SumDocs : CommonStatisticsDocs {
         typealias EXAMPLE = Nothing
     }
 
-    /**
-     * @comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The [ColumnsSelector] used to select the columns to compute the sum of.
-     */
+    /** @include [CommonStatisticsDocs.ColumnsSelectorParam] {@include [SetSumStatisticArgs]} */
     @ExcludeFromSources
     typealias ColumnsSelectorParam = Nothing
 
-    /**
-     * @comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The [ColumnsForAggregateSelector] used to select the columns
-     *   to compute the sum of.
-     */
+    /** @include [CommonStatisticsDocs.AggregateColumnsSelectorParam] {@include [SetSumStatisticArgs]} */
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
     /**
-     * @comment The `columns` parameter of the [String] overloads. KDoc-snippet.
-     *
-     * @param [columns\] The names of the columns to compute the sum of.
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetSumStatisticArgs]}
      *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
-    /**
-     * @comment The `expression` parameter of the `sumOf` overloads. KDoc-snippet.
-     *
-     * @param [expression\] The [RowExpression] to compute the value to sum for each row.
-     */
+    /** @include [CommonStatisticsDocs.ExpressionParam] {@include [SetSumStatisticArgs]} */
     @ExcludeFromSources
     typealias ExpressionParam = Nothing
 
-    /**
-     * @comment The `name` parameter of the [Grouped.sum] overloads. KDoc-snippet.
-     *
-     * @param [name\] The name of the resulting column.
-     *   If `null` (the default), the name of the selected column is used if exactly one column
-     *   is selected, and `"sum"` otherwise.
-     *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
-     */
+    /** @include [CommonStatisticsDocs.RowValuesTypeParam] {@include [SetSumStatisticArgs]} */
+    @ExcludeFromSources
+    typealias RowValuesTypeParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ResultColumnNameParam] {@include [SetSumStatisticArgs]} */
     @ExcludeFromSources
     typealias ResultColumnNameParam = Nothing
 }
@@ -626,6 +609,10 @@ internal interface SumDocs : CommonStatisticsDocs {
 /** [The Sum Operation][SumDocs] */
 @ExcludeFromSources
 private typealias SumDocsLink = Nothing
+
+/** {@set [STATISTIC] sum}{@set [STATISTIC_VERB] sum}{@set [STATISTIC_COLUMN_NAME] `"sum"`} */
+@ExcludeFromSources
+private typealias SetSumStatisticArgs = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [sum][sum]} */
 @ExcludeFromSources
@@ -751,8 +738,7 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
  *
  * Only the values in the columns of a primitive number type (and in "mixed" [Number] columns)
  * are taken into account; all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * Since the values of different columns are summed together, the result is the sum of all those
  * values converted to their common type.
@@ -786,8 +772,7 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  *
  * Only the values in the columns of type [Short] (or `Short?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -807,8 +792,7 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  *
  * Only the values in the columns of type [Byte] (or `Byte?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -828,8 +812,7 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  *
  * Only the values in the columns of type [Int] (or `Int?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -849,8 +832,7 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  *
  * Only the values in the columns of type [Long] (or `Long?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet] {@set [SumDocs.SupportedTypesSnippet.NAN_NOTE]}
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -870,8 +852,7 @@ public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> =
  *
  * Only the values in the columns of type [Float] (or `Float?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet]
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -894,8 +875,7 @@ public inline fun <reified T : Float> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of type [Double] (or `Double?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [SumDocs.ReifiedRowSumOfSnippet]
  * @set [SumDocs.ReifiedRowSumOfSnippet.EXAMPLE]
@@ -920,8 +900,7 @@ public inline fun <reified T : Double> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of the given [type] (or its nullable variant) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [column groups][ColumnGroup].
- * To include those in the sum, [flatten][DataFrame.flatten] the DataFrame first.
+ * @include [SumDocs.ColumnGroupsIgnoredSnippet]
  *
  * This overload takes the type as a [KType] argument; prefer the `reified` overloads, like
  * [`rowSumOf`][DataRow.rowSumOf]`<`[`Int`][Int]`>()`, whenever the type is known at compile time.
@@ -1371,7 +1350,7 @@ public fun <T, C : Number?> Grouped<T>.sum(
  *
  * @include [SumDocs.RowExpressionSnippet]
  *
- * The result of the [expression\] is considered the 'input' of this operation.
+ * @include [SumDocs.ExpressionResultIsInputSnippet]
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
@@ -1549,7 +1528,7 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  *
  * @include [SumDocs.RowExpressionSnippet]
  *
- * The result of [expression\] is treated as the 'input' of this operation.
+ * @include [SumDocs.ExpressionResultIsInputSnippet]
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptySnippet]
  *
@@ -1723,7 +1702,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  *
  * @include [SumDocs.RowExpressionSnippet]
  *
- * The result of the [expression\] is considered the 'input' of this operation.
+ * @include [SumDocs.ExpressionResultIsInputSnippet]
  * @include [SumDocs.SupportedTypesSnippet]
  * @include [SumDocs.ZeroCellOnEmptyPivotSnippet]
  *

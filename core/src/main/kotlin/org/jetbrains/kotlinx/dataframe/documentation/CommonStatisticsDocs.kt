@@ -1,10 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.flatten
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 
 /**
  * @comment
@@ -13,10 +19,35 @@ import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
  *   `sum`) inherits from this interface, so the snippets can be included from any of them,
  *   like `{@include [CommonMinMaxDocs.SkipNanParam]}`.
  *
+ *   Some snippets mention the statistic by name. Those use the [STATISTIC], [STATISTIC_VERB], and
+ *   [STATISTIC_COLUMN_NAME] keys, which each statistic sets in a single `Set...StatisticArgs` alias,
+ *   like `{@set [STATISTIC] mean}`. The statistic KDoc-topics then wrap these snippets, like:
+ *   `@include [CommonStatisticsDocs.ColumnsSelectorParam] {@include [SetMeanStatisticArgs]}`.
+ *
  *   NOTE: this cannot be @ExcludedFromSources because [CommonMinMaxDocs] and the other statistics
  *   KDoc-topics use it as supertype.
  */
 internal interface CommonStatisticsDocs {
+
+    /*
+     * The key for a @set that defines the name of the statistic, like "mean" or "minimum".
+     */
+    @ExcludeFromSources
+    typealias STATISTIC = Nothing
+
+    /*
+     * The key for a @set that defines what the statistic does with each value,
+     * like "average" or "compare".
+     */
+    @ExcludeFromSources
+    typealias STATISTIC_VERB = Nothing
+
+    /*
+     * The key for a @set that defines the default name of a resulting column, in code format,
+     * like `"mean"` or `"min"` (including the backticks).
+     */
+    @ExcludeFromSources
+    typealias STATISTIC_COLUMN_NAME = Nothing
 
     /**
      * {@comment Note about how `null` values in the input are treated. KDoc-snippet.}
@@ -107,4 +138,114 @@ internal interface CommonStatisticsDocs {
      */
     @ExcludeFromSources
     typealias PivotUrlsSnippet = Nothing
+
+    /**
+     * {@comment Note that columns inside column groups are not taken into account. KDoc-snippet.
+     *    Uses the [STATISTIC] key.}
+     *
+     * This includes columns inside [column groups][ColumnGroup].
+     * To include those in the {@get [STATISTIC] statistic}, [flatten][DataFrame.flatten] the DataFrame first.
+     */
+    @ExcludeFromSources
+    typealias ColumnGroupsIgnoredSnippet = Nothing
+
+    /**
+     * {@comment Note about which columns the no-argument modes of the number statistics take into account.
+     *    KDoc-snippet. Uses the [STATISTIC] key.}
+     *
+     * All columns of a primitive number type (and all "mixed" [Number] columns) are taken into account;
+     * the other columns are simply left out of the result.
+     *
+     * @include [ColumnGroupsIgnoredSnippet]
+     */
+    @ExcludeFromSources
+    typealias AllSuitableNumberColumnsSnippet = Nothing
+
+    /**
+     * {@comment Note that the results of the expression are the input of the `-Of` modes. KDoc-snippet.}
+     *
+     * The result of the [expression\] is considered the 'input' of this operation.
+     */
+    @ExcludeFromSources
+    typealias ExpressionResultIsInputSnippet = Nothing
+
+    /**
+     * {@comment Note about what empty pivot intersections become. KDoc-snippet.}
+     *
+     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
+     */
+    @ExcludeFromSources
+    typealias EmptyPivotIntersectionSnippet = Nothing
+
+    /**
+     * @comment The `columns` parameter of the [ColumnsSelector] overloads. KDoc-snippet.
+     *    Uses the [STATISTIC] key.
+     *
+     * @param [columns\] The [ColumnsSelector] used to select the columns
+     *   to compute the {@get [STATISTIC] statistic} of.
+     */
+    @ExcludeFromSources
+    typealias ColumnsSelectorParam = Nothing
+
+    /**
+     * @comment The `columns` parameter of the [ColumnsForAggregateSelector] overloads. KDoc-snippet.
+     *    Uses the [STATISTIC] key.
+     *
+     * @param [columns\] The [ColumnsForAggregateSelector] used to select the columns
+     *   to compute the {@get [STATISTIC] statistic} of.
+     */
+    @ExcludeFromSources
+    typealias AggregateColumnsSelectorParam = Nothing
+
+    /**
+     * @comment The `columns` parameter of the [String] overloads. KDoc-snippet.
+     *    Uses the [STATISTIC] key.
+     *
+     * @param [columns\] The names of the columns to compute the {@get [STATISTIC] statistic} of.
+     */
+    @ExcludeFromSources
+    typealias ColumnNamesParam = Nothing
+
+    /**
+     * @comment The `expression` parameter of the `-Of` overloads. KDoc-snippet.
+     *    Uses the [STATISTIC_VERB] key.
+     *
+     * @param [expression\] The [RowExpression] to compute the value to {@get [STATISTIC_VERB] aggregate}
+     *   for each row.
+     */
+    @ExcludeFromSources
+    typealias ExpressionParam = Nothing
+
+    /**
+     * @comment The type parameter `T` of the reified row overloads. KDoc-snippet.
+     *    Uses the [STATISTIC_VERB] key.
+     *
+     * @param [T\] The type of the values to {@get [STATISTIC_VERB] aggregate}.
+     *   Only columns of this type are taken into account.
+     */
+    @ExcludeFromSources
+    typealias RowValuesTypeParam = Nothing
+
+    /**
+     * @comment The `name` parameter of the column-selecting [Grouped] overloads. KDoc-snippet.
+     *    Uses the [STATISTIC_COLUMN_NAME] key.
+     *
+     * @param [name\] The name of the resulting column.
+     *   If `null` (the default), the name of the selected column is used if exactly one column
+     *   is selected, and {@get [STATISTIC_COLUMN_NAME] `"statistic"`} otherwise.
+     *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
+     */
+    @ExcludeFromSources
+    typealias ResultColumnNameParam = Nothing
+
+    /**
+     * @comment The `name` parameter of the [Grouped] `-Of` overloads. KDoc-snippet.
+     *    Uses the [STATISTIC_COLUMN_NAME] key.
+     *
+     * @param [name\] The name of the resulting column.
+     *   If `null` (the default), {@get [STATISTIC_COLUMN_NAME] `"statistic"`} is used.
+     *   This name needs to be unique, else a [DuplicateColumnPathInsertException] is thrown.
+     */
+    @ExcludeFromSources
+    typealias ExpressionResultColumnNameParam = Nothing
 }
