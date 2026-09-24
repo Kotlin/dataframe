@@ -19,6 +19,7 @@
         <toc-element topic="SetupGradle.md" accepts-web-file-names="gettingstartedgradle.html"/>
         <toc-element topic="SetupMaven.md"/>
         <toc-element topic="SetupAndroid.md"/>
+        <toc-element topic="SetupKotlinToolchain.md"/>
         <toc-element topic="SetupKotlinNotebook.md" accepts-web-file-names="gettingstartedkotlinnotebook.html"/>
         <toc-element topic="SetupJupyter.md" accepts-web-file-names="gettingstartedjupyternotebook.html"/>
         <toc-element topic="SetupDatalore.md" accepts-web-file-names="gettingstarteddatalore.html"/>
