@@ -28,7 +28,8 @@ import kotlin.reflect.typeOf
  * it will try to find the common type in terms of [<code>number unification</code>][UnifyingNumbers].
  * Preprocessing will handle the conversion of the values in the input to this unified number type.
  */
-internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Number, Return> {
+internal class NumberInputHandler<out Return : Any?>(override val valueTypeIfEmpty: KType) :
+    AggregatorInputHandler<Number, Return> {
 
     /**
      * Preprocesses the input values before aggregation.
@@ -100,8 +101,11 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * @throws IllegalArgumentException if the input type is not [<code>Number</code>][Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.
      *   If no valid unification can be found or the input is solely [<code>Number</code>][Number]`(?)`, the type [<code>Number</code>][Number]`(?)` is returned.
+     *   If the input is empty, [<code>valueTypeIfEmpty</code>][valueTypeIfEmpty] is returned.
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
+        if (valueTypes.isEmpty()) return valueTypeIfEmpty.toValueType()
+
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
             ?: typeOf<Number>().withNullability(valueTypes.any { it.isMarkedNullable })
         if (!unifiedType.isPrimitiveOrMixedNumber() && !unifiedType.isNothing) {
@@ -126,9 +130,16 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * @throws IllegalArgumentException if the input type is not [<code>Number</code>][Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.
      *   If no valid unification can be found or the input is solely [<code>Number</code>][Number]`(?)`, the type [<code>Number</code>][Number]`(?)` is returned.
+     *   Returns [<code>valueTypeIfEmpty</code>][valueTypeIfEmpty] if the input is empty.
      */
-    override fun calculateValueType(values: Sequence<Number?>): ValueType =
-        calculateValueType(values.asIterable().types().toSet())
+    override fun calculateValueType(values: Sequence<Number?>): ValueType {
+        val list = values.toList()
+        return if (list.isEmpty()) {
+            valueTypeIfEmpty.toValueType()
+        } else {
+            calculateValueType(list.types().toSet())
+        }
+    }
 
     override var aggregator: Aggregator<Number, @UnsafeVariance Return>? = null
 }
