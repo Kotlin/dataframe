@@ -74,7 +74,6 @@ you can do that in the `settings.kotlin.dataframe:` block:
 dependencies:
   - $kotlin.dataframe.json
   - $kotlin.dataframe.csv
-  - $kotlin.dataframe.json
   - $kotlin.dataframe.geo
   - $kotlin.dataframe.arrow
   - $kotlin.dataframe.excel
