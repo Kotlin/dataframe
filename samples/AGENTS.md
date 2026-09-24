@@ -12,6 +12,11 @@ docs under `docs/StardustDocs/topics/`.
 **New documentation samples belong here**, not in `:core`. (Sample migration into this module is in progress —
 issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`korro` tasks that will be removed.)
 
+A test that asserts what a page prints belongs here too, not in `:core`: the dependency runs
+`:samples` → `:core` (`build.gradle.kts` takes `:core` through its jars; `core/build.gradle.kts` has no
+dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` and has to copy the fixture
+— and a copy stops tracking the original the day someone adds a row to it.
+
 ## How it works
 
 - Sample sources live under `src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/**`
@@ -24,6 +29,12 @@ issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`kor
   sample code + output into the topic markdown; use `korroClean` + `korro` to save/update. Korro's `docs`/`samples`
   includes in `build.gradle.kts` define exactly which `docs/StardustDocs/topics/**` files and sample packages this
   module owns.
+- **A text `Output:` block is either generated or stale.** `String.saveSample()` writes one (with the
+  `Output:` header), `CodeString.saveSample()` wraps the value in a ` ```kotlin ` fence and
+  `String.saveTextSample()` in a ` ```text ` one; korro then injects the block **inside** the
+  `<!---FUN-->`…`<!---END-->` region. A block typed by hand sits *outside* `<!---END-->`, and nothing checks it
+  ever again. At the time of writing the topics carry 8 generated blocks against 10 hand-written ones, so the
+  hand-written shape is common but is the one that rots — prefer `saveSample`.
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
   `_accessors` → "Accessors", `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java" (wrapped in
   `<tabs>`/`<tab>`).

@@ -46,6 +46,14 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
         text.saveSample(addOutputLine)
     }
 
+    /**
+     * Saves [this] as a plain-text sample output, the counterpart of [CodeString.saveSample]
+     * for values that are not Kotlin code — the `toString()` of a `Map`, a number, a type.
+     */
+    fun String.saveTextSample(addOutputLine: Boolean = true) {
+        "```text\n$this\n```".saveSample(addOutputLine)
+    }
+
     fun DataColumn<*>.saveDfHtmlSample() {
         toDataFrame().saveDfHtmlSample()
     }
