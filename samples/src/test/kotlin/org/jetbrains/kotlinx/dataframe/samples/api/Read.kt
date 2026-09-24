@@ -402,9 +402,41 @@ class Read : DataFrameSampleHelper("read", "api") {
     }
 
     @Test
+    fun readJsonValueColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[1, 2, 3]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonArrayColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[[1], [2]]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonArrayOfObjectsColumn() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[[{ "a": 1 }], [{ "a": 2 }]]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun readJsonTopLevelTypeClash() {
+        // SampleStart
+        val df = DataFrame.readJsonStr("""[1, { "label": "record" }]""")
+            // SampleEnd
+            .saveDfHtmlSample()
+    }
+
+    @Test
     fun readJsonTypeClash() {
         // SampleStart
-        val text = """
+        val complexClashedJson = """
             [
                 { "a": "text" },
                 { "a": { "b": 2 } },
@@ -412,14 +444,14 @@ class Read : DataFrameSampleHelper("read", "api") {
             ]
         """.trimIndent()
 
-        val df = DataFrame.readJsonStr(text)
+        val df = DataFrame.readJsonStr(complexClashedJson)
             // SampleEnd
             .saveDfHtmlSample()
     }
 
     @Test
     fun readJsonTypeClashTactic() {
-        val text = """
+        val complexClashedJson = """
             [
                 { "a": "text" },
                 { "a": { "b": 2 } },
@@ -427,7 +459,7 @@ class Read : DataFrameSampleHelper("read", "api") {
             ]
         """.trimIndent()
         // SampleStart
-        val df = DataFrame.readJsonStr(text, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(complexClashedJson, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
             // SampleEnd
             .saveDfHtmlSample()
     }
