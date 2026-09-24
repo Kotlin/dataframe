@@ -421,6 +421,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     ): ColumnSet<C> = asSingleColumn().cols(firstCol, *otherCols)
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
+    @Interpretable("Cols0")
     public operator fun <C> ColumnsSelectionDsl<*>.get(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,

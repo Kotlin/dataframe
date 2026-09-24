@@ -275,7 +275,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
  * ```
- * @param [columns] The [<code>Columns Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
+ * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
  */
 @StringApiInterpretable(interpreter = "Rename", stringArgument = "cols", targetArgument = "columns")
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
@@ -324,8 +324,8 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)
@@ -500,8 +500,8 @@ public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)
@@ -532,8 +532,8 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = to { it.renam
  * ```
  * "snake_case_name" -> "snakeCaseName"
  * "PascalCaseName" -> "pascalCaseName"
- * "doner-case-name" -> "donerCaseName"
- * "UPPER_CASE_NAME -> upperCaseName"
+ * "kebab-case-name" -> "kebabCaseName"
+ * "UPPER_CASE_NAME" -> "upperCaseName"
  * ```
  *
  * For more information: [See `renameToCamelCase` on the documentation website.](https://kotlin.github.io/dataframe/rename.html#renametocamelcase)

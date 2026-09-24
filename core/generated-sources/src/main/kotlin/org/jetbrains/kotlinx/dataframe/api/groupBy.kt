@@ -184,6 +184,19 @@ internal interface GroupByDocs {
      *
      *  See [<code>GroupBy Aggregations</code>][Aggregation].
      *
+     * ### Map [<code>GroupBy</code>][GroupBy] into [<code>List</code>][List], [<code>DataFrame</code>][DataFrame] or [<code>FrameColumn</code>][FrameColumn]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * [<code>GroupBy</code>][GroupBy]`.`[<code>**`map`**</code>][GroupBy.map]**`  {  `**[<code>`GroupWithKey`</code>][GroupWithKey]**`  ->  `**`value`**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[<code>**`mapToRows`**</code>][GroupBy.mapToRows]**`  {  `**[<code>`GroupWithKey`</code>][GroupWithKey]**`  ->  `**[<code>`DataRow`</code>][DataRow]`?`**` }`**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[<code>**`mapToFrames`**</code>][GroupBy.mapToFrames]**`  {  `**[<code>`GroupWithKey`</code>][GroupWithKey]**`  ->  `**[<code>`DataFrame`</code>][DataFrame]**` }`**
+     *
+     *  See [<code>GroupBy Mapping</code>][Mapping].
+     *
      * ### Pivot [<code>GroupBy</code>][GroupBy] into [<code>PivotGroupBy</code>][PivotGroupBy] and reduce / aggregate it
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -398,6 +411,32 @@ internal interface GroupByDocs {
      * For more information: [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
      */
     typealias Aggregation = Nothing
+
+    /**
+     * ### [<code>GroupBy</code>][GroupBy] mapping
+     *
+     * Instead of aggregating the groups, a [<code>GroupBy</code>][GroupBy] can be walked over key–group pair by key–group pair,
+     * with the result of a lambda collected for each of them. Every pair is given to the lambda as a
+     * [<code>GroupWithKey</code>][GroupWithKey], so its key values are available as [<code>key</code>][GroupWithKey.key] and its rows as
+     * [<code>group</code>][GroupWithKey.group].
+     *
+     * The following mapping methods are available:
+     * * [<code>map</code>][GroupBy.map] — returns a [<code>List</code>][List] with one computed value per key–group pair;
+     * * [<code>mapToRows</code>][GroupBy.mapToRows] — computes a [<code>DataRow</code>][DataRow] per key–group pair and collects them
+     *   into a [<code>DataFrame</code>][DataFrame];
+     * * [<code>mapToFrames</code>][GroupBy.mapToFrames] — computes a [<code>DataFrame</code>][DataFrame] per key–group pair and collects them
+     *   into a [<code>FrameColumn</code>][FrameColumn].
+     *
+     * Unlike [<code>aggregation</code>][Aggregation], the result is not a [<code>DataFrame</code>][DataFrame] with the grouping key columns:
+     * what the lambda returns is what you get. [<code>map</code>][GroupBy.map] and [<code>mapToRows</code>][GroupBy.mapToRows]
+     * leave out the pairs for which the lambda returns `null`, so their results can be shorter than
+     * the number of key–group pairs.
+     *
+     * Check out [<code>`GroupBy grammar`</code>][Grammar].
+     *
+     * For more information: [See `map` on a `GroupBy` on the documentation website.](https://kotlin.github.io/dataframe/map.html#map-on-groupby)
+     */
+    typealias Mapping = Nothing
 
     /**
      * ### [<code>GroupBy</code>][GroupBy] pivoting
@@ -885,6 +924,8 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      * in a [<code>FrameColumn</code>][FrameColumn] with that name; otherwise, a default name "group" is used.
      *
      * For more information: [See "`GroupBy` Aggregation" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation)
+     *
+     * See also [<code>schema</code>][GroupBy.schema] — the schema of this [<code>GroupBy</code>][GroupBy] as a [<code>DataFrame</code>][DataFrame].
      *
      * @param groupedColumnName The name of the column in which to store grouped data;
      * if `null`, a default name will be used.

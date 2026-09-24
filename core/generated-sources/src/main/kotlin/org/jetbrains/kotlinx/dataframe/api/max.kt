@@ -47,7 +47,10 @@ import kotlin.reflect.KProperty
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -206,7 +209,10 @@ internal interface MaxDocs : CommonMinMaxDocs {
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -234,11 +240,9 @@ internal interface MaxDocs : CommonMinMaxDocs {
  * df.weight.max()
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -254,7 +258,10 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -283,11 +290,9 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * df.weight.maxOrNull()
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -303,7 +308,10 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -330,11 +338,9 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * df.name.firstName.maxBy { it.length }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [<code>selector</code>][selector] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -354,7 +360,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -382,11 +391,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * df.name.firstName.maxByOrNull { it.length }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [<code>selector</code>][selector] returns the maximum value,
  *   or `null` if there are no values to compare.
@@ -406,7 +413,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -433,11 +443,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * df.name.firstName.maxOf { it.length }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The maximum of the values [<code>selector</code>][selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -457,7 +465,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -485,11 +496,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * df.name.firstName.maxOfOrNull { it.length }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The maximum of the values [<code>selector</code>][selector] returns,
  *   or `null` if there are no values to compare.
@@ -522,7 +531,10 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -548,11 +560,9 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value of type [<code>T</code>][T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -570,7 +580,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -597,11 +610,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value of type [<code>T</code>][T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -624,7 +635,10 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -653,11 +667,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * df.max()
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A single [<code>DataRow</code>][DataRow] with the maximum of each suitable column of this [<code>DataFrame</code>][DataFrame].
  */
 @Refine
@@ -674,7 +686,10 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -692,8 +707,8 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -717,11 +732,9 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * df.maxFor(skipNaN = true) { age into "maxAge" and (weight into "maxWeight") }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
  * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column.
@@ -742,7 +755,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -777,11 +793,9 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column.
  */
 @Refine
@@ -812,7 +826,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -875,11 +892,9 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * df.max { age and weight }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns.
@@ -899,7 +914,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -945,11 +963,9 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * ```
  *
  * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -980,7 +996,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1044,11 +1063,9 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * df.maxOrNull { age and weight }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
  *   to compute the maximum of.
  * @return The largest value among all the values in the selected columns,
@@ -1069,7 +1086,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1116,11 +1136,9 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * ```
  *
  * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the maximum of.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -1159,7 +1177,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1188,11 +1209,9 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * df.maxOf { (weight ?: 0) / age }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return The maximum of the values [<code>expression</code>][expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -1220,7 +1239,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1249,11 +1271,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  * df.maxOfOrNull { (weight ?: 0) / age }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return The maximum of the values [<code>expression</code>][expression] returns,
  *   or `null` if there are no values to compare.
@@ -1281,7 +1301,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1312,11 +1335,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  * df.maxBy { (weight ?: 0) / age }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -1336,7 +1357,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1367,11 +1391,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The first [<code>DataRow</code>][DataRow] with the largest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -1410,7 +1432,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1437,11 +1462,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * df.maxByOrNull { age }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the maximum value,
  *   or `null` if there are no values to compare.
@@ -1461,7 +1484,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1491,11 +1517,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * ```
  *
  * @param [column] The name of the column of this [<code>DataFrame</code>][DataFrame] to compare the rows by.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return The first [<code>DataRow</code>][DataRow] with the largest value in the given column,
  *   or `null` if there are no values to compare.
  */
@@ -1535,7 +1559,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1566,11 +1593,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * df.groupBy { city }.max()
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each suitable column per group.
  */
 @Refine
@@ -1591,7 +1616,10 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1609,8 +1637,8 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -1635,11 +1663,9 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * df.groupBy { city }.maxFor { age and weight }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each selected column per group.
@@ -1664,7 +1690,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1702,11 +1731,9 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the maximum of each selected column per group.
  */
 @Refine
@@ -1743,7 +1770,10 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1784,11 +1814,9 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"max"` otherwise.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the maximum of.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
@@ -1815,7 +1843,10 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1857,11 +1888,9 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"max"` otherwise.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
@@ -1909,7 +1938,10 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -1942,11 +1974,9 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * ```
  *
  * @param [name] The name of the resulting column. If `null` (the default), `"max"` is used.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single maximum per group.
  */
@@ -1985,7 +2015,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2007,11 +2040,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  * df.groupBy { city }.maxBy { age }.concat()
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
  * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
  *   for which [<code>rowExpression</code>][rowExpression] returns the maximum value.
@@ -2048,7 +2079,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2072,11 +2106,9 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>ReducedGroupBy</code>][ReducedGroupBy] with, for each group, the first row
  *   that has the largest value in the given column.
  */
@@ -2109,7 +2141,10 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2134,7 +2169,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2142,17 +2177,13 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * df.pivot { city }.max()
  * ```
  *
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the maximum of each suitable column per [pivot] group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each suitable column per [<code>pivot</code>][pivot] group.
  */
 public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     delegate { max(separate, skipNaN) }
@@ -2170,7 +2201,10 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2188,8 +2222,8 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -2206,7 +2240,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2216,19 +2250,15 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * df.pivot { city }.maxFor(separate = true) { age and weight }
  * ```
  *
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
- * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column per [<code>pivot</code>][pivot] group.
  */
 public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
     separate: Boolean = false,
@@ -2249,7 +2279,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2278,7 +2311,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2287,17 +2320,13 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with the maximum of each selected column per [<code>pivot</code>][pivot] group.
  */
 public fun <T> Pivot<T>.maxFor(
     vararg columns: String,
@@ -2334,7 +2363,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2362,7 +2394,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2370,13 +2402,11 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * df.pivot { city }.max { age and weight }
  * ```
  *
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
- * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the maximum of.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the largest value among all the values
  *   in the selected columns.
  */
 public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
@@ -2397,7 +2427,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2425,7 +2458,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2434,12 +2467,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the largest value among all the values
  *   in the selected columns.
  */
 public fun <T> Pivot<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -2480,7 +2511,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2507,7 +2541,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2515,13 +2549,11 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * df.pivot { city }.maxOf { (weight ?: 0) / age }
  * ```
  *
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A single [DataRow] with, per [pivot] group, the maximum of the expression's results.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the maximum of the expression's results.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -2546,7 +2578,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2577,11 +2612,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * df.pivot { city }.maxBy { (weight ?: 0) / age }.with { name }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
  * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group,
  *   the first row where the [<code>rowExpression</code>][rowExpression] produced the maximum result.
@@ -2608,7 +2641,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2641,11 +2677,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>ReducedPivot</code>][ReducedPivot] holding, per group, the first row with the largest value
  *   in the given column.
  */
@@ -2678,7 +2712,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2704,7 +2741,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2712,17 +2749,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * df.pivot { city }.groupBy { name.lastName }.max()
  * ```
  *
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with the maximum of each suitable column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with the maximum of each suitable column per group.
  */
 public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     maxFor(separate, skipNaN, intraComparableColumns())
@@ -2740,7 +2773,10 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2758,8 +2794,8 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
- * [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
+ * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
  *
  *
  *
@@ -2778,7 +2814,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2786,19 +2822,15 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * df.pivot { city }.groupBy { name.lastName }.maxFor { age and weight }
  * ```
  *
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
  *   to compute the maximum of.
- * @return A [DataFrame] with the maximum of each selected column per group.
+ * @return A [<code>DataFrame</code>][DataFrame] with the maximum of each selected column per group.
  */
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
@@ -2819,7 +2851,10 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2850,7 +2885,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2859,17 +2894,13 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- *
- *
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with the maximum of each selected column per group.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with the maximum of each selected column per group.
  */
 public fun <T> PivotGroupBy<T>.maxFor(
     vararg columns: String,
@@ -2907,7 +2938,10 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -2937,7 +2971,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -2945,13 +2979,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * df.pivot { city }.groupBy { name.lastName }.max { age and weight }
  * ```
  *
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
- * @return A [DataFrame] with, per group, the largest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the maximum of.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
@@ -2973,7 +3005,10 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -3003,7 +3038,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -3012,12 +3047,10 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * ```
  *
  * @param [columns] The names of the columns to compute the maximum of.
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @return A [DataFrame] with, per group, the largest value among all the values
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
 public fun <T> PivotGroupBy<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -3058,7 +3091,10 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -3086,7 +3122,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * - [<code>The Max Operation</code>][org.jetbrains.kotlinx.dataframe.api.MaxDocs] — an overview of all `max` modes.
  *
  * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
- * [See "Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
+ * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
  * ```kotlin
@@ -3094,13 +3130,11 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * df.pivot { city }.groupBy { name.lastName }.maxOf { (weight ?: 0) / age }
  * ```
  *
- *
- *
- * @param [skipNaN] If `true`, [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
- *   If `false` (the default), a [`NaN`][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [Double] and [Float] values.
- * @param [rowExpression] The [RowExpression] to evaluate for each row.
- * @return A [DataFrame] with, per group, the maximum of the expression's results.
+ * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
+ *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
+ * @return A [<code>DataFrame</code>][DataFrame] with, per group, the maximum of the expression's results.
  */
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -3125,7 +3159,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -3157,11 +3194,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * df.pivot { city }.groupBy { name.lastName }.maxBy { (weight ?: 0) / age }.with { name.firstName }
  * ```
  *
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @param [rowExpression] The [<code>RowExpression</code>][RowExpression] to evaluate for each row.
  * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group,
  *   the first row where the [<code>rowExpression</code>][rowExpression] produced the maximum result.
@@ -3188,7 +3223,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
  *
+ *
+ *
  * `null` values in the input are always ignored.
+ *
  *
  * If the input contains [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values, the result will be `NaN`,
  * unless [skipNaN] is set to `true`.
@@ -3222,11 +3260,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- *
- *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
- *   Only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
+ *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group, the first row with the largest value
  *   in the given column.
  */

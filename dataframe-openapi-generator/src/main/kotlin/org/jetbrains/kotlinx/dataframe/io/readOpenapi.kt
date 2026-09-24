@@ -278,7 +278,7 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
  * - `type: object`
  *     - `properties:` (`additionalProperties` are ignored) creating an [OpenApiMarker.Interface] using the fields in the properties.
  *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertiesInterface] using the additionalProperties schema as type of `value`.
- * - `type:` if type is something else, generating a type alias for it. This can be a [OpenApiMarker.TypeAlias] or a [OpenApiMarker.MarkerAlias].
+ * - `type:` if type is something else, generating a type alias for it. This can be an [OpenApiMarker.TypeAlias] or an [OpenApiMarker.MarkerAlias].
  *
  * @param typeName The name of the schema / type to convert.
  * @param getRefMarker Function to retrieve a [Marker] for a given reference name.
@@ -697,7 +697,7 @@ private fun Schema<*>.toMarker(
  * `anyOf` and `oneOf` types are merged.
  *
  * These results still have to be converted to [FieldType]s to be able to generate [OpenApiMarker]s from it
- * (unless it's a [OpenApiTypeResult.UsingRef] of course).
+ * (unless it's an [OpenApiTypeResult.UsingRef] of course).
  *
  * @receiver Single property of an OpenApi type schema to convert.
  * @param getRefMarker function to attempt to resolve a reference.

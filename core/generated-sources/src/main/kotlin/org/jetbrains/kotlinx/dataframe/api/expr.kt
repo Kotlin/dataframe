@@ -76,7 +76,7 @@ public interface ExprColumnsSelectionDsl {
  *
  * For more information: [See `expr` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#expr-column-expression)
  *
- * ### Check out: [<code>Usage</code>][ExprColumnsSelectionDsl.Grammar]
+ * ### Check out: [<code>Grammar</code>][ExprColumnsSelectionDsl.Grammar]
  *
  * #### For example:
  *

@@ -179,10 +179,10 @@ Think of Kotlin DataFrame as a **data analysis/ETL tool**, not an ORM.
 | `WHERE amount > 100`                                                                                                                                   | `df.filter { amount > 100 }`           |
 | `ORDER BY amount DESC`                                                                                                                                 | `df.sortByDesc { amount }`             |
 | `GROUP BY region`                                                                                                                                      | `df.groupBy { region }`                |
-| `SUM(amount)`                                                                                                                                          | `.aggregate {  sum { amount } }`           |
+| `SUM(amount)`                                                                                                                                          | `.aggregate { sum { amount } }`            |
 | `JOIN`                                                                                                                                                 | `.join(otherDf) { id match right.id }` |
 | `LIMIT 5`                                                                                                                                              | `.take(5)`                             |
-| **Pivot:** <br>`SELECT * FROM crosstab('SELECT region, year, SUM(amount) FROM sales GROUP BY region, year') AS ct(region text, y2023 int, y2024 int);` | `.groupBy { region }.pivot { year }. sum { amount }` |
+| **Pivot:** <br>`SELECT * FROM crosstab('SELECT region, year, SUM(amount) FROM sales GROUP BY region, year') AS ct(region text, y2023 int, y2024 int);` | `.groupBy { region }.pivot { year }.sum { amount }`  |
 | **Explode array column:** <br>`SELECT id, unnest(tags) AS tag FROM products;`                                                                          | `.explode { tags }`                    |
 | **Update column:** <br>`UPDATE sales SET amount = amount * 1.2;`                                                                                       | `.update { amount }.with { it * 1.2 }` |
 

@@ -23,7 +23,7 @@ two steps using `DbType` — a class responsible for handling column metadata an
    before being placed into the DataFrame (`DbType.preprocessValue`). For example,
    `java.sql.Timestamp` is turned into `kotlin.time.Instant`.
 
-Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).`
+Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
 
 For some databases (such as [DuckDB](readSqlTypeMapping_DuckDB.md) and [SQLite](readSqlTypeMapping_SQLite.md)),
 this logic is overridden with custom dialect-specific converters based on column metadata —
@@ -53,7 +53,7 @@ Here is a list of links for each database supported in Kotlin DataFrame:
 | [PostgreSQL](readSqlTypeMapping_PostgreSQL.md) | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).                                                |
 | [MS SQL Server](readSqlTypeMapping_MsSql.md)   | Default `DbType`, no overrides.                                                                                        |
 | [H2](readSqlTypeMapping_H2.md)                 | Default `DbType` in `Regular` mode; other modes delegate to another dialect.                                           |
-| [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Allows to provide custom converters. |
+| [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Accepts user-provided converters.    |
 | [DuckDB](readSqlTypeMapping_DuckDB.md)         | `AdvancedDbType` with its own converters.                                                                              |
 
 ## Extending the mapping

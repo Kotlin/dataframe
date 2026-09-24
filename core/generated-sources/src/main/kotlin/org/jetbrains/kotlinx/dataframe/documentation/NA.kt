@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  *
  *
  * ## `NA`
- * `NA` in Dataframe can be seen as "[<code>NaN</code>][NaN] or `null`".
+ * `NA` in DataFrame can be seen as "[<code>NaN</code>][NaN] or `null`".
  *
  * [<code>Floats</code>][Float] or [<code>Doubles</code>][Double] can be represented as [<code>Float.NaN</code>][Float.NaN] or [<code>Double.NaN</code>][Double.NaN], respectively,
  * in cases where a mathematical operation is undefined, such as dividing by zero.
@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNA
  * You can also use [<code>fillNA</code>][fillNA] to replace `NAs` in certain columns with a given value or expression
  * or [<code>dropNA</code>][dropNA] to drop rows with `NAs` in them.
  *
- * For more information: [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanAndNa.html#na)
+ * For more information: [See `NA` on the documentation website.](https://kotlin.github.io/dataframe/nanandna.html#na)
  *
  * @see [NaN]
  */

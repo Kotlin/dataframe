@@ -256,8 +256,8 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
  * It must be followed by one of the positioning methods
  * to produce a new [<code>DataFrame</code>][DataFrame] with the updated column structure.
  *
- * Use the following methods to finalize the move:
- * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a one column group.
+ * Use the following methods to finalize the grouping:
+ * - [<code>into(groupName)</code>][GroupClause.into] – groups selected columns into a single column group.
  * - [<code>into { groupNameExpression }</code>][GroupClause.into] – groups each column into a group
  * by specifying path or name.
  *
@@ -271,7 +271,7 @@ public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val colum
 
 /**
  * Groups columns, previously selected with [<code>group</code>][group], into new or existing column groups
- * within the [<code>DataFrame</code>][DataFrame], using an [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] expression to specify the target group name for each column.
+ * within the [<code>DataFrame</code>][DataFrame], using a [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] expression to specify the target group name for each column.
  * The expression is applied to each selected column and determines the name of the column group
  * it will be placed into.
  *

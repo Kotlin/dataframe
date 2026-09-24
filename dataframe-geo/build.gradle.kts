@@ -72,7 +72,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeGeo"
         artifactId = project.name
-        description = "GeoDataFrame API"
+        description = "Kotlin DataFrame: GeoDataFrame API"
         packageName = artifactId
     }
 }

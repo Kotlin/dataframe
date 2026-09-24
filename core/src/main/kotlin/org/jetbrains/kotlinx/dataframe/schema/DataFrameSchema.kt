@@ -32,7 +32,7 @@ public interface DataFrameSchema {
      * @include [ComparisonModeOptionsSnippet]
      *
      * @param comparisonMode The [mode][ComparisonMode] to compare the schema's by.
-     *   By default, generated markers for leafs aren't used as supertypes: `@DataSchema(isOpen = false)`
+     *   By default, generated markers for leaves aren't used as supertypes: `@DataSchema(isOpen = false)`
      *   Setting [comparisonMode] to [ComparisonMode.STRICT_FOR_NESTED_SCHEMAS] takes this into account
      *   for internal codegen logic.
      *
@@ -52,6 +52,11 @@ public interface DataFrameSchema {
  * - For value columns, it contains the [type][kotlin.reflect.KType] of the column.
  * - For column groups, it contains the [DataFrameSchema] of the nested columns.
  * - For frame columns, it contains the [DataFrameSchema] of the contained dataframes.
+ *
+ * Use [schema][org.jetbrains.kotlinx.dataframe.DataFrame.schema] to read the schema of a
+ * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] from its columns, and
+ * [compileTimeSchema][org.jetbrains.kotlinx.dataframe.DataFrame.compileTimeSchema] to get the one
+ * that follows from its type.
  *
  * Use [compare][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
  * to compare this schema with another schema using different [comparison modes][ComparisonMode].

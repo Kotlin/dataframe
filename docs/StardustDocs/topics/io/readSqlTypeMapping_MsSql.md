@@ -16,7 +16,7 @@ Full mapping of MS SQL Server SQL types to Kotlin types, including aliases and d
 The tables below list every MS SQL Server column type
 ([Transact-SQL Data types](https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql))
 and the Kotlin type produced when the column is read into a DataFrame. Aliases are
-canonicalised by SQL Server at `CREATE TABLE` time, so DataFrame only ever sees the canonical
+canonicalized by SQL Server at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
 Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).

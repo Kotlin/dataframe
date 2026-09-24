@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.FirstOnColumn]}
  *
- * See also [firstOrNull], [last], [take], [takeLast].
+ * See also [firstOrNull], [last], [take], [takeLast], [single].
  *
  * @return The first value in this [DataColumn].
  *
@@ -49,7 +49,7 @@ public fun <T> DataColumn<T>.first(): T = get(0)
  *
  * For more information: {@include [DocumentationUrls.FirstOrNullOnColumn]}
  *
- * See also [first], [last], [take], [takeLast].
+ * See also [first], [last], [take], [takeLast], [single].
  *
  * @return The first value in this [DataColumn], or `null` if the [DataColumn] is empty.
  */
@@ -67,7 +67,7 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  *
  * For more information: {@include [DocumentationUrls.FirstOnColumn]}
  *
- * See also [firstOrNull], [last], [take], [takeLast].
+ * See also [firstOrNull], [last], [take], [takeLast], [single].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -96,7 +96,7 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  *
  * For more information: {@include [DocumentationUrls.FirstOrNullOnColumn]}
  *
- * See also [first], [last], [take], [takeLast].
+ * See also [first], [last], [take], [takeLast], [single].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -121,7 +121,8 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
  * [last][DataFrame.last],
  * [take][DataFrame.take],
  * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @return A [DataRow] containing the first row in this [DataFrame].
  *
@@ -143,7 +144,8 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
  * [last][DataFrame.last],
  * [take][DataFrame.take],
  * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @return A [DataRow] containing the first row in this [DataFrame], or `null` if the [DataFrame] is empty.
  */
@@ -169,7 +171,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * [last][DataFrame.last],
  * [take][DataFrame.take],
  * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [single][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -206,7 +209,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * [last][DataFrame.last],
  * [take][DataFrame.take],
  * [takeWhile][DataFrame.takeWhile],
- * [takeLast][DataFrame.takeLast].
+ * [takeLast][DataFrame.takeLast],
+ * [singleOrNull][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @param [predicate] A [row filter][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.

@@ -134,7 +134,7 @@ Kotlin DataFrame supports all popular data formats, including
 and [Apache Arrow](read.md#read-apache-arrow-formats),
 as well as [reading from various databases](readSqlDatabases.md). 
 
-Read a CSV with the "Jetbrains Repositories" dataset into the `df` variable
+Read a CSV with the "JetBrains Repositories" dataset into the `df` variable
 using [`DataFrame.readCsv()`](read.md#read-from-csv) method:
 
 <!---FUN notebook_test_quickstart_2-->

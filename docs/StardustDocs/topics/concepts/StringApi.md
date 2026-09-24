@@ -37,7 +37,7 @@ The String API can also be used inside the
 via *`String` column accessors*.
 
 `String` column accessors allow you to access nested columns and combine them with
-[the extensions properties](extensionPropertiesApi.md) 
+[the extension properties](extensionPropertiesApi.md) 
 or with any other [CS DSL methods](ColumnSelectors.md#functions-overview).
 
 String column accessors are created using special functions.
@@ -130,7 +130,7 @@ df.mean { colGroup("info").col<Int>("age") }
 <!---END-->
 
 Combine Extensions Properties and String Column Accessors.
-[Select](select.md) "height" and "name" columns, assuming we have extensions properties
+[Select](select.md) "height" and "name" columns, assuming we have extension properties
 for "info" and "name" columns but not for the ("info"/"height") column
 
 <!---FUN combineExtensionsAndStrings-->

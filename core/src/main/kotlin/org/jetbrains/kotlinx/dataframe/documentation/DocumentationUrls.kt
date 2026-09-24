@@ -82,13 +82,13 @@ public interface DocumentationUrls {
         public typealias FillNA = Nothing
     }
 
-    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
+    /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanandna.html) */
     public interface NanAndNa {
 
-        /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
+        /** [See `NaN` on the documentation website.]({@include [Url]}/nanandna.html#nan) */
         public typealias NaN = Nothing
 
-        /** [See `NA` on the documentation website.]({@include [Url]}/nanAndNa.html#na) */
+        /** [See `NA` on the documentation website.]({@include [Url]}/nanandna.html#na) */
         public typealias NA = Nothing
     }
 
@@ -136,6 +136,25 @@ public interface DocumentationUrls {
 
     /** [See `add` on the documentation website.]({@include [Url]}/add.html) */
     public typealias Add = Nothing
+
+    /** [See `map` on the documentation website.]({@include [Url]}/map.html) */
+    public interface Map {
+
+        /** [See `map` on a `DataColumn` on the documentation website.]({@include [Url]}/map.html#map-on-datacolumn) */
+        public typealias OnColumn = Nothing
+
+        /** [See `map` over rows on the documentation website.]({@include [Url]}/map.html#map) */
+        public typealias OverRows = Nothing
+
+        /** [See `mapToColumn` on the documentation website.]({@include [Url]}/map.html#maptocolumn) */
+        public typealias ToColumn = Nothing
+
+        /** [See `mapToFrame` on the documentation website.]({@include [Url]}/map.html#maptoframe) */
+        public typealias ToFrame = Nothing
+
+        /** [See `map` on a `GroupBy` on the documentation website.]({@include [Url]}/map.html#map-on-groupby) */
+        public typealias OnGroupBy = Nothing
+    }
 
     /** [See `all` on the documentation website.]({@include [Url]}/all.html) */
     public typealias All = Nothing
@@ -254,6 +273,9 @@ public interface DocumentationUrls {
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
 
+    /** [See `schema` on the documentation website.]({@include [Url]}/schema.html) */
+    public typealias Schema = Nothing
+
     /** [See `format` on the documentation website.]({@include [Url]}/format.html) */
     public typealias Format = Nothing
 
@@ -305,7 +327,7 @@ public interface DocumentationUrls {
     /** [See "`Pivot` Aggregation" on the documentation website.]({@include [Url]}/pivot.html#aggregation) */
     public typealias PivotAggregation = Nothing
 
-    /** [See "Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
+    /** [See "`Pivot` Aggregation statistics" on the documentation website.]({@include [Url]}/pivot.html#aggregation-statistics) */
     public typealias PivotAggregationStatistics = Nothing
 
     /** [See "`pivot` inside aggregation" on the documentation website.]({@include [Url]}/pivot.html#pivot-inside-aggregate) */
@@ -322,6 +344,16 @@ public interface DocumentationUrls {
 
     /** [See "Row statistics" on the documentation website.]({@include [Url]}/rowstats.html) */
     public typealias RowStatistics = Nothing
+
+    /** [See "Number Unification" on the documentation website.]({@include [Url]}/numberunification.html) */
+    public typealias NumberUnification = Nothing
+
+    /** [See `sum` on the documentation website.]({@include [Url]}/sum.html) */
+    public interface Sum {
+
+        /** [See "`sum` Type Conversion" on the documentation website.]({@include [Url]}/sum.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
 
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
     public interface MinMax {
@@ -421,6 +453,15 @@ public interface DocumentationUrls {
     /** [See `lastOrNull` on the documentation website.]({@include [Url]}/lastoncolumn.html#lastornull) */
     public typealias LastOrNullOnColumn = Nothing
 
+    /** [See `single` on the documentation website.]({@include [Url]}/single.html) */
+    public typealias Single = Nothing
+
+    /** [See `single` on the documentation website.]({@include [Url]}/singleoncolumn.html) */
+    public typealias SingleOnColumn = Nothing
+
+    /** [See `singleOrNull` on the documentation website.]({@include [Url]}/single.html#singleornull) */
+    public typealias SingleOrNull = Nothing
+
     /** [See First (Col), Last (Col), Single (Col) on the documentation website.]({@include [Url]}/columnselectors.html#first-col-last-col-single-col) */
     public typealias FirstLastSingleCols = Nothing
 
@@ -501,6 +542,9 @@ public interface DocumentationUrls {
 
     /** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
     public typealias SortWith = Nothing
+
+    /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
+    public typealias Indices = Nothing
 
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing
