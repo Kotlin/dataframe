@@ -118,6 +118,7 @@ korro {
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
                 include("groupBy.md")
+                include("map.md")
                 include("pivot.md")
                 include("countDistinct.md")
                 include("fill.md")
@@ -133,6 +134,8 @@ korro {
                 include("median.md")
                 include("percentile.md")
                 include("MigrationTo_1_0.md")
+                include("single.md")
+                include("indexing.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")

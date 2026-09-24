@@ -403,7 +403,7 @@ internal fun guessValueType(
  * See [<code>createColumnGuessingType</code>][createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
- * @param upperBound the upper bound of the type to guess
+ * @param upperBound the optional upper bound of the type to guess. This is an optional hint to speed up the search.
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
  *   Note: this parameter is ignored if another [<code>Collection</code>][Collection] is present in the values.

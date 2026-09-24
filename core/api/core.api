@@ -5393,10 +5393,16 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Do
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Fill {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Map {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$MinMax {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$NanAndNa {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Sum {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl {
@@ -5586,6 +5592,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getMultipleColumnsHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getStatisticsParameters ()Ljava/util/Map;
+	public fun getValueTypeIfEmpty ()Lkotlin/reflect/KType;
 	public fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 	public fun init (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
 	public fun preprocessAggregation (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Lkotlin/Pair;
@@ -5609,6 +5616,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorHandler {
 	public abstract fun calculateValueType (Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
 	public abstract fun calculateValueType (Lkotlin/sequences/Sequence;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
+	public fun getValueTypeIfEmpty ()Lkotlin/reflect/KType;
 	public abstract fun preprocessAggregation (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Lkotlin/Pair;
 }
 
@@ -5660,7 +5668,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun max (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun medianCommon (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun medianComparables ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;

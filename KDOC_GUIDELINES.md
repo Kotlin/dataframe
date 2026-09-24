@@ -405,6 +405,17 @@ and then use add it using `@include`:
  * For more information: {@include [DocumentationUrls.Move]}
 ```
 
+Keep it to **exactly one** such paragraph per KDoc, always the colon form — never
+`For more information,` followed by the link. If a shared KDoc-snippet you `@include` already carries the
+paragraph, don't add a second one in the declaration: the rendered KDoc then says it twice. When an
+operation needs several links, they go on that one line, space-separated:
+
+```
+ * For more information: {@include [DocumentationUrls.Count]} {@include [DocumentationUrls.DataRow.RowFunctions]}
+```
+
+(see `count.kt`, `concat.kt`, `distinct.kt`).
+
 #### Columns selection information
 
 For any method with columns selection, add a section with information about the columns selection.
@@ -445,6 +456,11 @@ This is not only cosmetic: an unbracketed type parameter (`@param T ...`) makes 
 doc comment with a doubled `*/` terminator, which then fails
 `runKtlintFormatOverGeneratedMainSourcesSourceSet` with "Expecting a top level declaration".
 Always write `@param [T] ...`.
+
+A KDoc-snippet that consists only of `@param` lines is included in the middle of the function's own
+`@param` list, so a leading `{@comment}` in it leaves two blank lines there. Put the `@comment` at the
+end of such a snippet instead. Don't move the note into a plain `/* */` comment above the KDoc either —
+ktlint's `no-consecutive-comments` rejects a block comment directly in front of a KDoc.
 
 ## KDoc-helpers Structure
 
@@ -651,6 +667,9 @@ But keep these things in mind:
   alternate,
   like `**a**__b__`.
 - Add one extra newline if you want to put something on a new line. Otherwise, they'll render on the same line.
+- KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
+  `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
+  `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in you code samples.
 
 

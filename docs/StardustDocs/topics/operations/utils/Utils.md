@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Overview of common utility operations in Kotlin Dataframe.
+Overview of common utility operations in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Overview of common utility operations in Kotlin Dataframe.
+Overview of common utility operations in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Overview of common utility operations in Kotlin Dataframe.
+Overview of common utility operations in Kotlin DataFrame.
 </link-summary>
 
 Explore frequently used helpers for querying and transforming your data:

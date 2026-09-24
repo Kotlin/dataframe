@@ -68,7 +68,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJupyter"
         artifactId = project.name
-        description = "Kotlin DataFrame integration with Kotlin Jupyter"
+        description = "Kotlin DataFrame: Kotlin Jupyter/Notebook integration"
         packageName = artifactId
     }
 }

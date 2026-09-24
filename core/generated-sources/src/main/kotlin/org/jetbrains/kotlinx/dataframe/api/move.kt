@@ -1055,7 +1055,7 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  *    .intoIndexed { it, index -> "allUsers"["user$index"] }
  * ```
  *
- * @param [column] The [<code>Column With Path Selector And Indices</code>][ColumnsSelector] used to specify
+ * @param [newPathExpression] The [<code>Column With Path Selector And Indices</code>][ColumnsSelector] used to specify
  * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.intoIndexed(
@@ -1091,8 +1091,8 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  * df.move { age and weight }.under("info")
  * ```
  *
- * @param [column] A [<code>ColumnsSelector</code>][ColumnsSelector] that defines the path to a [<code>ColumnGroup</code>][ColumnGroup]
- * in the [<code>DataFrame</code>][DataFrame], where the selected columns will be moved.
+ * @param [column] The [<code>String</code>][String] name of the [<code>ColumnGroup</code>][ColumnGroup] in the [<code>DataFrame</code>][DataFrame]
+ * the selected columns will be moved under.
  */
 @Refine
 @Interpretable("MoveUnder0")
@@ -1223,7 +1223,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int, insideGroup: Boolean): D
  * df.move { colsAtAnyDepth { it.name() == "number" } }.toTop { it.parentName + it.name() }
  * ```
  *
- * @param [newColumnName] The special [<code>ColumnsSelector</code>][ColumnsSelector] for define name of moved column.
+ * @param [newColumnName] The special [<code>ColumnsSelector</code>][ColumnsSelector] for defining the name of the moved column.
  * Optional, the original name is used by default
  */
 @Refine

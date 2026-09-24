@@ -26,6 +26,8 @@ import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumTypeConversion
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public object Aggregators {
 
@@ -89,23 +91,25 @@ public object Aggregators {
     )
 
     private fun <Return : Number?> flattenReducingForNumbers(
+        valueTypeIfEmpty: KType,
         getReturnType: CalculateReturnType,
         statisticsParameters: Map<String, Any>,
         reducer: Reducer<Number, Return>,
     ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
-        inputHandler = NumberInputHandler(),
+        inputHandler = NumberInputHandler(valueTypeIfEmpty),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
         statisticsParameters = statisticsParameters,
     )
 
     private fun <Return : Number?> twoStepReducingForNumbers(
+        valueTypeIfEmpty: KType,
         getReturnType: CalculateReturnType,
         statisticsParameters: Map<String, Any>,
         reducer: Reducer<Number, Return>,
     ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
-        inputHandler = NumberInputHandler(),
+        inputHandler = NumberInputHandler(valueTypeIfEmpty),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
         statisticsParameters = statisticsParameters,
     )
@@ -160,6 +164,7 @@ public object Aggregators {
         ddof: Int,
         ->
         flattenReducingForNumbers(
+            valueTypeIfEmpty = typeOf<Double>(),
             getReturnType = stdTypeConversion,
             statisticsParameters = mapOf(
                 "skipNaN" to skipNaN,
@@ -175,6 +180,7 @@ public object Aggregators {
     // step two: Double -> Double
     public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(
+            valueTypeIfEmpty = typeOf<Double>(),
             getReturnType = meanTypeConversion,
             statisticsParameters = mapOf("skipNaN" to skipNaN),
             reducer = { type ->
@@ -257,13 +263,15 @@ public object Aggregators {
     // Byte -> Int
     // Short -> Int
     // Nothing -> Double
-    public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
-        twoStepReducingForNumbers(
-            getReturnType = sumTypeConversion,
-            statisticsParameters = mapOf("skipNaN" to skipNaN),
-            reducer = { type ->
-                sum(type, skipNaN)
-            },
-        )
-    }
+    public val sum: AggregatorOptionSwitch2<Boolean, KType, Number, Number>
+        by withTwoOptions { skipNaN: Boolean, valueTypeIfEmpty: KType ->
+            twoStepReducingForNumbers(
+                valueTypeIfEmpty = valueTypeIfEmpty,
+                getReturnType = sumTypeConversion,
+                statisticsParameters = mapOf("skipNaN" to skipNaN),
+                reducer = { type ->
+                    sum(type, skipNaN)
+                },
+            )
+        }
 }

@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `asIterable` operation in Kotlin Dataframe.
+Discover `asIterable` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `asIterable` operation in Kotlin Dataframe.
+Discover `asIterable` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `asIterable` operation in Kotlin Dataframe.
+Discover `asIterable` operation in Kotlin DataFrame.
 </link-summary>
 
 

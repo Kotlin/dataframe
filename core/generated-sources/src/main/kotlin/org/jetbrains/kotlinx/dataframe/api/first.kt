@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
  *
- * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @return The first value in this [<code>DataColumn</code>][DataColumn].
  *
@@ -49,7 +49,7 @@ public fun <T> DataColumn<T>.first(): T = get(0)
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
  *
- * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @return The first value in this [<code>DataColumn</code>][DataColumn], or `null` if the [<code>DataColumn</code>][DataColumn] is empty.
  */
@@ -67,7 +67,7 @@ public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
  *
  * For more information: [See `first` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html)
  *
- * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>firstOrNull</code>][firstOrNull], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -96,7 +96,7 @@ public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(
  *
  * For more information: [See `firstOrNull` on the documentation website.](https://kotlin.github.io/dataframe/firstoncolumn.html#firstornull)
  *
- * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast].
+ * See also [<code>first</code>][first], [<code>last</code>][last], [<code>take</code>][take], [<code>takeLast</code>][takeLast], [<code>single</code>][single].
  *
  * @param [predicate] A lambda expression used to get the first value
  * that satisfies a condition specified in this expression.
@@ -121,7 +121,8 @@ public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values
  * [<code>last</code>][DataFrame.last],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeWhile</code>][DataFrame.takeWhile],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>single</code>][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @return A [<code>DataRow</code>][DataRow] containing the first row in this [<code>DataFrame</code>][DataFrame].
  *
@@ -143,7 +144,8 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
  * [<code>last</code>][DataFrame.last],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeWhile</code>][DataFrame.takeWhile],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @return A [<code>DataRow</code>][DataRow] containing the first row in this [<code>DataFrame</code>][DataFrame], or `null` if the [<code>DataFrame</code>][DataFrame] is empty.
  */
@@ -161,7 +163,7 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -180,7 +182,8 @@ public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() e
  * [<code>last</code>][DataFrame.last],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeWhile</code>][DataFrame.takeWhile],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>single</code>][DataFrame.single], that fails unless there is exactly one row to return.
  *
  * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -208,7 +211,7 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -228,7 +231,8 @@ public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
  * [<code>last</code>][DataFrame.last],
  * [<code>take</code>][DataFrame.take],
  * [<code>takeWhile</code>][DataFrame.takeWhile],
- * [<code>takeLast</code>][DataFrame.takeLast].
+ * [<code>takeLast</code>][DataFrame.takeLast],
+ * [<code>singleOrNull</code>][DataFrame.singleOrNull], that returns `null` unless there is exactly one row to return.
  *
  * @param [predicate] A [<code>row filter</code>][RowFilter] used to get the first value
  * that satisfies a condition specified in this filter.
@@ -293,7 +297,7 @@ public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOr
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -364,7 +368,7 @@ public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *
@@ -447,7 +451,7 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * including through [<code>extension properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
  * for convenient and type-safe access.
  *
- * Fore more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
+ * For more information, [See RowFilter on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowfilter)
  *
  *
  *

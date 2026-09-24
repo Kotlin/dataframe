@@ -125,7 +125,7 @@ Annotate your Kotlin class with [`@DataSchema`](Compiler-Plugin.md#dataschema-de
 and the plugin will automatically generate type-safe extension properties 
 for your [`DataFrame`](DataFrame.md).
 Or alternatively, call [`toDataFrame()`](createDataFrame.md#todataframe) on a list of Kotlin or Java objects, 
-and the resulting `DataFrame` will have schema according to their properties or getters.
+and the resulting `DataFrame` will have a schema according to their properties or getters.
 
 See [compiler plugin examples](Compiler-Plugin.md#examples).
 

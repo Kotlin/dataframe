@@ -53,8 +53,7 @@ dataframes {
 }
 ```
 In this case, the output path will depend on your directory structure. 
-For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
-`. 
+For a project with package `org.example`, the path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt`. 
 
 Note that the name of the Kotlin file is derived from the name of the data file with the suffix
 `.Generated` and the package 

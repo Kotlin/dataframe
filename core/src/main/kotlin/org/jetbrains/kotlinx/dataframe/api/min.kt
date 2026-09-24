@@ -106,9 +106,9 @@ private typealias SetMinOrNullOperationArg = Nothing
 /**
  * Returns the minimum of the values in this [DataColumn].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * See also:
  * - [minOrNull][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
@@ -127,7 +127,7 @@ private typealias SetMinOrNullOperationArg = Nothing
  * df.weight.min()
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value in this column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -137,9 +137,9 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
 /**
  * Returns the minimum of the values in this [DataColumn], or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * See also:
  * - [min][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
@@ -159,7 +159,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  * df.weight.minOrNull()
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value in this column, or `null` if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -169,9 +169,9 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * Don't confuse [minBy] with [minOf][DataColumn.minOf], which returns the minimum [selector] value itself
  * instead of the element it belongs to.
@@ -189,7 +189,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * df.name.firstName.minBy { it.length }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -203,9 +203,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value, or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * Don't confuse [minByOrNull] with [minOfOrNull][DataColumn.minOfOrNull], which returns the minimum
  * [selector] value itself instead of the element it belongs to.
@@ -224,7 +224,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  * df.name.firstName.minByOrNull { it.length }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The first element for which [selector] returns the minimum value,
  *   or `null` if there are no values to compare.
@@ -238,9 +238,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * Returns the minimum of the values that the given [selector] returns
  * for each element of this [DataColumn].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][DataColumn.minBy], which returns the element the minimum
  * [selector] value belongs to instead of that value.
@@ -258,7 +258,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * df.name.firstName.minOf { it.length }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The minimum of the values [selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -272,9 +272,9 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * Returns the minimum of the values that the given [selector] returns
  * for each element of this [DataColumn], or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * Don't confuse [minOfOrNull] with [minByOrNull][DataColumn.minByOrNull], which returns the element
  * the minimum [selector] value belongs to instead of that value.
@@ -293,7 +293,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * df.name.firstName.minOfOrNull { it.length }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [selector] A function that returns the value to compare for each element of this column.
  * @return The minimum of the values [selector] returns,
  *   or `null` if there are no values to compare.
@@ -320,9 +320,9 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * See also:
  * - [rowMinOf][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
@@ -339,7 +339,7 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value of type [T] in this row, or `null` if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
@@ -351,9 +351,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * See also:
  * - [rowMinOfOrNull][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
@@ -371,7 +371,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * ```
  *
  * @param [T] The type of the values to compare. Only columns of this type are taken into account.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value of type [T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -388,9 +388,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * See also:
  * - [minFor][DataFrame.minFor] — the same, but for an explicit selection of columns.
@@ -407,7 +407,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * df.min()
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A single [DataRow] with the minimum of each suitable column of this [DataFrame].
  */
 @Refine
@@ -418,13 +418,13 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 /**
  * Returns the minimum of the values of each selected column of this [DataFrame] separately.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [MinDocs.AggregateColumnsSelectorSnippet]}
+ * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions].
  *
@@ -444,7 +444,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * df.minFor(skipNaN = true) { age into "minAge" and (weight into "minWeight") }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return A single [DataRow] with the minimum of each selected column.
@@ -459,11 +459,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 /**
  * Returns the minimum of the values of each selected column of this [DataFrame] separately.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions].
  *
@@ -482,7 +482,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A single [DataRow] with the minimum of each selected column.
  */
 @Refine
@@ -507,11 +507,11 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
@@ -531,7 +531,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * df.min { age and weight }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns.
@@ -545,11 +545,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [minOrNull][DataFrame.minOrNull] — returns `null` instead of throwing when there's
@@ -570,7 +570,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -595,11 +595,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
  * or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
@@ -620,7 +620,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * df.minOrNull { age and weight }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns,
@@ -635,11 +635,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
  * or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [min][DataFrame.min] — throws instead of returning `null` when there's nothing to compare.
@@ -661,7 +661,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * ```
  *
  * @param [columns] The names of the columns of this [DataFrame] to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -686,11 +686,11 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Returns the minimum of the values that the given [expression] returns
  * for each row of this [DataFrame].
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][DataFrame.minBy], which returns the row the minimum
  * [expression] value belongs to instead of that value.
@@ -710,7 +710,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * df.minOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The minimum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -724,11 +724,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * Returns the minimum of the values that the given [expression] returns
  * for each row of this [DataFrame], or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * Don't confuse [minOfOrNull] with [minByOrNull][DataFrame.minByOrNull], which returns the row the
  * minimum [expression] value belongs to instead of that value.
@@ -748,7 +748,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * df.minOfOrNull { (weight ?: 0) / age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The minimum of the values [expression] returns,
  *   or `null` if there are no values to compare.
@@ -762,11 +762,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  * Returns the first row of this [DataFrame] for which the given [expression]
  * returns the minimum value.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum [expression] value
  * itself instead of the row it belongs to.
@@ -788,7 +788,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  * df.minBy { (weight ?: 0) / age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
@@ -802,9 +802,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * Returns the first row of this [DataFrame] that has the smallest value
  * in the column with the given name.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.ThrowsOnEmptySnippet]}
+ * @include [MinDocs.ThrowsOnEmptySnippet]
  *
  * Don't confuse [minBy] with [minOf][DataFrame.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row it belongs to.
@@ -826,7 +826,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * ```
  *
  * @param [column] The name of the column of this [DataFrame] to compare the rows by.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The first [DataRow] with the smallest value in the given column.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -851,11 +851,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * Returns the first row of this [DataFrame] for which the given [expression] returns
  * the minimum value, or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
  * [expression] value itself instead of the row it belongs to.
@@ -873,7 +873,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * df.minByOrNull { age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return The first [DataRow] for which [expression] returns the minimum value,
  *   or `null` if there are no values to compare.
@@ -887,9 +887,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * Returns the first row of this [DataFrame] that has the smallest value in the column with
  * the given name, or `null` if there is nothing to compare.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullOnEmptySnippet]}
+ * @include [MinDocs.NullOnEmptySnippet]
  *
  * Don't confuse [minByOrNull] with [minOfOrNull][DataFrame.minOfOrNull], which returns the minimum
  * value a row expression returns itself, instead of the row it belongs to.
@@ -910,7 +910,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * ```
  *
  * @param [column] The name of the column of this [DataFrame] to compare the rows by.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return The first [DataRow] with the smallest value in the given column,
  *   or `null` if there are no values to compare.
  */
@@ -944,9 +944,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * See also:
  * - [minFor][Grouped.minFor] — the same, but for an explicit selection of columns.
@@ -957,7 +957,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -965,7 +965,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * df.groupBy { city }.min()
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the minimum of each suitable column per group.
  */
 @Refine
@@ -980,13 +980,13 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * Returns a new [DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [MinDocs.AggregateColumnsSelectorSnippet]}
+ * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions].
  *
@@ -999,7 +999,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1007,7 +1007,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * df.groupBy { city }.minFor { age and weight }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
@@ -1026,11 +1026,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * Returns a new [DataFrame] with one row per group, containing the group key columns
  * and a column with the minimum for each selected column.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions].
  *
@@ -1043,7 +1043,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1052,7 +1052,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the minimum of each selected column per group.
  */
 @Refine
@@ -1083,11 +1083,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * That column is named [name], or, if [name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions].
  *
@@ -1100,7 +1100,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1112,7 +1112,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"min"` otherwise.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
@@ -1133,11 +1133,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * That column is named [name], or, if [name] is `null`, after the selected column
  * if exactly one column is selected, and `"min"` otherwise.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions].
  *
@@ -1150,7 +1150,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1163,7 +1163,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"min"` otherwise.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
 @Refine
@@ -1197,11 +1197,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * Returns a new [DataFrame] with one row per group, containing the group key columns and
  * a single column with the minimum per group, named [name] (or `"min"` if [name] is `null`).
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][GroupBy.minBy], which returns the row of each group for which
  * the expression returns the minimum value, instead of that value.
@@ -1213,7 +1213,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * {@include [DocumentationUrls.GroupByAggregationStatistics]}
+ * @include [DocumentationUrls.GroupByAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1222,7 +1222,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * ```
  *
  * @param [name] The name of the resulting column. If `null` (the default), `"min"` is used.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [expression] The [RowExpression] to compute the value to compare for each row.
  * @return A new [DataFrame] with the group keys and a single minimum per group.
  */
@@ -1238,11 +1238,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  * Reduces each group of this [GroupBy] to the first row for which the given [rowExpression]
  * returns the minimum value.
  *
- * {@include [MinDocs.ReducedGroupBySnippet]}
+ * @include [MinDocs.ReducedGroupBySnippet]
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1261,7 +1261,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  * df.groupBy { city }.minBy { age }.concat()
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to compute the value to compare for each row.
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   for which [rowExpression] returns the minimum value.
@@ -1283,9 +1283,9 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * Reduces each group of this [GroupBy] to the first row that has the smallest value
  * in the column with the given name.
  *
- * {@include [MinDocs.ReducedGroupBySnippet]}
+ * @include [MinDocs.ReducedGroupBySnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
@@ -1306,7 +1306,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [ReducedGroupBy] with, for each group, the first row
  *   that has the smallest value in the given column.
  */
@@ -1333,9 +1333,9 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1348,7 +1348,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1357,7 +1357,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * ```
  *
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A single [DataRow] with the minimum of each suitable column per [pivot] group.
  */
 public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
@@ -1370,13 +1370,13 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [MinDocs.AggregateColumnsSelectorSnippet]}
+ * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1389,7 +1389,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1400,7 +1400,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * ```
  *
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
@@ -1418,11 +1418,11 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
  * of each selected column of the corresponding group.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1435,7 +1435,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1445,7 +1445,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * @param [columns] The names of the columns to compute the minimum of.
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A single [DataRow] with the minimum of each selected column per [pivot] group.
  */
 public fun <T> Pivot<T>.minFor(
@@ -1477,11 +1477,11 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1493,7 +1493,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1501,7 +1501,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * df.pivot { city }.min { age and weight }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
  *   in the selected columns.
@@ -1518,11 +1518,11 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the smallest
  * value among all the values in the selected columns of the corresponding group.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1534,7 +1534,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1543,7 +1543,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A single [DataRow] with, per [pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -1571,11 +1571,11 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the minimum
  * of the expression's results for the rows of the corresponding group.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
@@ -1590,7 +1590,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1598,7 +1598,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * df.pivot { city }.minOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A single [DataRow] with, per [pivot] group, the minimum of the expression's results.
  */
@@ -1611,13 +1611,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
  * for which the given [rowExpression] returns the minimum value.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * {@include [MinDocs.ReducedPivotSnippet]}
+ * @include [MinDocs.ReducedPivotSnippet]
  *
  * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value the expression
  * returns itself, instead of the row.
@@ -1637,7 +1637,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  * df.pivot { city }.minBy { (weight ?: 0) / age }.with { name }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivot] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
@@ -1658,11 +1658,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the first [row][DataRow]
  * that has the smallest value in the given [column].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * {@include [MinDocs.ReducedPivotSnippet]}
+ * @include [MinDocs.ReducedPivotSnippet]
  *
  * Don't confuse [minBy] with [minOf][Pivot.minOf], which returns the minimum value a row expression
  * returns itself, instead of the row.
@@ -1684,7 +1684,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [ReducedPivot] holding, per group, the first row with the smallest value
  *   in the given column.
  */
@@ -1711,9 +1711,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1727,7 +1727,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1736,7 +1736,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * ```
  *
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [DataFrame] with the minimum of each suitable column per group.
  */
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -1749,13 +1749,13 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * Returns a [DataFrame] where each cell contains the minimum of each selected column
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [MinDocs.AggregateColumnsSelectorSnippet]}
+ * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
  * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1770,7 +1770,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1779,7 +1779,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * ```
  *
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A [DataFrame] with the minimum of each selected column per group.
@@ -1797,11 +1797,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * Returns a [DataFrame] where each cell contains the minimum of each selected column
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinForSelectingOptions], or check out the
  * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1816,7 +1816,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1826,7 +1826,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * @param [columns] The names of the columns to compute the minimum of.
  * @include [MinDocs.SeparateParam]
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [DataFrame] with the minimum of each selected column per group.
  */
 public fun <T> PivotGroupBy<T>.minFor(
@@ -1859,11 +1859,11 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * selected columns of the group corresponding to that [pivot] key (column)
  * and [groupBy] key (row).
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
  * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1877,7 +1877,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1885,7 +1885,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * df.pivot { city }.groupBy { name.lastName }.min { age and weight }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [columns] The [ColumnsSelector] used to select the columns to compute the minimum of.
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
@@ -1903,11 +1903,11 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * selected columns of the group corresponding to that [pivot] key (column)
  * and [groupBy] key (row).
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
- * {@include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]}
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See [Selecting Columns][MinDocs.MinSelectingOptions], or check out the
  * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1921,7 +1921,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1930,7 +1930,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -1958,11 +1958,11 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * Returns a [DataFrame] where each cell contains the minimum of the expression's results for the
  * rows of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
- * {@include [MinDocs.NullCellOnEmptySnippet]}
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
@@ -1978,7 +1978,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * - {@include [MinDocsLink]} — an overview of all `min` modes.
  *
  * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * {@include [DocumentationUrls.PivotAggregationStatistics]}
+ * @include [DocumentationUrls.PivotAggregationStatistics]
  *
  * ### Example
  * ```kotlin
@@ -1986,7 +1986,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * df.pivot { city }.groupBy { name.lastName }.minOf { (weight ?: 0) / age }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the minimum of the expression's results.
  */
@@ -1999,13 +1999,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
  * the first [row][DataRow] for which the given [rowExpression] returns the minimum value.
  *
- * {@include [MinDocs.RowExpressionSnippet]}
+ * @include [MinDocs.RowExpressionSnippet]
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * {@include [MinDocs.ReducedPivotGroupBySnippet]}
+ * @include [MinDocs.ReducedPivotGroupBySnippet]
  *
  * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value the
  * expression returns itself, instead of the row.
@@ -2026,7 +2026,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  * df.pivot { city }.groupBy { name.lastName }.minBy { (weight ?: 0) / age }.with { name.firstName }
  * ```
  *
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
@@ -2047,11 +2047,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group
  * the first [row][DataRow] that has the smallest value in the given [column].
  *
- * {@include [MinDocs.InputValuesSnippet]}
+ * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
  *
- * {@include [MinDocs.ReducedPivotGroupBySnippet]}
+ * @include [MinDocs.ReducedPivotGroupBySnippet]
  *
  * Don't confuse [minBy] with [minOf][PivotGroupBy.minOf], which returns the minimum value a row
  * expression returns itself, instead of the row.
@@ -2074,7 +2074,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  * ```
  *
  * @param [column] The name of the column to compare the rows by.
- * @include [MinDocs.SkipNaNParam]
+ * @include [MinDocs.SkipNanParam]
  * @return A [ReducedPivotGroupBy] holding, per group, the first row with the smallest value
  *   in the given column.
  */

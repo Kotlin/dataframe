@@ -120,6 +120,9 @@ benchmark {
         register("sort") {
             include("SortingBenchmark")
         }
+        register("groupBy") {
+            include("GroupByBenchmark")
+        }
     }
 }
 
@@ -367,7 +370,7 @@ kotlinPublications {
     publication {
         publicationName = "core"
         artifactId = "dataframe-core"
-        description = "Dataframe core API"
+        description = "Kotlin DataFrame: core API"
         packageName = artifactId
     }
 }

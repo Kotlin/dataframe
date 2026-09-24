@@ -32,7 +32,7 @@ val df = dataFrameOf(
 
 <!---END-->
 
-Create DataFrame with nested columns inplace:
+Create DataFrame with nested columns in place:
 
 <!---FUN createNestedDataFrameInplace-->
 
@@ -305,7 +305,7 @@ val df = students.toDataFrame {
 
 Previously mentioned [`DataFrame`](DataFrame.md) constructors throw an exception when column names are duplicated. 
 When implementing a custom operation involving multiple [`DataFrame`](DataFrame.md) objects,
-or computed columns or when parsing some third-party data,
+or computed columns, or when parsing some third-party data,
 it might be desirable to disambiguate column names instead of throwing an exception. 
 
 <!---FUN duplicatedColumns-->

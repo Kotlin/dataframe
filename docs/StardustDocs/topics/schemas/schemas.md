@@ -160,7 +160,7 @@ It will also **automatically update** the schema during operations that modify t
 ### Plugins
 
 > The current Gradle and KSP plugins are **deprecated**. 
-> Their latest release is 1.0.0-Beta4 and will not have future releases.
+> Their latest release is 1.0.0-Beta4; there will be no future releases.
 >
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugins.  
 {style="warning"}

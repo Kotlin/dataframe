@@ -93,7 +93,7 @@ private interface Params {
     /**
      * @param nestedMarkerNameProvider Strategy for generating names for nested data schema declarations (markers).
      *  - [MarkerNameProvider.fromColumnName] (default) generates descriptive names from the column names.
-     *  - [MarkerNameProvider.PredefinedName] will use the name of root marker for all nested declarations and append numerical suffix to resolve name conflicts.
+     *  - [MarkerNameProvider.PredefinedName] will use the name of the root marker for all nested declarations and append a numerical suffix to resolve name conflicts.
      */
     typealias NestedMarkerNameProvider = Nothing
 }

@@ -14,7 +14,7 @@ Aggregating summary statistics:
 * [median](median.md)
 * [percentile](percentile.md)
 
-Every summary statistics can be used in aggregations of:
+Every summary statistic can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
 * [`GroupBy DataFrame`](#groupby-statistics)
@@ -79,7 +79,7 @@ df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 
 ### groupBy statistics
 
-When statistics are applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
+When a statistic is applied to a [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
 
 If a statistic is applied in a mode that returns a single value for every data group,
 it will be stored in a single column named according to the statistic name.
@@ -121,7 +121,7 @@ df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
 
 ### pivot statistics
 
-When statistics are applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
+When a statistic is applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
 
 If a statistic is applied in a mode that returns a single value for every data group,
 it will be stored in a `DataFrame` cell without any name.
