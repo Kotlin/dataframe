@@ -75,8 +75,13 @@ Explore our extensive collection of practical examples and real-world analytics 
   showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
   that are generated on-the-fly in the IDEA project.
 
-* [Kotlin DataFrame Compiler Plugin Maven Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example)  
+* [Kotlin DataFrame Compiler Plugin Maven Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-maven-example)  
   — a simple Maven project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
+  showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
+  that are generated on-the-fly in the IDEA project.
+
+* [Kotlin DataFrame Compiler Plugin Kotlin Toolchain Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-kotlin-toolchain-example)  
+  — a simple Kotlin Toolchain project demonstrating the usage of the [compiler plugin](Compiler-Plugin.md),  
   showcasing DataFrame expressions with [extension properties](extensionPropertiesApi.md)  
   that are generated on-the-fly in the IDEA project.
 
