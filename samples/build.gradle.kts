@@ -2,6 +2,7 @@ import io.github.devcrocod.korro.KorroGenerateTask
 import org.gradle.kotlin.dsl.libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.nio.file.Files
+import kotlin.io.path.div
 import kotlin.io.path.name
 
 plugins {
@@ -211,4 +212,21 @@ tasks.register("updateShadowResources") {
 
         mdFile.writeText(content)
     }
+}
+
+// datasets from the root `data/` folder that are used in the docs
+val docsDatasets = listOf(
+    "movies.csv",
+    "jetbrains_repositories.csv",
+    "titanic.csv",
+)
+
+tasks.register<Copy>("syncDocsDatasets") {
+    group = "documentation"
+    description = "Copies datasets used in the docs from data/ to docs/StardustDocs/resources/datasets"
+
+    from(rootProject.file("data")) {
+        include(docsDatasets)
+    }
+    into(resourcesDir.toPath() / "datasets")
 }
