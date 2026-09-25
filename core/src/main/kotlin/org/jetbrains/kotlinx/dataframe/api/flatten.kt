@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * Removes {@get [FlattenDocs.GROUPS]} column groups in the [DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [Selecting Columns][FlattenDocs.FlattenSelectingOptions] for all the selecting options

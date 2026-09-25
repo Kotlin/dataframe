@@ -17,8 +17,8 @@ interface JoinedDataRow: LeftDataRow {
 ```
 
 This function is a [join](join.md) variant that lets you match data using any expression that returns a Boolean, 
-which also gives opportunity to perform operations that require values from both matching rows.
-Can be helpful if the data you want to join wasn't designed relational and requires heuristics to tell if rows are matching,
+which also gives you the opportunity to perform operations that require values from both matching rows.
+Can be helpful if the data you want to join wasn't designed to be relational and requires heuristics to tell if rows are matching,
 or has relations other than `equals`.
 
 For example, you can match rows based on:
@@ -167,7 +167,7 @@ campaigns.fullJoinWith(visits) {
 
 #### Exclude join
 
-Can be viewed as **filterJoin** with logically opposite predicate 
+Can be viewed as **filterJoin** with a logically opposite predicate.
 
 <!---FUN excludeJoinWith-->
 <tabs>
@@ -194,7 +194,7 @@ campaigns.excludeJoinWith(visits) {
 
 #### Cross join
 
-It can also be called cross product of two [`DataFrame`](DataFrame.md) objects.
+It can also be called the cross product of two [`DataFrame`](DataFrame.md) objects.
 
 <!---FUN crossProduct-->
 
@@ -207,7 +207,7 @@ campaigns.joinWith(visits) { true }
 
 ### Difference from join
 
-[join](join.md) tries to take advantage of knowledge that data in matching columns is the same (because `equals` is used) to minimize number of columns in the resulting dataframe.
+[join](join.md) tries to take advantage of the knowledge that data in matching columns is the same (because `equals` is used) to minimize the number of columns in the resulting dataframe.
 
 <!---FUN compareInnerColumns-->
 
@@ -218,7 +218,7 @@ df1.innerJoin(df2, "index", "age")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html" width="100%"/>
 <!---END-->
 
-Columns that were used in the condition: `index`, `age` - are present only once. Numerical suffix is used to disambiguate columns that are not used in the condition.
+Columns that were used in the condition: `index`, `age` - are present only once. A numerical suffix is used to disambiguate columns that are not used in the condition.
 Compare it to an equivalent `joinWith`:
 
 <!---FUN compareInnerValues-->
