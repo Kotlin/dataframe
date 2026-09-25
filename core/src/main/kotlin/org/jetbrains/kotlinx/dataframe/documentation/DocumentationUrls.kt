@@ -355,6 +355,13 @@ public interface DocumentationUrls {
         public typealias TypeConversion = Nothing
     }
 
+    /** [See `std` on the documentation website.]({@include [Url]}/std.html) */
+    public interface Std {
+
+        /** [See "`std` Type Conversion" on the documentation website.]({@include [Url]}/std.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
     public interface MinMax {
 
