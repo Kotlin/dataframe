@@ -159,7 +159,7 @@ DataFrame.readCsv("titanic.csv")
 
 > The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
-The Extension Properties API provides column names and types at compile-time, 
+The Extension Properties API provides column names and -types at compile-time, 
 while the String API could be used with incorrect column names or types and break at runtime.
 
 Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with
