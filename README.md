@@ -24,6 +24,10 @@ Automatically generated archives of example projects.
 
 **Download:** [kotlin-dataframe-plugin-gradle-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
 
+### Kotlin Dataframe Plugin Kotlin Toolchain Example
+
+**Download:** [kotlin-dataframe-plugin-kotlin-toolchain-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-kotlin-toolchain-example.zip)
+
 ### Kotlin Dataframe Plugin Maven Example
 
 **Download:** [kotlin-dataframe-plugin-maven-example.zip](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
@@ -54,6 +58,6 @@ Automatically generated archives of example projects.
 
 ---
 
-Last updated: 2026-09-21 13:04 UTC
+Last updated: 2026-09-25 10:19 UTC
 
-Source commit: 4705136664ff7b8c3a3daf7b3421f1d2be0353ab
+Source commit: d50efb9964938d65d83b1f7559d3a4c6b7fcd443
