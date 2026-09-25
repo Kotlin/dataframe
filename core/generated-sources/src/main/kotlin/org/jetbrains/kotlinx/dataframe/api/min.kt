@@ -14,6 +14,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs.InputValuesSnippet
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -223,6 +227,13 @@ internal interface MinDocs : CommonMinMaxDocs {
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
  * See also:
  * - [<code>minOrNull</code>][DataColumn.minOrNull] — returns `null` instead of throwing for a column with nothing to compare.
  * - [<code>minOf</code>][DataColumn.minOf] — the minimum of the values a selector returns for each element.
@@ -271,6 +282,13 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * See also:
  * - [<code>min</code>][DataColumn.min] — throws instead of returning `null` for a column with nothing to compare.
@@ -409,6 +427,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -426,6 +448,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][DataColumn.minBy], which returns the element the minimum
  * [<code>selector</code>][selector] value belongs to instead of that value.
@@ -461,6 +490,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -478,6 +511,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * Don't confuse [<code>minOfOrNull</code>][minOfOrNull] with [<code>minByOrNull</code>][DataColumn.minByOrNull], which returns the element
  * the minimum [<code>selector</code>][selector] value belongs to instead of that value.
@@ -525,6 +565,9 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
  *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
+ *
  *
  *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
@@ -545,6 +588,13 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
  * See also:
  * - [<code>rowMinOf</code>][DataRow.rowMinOf] — throws instead of returning `null` when there's nothing to compare.
  * - [<code>rowMaxOfOrNull</code>][DataRow.rowMaxOfOrNull] — the mirror operation.
@@ -559,7 +609,8 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  * df[0].rowMinOfOrNull<Int>()
  * ```
  *
- * @param [T] The type of the values to compare. Only columns of this type are taken into account.
+ * @param [T] The type of the values to compare.
+ *   Only columns of this type are taken into account.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -573,6 +624,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  *
  * Only the values in the columns of type [<code>T</code>][T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -594,6 +648,13 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
  *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
  * See also:
  * - [<code>rowMinOfOrNull</code>][DataRow.rowMinOfOrNull] — returns `null` instead of throwing
  *   when there's nothing to compare.
@@ -609,7 +670,8 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * df[0].rowMinOf<Int>()
  * ```
  *
- * @param [T] The type of the values to compare. Only columns of this type are taken into account.
+ * @param [T] The type of the values to compare.
+ *   Only columns of this type are taken into account.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -628,6 +690,9 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -735,7 +800,7 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column.
  */
@@ -792,7 +857,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * df.minFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns to compute the minimum of.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -839,6 +904,13 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  *
  *
@@ -895,7 +967,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -927,6 +999,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  *
  *
@@ -962,7 +1041,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * df.min("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns to compute the minimum of.
+ *   The values in these columns must be mutually comparable, else an [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1009,6 +1089,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  *
  *
@@ -1066,7 +1153,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame]
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
  *   to compute the minimum of.
  * @return The smallest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
@@ -1099,6 +1186,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  *
  *
@@ -1135,7 +1229,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * df.minOrNull("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [<code>DataFrame</code>][DataFrame] to compute the minimum of.
+ * @param [columns] The names of the columns to compute the minimum of.
+ *   The values in these columns must be mutually comparable, else an [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1173,6 +1268,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1190,6 +1289,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * Throws a [<code>NoSuchElementException</code>][NoSuchElementException] when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][DataFrame.minBy], which returns the row the minimum
  * [<code>expression</code>][expression] value belongs to instead of that value.
@@ -1212,7 +1318,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to compare
+ *   for each row.
  * @return The minimum of the values [<code>expression</code>][expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -1235,6 +1342,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1252,6 +1363,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * Returns `null` when there is nothing left to compare,
  * for instance when the input is empty or contains only `null`
  * (or, if [skipNaN] is `true`, only `null` and [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN]) values.
+ *
+ *
+ *
+ * The result has the same type as the input values.
+ *
+ * For more information about the resulting types:
+ * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
  *
  * Don't confuse [<code>minOfOrNull</code>][minOfOrNull] with [<code>minByOrNull</code>][DataFrame.minByOrNull], which returns the row the
  * minimum [<code>expression</code>][expression] value belongs to instead of that value.
@@ -1274,7 +1392,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to compare
+ *   for each row.
  * @return The minimum of the values [<code>expression</code>][expression] returns,
  *   or `null` if there are no values to compare.
  */
@@ -1338,7 +1457,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to compare
+ *   for each row.
  * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the minimum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -1465,7 +1585,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to compare
+ *   for each row.
  * @return The first [<code>DataRow</code>][DataRow] for which [<code>expression</code>][expression] returns the minimum value,
  *   or `null` if there are no values to compare.
  */
@@ -1553,6 +1674,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
+ *
  *
  *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
@@ -1584,7 +1708,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1654,7 +1780,9 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1666,7 +1794,7 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and the minimum of each selected column per group.
  */
@@ -1721,7 +1849,9 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1801,7 +1931,9 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1814,10 +1946,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"min"` otherwise.
+ *   This name needs to be unique, else a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the minimum of.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
 @Refine
@@ -1874,7 +2008,9 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1885,9 +2021,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   The values in these columns must be mutually comparable, else an [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"min"` otherwise.
+ *   This name needs to be unique, else a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1934,6 +2072,10 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1964,7 +2106,9 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * - [<code>aggregate</code>][Grouped.aggregate] — the general way to aggregate groups.
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics),
+ *
+ *
+ * For more information: [See "`groupBy` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#groupby-statistics), and
  * [See "`GroupBy` Aggregation Statistics" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#aggregation-statistics)
  *
  * ### Example
@@ -1973,11 +2117,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  * df.groupBy { city }.minOf("minRatio") { (weight ?: 0) / age }
  * ```
  *
- * @param [name] The name of the resulting column. If `null` (the default), `"min"` is used.
+ * @param [name] The name of the resulting column.
+ *   If `null` (the default), `"min"` is used.
+ *   This name needs to be unique, else a [<code>DuplicateColumnPathInsertException</code>][org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][RowExpression] to compute the value to compare for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to compare
+ *   for each row.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single minimum per group.
  */
 @Refine
@@ -2135,6 +2282,9 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
+ *
  *
  *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
@@ -2151,12 +2301,16 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
@@ -2168,7 +2322,9 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2211,12 +2367,16 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2239,7 +2399,9 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2256,7 +2418,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A single [<code>DataRow</code>][DataRow] with the minimum of each selected column per [<code>pivot</code>][pivot] group.
  */
@@ -2289,12 +2451,16 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2310,7 +2476,9 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2373,12 +2541,16 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2393,7 +2565,9 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2405,7 +2579,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the minimum of.
  * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -2437,12 +2612,16 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2457,7 +2636,9 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2467,6 +2648,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   The values in these columns must be mutually comparable, else an [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -2507,6 +2689,10 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2521,12 +2707,16 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
@@ -2540,7 +2730,9 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  * - [<code>Pivot aggregation</code>][PivotDocs.Aggregation] — all other ways to aggregate a [<code>Pivot</code>][Pivot].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2706,6 +2898,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
  *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the minimum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
+ *
  *
  *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
@@ -2722,12 +2917,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -2740,7 +2939,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2783,12 +2984,16 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2813,7 +3018,9 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2828,7 +3035,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsForAggregateSelector</code>][ColumnsForAggregateSelector] used to select the columns
+ * @param [columns] The [<code>ColumnsForAggregateSelector</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector] used to select the columns
  *   to compute the minimum of.
  * @return A [<code>DataFrame</code>][DataFrame] with the minimum of each selected column per group.
  */
@@ -2861,12 +3068,16 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2884,7 +3095,9 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2948,12 +3161,16 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2970,7 +3187,9 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -2982,7 +3201,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][ColumnsSelector] used to select the columns to compute the minimum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the minimum of.
  * @return A [<code>DataFrame</code>][DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
@@ -3015,12 +3235,16 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -3037,7 +3261,9 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
@@ -3047,6 +3273,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   The values in these columns must be mutually comparable, else an [<code>IllegalStateException</code>][IllegalStateException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -3087,6 +3314,10 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -3101,12 +3332,16 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * Result cells for which there is nothing left to compare
- * (for instance, because the input was empty or contained only `null` values)
+ * Result cells for which there exists a group, but there is nothing left to compare
+ * (for instance, because the group was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
+ *
+ *
+ *
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
@@ -3121,7 +3356,9 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *   a [<code>PivotGroupBy</code>][PivotGroupBy].
  * - [<code>The Min Operation</code>][org.jetbrains.kotlinx.dataframe.api.MinDocs] — an overview of all `min` modes.
  *
- * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics),
+ *
+ *
+ * For more information: [See "`pivot` statistics" on the documentation website.](https://kotlin.github.io/dataframe/summarystatistics.html#pivot-statistics), and
  * [See "`Pivot` Aggregation statistics" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#aggregation-statistics)
  *
  * ### Example
