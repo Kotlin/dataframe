@@ -46,6 +46,15 @@ this chain before changing type mapping — the type variables `J → D → P` f
 4. Type **P**: `getTargetColumnSchema(...)` → `ColumnSchema` and `buildDataColumn(...)` → the final `DataColumn<P>`
    (post-processes `java.sql.Array`→Kotlin arrays).
 
+**H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
+→ `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
+value classes. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
+H2, and which field does that differs per case: `MariaDb` keys its blob branch on `jdbcType != Types.BLOB`,
+because H2 in MariaDB mode reports `Types.BLOB` and does return a real `java.sql.Blob`; `MsSql` keys its
+`Short` branch on `javaClassName`, because H2 in MSSQL mode reports `Types.SMALLINT` too but returns an
+`Integer`. Neither field is the right discriminator in general — `io/h2/*H2Test.kt` is the oracle that
+decides, so run it before believing either.
+
 Other overridable behavior: `quoteIdentifier` (per-DB identifier quoting), `buildSqlQueryWithLimit`/
 `buildSelectTableQueryWithLimit`, `configureReadStatement` (fetch size/direction, query timeout), `createConnection`
 (SQLite needs read-only set at connect time), `isSystemTable`, `buildTableMetadata`, `tableTypes`.
@@ -98,9 +107,25 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
 - `io/local/` — integration tests against a **real DBMS** (`postgresTest`, `mysqlTest`, `mariadbTest`,
   `mssqlTest`, `duckDbTest`, `imdbTest`). They connect to either a Dockerized or a locally installed server;
   don't point them at a production database.
-- `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping.
+- `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
+  `TableColumnMetadata` rather than a live driver.
 - SQLite tests at the top level use bundled `.sqlite` files in `src/test/resources/`.
 - `commonTestScenarios.kt` holds the shared assertions reused across databases.
+
+**The column-type audit** is the second half of that mapping coverage and lives in its own two files
+rather than in `commonTestScenarios.kt`, because it carries a large per-database SQL fixture with it:
+
+- `columnTypeAudit.kt` — two assertions, both driven by a probe table with one column per SQL type.
+  `assertColumnTypesMatchValues` checks the invariant behind #2087, that the type the library declares
+  accepts the value the driver returns; `assertColumnTypes` pins the type each column is actually read
+  as, which is the claim the `readSqlTypeMapping_*.md` pages publish.
+- `columnTypeAuditTables.kt` — the probe tables and expected-type maps for the containerized databases;
+  the embedded ones live next to their test in `embeddedColumnTypeAuditTest.kt`.
+
+Both assertions are called from every `*TestBase` and from `EmbeddedColumnTypeAuditTest`, so all seven
+databases are covered. The expected types must come from a real run: read them off the failure message
+of a run with an incomplete map rather than deriving them by hand. Only the H2/SQLite/DuckDB half runs
+in the ordinary `test` task — the rest needs `testcontainersTest` and a working Docker.
 
 Test-only driver dependencies (MariaDB, MySQL, MSSQL, H2, SQLite, PostgreSQL, DuckDB, plus HikariCP and
 kotest-assertions) are declared `testImplementation` in `build.gradle.kts`. Run just this module with
