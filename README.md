@@ -101,12 +101,12 @@ repositories {
 
 Refer to
 [Get started with Kotlin DataFrame on Gradle](https://kotlin.github.io/dataframe/setupgradle.html)
-for detailed setup instructions (including Groovy DSL).
+for detailed setup instructions (including Groovy DSL), and how to set up the compiler plugin.
 
 * You can also check the [Custom Gradle Configuration](https://kotlin.github.io/dataframe/setupcustomgradle.html) if you don't need certain formats as dependencies.
 * For Android projects, see [Setup Kotlin DataFrame on Android](https://kotlin.github.io/dataframe/setupandroid.html).
 * See [IDEA Gradle example projects](examples) 
-and [the Gradle project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
+and [a Gradle example project with the Kotlin DataFrame compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
 
 ### Maven
 
@@ -133,8 +133,29 @@ Make sure that you have `mavenCentral` in the list of repositories:
 
 Refer to
 [Get started with Kotlin DataFrame on Maven](https://kotlin.github.io/dataframe/setupmaven.html).
+This also describes how to set up the compiler plugin.
 
-* See [the Maven project with the Kotlin DataFrame Compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
+* See [a Maven example project with the Kotlin DataFrame compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
+
+### The Kotlin Toolchain
+
+Now the [Kotlin Toolchain](https://kotlin-toolchain.org/) exists as a unified entry point into Kotlin,
+you can use it to get started with Kotlin DataFrame too.
+
+Add the DataFrame library dependency to your `module.yaml` file:
+
+```yaml
+dependencies:
+  - org.jetbrains.kotlinx:dataframe:1.0.0-rc01
+```
+
+`mavenCentral` is already configured by default in the Kotlin Toolchain, so no need to add it manually.
+
+Refer to
+[Get started with Kotlin DataFrame on the Kotlin Toolchain](https://kotlin.github.io/dataframe/setupkotlintoolchain.html).
+This also describes how to set up the compiler plugin.
+
+* See [a Kotlin Toolchain example project with the Kotlin DataFrame compiler plugin](examples/projects/kotlin-dataframe-plugin-kotlin-toolchain-example).
 
 ### Kotlin Notebook
 
