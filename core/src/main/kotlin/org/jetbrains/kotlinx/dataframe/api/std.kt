@@ -60,7 +60,7 @@ import kotlin.reflect.typeOf
  *
  * ### Delta Degrees of Freedom (ddof)
  *
- * All `std` operations take a [`ddof`][DdofParam] ("Delta Degrees of Freedom") argument.
+ * All `std` operations take a [`ddof`][Ddof] ("Delta Degrees of Freedom") argument.
  * The divisor used in the calculation is `N - ddof`, where `N` is the number of values.
  * The default is `1`, meaning DataFrame applies
  * [Bessel's correction](https://en.wikipedia.org/wiki/Bessel%27s_correction) and computes the
@@ -580,13 +580,18 @@ internal interface StdDocs : CommonStatisticsDocs {
     typealias ExpressionResultColumnNameParam = Nothing
 
     /**
-     * @comment The shared `ddof` parameter documentation. KDoc-snippet.
-     *
-     * @param [ddof\] "Delta Degrees of Freedom". The divisor used in the calculation is `N - ddof`,
+     * "Delta Degrees of Freedom". The divisor used in the calculation is `N - ddof`,
      *   where `N` is the number of values. The default is `1`, which applies
      *   [Bessel's correction](https://en.wikipedia.org/wiki/Bessel%27s_correction) and computes the
      *   unbiased sample standard deviation (as in R). Use `0` for the population standard deviation
      *   (as in Numpy).
+     */
+    typealias Ddof = Nothing
+
+    /**
+     * @comment The shared `ddof` parameter documentation. KDoc-snippet.
+     *
+     * @param [ddof\] {@include [Ddof]}
      */
     @ExcludeFromSources
     typealias DdofParam = Nothing
@@ -662,7 +667,7 @@ public inline fun <T, reified R : Number?> DataColumn<T>.stdOf(
  * are taken into account; all other columns of the row are ignored.
  * @include [StdDocs.ColumnGroupsIgnoredSnippet]
  *
- * Since the values of different columns are combined together, the result is the standard deviation
+ * Since the values of different columns are combined, the result is the standard deviation
  * of all those values converted to their common type.
  *
  * @include [StdDocs.SupportedTypesSnippet]
