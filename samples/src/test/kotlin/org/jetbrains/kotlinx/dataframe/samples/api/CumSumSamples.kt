@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.cumSum
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
@@ -15,7 +16,7 @@ class CumSumSamples : DataFrameSampleHelper("cumSum", "api") {
     fun cumSumBigNumbersManually() {
         // SampleStart
         // exact cumulative sum, computed with Java `BigDecimal` arithmetic
-        df.amount.toList().runningReduce(BigDecimal::add)
+        df.amount.toList().runningReduce(BigDecimal::add).toColumn("amount")
         // SampleEnd
     }
 

@@ -47,7 +47,7 @@ For a `BigDecimal` column `amount`, the exact cumulative sum can be computed wit
 
 ```kotlin
 // exact cumulative sum, computed with Java `BigDecimal` arithmetic
-df.amount.toList().runningReduce(BigDecimal::add)
+df.amount.toList().runningReduce(BigDecimal::add).toColumn("amount")
 ```
 
 <!---END-->
