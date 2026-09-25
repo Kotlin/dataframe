@@ -103,6 +103,22 @@ Header and signature rules (see *Structure* in the guidelines for the details):
 Link on first mention (`[`DataFrame`](DataFrame.md)`, `[column selectors](ColumnSelectors.md)`, …),
 follow `docs/StardustDocs/topics/concepts/spellingConventions.md`, and keep the language plain.
 
+Links that are easy to forget — check them explicitly:
+
+- The operation takes a **row expression** or **row condition** (`RowExpression`, `RowValueExpression`,
+  `RowFilter`, `RowValueFilter` — a lambda with `DataRow` as the receiver)? Link it:
+  `[row expression](DataRow.md#row-expressions)` / `[row condition](DataRow.md#row-conditions)`.
+- Mentioning `ColumnSet` or other column resolvers? Link
+  `[`ColumnSet`](ColumnSelectors.md#column-resolvers)`.
+
+Do **not** write meta-commentary about which overloads the operation does *not* have. For example, never
+write anything like:
+
+> This operation doesn't select columns, so it has neither string column names nor Columns Selection DSL
+> overloads: the whole row is available inside the comparator, and any of its columns can be used there.
+
+The reader does not need to be told what is absent. State what the operation does and show it.
+
 ### 4. Write the samples
 
 One test file per documentation page, at
@@ -112,9 +128,21 @@ order of sections in the topic.
 
 - Mark snippets with `// SampleStart` / `// SampleEnd`.
 - Show the input dataframe first, in its own sample.
-- Show both column-access APIs where applicable by naming paired tests `x_properties` /
-  `x_strings` — Korro turns them into tabs automatically. Prefer the Extension Property API
-  (compiler plugin) elsewhere.
+- **If the operation selects columns or uses row values, the basic usage example always has two
+  versions** — the
+  [Extension Properties API](../../../docs/StardustDocs/topics/extensionPropertiesApi.md) and the
+  [String API](../../../docs/StardustDocs/topics/concepts/StringApi.md) (read both topics if you are
+  unsure what each looks like) — written as paired tests `x_properties` / `x_strings`.
+  **Korro wraps such a pair into `<tabs>`/`<tab>` itself** (`groupSamples` in
+  `samples/build.gradle.kts` maps the `_properties`/`_accessors`/`_strings`/`_kotlin`/`_java`
+  suffixes onto tab titles), so never write the tab markup by hand in the topic — just put a single
+  `<!---FUN x-->` / `<!---END-->` pair with the **base** name, without the suffix.
+  If the operation cannot take plain column names (`String`s), write the `_strings` version with
+  [`String` column accessors](../../../docs/StardustDocs/topics/concepts/StringApi.md#string-column-accessors)
+  instead of dropping it: `col<Int>("age")` / `colGroup("name")` / `frameCol(...)` in the Columns
+  Selection DSL, `getValue<Int>("age")` / `getColumnGroup("name")` in row expressions. Do not use
+  the "Invoked String API" (`"age"<Int>()`, `"info"["age"]`) — `StringApi.md` marks it as outdated
+  and not recommended. Use the Extension Properties API in the remaining examples.
 - Save outputs with Sample Helper **after** `// SampleEnd`: `.saveDfHtmlSample()` for
   `DataFrame`/`DataColumn`/`GroupBy` (use `.toDataFrame()`/`.values()`/`.frames()` if needed),
   `.saveSample()` for `String`/`CodeString`.
@@ -137,6 +165,16 @@ at the top, then for each sample
 
 <!---END-->
 <inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
+```
+
+For a tabbed pair, the `FUN` directive takes the **base** name without the suffix, while the
+iframe keeps the full file name of the variant whose output you show:
+
+```markdown
+<!---FUN valueCountsSelector-->
+
+<!---END-->
+<inline-frame src="./resources/valueCountsSelector_properties.html" width="100%" height="500px"></inline-frame>
 ```
 
 Then add both the topic path and the test path to the Korro config in `samples/build.gradle.kts`

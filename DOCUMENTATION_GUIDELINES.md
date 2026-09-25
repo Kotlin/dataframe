@@ -47,7 +47,20 @@ but all the principles and standards apply to all the others.
 
 General rules for all pages:
 * When mentioning any operation or any Kotlin DataFrame structures the first time on the page,
-  add a link to the corresponding page.
+  add a link to the corresponding page. For example:
+  ```markdown
+  [`DataFrame`](DataFrame.md), [`DataRow`](DataRow.md), [`DataColumn`](DataColumn.md),
+  [`ColumnGroup`](DataColumn.md#columngroup), [`ValueColumn`](DataColumn.md#valuecolumn),
+  [`FrameColumn`](DataColumn.md#framecolumn), [`ColumnSet`](ColumnSelectors.md#column-resolvers),
+  [column selectors](ColumnSelectors.md), [`GroupBy`](groupBy.md)
+  ```
+  Note that Writerside resolves topics by file name, so use just `DataFrame.md`, not a relative path.
+  * If the operation takes a [row expression](docs/StardustDocs/topics/concepts/DataRow.md#row-expressions)
+    or a [row condition](docs/StardustDocs/topics/concepts/DataRow.md#row-conditions) — don't forget to link it
+    (`DataRow.md#row-expressions` / `DataRow.md#row-conditions`)!
+  * When linking dataframe structures, also link
+    [`ColumnSet`](docs/StardustDocs/topics/ColumnSelectors.md#column-resolvers) and other column resolvers
+    (`ColumnSelectors.md#column-resolvers`) where they are mentioned.
 * Follow [Spelling conventions](docs/StardustDocs/topics/concepts/spellingConventions.md).
 * Simple, clear language, without obscure words or complex vocabulary; avoid narrow concepts.
 * Use sample code created by [Korro](#korro).
@@ -80,9 +93,19 @@ describe its possible values and how they affect the operation result.
 
 #### Operation Examples
 
-* Show basic operation usage with both column access methods (Extension Property API and String API) through `<tab>`.
-  * Korro inserts this tab automatically when it sees `_properties` or `_accessors` suffices in the test name.
-  * Sometimes it's also useful to show an example with the [Column Selection DSL](docs/StardustDocs/topics/columnselectors).
+* For an operation that selects columns or uses row values, the basic usage example must always have two versions — one with the
+  [Extension Properties API](docs/StardustDocs/topics/extensionPropertiesApi.md) and one with the
+  [String API](docs/StardustDocs/topics/concepts/StringApi.md) — shown through `<tab>`.
+  * Korro inserts these tabs automatically when it sees `_properties`, `_accessors` or `_strings` suffices
+    in the test name — do not write `<tabs>`/`<tab>` markup manually for such samples.
+    Use the base name (without the suffix) in the `FUN` directive.
+  * Some operations can't be used with plain column names (`String`s):
+    write such a second version with
+    [`String` column accessors](docs/StardustDocs/topics/concepts/StringApi.md#string-column-accessors)
+    (`col<T>("name")`, `getValue<T>("name")`, …) instead of skipping it.
+    Don't use the outdated *Invoked String API*.
+  * Sometimes it's also useful to show an example with the
+    [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md).
 * Examples should contain clear explanations (both as code comments and text in the section).
 * Use illustrative meaningful example (do not show `dropNulls` example on dataframe without `null`s).
 * Show an initial dataset for examples first: put it inside the `### Examples` section, 
@@ -229,8 +252,14 @@ If a topic has no summaries yet, add them; if it already has meaningful custom o
 
 Operation KDocs link to the documentation website through
 [`DocumentationUrls`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt):
-KDoc snippets with URLs like `{@include [Url]}/sortwith.html#sortwith-on-datacolumn`,
-included into KDocs as `For more information: {@include [DocumentationUrls.SortWith]}`.
+KDoc snippets with URLs, for example:
+
+```kotlin
+/** [See `sortWith` on the documentation website.]({@include [Url]}/sortby.html#sortwith) */
+public typealias SortWith = Nothing
+```
+
+They are included into operation KDocs as `For more information: {@include [DocumentationUrls.SortWith]}`.
 
 Nothing checks these URLs automatically, so a stale one silently leads to a missing page or section.
 Whenever a topic or a section is added, renamed, moved, or split,
@@ -291,6 +320,12 @@ If not specified, the whole body is used (not recommended!).
 
 <!---END-->
 ```
+* For grouped samples (test names with the `_properties` / `_accessors` / `_strings` suffices),
+  write the **base** test name in the `FUN` directive, without the suffix
+  (`valueCountsSelector_properties` + `valueCountsSelector_strings` → `<!---FUN valueCountsSelector-->`).
+  Korro finds all suffixed variants itself and wraps them into `<tabs>`.
+  Note that the generated HTML outputs still have the full name with the suffix
+  (`./resources/valueCountsSelector_properties.html`).
 4) Code samples will be inserted between them after `korro` gradle task run.
 Both files must be included in korro configuration in the 
 [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
