@@ -36,7 +36,7 @@ You can combine as many as you like by chaining
 them with the `and` infix inside the Formatting DSL.
 Some common examples include `background(white)`, which sets the background to `white` for a cell,
 `italic`, which makes the cell text _italic_, `textColor(linear(it, 0 to green, 100 to rgb(255, 255, 0)))`, which
-interpolates the text color between green and yellow based on where the value of the cell lies in between 0 and 100, and
+interpolates the text color between green and yellow based on where the value of the cell lies between 0 and 100, and
 finally `attr("text-align", "center")`, a custom attribute which centers the text inside the cell.
 See [](#grammar) for everything that's available.
 
@@ -50,7 +50,7 @@ Formatting is done additively, meaning you can add more formatting to a cell tha
 override certain attributes inherited from its outer group.
 
 Specifying a [frame column](DataColumn.md#framecolumn) at the moment does nothing
-([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375)),
+([Issue #1375](https://github.com/Kotlin/dataframe/issues/1375));
 [](convert.md) each nested [`DataFrame`](DataFrame.md) to a `FormattedFrame` instead:
 
 ```kotlin
