@@ -3,6 +3,12 @@
 Guidance for this module. See the root `AGENTS.md` for repo-wide build/style/KoDEx rules; only module-specific
 details are here.
 
+**Writing or updating documentation?** The rules live in [`DOCUMENTATION_GUIDELINES.md`](../DOCUMENTATION_GUIDELINES.md)
+(website topics + samples) and [`KDOC_GUIDELINES.md`](../KDOC_GUIDELINES.md) (KDocs) — read the relevant one first.
+For an operation page (topic + samples in this module), use the
+[`operation-website-documentation`](../.claude/skills/operation-website-documentation/SKILL.md) skill,
+which walks through that workflow step by step.
+
 ## What this module is
 
 `:samples` holds the **code samples** (plus DataFrame iframes and Kandy plot images) for the documentation website.
