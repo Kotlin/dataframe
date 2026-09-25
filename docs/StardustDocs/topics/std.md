@@ -71,3 +71,41 @@ The following automatic type conversions are performed for the `mean` operation:
 | Float -> Double                                                            | Double.NaN             |
 | Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
 | Nothing -> Double                                                          | Double.NaN             |
+
+### Big numbers
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.StdSamples-->
+
+> `java.math.BigDecimal` and `java.math.BigInteger` are not supported:
+> `std` throws an exception at runtime for such columns.
+> Compute the standard deviation manually with Kotlin standard library methods and Java big number arithmetic,
+> or [`convert`](convert.md) the column to a primitive type first.
+> {style="warning"}
+
+For a `BigDecimal` column `amount`, the exact standard deviation can be computed
+with Java `BigDecimal` arithmetic:
+
+<!---FUN stdBigNumbersManually-->
+
+```kotlin
+// exact unbiased sample standard deviation (ddof = 1), computed with Java `BigDecimal` arithmetic
+val amounts = df.amount.toList()
+val mean = amounts.fold(BigDecimal.ZERO, BigDecimal::add)
+    .divide(amounts.size.toBigDecimal(), MathContext.DECIMAL128)
+amounts.fold(BigDecimal.ZERO) { acc, value -> acc + (value - mean).pow(2) }
+    .divide((amounts.size - 1).toBigDecimal(), MathContext.DECIMAL128)
+    .sqrt(MathContext.DECIMAL128)
+```
+
+<!---END-->
+
+Alternatively, [`convert`](convert.md) the column to a primitive type first — at the cost of precision:
+
+<!---FUN stdBigNumbersConverted-->
+
+```kotlin
+// approximate standard deviation, computed after converting the column to `Double`
+df.convert { amount }.toDouble().std { amount }
+```
+
+<!---END-->

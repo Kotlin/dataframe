@@ -127,6 +127,13 @@ korro {
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("sum.md")
+                include("mean.md")
+                include("std.md")
+                include("cumSum.md")
+                include("median.md")
+                include("percentile.md")
+                include("MigrationTo_1_0.md")
                 include("single.md")
                 include("indexing.md")
             },

@@ -45,8 +45,12 @@ In all cases, `null` values are ignored.
 `NaN` values can optionally be ignored by setting the `skipNaN` flag to `true`.
 When it's set to `false`, a `NaN` in the input will be propagated to the result.
 
-Big numbers (`BigInteger`, `BigDecimal`) are generally **not** supported for statistics.
-Please [convert](convert.md) them to primitive types before using statistics.
+Big numbers (`BigInteger`, `BigDecimal`) are **not** supported by [sum](sum.md), [mean](mean.md),
+[std](std.md), and [cumSum](cumSum.md) — these operations throw at runtime for such columns.
+[min/max](minmax.md) work with them, as they only compare values;
+[median](median.md) and [percentile](percentile.md) are not explicitly supported and work only for some overloads.
+Please [convert](convert.md) big numbers to primitive types before using statistics,
+or compute the statistic manually with Java big number arithmetic.
 
 When statistics `x` is applied to several columns, it can be computed in several modes:
 * `x(): DataRow` computes separate value per every suitable column
