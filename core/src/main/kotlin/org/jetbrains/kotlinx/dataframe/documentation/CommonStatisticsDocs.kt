@@ -143,7 +143,7 @@ internal interface CommonStatisticsDocs {
      * {@comment Note that columns inside column groups are not taken into account. KDoc-snippet.
      *    Uses the [STATISTIC] key.}
      *
-     * This includes columns inside [column groups][ColumnGroup].
+     * Columns inside [column groups][ColumnGroup] are also excluded.
      * To include those in the {@get [STATISTIC] statistic}, [flatten][DataFrame.flatten] the DataFrame first.
      */
     @ExcludeFromSources
