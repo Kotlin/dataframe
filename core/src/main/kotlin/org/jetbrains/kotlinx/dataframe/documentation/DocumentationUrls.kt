@@ -549,6 +549,9 @@ public interface DocumentationUrls {
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing
 
+    /** [See the "value" and "array" columns on the documentation website.]({@include [Url]}/read.html#value-and-array-columns) */
+    public typealias JsonValueAndArrayColumns = Nothing
+
     /** [Deephaven CSV](https://github.com/deephaven/deephaven-csv) */
     public typealias Deephaven = Nothing
 

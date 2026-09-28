@@ -76,7 +76,8 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; `changeJarTask` makes `sources.jar` use
   those.
 - **Don't hand-edit generated sources, and don't grep/crawl the tree.** Every module built with KoDEx (`core`,
-  `dataframe-csv`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked `generated-sources/` copy,
+  `dataframe-csv`, `dataframe-json`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked
+  `generated-sources/` copy,
   plus checked-in accessors under `**/src/generated-dataschema-accessors/` and generated **HTML** under
   `docs/StardustDocs/resources/`. In `generated-sources/` the **implementation and public API are the same** as the
   hand-written `src/main/kotlin/…` — KoDEx only expands the KDoc and strips the doc-only fragments (declarations
