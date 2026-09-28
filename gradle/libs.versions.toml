@@ -35,7 +35,7 @@ commonsStatistics = "1.3"
 serialization = "1.11.0"
 poi = "5.5.1"
 mariadb = "3.5.10"
-h2db = "2.5.250"
+h2db = "2.5.252"
 mssql = "13.6.0.jre11"
 mysql = "26.7.0"
 postgresql = "42.7.13"
@@ -43,7 +43,7 @@ sqlite = "3.53.4.0"
 kotlinDatetime = "0.8.0-0.6.x-compat"
 openapi = "2.1.48"
 kotlinLogging = "8.0.4"
-sl4j = "2.0.19"
+sl4j = "2.0.20"
 log4j = "2.26.1"
 
 # ignoreUpdates
@@ -76,7 +76,7 @@ dockerImage-mysql = "9.7" # available tags: https://hub.docker.com/_/mysql/tags
 dockerImage-postgres = "18-alpine" # available tags: https://hub.docker.com/_/postgres/tags
 dockerImage-mssql = "2022-CU22-ubuntu-22.04" # available tags: https://mcr.microsoft.com/en-us/artifact/mar/mssql/server
 
-buildconfig = "6.1.1"
+buildconfig = "6.1.2"
 benchmark = "0.5.0"
 
 geotools = "33.5" # 34.x and higher versions are not compatible with Java 11
@@ -87,7 +87,7 @@ kandy = "0.8.5"
 kotlin-dl = "0.5.2"
 
 exposed = "1.5.0"
-hibernate = "7.4.10.Final"
+hibernate = "7.4.11.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
