@@ -26,8 +26,8 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | Canonical      | Aliases                    | DataFrame column type  | Notes                                                                                 |
 |----------------|----------------------------|------------------------|---------------------------------------------------------------------------------------|
 | `bit`          | *none*                     | `Boolean`              | Single-bit integer (`0`/`1`/`NULL`).                                                  |
-| `tinyint`      | *none*                     | `Int`                  | 1-byte **unsigned** integer (`0..255`) — unusual: SQL Server's `tinyint` is unsigned. |
-| `smallint`     | *none*                     | `Int`                  | 2-byte signed integer.                                                                |
+| `tinyint`      | *none*                     | `Short`                | 1-byte **unsigned** integer (`0..255`) — unusual: SQL Server's `tinyint` is unsigned, so it does not fit a `Byte`. |
+| `smallint`     | *none*                     | `Short`                | 2-byte signed integer. The driver returns `Short` for both integer types above.       |
 | `int`          | `integer`                  | `Int`                  | 4-byte signed integer.                                                                |
 | `bigint`       | *none*                     | `Long`                 | 8-byte signed integer.                                                                |
 | `decimal(p,s)` | `dec(p,s)`, `numeric(p,s)` | `java.math.BigDecimal` | Fixed-point. `NUMERIC` and `DECIMAL` are stored identically.                          |
@@ -57,10 +57,10 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | Canonical   | Aliases                                     | DataFrame column type                                       | Notes                                           |
 |-------------|---------------------------------------------|-------------------------------------------------------------|-------------------------------------------------|
 | `char(n)`   | `character(n)`                              | `String`                                                    | Fixed-length non-Unicode text (max `n = 8000`). |
-| `varchar(n  | max)`                                       | `character varying(n)`                                      | `String`                                        | Variable-length non-Unicode text.                                  |
+| `varchar(n)`, `varchar(max)` | `character varying(n)`                       | `String`                                       | Variable-length non-Unicode text.               |
 | `text`      | *none*                                      | `String`                                                    | **Deprecated** — use `varchar(max)`.            |
 | `nchar(n)`  | `national character(n)`, `national char(n)` | `String`                                                    | Fixed-length UTF-16 text (max `n = 4000`).      |
-| `nvarchar(n | max)`                                       | `national character varying(n)`, `national char varying(n)` | `String`                                        | Variable-length UTF-16 text.                                 |
+| `nvarchar(n)`, `nvarchar(max)` | `national character varying(n)`, `national char varying(n)` | `String`                      | Variable-length UTF-16 text.                    |
 | `ntext`     | `national text`                             | `String`                                                    | **Deprecated** — use `nvarchar(max)`.           |
 
 ## Binary strings
@@ -68,7 +68,7 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | Canonical    | Aliases | DataFrame column type | Notes                                  |
 |--------------|---------|-----------------------|----------------------------------------|
 | `binary(n)`  | *none*  | `ByteArray`           | Fixed-length binary (max `n = 8000`).  |
-| `varbinary(n | max)`   | `binary varying(n)`   | `ByteArray`                            | Variable-length binary.                            |
+| `varbinary(n)`, `varbinary(max)` | `binary varying(n)` | `ByteArray`         | Variable-length binary.                |
 | `image`      | *none*  | `ByteArray`           | **Deprecated** — use `varbinary(max)`. |
 
 ## Row-version and identity

@@ -39,7 +39,8 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | `FLOAT[(P)]`         | `FLOAT4`                              | `Float`                | 4-byte float. Becomes `Double` if the driver reports the column class as `java.lang.Double`. |
 | `DOUBLE`             | `FLOAT8`, `DOUBLE PRECISION`          | `Double`               | 8-byte float.                                                                                |
 | `REAL`               | *(alias only)*                        | `Double`               | By default `REAL` is `DOUBLE`. Becomes `FLOAT` under the `REAL_AS_FLOAT` SQL mode.           |
-| `BIT(M)`             | *none*                                | `ByteArray`            | Reported as `BIT`/`VARBINARY`; `BIT(1)` may map to `Boolean`.                                |
+| `BIT(1)`             | *none*                                | `Boolean`              | Single-bit column.                                                                           |
+| `BIT(M)`, `M > 1`    | *none*                                | `ByteArray`            | Also reported as `Types.BIT`, but the value is the raw `byte[]` of the bit string.           |
 
 ## Date and time types
 
@@ -47,9 +48,13 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 |--------------------|---------|-----------------------|---------------------------------------------------------------------------------------------------------------|
 | `DATE`             | *none*  | `java.util.Date`      |                                                                                                               |
 | `TIME[(fsp)]`      | *none*  | `java.sql.Time`       | `fsp` is fractional seconds precision (0–6).                                                                  |
-| `DATETIME[(fsp)]`  | *none*  | `kotlin.time.Instant` | Preprocessed from `java.sql.Timestamp`.                                                                       |
+| `DATETIME[(fsp)]`  | *none*  | `kotlinx.datetime.LocalDateTime` | The MySQL driver returns a `java.time.LocalDateTime` for this type — `DATETIME` carries no time zone. [MariaDB](readSqlTypeMapping_MariaDB.md) differs here and reads it as `kotlin.time.Instant`. |
 | `TIMESTAMP[(fsp)]` | *none*  | `kotlin.time.Instant` | Preprocessed from `java.sql.Timestamp`.                                                                       |
 | `YEAR[(4)]`        | *none*  | `java.util.Date`      | 1-byte year (`1901..2155`); driver reports it as `Types.DATE`. Two-digit form `YEAR(2)` was removed in 5.7.5. |
+
+`kotlinx.datetime.LocalDateTime` comes from
+[`kotlinx-datetime`](https://github.com/Kotlin/kotlinx-datetime), which `dataframe-jdbc` brings in
+transitively — a `DATETIME` column needs no extra dependency to read, only an import.
 
 ## String types
 

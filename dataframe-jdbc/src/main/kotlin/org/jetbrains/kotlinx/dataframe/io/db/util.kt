@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.sql.Connection
 import java.sql.SQLException
+import java.sql.Types
 
 private val logger = KotlinLogging.logger {}
 
@@ -136,3 +137,20 @@ public fun driverClassNameFromUrl(url: String): String {
     val dbType = extractDBTypeFromUrl(url)
     return dbType.driverClassName
 }
+
+/**
+ * `true` for a multi-bit `BIT(M)` column, `M > 1`, in MySQL and MariaDB.
+ *
+ * Both drivers return a `byte[]` for such a column, but neither reports a column class the default
+ * mapping recognises as one: MySQL reports `java.lang.Boolean`, and MariaDB reports `byte[]` — the
+ * source-code spelling, not the `"[B"` JVM binary name the default mapping looks for. So both used to
+ * fall through to the [java.sql.Types.BIT] default, [Boolean], which does not match the values
+ * (see #2087). A single-bit column really is a [Boolean] and is left alone.
+ *
+ * The declared column width is the only thing in the metadata that tells the two apart, and it is
+ * [TableColumnMetadata.size] — which is `0` when the driver does not report a display size at all.
+ * A `BIT(M)` column of unknown width therefore still maps to [Boolean]; both drivers do report the
+ * width, so this is a fallback for a driver that does not rather than a case seen in practice.
+ */
+internal val TableColumnMetadata.isMultiBit: Boolean
+    get() = jdbcType == Types.BIT && size > 1
