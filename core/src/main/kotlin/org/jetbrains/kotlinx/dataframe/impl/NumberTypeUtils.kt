@@ -33,7 +33,7 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
 
 /**
  * Number type graph, structured in terms of number complexity.
- * A number can always be expressed lossless by a number of a more complex type (any of its parents).
+ * A number can always be expressed losslessly by a number of a more complex type (any of its parents).
  *
  * {@include [UnifyingNumbers.Graph]}
  *

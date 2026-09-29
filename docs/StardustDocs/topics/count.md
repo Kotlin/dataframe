@@ -132,8 +132,8 @@ df[2].count { it == null } // the result is 1
 
 ## On a [`DataColumn`](DataColumn.md)
 
-When called on a [`DataColumn`](DataColumn.md), returns the count of elements in the column 
-that either match the predicate or the total count of elements if no predicate is provided.
+When called on a [`DataColumn`](DataColumn.md), returns either the count of elements in the column 
+that match the predicate, or the total count of elements if no predicate is provided.
 
 <!---FUN countDataColumn-->
 

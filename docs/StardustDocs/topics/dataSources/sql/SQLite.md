@@ -44,13 +44,13 @@ USE {
 </tab>
 </tabs>
 
-The actual Maven Central driver version could be found
+The actual Maven Central driver version can be found
 [here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
 
 ## Read
 
 A [`DataFrame`](DataFrame.md) can be loaded from a database in several ways:  
-* a user can read data from a SQL table by given name ([`readSqlTable`](readSqlDatabases.md)),  
+* a user can read data from a SQL table by a given name ([`readSqlTable`](readSqlDatabases.md)),  
 * as a result of a user-defined SQL query ([`readSqlQuery`](readSqlDatabases.md)), or
 * from a given `ResultSet` ([`readResultSet`](readSqlDatabases.md)).  
 It is also possible to load all data from non-system tables, each into a separate `DataFrame` ([`readAllSqlTables`](readSqlDatabases.md)).

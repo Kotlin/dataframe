@@ -12,7 +12,7 @@ Related operations: [](adjustSchema.md)
 **Parameters:**
 * `verify: Boolean = false` —
   when `true`, the function throws an exception if the [`DataFrame`](DataFrame.md) instance doesn't match the given schema. 
-Otherwise, it just changes the format type without actual data checks.
+Otherwise, it just changes the formal type without actual data checks.
 
 Use this operation to change the formal type of a [`DataFrame`](DataFrame.md) instance
 to match the expected schema and enable generated [extension properties](extensionPropertiesApi.md) for it.
@@ -40,7 +40,7 @@ In notebooks, dataframe types are implicitly generated.
 ![Implicitly generated schema](implicitlyGeneratedSchema.png)
 
 This type can be referred to, but its name will change whenever you re-execute cells.
-Here how you can do it in a more robust way:
+Here's how you can do it in a more robust way:
 
 <!---FUN castToGenerateSchema-->
 
