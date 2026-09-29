@@ -6,7 +6,7 @@
    - The overview [page](https://kotlinlang.org/docs/data-analysis-overview.html)
    - The Data Analysis subchapter, for example, the [page](https://kotlinlang.org/docs/data-analysis-work-with-data-sources.html)
 4. Update tutorials according to the latest code changes.
-5. Update README.MD according last code changes:
+5. Update README.md according to the latest code changes:
    - update an artifact version.
    - update a Kotlin version.
    - update the [section](README.md#kotlin-kotlin-jupyter-openapi-arrow-and-jdk-versions) about library versions.

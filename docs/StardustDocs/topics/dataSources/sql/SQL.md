@@ -37,7 +37,7 @@ to work with any other JDBC-compatible database.
 ## Read
 
 [`DataFrame`](DataFrame.md) can be loaded from a database in several ways: 
-a user can read data from a SQL table by given name ([`DataFrame.readSqlTable()`](readSqlDatabases.md)), 
+a user can read data from a SQL table by a given name ([`DataFrame.readSqlTable()`](readSqlDatabases.md)), 
 as a result of a user-defined SQL query ([`DataFrame.readSqlQuery()`](readSqlDatabases.md)), 
 or from a given `ResultSet` ([`DataFrame.readResultSet()`](readSqlDatabases.md)). 
 It is also possible to load all data from non-system tables, each into a separate `DataFrame`
