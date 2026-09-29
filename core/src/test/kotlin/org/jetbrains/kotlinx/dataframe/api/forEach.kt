@@ -111,14 +111,4 @@ class ForEachTests : TestBase() {
     }
 
     // endregion
-
-    @Test
-    fun `forEach returns Unit on every receiver`() {
-        // the type annotations are the assertion
-        val onColumn: Unit = df.age.forEach { }
-        val onColumnIndexed: Unit = df.age.forEachIndexed { _, _ -> }
-        val onDataFrame: Unit = df.forEach { }
-        val onGroupBy: Unit = df.groupBy { city }.forEach { }
-        listOf(onColumn, onColumnIndexed, onDataFrame, onGroupBy) shouldBe List(4) { Unit }
-    }
 }

@@ -4,7 +4,7 @@
 
 `forEach` calls a function for every row of a [`DataFrame`](DataFrame.md), every value of a
 [`DataColumn`](DataColumn.md), or every key–group pair of a [`GroupBy`](groupBy.md).
-It returns nothing, so it is only useful for its side effects, such as printing values or collecting them.
+It returns `Unit`, so it is only useful for its side effects, such as printing values or collecting them.
 To get a result instead, use [`map`](map.md).
 
 | Operation | Goes over | The function gets |
