@@ -177,6 +177,15 @@ public interface DocumentationUrls {
     /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
     public typealias AsIterable = Nothing
 
+    /** [See iterating on the documentation website.]({@include [Url]}/iterate.html) */
+    public typealias Iterate = Nothing
+
+    /** [See `forEach` on a `DataColumn` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-datacolumn) */
+    public typealias IterateOnColumn = Nothing
+
+    /** [See `forEach` on a `GroupBy` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-groupby) */
+    public typealias IterateOnGroupBy = Nothing
+
     /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
     public typealias AsSequenceCol = Nothing
 
