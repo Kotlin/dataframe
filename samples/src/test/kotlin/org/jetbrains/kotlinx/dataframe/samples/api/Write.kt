@@ -6,10 +6,12 @@ import io.kotest.matchers.string.shouldStartWith
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
 import org.jetbrains.kotlinx.dataframe.io.arrowWriter
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.io.saveArrowFeatherToByteArray
 import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
 import org.jetbrains.kotlinx.dataframe.io.toCsvStr
@@ -20,11 +22,12 @@ import org.jetbrains.kotlinx.dataframe.io.writeCsv
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.io.writeMismatchMessage
+import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
 
-class Write : TestBase {
+class Write : TestBase, DataFrameSampleHelper("write", "io") {
 
     val df = peopleDf
 
@@ -74,6 +77,14 @@ class Write : TestBase {
                     "weight": 54,
                     "isHappy": true
         """.trimIndent()
+    }
+
+    @Test
+    fun readAndWriteJson() {
+        // SampleStart
+        DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").toJson()
+        // SampleEnd
+            .saveSample()
     }
 
     @Test

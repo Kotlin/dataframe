@@ -123,7 +123,7 @@ import kotlin.io.path.inputStream
  *
  *   If `null`, all lines will be read.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
@@ -287,7 +287,7 @@ public fun DataFrame.Companion.readTsv(
  *
  *   If `null`, all lines will be read.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
@@ -451,7 +451,7 @@ public fun DataFrame.Companion.readTsv(
  *
  *   If `null`, all lines will be read.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
@@ -615,7 +615,7 @@ public fun DataFrame.Companion.readTsv(
  *
  *   If `null`, all lines will be read.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
@@ -779,7 +779,7 @@ public fun DataFrame.Companion.readTsv(
  *
  *   If `null`, all lines will be read.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.util
 
 /*
- * This file contains deprecation messages for the whole core module.
+ * This file contains deprecation messages for the whole dataframe-excel module.
  * After each release, all messages should be reviewed and updated.
  * Level.WARNING -> Level.ERROR
  * Level.ERROR -> Remove

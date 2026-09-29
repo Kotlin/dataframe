@@ -159,7 +159,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 /**
  * Splits list-like values in the specified [\columns] of this [DataRow] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [DataFrame].
+ * and combines them into a new [DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
  * If no [\columns] are specified, all columns (at any depth) containing

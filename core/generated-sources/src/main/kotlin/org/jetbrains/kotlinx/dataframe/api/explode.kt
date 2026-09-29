@@ -179,7 +179,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 /**
  * Splits list-like values in the specified [<code>columns</code>][columns] of this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * and combines them into a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
  * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing
@@ -244,7 +244,7 @@ public fun <T> DataRow<T>.explode(
 /**
  * Splits list-like values in the specified [<code>columns</code>][columns] of this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow] and spreads them vertically —
  * that is, it adds a separate row for each element (one value per row)
- * and combine them into new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * and combines them into a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  * Values in all other columns are duplicated to preserve row context.
  *
  * If no [<code>columns</code>][columns] are specified, all columns (at any depth) containing

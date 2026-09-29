@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.with
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -32,6 +33,17 @@ public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
         } catch (_: Exception) {
             it
         }
+    }
+
+    // A missing or `null` json array is read as `null`, so read it as an empty list
+    // when the schema requires the list to be non-nullable.
+    convertIf({ fromType, toSchema ->
+        fromType.isMarkedNullable &&
+            !toSchema.type.isMarkedNullable &&
+            fromType.jvmErasure == List::class &&
+            fromType.withNullability(false) == toSchema.type
+    }) {
+        it ?: emptyList<Any?>()
     }
 }
 

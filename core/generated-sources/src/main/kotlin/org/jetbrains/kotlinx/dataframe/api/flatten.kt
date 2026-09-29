@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  * Removes all column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
@@ -52,7 +52,7 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
  * Removes specified column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
@@ -84,7 +84,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
@@ -116,7 +116,7 @@ public fun <T> DataFrame<T>.flatten(
  * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options
@@ -148,7 +148,7 @@ public fun <T, C> DataFrame<T>.flatten(
  * Removes selected column groups in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
- * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+ * Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
  *
  * The columns to flatten need to be selected.
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.FlattenDocs.FlattenSelectingOptions] for all the selecting options

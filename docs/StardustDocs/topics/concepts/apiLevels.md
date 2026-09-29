@@ -57,14 +57,14 @@ df.filter {
 
 <!---END-->
 
-Though the String API is the simplest of the two and doesn't require any additional setup, 
+Though the String API is the simpler of the two and doesn't require any additional setup, 
 it lacks name- and type-safety; if column names or cast types are incorrect,
 a runtime exception will be thrown.
 
 ## Extension Properties API
 
 The [**Extension Properties API**](extensionPropertiesApi.md) solves the 
-main problems of the String API - name- and type-safety;
+main problems of the String API — name- and type-safety.
 
 This is achieved by generating extension properties for **`DataFrame<T>`**
 (as well as for other related interfaces such as **`DataRow`** and others) 
@@ -160,7 +160,7 @@ DataFrame.readCsv("titanic.csv")
 > The `titanic.csv` file can be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
 The Extension Properties API provides column names and -types at compile-time, 
-while the String API could be used with incorrect column names or types and break in runtime.
+while the String API could be used with incorrect column names or types and break at runtime.
 
 Additionally, when using [IntelliJ IDEA](https://www.jetbrains.com/idea/) with
 [Gradle](SetupGradle.md#kotlin-dataframe-compiler-plugin) or

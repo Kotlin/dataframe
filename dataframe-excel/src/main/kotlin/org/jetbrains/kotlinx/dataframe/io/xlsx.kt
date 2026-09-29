@@ -766,7 +766,7 @@ public enum class WorkBookType {
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
@@ -793,7 +793,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
@@ -828,7 +828,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: Path,
@@ -869,7 +869,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
  * @param factory The [Workbook] instance, allowing integration with an existing workbook.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     outputStream: OutputStream,
@@ -901,7 +901,7 @@ public fun <T> DataFrame<T>.writeExcel(
  *
  * @return The created [Sheet] instance containing the DataFrame data.
  *
- * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,
@@ -1023,25 +1023,25 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
 
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
-        // so i think toString should do until more use cases arise.
+        // so I think toString should do until more use cases arise.
         else -> this.setCellValue(any.toString())
     }
 
 /**
- * Set LocalDateTime value correctly also if date have zero value in Excel.
+ * Set LocalDateTime value correctly also if the date has a zero value in Excel.
  * Zero dates are usually used for storing a time component only,
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
- * POI can not set 1899 year directly.
+ * POI cannot set the year 1899 directly.
  */
 private fun Cell.setTime(localDateTime: JavaLocalDateTime) {
     this.setCellValue(DateUtil.getExcelDate(localDateTime.plusDays(1)) - 1.0)
 }
 
 /**
- * Set Date value correctly also if date has zero value in Excel.
+ * Set Date value correctly also if the date has a zero value in Excel.
  * Zero dates are usually used for storing a time component only,
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
- * POI can not set 1899 year directly.
+ * POI cannot set the year 1899 directly.
  */
 private fun Cell.setDate(date: JavaDate) {
     val calStart = LocaleUtil.getLocaleCalendar()

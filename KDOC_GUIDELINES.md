@@ -206,7 +206,7 @@ Some KDoc-snippets and KDoc-topics are used in multiple places in the library.
 It's often useful to define them in one place and include them in multiple other places or
 to just link to them.
 
-Common KDoc-helpers in
+Common KDoc-helpers live in
 the [documentation folder](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation)
 and include things like:
 
@@ -399,7 +399,7 @@ Add a link to the corresponding operation in the
 
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
-and then use add it using `@include`:
+and then add it using `@include`:
 
 ```
  * For more information: {@include [DocumentationUrls.Move]}
@@ -544,7 +544,7 @@ like
 
 ### Grammar
 
-DSL Grammar (helpers usually are called simply `Grammar` and place inside the
+DSL Grammar (helpers usually are called simply `Grammar` and are placed inside the
 helper interface) is a special notation for describing 
 the complex operation.
 
@@ -622,7 +622,7 @@ just a simple comment explaining what the argument is for.
 Other KDoc-helpers like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
 all the arguments accordingly.
 
-It's recommended to name write their name in `UPPER_CASE`
+It's recommended to write their name in `UPPER_CASE`
 and have them nested in the documentation interface.
 
 ## Advanced KDocs
@@ -670,7 +670,7 @@ But keep these things in mind:
 - KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
-- Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in you code samples.
+- Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 
 
 ### Advanced DSL Grammar Templating (Columns Selection DSL)
@@ -688,7 +688,7 @@ Filled in, it looks something like:
 
 ![firstdslgrammar.png](docs/imgs/firstdslgrammar.png)
 
-As you can see, it consists of three parts: `Definitions`, `What can be called directly in the Columns Selection DSL`,
+As you can see, it consists of four parts: `Definitions`, `What can be called directly in the Columns Selection DSL`,
 `What can be called on a ColumnSet`, and `What can be called on a Column Group (reference)`.
 
 The definition part is filled in like:

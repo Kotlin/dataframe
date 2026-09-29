@@ -69,7 +69,7 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html) [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
  *
- * @return A new [<code>DataFrame</code>][DataFrame] where all groups are combined and additional key columns are included in each row.
+ * @return A new [<code>DataFrame</code>][DataFrame] where all groups are combined, without any grouping key columns added.
  */
 public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
@@ -98,7 +98,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  * ```
  *
  * A regular `concat()` will return a [<code>DataFrame</code>][DataFrame] similar to the original `df`
- * (with the same columns and rows but in the different orders):
+ * (with the same columns and rows but in a different order):
  *
  * ```
  * gb.concat()

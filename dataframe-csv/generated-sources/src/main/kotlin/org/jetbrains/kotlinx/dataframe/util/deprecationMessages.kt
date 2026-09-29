@@ -3,7 +3,7 @@
 package org.jetbrains.kotlinx.dataframe.util
 
 /*
- * This file contains deprecation messages for the whole core module.
+ * This file contains deprecation messages for the whole dataframe-csv module.
  * After each release, all messages should be reviewed and updated.
  * Level.WARNING -> Level.ERROR
  * Level.ERROR -> Remove
