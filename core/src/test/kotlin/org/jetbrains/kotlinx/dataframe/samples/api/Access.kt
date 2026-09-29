@@ -296,68 +296,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun forRows_properties() {
-        // SampleStart
-        for (row in df) {
-            println(row.age)
-        }
-
-        df.forEach {
-            println(it.age)
-        }
-
-        df.rows().forEach {
-            println(it.age)
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forRows_strings() {
-        // SampleStart
-        for (row in df) {
-            println(row["age"])
-        }
-
-        df.forEach {
-            println(it["age"])
-        }
-
-        df.rows().forEach {
-            println(it["age"])
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forColumn() {
-        // SampleStart
-        df.columns().forEach {
-            println(it.name())
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forCells() {
-        // SampleStart
-        // from top to bottom, then from left to right
-        df.values().forEach {
-            println(it)
-        }
-
-        // from left to right, then from top to bottom
-        df.values(byRows = true).forEach {
-            println(it)
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun xs() {
         // SampleStart
         df.xs("Charlie", "Chaplin")
