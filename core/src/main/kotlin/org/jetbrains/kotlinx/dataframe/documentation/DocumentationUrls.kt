@@ -355,6 +355,13 @@ public interface DocumentationUrls {
         public typealias TypeConversion = Nothing
     }
 
+    /** [See `mean` on the documentation website.]({@include [Url]}/mean.html) */
+    public interface Mean {
+
+        /** [See "`mean` Type Conversion" on the documentation website.]({@include [Url]}/mean.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
     public interface MinMax {
 
