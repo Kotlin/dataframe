@@ -55,7 +55,7 @@ import kotlin.reflect.typeOf
  * They are shown here for [DataFrame], but they exist for the other receivers too:
  *
  * - [`mean`][DataFrame.mean]`()` — the mean of each suitable column separately.
- * - [`mean`][DataFrame.mean]` { columns }` — a single mean of all values in all selected columns.
+ * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
  * - [`meanFor`][DataFrame.meanFor]` { columns }` — the mean of each selected column separately.
  * - [`meanOf`][DataFrame.meanOf]` { expression }` — the mean of the values that the given expression
  *   returns for each row.
@@ -88,7 +88,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [CommonStatisticsDocs.NullHandlingSnippet]
      * {@get [NAN_NOTE] {@include [CommonStatisticsDocs.NaNHandlingSnippet]}}
      *
-     * The result is always a [Double] and never `null`.
+     * The resulting average is always a [Double] and never `null`.
      * Converting [Long] values to [Double] may lose precision for very large values.
      *
      * For more information about the resulting types:
@@ -107,7 +107,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * {@comment Note about the behavior on empty input for the modes with a single result. KDoc-snippet.}
      *
      * When there is nothing to average, for instance, when the input is empty or contains only `null` values,
-     * the result is [Double.NaN]
+     * the result is [Double.NaN].
      */
     @ExcludeFromSources
     typealias NanOnEmptySnippet = Nothing
@@ -118,9 +118,6 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * Result cells for which there is nothing to average
      * (for instance, because the input was empty or contained only `null` values)
      * simply become [Double.NaN].
-     *
-     * For more information about the resulting types:
-     * @include [DocumentationUrls.Mean.TypeConversion]
      */
     @ExcludeFromSources
     typealias NanCellOnEmptySnippet = Nothing
@@ -131,9 +128,6 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * Result cells for which there exists a group, but there is nothing to average
      * (for instance, because the group was empty or contained only `null` values)
      * simply become [Double.NaN].
-     *
-     * For more information about the resulting types:
-     * @include [DocumentationUrls.Mean.TypeConversion]
      *
      * @include [MeanDocs.EmptyPivotIntersectionSnippet]
      */
@@ -188,7 +182,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][DataColumn.mean] — the mean of the values in this column itself.
-     * - [`sumOf`][DataColumn.sumOf] — the sum of those values.
+     * - [`sumOf`][DataColumn.sumOf] — the sum of the values returned by an expression.
      * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
      *
      * For more information:
@@ -239,8 +233,8 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][DataFrame.mean]`()` — the same, but for all suitable columns at once.
-     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of all values in the selected columns.
-     * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column.
+     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+     * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
      * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
      *
      * For more information: {@include [DocumentationUrls.Mean]}
@@ -302,7 +296,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [MeanDocs.NanOnEmptySnippet]
      *
      * See also:
-     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of all values in the selected columns.
+     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
      * $[SEE_ALSO_TAIL]
      *
      * For more information: {@include [DocumentationUrls.Mean]}
@@ -331,6 +325,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanCellOnEmptySnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -554,7 +549,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMeanStatisticArgs]}
-     *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
+     *   These must be columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
@@ -712,8 +707,8 @@ public inline fun <reified T : Number> DataRow<*>.rowMeanOf(skipNaN: Boolean = s
  *
  * See also:
  * - [`meanFor`][DataFrame.meanFor]` { columns }` — the same, but for an explicit selection of columns.
- * - [`mean`][DataFrame.mean]` { columns }` — a single mean of all values in the selected columns.
- * - [`sum`][DataFrame.sum] — the sum of each column.
+ * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+ * - [`sum`][DataFrame.sum]` () ` — the sum of each column separately.
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
  *
  * For more information: {@include [DocumentationUrls.Mean]}
@@ -784,7 +779,7 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
 ): DataRow<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns a single mean of all the values in the selected columns of this [DataFrame], as a [Double].
+ * Returns a single mean of all means of the selected columns of this [DataFrame], as a [Double].
  *
  * @include [MeanDocs.DataFrameMeanSnippet]
  * @set [MeanDocs.DataFrameMeanSnippet.SEE_ALSO_TAIL]
@@ -1148,8 +1143,7 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * ```
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ColumnsSelectorParam]
- * @return A single [DataRow] with, per [pivot] group, the mean of all the values
- *   in the selected columns.
+ * @return A [DataRow] with, per [pivot] group, a single mean of means of all the selected columns.
  */
 public fun <T, R : Number?> Pivot<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
@@ -1212,7 +1206,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.meanOf(
  *
  * See also:
  * - [`meanFor`][PivotGroupBy.meanFor] — the same, but for an explicit selection of columns.
- * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of all values in the selected columns,
+ * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of means of all selected columns,
  *   per group.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
@@ -1295,7 +1289,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  * ```
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ColumnsSelectorParam]
- * @return A [DataFrame] with, per group, the mean of all the values in the selected columns.
+ * @return A [DataFrame] with, per group, a single mean of all the values in the selected columns.
  */
 public fun <T, R : Number?> PivotGroupBy<T>.mean(
     skipNaN: Boolean = skipNaNDefault,

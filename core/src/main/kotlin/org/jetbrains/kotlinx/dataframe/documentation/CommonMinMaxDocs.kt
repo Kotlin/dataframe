@@ -87,7 +87,7 @@ internal interface CommonMinMaxDocs : CommonStatisticsDocs {
     /**
      * {@comment Note about the type of the result for the modes with a single result. KDoc-snippet.}
      *
-     * The result has the same type as the input values.
+     * The result has the same type as the input values (minus nullability, if the input values were nullable).
      *
      * For more information about the resulting types:
      * {@include [DocumentationUrls.MinMax.TypeConversion]}
