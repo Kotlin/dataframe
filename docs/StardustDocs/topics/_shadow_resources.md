@@ -301,6 +301,11 @@
 <resource src="notebook_test_tail_1.html"></resource>
 <resource src="notebook_test_tail_2.html"></resource>
 <resource src="notebook_test_tail_3.html"></resource>
+<resource src="unfoldDf.html"></resource>
+<resource src="unfoldMaxDepth_properties.html"></resource>
+<resource src="unfoldOnColumn.html"></resource>
+<resource src="unfoldRoots_properties.html"></resource>
+<resource src="unfold_properties.html"></resource>
 <resource src="valueCounts.html"></resource>
 <resource src="valueCountsColumn.html"></resource>
 <resource src="valueCountsDf.html"></resource>
