@@ -301,6 +301,8 @@ val df = students.toDataFrame {
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html" width="100%"/>
 <!---END-->
 
+To do the same for a column inside an existing dataframe, use [`unfold`](unfold.md).
+
 ### DynamicDataFrameBuilder
 
 Previously mentioned [`DataFrame`](DataFrame.md) constructors throw an exception when column names are duplicated. 
