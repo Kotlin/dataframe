@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.api.duplicateImpl
@@ -91,6 +92,10 @@ public fun <T> DataFrame<T>.duplicateRows(n: Int): DataFrame<T> = duplicateRowsI
  *
  * The [filter] is a [RowFilter] — a lambda that receives each [DataRow] as both `this` and `it`
  * and returns `true` for the rows to repeat.
+ *
+ * It allows you to define conditions using the row's values directly,
+ * including through [extension properties][AccessApis.ExtensionPropertiesApi]
+ * for convenient and type-safe access.
  *
  * For more information: {@include [DocumentationUrls.DuplicateRows]} {@include [DocumentationUrls.DataRow.RowFilter]}
  *
