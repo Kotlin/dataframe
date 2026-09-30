@@ -863,7 +863,11 @@ public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>)
  * @include [StdDocs.ColumnNamesParam]
  * @return The standard deviation of all the values in the selected columns, as a [Double].
  */
-public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsSetOf() }
+public fun <T> DataFrame<T>.std(
+    vararg columns: String,
+    skipNaN: Boolean = skipNaNDefault,
+    ddof: Int = ddofDefault,
+): Double = std(skipNaN, ddof) { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1281,10 +1285,10 @@ public fun <T, C : Number?> Pivot<T>.std(
  * @include [StdDocs.ExpressionParam]
  * @return A single [DataRow] with, per [pivot] group, the standard deviation of the expression's results.
  */
-public inline fun <reified T : Number?> Pivot<T>.stdOf(
+public inline fun <T, reified R : Number?> Pivot<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-    crossinline expression: RowExpression<T, T>,
+    crossinline expression: RowExpression<T, R>,
 ): DataRow<T> = delegate { stdOf(skipNaN, ddof, expression) }
 
 // endregion

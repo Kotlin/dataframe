@@ -4168,7 +4168,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/StdKt {
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZI)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZI)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILkotlin/jvm/functions/Function2;)D
-	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)D
+	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZI)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZILkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4189,6 +4189,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/StdKt {
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZIILjava/lang/Object;)D
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZIILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
+	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZIILjava/lang/Object;)D
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZILkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZIILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun std$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZIILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
