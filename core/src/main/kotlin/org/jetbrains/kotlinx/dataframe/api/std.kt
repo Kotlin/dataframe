@@ -68,6 +68,9 @@ import kotlin.reflect.typeOf
  * This is different from the "population standard deviation" (`ddof = 0`), which is the default
  * in libraries like Numpy.
  *
+ * If the number of values is `<= ddof`, the result is [Double.NaN].
+ * So, with the default `ddof = 1`, the standard deviation of a single value is [Double.NaN].
+ *
  * Related operation:
  * - [`mean`][DataFrame.mean] — the average of values (the standard deviation measures the spread around it).
  *
@@ -110,6 +113,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * When there is nothing to compute the standard deviation of, for instance, when the input is empty
      * or contains only `null` values, the result is [Double.NaN].
+     * The same holds when there are no more than `ddof` values, so, by default, for a single value.
      */
     @ExcludeFromSources
     typealias NanOnEmptySnippet = Nothing
@@ -120,6 +124,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * Result cells for which there is nothing to compute the standard deviation of
      * (for instance, because the input was empty or contained only `null` values)
      * simply become [Double.NaN].
+     * The same holds when there are no more than `ddof` values, so, by default, for a single value.
      */
     @ExcludeFromSources
     typealias NanCellOnEmptySnippet = Nothing
@@ -130,6 +135,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * Result cells for which there exists a group, but there is nothing to compute the
      * standard deviation of (for instance, because the group was empty or contained only `null` values)
      * simply become [Double.NaN].
+     * The same holds when there are no more than `ddof` values, so, by default, for a single value.
      *
      * @include [StdDocs.EmptyPivotIntersectionSnippet]
      */
