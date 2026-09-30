@@ -234,6 +234,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptySnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -333,6 +334,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptySnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -409,6 +411,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -483,6 +486,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
