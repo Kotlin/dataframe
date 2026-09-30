@@ -735,7 +735,7 @@ public inline fun <reified T : Number?> DataRow<*>.rowStdOf(
  * @include [StdDocs.NanCellOnEmptySnippet]
  *
  * See also:
- * - [`stdFor`][DataFrame.stdFor] — the same, but for an explicit selection of columns.
+ * - [`stdFor`][DataFrame.stdFor]` { columns }` — the same, but for an explicit selection of columns.
  * - [`std`][DataFrame.std]` { columns }` — a single standard deviation of all values in the selected columns.
  * - [`mean`][DataFrame.mean] — the mean of each column.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
