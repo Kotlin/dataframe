@@ -25,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
@@ -684,82 +683,6 @@ class Modify : TestBase() {
         // SampleStart
         val score by columnOf(4, 5, 3, 5, 4, 5, 3)
         df.insert(score).at(2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatDataFrames() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        df.concat(df1, df2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumns() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        a.concat(b)
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumnsIterable() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        listOf(a, b).concat()
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatIterable() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        listOf(df1, df2).concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatRows() {
-        // SampleStart
-        val rows = listOf(df[2], df[4], df[5])
-        rows.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatFrameColumn() {
-        // SampleStart
-        val x = dataFrameOf("a", "b")(
-            1, 2,
-            3, 4,
-        )
-        val y = dataFrameOf("b", "c")(
-            5, 6,
-            7, 8,
-        )
-        val frameColumn by columnOf(x, y)
-        frameColumn.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatGroupBy() {
-        // SampleStart
-        df.groupBy { name }.concat()
         // SampleEnd
     }
 
