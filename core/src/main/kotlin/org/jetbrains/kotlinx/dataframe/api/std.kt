@@ -742,7 +742,7 @@ public inline fun <reified T : Number?> DataRow<*>.rowStdOf(
  * See also:
  * - [`stdFor`][DataFrame.stdFor] — the same, but for an explicit selection of columns.
  * - [`std`][DataFrame.std]` { columns }` — a single standard deviation of all values in the selected columns.
- * - [`mean`][DataFrame.mean] — the mean of each column.
+ * - [`mean`][DataFrame.mean]` () ` — the mean of each column.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  *
  * For more information: {@include [DocumentationUrls.Std]}
@@ -825,7 +825,7 @@ public fun <T, C : Number?> DataFrame<T>.stdFor(
  *
  * @include [StdDocs.DataFrameStdSnippet]
  * @set [StdDocs.DataFrameStdSnippet.SEE_ALSO_TAIL]
- * - [`mean`][DataFrame.mean] — the mean of all values in the selected columns.
+ * - [`mean`][DataFrame.mean]` { columns } ` — the mean of means of the selected columns.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  * @set [StdDocs.DataFrameStdSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
  * @set [StdDocs.DataFrameStdSnippet.EXAMPLE]
@@ -854,7 +854,7 @@ public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>)
  *
  * @include [StdDocs.DataFrameStdSnippet]
  * @set [StdDocs.DataFrameStdSnippet.SEE_ALSO_TAIL]
- * - [`mean`][DataFrame.mean] — the mean of all values in the selected columns.
+ * - [`mean`][DataFrame.mean]` (columns) ` — the mean of means of the selected columns.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  * @set [StdDocs.DataFrameStdSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnNamesApi]}
  * @set [StdDocs.DataFrameStdSnippet.EXAMPLE]
@@ -913,7 +913,7 @@ public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
  * See also:
  * - [`stdFor`][Grouped.stdFor] — the same, but for an explicit selection of columns.
  * - [`std`][Grouped.std]` { columns }` — a single standard deviation of all values in the selected columns, per group.
- * - [`mean`][Grouped.mean] — the mean of each column, per group.
+ * - [`mean`][Grouped.mean]` () ` — the mean of each column, per group.
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  *
