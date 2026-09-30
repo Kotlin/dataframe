@@ -122,4 +122,5 @@ val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John"
 
 ### Converting columns with object instances to ColumnGroup
 
-[unfold](unfold.md) can be used as [`toDataFrame()`](createDataFrame.md#todataframe) analogue for specific columns inside existing dataframes
+[`unfold`](unfold.md) turns columns of objects inside an existing dataframe into [`ColumnGroup`](DataColumn.md#columngroup)s,
+the way [`toDataFrame()`](createDataFrame.md#todataframe) builds a dataframe from a list of objects.

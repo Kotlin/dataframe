@@ -128,6 +128,9 @@ public interface DocumentationUrls {
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
     public typealias Convert = Nothing
 
+    /** [See `unfold` on the documentation website.]({@include [Url]}/unfold.html) */
+    public typealias Unfold = Nothing
+
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
 
