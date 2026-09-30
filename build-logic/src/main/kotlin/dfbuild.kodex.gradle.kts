@@ -1,6 +1,7 @@
 import dfbuild.findRootDir
 import nl.jolanrensen.kodex.gradle.KodexIsolationMode
 import nl.jolanrensen.kodex.gradle.RunKodexTask
+import org.jetbrains.dokka.gradle.DokkaExtension
 
 plugins {
     alias(conventions.plugins.dfbuild.kotlinJvmCommon)
@@ -220,5 +221,13 @@ tasks.withType<Jar> {
 tasks.configureEach {
     if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
         dependsOn(processKDocsMain, changeJarTask)
+    }
+}
+
+afterEvaluate {
+    extensions.configure<DokkaExtension> {
+        dokkaSourceSets.named("main") {
+            sourceRoots.setFrom(generatedMainSources.kotlin.srcDirs)
+        }
     }
 }
