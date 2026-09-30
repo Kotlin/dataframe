@@ -59,7 +59,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 ### Type Conversion
 
-The following automatic type conversions are performed for the `mean` operation:
+The following automatic type conversions are performed for the `std` operation:
 
 | Conversion                                                                 | Result for Empty Input |
 |----------------------------------------------------------------------------|------------------------|
