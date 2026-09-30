@@ -109,7 +109,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * {@comment Note about the behavior on empty input for the modes with a single result. KDoc-snippet.}
      *
      * When there is nothing to compute the standard deviation of, for instance, when the input is empty
-     * or contains only `null` values, the result is [Double.NaN]
+     * or contains only `null` values, the result is [Double.NaN].
      */
     @ExcludeFromSources
     typealias NanOnEmptySnippet = Nothing
@@ -120,9 +120,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * Result cells for which there is nothing to compute the standard deviation of
      * (for instance, because the input was empty or contained only `null` values)
      * simply become [Double.NaN].
-     *
-     * For more information about the resulting types:
-     * @include [DocumentationUrls.Std.TypeConversion]
      */
     @ExcludeFromSources
     typealias NanCellOnEmptySnippet = Nothing
@@ -133,9 +130,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * Result cells for which there exists a group, but there is nothing to compute the
      * standard deviation of (for instance, because the group was empty or contained only `null` values)
      * simply become [Double.NaN].
-     *
-     * For more information about the resulting types:
-     * @include [DocumentationUrls.Std.TypeConversion]
      *
      * @include [StdDocs.EmptyPivotIntersectionSnippet]
      */
@@ -234,6 +228,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptySnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -333,6 +328,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptySnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -409,6 +405,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -483,6 +480,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     *
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -558,7 +556,7 @@ internal interface StdDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetStdStatisticArgs]}
-     *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
+     *   These must be columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
@@ -1208,7 +1206,7 @@ public fun <T, C : Number?> Pivot<T>.stdFor(
  * @include [StdDocs.SkipNanParam]
  * @include [StdDocs.DdofParam]
  * @include [StdDocs.ColumnsSelectorParam]
- * @return A single [DataRow] with, per [pivot] group, the standard deviation of all the values
+ * @return A [DataRow] with, per [pivot] group, a single standard deviation of all the values
  *   in the selected columns.
  */
 public fun <T, C : Number?> Pivot<T>.std(
@@ -1233,7 +1231,7 @@ public fun <T, C : Number?> Pivot<T>.std(
  * @include [StdDocs.ColumnNamesParam]
  * @include [StdDocs.SkipNanParam]
  * @include [StdDocs.DdofParam]
- * @return A single [DataRow] with, per [pivot] group, the standard deviation of all the values
+ * @return A [DataRow] with, per [pivot] group, a single standard deviation of all the values
  *   in the selected columns.
  */
 public fun <T> Pivot<T>.std(
@@ -1402,7 +1400,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
  * @include [StdDocs.SkipNanParam]
  * @include [StdDocs.DdofParam]
  * @include [StdDocs.ColumnsSelectorParam]
- * @return A [DataFrame] with, per group, the standard deviation of all the values in the selected columns.
+ * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
 public fun <T, C : Number?> PivotGroupBy<T>.std(
     skipNaN: Boolean = skipNaNDefault,
@@ -1428,7 +1426,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  * @include [StdDocs.ColumnNamesParam]
  * @include [StdDocs.SkipNanParam]
  * @include [StdDocs.DdofParam]
- * @return A [DataFrame] with, per group, the standard deviation of all the values in the selected columns.
+ * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
 public fun <T> PivotGroupBy<T>.std(
     vararg columns: String,
