@@ -55,7 +55,7 @@ import kotlin.reflect.typeOf
  * They are shown here for [DataFrame], but they exist for the other receivers too:
  *
  * - [`mean`][DataFrame.mean]`()` — the mean of each suitable column separately.
- * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+ * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of the selected columns.
  * - [`meanFor`][DataFrame.meanFor]` { columns }` — the mean of each selected column separately.
  * - [`meanOf`][DataFrame.meanOf]` { expression }` — the mean of the values that the given expression
  *   returns for each row.
@@ -133,6 +133,23 @@ internal interface MeanDocs : CommonStatisticsDocs {
      */
     @ExcludeFromSources
     typealias NanCellOnEmptyPivotSnippet = Nothing
+
+    /**
+     * {@comment Note about how the column-selecting `mean` modes combine multiple columns. KDoc-snippet.}
+     *
+     * When multiple columns are selected, the result is a *mean of means*:
+     * first, the mean of each selected column is computed separately,
+     * and then the mean of those per-column means is taken.
+     * This differs from the mean of all values pooled together
+     * whenever the selected columns contain a different number of values to average.
+     * For instance, for `age = [20, 25]` and `weight = [65, null]`, the result is
+     * `(22.5 + 65) / 2 = 43.75`.
+     *
+     * A selected column with nothing to average has [Double.NaN] as its mean,
+     * which makes the whole result [Double.NaN], unless `skipNaN` is `true`.
+     */
+    @ExcludeFromSources
+    typealias MeanOfMeansSnippet = Nothing
 
     /**
      * {@comment Note about which columns the no-argument `mean` modes take into account. KDoc-snippet.}
@@ -233,7 +250,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][DataFrame.mean]`()` — the same, but for all suitable columns at once.
-     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of the selected columns.
      * - [`sumFor`][DataFrame.sumFor] — the sum of each selected column separately.
      * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
      *
@@ -255,6 +272,8 @@ internal interface MeanDocs : CommonStatisticsDocs {
     /**
      * @comment The parts all column-selecting [DataFrame.mean] overloads have in common.
      *    KDoc-snippet.
+     *
+     * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanOnEmptySnippet]
@@ -296,7 +315,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [MeanDocs.NanOnEmptySnippet]
      *
      * See also:
-     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+     * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of the selected columns.
      * $[SEE_ALSO_TAIL]
      *
      * For more information: {@include [DocumentationUrls.Mean]}
@@ -333,7 +352,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][Grouped.mean]`()` — the same, but for all suitable columns at once.
-     * - [`mean`][Grouped.mean]` { columns }` — a single mean of all values in the selected columns, per group.
+     * - [`mean`][Grouped.mean]` { columns }` — a single mean of means of the selected columns, per group.
      * - [`sumFor`][Grouped.sumFor] — the sum of each selected column, per group.
      * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
      * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
@@ -357,13 +376,14 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * {@comment The parts all column-selecting [Grouped.mean] overloads have in common.
      *    KDoc-snippet.}
      *
-     * Aggregates this [GroupBy] by computing a single mean of all the values
-     * in the selected columns, per group.
+     * Aggregates this [GroupBy] by computing a single mean of means of the selected columns, per group.
      *
      * Returns a new [DataFrame] with one row per group, containing the group key columns and
      * a single column with the mean per group.
      * That column is named [name\], or, if [name\] is `null`, after the selected column
      * if exactly one column is selected, and `"mean"` otherwise.
+     *
+     * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanCellOnEmptySnippet]
@@ -409,7 +429,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][Pivot.mean]`()` — the same, but for all suitable columns at once.
-     * - [`mean`][Pivot.mean]` { columns }` — a single mean of all values in the selected columns, per group.
+     * - [`mean`][Pivot.mean]` { columns }` — a single mean of means of the selected columns, per group.
      * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
      * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
      *
@@ -432,11 +452,12 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * {@comment The parts all column-selecting [Pivot.mean] overloads have in common.
      *    KDoc-snippet.}
      *
-     * Aggregates this [Pivot] by computing a single mean of all the values
-     * in the selected columns, per group.
+     * Aggregates this [Pivot] by computing a single mean of means of the selected columns, per group.
      *
-     * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the mean of all
-     * the values in the selected columns of the corresponding group.
+     * Returns a single [DataRow] with the [pivot] keys as (nested) columns, containing the mean of means
+     * of the selected columns of the corresponding group.
+     *
+     * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
@@ -482,7 +503,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      *
      * See also:
      * - [`mean`][PivotGroupBy.mean]`()` — the same, but for all suitable columns at once.
-     * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of all values in the selected columns,
+     * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of means of the selected columns,
      *   per group.
      * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
      *   a [PivotGroupBy].
@@ -507,11 +528,12 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * {@comment The parts all column-selecting [PivotGroupBy.mean] overloads have in common.
      *    KDoc-snippet.}
      *
-     * Aggregates this [PivotGroupBy] by computing a single mean of all the values
-     * in the selected columns, per group.
+     * Aggregates this [PivotGroupBy] by computing a single mean of means of the selected columns, per group.
      *
-     * Returns a [DataFrame] where each cell contains the mean of all the values in the selected columns
+     * Returns a [DataFrame] where each cell contains the mean of means of the selected columns
      * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
+     *
+     * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
      * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
@@ -707,7 +729,7 @@ public inline fun <reified T : Number> DataRow<*>.rowMeanOf(skipNaN: Boolean = s
  *
  * See also:
  * - [`meanFor`][DataFrame.meanFor]` { columns }` — the same, but for an explicit selection of columns.
- * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of all selected columns.
+ * - [`mean`][DataFrame.mean]` { columns }` — a single mean of means of the selected columns.
  * - [`sum`][DataFrame.sum]` () ` — the sum of each column separately.
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
  *
@@ -779,7 +801,7 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
 ): DataRow<T> = meanFor(skipNaN) { columns.toColumnSet() }
 
 /**
- * Returns a single mean of all means of the selected columns of this [DataFrame], as a [Double].
+ * Returns a single mean of means of the selected columns of this [DataFrame], as a [Double].
  *
  * @include [MeanDocs.DataFrameMeanSnippet]
  * @set [MeanDocs.DataFrameMeanSnippet.SEE_ALSO_TAIL]
@@ -788,12 +810,12 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
  * @set [MeanDocs.DataFrameMeanSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
  * @set [MeanDocs.DataFrameMeanSnippet.EXAMPLE]
  * ```kotlin
- * // The mean of all values in the "age" and "weight" columns together
+ * // The mean of the mean of "age" and the mean of "weight"
  * df.mean { age and weight }
  * ```
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ColumnsSelectorParam]
- * @return The mean of all the values in the selected columns, as a [Double].
+ * @return The mean of the per-column means of the selected columns, as a [Double].
  */
 public fun <T, C : Number?> DataFrame<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
@@ -801,7 +823,7 @@ public fun <T, C : Number?> DataFrame<T>.mean(
 ): Double = Aggregators.mean(skipNaN).aggregateAll(this, columns)
 
 /**
- * Returns a single mean of all means of the selected columns of this [DataFrame], as a [Double].
+ * Returns a single mean of means of the selected columns of this [DataFrame], as a [Double].
  *
  * @include [MeanDocs.DataFrameMeanSnippet]
  * @set [MeanDocs.DataFrameMeanSnippet.SEE_ALSO_TAIL]
@@ -810,12 +832,12 @@ public fun <T, C : Number?> DataFrame<T>.mean(
  * @set [MeanDocs.DataFrameMeanSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnNamesApi]}
  * @set [MeanDocs.DataFrameMeanSnippet.EXAMPLE]
  * ```kotlin
- * // The mean of all values in the "age" and "weight" columns together
+ * // The mean of the mean of "age" and the mean of "weight"
  * df.mean("age", "weight")
  * ```
  * @include [MeanDocs.ColumnNamesParam]
  * @include [MeanDocs.SkipNanParam]
- * @return The mean of all the values in the selected columns, as a [Double].
+ * @return The mean of the per-column means of the selected columns, as a [Double].
  */
 public fun <T> DataFrame<T>.mean(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Double =
     mean(skipNaN) { columns.toNumberColumns() }
@@ -873,7 +895,7 @@ public inline fun <T, reified D : Number?> DataFrame<T>.meanOf(
  *
  * See also:
  * - [`meanFor`][Grouped.meanFor] — the same, but for an explicit selection of columns.
- * - [`mean`][Grouped.mean]` { columns }` — a single mean of all values in the selected columns, per group.
+ * - [`mean`][Grouped.mean]` { columns }` — a single mean of means of the selected columns, per group.
  * - [`sum`][Grouped.sum] — the sum of each column, per group.
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
@@ -947,7 +969,7 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
  * @include [MeanDocs.GroupedMeanSnippet]
  * @set [MeanDocs.GroupedMeanSnippet.EXAMPLE]
  * ```kotlin
- * // For each city, the mean of all values in the "age" and "weight" columns,
+ * // For each city, the mean of the mean of "age" and the mean of "weight",
  * // in a column called "average"
  * df.groupBy { city }.mean("average") { age and weight }
  * ```
@@ -968,7 +990,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
  * @include [MeanDocs.GroupedMeanSnippet]
  * @set [MeanDocs.GroupedMeanSnippet.EXAMPLE]
  * ```kotlin
- * // For each city, the mean of all values in the "age" and "weight" columns,
+ * // For each city, the mean of the mean of "age" and the mean of "weight",
  * // in a column called "average"
  * df.groupBy { city }.mean("age", "weight", name = "average")
  * ```
@@ -1015,7 +1037,7 @@ public fun <T, C : Number?> Grouped<T>.mean(
  * @include [MeanDocs.NanCellOnEmptySnippet]
  *
  * See also:
- * - [`mean`][Grouped.mean] — a single mean of all values in the selected columns, per group.
+ * - [`mean`][Grouped.mean] — a single mean of means of the selected columns, per group.
  * - [`sumOf`][Grouped.sumOf] — the sum of those values, per group.
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
@@ -1060,7 +1082,7 @@ public inline fun <T, reified R : Number?> Grouped<T>.meanOf(
  *
  * See also:
  * - [`meanFor`][Pivot.meanFor] — the same, but for an explicit selection of columns.
- * - [`mean`][Pivot.mean]` { columns }` — a single mean of all values in the selected columns, per group.
+ * - [`mean`][Pivot.mean]` { columns }` — a single mean of means of the selected columns, per group.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
  *
@@ -1138,12 +1160,12 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * @include [MeanDocs.PivotMeanSnippet]
  * @set [MeanDocs.PivotMeanSnippet.EXAMPLE]
  * ```kotlin
- * // For each city, the mean of all values in the "age" and "weight" columns
+ * // For each city, the mean of the mean of "age" and the mean of "weight"
  * df.pivot { city }.mean { age and weight }
  * ```
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ColumnsSelectorParam]
- * @return A [DataRow] with, per [pivot] group, a single mean of means of all the selected columns.
+ * @return A [DataRow] with, per [pivot] group, a single mean of means of the selected columns.
  */
 public fun <T, R : Number?> Pivot<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
@@ -1166,7 +1188,7 @@ public fun <T, R : Number?> Pivot<T>.mean(
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
  * See also:
- * - [`mean`][Pivot.mean]` { columns }` — a single mean of all values in the selected columns, per group.
+ * - [`mean`][Pivot.mean]` { columns }` — a single mean of means of the selected columns, per group.
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MeanDocsLink]} — an overview of all `mean` modes.
  *
@@ -1206,7 +1228,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.meanOf(
  *
  * See also:
  * - [`meanFor`][PivotGroupBy.meanFor] — the same, but for an explicit selection of columns.
- * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of means of all selected columns,
+ * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of means of the selected columns,
  *   per group.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
@@ -1284,12 +1306,12 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  * @include [MeanDocs.PivotGroupByMeanSnippet]
  * @set [MeanDocs.PivotGroupByMeanSnippet.EXAMPLE]
  * ```kotlin
- * // Per city and last name, the mean of all values in the "age" and "weight" columns
+ * // Per city and last name, the mean of the mean of "age" and the mean of "weight"
  * df.pivot { city }.groupBy { name.lastName }.mean { age and weight }
  * ```
  * @include [MeanDocs.SkipNanParam]
  * @include [MeanDocs.ColumnsSelectorParam]
- * @return A [DataFrame] with, per group, a single mean of all the values in the selected columns.
+ * @return A [DataFrame] with, per group, a single mean of means of the selected columns.
  */
 public fun <T, R : Number?> PivotGroupBy<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
@@ -1300,12 +1322,12 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  * @include [MeanDocs.PivotGroupByMeanSnippet]
  * @set [MeanDocs.PivotGroupByMeanSnippet.EXAMPLE]
  * ```kotlin
- * // Per city and last name, the mean of all values in the "age" and "weight" columns
+ * // Per city and last name, the mean of the mean of "age" and the mean of "weight"
  * df.pivot { city }.groupBy { name.lastName }.mean("age", "weight")
  * ```
  * @include [MeanDocs.ColumnNamesParam]
  * @include [MeanDocs.SkipNanParam]
- * @return A [DataFrame] with, per group, the mean of all the values in the selected columns.
+ * @return A [DataFrame] with, per group, a single mean of means of the selected columns.
  */
 public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     mean(skipNaN) { columns.toColumnsSetOf() }
@@ -1340,7 +1362,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
  * See also:
- * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of all values in the selected columns,
+ * - [`mean`][PivotGroupBy.mean]` { columns }` — a single mean of means of the selected columns,
  *   per group.
  * - [PivotGroupBy aggregation][PivotGroupByDocs.Aggregation] — all other ways to aggregate
  *   a [PivotGroupBy].
