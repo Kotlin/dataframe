@@ -121,6 +121,7 @@ korro {
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
                 include("concat.md")
+                include("concatDf.md")
                 include("groupBy.md")
                 include("map.md")
                 include("pivot.md")
