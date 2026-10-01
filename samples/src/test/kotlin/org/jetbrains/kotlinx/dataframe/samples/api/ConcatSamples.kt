@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
+import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.minBy
@@ -161,7 +162,7 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     }
 
     @Test
-    fun concatDataRows() {
+    fun concatDataRows_properties() {
         // SampleStart
         val youngest = df.minBy { age }
         val oldest = df.maxBy { age }
@@ -176,6 +177,23 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
                 )
             }
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun concatDataRows_strings() {
+        // SampleStart
+        val youngest = df.minBy("age")
+        val oldest = df.maxBy("age")
+
+        youngest.concat(oldest)
+            // SampleEnd
+            .also { result ->
+                result shouldBe dataFrameOf(
+                    "name" to columnOf("Bob", "Charlie"),
+                    "age" to columnOf(15, 25),
+                    "city" to columnOf("Paris", "London"),
+                )
+            }
     }
 
     @Test
@@ -223,7 +241,7 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     }
 
     @Test
-    fun concatGroupBy() {
+    fun concatGroupBy_properties() {
         // SampleStart
         val grouped = df.groupBy {
             expr { if (age >= 20) "adult" else "teen" } named "ageGroup"
@@ -245,7 +263,25 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     }
 
     @Test
-    fun concatGroupByWithKeys() {
+    fun concatGroupBy_strings() {
+        // SampleStart
+        val grouped = df.groupBy {
+            expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+        }
+
+        grouped.concat()
+            // SampleEnd
+            .also { result ->
+                result shouldBe dataFrameOf(
+                    "name" to listOf("Alice", "Charlie", "Bob"),
+                    "age" to listOf(20, 25, 15),
+                    "city" to listOf("London", "London", "Paris"),
+                )
+            }
+    }
+
+    @Test
+    fun concatGroupByWithKeys_properties() {
         // SampleStart
         val grouped = df.groupBy {
             expr { if (age >= 20) "adult" else "teen" } named "ageGroup"
@@ -268,7 +304,26 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     }
 
     @Test
-    fun concatReducedGroupBy() {
+    fun concatGroupByWithKeys_strings() {
+        // SampleStart
+        val grouped = df.groupBy {
+            expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+        }
+
+        grouped.concatWithKeys()
+            // SampleEnd
+            .also { result ->
+                result shouldBe dataFrameOf(
+                    "name" to listOf("Alice", "Charlie", "Bob"),
+                    "age" to listOf(20, 25, 15),
+                    "city" to listOf("London", "London", "Paris"),
+                    "ageGroup" to listOf("adult", "adult", "teen"),
+                )
+            }
+    }
+
+    @Test
+    fun concatReducedGroupBy_properties() {
         // SampleStart
         df.groupBy { city }.first().concat()
             // SampleEnd
@@ -280,6 +335,20 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
                 )
             }
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun concatReducedGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city").first().concat()
+            // SampleEnd
+            .also { result ->
+                result shouldBe dataFrameOf(
+                    "name" to listOf("Alice", "Bob"),
+                    "age" to listOf(20, 15),
+                    "city" to listOf("London", "Paris"),
+                )
+            }
     }
 
     @Test

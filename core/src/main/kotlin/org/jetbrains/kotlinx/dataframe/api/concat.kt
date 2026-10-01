@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -18,23 +20,63 @@ private interface ConcatDocs {
 
     /**
      * The result contains the union of the input schemas. Columns are ordered by their first appearance in the
-     * inputs. When two or more input schemas are combined, columns with the same name are concatenated as described
-     * in [DataColumn.concat]. If the contributing columns have the same [type][DataColumn.type], the result
-     * keeps this type, except for its nullability. If their types differ, the result type is inferred from the
-     * concatenated values. The result type is nullable only if the resulting values contain `null`.
-     * When a column is missing from an input that contributes rows, its values for those rows are filled with `null`,
-     * and its result type becomes nullable. A missing [List] column is filled with empty lists, and a missing frame
-     * column with empty [DataFrame]s instead; these columns do not become nullable.
+     * inputs. When two or more input schemas are combined, columns with the same name form one result column.
+     */
+    typealias SchemaUnification = Nothing
+
+    /**
+     * When two or more columns contribute to one result column, the result keeps their shared
+     * [runtime type][DataColumn.type], except for its nullability. If their runtime types differ, the result runtime
+     * type is inferred from the concatenated values. The result runtime type is nullable only if the resulting values
+     * contain `null`.
+     */
+    typealias RuntimeTypeUnification = Nothing
+
+    /**
+     * If all input columns are empty, their runtime types determine the result runtime type.
+     */
+    typealias EmptyColumnTypeUnification = Nothing
+
+    /**
+     * Missing values in a [List] column are represented by empty lists, and missing values in a [FrameColumn] by empty
+     * [DataFrame]s; these columns do not become nullable. A missing [ColumnGroup] remains a column group, and its
+     * nested columns are filled according to these same rules recursively.
+     */
+    typealias MissingColumnValues = Nothing
+
+    /**
+     * @include [SchemaUnification]
+     *
+     * @include [RuntimeTypeUnification]
+     *
+     * @include [EmptyColumnTypeUnification]
+     *
+     * When a value column is missing from an input that contributes rows, its values for those rows are filled with
+     * `null`, and its result runtime type becomes nullable.
+     *
+     * @include [MissingColumnValues]
      */
     typealias DataFrameSchemaUnification = Nothing
 
     /**
+     * @include [SchemaUnification]
+     *
+     * @include [RuntimeTypeUnification]
+     *
+     * If a row does not contain a result value column, the corresponding value is `null`, and the result runtime type
+     * of that column becomes nullable.
+     *
+     * @include [MissingColumnValues]
+     */
+    typealias DataRowSchemaUnification = Nothing
+
+    /**
      * The result keeps the name of the first column.
-     * If there is only one input column, its [type][DataColumn.type] is preserved.
-     * For two or more input columns with the same type, the result keeps this type, except for its nullability.
-     * If their types differ, the result type is inferred from the concatenated values.
-     * If all input columns are empty, their types determine the result type.
-     * For two or more input columns, the result type is nullable only if the resulting values contain `null`.
+     * If there is only one input column, its [runtime type][DataColumn.type] is preserved.
+     *
+     * @include [RuntimeTypeUnification]
+     *
+     * @include [EmptyColumnTypeUnification]
      */
     typealias DataColumnUnification = Nothing
 }
@@ -117,7 +159,7 @@ public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
  *
  * Rows are processed in argument order.
  *
- * @include [ConcatDocs.DataFrameSchemaUnification]
+ * @include [ConcatDocs.DataRowSchemaUnification]
  *
  * For more information: {@include [DocumentationUrls.Concat]}
  *
@@ -127,7 +169,7 @@ public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataRows]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataRows_properties]
  *
  * @param [T] The schema marker type of this [DataRow] and the rows in [rows].
  * @param [rows] The rows to append to this [DataRow].
@@ -143,7 +185,7 @@ public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> = (listO
  * Returns a [DataFrame] containing the rows of this [DataFrame] followed by the rows of [frames].
  *
  * The [DataFrame]s in [frames] are processed in argument order, and row order within every [DataFrame] is preserved.
- * If no [frames] are supplied, this [DataFrame] is returned unchanged.
+ * If no [frames] are supplied, the receiver is returned as the same [DataFrame] instance.
  *
  * @include [ConcatDocs.DataFrameSchemaUnification]
  *
@@ -207,7 +249,7 @@ public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<An
  * For more information: {@include [DocumentationUrls.Concat]}
  *
  * See also:
- * - [DataFrame.append] — appends one row supplied as values.
+ * - [DataFrame.append] — appends rows supplied as values.
  * - [DataRow.concat] — starts with a [DataRow].
  * - [Iterable.concat] — creates a [DataFrame] from an iterable of nullable rows.
  *
@@ -233,7 +275,7 @@ public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (
  * A [DataFrame] supplied in [frames] with zero rows adds no rows, while its columns still participate in schema
  * unification.
  *
- * If [frames] is empty, this same [DataFrame] instance is returned.
+ * If [frames] is empty, the receiver is returned as the same [DataFrame] instance.
  *
  * For more information: {@include [DocumentationUrls.Concat]}
  *
@@ -270,7 +312,7 @@ public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatGroupBy]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatGroupBy_properties]
  *
  * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
  * @param [G] The schema marker type of the groups.
@@ -298,7 +340,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatGroupByWithKeys]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatGroupByWithKeys_properties]
  *
  * @param [T] The schema marker type of the grouping [keys][GroupBy.keys].
  * @param [G] The schema marker type of the groups.
@@ -327,10 +369,13 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
  * [minBy][GroupBy.minBy], [maxBy][GroupBy.maxBy], [medianBy][GroupBy.medianBy], and
  * [percentileBy][GroupBy.percentileBy].
  *
- * If the reducer returns `null` for a group, the result still contains one row for that group. Its values are `null`
- * in every column contributed by the other reduced rows. When reduced rows have different schemas, the result
- * contains their union, and columns missing from a row are filled with `null`.
- * In [List] columns and frame columns, these values are empty lists and empty [DataFrame]s instead of `null`.
+ * If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
+ * their first appearance in the reduced rows. A value column missing from a reduced row is filled with `null`.
+ *
+ * @include [ConcatDocs.MissingColumnValues]
+ *
+ * If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
+ * missing every result column, so its values are filled according to the same rules.
  *
  * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Concat]}
  *
@@ -340,7 +385,7 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatReducedGroupBy]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatReducedGroupBy_properties]
  *
  * @param [T] The schema marker type of the grouping keys in the underlying [GroupBy].
  * @param [G] The schema marker type of the groups and the resulting [DataFrame].
@@ -411,17 +456,10 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
 /**
  * Returns a [DataFrame] containing the rows in this iterable in iteration order.
  *
- * The result contains the union of the schemas of all non-null rows. Columns are ordered by their first appearance.
- * If a non-null row does not contain a result column, its value in that row is `null`. Values from columns with the
- * same name in different rows form a single result column. If those columns have the same runtime type, the result
- * keeps that type, except for its nullability; otherwise, its type is inferred from their combined values.
- * Its type is nullable only if it contains `null`.
+ * @include [ConcatDocs.DataRowSchemaUnification]
  *
- * A `null` element of this iterable contributes one result row. That row contains `null` in every column contributed
- * by the non-null rows. An empty iterable produces an empty [DataFrame].
- *
- * In [List] columns and frame columns, values missing from a non-null row or contributed by a `null` element are
- * empty lists and empty [DataFrame]s instead of `null`, and these columns do not become nullable.
+ * A `null` element of this iterable contributes one result row. Its values are filled according to the missing-column
+ * rules above. An empty iterable produces an empty [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Concat]}
  *
@@ -435,8 +473,7 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
  *
  * @param [T] The schema marker type of the non-null [DataRow]s in this iterable.
  * @return A [DataFrame] containing every row in iteration order. Each `null` element of this iterable contributes one
- * result row whose values are `null` in every result column, or empty lists and empty [DataFrame]s in [List] and
- * frame columns.
+ * result row whose values follow the missing-column rules above.
  */
 @JvmName("concatRows")
 public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> =
