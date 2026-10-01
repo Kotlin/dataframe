@@ -307,6 +307,9 @@
 <resource src="valueCountsSelector_properties.html"></resource>
 <resource src="valueCountsWithNA.html"></resource>
 <resource src="example.csv"></resource>
+<resource src="jetbrains_repositories.csv"></resource>
+<resource src="movies.csv"></resource>
+<resource src="titanic.csv"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="dfCast.html"></resource>
 <resource src="dfDescribe.html"></resource>
@@ -324,13 +327,11 @@
 <resource src="notebook_test_quickstart_7.html"></resource>
 <resource src="notebook_test_quickstart_8.html"></resource>
 <resource src="usingResult.html"></resource>
-<resource src="jetbrains_repositories.csv"></resource>
 <resource src="filterColumn_properties.html"></resource>
 <resource src="filter_properties.html"></resource>
 <resource src="formatExampleNumbers.html"></resource>
 <resource src="formatExample_properties.html"></resource>
 <resource src="formatExample_strings.html"></resource>
-<resource src="movies.csv"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"></resource>
