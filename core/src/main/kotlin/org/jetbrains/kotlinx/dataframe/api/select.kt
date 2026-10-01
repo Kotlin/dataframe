@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -93,7 +92,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
+public fun <T> DataFrame<T>.select(vararg columns: ColumnReference<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
 

@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -40,7 +39,7 @@ import kotlin.reflect.typeOf
  *
  * @return `true` if this column is a [ColumnGroup], `false` otherwise.
  */
-public fun AnyCol.isColumnGroup(): Boolean {
+public fun DataColumn<*>.isColumnGroup(): Boolean {
     contract { returns(true) implies (this@isColumnGroup is ColumnGroup<*>) }
     return kind() == ColumnKind.Group
 }
@@ -62,7 +61,7 @@ public fun AnyCol.isColumnGroup(): Boolean {
  *
  * @return `true` if this column is a [FrameColumn], `false` otherwise.
  */
-public fun AnyCol.isFrameColumn(): Boolean {
+public fun DataColumn<*>.isFrameColumn(): Boolean {
     contract { returns(true) implies (this@isFrameColumn is FrameColumn<*>) }
     return kind() == ColumnKind.Frame
 }
@@ -84,7 +83,7 @@ public fun AnyCol.isFrameColumn(): Boolean {
  *
  * @return `true` if this column is a [ValueColumn], `false` otherwise.
  */
-public fun AnyCol.isValueColumn(): Boolean {
+public fun DataColumn<*>.isValueColumn(): Boolean {
     contract { returns(true) implies (this@isValueColumn is ValueColumn<*>) }
     return kind() == ColumnKind.Value
 }
@@ -108,7 +107,7 @@ public fun AnyCol.isValueColumn(): Boolean {
  * @param [type] the [KType] to check the column type against.
  * @return `true` if the column type is a subtype of [type], `false` otherwise.
  */
-public fun AnyCol.isSubtypeOf(type: KType): Boolean =
+public fun DataColumn<*>.isSubtypeOf(type: KType): Boolean =
     this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
 /**
@@ -130,7 +129,7 @@ public fun AnyCol.isSubtypeOf(type: KType): Boolean =
  * @param [T] the type to check the column type against.
  * @return `true` if the column type is a subtype of [T], `false` otherwise.
  */
-public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
+public inline fun <reified T> DataColumn<*>.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
 
 /**
  * Returns `true` only if the [type][DataColumn.type] of this column is exactly [T].
@@ -147,19 +146,19 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf
  * @param [T] the type to compare the column type with.
  * @return `true` if the column type is exactly [T], `false` otherwise.
  */
-public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
+public inline fun <reified T> DataColumn<*>.isType(): Boolean = type() == typeOf<T>()
 
 /** Returns `true` when this column's type is a subtype of `Number?` */
-public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
+public fun DataColumn<*>.isNumber(): Boolean = isSubtypeOf<Number?>()
 
 /** Returns `true` only when this column's type is exactly `Number` or `Number?`. */
-public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
+public fun DataColumn<*>.isMixedNumber(): Boolean = type().isMixedNumber()
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
  * [Byte], [Short], [Int], [Long], [Float], or [Double].
  */
-public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
+public fun DataColumn<*>.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
 
 /**
  * Returns `true` when this column has the (nullable) type of either:
@@ -168,7 +167,7 @@ public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
  * Careful: Will return `true` if the column contains multiple number types that
  * might NOT be primitive.
  */
-public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
+public fun DataColumn<*>.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
 
 /**
  * Returns `true` when the class of this column's [type][DataColumn.type] is [List],
@@ -183,7 +182,7 @@ public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixe
  *
  * @return `true` if the column type class is [List], `false` otherwise.
  */
-public fun AnyCol.isList(): Boolean = typeClass == List::class
+public fun DataColumn<*>.isList(): Boolean = typeClass == List::class
 
 /** @include [valuesAreComparable] */
 @Deprecated(
@@ -191,7 +190,7 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
     replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
     level = DeprecationLevel.ERROR,
 )
-public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
+public fun DataColumn<*>.isComparable(): Boolean = valuesAreComparable()
 
 /**
  * Returns `true` if [this] column is intra-comparable (mutually comparable), i.e.,
@@ -202,4 +201,4 @@ public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
  *
  * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */
-public fun AnyCol.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()
+public fun DataColumn<*>.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()

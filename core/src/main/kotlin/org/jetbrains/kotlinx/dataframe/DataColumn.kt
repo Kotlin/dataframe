@@ -308,17 +308,17 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public override operator fun get(range: IntRange): DataColumn<T>
 }
 
-public val AnyCol.name: String get() = name()
-public val AnyCol.path: ColumnPath get() = path()
+public val DataColumn<*>.name: String get() = name()
+public val DataColumn<*>.path: ColumnPath get() = path()
 
 public val <T> DataColumn<T>.values: Iterable<T> get() = values()
-public val AnyCol.hasNulls: Boolean get() = hasNulls()
-public val AnyCol.size: Int get() = size()
-public val AnyCol.indices: IntRange get() = indices()
+public val DataColumn<*>.hasNulls: Boolean get() = hasNulls()
+public val DataColumn<*>.size: Int get() = size()
+public val DataColumn<*>.indices: IntRange get() = indices()
 
-public val AnyCol.type: KType get() = type()
-public val AnyCol.kind: ColumnKind get() = kind()
-public val AnyCol.typeClass: KClass<*>
+public val DataColumn<*>.type: KType get() = type()
+public val DataColumn<*>.kind: ColumnKind get() = kind()
+public val DataColumn<*>.typeClass: KClass<*>
     get() = type.classifier as? KClass<*>
         ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 

@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -96,7 +95,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `"fromColumn"`[`..`][String.rangeTo]`toColumn`}
      */
-    public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun String.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
@@ -123,21 +122,21 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun KProperty<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`}
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`}
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
@@ -145,7 +144,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`}
      */
     @Interpretable("ColumnRange")
-    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         createColumnSet { context ->
             val startPath = this@rangeTo.resolveSingle(context)!!.path
             val endPath = endInclusive.resolveSingle(context)!!.path
