@@ -30,7 +30,8 @@ internal interface UnfoldDocs {
 
     /**
      * {@comment What all `unfold` overloads have in common. KDoc-snippet.
-     *    Set [TYPE_SOURCE] to where the properties are taken from.}
+     *    Set [TYPE_SOURCE] to where the properties are taken from,
+     *    and [ANY_COLUMNS] to which columns of `Any` stay as they are.}
      *
      * The new columns are named after the properties, in the order of the primary constructor
      * (for a class without one, in the order of their names),
@@ -42,7 +43,7 @@ internal interface UnfoldDocs {
      * A column that cannot be unfolded stays as it is.
      * These are columns of simple values, such as numbers, strings, or enums,
      * columns of objects without public properties,
-     * columns whose [type][DataColumn.type] is [Any] (for example, with objects of different classes),
+     * {@get [ANY_COLUMNS]} (for example, with objects of different classes),
      * [ColumnGroup]s, and [FrameColumn]s.
      */
     @ExcludeFromSources
@@ -51,6 +52,10 @@ internal interface UnfoldDocs {
         // the key for a @set that names the type the properties are taken from
         @ExcludeFromSources
         typealias TYPE_SOURCE = Nothing
+
+        // the key for a @set that names the columns of `Any` that stay as they are
+        @ExcludeFromSources
+        typealias ANY_COLUMNS = Nothing
     }
 
     /**
@@ -61,6 +66,7 @@ internal interface UnfoldDocs {
      * The other columns and the order of the columns stay the same.
      *
      * @include [CommonSnippet] {@set [CommonSnippet.TYPE_SOURCE] the [type][DataColumn.type] of each selected column}
+     * {@set [CommonSnippet.ANY_COLUMNS] columns whose [type][DataColumn.type] is [Any]}
      */
     @ExcludeFromSources
     typealias DataFrameSnippet = Nothing
@@ -134,6 +140,7 @@ private typealias SetUnfoldOperationArg = Nothing
  * @include [UnfoldDocs.CommonSnippet] {@set [UnfoldDocs.CommonSnippet.TYPE_SOURCE] the type `T` of this column
  * as the compiler sees it. When `T` cannot be unfolded itself, such as `Any?` of an untyped column,
  * they are those of the [type][DataColumn.type] of the column instead}
+ * {@set [UnfoldDocs.CommonSnippet.ANY_COLUMNS] columns where both `T` and the [type][DataColumn.type] are [Any]}
  *
  * @include [UnfoldDocs.MaxDepthSnippet]
  *

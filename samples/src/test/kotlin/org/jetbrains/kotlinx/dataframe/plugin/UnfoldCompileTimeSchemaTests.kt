@@ -35,12 +35,22 @@ class UnfoldCompileTimeSchemaTests {
         res.compileTimeSchema() shouldBe res.schema()
     }
 
-    // TODO(#2115): enable this test once the issue is fixed
+    // TODO(#2115): enable this test once the issue is fixed, and remove the test below
     @Ignore("with roots, the compiler plugin derives an empty schema for unfold")
     @Test
     fun `unfold with roots has the same schema at compile time and at runtime`() {
         val res = students().unfold(Student::name, Student::age) { student }
         res.compileTimeSchema() shouldBe res.schema()
+    }
+
+    // TODO(#2115): this test fails once the issue is fixed. Remove it, enable the test above,
+    //  and remove the sentence about the empty compile-time schema from `topics/unfold.md`
+    //  and from the KDoc of `DataFrame.unfold` with `roots`
+    @Test
+    fun `unfold with roots has an empty schema at compile time`() {
+        val res = students().unfold(Student::name, Student::age) { student }
+        res.compileTimeSchema().columns.keys shouldBe emptySet()
+        res.schema().columns.keys shouldBe setOf("id", "student", "year")
     }
 
     // TODO(#2114): enable this test once the issue is fixed

@@ -224,6 +224,14 @@ class UnfoldTests {
         df.unfold("mixed") shouldBe df
     }
 
+    @Test
+    fun `unfold leaves a column of type Any as it is even when all objects are of one class`() {
+        val df = dataFrameOf("name" to listOf<Any>(Name("Alice", "Cooper")).toColumn())
+        df["name"].type() shouldBe typeOf<Any>()
+        df.unfold("name") shouldBe df
+        df.unfold { "name"<Any>() } shouldBe df
+    }
+
     class Bean {
         var zeta: Int = 1
         var alpha: Int = 2
@@ -340,6 +348,20 @@ class UnfoldTests {
 
         val anyColumn: DataColumn<Any> = students["student"].cast()
         anyColumn.unfold().asColumnGroup().columnNames() shouldBe listOf("name", "age", "scores")
+    }
+
+    @Test
+    fun `DataColumn unfold reads the properties of the static type when the type of the column is Any`() {
+        val column: DataColumn<Name> = listOf<Any>(Name("Alice", "Cooper")).toColumn("name").cast()
+        column.type() shouldBe typeOf<Any>()
+        column.unfold().asColumnGroup().columnNames() shouldBe listOf("firstName", "lastName")
+    }
+
+    @Test
+    fun `DataColumn unfold returns the column itself when both the static type and the type of the column are Any`() {
+        val column: DataColumn<Any> = listOf<Any>(Name("Alice", "Cooper")).toColumn("name")
+        column.type() shouldBe typeOf<Any>()
+        column.unfold() shouldBeSameInstanceAs column
     }
 
     // region known issues: `unfold` is not consistent with `toDataFrame` yet

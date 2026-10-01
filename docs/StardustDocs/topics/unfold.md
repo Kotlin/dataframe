@@ -138,6 +138,7 @@ A column that cannot be unfolded stays as it is. These are:
 * columns of simple values, such as numbers, strings, or enums;
 * columns of objects without public properties;
 * columns whose type is `Any` — for example, with objects of different classes;
+  with [`unfold` on DataColumn](#unfold-on-datacolumn), only when the compiler sees the column as `Any` too;
 * [`ColumnGroup`](DataColumn.md#columngroup)s and [`FrameColumn`](DataColumn.md#framecolumn)s.
 
 ## unfold on DataColumn
@@ -161,6 +162,7 @@ df.student.unfold(maxDepth = 1)
 The properties are those of the type of the column as the compiler sees it.
 When that type cannot be unfolded itself, such as `Any?` of an untyped column (`df["student"]`),
 the properties are those of the type of the column at runtime.
+A `DataColumn<Student>` is unfolded even when the type of the column at runtime is `Any`.
 
 ## See also
 
