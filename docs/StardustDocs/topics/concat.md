@@ -34,10 +34,12 @@ When `concat` combines frames, it unifies their schemas:
 
 * The result contains the union of the input columns, ordered by their first appearance.
 * When two or more input schemas are combined, values from columns with the same name form one result column. Its type
-  is kept if all contributing columns have the same type. If their types differ, the result type is inferred 
-  from the concatenated values. Result nullability follows whether the resulting values contain `null`.
+  is kept, except for its nullability, if all contributing columns have the same type. If their types differ, the
+  result type is inferred from the concatenated values. The result type is nullable only if the resulting values
+  contain `null`.
 * If an input does not contain a result column, that column is filled with `null` for the input's rows and becomes
-  nullable.
+  nullable. A missing `List` column is filled with empty lists, and a missing `FrameColumn` with empty
+  `DataFrame`s instead; these columns do not become nullable.
 
 For overloads that append [`DataFrame`](DataFrame.md) objects, an appended `DataFrame` with no rows adds no rows,
 but its columns still participate in schema unification. Calling the vararg overload without any `frames` returns
@@ -194,9 +196,9 @@ collectionColumn.concat(): List<T>
 
 For value columns, `concat` appends the values from `other` in argument order and preserves the receiver's name.
 With one input column, its runtime type is preserved. With two or more input columns of the same type, the
-result keeps this type. If their types differ, the result type is inferred from the concatenated values.
-Result nullability follows whether the resulting values contain `null`.
-If all input columns are empty, their types determine the result type.
+result keeps this type, except for its nullability. If their types differ, the result type is inferred from the
+concatenated values. If all input columns are empty, their types determine the result type.
+For two or more input columns, the result type is nullable only if the resulting values contain `null`.
 
 For a column of `DataFrame` values, `concat` combines the rows of all stored frames and performs
 schema unification. Frames are processed in their order of appearance, and row order within every frame is
@@ -268,7 +270,8 @@ repeated for every row in its group. An existing group column with the same name
 
 [`ReducedGroupBy.concat()`](groupBy.md#reducing) applies the stored reducer to every group and returns one result
 row per group, in group order. If the reducer returns `null`, the result still contains a row for that group, filled
-with `null` in the columns contributed by other reduced rows.
+with `null` in the columns contributed by other reduced rows. In `List` columns and `FrameColumn`s, these values are
+empty lists and empty `DataFrame`s instead of `null`.
 
 ```kotlin
 groupBy.concat(): DataFrame<G>
@@ -351,8 +354,11 @@ column. The result schema is the union of the schemas of all non-null rows, with
 appearance. If a non-null row does not contain a result column, its value in that row is `null`. Values from columns
 with the same name form one result column. When the iterable has more than one element, the result column's base type
 is preserved if all contributing columns have the same type. If their types differ, its type is
-inferred from the combined values. Its nullability follows whether it contains `null`.
+inferred from the combined values. Its type is nullable only if it contains `null`.
 An empty iterable returns an empty [`DataFrame`](DataFrame.md).
+
+In `List` columns and `FrameColumn`s, values missing from a non-null row or contributed by a `null` element are
+empty lists and empty `DataFrame`s instead of `null`, and these columns do not become nullable.
 
 ### Examples
 
