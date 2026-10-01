@@ -48,7 +48,6 @@ import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
-import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
@@ -464,16 +463,6 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
-    @Test
-    @TransformDataFrameExpressions
-    fun splitRegex() {
-        // SampleStart
-        val merged = df.merge { name.lastName and name.firstName }
-            .by { it[0] + " (" + it[1] + ")" }
-            .into("name")
-        // SampleEnd
-    }
-
     private val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
 
     @Test
@@ -631,15 +620,6 @@ class Modify : TestBase() {
     }
 
     val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun gatherNames() {
-        // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>()
-            .where { it > 0 }.keysInto("city")
-        // SampleEnd
-    }
 
     @Test
     @TransformDataFrameExpressions

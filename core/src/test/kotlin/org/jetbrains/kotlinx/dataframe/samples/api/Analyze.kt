@@ -2,20 +2,11 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.asComparable
-import org.jetbrains.kotlinx.dataframe.api.asNumbers
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.head
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.maxFor
-import org.jetbrains.kotlinx.dataframe.api.maxOf
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
@@ -41,23 +32,8 @@ import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
-import kotlin.math.ln
 
 class Analyze : TestBase() {
-
-    @Test
-    @TransformDataFrameExpressions
-    fun basicInfo() {
-        // SampleStart
-        df.count() // same as df.rowsCount()
-        df.indices() // 0 until count()
-        df.columnsCount()
-        df.columnNames()
-        df.head()
-        df.schema()
-        df.describe()
-        // SampleEnd
-    }
 
     @Test
     @TransformDataFrameExpressions
@@ -249,14 +225,6 @@ class Analyze : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun meanAggregationsSkipNA() {
-        // SampleStart
-        df.mean(skipNaN = true)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun statisticAggregations() {
         // SampleStart
         df.mean()
@@ -327,115 +295,6 @@ class Analyze : TestBase() {
         // SampleStart
         df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and weight }
         df.groupBy { city }.pivot { name.lastName }.mean(separate = true)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnStats_properties() {
-        // SampleStart
-        df.sum { weight }
-        df.min { age }
-        df.mean { age }
-        df.median { age }
-
-        df.weight.sum()
-        df.age.max()
-        df.age.mean()
-        df.age.median()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnStats_strings() {
-        // SampleStart
-        df.sum("weight")
-        df.min("age")
-        df.mean("age")
-        df.median("age")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun multipleColumnsStat_properties() {
-        // SampleStart
-        df.min { colsOf<Int>() }
-        df.max { name.firstName and name.lastName }
-        df.sum { age and weight }
-        df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.allCols().cast() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun multipleColumnsStat_strings() {
-        // SampleStart
-
-        df.min { colsOf<Int>() }
-
-        df.max { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
-
-        df.sum("age", "weight")
-        // or
-        df.sum { "age"<Int>() and "weight"<Int?>() }
-
-        df.mean { cols(1, 3).asNumbers() }
-        df.median<_, String> { name.allCols().cast() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnsFor_properties() {
-        // SampleStart
-        df.minFor { colsOf<Int>() }
-        df.maxFor { name.firstName and age }
-        df.sumFor { age and weight }
-        df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.allCols().asComparable() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnsFor_strings() {
-        // SampleStart
-        df.minFor { colsOf<Int>() }
-        df.maxFor { "name"["firstName"].asComparable() and "age"<Int>() }
-
-        df.sumFor("age", "weight")
-        // or
-        df.sumFor { "age"<Int>() and "weight"<Int?>() }
-
-        df.meanFor { cols(1, 3).asNumbers() }
-        df.medianFor { name.allCols().asComparable() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun ofExpressions_properties() {
-        // SampleStart
-        df.minOf { 2021 - age }
-        df.maxOf { name.firstName.length + name.lastName.length }
-        df.sumOf { weight?.let { it - 50 } }
-        df.meanOf { ln(age.toDouble()) }
-        df.medianOf { city?.length }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun ofExpressions_strings() {
-        // SampleStart
-        df.minOf { 2021 - "age"<Int>() }
-        df.maxOf { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length }
-        df.sumOf { "weight"<Int?>()?.let { it - 50 } }
-        df.meanOf { ln("age"<Int>().toDouble()) }
-        df.medianOf { "city"<String?>()?.length }
         // SampleEnd
     }
 

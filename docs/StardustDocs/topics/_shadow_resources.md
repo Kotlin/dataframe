@@ -307,6 +307,9 @@
 <resource src="valueCountsSelector_properties.html"></resource>
 <resource src="valueCountsWithNA.html"></resource>
 <resource src="example.csv"></resource>
+<resource src="jetbrains_repositories.csv"></resource>
+<resource src="movies.csv"></resource>
+<resource src="titanic.csv"></resource>
 <resource src="quickstart.ipynb"></resource>
 <resource src="dfCast.html"></resource>
 <resource src="dfDescribe.html"></resource>
@@ -324,13 +327,11 @@
 <resource src="notebook_test_quickstart_7.html"></resource>
 <resource src="notebook_test_quickstart_8.html"></resource>
 <resource src="usingResult.html"></resource>
-<resource src="jetbrains_repositories.csv"></resource>
 <resource src="filterColumn_properties.html"></resource>
 <resource src="filter_properties.html"></resource>
 <resource src="formatExampleNumbers.html"></resource>
 <resource src="formatExample_properties.html"></resource>
 <resource src="formatExample_strings.html"></resource>
-<resource src="movies.csv"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"></resource>
@@ -338,7 +339,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html"></resource>
 <resource src="extensionPropertiesApi1.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.byRow.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"></resource>
@@ -347,11 +347,9 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.xs.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.columnsFor.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.head.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.meanAggregationsSkipNA.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupByMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"></resource>
@@ -359,7 +357,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html"></resource>
@@ -370,10 +367,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinDefault.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinWithMatch.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html"></resource>
@@ -402,7 +395,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flatten.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gather.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherNames.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.group.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"></resource>
@@ -428,7 +420,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.update.html"></resource>
