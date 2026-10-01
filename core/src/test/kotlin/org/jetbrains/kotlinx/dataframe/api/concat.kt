@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -10,6 +11,17 @@ import kotlin.reflect.typeOf
 class ConcatTests {
 
     private data class EmptySchema(val a: Int, val b: String)
+
+    private fun concatWithEverySchemaUnifyingOverload(first: DataFrame<*>, second: DataFrame<*>): List<DataFrame<*>> =
+        listOf(
+            DataFrame.empty().concat(first, second),
+            first concat second,
+            first.concat(listOf(second)),
+            first.concat(listOf(second[0])),
+            columnOf(first, second).concat(),
+            first[0].concat(second[0]),
+            listOf(first, second).concat(),
+        )
 
     // region DataColumn
 
@@ -51,6 +63,38 @@ class ConcatTests {
     }
 
     @Test
+    fun `data column concat preserves a shared runtime type except nullability`() {
+        val first = DataColumn.createValueColumn<Number?>("first", listOf(1, 2))
+        val second = DataColumn.createValueColumn<Number?>("second", listOf(3, 4))
+
+        first.type() shouldBe typeOf<Number?>()
+        second.type() shouldBe typeOf<Number?>()
+        first.concat(second).type() shouldBe typeOf<Number>()
+    }
+
+    @Test
+    fun `data column concat with one input preserves its runtime type`() {
+        val column = DataColumn.createValueColumn<Number?>("numbers", listOf(1, 2))
+
+        column.concat().let { result ->
+            result shouldBeSameInstanceAs column
+            result.type() shouldBe typeOf<Number?>()
+        }
+        listOf(column).concat().let { result ->
+            result shouldBeSameInstanceAs column
+            result.type() shouldBe typeOf<Number?>()
+        }
+    }
+
+    @Test
+    fun `data column concat uses runtime types when all inputs are empty`() {
+        DataColumn.emptyOf<Int>("ints").concat(DataColumn.emptyOf<String>("strings")).type() shouldBe
+            typeOf<Comparable<*>>()
+        DataColumn.emptyOf<Int?>("first").concat(DataColumn.emptyOf<Int?>("second")).type() shouldBe
+            typeOf<Int>()
+    }
+
+    @Test
     fun `data column concat with an empty column preserves values and type`() {
         val values = columnOf(1, 2).named("values")
         val empty = DataColumn.empty("empty")
@@ -78,6 +122,11 @@ class ConcatTests {
             "b" to columnOf("x", "y", "z"),
             "c" to columnOf<Boolean?>(null, null, true),
         )
+    }
+
+    @Test
+    fun `empty frame column concat returns an empty dataframe`() {
+        emptyList<DataFrame<Any>>().toFrameColumn("frames").concat() shouldBe DataFrame.empty()
     }
 
     @Test
@@ -113,6 +162,17 @@ class ConcatTests {
             "a" to columnOf<Int?>(1, null, 2),
             "b" to columnOf<String?>(null, "x", "y"),
         )
+    }
+
+    @Test
+    fun `data row concat infers a common runtime type`() {
+        val integer = dataFrameOf("value")(1)[0]
+        val double = dataFrameOf("value")(2.5)[0]
+
+        val result = integer.concat(double)
+
+        result shouldBe dataFrameOf("value" to columnOf<Number>(1, 2.5))
+        result["value"].type() shouldBe typeOf<Number>()
     }
 
     // endregion
@@ -180,6 +240,14 @@ class ConcatTests {
     }
 
     @Test
+    fun `dataframe concat without appended frames returns the receiver instance`() {
+        val df = DataFrame.emptyOf<EmptySchema>()
+
+        df.concat() shouldBeSameInstanceAs df
+        df.concat(emptyList<DataFrame<EmptySchema>>()) shouldBeSameInstanceAs df
+    }
+
+    @Test
     fun `dataframe concat with an empty dataframe preserves rows and schema`() {
         val df = dataFrameOf("id", "value")(1, "a", 2, "b")
         val empty = DataFrame.empty()
@@ -191,6 +259,81 @@ class ConcatTests {
         df.concat(empty).let { result ->
             result shouldBe df
             result.schema() shouldBe df.schema()
+        }
+    }
+
+    @Test
+    fun `zero-row appended dataframe contributes its columns`() {
+        val df = dataFrameOf("a")(1)
+        val empty = dataFrameOf("z" to DataColumn.emptyOf<String>())
+        val result = df concat empty
+
+        result shouldBe dataFrameOf(
+            "a" to columnOf(1),
+            "z" to DataColumn.createValueColumn<String?>("z", listOf(null)),
+        )
+        result["z"].type() shouldBe typeOf<String?>()
+    }
+
+    @Test
+    fun `missing list column is filled with empty lists`() {
+        val withList = dataFrameOf(
+            "name" to columnOf("Alice"),
+            "values" to columnOf(listOf(1, 2, 3)),
+        )
+        val withoutList = dataFrameOf("name" to columnOf("Charlie"))
+        val expected = dataFrameOf(
+            "name" to columnOf("Alice", "Charlie"),
+            "values" to columnOf(listOf(1, 2, 3), emptyList()),
+        )
+
+        concatWithEverySchemaUnifyingOverload(withList, withoutList).forEach { result ->
+            result shouldBe expected
+            result["values"].type() shouldBe typeOf<List<Int>>()
+        }
+    }
+
+    @Test
+    fun `missing frame column is filled with empty dataframes`() {
+        val firstFrame = dataFrameOf("score")(100)
+        val withFrames = dataFrameOf(
+            "name" to columnOf("Alice"),
+            "details" to columnOf(firstFrame),
+        )
+        val withoutFrames = dataFrameOf("name" to columnOf("Charlie"))
+        val expected = dataFrameOf(
+            "name" to columnOf("Alice", "Charlie"),
+            "details" to columnOf(firstFrame, DataFrame.empty()),
+        )
+
+        concatWithEverySchemaUnifyingOverload(withFrames, withoutFrames).forEach { result ->
+            result shouldBe expected
+            result["details"].type() shouldBe typeOf<DataFrame<*>>()
+        }
+    }
+
+    @Test
+    fun `missing column group keeps the group and fills nested columns with null`() {
+        val withGrades = dataFrameOf(
+            "name" to columnOf("Alice"),
+            "grades" to dataFrameOf(
+                "math" to columnOf(100.0),
+                "english" to columnOf(90.0),
+            ).asColumnGroup(),
+        )
+        val withoutGrades = dataFrameOf("name" to columnOf("Charlie"))
+        val expected = dataFrameOf(
+            "name" to columnOf("Alice", "Charlie"),
+            "grades" to dataFrameOf(
+                "math" to columnOf<Double?>(100.0, null),
+                "english" to columnOf<Double?>(90.0, null),
+            ).asColumnGroup(),
+        )
+
+        concatWithEverySchemaUnifyingOverload(withGrades, withoutGrades).forEach { result ->
+            result shouldBe expected
+            result.getColumnGroup("grades")["math"].type() shouldBe typeOf<Double?>()
+            result.getColumnGroup("grades")["english"].type() shouldBe typeOf<Double?>()
         }
     }
 
@@ -317,6 +460,23 @@ class ConcatTests {
         reduced.concat() shouldBe dataFrameOf(
             "value" to columnOf<Int?>(3, null),
             "type" to columnOf<String?>("a", null),
+        )
+    }
+
+    @Test
+    fun `reduced groupBy concat unifies different reduced row schemas`() {
+        val df = dataFrameOf(
+            "key" to columnOf("a", "b"),
+            "value" to columnOf(1, 2),
+        )
+        val reduced = df.groupBy("key").updateGroups {
+            if (it["key"][0] == "b") it.add("extra") { "y" } else it
+        }.first()
+
+        reduced.concat() shouldBe dataFrameOf(
+            "key" to columnOf("a", "b"),
+            "value" to columnOf(1, 2),
+            "extra" to columnOf<String?>(null, "y"),
         )
     }
 

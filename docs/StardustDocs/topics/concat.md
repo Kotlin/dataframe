@@ -33,17 +33,20 @@ dataFrame.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
 When `concat` combines frames, it unifies their schemas:
 
 * The result contains the union of the input columns, ordered by their first appearance.
-* When two or more input schemas are combined, values from columns with the same name form one result column. Its type
-  is kept, except for its nullability, if all contributing columns have the same type. If their types differ, the
-  result type is inferred from the concatenated values. The result type is nullable only if the resulting values
-  contain `null`.
-* If an input does not contain a result column, that column is filled with `null` for the input's rows and becomes
-  nullable. A missing `List` column is filled with empty lists, and a missing `FrameColumn` with empty
-  `DataFrame`s instead; these columns do not become nullable.
+* When two or more input schemas are combined, values from columns with the same name form one result column. It keeps
+  the contributing columns' shared runtime type, except for its nullability. If their runtime types differ, the result
+  type is inferred from the concatenated values. If all contributing columns are empty, their runtime types
+  determine the result type. The result type is nullable only if the resulting values contain `null`.
+* If an input does not contain a result [`ValueColumn`](DataColumn.md#valuecolumn),
+  that column is filled with `null` for the input's rows and becomes nullable. 
+  A missing `List` column is filled with empty lists, and a missing [`FrameColumn`](DataColumn.md#framecolumn) 
+  with empty `DataFrame`s instead; these columns do not become nullable.
+  A missing [`ColumnGroup`](DataColumn.md#columngroup) remains a `ColumnGroup`,
+  and its nested columns are filled according to these same rules recursively.
 
 For overloads that append [`DataFrame`](DataFrame.md) objects, an appended `DataFrame` with no rows adds no rows,
-but its columns still participate in schema unification. Calling the vararg overload without any `frames` returns
-the receiver unchanged. Passing an empty iterable of `DataFrame` objects returns the same receiver instance.
+but its columns still participate in schema unification. Calling the vararg overload without any `frames` or passing
+an empty iterable of `DataFrame` objects returns the receiver as the same `DataFrame` instance.
 An empty iterable of `DataRow` objects adds no rows and provides no additional schema to unify.
 
 See also:
@@ -88,7 +91,7 @@ firstBatch.concat(secondBatch, thirdBatch)
 <!---END-->
 <inline-frame src="./resources/concatDataFrames.html" width="100%" height="500px"></inline-frame>
 
-### Schema unification
+### Schema unification examples
 
 The following two frames have different schemas. Their `age` columns also have different runtime types:
 
@@ -173,6 +176,8 @@ row.concat(vararg rows: DataRow<T>): DataFrame<T>
 `DataRow.concat` is useful when working with operations that produce rows:
 
 <!---FUN concatDataRows-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 val youngest = df.minBy { age }
@@ -181,8 +186,19 @@ val oldest = df.maxBy { age }
 youngest.concat(oldest)
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+val youngest = df.minBy("age")
+val oldest = df.maxBy("age")
+
+youngest.concat(oldest)
+```
+
+</tab></tabs>
 <!---END-->
-<inline-frame src="./resources/concatDataRows.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/concatDataRows_properties.html" width="100%" height="500px"></inline-frame>
 
 ## `concat` on `DataColumn`
 
@@ -195,10 +211,10 @@ collectionColumn.concat(): List<T>
 ```
 
 For value columns, `concat` appends the values from `other` in argument order and preserves the receiver's name.
-With one input column, its runtime type is preserved. With two or more input columns of the same type, the
-result keeps this type, except for its nullability. If their types differ, the result type is inferred from the
-concatenated values. If all input columns are empty, their types determine the result type.
-For two or more input columns, the result type is nullable only if the resulting values contain `null`.
+With one input column, its runtime type is preserved. With two or more input columns that have the same runtime type,
+the result keeps this type except for its nullability. If their types differ, the result type is inferred from the
+concatenated values. If all input columns are empty, their runtime types determine the result type.
+The result runtime type is nullable only if the resulting values contain `null`.
 
 For a column of `DataFrame` values, `concat` combines the rows of all stored frames and performs
 schema unification. Frames are processed in their order of appearance, and row order within every frame is
@@ -269,9 +285,14 @@ same name as a key, that original column remains unchanged.
 repeated for every row in its group. An existing group column with the same name is not overwritten.
 
 [`ReducedGroupBy.concat()`](groupBy.md#reducing) applies the stored reducer to every group and returns one result
-row per group, in group order. If the reducer returns `null`, the result still contains a row for that group, filled
-with `null` in the columns contributed by other reduced rows. In `List` columns and `FrameColumn`s, these values are
-empty lists and empty `DataFrame`s instead of `null`.
+row per group, in group order.
+
+If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
+their first appearance in the reduced rows. Values missing from a reduced row follow the
+[schema-unification rules for `DataFrame`s](#concat-on-dataframe).
+
+If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
+missing every result column, so its values are filled according to the same rules.
 
 ```kotlin
 groupBy.concat(): DataFrame<G>
@@ -286,6 +307,8 @@ The `adult` group appears before the `teen` group, so `concat()` changes the row
 It does not add the `ageGroup` key column. The `age` values are colored according to the grouping expression:
 
 <!---FUN concatGroupBy-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 val grouped = df.groupBy {
@@ -295,13 +318,27 @@ val grouped = df.groupBy {
 grouped.concat()
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+val grouped = df.groupBy {
+    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+}
+
+grouped.concat()
+```
+
+</tab></tabs>
 <!---END-->
-<inline-frame src="./resources/concatGroupBy.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/concatGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 `concatWithKeys()` adds the missing `ageGroup` column and repeats each key value for the rows in its group. The
 added column is highlighted in the result:
 
 <!---FUN concatGroupByWithKeys-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 val grouped = df.groupBy {
@@ -311,20 +348,42 @@ val grouped = df.groupBy {
 grouped.concatWithKeys()
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+val grouped = df.groupBy {
+    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+}
+
+grouped.concatWithKeys()
+```
+
+</tab></tabs>
 <!---END-->
-<inline-frame src="./resources/concatGroupByWithKeys.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/concatGroupByWithKeys_properties.html" width="100%" height="500px"></inline-frame>
 
 After a reducing operation such as [`first`](first.md), `concat()` applies the reducer and combines one selected
 row from every group:
 
 <!---FUN concatReducedGroupBy-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df.groupBy { city }.first().concat()
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").first().concat()
+```
+
+</tab></tabs>
 <!---END-->
-<inline-frame src="./resources/concatReducedGroupBy.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/concatReducedGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ## `concat` on `Iterable`
 
@@ -348,17 +407,10 @@ participate in schema unification. An empty iterable returns an empty [`DataFram
 For `Iterable<DataColumn>`, the values form one result column. The result keeps the name of the first column and
 uses the same type rules as [`DataColumn.concat`](#concat-on-datacolumn). An empty iterable returns an empty column.
 
-For `Iterable<DataRow?>`, `concat` returns a `DataFrame` containing rows from the iterable, in
-iteration order. A `null` element of the iterable contributes one row whose values are `null` in every result
-column. The result schema is the union of the schemas of all non-null rows, with columns ordered by their first
-appearance. If a non-null row does not contain a result column, its value in that row is `null`. Values from columns
-with the same name form one result column. When the iterable has more than one element, the result column's base type
-is preserved if all contributing columns have the same type. If their types differ, its type is
-inferred from the combined values. Its type is nullable only if it contains `null`.
-An empty iterable returns an empty [`DataFrame`](DataFrame.md).
-
-In `List` columns and `FrameColumn`s, values missing from a non-null row or contributed by a `null` element are
-empty lists and empty `DataFrame`s instead of `null`, and these columns do not become nullable.
+For `Iterable<DataRow?>`, `concat` returns a `DataFrame` containing rows from the iterable in iteration order.
+Non-null rows follow the same schema-unification rules described for [`DataRow.concat`](#concat-on-datarow). A `null`
+element contributes one result row that is treated as missing every result column, so its values follow the same
+missing-column rules. An empty iterable returns an empty [`DataFrame`](DataFrame.md).
 
 ### Examples
 
