@@ -2,6 +2,8 @@
 
 This document outlines the guidelines for writing KDocs in the Kotlin DataFrame project.
 
+For website documentation guidelines, see [DOCUMENTATION_GUIDELINES.md](DOCUMENTATION_GUIDELINES.md).
+
 <!-- TOC -->
 * [KDocs Guidelines](#kdocs-guidelines)
   * [The most important advice](#the-most-important-advice)

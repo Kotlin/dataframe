@@ -2,6 +2,13 @@
 
 Guidance for the documentation site. See the root `AGENTS.md` for repo-wide rules.
 
+**Content rules for the website** (topic structure, summaries, samples, links, examples) live in
+[`DOCUMENTATION_GUIDELINES.md`](../../DOCUMENTATION_GUIDELINES.md) — read it before writing or updating a topic;
+this file only covers the mechanics of the site and its generators.
+For an operation page, use the
+[`operation-website-documentation`](../../.claude/skills/operation-website-documentation/SKILL.md) skill,
+which walks through that workflow step by step.
+
 ## What this is
 
 The Kotlin DataFrame documentation website, authored as a **JetBrains WriterSide** project (not a Gradle module).
