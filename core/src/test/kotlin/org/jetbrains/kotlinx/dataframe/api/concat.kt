@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class ConcatTests {
 
@@ -37,6 +38,16 @@ class ConcatTests {
         val result = integers.concat(doubles)
 
         result shouldBe columnOf<Number?>(1, 2, 3.0, null).named("numbers")
+    }
+
+    @Test
+    fun `data column concat derives nullability from resulting values`() {
+        val first = DataColumn.createValueColumn<Int?>("first", listOf(1, 2))
+        val second = DataColumn.createValueColumn<Int?>("second", listOf(3, 4))
+
+        first.type() shouldBe typeOf<Int?>()
+        second.type() shouldBe typeOf<Int?>()
+        first.concat(second).type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -207,7 +218,7 @@ class ConcatTests {
         val emptyDf2 = DataFrame.empty(3)
         val result = emptyDf1 concat emptyDf2
 
-        result.rowsCount() shouldBe 5
+        result shouldBe DataFrame.empty(5)
     }
 
     // endregion

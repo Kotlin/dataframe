@@ -20,8 +20,10 @@ private interface ConcatDocs {
      * ### Schema unification
      *
      * The result contains the union of the input schemas. Columns are ordered by their first appearance in the
-     * inputs. Columns with the same name are concatenated as described in [DataColumn.concat]:
-     * their type is kept if it is the same in all inputs and otherwise inferred from the values.
+     * inputs. When two or more input schemas are combined, columns with the same name are concatenated as described
+     * in [DataColumn.concat]. If the contributing columns have the same [type][DataColumn.type], the result
+     * keeps this type. If their types differ, the result type is inferred from the concatenated values.
+     * Result nullability follows whether the resulting values contain `null`.
      * When a column is missing from an input that contributes rows, its values for those rows are filled with `null`,
      * and its result type becomes nullable.
      */
@@ -29,9 +31,10 @@ private interface ConcatDocs {
 
     /**
      * The result keeps the name of the first column.
-     * If all input columns have the same runtime [type][DataColumn.type], the result keeps that type.
-     * If their types differ and at least one value is present, the result type is inferred from the concatenated
-     * values. If all input columns are empty, their types determine the result type.
+     * If there is only one input column, its [type][DataColumn.type] is preserved.
+     * For two or more input columns with the same type, the result keeps this type. If their types differ,
+     * the result type is inferred from the concatenated values.
+     * If all input columns are empty, their types determine the result type.
      * The result becomes nullable if the resulting values contain `null`.
      */
     typealias DataColumnUnification = Nothing
@@ -412,6 +415,7 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
  * If a non-null row does not contain a result column, its value in that row is `null`. Values from columns with the
  * same name in different rows form a single result column. If those columns have the same runtime type, the result
  * keeps that type; otherwise, its type is inferred from their combined values.
+ * Its nullability follows whether it contains `null`.
  *
  * A `null` element of this iterable contributes one result row. That row contains `null` in every column contributed
  * by the non-null rows. An empty iterable produces an empty [DataFrame].

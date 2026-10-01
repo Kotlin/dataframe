@@ -30,11 +30,12 @@ dataFrame.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
 dataFrame.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
 ```
 
-When input frames have different schemas, `concat` unifies them:
+When `concat` combines frames, it unifies their schemas:
 
 * The result contains the union of the input columns, ordered by their first appearance.
-* Values from columns with the same name form one result column. If all such columns have the same runtime type,
-  that type is kept; otherwise, the type is inferred from their combined values.
+* When two or more input schemas are combined, values from columns with the same name form one result column. Its type
+  is kept if all contributing columns have the same type. If their types differ, the result type is inferred 
+  from the concatenated values. Result nullability follows whether the resulting values contain `null`.
 * If an input does not contain a result column, that column is filled with `null` for the input's rows and becomes
   nullable.
 
@@ -192,10 +193,10 @@ collectionColumn.concat(): List<T>
 ```
 
 For value columns, `concat` appends the values from `other` in argument order and preserves the receiver's name.
-If all input columns have the same runtime type, the result keeps that type. If their types differ and at least one
-value is present, the result type is inferred from the concatenated values. If all input columns are empty, their
-types determine the result type. The result becomes nullable if its values contain `null`. Empty columns add no
-values.
+With one input column, its runtime type is preserved. With two or more input columns of the same type, the
+result keeps this type. If their types differ, the result type is inferred from the concatenated values.
+Result nullability follows whether the resulting values contain `null`.
+If all input columns are empty, their types determine the result type.
 
 For a column of `DataFrame` values, `concat` combines the rows of all stored frames and performs
 schema unification. Frames are processed in their order of appearance, and row order within every frame is
@@ -348,8 +349,10 @@ For `Iterable<DataRow?>`, `concat` returns a `DataFrame` containing rows from th
 iteration order. A `null` element of the iterable contributes one row whose values are `null` in every result
 column. The result schema is the union of the schemas of all non-null rows, with columns ordered by their first
 appearance. If a non-null row does not contain a result column, its value in that row is `null`. Values from columns
-with the same name form one result column: their runtime type is kept when it is the same in every row and otherwise
-inferred from the combined values. An empty iterable returns an empty [`DataFrame`](DataFrame.md).
+with the same name form one result column. When the iterable has more than one element, the result column's base type
+is preserved if all contributing columns have the same type. If their types differ, its type is
+inferred from the combined values. Its nullability follows whether it contains `null`.
+An empty iterable returns an empty [`DataFrame`](DataFrame.md).
 
 ### Examples
 
