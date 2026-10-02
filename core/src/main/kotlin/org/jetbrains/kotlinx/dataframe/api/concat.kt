@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.type
 
 @ExcludeFromSources
-@Suppress("ClassName")
 private interface ConcatDocs {
 
     /**
@@ -365,10 +364,6 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
  * Applies the stored reducer to every group and returns a [DataFrame] containing one resulting row per group, in
  * the order in which the groups appear in the underlying [GroupBy].
  *
- * [ReducedGroupBy] is returned by reducing operations such as [first][GroupBy.first], [last][GroupBy.last],
- * [minBy][GroupBy.minBy], [maxBy][GroupBy.maxBy], [medianBy][GroupBy.medianBy], and
- * [percentileBy][GroupBy.percentileBy].
- *
  * If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
  * their first appearance in the reduced rows. A value column missing from a reduced row is filled with `null`.
  *
@@ -377,7 +372,11 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
  * If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
  * missing every result column, so its values are filled according to the same rules.
  *
- * For more information: {@include [DocumentationUrls.GroupBy]} {@include [DocumentationUrls.Concat]}
+ * For more information:
+ *
+ * {@include [DocumentationUrls.GroupBy]}
+ *
+ * {@include [DocumentationUrls.Concat]}
  *
  * See also:
  * - [GroupBy.concat] — concatenates the group rows without applying a reducer.

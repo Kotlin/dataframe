@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
-import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.minBy
@@ -114,16 +113,17 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
 
     @Test
     fun concatDataFramesWithDifferentSchemas() {
-        // SampleStart
-        (peopleDf1 concat peopleDf2)
-            // SampleEnd
-            .also { result ->
-                result shouldBe dataFrameOf(
-                    "name" to columnOf("Alice", "Bob", "Charlie"),
-                    "age" to columnOf<Number>(20, 15, 25.0),
-                    "city" to columnOf<String?>(null, null, "London"),
-                )
-            }
+        val newDf =
+            // SampleStart
+            peopleDf1 concat peopleDf2
+        // SampleEnd
+        newDf.also { result ->
+            result shouldBe dataFrameOf(
+                "name" to columnOf("Alice", "Bob", "Charlie"),
+                "age" to columnOf<Number>(20, 15, 25.0),
+                "city" to columnOf<String?>(null, null, "London"),
+            )
+        }
             .defaultHeaderFormatting { "city"() }
             .saveDfHtmlSample()
     }
@@ -132,7 +132,11 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     fun concatDataFrameAndRows() {
         // SampleStart
         val registeredPeople = dataFrameOf("name", "age", "city")("Alice", 20, "London")
-        val newPeople = dataFrameOf("name", "age", "city")("Bob", 15, "Paris", "Charlie", 25, "London")
+        val newPeople = dataFrameOf(
+            "name" to columnOf("Bob", "Charlie"),
+            "age" to columnOf(15, 25),
+            "city" to columnOf("Paris", "London"),
+        )
 
         registeredPeople.concat(newPeople.rows())
             // SampleEnd
@@ -209,15 +213,15 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     @Test
     fun concatFrameColumn() {
         // SampleStart
-        val teams = dataFrameOf(
-            "team" to columnOf("Engineering", "Design"),
-            "members" to columnOf(
-                dataFrameOf("name", "age")("Alice", 20, "Bob", 15),
-                dataFrameOf("name", "age")("Charlie", 25),
+        val teamMembers = columnOf(
+            dataFrameOf(
+                "name" to columnOf("Alice", "Bob"),
+                "age" to columnOf(20, 15),
             ),
+            dataFrameOf("name", "age")("Charlie", 25),
         )
 
-        teams.members.concat()
+        teamMembers.concat()
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
@@ -231,7 +235,11 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
     @Test
     fun concatCollectionColumn() {
         // SampleStart
-        val nameGroups = columnOf<Collection<String>>(listOf("Alice", "Bob"), emptySet(), setOf("Charlie"))
+        val nameGroups = columnOf<Collection<String>>(
+            listOf("Alice", "Bob"),
+            emptySet(),
+            setOf("Charlie"),
+        )
 
         nameGroups.concat()
             // SampleEnd
@@ -251,9 +259,9 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Charlie", "Bob"),
-                    "age" to listOf(20, 25, 15),
-                    "city" to listOf("London", "London", "Paris"),
+                    "name" to columnOf("Alice", "Charlie", "Bob"),
+                    "age" to columnOf(20, 25, 15),
+                    "city" to columnOf("London", "London", "Paris"),
                 )
             }.format("age").with {
                 val age = it as Int
@@ -273,9 +281,9 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Charlie", "Bob"),
-                    "age" to listOf(20, 25, 15),
-                    "city" to listOf("London", "London", "Paris"),
+                    "name" to columnOf("Alice", "Charlie", "Bob"),
+                    "age" to columnOf(20, 25, 15),
+                    "city" to columnOf("London", "London", "Paris"),
                 )
             }
     }
@@ -291,10 +299,10 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Charlie", "Bob"),
-                    "age" to listOf(20, 25, 15),
-                    "city" to listOf("London", "London", "Paris"),
-                    "ageGroup" to listOf("adult", "adult", "teen"),
+                    "name" to columnOf("Alice", "Charlie", "Bob"),
+                    "age" to columnOf(20, 25, 15),
+                    "city" to columnOf("London", "London", "Paris"),
+                    "ageGroup" to columnOf("adult", "adult", "teen"),
                 )
             }.format("ageGroup").with {
                 background(if (it == "adult") adultColor else teenColor) and textColor(black)
@@ -314,10 +322,10 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Charlie", "Bob"),
-                    "age" to listOf(20, 25, 15),
-                    "city" to listOf("London", "London", "Paris"),
-                    "ageGroup" to listOf("adult", "adult", "teen"),
+                    "name" to columnOf("Alice", "Charlie", "Bob"),
+                    "age" to columnOf(20, 25, 15),
+                    "city" to columnOf("London", "London", "Paris"),
+                    "ageGroup" to columnOf("adult", "adult", "teen"),
                 )
             }
     }
@@ -329,9 +337,9 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Bob"),
-                    "age" to listOf(20, 15),
-                    "city" to listOf("London", "Paris"),
+                    "name" to columnOf("Alice", "Bob"),
+                    "age" to columnOf(20, 15),
+                    "city" to columnOf("London", "Paris"),
                 )
             }
             .saveDfHtmlSample()
@@ -344,9 +352,9 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
             // SampleEnd
             .also { result ->
                 result shouldBe dataFrameOf(
-                    "name" to listOf("Alice", "Bob"),
-                    "age" to listOf(20, 15),
-                    "city" to listOf("London", "Paris"),
+                    "name" to columnOf("Alice", "Bob"),
+                    "age" to columnOf(20, 15),
+                    "city" to columnOf("London", "Paris"),
                 )
             }
     }
@@ -356,7 +364,11 @@ class ConcatSamples : DataFrameSampleHelper("concat", "api") {
         // SampleStart
         val batches = listOf(
             dataFrameOf("name", "age", "city")("Charlie", 25, "London"),
-            dataFrameOf("name", "age", "city")("Alice", 20, "London", "Bob", 15, "Paris"),
+            dataFrameOf(
+                "name" to columnOf("Alice", "Bob"),
+                "age" to columnOf(20, 15),
+                "city" to columnOf("London", "Paris"),
+            ),
         )
 
         batches.concat()

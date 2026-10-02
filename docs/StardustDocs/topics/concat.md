@@ -25,12 +25,12 @@ objects are not modified.
 
 ```kotlin
 dataFrame.concat(vararg frames: DataFrame<T>): DataFrame<T>
-dataFrame concat frame: DataFrame<Any>
+dataFrame concat frame
 dataFrame.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
 dataFrame.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
 ```
 
-When `concat` combines frames, it unifies their schemas:
+When `concat` combines dataframes, it unifies their schemas:
 
 * The result contains the union of the input columns, ordered by their first appearance.
 * When two or more input schemas are combined, values from columns with the same name form one result column. It keeps
@@ -53,17 +53,17 @@ See also:
 
 * [`add`](add.md), which adds columns to a `DataFrame`.
 * [`append`](append.md), which appends rows supplied as values or schema objects.
-* [`join`](join.md), which combines rows from two frames using matching keys or a condition.
-* [Multiple DataFrames](multipleDataFrames.md), an overview of operations that combine frames.
+* [`join`](join.md), which combines rows from two dataframes using matching keys or a condition.
+* [Multiple DataFrames](multipleDataFrames.md), an overview of operations that combine dataframes.
 
-### Parameters
+### Parameters {id="parameters_df"}
 
 * `vararg frames: DataFrame | frames: Iterable<DataFrame>` — the `DataFrame`s whose rows are appended.
   Vararg `frames` are processed in argument order; iterable `frames` are processed in iteration order.
 * `frame: DataFrame` — a single `DataFrame` appended with infix syntax.
 * `rows: Iterable<DataRow>` — the rows to append, processed in iteration order.
 
-### Examples
+### Examples {id="examples_df"}
 
 The following [`DataFrame`](DataFrame.md) is used in examples that share one input:
 
@@ -76,7 +76,7 @@ df
 <!---END-->
 <inline-frame src="./resources/concatDf.html" width="100%" height="500px"></inline-frame>
 
-Pass several frames as vararg arguments to append their rows in argument order:
+Pass several dataframes as vararg arguments to append their rows in argument order:
 
 <!---FUN concatDataFrames-->
 
@@ -93,7 +93,7 @@ firstBatch.concat(secondBatch, thirdBatch)
 
 ### Schema unification examples
 
-The following two frames have different schemas. Their `age` columns also have different runtime types:
+The following two dataframes have different schemas. Their `age` columns also have different runtime types:
 
 <!---FUN concatDataFramesFirstInput-->
 
@@ -120,7 +120,7 @@ peopleDf2
 <!---FUN concatDataFramesWithDifferentSchemas-->
 
 ```kotlin
-(peopleDf1 concat peopleDf2)
+peopleDf1 concat peopleDf2
 ```
 
 <!---END-->
@@ -132,7 +132,11 @@ New data can be added to a [`DataFrame`](DataFrame.md) as an iterable of rows:
 
 ```kotlin
 val registeredPeople = dataFrameOf("name", "age", "city")("Alice", 20, "London")
-val newPeople = dataFrameOf("name", "age", "city")("Bob", 15, "Paris", "Charlie", 25, "London")
+val newPeople = dataFrameOf(
+    "name" to columnOf("Bob", "Charlie"),
+    "age" to columnOf(15, 25),
+    "city" to columnOf("Paris", "London")
+)
 
 registeredPeople.concat(newPeople.rows())
 ```
@@ -167,11 +171,11 @@ the same rules as [`DataFrame.concat`](#concat-on-dataframe).
 row.concat(vararg rows: DataRow<T>): DataFrame<T>
 ```
 
-### Parameters
+### Parameters {id="parameters_row"}
 
 * `vararg rows: DataRow` — the rows to append in argument order.
 
-### Examples
+### Examples {id="examples_row"}
 
 `DataRow.concat` is useful when working with operations that produce rows:
 
@@ -216,19 +220,19 @@ the result keeps this type except for its nullability. If their types differ, th
 concatenated values. If all input columns are empty, their runtime types determine the result type.
 The result runtime type is nullable only if the resulting values contain `null`.
 
-For a column of `DataFrame` values, `concat` combines the rows of all stored frames and performs
-schema unification. Frames are processed in their order of appearance, and row order within every frame is
+For a column of `DataFrame` values, `concat` combines the rows of all stored dataframes and performs
+schema unification. Dataframes are processed in their order of appearance, and row order within every dataframe is
 preserved. An empty column of `DataFrame` values produces an empty `DataFrame`.
-A stored frame with no rows adds no rows, but its columns still participate in schema unification.
+A stored dataframe with no rows adds no rows, but its columns still participate in schema unification.
 
 For a column of `Collection<T>` values, it flattens the collections into a `List<T>` while preserving the order of
 both the column values and the elements in each collection.
 
-### Parameters
+### Parameters {id="parameters_column"}
 
 * `vararg other: DataColumn<T>` — the columns whose values are appended to the receiver in argument order.
 
-### Examples
+### Examples {id="examples_column"}
 
 Concatenating value columns keeps the name of the receiver and finds a common type for the values:
 
@@ -241,21 +245,21 @@ peopleDf1.age.concat(peopleDf2.age)
 <!---END-->
 <inline-frame src="./resources/concatDataColumns.html" width="100%" height="500px"></inline-frame>
 
-A `FrameColumn` can naturally represent nested tables.
-`concat()` combines those nested frames in their order of appearance:
+A [`FrameColumn`](DataColumn.md#framecolumn) can store nested dataframes.
+`concat()` combines those dataframes in their order of appearance:
 
 <!---FUN concatFrameColumn-->
 
 ```kotlin
-val teams = dataFrameOf(
-    "team" to columnOf("Engineering", "Design"),
-    "members" to columnOf(
-        dataFrameOf("name", "age")("Alice", 20, "Bob", 15),
-        dataFrameOf("name", "age")("Charlie", 25),
+val teamMembers = columnOf(
+    dataFrameOf(
+        "name" to columnOf("Alice", "Bob"),
+        "age" to columnOf(20, 15),
     ),
+    dataFrameOf("name", "age")("Charlie", 25),
 )
 
-teams.members.concat()
+teamMembers.concat()
 ```
 
 <!---END-->
@@ -266,7 +270,11 @@ Concatenating a column of collections flattens all collection values. Empty coll
 <!---FUN concatCollectionColumn-->
 
 ```kotlin
-val nameGroups = columnOf<Collection<String>>(listOf("Alice", "Bob"), emptySet(), setOf("Charlie"))
+val nameGroups = columnOf<Collection<String>>(
+    listOf("Alice", "Bob"),
+    emptySet(),
+    setOf("Charlie")
+)
 
 nameGroups.concat()
 ```
@@ -277,7 +285,7 @@ nameGroups.concat()
 ## `concat` on `GroupBy`
 
 A [`GroupBy`](groupBy.md) stores its grouping keys separately from the group `DataFrame`s.
-[`GroupBy.concat()`](groupBy.md#aggregation) combines only those group frames, in group order, and preserves the row
+[`GroupBy.concat()`](groupBy.md#aggregation) combines only those group dataframes, in group order, and preserves the row
 order within each group. It does not add the separate key columns. If a group already contains a column with the
 same name as a key, that original column remains unchanged.
 
@@ -300,41 +308,13 @@ groupBy.concatWithKeys(): DataFrame<G>
 reducedGroupBy.concat(): DataFrame<G>
 ```
 
-### Examples
+### Examples {id="examples_groupby"}
 
 Here the grouping key `ageGroup` is created by an expression and is stored separately from the groups.
-The `adult` group appears before the `teen` group, so `concat()` changes the row order to Alice, Charlie, Bob.
-It does not add the `ageGroup` key column. The `age` values are colored according to the grouping expression:
-
-<!---FUN concatGroupBy-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-val grouped = df.groupBy {
-    expr { if (age >= 20) "adult" else "teen" } named "ageGroup"
-}
-
-grouped.concat()
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-val grouped = df.groupBy {
-    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
-}
-
-grouped.concat()
-```
-
-</tab></tabs>
-<!---END-->
-<inline-frame src="./resources/concatGroupBy_properties.html" width="100%" height="500px"></inline-frame>
-
-`concatWithKeys()` adds the missing `ageGroup` column and repeats each key value for the rows in its group. The
-added column is highlighted in the result:
+The `adult` group appears before the `teen` group, so `concatWithKeys()` changes the row order to Alice, Charlie, Bob.
+It adds the `ageGroup` key column and repeats each key value for the rows in its group.
+The added column is highlighted in the result,
+and values of this column are colored according to the grouping expression:
 
 <!---FUN concatGroupByWithKeys-->
 <tabs>
@@ -363,6 +343,35 @@ grouped.concatWithKeys()
 <!---END-->
 <inline-frame src="./resources/concatGroupByWithKeys_properties.html" width="100%" height="500px"></inline-frame>
 
+`concat()` does not include the `ageGroup` key column:
+
+<!---FUN concatGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+val grouped = df.groupBy {
+    expr { if (age >= 20) "adult" else "teen" } named "ageGroup"
+}
+
+grouped.concat()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+val grouped = df.groupBy {
+    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+}
+
+grouped.concat()
+```
+
+</tab></tabs>
+<!---END-->
+<inline-frame src="./resources/concatGroupBy_properties.html" width="100%" height="500px"></inline-frame>
+
 After a reducing operation such as [`first`](first.md), `concat()` applies the reducer and combines one selected
 row from every group:
 
@@ -387,7 +396,7 @@ df.groupBy("city").first().concat()
 
 ## `concat` on `Iterable`
 
-`concat()` combines an `Iterable` of frames, columns, or nullable rows in iteration order:
+`concat()` combines an `Iterable` of dataframes, columns, or nullable rows in iteration order:
 
 ```kotlin
 frames: Iterable<DataFrame<T>>
@@ -412,16 +421,20 @@ Non-null rows follow the same schema-unification rules described for [`DataRow.c
 element contributes one result row that is treated as missing every result column, so its values follow the same
 missing-column rules. An empty iterable returns an empty [`DataFrame`](DataFrame.md).
 
-### Examples
+### Examples {id="examples_iterable"}
 
-An iterable of frames is concatenated in iteration order:
+An iterable of dataframes is concatenated in iteration order:
 
 <!---FUN concatIterableDataFrames-->
 
 ```kotlin
 val batches = listOf(
     dataFrameOf("name", "age", "city")("Charlie", 25, "London"),
-    dataFrameOf("name", "age", "city")("Alice", 20, "London", "Bob", 15, "Paris"),
+    dataFrameOf(
+        "name" to columnOf("Alice", "Bob"),
+        "age" to columnOf(20, 15),
+        "city" to columnOf("London", "Paris"),
+    ),
 )
 
 batches.concat()
