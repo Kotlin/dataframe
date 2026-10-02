@@ -20,6 +20,11 @@ Requires the [`dataframe-excel` module](Modules.md#dataframe-excel),
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
 artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.
 
+<warning>
+When packaging an application as a fat JAR, merge `META-INF/services` resources. Otherwise, reading `.xls` files
+may fail even though all Apache POI dependencies are present. See [Packaging into a fat JAR](Packaging.md).
+</warning>
+
 ## Read
 
 You can read a [`DataFrame`](DataFrame.md) from an Excel file (via a file path or URL) 
