@@ -47,6 +47,9 @@ When `concat` combines dataframes, it unifies their schemas:
 For overloads that append [`DataFrame`](DataFrame.md) objects, an appended `DataFrame` with no rows adds no rows,
 but its columns still participate in schema unification. Calling the vararg overload without any `frames` or passing
 an empty iterable of `DataFrame` objects returns the receiver as the same `DataFrame` instance.
+
+For the overload that appends [`DataRow`](DataRow.md) objects,
+a receiver with no rows contributes no columns to the result schema.
 An empty iterable of `DataRow` objects adds no rows and provides no additional schema to unify.
 
 See also:
