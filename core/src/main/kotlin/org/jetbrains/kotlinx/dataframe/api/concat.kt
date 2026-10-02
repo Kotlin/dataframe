@@ -241,8 +241,9 @@ public infix fun <T, T1> DataFrame<T>.concat(frame: DataFrame<T1>): DataFrame<An
  *
  * The rows from [rows] retain their iteration order.
  *
- * @include [ConcatDocs.DataFrameSchemaUnification]
+ * @include [ConcatDocs.DataRowSchemaUnification]
  *
+ * If this [DataFrame] has no rows, its schema does not participate in schema unification.
  * An empty [rows] iterable appends no rows.
  *
  * For more information: {@include [DocumentationUrls.Concat]}
