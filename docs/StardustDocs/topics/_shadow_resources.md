@@ -158,6 +158,7 @@
 <resource src="valuesOnGroupBySelectedColumns_properties.html"></resource>
 <resource src="indexingDf.html"></resource>
 <resource src="indicesGetRows.html"></resource>
+<resource src="iterateDf.html"></resource>
 <resource src="dfLeftImplicit.html"></resource>
 <resource src="dfRightImplicit.html"></resource>
 <resource src="notebook_test_join_10.html"></resource>
