@@ -147,7 +147,11 @@ class ConcatTests {
         val row2 = dataFrameOf("id", "value")(2, "b")[0]
         val row3 = dataFrameOf("id", "value")(3, "c")[0]
 
-        row1.concat(row2, row3) shouldBe dataFrameOf("id", "value")(1, "a", 2, "b", 3, "c")
+        val expected = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "value" to columnOf("a", "b", "c"),
+        )
+        row1.concat(row2, row3) shouldBe expected
     }
 
     @Test
@@ -181,20 +185,42 @@ class ConcatTests {
 
     @Test
     fun `dataframe vararg concat appends all frames in order`() {
-        val df1 = dataFrameOf("id", "value")(1, "a", 2, "b")
-        val df2 = dataFrameOf("id", "value")(3, "c")
-        val df3 = dataFrameOf("id", "value")(4, "d", 5, "e")
+        val df1 = dataFrameOf(
+            "id" to columnOf(1, 2),
+            "value" to columnOf("a", "b"),
+        )
+        val df2 = dataFrameOf(
+            "id" to columnOf(3),
+            "value" to columnOf("c"),
+        )
+        val df3 = dataFrameOf(
+            "id" to columnOf(4, 5),
+            "value" to columnOf("d", "e"),
+        )
+        val expected = dataFrameOf(
+            "id" to columnOf(1, 2, 3, 4, 5),
+            "value" to columnOf("a", "b", "c", "d", "e"),
+        )
 
-        df1.concat(df2, df3) shouldBe
-            dataFrameOf("id", "value")(1, "a", 2, "b", 3, "c", 4, "d", 5, "e")
+        df1.concat(df2, df3) shouldBe expected
     }
 
     @Test
     fun `infix dataframe concat appends rows from another dataframe`() {
-        val df1 = dataFrameOf("id", "value")(1, "a", 2, "b")
-        val df2 = dataFrameOf("id", "value")(3, "c")
+        val df1 = dataFrameOf(
+            "id" to columnOf(1, 2),
+            "value" to columnOf("a", "b"),
+        )
+        val df2 = dataFrameOf(
+            "id" to columnOf(3),
+            "value" to columnOf("c"),
+        )
+        val expected = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "value" to columnOf("a", "b", "c"),
+        )
 
-        (df1 concat df2) shouldBe dataFrameOf("id", "value")(1, "a", 2, "b", 3, "c")
+        (df1 concat df2) shouldBe expected
     }
 
     @Test
@@ -207,12 +233,13 @@ class ConcatTests {
             "id" to columnOf(3),
             "right" to columnOf(true),
         )
-
-        (df1 concat df2) shouldBe dataFrameOf(
+        val expected = dataFrameOf(
             "id" to columnOf(1, 2, 3),
             "left" to columnOf<String?>("a", "b", null),
             "right" to columnOf<Boolean?>(null, null, true),
         )
+
+        df1 concat df2 shouldBe expected
     }
 
     @Test
@@ -225,10 +252,20 @@ class ConcatTests {
 
     @Test
     fun `dataframe concat rows appends iterable rows`() {
-        val df1 = dataFrameOf("id", "value")(1, "a")
-        val df2 = dataFrameOf("id", "value")(2, "b", 3, "c")
+        val df1 = dataFrameOf(
+            "id" to columnOf(1),
+            "value" to columnOf("a"),
+        )
+        val df2 = dataFrameOf(
+            "id" to columnOf(2, 3),
+            "value" to columnOf("b", "c"),
+        )
+        val expected = dataFrameOf(
+            "id" to columnOf(1, 2, 3),
+            "value" to columnOf("a", "b", "c"),
+        )
 
-        df1.concat(df2.rows()) shouldBe dataFrameOf("id", "value")(1, "a", 2, "b", 3, "c")
+        df1.concat(df2.rows()) shouldBe expected
     }
 
     @Test
@@ -249,7 +286,10 @@ class ConcatTests {
 
     @Test
     fun `dataframe concat with an empty dataframe preserves rows and schema`() {
-        val df = dataFrameOf("id", "value")(1, "a", 2, "b")
+        val df = dataFrameOf(
+            "id" to columnOf(1, 2),
+            "value" to columnOf("a", "b"),
+        )
         val empty = DataFrame.empty()
 
         empty.concat(df).let { result ->
@@ -267,11 +307,12 @@ class ConcatTests {
         val df = dataFrameOf("a")(1)
         val empty = dataFrameOf("z" to DataColumn.emptyOf<String>())
         val result = df concat empty
-
-        result shouldBe dataFrameOf(
+        val expected = dataFrameOf(
             "a" to columnOf(1),
             "z" to DataColumn.createValueColumn<String?>("z", listOf(null)),
         )
+
+        result shouldBe expected
         result["z"].type() shouldBe typeOf<String?>()
     }
 
@@ -371,63 +412,63 @@ class ConcatTests {
     @Test
     fun `groupBy concat preserves group order without adding group keys`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("a", "b", "a", "b"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("a", "b", "a", "b"),
         )
         val grouped = df.groupBy {
             expr { "Category: ${"type"<String>().uppercase()}" } named "category"
         }
 
         grouped.concat() shouldBe dataFrameOf(
-            "value" to listOf(1, 3, 2, 4),
-            "type" to listOf("a", "a", "b", "b"),
+            "value" to columnOf(1, 3, 2, 4),
+            "type" to columnOf("a", "a", "b", "b"),
         )
     }
 
     @Test
     fun `groupBy concat preserves group columns with the same names as keys`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("a", "b", "a", "b"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("a", "b", "a", "b"),
         )
         val grouped = df.groupBy("type").updateGroups { update("type").with { "changed" } }
 
         grouped.concat() shouldBe dataFrameOf(
-            "value" to listOf(1, 3, 2, 4),
-            "type" to listOf("changed", "changed", "changed", "changed"),
+            "value" to columnOf(1, 3, 2, 4),
+            "type" to columnOf("changed", "changed", "changed", "changed"),
         )
     }
 
     @Test
     fun `groupBy concatWithKeys adds missing keys with values repeated for every group row`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("a", "b", "a", "b"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("a", "b", "a", "b"),
         )
         val grouped = df.groupBy {
             expr { "Category: ${"type"<String>().uppercase()}" } named "category"
         }
 
         grouped.concatWithKeys() shouldBe dataFrameOf(
-            "value" to listOf(1, 3, 2, 4),
-            "type" to listOf("a", "a", "b", "b"),
-            "category" to listOf("Category: A", "Category: A", "Category: B", "Category: B"),
+            "value" to columnOf(1, 3, 2, 4),
+            "type" to columnOf("a", "a", "b", "b"),
+            "category" to columnOf("Category: A", "Category: A", "Category: B", "Category: B"),
         )
     }
 
     @Test
     fun `groupBy concatWithKeys does not overwrite a group column with the same name as a key`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("one", "two", "three", "four"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("one", "two", "three", "four"),
         )
         val grouped = df.groupBy {
             expr { if ("value"<Int>() % 2 == 0) "even" else "odd" } named "type"
         }
 
         grouped.concatWithKeys() shouldBe dataFrameOf(
-            "value" to listOf(1, 3, 2, 4),
-            "type" to listOf("one", "three", "two", "four"),
+            "value" to columnOf(1, 3, 2, 4),
+            "type" to columnOf("one", "three", "two", "four"),
         )
     }
 
@@ -438,22 +479,22 @@ class ConcatTests {
     @Test
     fun `reduced groupBy concat applies the reducer and preserves group order`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("a", "b", "a", "b"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("a", "b", "a", "b"),
         )
         val reduced = df.groupBy("type").first()
 
         reduced.concat() shouldBe dataFrameOf(
-            "value" to listOf(1, 2),
-            "type" to listOf("a", "b"),
+            "value" to columnOf(1, 2),
+            "type" to columnOf("a", "b"),
         )
     }
 
     @Test
     fun `reduced groupBy concat represents a null reducer result with one empty row`() {
         val df = dataFrameOf(
-            "value" to listOf(1, 2, 3, 4),
-            "type" to listOf("a", "b", "a", "b"),
+            "value" to columnOf(1, 2, 3, 4),
+            "type" to columnOf("a", "b", "a", "b"),
         )
         val reduced = df.groupBy("type").first { "value"<Int>() == 3 }
 
