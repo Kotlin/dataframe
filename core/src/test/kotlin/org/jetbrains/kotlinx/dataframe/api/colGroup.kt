@@ -45,6 +45,21 @@ class ColGroupTests : ColumnsSelectionDslTests() {
     }
 
     @Test
+    @Suppress("DEPRECATION")
+    fun `columnGroup constructors are aliases of colGroup`() {
+        listOf(
+            dfGroup.select { colGroup("name") },
+            dfGroup.select { columnGroup("name") },
+            dfGroup.select { colGroup<Name2>("name") },
+            dfGroup.select { columnGroup<Name2>("name") },
+            dfGroup.select { colGroup(pathOf("name")) },
+            dfGroup.select { columnGroup(pathOf("name")) },
+            dfGroup.select { colGroup<Name2>(pathOf("name")) },
+            dfGroup.select { columnGroup<Name2>(pathOf("name")) },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
     fun `frameCol at lower level`() {
         val firstNamesAccessor = columnGroup<FirstNames>("firstName")
         listOf(
