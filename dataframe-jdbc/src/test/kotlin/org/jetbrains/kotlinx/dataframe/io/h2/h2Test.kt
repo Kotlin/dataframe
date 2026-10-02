@@ -857,7 +857,7 @@ class JdbcTest {
             """
 
         // Double-quoted identifiers are stripped before keyword matching in ReadOnly mode,
-        // so SELECT * FROM "ALTER" is correctly recognised as a read-only query.
+        // so SELECT * FROM "ALTER" is correctly recognized as a read-only query.
         @Language("SQL")
         val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
 

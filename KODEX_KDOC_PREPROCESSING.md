@@ -75,7 +75,7 @@ See the [Notation](#notation) section for more information on each of these proc
 ## Previewing the Processed KDocs in IntelliJ IDEA
 
 KoDEx comes with an
-[IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/26250)
+[IntelliJ IDEA plugin](https://plugins.jetbrains.com/plugin/27473)
 that allows you to preview the processed KDocs without having to run the Gradle task.
 It also provides highlighting for the KDoc notations and more.
 
@@ -85,7 +85,7 @@ As described in the README of KoDEx, the plugin may not 100% match the results o
 because it uses IntelliJ to resolve references instead of Dokka. However, it should give you a good idea of what the
 processed KDocs will look like, and, most importantly, it's really fast.
 
-You can install the plugin from [the marketplace](https://plugins.jetbrains.com/plugin/26250),
+You can install the plugin from [the marketplace](https://plugins.jetbrains.com/plugin/27473),
 by building the project yourself, 
 or by downloading the latest release from the
 [releases page](https://github.com/Jolanrensen/KoDEx/releases).
