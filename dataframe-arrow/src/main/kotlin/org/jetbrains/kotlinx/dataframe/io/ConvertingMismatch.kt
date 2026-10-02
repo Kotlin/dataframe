@@ -29,12 +29,12 @@ public sealed class ConvertingMismatch(
     public sealed class NarrowingMismatch(column: String) : ConvertingMismatch(column, null, null) {
         public data class NotPresentedColumnIgnored(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, saving as is"
+                "Not nullable column \"$column\" is not present in actual data, saving as is"
         }
 
         public data class NotPresentedColumnError(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, can not save"
+                "Not nullable column \"$column\" is not present in actual data, can not save"
         }
     }
 
