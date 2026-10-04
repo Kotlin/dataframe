@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -43,19 +44,11 @@ class Append : DataFrameSampleHelper("append", "api") {
     }
 
     @Test
-    fun appendDataSchema() {
-        // SampleStart
-        df.append(Person("Bob", 30))
-            // SampleEnd
-            .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
-            .saveDfHtmlSample()
-    }
-
-    @Test
     fun appendOneRow() {
         // SampleStart
         df.append("Bob", 30)
             // SampleEnd
+            .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
             .saveDfHtmlSample()
     }
 
@@ -84,10 +77,33 @@ class Append : DataFrameSampleHelper("append", "api") {
 
     @Test
     fun appendNoValues() {
+        val df = dataFrameOf(
+            "name" to columnOf("Alice"),
+            "age" to columnOf(20),
+        )
         // SampleStart
         df.append()
             // SampleEnd
             .also { (it === df) shouldBe true }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun appendDataSchema() {
+        // SampleStart
+        df.append(Person("Bob", 30))
+            // SampleEnd
+            .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun appendExplicitDataRowSchema() {
+        // SampleStart
+        data class Person(val name: String, val age: Int) : DataRowSchema
+
+        df.append(Person("Bob", 30))
+        // SampleEnd
     }
 
     @Test

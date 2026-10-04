@@ -8,6 +8,7 @@
 <resource src="appendDf.html"></resource>
 <resource src="appendFrameColumn.html"></resource>
 <resource src="appendFrameColumnDf.html"></resource>
+<resource src="appendNoValues.html"></resource>
 <resource src="appendNullToColumnGroup.html"></resource>
 <resource src="appendNullToFrameColumn.html"></resource>
 <resource src="appendNullValue.html"></resource>

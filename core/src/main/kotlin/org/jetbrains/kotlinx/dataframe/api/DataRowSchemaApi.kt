@@ -35,16 +35,14 @@ public inline fun <reified T : DataRowSchema> dataFrameOf(vararg rows: T): DataF
  * Each object in [rows] represents one complete row. Its properties are used as the values of the corresponding
  * dataframe columns. If [rows] is empty, this [DataFrame] is returned as is.
  *
- * The schema type [T] must implement [DataRowSchema]. When the Kotlin DataFrame compiler plugin is enabled, it adds
- * [DataRowSchema] as a supertype to classes annotated with [DataSchema], allowing their instances to be appended as
- * rows. The plugin is not required for this overload: a class can implement [DataRowSchema] explicitly.
- * The plugin does not add this supertype to annotated interfaces.
+ * The schema type [T] must implement [DataRowSchema]. The Kotlin DataFrame compiler plugin adds [DataRowSchema] to
+ * classes annotated with [DataSchema]; alternatively, a class can implement it explicitly.
  *
- * For more information: {@include [DocumentationUrls.CompilerPlugin]}
+ * {@include [DocumentationUrls.CompilerPlugin]}
  *
  * @include [AppendImmutabilityAndPerformanceNote]
  *
- * For more information: {@include [DocumentationUrls.Append]}
+ * {@include [DocumentationUrls.Append]}
  *
  * See also:
  * - [append][DataFrame.append] — appends rows constructed from a flat sequence of cell values.

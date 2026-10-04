@@ -15,6 +15,12 @@ class AppendTests {
 
     private data class ExplicitSchemaPerson(val name: String, val age: Int) : DataRowSchema
 
+    private interface Named : DataRowSchema {
+        val name: String
+    }
+
+    private data class NamedImpl(override val name: String) : Named
+
     // region append
 
     @Test
@@ -47,6 +53,45 @@ class AppendTests {
     }
 
     @Test
+    fun `append rejects a value incompatible with a value column`() {
+        val df = dataFrameOf("name", "age")("Alice", 20)
+
+        val exception = shouldThrow<IllegalArgumentException> {
+            df.append("Bob", "thirty")
+        }
+
+        exception.message shouldBe "Can not add value 'thirty' to column 'age' of type kotlin.Int"
+    }
+
+    @Test
+    fun `append rejects a value incompatible with a column group`() {
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice"),
+                "lastName" to columnOf("Cooper"),
+            ),
+        )
+
+        val exception = shouldThrow<IllegalArgumentException> {
+            df.append("Bob")
+        }
+
+        exception.message shouldBe "Can not add value 'Bob' to ColumnGroup"
+    }
+
+    @Test
+    fun `append rejects a value incompatible with a frame column`() {
+        val frame = dataFrameOf("name")("Alice")
+        val df = dataFrameOf(columnOf(frame) named "people")
+
+        val exception = shouldThrow<IllegalArgumentException> {
+            df.append(42)
+        }
+
+        exception.message shouldBe "Can not add value '42' to FrameColumn"
+    }
+
+    @Test
     fun `append zero rows`() {
         val df = dataFrameOf("name", "age")("Alice", 20)
 
@@ -62,6 +107,25 @@ class AppendTests {
         val result = df.append()
 
         (result === df) shouldBe true
+    }
+
+    @Test
+    fun `DataRowSchema append adds a row without the compiler plugin`() {
+        val df = dataFrameOf(ExplicitSchemaPerson("Alice", 20))
+
+        val result = df.append(ExplicitSchemaPerson("Bob", 30))
+
+        result shouldBe dataFrameOf(
+            "name" to columnOf("Alice", "Bob"),
+            "age" to columnOf(20, 30),
+        )
+    }
+
+    @Test
+    fun `DataRowSchema append works with an interface schema`() {
+        val df = listOf<Named>(NamedImpl("Alice")).toDataFrame()
+
+        df.append(NamedImpl("Bob")) shouldBe dataFrameOf("name")("Alice", "Bob")
     }
 
     @Test
