@@ -22,12 +22,12 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * of the number of columns.
  *
  * Every appended value must be compatible with the corresponding column. A [ValueColumn] accepts `null` or a value
- * of its declared type. A [ColumnGroup] accepts `null`, a [DataRow], or a [List]. Values from a [DataRow] are matched
- * to the group's columns by name: a group column whose name is absent from the row receives `null`, while columns
- * present only in the [DataRow] are ignored. Values from a [List] are read in the group's column order, one value per
- * column in the [ColumnGroup]. The list must contain at least as many values as the [ColumnGroup] has columns:
- * a shorter list throws [IndexOutOfBoundsException], while additional values in a longer list are ignored.
- * A [FrameColumn] accepts `null` or a [DataFrame].
+ * whose runtime type is the same as or a subtype of the column type. A [ColumnGroup] accepts `null`, a [DataRow], or a
+ * [List]. Values from a [DataRow] are matched to the group's columns by name: a group column whose name is absent
+ * from the row receives `null`, while columns present only in the [DataRow] are ignored. Values from a [List] are
+ * read in the group's column order, one value per column in the [ColumnGroup]. The list must contain at least as many
+ * values as the [ColumnGroup] has columns: a shorter list throws [IndexOutOfBoundsException], while additional values
+ * in a longer list are ignored. A [FrameColumn] accepts `null` or a [DataFrame].
  *
  * @include [AppendingNullsToHierarchicalColumns]
  *
@@ -42,7 +42,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
  * See also:
  * - [appendNulls] — appends rows filled with `null` values.
  * - [concat][DataFrame.concat] — vertically combines this [DataFrame] with other dataframes or rows.
- * - [duplicate][DataFrame.duplicate] — repeats existing rows.
+ * - [duplicateRows][DataFrame.duplicateRows] — repeats existing rows.
  * - [add][DataFrame.add] — adds columns rather than rows.
  *
  * ### Examples
@@ -99,7 +99,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
  * - [append][DataFrame.append] — appends rows containing specified values.
  * - [concat][DataFrame.concat] — vertically combines this [DataFrame] with other dataframes or rows.
  * - [fillNulls][DataFrame.fillNulls] — replaces `null` values in existing rows.
- * - [duplicate][DataFrame.duplicate] — repeats existing rows.
+ * - [duplicateRows][DataFrame.duplicateRows] — repeats existing rows.
  *
  * ### Examples
  * In the examples below, `df` has `"name"` and `"age"` columns and contains one row: `"Alice", 20`.
