@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
@@ -490,6 +491,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
  */
 internal fun KType.toColumnKind(): ColumnKind =
     when {
+        this.isNothing -> ColumnKind.Value
         this.isSubtypeOf(typeOf<AnyFrame>()) -> ColumnKind.Frame
         this.isSubtypeOf(typeOf<AnyRow?>()) -> ColumnKind.Group
         else -> ColumnKind.Value

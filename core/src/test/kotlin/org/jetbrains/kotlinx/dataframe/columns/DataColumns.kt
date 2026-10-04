@@ -123,4 +123,12 @@ class DataColumns : BaseTest() {
             it.type().isSubtypeOf(typeOf<DataFrame<*>>()) shouldBe true
         }
     }
+
+    // Tests for issue #2034
+    @Test
+    fun `column of nulls with Nothing nullable type is ValueColumn`() {
+        val df = dataFrameOf("a")(null, null)
+        df["a"].kind() shouldBe ColumnKind.Value
+        df["a"].type().classifier shouldBe Nothing::class
+    }
 }

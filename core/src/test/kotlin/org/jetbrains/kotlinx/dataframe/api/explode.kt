@@ -147,4 +147,17 @@ class ExplodeTests {
         val df = dataFrameOf("a")(1)
         shouldThrow<ExplodeWrongColumnKindException> { df.explode { it["a"] } }
     }
+
+    @Test
+    fun `explode with null column of Nothing type`() {
+        val df = dataFrameOf(
+            "nulls" to List(3) { null }.toColumn(),
+            "lists" to listOf(listOf(1), listOf(2), listOf(3)).toColumn(),
+        )
+        val exploded = df.explode { it["lists"] }
+        exploded shouldBe dataFrameOf(
+            "nulls" to listOf(null, null, null),
+            "lists" to listOf(1, 2, 3),
+        )
+    }
 }
