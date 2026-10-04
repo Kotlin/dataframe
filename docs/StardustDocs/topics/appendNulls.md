@@ -5,14 +5,14 @@
 Returns a new [`DataFrame`](DataFrame.md) containing the existing rows followed by the requested number of rows
 filled with `null` values.
 
-```kotlin
-fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T>
+```text
+appendNulls(numberOfRows: Int = 1): DataFrame
 ```
 
 **Parameters:**
 
 `numberOfRows` defaults to `1` and must not be negative.
-When `numberOfRows` is `0`, it returns the original [`DataFrame`](DataFrame.md) instance.
+`appendNulls(0)` returns the original [`DataFrame`](DataFrame.md) instance.
 Passing a negative `numberOfRows` results in an `IllegalArgumentException`.
 
 `appendNulls` does not modify the original [`DataFrame`](DataFrame.md).
@@ -25,19 +25,19 @@ with a nullable schema before accessing these values through typed accessors.
 
 </warning>
 
-<warning>
+<tip>
 
 Adding rows creates a new dataframe and rebuilds its columns using the existing and appended values.
 Repeatedly appending rows one at a time in a loop is a performance antipattern.
 Prefer building a dataframe at once or appending/concatenating rows in batches.
 
-</warning>
+</tip>
 
 **Related operations**
 * [`append`](append.md) — appends rows containing specified values;
 * [`concat`](concat.md) — vertically combines dataframes or rows;
 * [`fillNulls`](fill.md#fillnulls) — replaces `null` values in existing rows;
-* [`duplicate`](duplicate.md) — repeats existing rows.
+* [`duplicateRows`](duplicate.md) — repeats existing rows.
 
 ## Basic usage
 

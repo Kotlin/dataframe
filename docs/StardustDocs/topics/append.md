@@ -5,11 +5,11 @@
 Returns a new [`DataFrame`](DataFrame.md) containing the existing rows followed by rows constructed from the
 supplied values.
 
-```kotlin
-fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T>
+```text
+append(vararg values: Any?): DataFrame
 ```
 
-**Parameters**:
+**Parameters:**
 
 `values` — a flat sequence of values to construct new rows from.
 Each consecutive group containing one value for every top-level column forms one new
@@ -18,7 +18,8 @@ must be a multiple of the number of columns.
 
 Every appended value must be compatible with the corresponding column:
 
-* a [`ValueColumn`](DataColumn.md#valuecolumn) accepts `null` or a value compatible with its type;
+* a [`ValueColumn`](DataColumn.md#valuecolumn) accepts `null` or a value whose runtime type is the same as or a subtype
+of the column type;
 * a [`ColumnGroup`](DataColumn.md#columngroup) accepts `null`, a [`DataRow`](DataRow.md), or a `List`. Values from a
 [`DataRow`](DataRow.md) are matched to the nested columns by name: a nested column whose name is absent from the
 [`DataRow`](DataRow.md) receives `null`, while columns present only in the row are ignored.
@@ -43,18 +44,18 @@ with a nullable schema before accessing these values through typed accessors.
 
 </warning>
 
-<warning>
+<tip>
 
 Adding rows creates a new dataframe and rebuilds its columns using the existing and appended values.
 Repeatedly appending rows one at a time in a loop is a performance antipattern.
 Prefer building a dataframe at once or appending/concatenating rows in batches.
 
-</warning>
+</tip>
 
 **Related operations**
 * [`appendNulls`](appendNulls.md) — appends rows filled with `null` values;
 * [`concat`](concat.md) — vertically combines dataframes or rows;
-* [`duplicate`](duplicate.md) — repeats existing rows;
+* [`duplicateRows`](duplicate.md) — repeats existing rows;
 * [`add`](add.md) — adds columns rather than rows.
 
 ## Basic usage
@@ -117,11 +118,12 @@ df.append()
 ```
 
 <!---END-->
+<inline-frame src="./resources/appendNoValues.html" width="100%" height="500px"></inline-frame>
 
 ## Append objects as rows
 
-```kotlin
-inline fun <reified T : DataRowSchema> DataFrame<T>.append(vararg rows: T): DataFrame<T>
+```text
+append(vararg rows: T): DataFrame<T>
 ```
 
 This overload appends one row for each object in `rows`. The [`DataFrame`](DataFrame.md) schema type `T` must
@@ -154,12 +156,15 @@ df.append(Person("Bob", 30))
 
 The overload itself does not require the compiler plugin. A class can implement `DataRowSchema` explicitly:
 
+<!---FUN appendExplicitDataRowSchema-->
+
 ```kotlin
-data class Person(
-    val name: String,
-    val age: Int,
-) : DataRowSchema
+data class Person(val name: String, val age: Int) : DataRowSchema
+
+df.append(Person("Bob", 30))
 ```
+
+<!---END-->
 
 An interface can also extend `DataRowSchema` and serve as the schema. In that case, instances of a class
 implementing that interface can be appended.
