@@ -67,7 +67,7 @@ ktor = "3.6.0"
 # ignoreUpdates
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
-duckdb = "1.5.5.1"
+duckdb = "1.5.6.0"
 testcontainers = "2.0.5"
 
 # Docker image tags of the databases used in the Testcontainers tests
@@ -87,7 +87,7 @@ kandy = "0.8.5"
 kotlin-dl = "0.5.2"
 
 exposed = "1.5.0"
-hibernate = "7.4.11.Final"
+hibernate = "7.4.12.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
