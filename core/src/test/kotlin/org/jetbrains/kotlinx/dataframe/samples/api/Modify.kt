@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.byName
@@ -55,7 +54,6 @@ import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.match
-import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.merge
@@ -73,7 +71,6 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorder
-import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -98,15 +95,9 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
-import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.io.readJsonStr
-import org.jetbrains.kotlinx.dataframe.io.renderToString
-import org.jetbrains.kotlinx.dataframe.testResource
-import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
 import org.junit.Test
-import java.net.URL
 import java.util.Locale
 import java.util.stream.Collectors
 
@@ -270,16 +261,6 @@ class Modify : TestBase() {
         df.convert { name }.asColumn { col ->
             col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
         }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun replace() {
-        // SampleStart
-        df.replace { name }.with { name.firstName }
-        df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
-        df.replace { age }.with { 2021 - age named "year" }
         // SampleEnd
     }
 
@@ -1079,48 +1060,6 @@ class Modify : TestBase() {
 
         df.move { response.data }.toTop().alsoDebug()
         df.rename { response.data }.to("description").alsoDebug()
-    }
-
-    @Ignore
-    @Test
-    @TransformDataFrameExpressions
-    fun convertToFrameColumnAPI() {
-        // SampleStart
-        fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.getResource(resourcePath)!!
-
-        val interestingRepos = dataFrameOf("name", "url", "contributors")(
-            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
-            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
-        )
-        // SampleEnd
-    }
-
-    @Ignore
-    @Test
-    @TransformDataFrameExpressions
-    fun customUnfoldRead() {
-        val interestingRepos = dataFrameOf("name", "url", "contributors")(
-            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
-            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
-        )
-
-        // SampleStart
-        val contributors by column<URL>()
-
-        val df = interestingRepos
-            .replace { contributors }
-            .with {
-                it.mapNotNullValues { url -> DataFrame.readJsonStr(url.readText()) }
-            }
-
-        df.asGroupBy("contributors").max("contributions")
-        // SampleEnd
-
-        df.asGroupBy("contributors").max("contributions").renderToString() shouldBe
-            """|        name        url contributions
-               | 0 dataframe /dataframe           111
-               | 1    kotlin    /kotlin           180
-            """.trimMargin()
     }
 
     @DataSchema
