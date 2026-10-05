@@ -134,6 +134,15 @@ public interface DocumentationUrls {
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
 
+    /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
+    public typealias ToList = Nothing
+
+    /** [See `toListOf` on the documentation website.]({@include [Url]}/tolist.html#tolistof) */
+    public typealias ToListOf = Nothing
+
+    /** [See `toSequence` on the documentation website.]({@include [Url]}/tolist.html#tosequence-and-tosequenceof) */
+    public typealias ToSequence = Nothing
+
     /** [See `corr` on the documentation website.]({@include [Url]}/corr.html) */
     public typealias Corr = Nothing
 

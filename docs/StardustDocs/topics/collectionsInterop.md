@@ -96,14 +96,10 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-```kotlin
-data class Output(val a: Int, val b: Int, val c: Int)
+With the [compiler plugin](Compiler-Plugin.md), use `toListOf` here rather than `toList`:
+the plugin gives `df2` a generated type argument, which is not a data class, so `toList()` throws.
 
-val result = df2.toListOf<Output>()
-```
-
-Alternatively, one can create lazy [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-sequence/) objects.
-This avoids holding the entire list of objects in memory as objects are created on the fly as needed.
+A [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested data class:
 
 <!---FUN listInterop5-->
 
@@ -115,10 +111,16 @@ data class FullName(val name: String, val lastName: String)
 
 data class Person(val fullName: FullName, val age: Int)
 
-val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
+val persons = df.toListOf<Person>() // [Person(fullName=FullName(name=John, lastName=Doe), age=21)]
 ```
 
 <!---END-->
+
+Alternatively, [`toSequence` and `toSequenceOf`](toList.md#tosequence-and-tosequenceof) create a lazy
+[`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/).
+The objects are created only when the sequence is iterated, so you do not need to hold all of them in memory at once.
+
+The rules for matching columns to data class properties are in [How rows become objects](toList.md#how-rows-become-objects).
 
 ### Converting columns with object instances to ColumnGroup
 
