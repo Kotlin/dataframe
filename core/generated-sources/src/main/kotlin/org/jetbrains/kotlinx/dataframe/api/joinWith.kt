@@ -43,11 +43,11 @@ public typealias JoinExpression<A, B> = Selector<JoinedDataRow<A, B>, Boolean>
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -124,11 +124,11 @@ public fun <A, B> DataFrame<A>.joinWith(
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -178,11 +178,11 @@ public fun <A, B> DataFrame<A>.innerJoinWith(right: DataFrame<B>, joinExpression
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -232,11 +232,11 @@ public fun <A, B> DataFrame<A>.leftJoinWith(right: DataFrame<B>, joinExpression:
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -286,11 +286,11 @@ public fun <A, B> DataFrame<A>.rightJoinWith(right: DataFrame<B>, joinExpression
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -340,11 +340,11 @@ public fun <A, B> DataFrame<A>.fullJoinWith(right: DataFrame<B>, joinExpression:
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
@@ -394,11 +394,11 @@ public fun <A, B> DataFrame<A>.filterJoinWith(right: DataFrame<B>, joinExpressio
  * A [<code>JoinExpression</code>][org.jetbrains.kotlinx.dataframe.api.JoinExpression] defines the matching condition between [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow] of the two [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
  * It provides access to row values from both the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s
  * and expects a [<code>Boolean</code>][Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfies
+ * All combinations of rows from the left and right [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] by combining [<code>rows</code>][org.jetbrains.kotlinx.dataframe.DataRow]
  * from both inputs according to the [<code>joinExpression</code>][joinExpression] matching rule.
