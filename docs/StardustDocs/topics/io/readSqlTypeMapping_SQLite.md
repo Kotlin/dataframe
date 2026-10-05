@@ -150,7 +150,7 @@ val sqlite = Sqlite.withCustomConverters {
 |------------------|---------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------|
 | `BOOLEAN`, `BIT` | INTEGER (0/1) | `Boolean`             | The preprocessor treats non-zero as `true`, zero as `false`.                                                                   |
 | `BOOLEAN`, `BIT` | REAL          | `Boolean`             | Same convention (non-zero → `true`).                                                                                           |
-| `BOOLEAN`, `BIT` | TEXT          | `Boolean`             | Case-insensitively accepts `true`/`1`/`yes`/`y`/`t` → `true` and `false`/`0`/`no`/`n`/`f` → `false`. Unrecognised text throws. |
+| `BOOLEAN`, `BIT` | TEXT          | `Boolean`             | Case-insensitively accepts `true`/`1`/`yes`/`y`/`t` → `true` and `false`/`0`/`no`/`n`/`f` → `false`. Unrecognized text throws. |
 
 `BOOL`/`BIT` substring in the declared name is also caught (e.g. columns declared `IS_ACTIVE_BOOL`).
 
@@ -165,7 +165,7 @@ value as-is (`Int`, `Long`, or `Double` depending on how each row was inserted).
 | `NUMERIC`         | REAL          | `Double`                |                                                                                                                                                                       |
 | `DECIMAL(P,S)`    | REAL          | `Double`                |                                                                                                                                                                       |
 | `DECIMAL(P,S)`    | INTEGER       | `Int` / `Long`          |                                                                                                                                                                       |
-| unrecognised type | any           | depends on stored value | E.g. a text value in a `CUSTOM_TYPE` column is reported as `Types.VARCHAR` and read as `String`. Use a [custom converter](#custom-converters) to pin a specific type. |
+| unrecognized type | any           | depends on stored value | E.g. a text value in a `CUSTOM_TYPE` column is reported as `Types.VARCHAR` and read as `String`. Use a [custom converter](#custom-converters) to pin a specific type. |
 
 Sometimes, a driver may return mixed `Int` and `Long` values for the same column,
 which can break column type detection.

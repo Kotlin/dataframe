@@ -25,7 +25,7 @@ import java.util.Date
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
-// NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names itself
+// NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names themselves
 private const val URL = "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE"
 
 @DataSchema
