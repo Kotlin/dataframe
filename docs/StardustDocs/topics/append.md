@@ -161,6 +161,8 @@ The overload itself does not require the compiler plugin. A class can implement 
 ```kotlin
 data class Person(val name: String, val age: Int) : DataRowSchema
 
+val df = dataFrameOf(Person("Alice", 20))
+
 df.append(Person("Bob", 30))
 ```
 

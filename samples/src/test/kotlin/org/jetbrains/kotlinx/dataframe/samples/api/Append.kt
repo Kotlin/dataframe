@@ -102,8 +102,11 @@ class Append : DataFrameSampleHelper("append", "api") {
         // SampleStart
         data class Person(val name: String, val age: Int) : DataRowSchema
 
+        val df = dataFrameOf(Person("Alice", 20))
+
         df.append(Person("Bob", 30))
-        // SampleEnd
+            // SampleEnd
+            .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
     }
 
     @Test
