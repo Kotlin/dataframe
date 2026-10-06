@@ -19,16 +19,16 @@ import kotlin.reflect.typeOf
 
 @DataSchema
 interface CustomerSqlite {
-    val id: Int?
+    val id: Long?
     val name: String?
-    val age: Int?
+    val age: Long?
     val salary: Double
     val profilePicture: ByteArray?
 }
 
 @DataSchema
 interface OrderSqlite {
-    val id: Int?
+    val id: Long?
     val customerName: String?
     val orderDate: String?
     val totalAmount: Double
@@ -37,12 +37,12 @@ interface OrderSqlite {
 
 @DataSchema
 interface CustomerOrderSqlite {
-    val customerId: Int?
+    val customerId: Long?
     val customerName: String?
-    val customerAge: Int?
+    val customerAge: Long?
     val customerSalary: Double
     val customerProfilePicture: ByteArray?
-    val orderId: Int?
+    val orderId: Long?
     val orderDate: String?
     val totalAmount: Double
     val orderDetails: ByteArray?
@@ -50,7 +50,7 @@ interface CustomerOrderSqlite {
 
 @DataSchema
 interface FlagSqlite {
-    val id: Int?
+    val id: Long?
     val enabled: Boolean
     val optional: Boolean?
 }
@@ -253,10 +253,10 @@ class SqliteTest {
         val customerTableName = "Customers"
         val df = DataFrame.readSqlTable(connection, customerTableName).cast<CustomerSqlite>()
         val result = df.filter { "name"<String?>() == "John Doe" }
-        result[0][2] shouldBe 30
+        result[0][2] shouldBe 30L
 
         val schema = DataFrameSchema.readSqlTable(connection, customerTableName)
-        schema.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["id"]!!.type shouldBe typeOf<Long?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
         schema.columns["salary"]!!.type shouldBe typeOf<Double>()
         schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
@@ -267,7 +267,7 @@ class SqliteTest {
         result2[0][2] shouldBe "2023-07-21"
 
         val schema2 = DataFrameSchema.readSqlTable(connection, orderTableName)
-        schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema2.columns["id"]!!.type shouldBe typeOf<Long?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
@@ -280,10 +280,10 @@ class SqliteTest {
 
         val df = DataFrame.readSqlTable(dbConnectionConfig, customerTableName).cast<CustomerSqlite>()
         val result = df.filter { "name"<String?>() == "John Doe" }
-        result[0][2] shouldBe 30
+        result[0][2] shouldBe 30L
 
         val schema = DataFrameSchema.readSqlTable(dbConnectionConfig, customerTableName)
-        schema.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["id"]!!.type shouldBe typeOf<Long?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
         schema.columns["salary"]!!.type shouldBe typeOf<Double>()
         schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
@@ -294,7 +294,7 @@ class SqliteTest {
         result2[0][2] shouldBe "2023-07-21"
 
         val schema2 = DataFrameSchema.readSqlTable(dbConnectionConfig, orderTableName)
-        schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
+        schema2.columns["id"]!!.type shouldBe typeOf<Long?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
@@ -322,9 +322,9 @@ class SqliteTest {
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery = sqlQuery)
-        schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["customerId"]!!.type shouldBe typeOf<Long?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
-        schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["customerAge"]!!.type shouldBe typeOf<Long?>()
         schema.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
 
@@ -337,9 +337,9 @@ class SqliteTest {
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrameSchema.readSqlQuery(dbConnectionConfig, sqlQuery = sqlQuery)
-        schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["customerId"]!!.type shouldBe typeOf<Long?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
-        schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
+        schema.columns["customerAge"]!!.type shouldBe typeOf<Long?>()
         schema.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
 
@@ -350,7 +350,7 @@ class SqliteTest {
         val customerDf = dataframes.getValue("Customers").cast<CustomerSqlite>()
 
         customerDf.rowsCount() shouldBe 2
-        customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
+        customerDf.filter { "age"<Long?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
         customerDf[0][1] shouldBe "John Doe"
 
         val orderDf = dataframes.getValue("Orders").cast<OrderSqlite>()
