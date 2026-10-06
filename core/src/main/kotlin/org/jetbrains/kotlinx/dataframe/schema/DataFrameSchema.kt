@@ -27,11 +27,11 @@ public interface DataFrameSchema {
     /**
      * Compares this schema with [other] schema.
      *
-     * Returns one of possible [CompareResult] based on the specified [comparisonMode]:
+     * Returns one of the possible [CompareResult]s based on the specified [comparisonMode]:
      *
      * @include [ComparisonModeOptionsSnippet]
      *
-     * @param comparisonMode The [mode][ComparisonMode] to compare the schema's by.
+     * @param comparisonMode The [mode][ComparisonMode] to compare the schemas by.
      *   By default, generated markers for leaves aren't used as supertypes: `@DataSchema(isOpen = false)`
      *   Setting [comparisonMode] to [ComparisonMode.STRICT_FOR_NESTED_SCHEMAS] takes this into account
      *   for internal codegen logic.

@@ -86,7 +86,7 @@ public interface ConvertSchemaDsl<in T> {
      * If you want to define a common conversion for multiple types (or any type), or
      * you need extra information about the target, such as its schema, use this method.
      *
-     * The exact type conversion does have higher priority. After that, this flexible conversions will be checked
+     * The exact type conversion does have higher priority. After that, these flexible conversions will be checked
      * in order.
      *
      * For more information: {@include [DocumentationUrls.ConvertTo]}
