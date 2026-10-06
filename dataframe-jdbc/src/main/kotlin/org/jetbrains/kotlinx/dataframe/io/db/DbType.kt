@@ -209,9 +209,10 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
             // The name of the DataFrame column: the label, which is the SQL `AS` alias if there is one
             // (JDBC: "if a SQL AS is not specified, the value returned from getColumnLabel will be the same
-            // as the value returned by the getColumnName method"). MySQL, MariaDB and H2 report the alias only
-            // there, and the original name in getColumnName. Falling back to getColumnName when the label is
-            // empty follows Spring's JdbcUtils.lookupColumnName.
+            // as the value returned by the getColumnName method"). MySQL, MariaDB and H2 (without a compatibility
+            // mode, and in MySQL and MariaDB modes) report the alias only there, and the original name in
+            // getColumnName. Falling back to getColumnName when the label is empty follows Spring's
+            // JdbcUtils.lookupColumnName.
             val preferredName = label?.ifEmpty { null } ?: columnName
 
             // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException

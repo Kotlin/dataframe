@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
@@ -26,6 +27,14 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
 private val logger = KotlinLogging.logger {}
+
+/**
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+ * gives `CUSTOMER_ID` for this unquoted alias.
+ */
+@ExcludeFromSources
+internal typealias SqlAliasNamesColumnSnippet = Nothing
 
 /**
  * Reads data from an SQL table and converts it into a [DataFrame].
@@ -203,6 +212,8 @@ private fun executeQueryAndBuildDataFrame(
 /**
  * Converts the result of an SQL query to the [DataFrame].
  *
+ * @include [SqlAliasNamesColumnSnippet]
+ *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
  * __NOTE:__ SQL query should start from SELECT and contain one query for reading data without any manipulation.
@@ -250,6 +261,8 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query to the [DataFrame].
  *
+ * @include [SqlAliasNamesColumnSnippet]
+ *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
  * @param [dataSource] the [DataSource] to obtain a database connection from.
@@ -286,6 +299,8 @@ public fun DataFrame.Companion.readSqlQuery(
 
 /**
  * Converts the result of an SQL query to the [DataFrame].
+ *
+ * @include [SqlAliasNamesColumnSnippet]
  *
  * @include [org.jetbrains.kotlinx.dataframe.documentation.AutoRenameInputSnippet]
  *
