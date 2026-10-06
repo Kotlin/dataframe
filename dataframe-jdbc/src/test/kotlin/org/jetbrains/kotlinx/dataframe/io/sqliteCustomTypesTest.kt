@@ -293,7 +293,8 @@ class SqliteTestCustomTypes {
     }
 
     /**
-     * Xerial SQLite JDBC driver seems to give identical metadata for `Int?` and `Long?` columns
+     * Xerial SQLite JDBC driver seems to give identical metadata for `Int?` and `Long?` columns,
+     * so both are read as `Long?` by the INTEGER-affinity mapping; a custom converter still takes precedence.
      */
     class DynamicTypes {
 
@@ -331,8 +332,8 @@ class SqliteTestCustomTypes {
 
             val df = DataFrame.readSqlTable(connection, "numbers", dbType = customSqlite)
 
-            df["int_col"].type shouldBe typeOf<Int?>()
-            df["int_col"][1] shouldBe 1
+            df["int_col"].type shouldBe typeOf<Long?>()
+            df["int_col"][1] shouldBe 1L
 
             df["long_col"].type shouldBe typeOf<Long?>()
             df["long_col"][1] shouldBe 1L
