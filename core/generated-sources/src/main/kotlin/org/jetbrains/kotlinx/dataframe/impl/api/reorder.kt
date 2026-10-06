@@ -21,9 +21,16 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import kotlin.reflect.typeOf
 
+/**
+ * @param reorderNestedColumnsOfSingleGroup when `true` and [<code>Reorder.columns</code>][Reorder.columns] selects exactly one column group,
+ * the nested columns of that group are reordered instead of the group itself.
+ * `reorderColumnsBy(atAnyDepth = false)` passes `false`: it must reorder only the top-level columns,
+ * even when the only top-level column is a column group.
+ */
 internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     desc: Boolean,
     expression: ColumnExpression<C, V>,
+    reorderNestedColumnsOfSingleGroup: Boolean = true,
 ): DataFrame<T> {
     data class ColumnInfo(
         val treeNode: TreeNode<ColumnPosition>,
@@ -33,9 +40,11 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     )
 
     val columnsWithPaths = df.getColumnsWithPaths(columns)
-    if (columnsWithPaths.size == 1 && columnsWithPaths[0].isColumnGroup()) {
+    if (reorderNestedColumnsOfSingleGroup && columnsWithPaths.size == 1 && columnsWithPaths[0].isColumnGroup()) {
         val path = columnsWithPaths[0].path
-        return df.reorder { path.allCols().cast<C>() }.reorderImpl(desc, expression)
+        // `false`: if the only nested column is a column group too, its own nested columns keep their order
+        return df.reorder { path.allCols().cast<C>() }
+            .reorderImpl(desc, expression, reorderNestedColumnsOfSingleGroup = false)
     }
 
     var df = df
@@ -62,7 +71,10 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
                     column = column.asAnyFrameColumn()
-                        .map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
+                        // pass `inFrameColumns` on, so that frame columns nested in this frame are reordered too
+                        .map(typeOf<AnyFrame>()) {
+                            Reorder(it.cast<T>(), columns, inFrameColumns).reorderImpl(desc, expression)
+                        }
                         .cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)
