@@ -41,11 +41,11 @@ interface Table1MySql {
     val floatCol: Float
     val doubleCol: Double
     val decimalCol: BigDecimal
-    val dateCol: String
-    val datetimeCol: String
-    val timestampCol: String
-    val timeCol: String
-    val yearCol: String
+    val dateCol: Date
+    val datetimeCol: LocalDateTime
+    val timestampCol: Instant
+    val timeCol: SqlTime
+    val yearCol: Date
     val varcharCol: String
     val charCol: String
     val binaryCol: ByteArray
@@ -58,52 +58,52 @@ interface Table1MySql {
     val mediumtextCol: String
     val longtextCol: String
     val enumCol: String
-    val setCol: Char
+    val setCol: String
     val bigintUnsignedCol: BigInteger
 }
 
 @DataSchema
 interface Table2MySql {
     val id: Int
-    val bitCol: Boolean?
-    val tinyintCol: Int?
-    val smallintCol: Int?
-    val mediumintCol: Int?
-    val mediumintUnsignedCol: Int?
-    val integerCol: Int?
-    val intCol: Int?
-    val integerUnsignedCol: Long?
-    val bigintCol: Long?
-    val floatCol: Float?
-    val doubleCol: Double?
-    val decimalCol: Double?
-    val dateCol: String?
-    val datetimeCol: String?
-    val timestampCol: String?
-    val timeCol: String?
-    val yearCol: String?
-    val varcharCol: String?
-    val charCol: String?
-    val binaryCol: ByteArray?
-    val varbinaryCol: ByteArray?
-    val tinyblobCol: ByteArray?
-    val blobCol: ByteArray?
-    val mediumblobCol: ByteArray?
-    val longblobCol: ByteArray?
+    val bitCol: Boolean
+    val tinyintCol: Int
+    val smallintCol: Int
+    val mediumintCol: Int
+    val mediumintUnsignedCol: Int
+    val integerCol: Int
+    val intCol: Int
+    val integerUnsignedCol: Long
+    val bigintCol: Long
+    val floatCol: Float
+    val doubleCol: Double
+    val decimalCol: BigDecimal
+    val dateCol: Date
+    val datetimeCol: LocalDateTime
+    val timestampCol: Instant
+    val timeCol: SqlTime
+    val yearCol: Date
+    val varcharCol: String
+    val charCol: String
+    val binaryCol: ByteArray
+    val varbinaryCol: ByteArray
+    val tinyblobCol: ByteArray
+    val blobCol: ByteArray
+    val mediumblobCol: ByteArray
+    val longblobCol: ByteArray
     val textCol: String?
     val mediumtextCol: String?
-    val longtextCol: String?
-    val enumCol: String?
-    val setCol: Char?
-    val bigintUnsignedCol: BigInteger?
-    val jsonCol: String?
+    val longtextCol: String
+    val enumCol: String
+    val setCol: String
+    val bigintUnsignedCol: BigInteger
+    val jsonCol: String? // no such column in the table yet: read as nulls
 }
 
 @DataSchema
 interface Table3MySql {
     val id: Int
     val enumCol: String
-    val setCol: Char?
+    val setCol: String
 }
 
 internal fun setUpMySqlTestData(connection: Connection) {
@@ -331,7 +331,7 @@ abstract class MySqlTestBase {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>(verify = true)
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
         result[0][22] shouldBe "tinyblobValue".toByteArray()
@@ -350,7 +350,7 @@ abstract class MySqlTestBase {
         schema.columns["longblobCol"]!!.type shouldBe typeOf<ByteArray>()
         schema.columns["tinyblobCol"]!!.type shouldBe typeOf<ByteArray>()
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>(verify = true)
         val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][26] shouldBe null
 
@@ -372,7 +372,7 @@ abstract class MySqlTestBase {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>(verify = true)
         val result = df.filter { "id"<Int>() == 1 }
         result[0][2] shouldBe "Option1"
 
@@ -386,14 +386,14 @@ abstract class MySqlTestBase {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MySql>()
+        val table1Df = dataframes[0].cast<Table1MySql>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { "integerCol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
 
-        val table2Df = dataframes[1].cast<Table2MySql>()
+        val table2Df = dataframes[1].cast<Table2MySql>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
@@ -405,7 +405,7 @@ abstract class MySqlTestBase {
 
     @Test
     fun `reading numeric types`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>(verify = true)
 
         val result = df1.select("tinyintCol").add("tinyintCol2") { "tinyintCol"<Int>() }
 
@@ -478,6 +478,11 @@ abstract class MySqlTestBase {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 
     // https://github.com/Kotlin/dataframe/issues/1746
