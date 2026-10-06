@@ -27,11 +27,12 @@ import kotlin.reflect.jvm.jvmErasure
  * [assertColumnTypes].
  *
  * @param [dbType] the [DbType] under test, used exactly as the reading pipeline would use it
- * @param [ddl] creates the probe table; it must be named [PROBE_TABLE] and hold one column per SQL type
- * @param [insert] inserts a single non-null row into it
+ * @param [createTableSql] the SQL command that creates the probe table; the table must be named
+ *   [PROBE_TABLE] and hold one column per SQL type
+ * @param [insertRowSql] the SQL command that inserts a single row with no `NULL` values into the probe table
  */
-internal fun Connection.assertColumnTypesMatchValues(dbType: DbType, ddl: String, insert: String) {
-    val mismatches = withProbeTable(ddl, insert) {
+internal fun Connection.assertColumnTypesMatchValues(dbType: DbType, createTableSql: String, insertRowSql: String) {
+    val mismatches = withProbeTable(createTableSql, insertRowSql) {
         probeColumnNames().mapNotNull { name -> describeMismatch(dbType, name) }
     }
 
@@ -58,16 +59,20 @@ internal fun Connection.assertColumnTypesMatchValues(dbType: DbType, ddl: String
  * nullable, while the pages document the non-nullable type. So [expected] is written exactly as the
  * pages' "DataFrame column type" column reads.
  *
+ * @param [dbType] the [DbType] under test, passed to [DataFrame.readSqlTable] as is
+ * @param [createTableSql] the SQL command that creates the probe table; the table must be named
+ *   [PROBE_TABLE] and hold one column per SQL type
+ * @param [insertRowSql] the SQL command that inserts a single row with no `NULL` values into the probe table
  * @param [expected] the expected column type per column name; must list **every** column of the probe
  *   table, so that a newly added column cannot go unpinned
  */
 internal fun Connection.assertColumnTypes(
     dbType: DbType,
-    ddl: String,
-    insert: String,
+    createTableSql: String,
+    insertRowSql: String,
     expected: Map<String, KType>,
 ) {
-    val actual = withProbeTable(ddl, insert) {
+    val actual = withProbeTable(createTableSql, insertRowSql) {
         val df = DataFrame.readSqlTable(this, PROBE_TABLE, inferNullability = false, dbType = dbType)
         df.columns().associate { it.name() to it.type().withNullability(false) }
     }
@@ -99,12 +104,12 @@ private const val PROBE_TABLE = "column_type_audit"
  * The table must not outlive the test: tests that read *all* tables of the database address the
  * results positionally, so leaving it behind would make them order-dependent.
  */
-private fun <R> Connection.withProbeTable(ddl: String, insert: String, body: Connection.() -> R): R =
+private fun <R> Connection.withProbeTable(createTableSql: String, insertRowSql: String, body: Connection.() -> R): R =
     try {
         createStatement().use { st ->
             st.execute("DROP TABLE IF EXISTS $PROBE_TABLE")
-            st.execute(ddl)
-            st.execute(insert)
+            st.execute(createTableSql)
+            st.execute(insertRowSql)
         }
         body()
     } finally {
@@ -137,10 +142,15 @@ private fun Connection.describeMismatch(dbType: DbType, columnName: String): Str
 
             rs.next()
             val value: Any? = dbType.preprocessValue(
-                dbType.getValueFromResultSet<Any?>(rs, 0, metadata, expectedJdbcType),
-                metadata,
-                expectedJdbcType,
-                declaredType,
+                value = dbType.getValueFromResultSet<Any?>(
+                    rs = rs,
+                    columnIndex = 0,
+                    tableColumnMetadata = metadata,
+                    expectedJdbcType = expectedJdbcType,
+                ),
+                tableColumnMetadata = metadata,
+                expectedJdbcType = expectedJdbcType,
+                expectedPreprocessedValueType = declaredType,
             )
 
             val describe = { problem: String ->

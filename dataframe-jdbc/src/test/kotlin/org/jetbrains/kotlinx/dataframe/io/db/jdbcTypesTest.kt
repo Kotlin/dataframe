@@ -160,7 +160,7 @@ class JdbcTypesTest {
     class SqliteTypes {
 
         @Test
-        fun `INTEGER affinity — declared int-like types map to Int or Long`() {
+        fun `INTEGER affinity — declared int-like types map to Long`() {
             assertMappings(Sqlite.default, sqliteIntegerAffinityMappings)
         }
 
@@ -589,19 +589,23 @@ internal val postgreSqlSpecificMappings: List<TypeMapping> = listOf(
 //   - REAL    affinity: declared type contains "REAL", "FLOA", or "DOUB"
 //   - NUMERIC affinity: everything else (e.g. BOOLEAN, DATE, DATETIME, DECIMAL, NUMERIC, ...)
 //
-// The Xerial JDBC driver reports the declared type in `sqlTypeName` and infers `jdbcType` from
-// affinity, but reports `javaClassName` from the *actual stored value*. The mappings below
-// reflect what `getExpectedJdbcType` returns for a column of the given declared type once
-// a representative value has been inserted (i.e. the common case for reading data).
+// The Xerial JDBC driver reports the declared type verbatim in `sqlTypeName`, but both
+// `jdbcType` and `javaClassName` follow the storage class of the *first row* (a BIGINT column
+// whose first row is 'abc' is reported as `Types.VARCHAR`). The mappings below reflect what
+// the column is read as for a column of the given declared type once a representative value
+// has been inserted (i.e. the common case for reading data).
 
-/** INTEGER affinity — declared int-like types storing an int value. */
+/**
+ * INTEGER affinity — declared int-like types storing an int value. All of them are [Long]:
+ * SQLite stores every integer as a 64-bit value, whatever width the declared type names.
+ */
 internal val sqliteIntegerAffinityMappings: List<TypeMapping> = listOf(
-    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("INT", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("MEDIUMINT", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("INT2", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("MEDIUMINT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT2", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("BIGINT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("UNSIGNED BIG INT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("INT8", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),

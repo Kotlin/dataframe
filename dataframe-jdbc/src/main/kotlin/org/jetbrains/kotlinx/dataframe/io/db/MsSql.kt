@@ -49,13 +49,16 @@ public object MsSql : DbType("sqlserver") {
      *   honestly be typed [Any]. The default mapping declared it [String].
      */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
-        val kType = when {
-            tableColumnMetadata.javaClassName == DATE_TIME_OFFSET_CLASS_NAME -> typeOf<OffsetDateTime>()
-            tableColumnMetadata.javaClassName == "java.lang.Short" -> typeOf<Short>()
-            tableColumnMetadata.jdbcType == SQL_VARIANT_JDBC_TYPE -> typeOf<Any>()
-            else -> return super.getExpectedJdbcType(tableColumnMetadata)
+        if (tableColumnMetadata.javaClassName == DATE_TIME_OFFSET_CLASS_NAME) {
+            return typeOf<OffsetDateTime>().withNullability(tableColumnMetadata.isNullable)
         }
-        return kType.withNullability(tableColumnMetadata.isNullable)
+        if (tableColumnMetadata.javaClassName == "java.lang.Short") {
+            return typeOf<Short>().withNullability(tableColumnMetadata.isNullable)
+        }
+        if (tableColumnMetadata.jdbcType == SQL_VARIANT_JDBC_TYPE) {
+            return typeOf<Any>().withNullability(tableColumnMetadata.isNullable)
+        }
+        return super.getExpectedJdbcType(tableColumnMetadata)
     }
 
     /**

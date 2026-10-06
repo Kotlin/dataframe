@@ -409,8 +409,8 @@ abstract class PostgresTestBase {
     fun `declared column types accept the values the driver returns`() {
         connection.assertColumnTypesMatchValues(
             dbType = PostgreSql,
-            ddl = POSTGRES_AUDIT_DDL,
-            insert = POSTGRES_AUDIT_INSERT,
+            createTableSql = POSTGRES_AUDIT_DDL,
+            insertRowSql = POSTGRES_AUDIT_INSERT,
         )
     }
 
@@ -422,8 +422,8 @@ abstract class PostgresTestBase {
     fun `columns are read as the type-mapping page documents`() {
         connection.assertColumnTypes(
             dbType = PostgreSql,
-            ddl = POSTGRES_AUDIT_DDL,
-            insert = POSTGRES_AUDIT_INSERT,
+            createTableSql = POSTGRES_AUDIT_DDL,
+            insertRowSql = POSTGRES_AUDIT_INSERT,
             expected = POSTGRES_EXPECTED_TYPES,
         )
     }

@@ -336,8 +336,8 @@ abstract class MsSqlTestBase {
     fun `declared column types accept the values the driver returns`() {
         connection.assertColumnTypesMatchValues(
             dbType = MsSql,
-            ddl = MSSQL_AUDIT_DDL,
-            insert = MSSQL_AUDIT_INSERT,
+            createTableSql = MSSQL_AUDIT_DDL,
+            insertRowSql = MSSQL_AUDIT_INSERT,
         )
     }
 
@@ -349,8 +349,8 @@ abstract class MsSqlTestBase {
     fun `columns are read as the type-mapping page documents`() {
         connection.assertColumnTypes(
             dbType = MsSql,
-            ddl = MSSQL_AUDIT_DDL,
-            insert = MSSQL_AUDIT_INSERT,
+            createTableSql = MSSQL_AUDIT_DDL,
+            insertRowSql = MSSQL_AUDIT_INSERT,
             expected = MSSQL_EXPECTED_TYPES,
         )
     }

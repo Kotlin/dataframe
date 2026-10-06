@@ -55,6 +55,14 @@ because H2 in MariaDB mode reports `Types.BLOB` and does return a real `java.sql
 `Integer`. Neither field is the right discriminator in general — `io/h2/*H2Test.kt` is the oracle that
 decides, so run it before believing either.
 
+**SQLite is the case where neither field describes the column at all.** The Xerial driver reports both
+`javaClassName` and `jdbcType` from the storage class of the *first row*: a `BIGINT` column is reported as
+`Types.VARCHAR` / `String` when its first row holds text, and as `Types.FLOAT` / `Double` when it holds a
+real number. Only `sqlTypeName` — the declared type, verbatim from `CREATE TABLE` — stays the same whatever
+the rows hold, so `Sqlite` keys its mappings on it (`EmbeddedColumnTypeAuditTest` pins this driver
+behaviour). Before choosing a discriminator for any driver, probe it with a first row of every storage
+class — `NULL`, a small and a large integer, a real number, text — not only with a representative value.
+
 Other overridable behavior: `quoteIdentifier` (per-DB identifier quoting), `buildSqlQueryWithLimit`/
 `buildSelectTableQueryWithLimit`, `configureReadStatement` (fetch size/direction, query timeout), `createConnection`
 (SQLite needs read-only set at connect time), `isSystemTable`, `buildTableMetadata`, `tableTypes`.
@@ -71,7 +79,7 @@ API subject to change**). Instead of overriding the individual `open` pipeline f
 (`io/db/JdbcToDataFrameConverter.kt`). A subclass implements just one method —
 `protected abstract fun generateConverter(tableColumnMetadata): AnyJdbcToDataFrameConverter` — and the returned
 converter supplies the expected JDBC type, preprocessed type, target schema, value extraction, and column building.
-Converters are cached per `CacheKey(sqlTypeName, jdbcType, javaClassName, isNullable)`.
+Converters are cached per `CacheKey(sqlTypeName, jdbcType, size, javaClassName, isNullable)`.
 
 **When to use which:** extend plain `DbType` for ordinary relational databases where you only tweak a few functions
 (type mapping, quoting, limits, system-table filtering). Extend `AdvancedDbType` when a database has

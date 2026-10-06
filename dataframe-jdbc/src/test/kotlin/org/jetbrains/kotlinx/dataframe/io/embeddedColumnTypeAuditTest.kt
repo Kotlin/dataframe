@@ -1,9 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.withClue
+import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
 import org.jetbrains.kotlinx.dataframe.io.db.H2
@@ -16,6 +20,7 @@ import java.sql.Clob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.Time
+import java.sql.Types
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Date
@@ -59,6 +64,86 @@ class EmbeddedColumnTypeAuditTest {
     @Test
     fun `DuckDB columns are read as the type-mapping page documents`() {
         withDuckDb { assertColumnTypes(DuckDb, DUCKDB_AUDIT_DDL, DUCKDB_AUDIT_INSERT, DUCKDB_EXPECTED_TYPES) }
+    }
+
+    /**
+     * Xerial reports a column's metadata — its class *and* its `jdbcType` — from the storage class of
+     * the first row, so an INTEGER-affinity column whose first row is `NULL` or does not fit in an
+     * `Int` used to be declared differently from the values of the rows that followed.
+     */
+    @Test
+    fun `SQLite INTEGER-affinity columns are read as Long whatever the first row holds`() {
+        val columns = listOf("INT", "INTEGER", "TINYINT", "SMALLINT", "MEDIUMINT", "BIGINT")
+        val rowOrders = listOf(
+            listOf("NULL", "10000000000", "1"),
+            listOf("10000000000", "1"),
+            listOf("1", "10000000000"),
+        )
+        for (rows in rowOrders) {
+            withSqlite {
+                createStatement().use { st ->
+                    st.execute("CREATE TABLE ints(" + columns.joinToString { "${it.lowercase()}Col $it" } + ")")
+                    rows.forEach { row -> st.execute("INSERT INTO ints VALUES(" + columns.joinToString { row } + ")") }
+                }
+                val df = DataFrame.readSqlTable(this, "ints", dbType = Sqlite.default)
+
+                val expectedValues = rows.map { it.toLongOrNull() }
+                for (column in columns) {
+                    val col = df["${column.lowercase()}Col"]
+                    withClue("$column column, rows $rows") {
+                        col.type() shouldBe if (null in expectedValues) typeOf<Long?>() else typeOf<Long>()
+                        col.values().toList() shouldBe expectedValues
+                    }
+                }
+            }
+        }
+    }
+
+    /** The driver behaviour `readSqlTypeMapping_SQLite.md` documents, and the reason the mapping keys on the name. */
+    @Test
+    fun `Xerial reports the class and the JDBC type of a SQLite column from its first row`() {
+        // the first row, and the JDBC type and the class Xerial then reports for a BIGINT column
+        val firstRows = listOf(
+            "1" to (Types.BIGINT to "java.lang.Integer"),
+            "'abc'" to (Types.VARCHAR to "java.lang.String"),
+        )
+        for ((firstRow, reported) in firstRows) {
+            withSqlite {
+                createStatement().use { st ->
+                    st.execute("CREATE TABLE ints(bigintCol BIGINT)")
+                    st.execute("INSERT INTO ints VALUES($firstRow)")
+                    st.execute("INSERT INTO ints VALUES(2)")
+                    st.executeQuery("SELECT bigintCol FROM ints").use { rs ->
+                        val (jdbcType, className) = reported
+                        rs.metaData.getColumnTypeName(1) shouldBe "BIGINT"
+                        rs.metaData.getColumnType(1) shouldBe jdbcType
+                        rs.metaData.getColumnClassName(1) shouldBe className
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `SQLite INTEGER-affinity column holding a REAL or TEXT value fails instead of converting it`() {
+        // the stored value, and the class Xerial returns it as
+        val nonIntegers = listOf("1.5" to "java.lang.Double", "'abc'" to "java.lang.String")
+        for ((value, valueClass) in nonIntegers) {
+            withSqlite {
+                createStatement().use { st ->
+                    st.execute("CREATE TABLE ints(bigintCol BIGINT)")
+                    st.execute("INSERT INTO ints VALUES(1)")
+                    st.execute("INSERT INTO ints VALUES($value)")
+                }
+                val failure = shouldThrow<IllegalStateException> {
+                    DataFrame.readSqlTable(this, "ints", dbType = Sqlite.default)
+                }
+                failure.cause?.message shouldBe
+                    "SQLite: cannot convert value of type $valueClass to Long from column 'bigintCol' " +
+                    "(declared 'BIGINT'). Register a custom converter for this type or column via " +
+                    "`Sqlite.withCustomConverters { }` to override the built-in mapping."
+            }
+        }
     }
 
     private fun withH2(body: Connection.() -> Unit) =
@@ -191,11 +276,11 @@ private val H2_EXPECTED_TYPES: Map<String, KType> = mapOf(
  * stored value fits in one, and the column is still read as [Long] because its *declared* type says so.
  */
 private val SQLITE_EXPECTED_TYPES: Map<String, KType> = mapOf(
-    "integerCol" to typeOf<Int>(),
-    "intCol" to typeOf<Int>(),
+    "integerCol" to typeOf<Long>(),
+    "intCol" to typeOf<Long>(),
     "bigintCol" to typeOf<Long>(),
-    "tinyintCol" to typeOf<Int>(),
-    "smallintCol" to typeOf<Int>(),
+    "tinyintCol" to typeOf<Long>(),
+    "smallintCol" to typeOf<Long>(),
     "realCol" to typeOf<Double>(),
     "doubleCol" to typeOf<Double>(),
     "floatCol" to typeOf<Double>(),

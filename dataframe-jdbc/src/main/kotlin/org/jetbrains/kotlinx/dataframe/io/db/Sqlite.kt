@@ -201,9 +201,11 @@ public class SqliteCustomConvertersBuilder
  *  2. [customTypesMap] — keyed by the declared **SQL type name** (as written in `CREATE TABLE`).
  *     Use this to override every column that shares a declared type.
  *  3. The built-in SQLite conversion for BOOLEAN, DATE, DATETIME, TIME, TIMESTAMP, DECIMAL,
- *     NUMERIC.
+ *     NUMERIC and INT.
  *     **This conversion is also applied to declared types that contain one of these names as a
- *     substring**.
+ *     substring**. So every column with SQLite's `INTEGER` affinity (`INT`, `INTEGER`, `TINYINT`,
+ *     `BIGINT`, …) is read as [Long]. A `REAL` or `TEXT` value stored in such a column is not
+ *     converted: reading the table throws.
  *  4. The base `DbType` mapping.
  */
 public class Sqlite(
@@ -321,16 +323,15 @@ public class Sqlite(
             return jdbcToDfConverterFor<String>(expectedKType)
         }
 
-        // 6) BIGINT affinity — the declared column type decides the Kotlin type, so a BIGINT column
-        //    stays `Long` even though Xerial reports (and returns) an Integer whenever the stored
-        //    value happens to fit in one. Widening the value is the only consistent option here:
-        //    typing the column from the value instead would make a BIGINT column `Int` or `Long`
-        //    depending on which rows it happens to hold (see #2087).
-        if (tableColumnMetadata.jdbcType == Types.BIGINT && tableColumnMetadata.javaClassName == "java.lang.Integer") {
-            return jdbcToDfConverterFor<Any?>(expectedKType)
-                .withPreprocessor(preprocessedValueType = typeOf<Long>().withNullability(nullable)) {
-                    (it as Number?)?.toLong()
-                }
+        // 6) INTEGER affinity — SQLite stores every integer as a 64-bit value, whatever width the
+        //    declared type names, so the column is `Long`. Detected by the declared type name, by
+        //    SQLite's own affinity rule: Xerial reports both `javaClassName` and `jdbcType` from the
+        //    storage class of the first row, so a column whose first row is NULL or does not fit in
+        //    an Integer would otherwise be declared differently from the rows that follow (see #2087).
+        //    A REAL or TEXT value cannot become a `Long` without losing data, so it fails instead.
+        if ("INT" in declaredUpper) {
+            return jdbcToDfConverterFor<Any>(nullable)
+                .withPreprocessor { convertToLong(it, tableColumnMetadata) }
         }
 
         // 7) Fallback — delegate to the base [DbType] end-to-end pipeline.
@@ -397,6 +398,14 @@ public class Sqlite(
             }
 
             else -> unsupportedConversion(value, "Boolean", meta)
+        }
+
+    private fun convertToLong(value: Any?, meta: TableColumnMetadata): Long? =
+        when (value) {
+            null -> null
+            is Int -> value.toLong()
+            is Long -> value
+            else -> unsupportedConversion(value, "Long", meta)
         }
 
     private fun convertToInstant(value: Any?, meta: TableColumnMetadata): Instant? =

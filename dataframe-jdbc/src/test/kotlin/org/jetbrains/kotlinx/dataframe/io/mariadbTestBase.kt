@@ -522,8 +522,8 @@ abstract class MariadbTestBase {
     fun `declared column types accept the values the driver returns`() {
         connection.assertColumnTypesMatchValues(
             dbType = MariaDb,
-            ddl = MYSQL_FAMILY_AUDIT_DDL,
-            insert = MYSQL_FAMILY_AUDIT_INSERT,
+            createTableSql = MYSQL_FAMILY_AUDIT_DDL,
+            insertRowSql = MYSQL_FAMILY_AUDIT_INSERT,
         )
     }
 
@@ -535,8 +535,8 @@ abstract class MariadbTestBase {
     fun `columns are read as the type-mapping page documents`() {
         connection.assertColumnTypes(
             dbType = MariaDb,
-            ddl = MYSQL_FAMILY_AUDIT_DDL,
-            insert = MYSQL_FAMILY_AUDIT_INSERT,
+            createTableSql = MYSQL_FAMILY_AUDIT_DDL,
+            insertRowSql = MYSQL_FAMILY_AUDIT_INSERT,
             expected = MARIADB_EXPECTED_TYPES,
         )
     }

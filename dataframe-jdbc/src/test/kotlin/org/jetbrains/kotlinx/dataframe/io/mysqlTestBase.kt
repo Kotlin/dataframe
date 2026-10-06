@@ -517,8 +517,8 @@ abstract class MySqlTestBase {
     fun `declared column types accept the values the driver returns`() {
         connection.assertColumnTypesMatchValues(
             dbType = MySql,
-            ddl = MYSQL_FAMILY_AUDIT_DDL,
-            insert = MYSQL_FAMILY_AUDIT_INSERT,
+            createTableSql = MYSQL_FAMILY_AUDIT_DDL,
+            insertRowSql = MYSQL_FAMILY_AUDIT_INSERT,
         )
     }
 
@@ -530,8 +530,8 @@ abstract class MySqlTestBase {
     fun `columns are read as the type-mapping page documents`() {
         connection.assertColumnTypes(
             dbType = MySql,
-            ddl = MYSQL_FAMILY_AUDIT_DDL,
-            insert = MYSQL_FAMILY_AUDIT_INSERT,
+            createTableSql = MYSQL_FAMILY_AUDIT_DDL,
+            insertRowSql = MYSQL_FAMILY_AUDIT_INSERT,
             expected = MYSQL_EXPECTED_TYPES,
         )
     }
