@@ -156,7 +156,7 @@ public fun DataFrame.Companion.readSqlTable(
 }
 
 /**
- * Reads a data frame from the specified database using the provided SQL query and configurations.
+ * Reads a dataframe from the specified database using the provided SQL query and configurations.
  *
  * @param [connection] The database connection to be used for executing the query.
  * @param [sqlQuery]  The SQL query string to be executed.
@@ -165,7 +165,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [limit] the maximum number of rows to retrieve from the table.
  *   `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability]  A flag to determine whether to infer nullability for result set fields.
- * @return The data frame constructed from the database query results.
+ * @return The dataframe constructed from the database query results.
  * @throws [IllegalStateException]  If an error occurs while reading from the database or processing the data.
  */
 private fun executeQueryAndBuildDataFrame(
