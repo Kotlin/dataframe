@@ -1,15 +1,15 @@
 [//]: # (title: single)
 
 <web-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </link-summary>
 
 Returns the single [row](DataRow.md) in this [`DataFrame`](DataFrame.md).
