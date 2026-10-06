@@ -84,6 +84,18 @@ class ReorderTests {
     }
 
     @Test
+    fun `a single selected column group reorders only its own nested columns`() {
+        // [a[b[y, x]]]: the only nested column of "a" is the column group "b"
+        val df = dataFrameOf("y", "x")(1, 2).group("y", "x").into("b").group("b").into("a")
+
+        val reordered = df.reorder("a").byName()
+
+        reordered.getColumnGroup("a").columnNames() shouldBe listOf("b")
+        // the nested columns of "b" keep their order
+        reordered.getColumnGroup("a").getColumnGroup("b").columnNames() shouldBe listOf("y", "x")
+    }
+
+    @Test
     fun `byDesc puts the column with the largest value first`() {
         val df = dataFrameOf("c", "d", "a", "b")(
             3, 4, 1, 2,
@@ -168,6 +180,28 @@ class ReorderTests {
 
         val frame = df.reorderColumnsBy { name() }.getColumnGroup("grp").getFrameColumn("frame")
         frame.values().map { it.columnNames() } shouldBe listOf(listOf("k", "v1", "v2"))
+    }
+
+    // [k1, outer[k2, inner[k2, v2, v1]]]: a frame column inside a frame column
+    private val withNestedFrameColumn = dataFrameOf(
+        columnOf(1).named("k1"),
+        listOf(dataFrameOf("k2", "v2", "v1")(1, 2, 3).groupBy("k2").toDataFrame("inner")).toFrameColumn("outer"),
+    )
+
+    @Test
+    fun `reorderColumnsBy with atAnyDepth reorders columns of a frame column inside a frame column`() {
+        val outer = withNestedFrameColumn.reorderColumnsBy { name() }.getFrameColumn("outer").values().single()
+
+        outer.columnNames() shouldBe listOf("inner", "k2")
+        outer.getFrameColumn("inner").values().map { it.columnNames() } shouldBe listOf(listOf("k2", "v1", "v2"))
+    }
+
+    @Test
+    fun `reorderColumnsByName with atAnyDepth reorders columns of a frame column inside a frame column`() {
+        val outer = withNestedFrameColumn.reorderColumnsByName().getFrameColumn("outer").values().single()
+
+        outer.columnNames() shouldBe listOf("inner", "k2")
+        outer.getFrameColumn("inner").values().map { it.columnNames() } shouldBe listOf(listOf("k2", "v1", "v2"))
     }
 
     @Test
