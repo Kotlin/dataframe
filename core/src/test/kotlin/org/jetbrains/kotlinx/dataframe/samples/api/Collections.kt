@@ -83,7 +83,7 @@ class Collections {
 
         data class Person(val fullName: FullName, val age: Int)
 
-        val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
+        val persons = df.toListOf<Person>() // [Person(fullName=FullName(name=John, lastName=Doe), age=21)]
         // SampleEnd
 
         persons shouldBe listOf(Person(FullName("John", "Doe"), 21))
