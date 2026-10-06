@@ -119,6 +119,15 @@ public interface DocumentationUrls {
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
     public typealias Move = Nothing
 
+    /** [See `reorder` on the documentation website.]({@include [Url]}/reorder.html) */
+    public typealias Reorder = Nothing
+
+    /** [See `reorderColumnsBy` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsby) */
+    public typealias ReorderColumnsBy = Nothing
+
+    /** [See `reorderColumnsByName` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsbyname) */
+    public typealias ReorderColumnsByName = Nothing
+
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
     public typealias Group = Nothing
 
