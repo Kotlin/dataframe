@@ -61,8 +61,14 @@ internal fun AnyFrame.toSequenceImpl(type: KType): Sequence<Any> {
                         require(elementType != null) { "FrameColumn can not be converted to type `List<*>`" }
                         column.asAnyFrameColumn().map { it.toSequenceImpl(elementType).toList() }
                     } else if (parameterType.jvmErasure == DataFrame::class) {
-                        // the same as `convertTo`: the frames are passed as they are
-                        column
+                        // the same as `convertTo`: frames go into a `DataFrame<S>` converted to the schema of `S`,
+                        // and into an `AnyFrame` as they are
+                        val schemaType = parameterType.arguments[0].type
+                        if (schemaType == null || schemaType.classifier == Any::class) {
+                            column
+                        } else {
+                            column.asAnyFrameColumn().map { it.convertTo(schemaType) }
+                        }
                     } else {
                         error("FrameColumn can not be converted to type `$parameterType`")
                     }

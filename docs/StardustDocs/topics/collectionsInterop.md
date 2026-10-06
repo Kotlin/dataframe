@@ -84,7 +84,7 @@ for Gradle or the [Kotlin Jupyter kernel](SetupJupyter.md)
 </tip>
 
 After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported eagerly
-into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
+into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toListOf](toList.md#tolistof):
 
 <!---FUN listInterop4-->
 
@@ -96,8 +96,11 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-With the [compiler plugin](Compiler-Plugin.md), use `toListOf` here rather than `toList`:
-the plugin gives `df2` a generated type argument, which is not a data class, so `toList()` throws.
+`toListOf` works whatever the type argument of the [`DataFrame`](DataFrame.md) is, so use it in most cases.
+[toList](toList.md#tolist) creates instances of the type argument itself,
+so use it only when this type argument is known to be a data class.
+With the [compiler plugin](Compiler-Plugin.md), this is not the case here:
+the plugin gives `df2` a generated type argument, which is not a data class, so `df2.toList()` throws.
 
 A [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested data class:
 

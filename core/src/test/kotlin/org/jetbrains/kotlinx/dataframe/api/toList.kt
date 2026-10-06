@@ -2,11 +2,13 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DataClassesTests {
@@ -53,6 +55,14 @@ class DataClassesTests {
     data class City(val city: String, val students: List<Student>)
 
     data class TypedCity(val city: String, val students: DataFrame<Student>)
+
+    data class UntypedCity(val city: String, val students: AnyFrame)
+
+    data class LongAgeCity(val city: String, val students: DataFrame<LongAge>)
+
+    data class NotStudent(val x: Int, val y: String)
+
+    data class NotStudentCity(val city: String, val students: DataFrame<NotStudent>)
 
     data class Box<V>(val value: V)
 
@@ -266,12 +276,44 @@ class DataClassesTests {
     }
 
     @Test
-    fun `frame column goes into a DataFrame parameter as it is`() {
+    fun `frame column keeps its other columns in a DataFrame parameter`() {
         val df = dataFrameOf("city", "name", "age")("London", "Alice", 15)
             .groupBy("city").toDataFrame("students")
 
         // The "city" column stays in the frame, although `Student` has no such property.
         df.toListOf<TypedCity>().single().students.columnNames() shouldBe listOf("city", "name", "age")
+    }
+
+    @Test
+    fun `frame column goes into an AnyFrame parameter as it is`() {
+        val df = dataFrameOf("city", "name", "age")("London", "Alice", 15)
+            .groupBy("city").toDataFrame("students")
+
+        val students = df.toListOf<UntypedCity>().single().students
+
+        students.columnNames() shouldBe listOf("city", "name", "age")
+        students["age"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `frame column is converted to the schema of a DataFrame parameter`() {
+        val df = dataFrameOf("city", "name", "age")("London", "Alice", 15)
+            .groupBy("city").toDataFrame("students")
+
+        // `LongAge.age` is `Long`, so the `Int` column "age" inside each frame becomes `Long`.
+        val students = df.toListOf<LongAgeCity>().single().students
+
+        students["age"].type() shouldBe typeOf<Long>()
+        students.toList() shouldBe listOf(LongAge("Alice", 15L))
+    }
+
+    @Test
+    fun `frame column that does not match the schema of a DataFrame parameter throws`() {
+        val df = dataFrameOf("city", "name", "age")("London", "Alice", 15)
+            .groupBy("city").toDataFrame("students")
+
+        // The frames have no "x" and "y" columns, which `NotStudent` needs.
+        shouldThrow<IllegalArgumentException> { df.toListOf<NotStudentCity>() }
     }
 
     @Test

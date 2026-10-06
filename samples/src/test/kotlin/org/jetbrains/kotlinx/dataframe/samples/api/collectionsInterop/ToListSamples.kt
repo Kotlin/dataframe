@@ -77,7 +77,7 @@ class ToListSamples : DataFrameSampleHelper("toList", "api/collectionsInterop") 
     }
 
     // Not a sample: pins the page and KDoc sentence about `toList` and the compiler plugin.
-    // TODO: see ISSUE-toList-compiler-plugin.md. Once fixed, update the "With the compiler plugin" sentences in
+    // TODO(#2127): once fixed, this test fails; then update the "With the compiler plugin" sentences in
     //  `CommonToListDocs.FromTypeArgument` (`toList.kt`), in `toList.md#tolist` and in `collectionsInterop.md`.
     @Test
     fun `with the compiler plugin toList throws right after toDataFrame`() {
