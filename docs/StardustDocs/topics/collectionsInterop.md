@@ -84,7 +84,7 @@ for Gradle or the [Kotlin Jupyter kernel](SetupJupyter.md)
 </tip>
 
 After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported eagerly
-into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
+into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toListOf](toList.md#tolistof):
 
 <!---FUN listInterop4-->
 
@@ -96,14 +96,13 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-```kotlin
-data class Output(val a: Int, val b: Int, val c: Int)
+`toListOf` works whatever the type argument of the [`DataFrame`](DataFrame.md) is, so use it in most cases.
+[toList](toList.md#tolist) creates instances of the type argument itself,
+so use it only when this type argument is known to be a data class.
+With the [compiler plugin](Compiler-Plugin.md), this is not the case here:
+the plugin gives `df2` a generated type argument, which is not a data class, so `df2.toList()` throws.
 
-val result = df2.toListOf<Output>()
-```
-
-Alternatively, one can create lazy [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-sequence/) objects.
-This avoids holding the entire list of objects in memory as objects are created on the fly as needed.
+A [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested data class:
 
 <!---FUN listInterop5-->
 
@@ -115,10 +114,16 @@ data class FullName(val name: String, val lastName: String)
 
 data class Person(val fullName: FullName, val age: Int)
 
-val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
+val persons = df.toListOf<Person>() // [Person(fullName=FullName(name=John, lastName=Doe), age=21)]
 ```
 
 <!---END-->
+
+Alternatively, [`toSequence` and `toSequenceOf`](toList.md#tosequence-and-tosequenceof) create a lazy
+[`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/).
+The objects are created only when the sequence is iterated, so you do not need to hold all of them in memory at once.
+
+The rules for matching columns to data class properties are in [How rows become objects](toList.md#how-rows-become-objects).
 
 ### Converting columns with object instances to ColumnGroup
 

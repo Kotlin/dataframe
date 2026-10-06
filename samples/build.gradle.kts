@@ -127,6 +127,7 @@ korro {
                 include("fill.md")
                 include("drop.md")
                 include("filter.md")
+                include("toList.md")
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
