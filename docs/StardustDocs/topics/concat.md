@@ -138,7 +138,7 @@ val registeredPeople = dataFrameOf("name", "age", "city")("Alice", 20, "London")
 val newPeople = dataFrameOf(
     "name" to columnOf("Bob", "Charlie"),
     "age" to columnOf(15, 25),
-    "city" to columnOf("Paris", "London")
+    "city" to columnOf("Paris", "London"),
 )
 
 registeredPeople.concat(newPeople.rows())
@@ -276,7 +276,7 @@ Concatenating a column of collections flattens all collection values. Empty coll
 val nameGroups = columnOf<Collection<String>>(
     listOf("Alice", "Bob"),
     emptySet(),
-    setOf("Charlie")
+    setOf("Charlie"),
 )
 
 nameGroups.concat()
