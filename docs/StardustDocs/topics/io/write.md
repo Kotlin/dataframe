@@ -233,7 +233,7 @@ The second approach is a bit more tricky. You have to specify the schema itself 
 Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
 You can use `Mode.STRICT` (this is the default), `Mode.LOYAL` or any combination you want.
 The `ArrowWriter` object should be closed after use because Arrow uses random access buffers not managed by Java GC.
-Finally, you can specify a callback to be invoked if some data is lost or can not be saved according to your schema.
+Finally, you can specify a callback to be invoked if some data is lost or cannot be saved according to your schema.
 
 Here is a full example:
 <!---FUN writeArrowPerSchema-->
