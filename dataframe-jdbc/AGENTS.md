@@ -120,6 +120,13 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
 - SQLite tests at the top level use bundled `.sqlite` files in `src/test/resources/`.
 - `commonTestScenarios.kt` holds the shared assertions reused across databases.
 
+**`@DataSchema` interfaces in these tests are only checked by `cast<T>(verify = true)`** — write the
+argument out: a bare `cast<T>()` resolves to the overload that checks nothing. The check needs the
+exact column type, nullability included, and the nullability is inferred from the rows read
+(`inferNullability`), so the same table can read as `String` with a `limit` and as `String?` without
+one. It stops at the first mismatch, and a nullable field with no matching column is filled with
+nulls instead of reported — a wrong name on a nullable field never fails.
+
 **The column-type audit** is the second half of that mapping coverage and lives in its own two files
 rather than in `commonTestScenarios.kt`, because it carries a large per-database SQL fixture with it:
 

@@ -29,7 +29,7 @@ interface Table1MSSSQL {
     val bigintColumn: Long
     val binaryColumn: ByteArray
     val bitColumn: Boolean
-    val charColumn: Char
+    val charColumn: String
     val dateColumn: Date
     val datetime3Column: Instant
     val datetime2Column: Instant
@@ -39,7 +39,7 @@ interface Table1MSSSQL {
     val imageColumn: ByteArray?
     val intColumn: Int
     val moneyColumn: BigDecimal
-    val ncharColumn: Char
+    val ncharColumn: String
     val ntextColumn: String
     val numericColumn: BigDecimal
     val nvarcharColumn: String
@@ -51,7 +51,7 @@ interface Table1MSSSQL {
     val timeColumn: java.sql.Time
     val timestampColumn: Instant
     val tinyintColumn: Short
-    val uniqueidentifierColumn: Char
+    val uniqueidentifierColumn: String
     val varbinaryColumn: ByteArray
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
@@ -206,7 +206,7 @@ abstract class MsSqlTestBase {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>()
+        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>(verify = true)
 
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][30] shouldBe "Sample1"
@@ -270,7 +270,7 @@ abstract class MsSqlTestBase {
             FROM Table1
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3)
         val result = df.filter { "id"<Int>() == 1 }
         result[0]["bigintColumn"] shouldBe 123456789012345L
 
@@ -283,7 +283,7 @@ abstract class MsSqlTestBase {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection, MSSQL_TEST_DATABASE_NAME, 4).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MSSSQL>()
+        val table1Df = dataframes[0].cast<Table1MSSSQL>(verify = true)
 
         table1Df.rowsCount() shouldBe 4
         table1Df.filter { "id"<Int>() > 2 }.rowsCount() shouldBe 2
@@ -293,6 +293,11 @@ abstract class MsSqlTestBase {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 
     // https://github.com/Kotlin/dataframe/issues/1746
