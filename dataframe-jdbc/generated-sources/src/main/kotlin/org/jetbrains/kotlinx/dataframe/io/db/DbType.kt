@@ -146,9 +146,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * for JDBC drivers that throw [<code>java.sql.SQLFeatureNotSupportedException</code>][java.sql.SQLFeatureNotSupportedException] for certain methods
      * (e.g., Apache Hive).
      *
+     * Each DataFrame column is named by its label: the SQL `AS` alias, or the column name when there is no
+     * alias (see [<code>ResultSetMetaData.getColumnLabel</code>][ResultSetMetaData.getColumnLabel]). A name that repeats gets a number:
+     * `name`, `name1`; a repeated `name_1` becomes `name_11`.
+     *
      * Fallback behavior for unsupported methods:
-     * - `getColumnName()` → `getColumnLabel()` → `"column_N"`
-     * - `getTableName()` → extract from column name if contains '.' → `null`
+     * - the DataFrame column name: [<code>ResultSetMetaData.getColumnLabel</code>][ResultSetMetaData.getColumnLabel] → [<code>ResultSetMetaData.getColumnName</code>][ResultSetMetaData.getColumnName] →
+     *   `"untitled"`; an empty label also falls back to [<code>ResultSetMetaData.getColumnName</code>][ResultSetMetaData.getColumnName]
+     * - the name the column has in its table, used to look up the table name and the nullability:
+     *   [<code>ResultSetMetaData.getColumnName</code>][ResultSetMetaData.getColumnName] → [<code>ResultSetMetaData.getColumnLabel</code>][ResultSetMetaData.getColumnLabel]
+     * - `getTableName()` → the `table` part of a column name `table.column` → `null`
      * - `isNullable()` → [<code>DatabaseMetaData.getColumns</code>][DatabaseMetaData.getColumns] → `true` (assume nullable)
      * - `getColumnTypeName()` → `"OTHER"`
      * - `getColumnType()` → [<code>Types.OTHER</code>][Types.OTHER]
@@ -186,26 +193,36 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             // SQL columns are 1-indexed
             val index = it + 1
 
-            // Try to getColumnName, fallback to getColumnLabel, then generate name
+            // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
+            val label = try {
+                rsMetaData.getColumnLabel(index)
+            } catch (_: Exception) {
+                null
+            }
+
+            // The name the column has in its table, for the table name and nullability lookups below
             val columnName = try {
                 rsMetaData.getColumnName(index)
             } catch (_: Exception) {
-                try {
-                    rsMetaData.getColumnLabel(index)
-                } catch (_: Exception) {
-                    null
-                }
+                label
             }
 
+            // The name of the DataFrame column: the label, which is the SQL `AS` alias if there is one
+            // (JDBC: "if a SQL AS is not specified, the value returned from getColumnLabel will be the same
+            // as the value returned by the getColumnName method"). MySQL, MariaDB and H2 report the alias only
+            // there, and the original name in getColumnName. Falling back to getColumnName when the label is
+            // empty follows Spring's JdbcUtils.lookupColumnName.
+            val preferredName = label?.ifEmpty { null } ?: columnName
+
             // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
-            val tableName = try {
-                rsMetaData.getTableName(index).takeUnless { it.isBlank() }
+            val (tableName, lookupColumnName) = try {
+                rsMetaData.getTableName(index).takeUnless { it.isBlank() } to columnName
             } catch (_: Exception) {
-                // Fallback: try to extract table name from column name if it contains '.'
+                // Fallback: a column name qualified as `table.column` carries its table
                 if (columnName?.contains('.') == true) {
-                    columnName.substringAfterLast('.')
+                    columnName.substringBeforeLast('.') to columnName.substringAfterLast('.')
                 } else {
-                    null
+                    null to columnName
                 }
             }
 
@@ -225,7 +242,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 // Some drivers may throw for unsupported features
                 // Try fallback to DatabaseMetaData, with additional safety
                 try {
-                    dbMetaData.getColumns(catalog, schema, tableName, columnName).use { cols ->
+                    dbMetaData.getColumns(catalog, schema, tableName, lookupColumnName).use { cols ->
                         if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
                     }
                 } catch (_: Exception) {
@@ -261,7 +278,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
             // Generate DataFrame-compatible unique names in the same way as creating a DataFrame would
             val uniqueName = nameGenerator.addUnique(
-                preferredName = columnName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX },
+                preferredName = preferredName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX },
             )
 
             TableColumnMetadata(
