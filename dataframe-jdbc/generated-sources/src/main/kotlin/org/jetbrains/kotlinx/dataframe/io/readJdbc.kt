@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
@@ -209,6 +210,10 @@ private fun executeQueryAndBuildDataFrame(
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+ * gives `CUSTOMER_ID` for this unquoted alias.
+ *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -258,6 +263,10 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+ * gives `CUSTOMER_ID` for this unquoted alias.
+ *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -296,6 +305,10 @@ public fun DataFrame.Companion.readSqlQuery(
 
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
+ *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+ * gives `CUSTOMER_ID` for this unquoted alias.
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
