@@ -81,7 +81,7 @@ public object KotlinNotebookPluginUtils {
      * @param dataFrameLike The dataframe-like object to sort.
      * @param columnPaths The list of columns to sort by. Each element in the list represents a column path.
      * @param desc The list of booleans indicating whether each column should be sorted in descending order.
-     *             The size of this list should be the same as the size of the `columnPaths` list.
+     *             The size of this list should be the same as the size of the [columnPaths] list.
      *
      * @throws IllegalArgumentException if `dataFrameLike` is `null`.
      *
