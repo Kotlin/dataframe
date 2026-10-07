@@ -381,6 +381,23 @@ public interface DocumentationUrls {
         public typealias TypeConversion = Nothing
     }
 
+    /** [See `median` on the documentation website.]({@include [Url]}/median.html) */
+    public interface Median {
+
+        /** [See "`median` Type Conversion" on the documentation website.]({@include [Url]}/median.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `percentile` on the documentation website.]({@include [Url]}/percentile.html) */
+    public interface Percentile {
+
+        /** [See "`percentile` Type Conversion" on the documentation website.]({@include [Url]}/percentile.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+
+        /** [See "Quantile Estimation Methods" on the documentation website.]({@include [Url]}/percentile.html#quantile-estimation-methods) */
+        public typealias QuantileEstimationMethods = Nothing
+    }
+
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
     public interface MinMax {
 
