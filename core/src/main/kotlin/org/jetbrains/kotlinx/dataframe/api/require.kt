@@ -19,7 +19,7 @@ import kotlin.reflect.typeOf
  *
  * We recommend considering declaring a [DataSchema] and use [cast] or [convertTo] if you end up with more than a few `requireColumn` calls.
  *
- * Example:
+ * String API Example:
  *
  * ```kotlin
  * val repos = DataFrame
@@ -31,7 +31,9 @@ import kotlin.reflect.typeOf
  *     .select("full_name", "stargazers_count")
  * ```
  *
- * Notice how `stargazers_count` String is repeated three times. We can refactor this code using `requireColumn`:
+ * Notice how `stargazers_count` String is repeated three times. We can use `requireColumn` to add information about this column to the compile-time schema.
+ *
+ * Refactored example:
  *
  * ```
  * val repos = DataFrame
@@ -44,7 +46,11 @@ import kotlin.reflect.typeOf
  *     .select { "full_name" and stargazers_count }
  * ```
  *
- * This way code becomes a bit more robust. For example, usages of a renamed column will become compile time errors that are easy to spot and update:
+ * This way code becomes a bit more robust.
+ * For example, after `.rename { stargazers_count }.into("stars")`
+ * usages of the `stargazers_count` property become compile time errors
+ * that are easy to spot and update to `stars`.
+ *
  * ```kotlin
  * val repos = DataFrame
  *     .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
@@ -55,6 +61,14 @@ import kotlin.reflect.typeOf
  *     .filter { stars > 100 }
  *     .sortByDesc { stars }
  *     .select { "full_name" and stars }
+ * ```
+ *
+ * `requireColumn` can be used to change the type of a known column:
+ *
+ * ```kotlin
+ * val df = dataFrameOf("name" to columnOf<Any>("Joe"))
+ * val typed = df.requireColumn { name.cast<String>() }
+ * typed.filter { name.length > 2 }
  * ```
  *
  * For more information: {@include [DocumentationUrls.Require]}
