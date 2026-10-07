@@ -18,4 +18,7 @@ internal interface Issues {
 
     /** [KT-76683](https://youtrack.jetbrains.com/issue/KT-76683) */
     typealias OverloadResolutionByLambdaReturnTypeLink = Nothing
+
+    /** [KT-51107](https://youtrack.jetbrains.com/issue/KT-51107/ELA-Overload-resolution-via-eager-lambda-return-type-analysis) */
+    typealias EagerLambdaAnalysisLink = Nothing
 }

@@ -88,6 +88,8 @@ import kotlin.reflect.KProperty
  * requires either explicit type arguments, like `df.percentile<_, String>(25.0) { name.firstName }`,
  * or passing the lambda inside the parentheses, like `df.percentile(25.0, { name.firstName })`.
  *
+ * @include [CommonMedianPercentileDocs.EagerLambdaAnalysisSnippet]
+ *
  * Related operation:
  * - [`median`][DataFrame.median] — the 50th percentile; the same as `percentile(50.0)`.
  *
