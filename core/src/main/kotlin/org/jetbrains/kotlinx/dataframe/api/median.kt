@@ -83,6 +83,8 @@ import kotlin.reflect.KProperty
  * `df.median<_, String> { name.firstName }`, or passing the lambda inside the parentheses, like
  * `df.median({ name.firstName })`.
  *
+ * @include [CommonMedianPercentileDocs.EagerLambdaAnalysisSnippet]
+ *
  * Related operation:
  * - [`percentile`][DataFrame.percentile] — any percentile of values; `median` is the same as `percentile(50.0)`.
  *
