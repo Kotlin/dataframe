@@ -162,9 +162,25 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      * returning non-number comparable values, like strings or dates, requires either explicit type arguments,
      * or passing the lambda inside the parentheses (see the examples below).
      * For a lambda returning primitive numbers, the overload returning a [Double] is picked automatically.
+     *
+     * @include [EagerLambdaAnalysisSnippet]
      */
     @ExcludeFromSources
     typealias ExplicitTypeArgumentsSnippet = Nothing
+
+    /**
+     * {@comment Note that KT-76683 is solved by eager lambda analysis from Kotlin 2.5. KDoc-snippet.}
+     *
+     * From Kotlin 2.5, this limitation can be lifted by enabling eager lambda analysis
+     * ({@include [Issues.EagerLambdaAnalysisLink]}) with the compiler option `-XXLanguage:+EagerLambdaAnalysis`,
+     * like `kotlin { compilerOptions { freeCompilerArgs.add("-XXLanguage:+EagerLambdaAnalysis") } }` in Gradle.
+     * Then, the right overload is picked for lambdas returning non-number comparable values too,
+     * without explicit type arguments.
+     * Note that this is an internal compiler option without any stability guarantees,
+     * so it is not recommended for production use yet.
+     */
+    @ExcludeFromSources
+    typealias EagerLambdaAnalysisSnippet = Nothing
 
     /**
      * {@comment Note for the [DataRow] overloads for comparable values about KT-76683-like overload resolution.
