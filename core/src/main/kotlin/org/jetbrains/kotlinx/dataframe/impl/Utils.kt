@@ -14,6 +14,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
 import java.lang.reflect.Method
 import java.math.BigDecimal
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -511,3 +514,19 @@ internal val KCallable<*>.columnName: String
         is KProperty<*> -> columnName
         else -> findAnnotation<ColumnName>()?.name ?: getterName
     }
+
+/**
+ * Shortcut for
+ * ```kt
+ * .let { if (predicate) block(it) else it }
+ * ```
+ * @see let
+ */
+@OptIn(ExperimentalContracts::class)
+@PublishedApi
+internal inline fun <T> T.letIf(predicate: Boolean, block: (T) -> T): T {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
+    return if (predicate) block(this) else this
+}
