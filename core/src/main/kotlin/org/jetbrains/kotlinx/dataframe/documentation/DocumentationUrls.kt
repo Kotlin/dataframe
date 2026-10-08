@@ -309,6 +309,9 @@ public interface DocumentationUrls {
     /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
     public typealias Rename = Nothing
 
+    /** [See `replace` on the documentation website.]({@include [Url]}/replace.html) */
+    public typealias Replace = Nothing
+
     /** [See `groupBy` on the documentation website.]({@include [Url]}/groupby.html) */
     public typealias GroupBy = Nothing
 

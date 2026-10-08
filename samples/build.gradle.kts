@@ -144,6 +144,7 @@ korro {
                 include("single.md")
                 include("indexing.md")
                 include("unfold.md")
+                include("replace.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
