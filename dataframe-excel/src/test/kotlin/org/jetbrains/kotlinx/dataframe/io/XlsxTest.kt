@@ -2,8 +2,13 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.datetime.LocalDateTime
+import org.apache.poi.hssf.usermodel.HSSFWorkbookFactory
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -14,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
+import java.io.IOException
 import java.net.URL
 import java.nio.file.Files
 import kotlin.reflect.typeOf
@@ -22,6 +28,90 @@ import kotlin.reflect.typeOf
 class XlsxTest {
 
     fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
+
+    private fun missingProviderException(fileMagic: String): IOException =
+        IOException(
+            "Your InputStream was neither an OLE2 stream, nor an OOXML stream or you haven't provide the " +
+                "poi-ooxml*.jar in the classpath/modulepath - FileMagic: $fileMagic, having providers: []",
+        )
+
+    @Test
+    fun `explain a missing OLE2 provider when its implementation is on the classpath`() {
+        val original = missingProviderException("OLE2")
+
+        val enriched = addMissingServiceDescriptorHint(original) { className ->
+            className shouldBe "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+            true
+        }
+
+        enriched.message shouldContain "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+        enriched.message shouldContain "(OLE2)"
+        enriched.message shouldContain "META-INF/services resources are merged"
+        enriched.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
+        enriched.message shouldNotContain original.message!!
+        enriched.cause shouldBe original
+    }
+
+    @Test
+    fun `keep POI error for a missing OOXML dependency`() {
+        val original = missingProviderException("OOXML")
+
+        val result = addMissingServiceDescriptorHint(original) { className ->
+            className shouldBe "org.apache.poi.xssf.usermodel.XSSFWorkbookFactory"
+            false
+        }
+
+        result shouldBe original
+    }
+
+    @Test
+    fun `keep unrelated IO errors unchanged`() {
+        val original = IOException("Unable to read the stream")
+
+        val result = addMissingServiceDescriptorHint(original) {
+            error("Class availability must not be checked for unrelated IO errors")
+        }
+
+        result shouldBe original
+    }
+
+    @Test
+    fun `explain the actual POI error when the OLE2 provider is missing`() {
+        WorkbookFactory.removeProvider(HSSFWorkbookFactory::class.java)
+
+        try {
+            val exception = shouldThrow<IOException> {
+                DataFrame.readExcel(testResource("sample.xls"))
+            }
+
+            exception.message shouldContain "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+            exception.message shouldContain "(OLE2)"
+            exception.message shouldContain "META-INF/services resources are merged"
+            exception.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
+            exception.cause.shouldBeInstanceOf<IOException>()
+        } finally {
+            WorkbookFactory.addProvider(HSSFWorkbookFactory())
+        }
+    }
+
+    @Test
+    fun `explain the actual POI error when the OOXML provider is missing`() {
+        WorkbookFactory.removeProvider(XSSFWorkbookFactory::class.java)
+
+        try {
+            val exception = shouldThrow<IOException> {
+                DataFrame.readExcel(testResource("sample2.xlsx"))
+            }
+
+            exception.message shouldContain "org.apache.poi.xssf.usermodel.XSSFWorkbookFactory"
+            exception.message shouldContain "(OOXML)"
+            exception.message shouldContain "META-INF/services resources are merged"
+            exception.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
+            exception.cause.shouldBeInstanceOf<IOException>()
+        } finally {
+            WorkbookFactory.addProvider(XSSFWorkbookFactory())
+        }
+    }
 
     @Test
     fun `numerical columns`() {
