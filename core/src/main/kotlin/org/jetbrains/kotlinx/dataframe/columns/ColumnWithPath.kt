@@ -63,3 +63,13 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
 public val <T> ColumnWithPath<T>.depth: Int get() = path.depth()
 
 public fun ColumnWithPath(column: DataColumn<*>, path: ColumnPath): ColumnWithPath<*> = column.addPath(path)
+
+public class ColumnGroupWithPath<T>(public val data: ColumnGroup<T>, public val path: ColumnPath) {
+    public val name: String get() = data.name()
+
+    public val parentName: String? get() = path.parentName
+
+    public fun depth(): Int = path.depth()
+
+    public val depth: Int get() = path.depth()
+}
