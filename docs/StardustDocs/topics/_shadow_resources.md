@@ -114,6 +114,12 @@
 <resource src="dropNullsWhereAllNull.html"></resource>
 <resource src="dropNullsWhereAllNullSelector.html"></resource>
 <resource src="dropWhere_properties.html"></resource>
+<resource src="duplicateDataFrame.html"></resource>
+<resource src="duplicateDataFrameConcat.html"></resource>
+<resource src="duplicateDf.html"></resource>
+<resource src="duplicateRow.html"></resource>
+<resource src="duplicateRows.html"></resource>
+<resource src="duplicateRowsWhere_properties.html"></resource>
 <resource src="fillDf.html"></resource>
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>

@@ -110,6 +110,15 @@ public interface DocumentationUrls {
     /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
     public typealias DistinctBy = Nothing
 
+    /** [See `duplicateRows` on the documentation website.]({@include [Url]}/duplicate.html#duplicaterows) */
+    public typealias DuplicateRows = Nothing
+
+    /** [See `duplicate` on a DataRow on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-datarow) */
+    public typealias DuplicateOnDataRow = Nothing
+
+    /** [See `duplicate` on a DataFrame on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-dataframe) */
+    public typealias DuplicateOnDataFrame = Nothing
+
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
     public typealias Flatten = Nothing
 

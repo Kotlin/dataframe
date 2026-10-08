@@ -129,6 +129,7 @@ korro {
                 include("countDistinct.md")
                 include("fill.md")
                 include("drop.md")
+                include("duplicate.md")
                 include("filter.md")
                 include("toList.md")
                 include("count.md")
