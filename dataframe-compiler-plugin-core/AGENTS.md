@@ -39,3 +39,9 @@ disabled legacy copy — see the root `AGENTS.md`.)
   (`dataframe-dev` in the Kotlin repository's `gradle/libs.versions.toml`), so the change reaches the compile-time
   schema only after that version is bumped; until then the compile-time and runtime schemas can differ. State it in
   the PR when the change can be observed in a schema.
+- **A new parameter on a `@Refine`/`@Interpretable` operation goes into a separate overload without these
+  annotations.** The interpreter in the Kotlin repository matches the argument names of the call against the
+  ones it declares: an argument it does not declare, or an interpreter name it does not know, makes the plugin
+  materialize an empty schema, so every accessor after that call stops compiling. The interpreter ships with the
+  Kotlin compiler, so released Kotlin versions keep the old one. Add `@Refine` to the new overload only once the
+  minimal Kotlin version supported with the compiler plugin interprets it.
