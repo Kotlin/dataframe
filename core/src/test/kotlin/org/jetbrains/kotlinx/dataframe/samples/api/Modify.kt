@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.byName
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -71,7 +70,6 @@ import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -80,7 +78,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -371,44 +368,6 @@ class Modify : TestBase() {
             }
         }
         // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_properties() {
-        // SampleStart
-        df.reorder { age..isHappy }.byName()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_strings() {
-        // SampleStart
-        df.reorder { "age".."isHappy" }.byName()
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderSome() {
-        // SampleStart
-        val df = dataFrameOf("c", "d", "a", "b")(
-            3, 4, 1, 2,
-            1, 1, 1, 1,
-        )
-        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
-            // SampleEnd
-            .columnNames() shouldBe listOf("c", "b", "a", "d")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderInGroup() {
-        // SampleStart
-        df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
-            // SampleEnd
-            .name.columnNames() shouldBe listOf("lastName", "firstName")
     }
 
     @Test

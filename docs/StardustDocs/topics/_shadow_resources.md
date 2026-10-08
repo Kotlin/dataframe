@@ -301,6 +301,17 @@
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>
+<resource src="reorderByDesc.html"></resource>
+<resource src="reorderColumnsBy.html"></resource>
+<resource src="reorderColumnsByName.html"></resource>
+<resource src="reorderColumnsByNameTopLevel.html"></resource>
+<resource src="reorderColumnsByTopLevel.html"></resource>
+<resource src="reorderDf.html"></resource>
+<resource src="reorderEqualKeys_properties.html"></resource>
+<resource src="reorderInDifferentGroups_properties.html"></resource>
+<resource src="reorderInGroup_properties.html"></resource>
+<resource src="reorderSome.html"></resource>
+<resource src="reorder_properties.html"></resource>
 <resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_shuffle_2.html"></resource>
 <resource src="singleCondition_properties.html"></resource>
@@ -446,8 +457,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
