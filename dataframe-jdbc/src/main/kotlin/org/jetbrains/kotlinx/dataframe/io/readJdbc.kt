@@ -30,8 +30,7 @@ private val logger = KotlinLogging.logger {}
 
 /**
  * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
- * gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
- * gives `CUSTOMER_ID` for this unquoted alias.
+ * gives a column `customer_id`.
  */
 @ExcludeFromSources
 internal typealias SqlAliasNamesColumnSnippet = Nothing

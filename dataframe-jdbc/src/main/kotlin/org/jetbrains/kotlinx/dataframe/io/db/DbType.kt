@@ -156,7 +156,8 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * - the name the column has in its table, used to look up the table name and the nullability:
      *   [ResultSetMetaData.getColumnName] → [ResultSetMetaData.getColumnLabel]
      * - `getTableName()` → the `table` part of a column name `table.column` → `null`
-     * - `isNullable()` → [DatabaseMetaData.getColumns] → `true` (assume nullable)
+     * - `isNullable()` → [DatabaseMetaData.getColumns], only when both the table name and the column name
+     *   are known → `true` (assume nullable)
      * - `getColumnTypeName()` → `"OTHER"`
      * - `getColumnType()` → [Types.OTHER]
      * - `getColumnDisplaySize()` → `0`
@@ -212,8 +213,13 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
             // as the value returned by the getColumnName method"). MySQL, MariaDB and H2 (without a compatibility
             // mode, and in MySQL and MariaDB modes) report the alias only there, and the original name in
             // getColumnName. Falling back to getColumnName when the label is empty follows Spring's
-            // JdbcUtils.lookupColumnName.
-            val preferredName = label?.ifEmpty { null } ?: columnName
+            // JdbcUtils.lookupColumnName; with neither, the column is "untitled". A blank label is a real
+            // alias (`AS " "`) and is kept.
+            val preferredName = when {
+                !label.isNullOrEmpty() -> label
+                !columnName.isNullOrEmpty() -> columnName
+                else -> UNNAMED_COLUMN_PREFIX
+            }
 
             // Some JDBC drivers (e.g., Apache Hive) throw SQLFeatureNotSupportedException
             val (tableName, lookupColumnName) = try {
@@ -243,8 +249,16 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                 // Some drivers may throw for unsupported features
                 // Try fallback to DatabaseMetaData, with additional safety
                 try {
-                    dbMetaData.getColumns(catalog, schema, tableName, lookupColumnName).use { cols ->
-                        if (cols.next()) !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true) else true
+                    // getColumns reads a null pattern as "any", so it would find another table or column
+                    if (tableName == null || lookupColumnName == null) {
+                        true
+                    } else {
+                        dbMetaData.getColumns(catalog, schema, tableName, lookupColumnName).use { cols ->
+                            // No such column: the nullability is unknown, assume nullable
+                            if (!cols.next()) return@use true
+                            // IS_NULLABLE is "NO", "YES", or "" when unknown; only "NO" rules out nulls
+                            !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true)
+                        }
                     }
                 } catch (_: Exception) {
                     // Fallback failed, assume nullable as the safest default
@@ -279,7 +293,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
 
             // Generate DataFrame-compatible unique names in the same way as creating a DataFrame would
             val uniqueName = nameGenerator.addUnique(
-                preferredName = preferredName.orEmpty().ifEmpty { UNNAMED_COLUMN_PREFIX },
+                preferredName = preferredName,
             )
 
             TableColumnMetadata(

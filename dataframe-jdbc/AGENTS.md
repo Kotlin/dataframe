@@ -46,6 +46,13 @@ this chain before changing type mapping — the type variables `J → D → P` f
 4. Type **P**: `getTargetColumnSchema(...)` → `ColumnSchema` and `buildDataColumn(...)` → the final `DataColumn<P>`
    (post-processes `java.sql.Array`→Kotlin arrays).
 
+**A metadata fallback must not guess a column's nullability.** When `isNullable` is unsupported,
+`getTableColumnsMetadata` looks the column up with `DatabaseMetaData.getColumns`, whose name arguments are
+patterns: H2, like other drivers, reads a `null` table or column pattern as "any", so a lookup with an unknown
+name returns the `IS_NULLABLE` of some other column. Look up only when both names are known, and otherwise
+assume nullable. The two errors are not equal: a column wrongly read as nullable only gains a `?`, while one
+wrongly read as non-null fails to read with `inferNullability = false`.
+
 **H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
 → `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
 value classes. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
@@ -117,6 +124,10 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
   don't point them at a production database.
 - `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
   `TableColumnMetadata` rather than a live driver.
+- `io/db/tableColumnsMetadataTest.kt` — the fallbacks of `getTableColumnsMetadata`, on a proxy over an H2
+  `ResultSet` that makes chosen `ResultSetMetaData` methods throw. No bundled driver reaches these
+  branches on its own (H2, SQLite and DuckDB all answer `isNullable`), so a new fallback is tested the
+  same way.
 - SQLite tests at the top level use bundled `.sqlite` files in `src/test/resources/`.
 - `commonTestScenarios.kt` holds the shared assertions reused across databases.
 
