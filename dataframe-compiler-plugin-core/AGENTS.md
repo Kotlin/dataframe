@@ -34,3 +34,8 @@ disabled legacy copy — see the root `AGENTS.md`.)
   compiler plugin needs from `:core`, update the shadow `exclude(...)` list accordingly and keep the surface minimal.
 - Don't add feature code here — put library logic in `:core`. This module only *repackages* `:core`.
 - If `PluginApiUsages.kt` starts failing, an exclude is likely stripping API the plugin depends on.
+- A behaviour change in `:core` also changes what the compiler plugin computes: its interpreters call the `:core`
+  operations from this artifact instead of reimplementing them. The plugin pins the artifact version
+  (`dataframe-dev` in the Kotlin repository's `gradle/libs.versions.toml`), so the change reaches the compile-time
+  schema only after that version is bumped; until then the compile-time and runtime schemas can differ. State it in
+  the PR when the change can be observed in a schema.

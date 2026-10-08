@@ -315,8 +315,7 @@ Anything inside a `@comment` tag block or inline tag `{}` will be removed from t
   <img src="docs/imgs/sample2.png" alt="sample2.png" width="45%"/>
 </p>
 
-While this processor is not used in the DataFrame project at the moment, it can be seen as an extension
-to the normal `@sample` tag. While the 'normal' `@sample [Reference]` tag shows the code from the target reference as
+This processor can be seen as an extension to the normal `@sample` tag. While the 'normal' `@sample [Reference]` tag shows the code from the target reference as
 is,
 `@sample` and `@sampleNoComments` actually copy over the code to inside a ` ```kt ``` ` (or `java`) code block in the
 KDoc.
@@ -325,6 +324,11 @@ Just like [korro](https://github.com/devcrocod/korro), if `// SampleStart` or `/
 only the code between these markers will be included in the KDoc.
 
 `@sampleNoComments` is the same as `@sample`, but it will remove all KDocs from the code before pasting it here.
+
+Gradle resolves `@sample` references into the `:samples` module, which is added as a contextual source, but the
+IntelliJ KoDEx plugin does not: the IDE hover then shows a `SampleDocProcessor` error instead of the KDoc.
+Until it does, write examples for `:core` KDocs as literal ` ```kotlin ` blocks and keep the asserting copy in
+`:samples`.
 
 ### `@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML
 
