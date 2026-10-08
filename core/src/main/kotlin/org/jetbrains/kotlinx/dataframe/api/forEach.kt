@@ -44,7 +44,8 @@ private interface CommonForEachSnippet {
  * ### Example
  *
  * ```kotlin
- * // Prints the ages, from the first value to the last one: 15, 45, 20, 40, 30, 20, 30
+ * // Prints the ages, from the first value to the last one:
+ * // 15, 45, 20, 40, 30, 20, 30
  * df.age.forEach { println(it) }
  * ```
  *
@@ -66,8 +67,11 @@ public inline fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values(
  * ### Example
  *
  * ```kotlin
- * // Prints the first names, numbered: "1. Alice", "2. Bob", ...
- * df.name.firstName.forEachIndexed { i, firstName -> println("\${i + 1}. \$firstName") }
+ * // Prints the first names, numbered:
+ * // "1. Alice", "2. Bob", ...
+ * df.name.firstName.forEachIndexed { i, firstName ->
+ *     println("\${i + 1}. \$firstName")
+ * }
  * ```
  *
  * @param [action] A function that is called with the position of every value of this column and that value.
@@ -88,7 +92,11 @@ public inline fun <T> DataColumn<T>.forEachIndexed(action: (Int, T) -> Unit): Un
  *
  * For more information: {@include [DocumentationUrls.Iterate]} {@include [DocumentationUrls.DataRow.RowExpressions]}
  *
- * See also [forEach][DataColumn.forEach] — goes over the values of a single column.
+ * See also:
+ * - [forEach][DataColumn.forEach] — goes over the values of a single column.
+ * - [mapToColumn][DataFrame.mapToColumn] — computes a value for every row
+ *   and collects the results into a [DataColumn].
+ * - [mapToFrame][DataFrame.mapToFrame] — computes several columns at once and returns them as a new [DataFrame].
  *
  * ### Example
  *
@@ -121,8 +129,11 @@ public inline fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit
  * ### Example
  *
  * ```kotlin
- * // Prints the number of people per city: "London: 1", "Dubai: 1", "Moscow: 2", ...
- * df.groupBy { city }.forEach { (key, group) -> println("\${key.city}: \${group.rowsCount()}") }
+ * // Prints the number of people per city:
+ * // "London: 1", "Dubai: 1", "Moscow: 2", ...
+ * df.groupBy { city }.forEach { (key, group) ->
+ *     println("\${key.city}: \${group.rowsCount()}")
+ * }
  * ```
  *
  * @param [body] A function that is called with every key–group pair of this [GroupBy].

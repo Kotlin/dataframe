@@ -136,7 +136,8 @@ class IterateSamples : DataFrameSampleHelper("iterate", "api") {
     fun forEachOnColumn() {
         val lines = printedLines {
             // SampleStart
-            // Prints the ages, from the first value to the last one: 15, 45, 20, 40, 30, 20, 30
+            // Prints the ages, from the first value to the last one:
+            // 15, 45, 20, 40, 30, 20, 30
             df.age.forEach { println(it) }
             // SampleEnd
         }
@@ -147,8 +148,11 @@ class IterateSamples : DataFrameSampleHelper("iterate", "api") {
     fun forEachIndexedOnColumn() {
         val lines = printedLines {
             // SampleStart
-            // Prints the first names, numbered: "1. Alice", "2. Bob", ...
-            df.name.firstName.forEachIndexed { i, firstName -> println("${i + 1}. $firstName") }
+            // Prints the first names, numbered:
+            // "1. Alice", "2. Bob", ...
+            df.name.firstName.forEachIndexed { i, firstName ->
+                println("${i + 1}. $firstName")
+            }
             // SampleEnd
         }
         lines shouldBe listOf(
@@ -166,8 +170,11 @@ class IterateSamples : DataFrameSampleHelper("iterate", "api") {
     fun forEachOnGroupBy_properties() {
         val lines = printedLines {
             // SampleStart
-            // Prints the number of people per city: "London: 1", "Dubai: 1", "Moscow: 2", ...
-            df.groupBy { city }.forEach { (key, group) -> println("${key.city}: ${group.rowsCount()}") }
+            // Prints the number of people per city:
+            // "London: 1", "Dubai: 1", "Moscow: 2", ...
+            df.groupBy { city }.forEach { (key, group) ->
+                println("${key.city}: ${group.rowsCount()}")
+            }
             // SampleEnd
         }
         lines shouldBe listOf("London: 1", "Dubai: 1", "Moscow: 2", "Milan: 1", "Tokyo: 1", "null: 1")
@@ -177,8 +184,11 @@ class IterateSamples : DataFrameSampleHelper("iterate", "api") {
     fun forEachOnGroupBy_strings() {
         val lines = printedLines {
             // SampleStart
-            // Prints the number of people per city: "London: 1", "Dubai: 1", "Moscow: 2", ...
-            df.groupBy("city").forEach { (key, group) -> println("${key["city"]}: ${group.rowsCount()}") }
+            // Prints the number of people per city:
+            // "London: 1", "Dubai: 1", "Moscow: 2", ...
+            df.groupBy("city").forEach { (key, group) ->
+                println("${key["city"]}: ${group.rowsCount()}")
+            }
             // SampleEnd
         }
         lines shouldBe listOf("London: 1", "Dubai: 1", "Moscow: 2", "Milan: 1", "Tokyo: 1", "null: 1")

@@ -28,9 +28,7 @@ df
 ## Iterate over rows
 
 ```text
-forEach { rowExpression }
-
-rowExpression: DataRow.(DataRow) -> Unit
+forEach { row: DataRow -> Unit }
 ```
 
 The function is called for every row, from the first one to the last one.
@@ -110,8 +108,8 @@ df.values(byRows = true).forEach {
 ## forEach on DataColumn
 
 ```text
-forEach { value -> }
-forEachIndexed { index, value -> }
+forEach { value: T -> Unit }
+forEachIndexed { index: Int, value: T -> Unit }
 ```
 
 `forEach` calls the function for every value of a [`DataColumn`](DataColumn.md), from the first one to the last one.
@@ -122,7 +120,8 @@ To get a new [`DataColumn`](DataColumn.md) of computed values instead, use
 <!---FUN forEachOnColumn-->
 
 ```kotlin
-// Prints the ages, from the first value to the last one: 15, 45, 20, 40, 30, 20, 30
+// Prints the ages, from the first value to the last one:
+// 15, 45, 20, 40, 30, 20, 30
 df.age.forEach { println(it) }
 ```
 
@@ -131,8 +130,11 @@ df.age.forEach { println(it) }
 <!---FUN forEachIndexedOnColumn-->
 
 ```kotlin
-// Prints the first names, numbered: "1. Alice", "2. Bob", ...
-df.name.firstName.forEachIndexed { i, firstName -> println("${i + 1}. $firstName") }
+// Prints the first names, numbered:
+// "1. Alice", "2. Bob", ...
+df.name.firstName.forEachIndexed { i, firstName ->
+    println("${i + 1}. $firstName")
+}
 ```
 
 <!---END-->
@@ -140,7 +142,7 @@ df.name.firstName.forEachIndexed { i, firstName -> println("${i + 1}. $firstName
 ## forEach on GroupBy
 
 ```text
-forEach { (key, group) -> }
+forEach { (key: DataRow, group: DataFrame) -> Unit }
 ```
 
 `forEach` calls the function for every key–group pair of a [`GroupBy`](groupBy.md),
@@ -154,16 +156,22 @@ The pair is the argument of the function, so destructure it as `(key, group)` or
 <tab title="Properties">
 
 ```kotlin
-// Prints the number of people per city: "London: 1", "Dubai: 1", "Moscow: 2", ...
-df.groupBy { city }.forEach { (key, group) -> println("${key.city}: ${group.rowsCount()}") }
+// Prints the number of people per city:
+// "London: 1", "Dubai: 1", "Moscow: 2", ...
+df.groupBy { city }.forEach { (key, group) ->
+    println("${key.city}: ${group.rowsCount()}")
+}
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-// Prints the number of people per city: "London: 1", "Dubai: 1", "Moscow: 2", ...
-df.groupBy("city").forEach { (key, group) -> println("${key["city"]}: ${group.rowsCount()}") }
+// Prints the number of people per city:
+// "London: 1", "Dubai: 1", "Moscow: 2", ...
+df.groupBy("city").forEach { (key, group) ->
+    println("${key["city"]}: ${group.rowsCount()}")
+}
 ```
 
 </tab></tabs>
