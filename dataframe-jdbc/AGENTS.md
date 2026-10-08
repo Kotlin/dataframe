@@ -49,8 +49,9 @@ this chain before changing type mapping — the type variables `J → D → P` f
 **A metadata fallback must not guess a column's nullability.** When `isNullable` is unsupported,
 `getTableColumnsMetadata` looks the column up with `DatabaseMetaData.getColumns`, whose name arguments are
 patterns: H2, like other drivers, reads a `null` table or column pattern as "any", so a lookup with an unknown
-name returns the `IS_NULLABLE` of some other column. Look up only when both names are known, and otherwise
-assume nullable. The two errors are not equal: a column wrongly read as nullable only gains a `?`, while one
+name returns the `IS_NULLABLE` of some other column. A known name is a pattern too: `_` and `%` are LIKE
+wildcards, so `is_active` also matches an earlier `isXactive`. Look up only when both names are known, take only
+the row whose `TABLE_NAME` and `COLUMN_NAME` equal them, and otherwise assume nullable. The two errors are not equal: a column wrongly read as nullable only gains a `?`, while one
 wrongly read as non-null fails to read with `inferNullability = false`.
 
 **H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`

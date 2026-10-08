@@ -83,6 +83,45 @@ class TableColumnsMetadataTest {
         ).map { it.isNullable } shouldBe listOf(true, true)
     }
 
+    @Test
+    fun `without isNullable an underscore in the column name does not match another column`() {
+        // `_` is a LIKE wildcard in the getColumns pattern: `is_active` also matches the earlier `isXactive`
+        read(
+            "CREATE TABLE t (isXactive BOOLEAN NOT NULL, is_active BOOLEAN)",
+            query = "SELECT is_active FROM t",
+            override = "isNullable" to unsupported,
+        ).map { it.isNullable } shouldBe listOf(true)
+    }
+
+    @Test
+    fun `without isNullable an underscore in the table name does not match another table`() {
+        // `_` is a LIKE wildcard in the getColumns pattern: `t_a` also matches `tXa`, which comes first
+        read(
+            "CREATE TABLE tXa (id INT NOT NULL)",
+            "CREATE TABLE t_a (id INT)",
+            query = "SELECT id FROM t_a",
+            override = "isNullable" to unsupported,
+        ).map { it.isNullable } shouldBe listOf(true)
+    }
+
+    /**
+     * Reads the metadata of [query] from H2 after running [ddl], with the driver's [ResultSetMetaData]
+     * method named in [override] answered by the override instead.
+     */
+    private fun read(
+        vararg ddl: String,
+        query: String,
+        override: Pair<String, (Int) -> Any?>,
+    ): List<TableColumnMetadata> =
+        DriverManager.getConnection("jdbc:h2:mem:;DATABASE_TO_UPPER=false").use { connection ->
+            connection.createStatement().use { st ->
+                ddl.forEach { st.execute(it) }
+                st.executeQuery(query).use { rs ->
+                    H2(H2.Mode.Regular).getTableColumnsMetadata(rs.withMetaData(mapOf(override)))
+                }
+            }
+        }
+
     /**
      * Reads the metadata of `SELECT id AS customer_id, name AS customer_name` from H2, with the driver's
      * [ResultSetMetaData] methods named in [overrides] answered by the override instead.

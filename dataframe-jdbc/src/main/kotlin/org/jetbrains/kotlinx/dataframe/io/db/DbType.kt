@@ -157,7 +157,7 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      *   [ResultSetMetaData.getColumnName] → [ResultSetMetaData.getColumnLabel]
      * - `getTableName()` → the `table` part of a column name `table.column` → `null`
      * - `isNullable()` → [DatabaseMetaData.getColumns], only when both the table name and the column name
-     *   are known → `true` (assume nullable)
+     *   are known, and only for the column with exactly these names → `true` (assume nullable)
      * - `getColumnTypeName()` → `"OTHER"`
      * - `getColumnType()` → [Types.OTHER]
      * - `getColumnDisplaySize()` → `0`
@@ -254,10 +254,18 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
                         true
                     } else {
                         dbMetaData.getColumns(catalog, schema, tableName, lookupColumnName).use { cols ->
+                            // The names are LIKE patterns too: `_` and `%` also match other names,
+                            // so only the row with exactly these names counts
+                            while (cols.next()) {
+                                if (cols.getString("TABLE_NAME") == tableName &&
+                                    cols.getString("COLUMN_NAME") == lookupColumnName
+                                ) {
+                                    // IS_NULLABLE is "NO", "YES", or "" when unknown; only "NO" rules out nulls
+                                    return@use !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true)
+                                }
+                            }
                             // No such column: the nullability is unknown, assume nullable
-                            if (!cols.next()) return@use true
-                            // IS_NULLABLE is "NO", "YES", or "" when unknown; only "NO" rules out nulls
-                            !cols.getString("IS_NULLABLE").equals("NO", ignoreCase = true)
+                            true
                         }
                     }
                 } catch (_: Exception) {
