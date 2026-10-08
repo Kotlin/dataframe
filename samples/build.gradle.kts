@@ -124,6 +124,7 @@ korro {
                 include("concatDf.md")
                 include("groupBy.md")
                 include("map.md")
+                include("iterate.md")
                 include("pivot.md")
                 include("countDistinct.md")
                 include("fill.md")
