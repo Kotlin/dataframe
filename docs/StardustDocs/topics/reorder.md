@@ -52,8 +52,10 @@ df.reorder { "age".."isHappy" }.byName()
 The selected columns change places only with each other: they take the positions of the selected columns,
 in the new order. Positions of other columns do not change. The values in the columns do not change either.
 
-`columnExpression` is computed for every selected column. The column is passed to it both as the receiver (`this`)
-and as the argument (`it`). `by` puts the columns in ascending order of the computed value:
+The `columnExpression` lambda is computed for every selected column. The column is passed to it both as the receiver
+(`this`) and as the argument (`it`).
+
+`by` puts the columns in ascending order of the computed value:
 
 <!---FUN reorderSome-->
 
@@ -62,7 +64,7 @@ val df = dataFrameOf("c", "d", "a", "b")(
     3, 4, 1, 2,
     1, 1, 1, 1,
 )
-df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
+df.reorder("d", "b").cast<Int>().by { sum() }
 ```
 
 <!---END-->
@@ -77,13 +79,14 @@ val df = dataFrameOf("c", "d", "a", "b")(
     3, 4, 1, 2,
     1, 1, 1, 1,
 )
-df.reorder("a", "b").cast<Int>().byDesc { sum() } // [c, d, b, a]
+df.reorder("a", "b").cast<Int>().byDesc { sum() }
 ```
 
 <!---END-->
 <inline-frame src="./resources/reorderByDesc.html" width="100%"/>
 
-Columns with equal values keep their original order. Here `name` and `city` have names of the same length,
+Columns for which `columnExpression` gives equal results keep their original order.
+Here `name` and `city` have names of the same length,
 so `name` stays before `city`:
 
 <!---FUN reorderEqualKeys-->
@@ -155,16 +158,19 @@ df.reorder("name").byName(desc = true)
 Reorders all columns of the dataframe by the value of `columnExpression`.
 
 ```text
-reorderColumnsBy(atAnyDepth = true, desc = false) { columnExpression }
+reorderColumnsBy(atAnyDepth = true, desc = false, inFrameColumns = false) { columnExpression }
 ```
 
 **Parameters:**
-* `atAnyDepth` — if `true`, also reorder the columns inside every [`ColumnGroup`](DataColumn.md#columngroup)
-  and inside every dataframe of a [`FrameColumn`](DataColumn.md#framecolumn), each within its own group or dataframe.
-  If `false`, only the top-level columns are reordered.
+* `atAnyDepth` — if `true`, also reorder the columns inside every [`ColumnGroup`](DataColumn.md#columngroup),
+  each within its own group. If `false`, only the top-level columns are reordered.
 * `desc` — apply descending order
+* `inFrameColumns` — if `true`, also reorder the columns inside every dataframe of a
+  [`FrameColumn`](DataColumn.md#framecolumn), each dataframe on its own and with the same `atAnyDepth`.
+  If `false`, they keep their order: like [`colsAtAnyDepth()`](ColumnSelectors.md#cols-at-any-depth),
+  `atAnyDepth` does not look inside frame columns.
 
-As in `reorder`, columns with equal values keep their original order.
+As in `reorder`, columns for which `columnExpression` gives equal results keep their original order.
 The examples use the dataframe from the top of the page.
 With the default `atAnyDepth = true`, the columns inside `name` are reordered too:
 
@@ -190,17 +196,20 @@ df.reorderColumnsBy(atAnyDepth = false) { name().length }
 
 ## reorderColumnsByName
 
-Reorders all columns of the dataframe by their names. It is a shortcut for `reorderColumnsBy { name() }`.
+Reorders all columns of the dataframe in lexicographic order of their names.
+It is a shortcut for `reorderColumnsBy { name() }`.
 
 ```text
-reorderColumnsByName(atAnyDepth = true, desc = false)
+reorderColumnsByName(atAnyDepth = true, desc = false, inFrameColumns = false)
 ```
 
 **Parameters:**
-* `atAnyDepth` — if `true`, also reorder the columns inside every [`ColumnGroup`](DataColumn.md#columngroup)
-  and inside every dataframe of a [`FrameColumn`](DataColumn.md#framecolumn), each within its own group or dataframe.
-  If `false`, only the top-level columns are reordered.
+* `atAnyDepth` — if `true`, also reorder the columns inside every [`ColumnGroup`](DataColumn.md#columngroup),
+  each within its own group. If `false`, only the top-level columns are reordered.
 * `desc` — apply descending order
+* `inFrameColumns` — if `true`, also reorder the columns inside every dataframe of a
+  [`FrameColumn`](DataColumn.md#framecolumn), each dataframe on its own and with the same `atAnyDepth`.
+  If `false`, they keep their order.
 
 The examples use the dataframe from the top of the page.
 With the default `atAnyDepth = true`, the columns inside `name` are reordered too:

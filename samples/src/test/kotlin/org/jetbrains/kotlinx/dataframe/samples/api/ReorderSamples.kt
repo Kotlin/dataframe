@@ -56,7 +56,7 @@ class ReorderSamples : DataFrameSampleHelper("reorder", "api") {
             3, 4, 1, 2,
             1, 1, 1, 1,
         )
-        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
+        df.reorder("d", "b").cast<Int>().by { sum() }
             // SampleEnd
             .also { it.columnNames() shouldBe listOf("c", "b", "a", "d") }
             .saveDfHtmlSample()
@@ -69,7 +69,7 @@ class ReorderSamples : DataFrameSampleHelper("reorder", "api") {
             3, 4, 1, 2,
             1, 1, 1, 1,
         )
-        df.reorder("a", "b").cast<Int>().byDesc { sum() } // [c, d, b, a]
+        df.reorder("a", "b").cast<Int>().byDesc { sum() }
             // SampleEnd
             .also { it.columnNames() shouldBe listOf("c", "d", "b", "a") }
             .saveDfHtmlSample()

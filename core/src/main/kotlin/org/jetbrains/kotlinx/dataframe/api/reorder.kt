@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.REORDER_COLUMNS_WITHOUT_IN_FRAME_COLUMNS
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -29,12 +30,12 @@ import kotlin.reflect.KProperty
  * Reorders the selected columns of the [DataFrame].
  *
  * This function does not reorder the columns immediately. It returns a [Reorder],
- * which serves as an intermediate step. Finish it with one of these methods to get a new [DataFrame]:
+ * which serves as an intermediate step.
+ * First, [cast][Reorder.cast] can optionally change the type of the selected columns for the column expression.
+ * Then finish it with one of these methods to get a new [DataFrame]:
  * - [by][Reorder.by] — puts the selected columns in ascending order of the value of a [column expression][ColumnExpression];
  * - [byDesc][Reorder.byDesc] — puts them in descending order of that value;
- * - [byName][Reorder.byName] — puts them in order of their names.
- *
- * Before that, [cast][Reorder.cast] can change the type of the selected columns for the column expression.
+ * - [byName][Reorder.byName] — puts them in lexicographic order of their names.
  *
  * @include [ReorderRulesSnippet]
  *
@@ -97,7 +98,7 @@ internal interface ReorderDocs {
 @ExcludeFromSources
 private typealias ReorderRulesSnippet = Nothing
 
-/** Columns that get equal values keep their original order. */
+/** Columns for which the expression gives equal results keep their original order. */
 @ExcludeFromSources
 private typealias ReorderEqualValuesSnippet = Nothing
 
@@ -132,9 +133,9 @@ private typealias CommonReorderDocs = Nothing
  * An intermediate step of the [reorder] operation.
  *
  * It holds the selected columns and does not reorder anything by itself.
- * Finish it with [by][Reorder.by], [byDesc][Reorder.byDesc] or [byName][Reorder.byName]
+ * First, [cast][Reorder.cast] can optionally change the type of the selected columns.
+ * Then finish it with [by][Reorder.by], [byDesc][Reorder.byDesc] or [byName][Reorder.byName]
  * to get a new [DataFrame] with the selected columns reordered.
- * Before that, [cast][Reorder.cast] can change the type of the selected columns.
  *
  * See [Grammar][ReorderDocs.Grammar] for more details.
  *
@@ -271,7 +272,7 @@ public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpressi
     reorderImpl(false, expression)
 
 /**
- * Puts the columns selected by [reorder] in order of their names and returns a new [DataFrame].
+ * Puts the columns selected by [reorder] in lexicographic order of their names and returns a new [DataFrame].
  *
  * It is a shortcut for `by { it.name() }`, or for `byDesc { it.name() }` when [desc\] is `true`.
  *
@@ -330,9 +331,13 @@ public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: ColumnExpr
 
 /**
  * With [atAnyDepth\] set to `true` (the default), the columns inside every [column group][ColumnGroup]
- * and inside every [DataFrame] of a [frame column][FrameColumn] are reordered too,
- * each within its own group or dataframe.
+ * are reordered too, each within its own group.
  * With [atAnyDepth\] set to `false`, only the top-level columns are reordered, and the nested columns keep their order.
+ *
+ * With [inFrameColumns\] set to `true`, the columns inside every [DataFrame] of a [frame column][FrameColumn]
+ * are reordered too, each dataframe on its own and with the same [atAnyDepth\].
+ * With [inFrameColumns\] set to `false` (the default), they keep their order:
+ * like [colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth], [atAnyDepth\] does not look inside frame columns.
  *
  * The values in the columns do not change.
  */
@@ -340,8 +345,9 @@ public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: ColumnExpr
 private typealias ReorderColumnsAtAnyDepthSnippet = Nothing
 
 /**
- * @param [atAnyDepth\] If `true`, the nested columns are reordered too. `true` by default.
+ * @param [atAnyDepth\] If `true`, the columns inside column groups are reordered too. `true` by default.
  * @param [desc\] If `true`, the columns are put in descending order. `false` by default.
+ * @param [inFrameColumns\] If `true`, the columns inside frame columns are reordered too. `false` by default.
  */
 @ExcludeFromSources
 private typealias ReorderColumnsParamsSnippet = Nothing
@@ -382,16 +388,17 @@ private typealias ReorderColumnsParamsSnippet = Nothing
 public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
+    inFrameColumns: Boolean = false,
     expression: Selector<AnyCol, V>,
 ): DataFrame<T> =
     Reorder(
         df = this,
         columns = { if (atAnyDepth) colsAtAnyDepth() else all() },
-        inFrameColumns = atAnyDepth,
-    ).reorderImpl(desc, expression, reorderNestedColumnsOfSingleGroup = atAnyDepth)
+        inFrameColumns = inFrameColumns,
+    ).reorderImpl(desc, expression, unwrapSingleColumnGroup = atAnyDepth)
 
 /**
- * Puts all columns of the [DataFrame] in order of their names and returns a new [DataFrame].
+ * Puts all columns of the [DataFrame] in lexicographic order of their names and returns a new [DataFrame].
  *
  * It is a shortcut for [reorderColumnsBy] with `{ name() }`.
  *
@@ -416,7 +423,25 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
  */
 @Refine
 @Interpretable("ReorderColumnsByName")
+public fun <T> DataFrame<T>.reorderColumnsByName(
+    atAnyDepth: Boolean = true,
+    desc: Boolean = false,
+    inFrameColumns: Boolean = false,
+): DataFrame<T> = reorderColumnsBy(atAnyDepth, desc, inFrameColumns) { name() }
+
+// endregion
+
+// region binary compatibility
+
+@Deprecated(REORDER_COLUMNS_WITHOUT_IN_FRAME_COLUMNS, level = DeprecationLevel.HIDDEN)
+public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
+    atAnyDepth: Boolean = true,
+    desc: Boolean = false,
+    expression: Selector<AnyCol, V>,
+): DataFrame<T> = reorderColumnsBy(atAnyDepth, desc, inFrameColumns = false, expression)
+
+@Deprecated(REORDER_COLUMNS_WITHOUT_IN_FRAME_COLUMNS, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
-    reorderColumnsBy(atAnyDepth, desc) { name() }
+    reorderColumnsByName(atAnyDepth, desc, inFrameColumns = false)
 
 // endregion

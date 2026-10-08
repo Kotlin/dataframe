@@ -433,8 +433,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
