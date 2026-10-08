@@ -46,6 +46,14 @@ this chain before changing type mapping — the type variables `J → D → P` f
 4. Type **P**: `getTargetColumnSchema(...)` → `ColumnSchema` and `buildDataColumn(...)` → the final `DataColumn<P>`
    (post-processes `java.sql.Array`→Kotlin arrays).
 
+**A metadata fallback must not guess a column's nullability.** When `isNullable` is unsupported,
+`getTableColumnsMetadata` looks the column up with `DatabaseMetaData.getColumns`, whose name arguments are
+patterns: H2, like other drivers, reads a `null` table or column pattern as "any", so a lookup with an unknown
+name returns the `IS_NULLABLE` of some other column. A known name is a pattern too: `_` and `%` are LIKE
+wildcards, so `is_active` also matches an earlier `isXactive`. Look up only when both names are known, take only
+the row whose `TABLE_NAME` and `COLUMN_NAME` equal them, and otherwise assume nullable. The two errors are not equal: a column wrongly read as nullable only gains a `?`, while one
+wrongly read as non-null fails to read with `inferNullability = false`.
+
 **H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
 → `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
 value classes. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
@@ -117,8 +125,19 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
   don't point them at a production database.
 - `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
   `TableColumnMetadata` rather than a live driver.
+- `io/db/tableColumnsMetadataTest.kt` — the fallbacks of `getTableColumnsMetadata`, on a proxy over an H2
+  `ResultSet` that makes chosen `ResultSetMetaData` methods throw. No bundled driver reaches these
+  branches on its own (H2, SQLite and DuckDB all answer `isNullable`), so a new fallback is tested the
+  same way.
 - SQLite tests at the top level use bundled `.sqlite` files in `src/test/resources/`.
 - `commonTestScenarios.kt` holds the shared assertions reused across databases.
+
+**`@DataSchema` interfaces in these tests are only checked by `cast<T>(verify = true)`** — write the
+argument out: a bare `cast<T>()` resolves to the overload that checks nothing. The check needs the
+exact column type, nullability included, and the nullability is inferred from the rows read
+(`inferNullability`), so the same table can read as `String` with a `limit` and as `String?` without
+one. It stops at the first mismatch, and a nullable field with no matching column is filled with
+nulls instead of reported — a wrong name on a nullable field never fails.
 
 **The column-type audit** is the second half of that mapping coverage and lives in its own two files
 rather than in `commonTestScenarios.kt`, because it carries a large per-database SQL fixture with it:
