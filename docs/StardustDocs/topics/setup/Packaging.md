@@ -23,6 +23,19 @@ A typical symptom is that an Excel file can be read with `gradle run`, but readi
 fails. For example, `.xlsx` files may work while `.xls` files fail with an exception like this:
 
 ```text
+java.io.IOException: Kotlin DataFrame: The Apache POI provider org.apache.poi.hssf.usermodel.HSSFWorkbookFactory
+required for this Excel format (OLE2) is present on the classpath but was not discovered. If this application is
+packaged as a fat JAR, make sure META-INF/services resources are merged.
+See https://kotlin.github.io/dataframe/packaging.html
+    at ...
+Caused by: java.io.IOException: Your InputStream was neither an OLE2 stream, nor an OOXML stream or you haven't
+provide the poi-ooxml*.jar in the classpath/modulepath - FileMagic: OLE2, having providers:
+[org.apache.poi.xssf.usermodel.XSSFWorkbookFactory@19e1023e]
+```
+
+Older Kotlin DataFrame versions report only the Apache POI exception:
+
+```text
 java.io.IOException: Your InputStream was neither an OLE2 stream, nor an OOXML stream or you haven't provide the
 poi-ooxml*.jar in the classpath/modulepath - FileMagic: OLE2, having providers:
 [org.apache.poi.xssf.usermodel.XSSFWorkbookFactory@19e1023e]
@@ -30,6 +43,10 @@ poi-ooxml*.jar in the classpath/modulepath - FileMagic: OLE2, having providers:
 
 In this situation, adding `poi-ooxml` does not help: the dependency is already present. The list after
 `having providers` shows that Apache POI discovered the provider for `.xlsx`, but not the provider for `.xls`.
+
+Depending on which service descriptor is lost during packaging, the opposite can also happen: `.xls` files work,
+while `.xlsx` files fail with
+`FileMagic: OOXML, having providers: [org.apache.poi.hssf.usermodel.HSSFWorkbookFactory@...]`.
 
 ## Am I affected?
 

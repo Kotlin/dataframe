@@ -104,17 +104,17 @@ internal fun addMissingServiceDescriptorHint(
         return exception
     }
 
-    val expectedProvider = when {
-        OLE2_FILE_MAGIC_MARKER in message -> HSSF_WORKBOOK_FACTORY
-        OOXML_FILE_MAGIC_MARKER in message -> XSSF_WORKBOOK_FACTORY
+    val (fileFormat, expectedProvider) = when {
+        OLE2_FILE_MAGIC_MARKER in message -> "OLE2" to HSSF_WORKBOOK_FACTORY
+        OOXML_FILE_MAGIC_MARKER in message -> "OOXML" to XSSF_WORKBOOK_FACTORY
         else -> return exception
     }
     if (!isClassAvailable(expectedProvider)) return exception
 
     return IOException(
-        "Kotlin DataFrame: The Apache POI provider required for this Excel format is present on the " +
-            "classpath but was not discovered. If this application is packaged as a fat JAR, make sure " +
-            "META-INF/services resources are merged. See $FAT_JAR_PACKAGING_DOCUMENTATION",
+        "Kotlin DataFrame: The Apache POI provider $expectedProvider required for this Excel format " +
+            "($fileFormat) is present on the classpath but was not discovered. If this application is packaged " +
+            "as a fat JAR, make sure META-INF/services resources are merged. See $FAT_JAR_PACKAGING_DOCUMENTATION",
         exception,
     )
 }

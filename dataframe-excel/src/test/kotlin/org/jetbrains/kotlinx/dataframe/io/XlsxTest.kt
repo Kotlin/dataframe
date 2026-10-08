@@ -8,6 +8,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.datetime.LocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFWorkbookFactory
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -43,6 +44,8 @@ class XlsxTest {
             true
         }
 
+        enriched.message shouldContain "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+        enriched.message shouldContain "(OLE2)"
         enriched.message shouldContain "META-INF/services resources are merged"
         enriched.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
         enriched.message shouldNotContain original.message!!
@@ -81,11 +84,32 @@ class XlsxTest {
                 DataFrame.readExcel(testResource("sample.xls"))
             }
 
+            exception.message shouldContain "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+            exception.message shouldContain "(OLE2)"
             exception.message shouldContain "META-INF/services resources are merged"
             exception.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
             exception.cause.shouldBeInstanceOf<IOException>()
         } finally {
             WorkbookFactory.addProvider(HSSFWorkbookFactory())
+        }
+    }
+
+    @Test
+    fun `explain the actual POI error when the OOXML provider is missing`() {
+        WorkbookFactory.removeProvider(XSSFWorkbookFactory::class.java)
+
+        try {
+            val exception = shouldThrow<IOException> {
+                DataFrame.readExcel(testResource("sample2.xlsx"))
+            }
+
+            exception.message shouldContain "org.apache.poi.xssf.usermodel.XSSFWorkbookFactory"
+            exception.message shouldContain "(OOXML)"
+            exception.message shouldContain "META-INF/services resources are merged"
+            exception.message shouldContain "https://kotlin.github.io/dataframe/packaging.html"
+            exception.cause.shouldBeInstanceOf<IOException>()
+        } finally {
+            WorkbookFactory.addProvider(XSSFWorkbookFactory())
         }
     }
 
