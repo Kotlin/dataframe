@@ -233,6 +233,15 @@ class ReorderTests {
         outer.getFrameColumn("inner").values().map { it.columnNames() } shouldBe listOf(listOf("k2", "v2", "v1"))
     }
 
+    @Test
+    fun `reorderColumnsByName with inFrameColumns = false does not reorder columns in a frame column`() {
+        val reordered = withFrameColumn.reorderColumnsByName(inFrameColumns = false)
+
+        reordered.columnNames() shouldBe listOf("frame", "k")
+        reordered.getFrameColumn("frame").values().map { it.columnNames() } shouldBe
+            listOf(listOf("k", "v2", "v1"))
+    }
+
     // [k, frame[b, a, g[z, y]]]
     private val withGroupInFrameColumn = dataFrameOf(
         columnOf(1).named("k"),
