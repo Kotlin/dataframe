@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.DF_STD_BINARY_COMPAT
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -236,7 +237,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [StdDocs.NanCellOnEmptySnippet]
      *
      * $[NOTE]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdForSelectingOptions].
      *
@@ -267,7 +267,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanOnEmptySnippet]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See also:
      * - [`stdFor`][DataFrame.stdFor] — the standard deviation of each selected column separately.
@@ -336,7 +335,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [StdDocs.NanCellOnEmptySnippet]
      *
      * $[NOTE]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdForSelectingOptions].
      *
@@ -377,7 +375,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptySnippet]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdSelectingOptions].
      *
@@ -413,7 +410,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
      *
      * $[NOTE]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdForSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -452,7 +448,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -488,7 +483,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
      *
      * $[NOTE]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdForSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -528,7 +522,6 @@ internal interface StdDocs : CommonStatisticsDocs {
      *
      * @include [StdDocs.SupportedTypesSnippet]
      * @include [StdDocs.NanCellOnEmptyPivotSnippet]
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][StdDocs.StdSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -562,7 +555,7 @@ internal interface StdDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetStdStatisticArgs]}
-     *   These must be columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
+     *   These must be existing columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
@@ -746,7 +739,7 @@ public inline fun <reified T : Number?> DataRow<*>.rowStdOf(
  * See also:
  * - [`stdFor`][DataFrame.stdFor] — the same, but for an explicit selection of columns.
  * - [`std`][DataFrame.std]` { columns }` — a single standard deviation of all values in the selected columns.
- * - [`mean`][DataFrame.mean]` () ` — the mean of each column.
+ * - [`mean`][DataFrame.mean]`()` — the mean of each column.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  *
  * For more information: {@include [DocumentationUrls.Std]}
@@ -809,6 +802,8 @@ public fun <T> DataFrame<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataRow<T> = stdFor(skipNaN, ddof) { columns.toColumnsSetOf() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T, C : Number?> DataFrame<T>.stdFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -829,7 +824,7 @@ public fun <T, C : Number?> DataFrame<T>.stdFor(
  *
  * @include [StdDocs.DataFrameStdSnippet]
  * @set [StdDocs.DataFrameStdSnippet.SEE_ALSO_TAIL]
- * - [`mean`][DataFrame.mean]` { columns } ` — the mean of means of the selected columns.
+ * - [`mean`][DataFrame.mean]` { columns }` — the mean of means of the selected columns.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  * @set [StdDocs.DataFrameStdSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnsSelectionDsl]}
  * @set [StdDocs.DataFrameStdSnippet.EXAMPLE]
@@ -858,7 +853,7 @@ public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>)
  *
  * @include [StdDocs.DataFrameStdSnippet]
  * @set [StdDocs.DataFrameStdSnippet.SEE_ALSO_TAIL]
- * - [`mean`][DataFrame.mean]` (columns) ` — the mean of means of the selected columns.
+ * - [`mean`][DataFrame.mean]`(columns)` — the mean of means of the selected columns.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  * @set [StdDocs.DataFrameStdSnippet.COLUMNS_API] {@include [SelectingColumns.ColumnNamesApi]}
  * @set [StdDocs.DataFrameStdSnippet.EXAMPLE]
@@ -867,6 +862,8 @@ public fun <T, C : Number?> DataFrame<T>.std(vararg columns: ColumnReference<C>)
  * df.std("age", "weight")
  * ```
  * @include [StdDocs.ColumnNamesParam]
+ * @include [StdDocs.SkipNanParam]
+ * @include [StdDocs.DdofParam]
  * @return The standard deviation of all the values in the selected columns, as a [Double].
  */
 public fun <T> DataFrame<T>.std(
@@ -874,6 +871,9 @@ public fun <T> DataFrame<T>.std(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
 ): Double = std(skipNaN, ddof) { columns.toColumnsSetOf() }
+
+@Deprecated(DF_STD_BINARY_COMPAT, level = DeprecationLevel.HIDDEN)
+public fun <T> DataFrame<T>.std(vararg columns: String): Double = this.std(*columns)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -885,7 +885,7 @@ public fun <T, C : Number?> DataFrame<T>.std(vararg columns: KProperty<C>): Doub
  *
  * @include [StdDocs.DataFrameStdOfSnippet]
  * @set [StdDocs.DataFrameStdOfSnippet.SEE_ALSO_TAIL]
- * - [`meanOf`][DataFrame.meanOf] — the mean of those values.
+ * - [`meanOf`][DataFrame.meanOf] — the mean of the values of the given expression.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  * @set [StdDocs.DataFrameStdOfSnippet.EXAMPLE]
  * ```kotlin
@@ -921,7 +921,7 @@ public inline fun <T, reified R : Number?> DataFrame<T>.stdOf(
  * See also:
  * - [`stdFor`][Grouped.stdFor] — the same, but for an explicit selection of columns.
  * - [`std`][Grouped.std]` { columns }` — a single standard deviation of all values in the selected columns, per group.
- * - [`mean`][Grouped.mean]` () ` — the mean of each column, per group.
+ * - [`mean`][Grouped.mean]`()` — the mean of each column, per group.
  * - [`aggregate`][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [StdDocsLink]} — an overview of all `std` modes.
  *
@@ -1190,6 +1190,8 @@ public fun <T> Pivot<T>.stdFor(
     ddof: Int = ddofDefault,
 ): DataRow<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T, C : Number?> Pivot<T>.stdFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -1225,6 +1227,8 @@ public fun <T, C : Number?> Pivot<T>.std(
     columns: ColumnsSelector<T, C>,
 ): DataRow<T> = delegate { std(skipNaN, ddof, columns) }
 
+@Deprecated(DEPRECATED_ACCESS_API)
+@AccessApiOverload
 public fun <T, C : Number?> Pivot<T>.std(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
