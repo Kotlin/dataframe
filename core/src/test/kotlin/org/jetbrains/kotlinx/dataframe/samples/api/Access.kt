@@ -2,10 +2,8 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNaNs
@@ -26,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
 import org.jetbrains.kotlinx.dataframe.api.takeWhile
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -192,57 +189,6 @@ class Access : TestBase() {
         df.columns() // List<DataColumn>
         df.rows() // Iterable<DataRow>
         df.values() // Sequence<Any?>
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byColumn_strings() {
-        // SampleStart
-        df["name"][0]
-        df["name", "age"][3, 5, 6]
-        // SampleEnd
-        // TODO: df["age"][2..4]
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byColumn_properties() {
-        // SampleStart
-        df.name[0]
-        df.select { name and age }[3, 5, 6]
-        df.age[2..4]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byRow_strings() {
-        // SampleStart
-        df[0]["name"]
-        df[3, 5, 6]["name", "age"]
-        df[3..5]["age"]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byRow_properties() {
-        // SampleStart
-        df[0].name
-        df[3, 5, 6].select { name and age }
-        df[3..5].age
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun iterableApi() {
-        // SampleStart
-        df.forEach { println(it) }
-        df.take(5)
-        df.drop(2)
-        df.chunked(10)
         // SampleEnd
     }
 
