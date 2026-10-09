@@ -72,6 +72,12 @@ You could find the following articles there:
     * [GroupBy operation](https://kotlin.github.io/dataframe/groupby.html)
 * [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
+Want to contribute to the documentation?
+See the [Documentation Guidelines](DOCUMENTATION_GUIDELINES.md) for the website
+and the [KDoc Guidelines](KDOC_GUIDELINES.md) for the API docs; the
+[`operation-website-documentation`](.claude/skills/operation-website-documentation/SKILL.md) skill
+walks coding agents through writing an operation page.
+
 ### What's new
 
 1.0.0-rc01: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-rc01)
