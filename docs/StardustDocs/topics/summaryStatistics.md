@@ -107,7 +107,7 @@ df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
 <!---END-->
 
 If a statistic is applied in a mode that returns a separate value for every column in a data group,
-aggregated values will be stored in columns with original column names.
+aggregated values will be stored in columns with the original column names.
 
 <!---FUN statisticGroupByMany-->
 

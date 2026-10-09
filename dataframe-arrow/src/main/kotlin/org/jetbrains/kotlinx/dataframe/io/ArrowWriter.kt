@@ -29,7 +29,7 @@ public val logMismatchMessage: (ConvertingMismatch) -> Unit = { message: Convert
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
- * If [dataFrame] content does not match with [targetSchema], behaviour is specified by [mode], mismatches would be sent to [mismatchSubscriber]
+ * If [dataFrame] content does not match [targetSchema], the behaviour is specified by [mode], and mismatches would be sent to [mismatchSubscriber]
  */
 public interface ArrowWriter : AutoCloseable {
     public val dataFrame: DataFrame<*>
@@ -49,9 +49,9 @@ public interface ArrowWriter : AutoCloseable {
 
     /**
      * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
-     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
-     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
-     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
+     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce an exception (otherwise, would not be saved).
+     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce an exception (otherwise, would be saved as is).
+     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce an exception (otherwise, would be saved as is with nullable = true).
      */
     public data class Mode(
         public val restrictWidening: Boolean,

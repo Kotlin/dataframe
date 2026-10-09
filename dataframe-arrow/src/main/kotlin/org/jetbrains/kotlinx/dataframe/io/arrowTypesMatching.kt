@@ -26,7 +26,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
- * name, type and nullable as [this]
+ * name, type and nullability as [this]
  */
 public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
