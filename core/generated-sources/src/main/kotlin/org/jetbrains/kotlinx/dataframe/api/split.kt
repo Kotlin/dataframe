@@ -158,13 +158,13 @@ internal inline fun <T, C, R> Split<T, C>.by(
 
 /**
  * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html),
- * excluding the first group which is entire matched String.
+ * excluding the first group which is the entire matched String.
  * Example:
  * ```
  * dataFrameOf("str" to listOf("100 ml", "1 L"))
  *      .split { "str"<String>() }.match("(\d+)\s*(ml|l|L)").into("volume", "unit")
  * ```
- * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in original column
+ * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in the original column
  * Check [<code>Split.by</code>][Split.by] overload with regex parameter if you're looking to split String value by [<code>Regex</code>][Regex] delimiter
  *
  * For more information: [See `split` on the documentation website.](https://kotlin.github.io/dataframe/split.html)
@@ -176,13 +176,13 @@ public fun <T, C : String?> Split<T, C>.match(
 
 /**
  * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html),
- * excluding the first group which is entire matched String.
+ * excluding the first group which is the entire matched String.
  * Example:
  * ```
  * dataFrameOf("str" to listOf("100 ml", "1 L"))
  *      .split { "str"<String>() }.match("(\d+)\s*(ml|l|L)").into("volume", "unit")
  * ```
- * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in original column
+ * Created columns will be nullable if [<code>regex</code>][regex] doesn't match some rows or there are nulls in the original column
  * Check [<code>Split.by</code>][org.jetbrains.kotlinx.dataframe.api.Split.by] overload with regex parameter if you're looking to split String value by [<code>Regex</code>][Regex] delimiter
  *
  * For more information: [See `split` on the documentation website.](https://kotlin.github.io/dataframe/split.html)

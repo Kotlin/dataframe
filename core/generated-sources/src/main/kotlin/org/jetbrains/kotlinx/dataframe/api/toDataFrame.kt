@@ -211,7 +211,7 @@ public interface TraversePropertiesDsl {
 }
 
 /**
- * Store values of given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ * Store values of the given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
  */
