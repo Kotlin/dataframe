@@ -180,6 +180,8 @@ internal const val TRAVERSE_PROPERTIES_DSL =
     "Top-level `exclude`/`preserve` calls in `toDataFrame {}` are deprecated. " +
         "Move them into each `properties { }` block to configure traversal instead. $MESSAGE_1_0"
 
+internal const val DF_STD_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
