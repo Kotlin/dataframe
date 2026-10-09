@@ -61,7 +61,7 @@ val df = dataFrameOf(
 
 <!---END-->
 
-Returns a [`DataFrame`](DataFrame.md) with given column names and values.
+Returns a [`DataFrame`](DataFrame.md) with the given column names and values.
 
 <!---FUN createDataFrameOf-->
 

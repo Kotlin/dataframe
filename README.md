@@ -23,7 +23,7 @@
 Kotlin DataFrame provides type-safe, in-memory processing of tabular data on the JVM. 
 It reconciles Kotlin's static typing with the dynamic nature of data, 
 utilizing the full power of the Kotlin language with the interactive compiler plugin 
-that provides type-safe access to columns by evaluating structure changes on-the-fly in compile time
+that provides type-safe access to columns by evaluating structure changes on-the-fly at compile time.
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — the data processing pipeline is organized in a chain of `DataFrame` transformation operations.
