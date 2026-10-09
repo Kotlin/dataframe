@@ -41,7 +41,7 @@ Images all README files can be stored in [docs/imgs](./imgs).
 ### Explainer dataframes
 
 > Warning: this approach is outdated! Use [`SampleHelper` approach](../samples/README.md#samplehelper) instead!
-> Cuurently [migrating](https://github.com/Kotlin/dataframe/issues/898).
+> We are curently [migrating](https://github.com/Kotlin/dataframe/issues/898).
 
 `@TransformDataFrameExpressions` annotated test functions generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.
