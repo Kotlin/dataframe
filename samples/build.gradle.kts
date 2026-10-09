@@ -120,6 +120,8 @@ korro {
                 include("info/*.md")
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
+                include("append.md")
+                include("appendNulls.md")
                 include("concat.md")
                 include("concatDf.md")
                 include("groupBy.md")
