@@ -20,10 +20,21 @@ issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`kor
 Never use the legacy "dataframe explainer" / `@TransformDataFrameExpressions` mechanism; when migrating a page,
 rewrite its `:core` samples here with Sample Helper outputs.
 
+**Moving a page's samples here means deleting the `:core` originals in the same PR** (usually from
+`core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Access.kt`). Nothing reports a `:core` sample
+that no page imports any more, so the orphan stays, and the next person who edits it sees no change on the
+page. Before the PR, check that every function the page imported from `:core` is either deleted or still used by
+another page.
+
+A test that asserts what a page prints belongs here too, not in `:core`: the dependency runs
+`:samples` → `:core` (`build.gradle.kts` takes `:core` through its jars; `core/build.gradle.kts` has no
+dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` and has to copy the fixture
+— and a copy stops tracking the original the day someone adds a row to it.
+
 ## How it works
 
 - Sample sources live under `src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/**`
-  (subpackages `api/`, `io/`, `guides/`, `concepts/`, `schemas/`, ...). Test resources (CSV/JSON/XLSX/Parquet/Feather)
+  (subpackages `api/`, `io/`, `guides/`, `concepts/`, `schemas/`, …). Test resources (CSV/JSON/XLSX/Parquet/Feather)
   are in `src/test/resources/`.
 - The module applies the DataFrame **compiler plugin** (`libs.plugins.dataframe.compiler.plugin`), so samples get
   compile-time type-safe accessors. It depends on the built jars of the I/O modules (`runtimeOnly(projects.dataframe)`)
@@ -32,6 +43,12 @@ rewrite its `:core` samples here with Sample Helper outputs.
   sample code + output between the `<!---FUN x-->` / `<!---END-->` marks of the topic markdown. Korro's
   `docs`/`samples` includes in `build.gradle.kts` define exactly which `docs/StardustDocs/topics/**` files and sample
   packages this module owns. Never hand-write or hand-patch the inserted snippets.
+- **A text `Output:` block is either generated or stale.** `String.saveSample()` writes one (with the
+  `Output:` header), `CodeString.saveSample()` wraps the value in a ` ```kotlin ` fence and
+  `String.saveTextSample()` in a ` ```text ` one; korro then injects the block **inside** the
+  `<!---FUN-->`…`<!---END-->` region. A block typed by hand sits *outside* `<!---END-->`, and nothing checks it
+  ever again. At the time of writing the topics carry 8 generated blocks against 10 hand-written ones, so the
+  hand-written shape is common but is the one that rots — prefer `saveSample`.
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
   `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java". Korro wraps the variants into `<tabs>`/`<tab>`
   itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup. The
@@ -69,7 +86,7 @@ Run in this order (`korro` **must** run after `test`):
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
   (`"age"<Int>()`). Use the Extension Properties API in the remaining examples.
 - **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
-  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.saveSample()` for `String`/`CodeString`) and add highlighting
+  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.saveSample()` / `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting
   (`.format` / `.formatHeader` / `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for
   column-oriented ones). Reference each HTML output in the topic as an `<inline-frame>` right after its `<!---END-->`.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
