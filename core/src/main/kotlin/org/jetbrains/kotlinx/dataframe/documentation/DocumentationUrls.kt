@@ -125,6 +125,9 @@ public interface DocumentationUrls {
     /** <a href="{@include [Url]}/cumsum.html">See `cumSum` on the documentation website.</a> */
     public typealias CumSum = Nothing
 
+    /** [See `cumMin` on a DataColumn on the documentation website.]({@include [Url]}/cumminoncolumn.html) */
+    public typealias CumMinOnColumn = Nothing
+
     /** [See `describe` on the documentation website.]({@include [Url]}/describe.html) */
     public typealias Describe = Nothing
 
