@@ -1574,13 +1574,9 @@ public fun <T> Pivot<T>.mean(skipNaN: Boolean = skipNaNDefault, separate: Boolea
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
  * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
@@ -1660,13 +1656,9 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -1769,13 +1761,9 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.

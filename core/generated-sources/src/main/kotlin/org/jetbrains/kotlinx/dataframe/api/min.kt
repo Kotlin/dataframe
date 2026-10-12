@@ -2301,16 +2301,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
@@ -2367,16 +2363,12 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2451,16 +2443,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2541,16 +2529,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2612,16 +2596,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2707,16 +2687,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
