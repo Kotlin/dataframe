@@ -100,7 +100,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [CommonStatisticsDocs.NullHandlingSnippet]
      * @include [CommonStatisticsDocs.NaNHandlingSnippet]
      *
-     * The result is always a [Double] and never `null`.
+     * The resulting standard deviation is always a [Double] and never `null`.
      * Converting [Long] values to [Double] may lose precision for very large values.
      *
      * For more information about the resulting types:
