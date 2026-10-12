@@ -83,7 +83,7 @@ Header and signature rules (see *Structure* in the guidelines for the details):
 - A separate [`DataColumn`](docs/StardustDocs/topics/concepts/DataColumn.md) overload goes at the end
   of the operation section under ``### `funName` on `DataColumn` ``, with its own description,
   signature, parameters, and examples.
-- Signatures are pseudocode **with types**, in a `kotlin` code block, e.g.
+- Signatures are pseudocode **with types**, in a `text` code block, e.g.
   `sortWith(comparator: Comparator<DataRow>)` / `sortWith { row1: DataRow, row2: DataRow -> Int }`.
 - Types go in the **parameter descriptions too**, not only in the signature — as pseudocode (same
   style as the signature) or in words; for lambdas say what they receive and what they must return.
@@ -134,7 +134,7 @@ order of sections in the topic.
   [String API](../../../docs/StardustDocs/topics/concepts/StringApi.md) (read both topics if you are
   unsure what each looks like) — written as paired tests `x_properties` / `x_strings`.
   **Korro wraps such a pair into `<tabs>`/`<tab>` itself** (`groupSamples` in
-  `samples/build.gradle.kts` maps the `_properties`/`_accessors`/`_strings`/`_kotlin`/`_java`
+  `samples/build.gradle.kts` maps the `_properties`/`_strings`/`_kotlin`/`_java`
   suffixes onto tab titles), so never write the tab markup by hand in the topic — just put a single
   `<!---FUN x-->` / `<!---END-->` pair with the **base** name, without the suffix.
   If the operation cannot take plain column names (`String`s), write the `_strings` version with

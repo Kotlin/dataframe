@@ -96,7 +96,7 @@ describe its possible values and how they affect the operation result.
 * For an operation that selects columns or uses row values, the basic usage example must always have two versions — one with the
   [Extension Properties API](docs/StardustDocs/topics/extensionPropertiesApi.md) and one with the
   [String API](docs/StardustDocs/topics/concepts/StringApi.md) — shown through `<tab>`.
-  * Korro inserts these tabs automatically when it sees `_properties`, `_accessors` or `_strings` suffices
+  * Korro inserts these tabs automatically when it sees `_properties` or `_strings` suffices
     in the test name — do not write `<tabs>`/`<tab>` markup manually for such samples.
     Use the base name (without the suffix) in the `FUN` directive.
   * Some operations can't be used with plain column names (`String`s):
@@ -175,9 +175,9 @@ If a topic describes several operations (e.g., `sortBy` and `sortByDesc`), then:
 ##### Signatures
 
 Write signatures as pseudocode with types: a Kotlin-like call with parameter names and their types,
-lambda parameters and the lambda result type. Use a `kotlin` code block:
+lambda parameters and the lambda result type. Use a `text` code block:
 
-```kotlin
+```text
 sortWith(comparator: Comparator<DataRow>)
 sortWith { row1: DataRow, row2: DataRow -> Int }
 ```
@@ -320,7 +320,7 @@ If not specified, the whole body is used (not recommended!).
 
 <!---END-->
 ```
-* For grouped samples (test names with the `_properties` / `_accessors` / `_strings` suffices),
+* For grouped samples (test names with the `_properties` / `_strings` suffices),
   write the **base** test name in the `FUN` directive, without the suffix
   (`valueCountsSelector_properties` + `valueCountsSelector_strings` → `<!---FUN valueCountsSelector-->`).
   Korro finds all suffixed variants itself and wraps them into `<tabs>`.
