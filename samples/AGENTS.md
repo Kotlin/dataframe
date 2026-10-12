@@ -31,7 +31,7 @@ issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`kor
   includes in `build.gradle.kts` define exactly which `docs/StardustDocs/topics/**` files and sample packages this
   module owns.
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
-  `_accessors` → "Accessors", `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java" (wrapped in
+  `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java" (wrapped in
   `<tabs>`/`<tab>`).
 - **Iframes / plots:** `SampleHelper` saves DataFrames as HTML iframes and Kandy plots as SVGs; the
   `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag per
@@ -43,5 +43,5 @@ issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`kor
   test task for Arrow). Then `./gradlew :samples:korroClean :samples:korro` to regenerate docs snippets — or run the
   Korro tasks for the whole project.
 - Writing a new sample: put it in the correct subpackage matching its topic, write it as a runnable test with
-  assertions, use the `_properties`/`_accessors`/… suffixes for grouped variants, and add the target topic file to
+  assertions, use the `_properties`/… suffixes for grouped variants, and add the target topic file to
   the `korro.docs` include list; for iframe/plot samples, register outputs via `updateShadowResources`.
