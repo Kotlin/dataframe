@@ -75,7 +75,7 @@ You could find the following articles there:
 Want to contribute to the documentation?
 See the [Documentation Guidelines](DOCUMENTATION_GUIDELINES.md) for the website
 and the [KDoc Guidelines](KDOC_GUIDELINES.md) for the API docs; the
-[`operation-website-documentation`](.claude/skills/operation-website-documentation/SKILL.md) skill
+[`operation-website-documentation`](.agents/skills/operation-website-documentation/SKILL.md) skill
 walks coding agents through writing an operation page.
 
 ### What's new
