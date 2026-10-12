@@ -1229,7 +1229,8 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
  * df.sumFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1551,7 +1552,8 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  * df.sum("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1997,7 +1999,8 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
  * df.groupBy { city }.sumFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -2174,7 +2177,8 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * df.groupBy { city }.sum("age", "weight", name = "total")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"sum"` otherwise.
@@ -2409,16 +2413,12 @@ public fun <T> Pivot<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNa
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to sum
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to sum
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `0` in the result type (defaulting to [<code>Double</code>][Double] if there is no number type to speak of).
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
  * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
@@ -2498,16 +2498,12 @@ public fun <T, R : Number?> Pivot<T>.sumFor(
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to sum
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to sum
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `0` in the result type (defaulting to [<code>Double</code>][Double] if there is no number type to speak of).
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2533,7 +2529,8 @@ public fun <T, R : Number?> Pivot<T>.sumFor(
  * df.pivot { city }.sumFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
@@ -2598,16 +2595,12 @@ public fun <T, C : Number?> Pivot<T>.sumFor(
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to sum
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to sum
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `0` in the result type (defaulting to [<code>Double</code>][Double] if there is no number type to speak of).
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2678,16 +2671,12 @@ public fun <T, C : Number?> Pivot<T>.sum(
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to sum
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to sum
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `0` in the result type (defaulting to [<code>Double</code>][Double] if there is no number type to speak of).
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2712,7 +2701,8 @@ public fun <T, C : Number?> Pivot<T>.sum(
  * df.pivot { city }.sum("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -3063,7 +3053,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
  * df.pivot { city }.groupBy { name.lastName }.sumFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
@@ -3243,7 +3234,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * df.pivot { city }.groupBy { name.lastName }.sum("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the sum of.
- *   These must be primitive number columns, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing primitive number columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
