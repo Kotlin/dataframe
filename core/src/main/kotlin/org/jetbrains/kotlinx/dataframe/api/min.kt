@@ -98,7 +98,11 @@ internal interface MinDocs : CommonMinMaxDocs {
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
-    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMinStatisticArgs]} */
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMinStatisticArgs]}
+     *   These must be existing mutually comparable columns,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
+     */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 

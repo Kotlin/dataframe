@@ -555,7 +555,8 @@ internal interface StdDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetStdStatisticArgs]}
-     *   These must be existing columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
+     *   These must be existing columns holding only primitive numbers,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing

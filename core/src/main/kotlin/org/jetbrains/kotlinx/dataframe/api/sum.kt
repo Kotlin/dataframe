@@ -588,7 +588,8 @@ internal interface SumDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetSumStatisticArgs]}
-     *   These must be primitive number columns, else an [IllegalArgumentException] is thrown.
+     *   These must be existing primitive number columns,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing

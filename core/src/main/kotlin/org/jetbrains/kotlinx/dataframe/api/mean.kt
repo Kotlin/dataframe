@@ -571,7 +571,8 @@ internal interface MeanDocs : CommonStatisticsDocs {
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMeanStatisticArgs]}
-     *   These must be columns holding only primitive numbers, else an [IllegalArgumentException] is thrown.
+     *   These must be existing columns holding only primitive numbers,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
