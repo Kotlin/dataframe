@@ -246,6 +246,12 @@ public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = 
  *
  * If [<code>frame</code>][frame] has zero rows, it adds no rows, while its columns still participate in schema unification.
  *
+ * This overload can be called using either infix or regular call syntax.
+ * Infix notation reads naturally when concatenation is the complete expression, such as
+ * `val fullDf = df1 concat df2` or `return df1 concat df2`.
+ * When chaining another operation, prefer regular call syntax, such as `df1.concat(df2).head()`, instead of
+ * parenthesizing the infix expression.
+ *
  * For more information: [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
  *
  * See also:
