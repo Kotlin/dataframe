@@ -2,12 +2,20 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.cumMin
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.math.BigDecimal
+import java.time.LocalDate
+import kotlin.random.Random
 import kotlin.reflect.typeOf
 
 class CumMinTests {
@@ -133,6 +141,72 @@ class CumMinTests {
         val column = DataColumn.createValueColumn("values", listOf(5, 3), typeOf<Int>(), defaultValue = 42)
 
         column.cumMin().defaultValue() shouldBe 42
+    }
+
+    @Test
+    fun `dates use their natural ordering`() {
+        val first = LocalDate.of(2026, 10, 12)
+        val earlier = first.minusDays(1)
+
+        columnOf(first, earlier, first.plusDays(1)).cumMin().toList() shouldBe listOf(first, earlier, earlier)
+    }
+
+    @Test
+    fun `signed zeros follow Comparable ordering`() {
+        val result = columnOf(0.0, -0.0, 0.0).cumMin().toList()
+
+        result.map { it.toBits() } shouldBe listOf(0.0.toBits(), (-0.0).toBits(), (-0.0).toBits())
+    }
+
+    @Test
+    fun `first missing representation wins when NaN precedes null`() {
+        val result = columnOf(8.0, Double.NaN, null, 2.0).cumMin(skipNA = false).toList()
+
+        result.first() shouldBe 8.0
+        result.drop(1).all { it?.isNaN() == true } shouldBe true
+    }
+
+    @Test
+    fun `dataframe conversion preserves unselected columns`() {
+        val values by column<Int?>()
+        val df = dataFrameOf("label", "values")("a", 8, "b", null, "c", 5, "d", 7)
+        val result = df.convert { values }.asColumn { it.cumMin() }
+
+        result[values].toList() shouldBe listOf(8, null, 5, 5)
+        result["label"] shouldBe df["label"]
+        df[values].toList() shouldBe listOf(8, null, 5, 7)
+    }
+
+    @Test
+    fun `group transformations reset minima and missing propagation`() {
+        val values by column<Int?>()
+        val df = dataFrameOf("group", "values")("a", 8, "b", 3, "a", null, "b", 4, "a", 5)
+
+        val groups = df.groupBy("group")
+        val skipping = groups.updateGroups { convert { values }.asColumn { it.cumMin() } }.concat()
+        val propagating = groups.updateGroups { convert { values }.asColumn { it.cumMin(skipNA = false) } }.concat()
+
+        skipping[values].toList() shouldBe listOf(8, null, 5, 3, 3)
+        propagating[values].toList() shouldBe listOf(8, null, null, 3, 3)
+    }
+
+    @Test
+    fun `seeded nullable inputs match independent prefix minima`() {
+        val random = Random(2144)
+        repeat(100) {
+            val input = List(random.nextInt(0, 100)) { if (random.nextInt(4) == 0) null else random.nextInt(-100, 101) }
+            val column = DataColumn.createValueColumn("values", input, typeOf<Int?>())
+            val skipping = input.indices.map { i ->
+                if (input[i] == null) null else input.take(i + 1).filterNotNull().minOrNull()
+            }
+            val firstNull = input.indexOf(null).let { if (it < 0) input.size else it }
+            val propagating = input.indices.map { i ->
+                if (i >= firstNull) null else input.take(i + 1).filterNotNull().minOrNull()
+            }
+
+            column.cumMin().toList() shouldBe skipping
+            column.cumMin(skipNA = false).toList() shouldBe propagating
+        }
     }
 
     private data class Score(val value: Int, val label: String) : Comparable<Score> {

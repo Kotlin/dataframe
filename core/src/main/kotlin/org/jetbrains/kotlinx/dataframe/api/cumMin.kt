@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.api.cumMinImpl
 
 // Adapted from the cumulative-operation documentation in cumSum.kt.
+
 /**
  * Computes the cumulative minimum from the first value to the last value in this [DataColumn].
  *
@@ -28,10 +29,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.cumMinImpl
 private interface CumMinDocs
 
 /** @include [CumMinDocs] */
-public fun <T : Comparable<T>> DataColumn<T>.cumMin(skipNA: Boolean = true): DataColumn<T> =
-    cumMinImpl(skipNA).cast()
+public fun <T : Comparable<T>> DataColumn<T>.cumMin(skipNA: Boolean = true): DataColumn<T> = cumMinImpl(skipNA).cast()
 
 /** @include [CumMinDocs] */
 @JvmName("cumMinNullable")
-public fun <T : Comparable<T>> DataColumn<T?>.cumMin(skipNA: Boolean = true): DataColumn<T?> =
-    cumMinImpl(skipNA)
+public fun <T : Comparable<T>> DataColumn<T?>.cumMin(skipNA: Boolean = true): DataColumn<T?> = cumMinImpl(skipNA)
