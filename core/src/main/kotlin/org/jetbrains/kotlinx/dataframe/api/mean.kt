@@ -123,7 +123,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
     typealias NanCellOnEmptySnippet = Nothing
 
     /**
-     * {@comment Note about the behavior on empty input for the Pivot functions. KDoc-snippet.}
+     * {@comment Note about the behavior on empty input for the PivotGroupBy functions. KDoc-snippet.}
      *
      * Result cells for which there exists a group, but there is nothing to average
      * (for instance, because the group was empty or contained only `null` values)
@@ -132,7 +132,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [MeanDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
-    typealias NanCellOnEmptyPivotSnippet = Nothing
+    typealias NanCellOnEmptyPivotGroupBySnippet = Nothing
 
     /**
      * {@comment Note about how the column-selecting `mean` modes combine multiple columns. KDoc-snippet.}
@@ -420,7 +420,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * of each selected column of the corresponding group.
      *
      * @include [MeanDocs.SupportedTypesSnippet]
-     * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+     * @include [MeanDocs.NanCellOnEmptySnippet]
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -460,7 +460,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
-     * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+     * @include [MeanDocs.NanCellOnEmptySnippet]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MeanDocs.MeanSelectingOptions], or check out the
@@ -494,7 +494,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
      *
      * @include [MeanDocs.SupportedTypesSnippet]
-     * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+     * @include [MeanDocs.NanCellOnEmptyPivotGroupBySnippet]
      * $[NOTE]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
@@ -536,7 +536,7 @@ internal interface MeanDocs : CommonStatisticsDocs {
      * @include [MeanDocs.MeanOfMeansSnippet]
      *
      * @include [MeanDocs.SupportedTypesSnippet]
-     * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+     * @include [MeanDocs.NanCellOnEmptyPivotGroupBySnippet]
      * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MeanDocs.MeanSelectingOptions], or check out the
@@ -1222,7 +1222,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.meanOf(
  *
  * @include [MeanDocs.AllSuitableColumnsSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
- * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+ * @include [MeanDocs.NanCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1357,7 +1357,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  *
  * @include [MeanDocs.ExpressionResultIsInputSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
- * @include [MeanDocs.NanCellOnEmptyPivotSnippet]
+ * @include [MeanDocs.NanCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *

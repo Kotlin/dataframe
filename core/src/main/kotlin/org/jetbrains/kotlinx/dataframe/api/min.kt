@@ -1407,7 +1407,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1443,7 +1443,7 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1489,7 +1489,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1547,7 +1547,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1587,7 +1587,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1643,7 +1643,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [minOf] with [minBy][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
@@ -1781,7 +1781,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1818,7 +1818,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [MinDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1864,7 +1864,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1925,7 +1925,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1968,7 +1968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -2026,7 +2026,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  * @include [MinDocs.InputValuesSnippet]
  *
- * @include [MinDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MinDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Don't confuse [minOf] with [minBy][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.

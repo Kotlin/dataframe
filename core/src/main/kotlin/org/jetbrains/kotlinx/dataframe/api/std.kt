@@ -131,7 +131,7 @@ internal interface StdDocs : CommonStatisticsDocs {
     typealias NanCellOnEmptySnippet = Nothing
 
     /**
-     * {@comment Note about the behavior on empty input for the Pivot functions. KDoc-snippet.}
+     * {@comment Note about the behavior on empty input for the PivotGroupBy functions. KDoc-snippet.}
      *
      * Result cells for which there exists a group, but there is nothing to compute the
      * standard deviation of (for instance, because the group was empty or contained only `null` values)
@@ -141,7 +141,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * @include [StdDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
-    typealias NanCellOnEmptyPivotSnippet = Nothing
+    typealias NanCellOnEmptyPivotGroupBySnippet = Nothing
 
     /**
      * {@comment Note about which columns the no-argument `std` modes take into account. KDoc-snippet.}
@@ -407,7 +407,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * deviation of each selected column of the corresponding group.
      *
      * @include [StdDocs.SupportedTypesSnippet]
-     * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     * @include [StdDocs.NanCellOnEmptySnippet]
      *
      * $[NOTE]
      *
@@ -447,7 +447,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * deviation of all the values in the selected columns of the corresponding group.
      *
      * @include [StdDocs.SupportedTypesSnippet]
-     * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     * @include [StdDocs.NanCellOnEmptySnippet]
      *
      * See [Selecting Columns][StdDocs.StdSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -480,7 +480,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
      *
      * @include [StdDocs.SupportedTypesSnippet]
-     * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     * @include [StdDocs.NanCellOnEmptyPivotGroupBySnippet]
      *
      * $[NOTE]
      *
@@ -521,7 +521,7 @@ internal interface StdDocs : CommonStatisticsDocs {
      * selected columns of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
      *
      * @include [StdDocs.SupportedTypesSnippet]
-     * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+     * @include [StdDocs.NanCellOnEmptyPivotGroupBySnippet]
      *
      * See [Selecting Columns][StdDocs.StdSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1314,7 +1314,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.stdOf(
  *
  * @include [StdDocs.AllSuitableColumnsSnippet]
  * @include [StdDocs.SupportedTypesSnippet]
- * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+ * @include [StdDocs.NanCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1467,7 +1467,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  *
  * @include [StdDocs.ExpressionResultIsInputSnippet]
  * @include [StdDocs.SupportedTypesSnippet]
- * @include [StdDocs.NanCellOnEmptyPivotSnippet]
+ * @include [StdDocs.NanCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
