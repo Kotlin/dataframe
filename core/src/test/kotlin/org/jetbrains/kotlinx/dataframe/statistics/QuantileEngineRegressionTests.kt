@@ -27,21 +27,30 @@ class QuantileEngineRegressionTests {
     @Test
     fun `interpolated minimum endpoint preserves negative infinity`() {
         sequenceOf(Double.NEGATIVE_INFINITY, 1.0).quantileOrNull(
-            0.0, typeOf<Double>(), false, QuantileEstimationMethod.R7,
+            0.0,
+            typeOf<Double>(),
+            false,
+            QuantileEstimationMethod.R7,
         ) shouldBe Double.NEGATIVE_INFINITY
     }
 
     @Test
     fun `interpolated maximum endpoint preserves positive infinity`() {
         sequenceOf(1.0, Double.POSITIVE_INFINITY).quantileOrNull(
-            1.0, typeOf<Double>(), false, QuantileEstimationMethod.R8,
+            1.0,
+            typeOf<Double>(),
+            false,
+            QuantileEstimationMethod.R8,
         ) shouldBe Double.POSITIVE_INFINITY
     }
 
     @Test
     fun `identical infinite observations do not become NaN during interpolation`() {
         sequenceOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY).quantileOrNull(
-            0.5, typeOf<Double>(), false, QuantileEstimationMethod.R7,
+            0.5,
+            typeOf<Double>(),
+            false,
+            QuantileEstimationMethod.R7,
         ) shouldBe Double.POSITIVE_INFINITY
     }
 }

@@ -77,6 +77,7 @@ private interface QuantileDocs
  * Interpolation returns an exact observation directly when the estimated position is integral,
  * and preserves identical infinite observations. Other interpolation arithmetic can produce NaN,
  * including combining opposite infinities, or lose precision through Double conversion.
+ * Returning an exact observation also preserves its signed zero.
  */
 @ExcludeFromSources
 internal interface InterpolatedQuantileInfinityDocs
@@ -101,8 +102,7 @@ public fun <T> DataColumn<T>.quantile(
     method: QuantileMethod.Interpolating,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T & Any>?, T : Number? =
-    quantileOrNull(p, method, skipNaN).suggestIfNull("quantile")
+    where T : Comparable<T & Any>?, T : Number? = quantileOrNull(p, method, skipNaN).suggestIfNull("quantile")
 
 /** @include [QuantileDocs] */
 public fun <T> DataColumn<T>.quantileOrNull(
@@ -110,5 +110,4 @@ public fun <T> DataColumn<T>.quantileOrNull(
     method: QuantileMethod.Interpolating,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where T : Comparable<T & Any>?, T : Number? =
-    quantileInterpolatingOrNullImpl(p, method, skipNaN)
+    where T : Comparable<T & Any>?, T : Number? = quantileInterpolatingOrNullImpl(p, method, skipNaN)

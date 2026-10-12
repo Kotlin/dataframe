@@ -19,6 +19,11 @@ but no mix of different number types.
 In these cases, the return type is always `Double?`.
 The results of the operation on these types are interpolated using
 [Quantile Estimation Method](#quantile-estimation-methods) R8.
+Interpolation preserves exact observations at integral estimated positions, including infinite endpoints,
+and identical infinite observations. Other non-finite interpolation arithmetic can produce NaN.
+Exact observations retain their signed zero.
+Use [`quantile`](operations/column/quantileOnColumn.md) to choose an estimator explicitly with a `[0, 1]` probability;
+the percentile default remains R8.
 
 The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)

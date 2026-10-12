@@ -54,6 +54,10 @@ public fun <T : Comparable<T & Any>?> DataColumn<T>.percentile(percentile: Doubl
 public fun <T : Comparable<T & Any>?> DataColumn<T>.percentileOrNull(percentile: Double): T? =
     Aggregators.percentileComparables<T>(percentile).aggregateSingleColumn(this)
 
+/**
+ * Returns the numeric percentile using the existing R8 estimator.
+ * @include [InterpolatedQuantileInfinityDocs]
+ */
 public fun <T> DataColumn<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
@@ -61,6 +65,10 @@ public fun <T> DataColumn<T>.percentile(
     where T : Comparable<T & Any>?, T : Number? =
     percentileOrNull(percentile = percentile, skipNaN = skipNaN).suggestIfNull("percentile")
 
+/**
+ * Returns the numeric percentile using R8, or null when no observations remain.
+ * @include [InterpolatedQuantileInfinityDocs]
+ */
 public fun <T> DataColumn<T>.percentileOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,

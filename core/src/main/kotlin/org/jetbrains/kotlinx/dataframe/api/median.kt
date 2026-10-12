@@ -52,11 +52,19 @@ public fun <T : Comparable<T & Any>?> DataColumn<T>.median(): T & Any = medianOr
 public fun <T : Comparable<T & Any>?> DataColumn<T>.medianOrNull(): T? =
     Aggregators.medianComparables<T>().aggregateSingleColumn(this)
 
+/**
+ * Returns the numeric median using the existing estimator.
+ * @include [InterpolatedQuantileInfinityDocs]
+ */
 public fun <T> DataColumn<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
     where T : Comparable<T & Any>?, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
 
+/**
+ * Returns the numeric median, or null when no observations remain.
+ * @include [InterpolatedQuantileInfinityDocs]
+ */
 public fun <T> DataColumn<T>.medianOrNull(
     skipNaN: Boolean = skipNaNDefault,
 ): Double?

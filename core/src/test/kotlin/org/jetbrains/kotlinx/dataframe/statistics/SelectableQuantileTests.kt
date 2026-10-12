@@ -6,9 +6,11 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.QuantileMethod
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.quantile
 import org.jetbrains.kotlinx.dataframe.api.quantileOrNull
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -55,7 +57,8 @@ class SelectableQuantileTests {
         val float: Float = columnOf(7.0f).quantile(0.5, QuantileMethod.R1)
         val double: Double = columnOf(7.0).quantile(0.5, QuantileMethod.R3)
 
-        listOf(byte, short, int, long, float, double) shouldBe listOf(7.toByte(), 7.toShort(), 7, 9007199254740993L, 7.0f, 7.0)
+        listOf(byte, short, int, long, float, double) shouldBe
+            listOf(7.toByte(), 7.toShort(), 7, 9007199254740993L, 7.0f, 7.0)
     }
 
     @Test
@@ -224,6 +227,44 @@ class SelectableQuantileTests {
             columnOf("pear", "apple", "orange").quantile(0.5, QuantileMethod.R3)
         values.percentile(0.0) shouldBe 1.0
         values.percentile(100.0) shouldBe 4.0
+    }
+
+    @Test
+    fun `existing percentile and median preserve infinite observations`() {
+        val values = columnOf(Double.NEGATIVE_INFINITY, 1.0, Double.POSITIVE_INFINITY)
+
+        values.percentile(0.0) shouldBe Double.NEGATIVE_INFINITY
+        values.percentile(100.0) shouldBe Double.POSITIVE_INFINITY
+        columnOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY).median() shouldBe Double.POSITIVE_INFINITY
+        columnOf(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY).percentile(50.0) shouldBe
+            Double.POSITIVE_INFINITY
+    }
+
+    @Test
+    fun `exact interpolation preserves negative zero in new and existing APIs`() {
+        val values = columnOf(-0.0, -0.0)
+        val expected = (-0.0).toBits()
+
+        values.quantile(0.5, QuantileMethod.R7).toBits() shouldBe expected
+        values.quantile(0.0, QuantileMethod.R8).toBits() shouldBe expected
+        values.percentile(0.0).toBits() shouldBe expected
+        values.percentile(50.0).toBits() shouldBe expected
+        values.median().toBits() shouldBe expected
+    }
+
+    @Test
+    fun `null-inferred and Nothing nullable input are treated as empty samples`() {
+        val inferred = columnOf(null, null)
+        val empty = DataColumn.createValueColumn<Nothing?>("empty", emptyList(), nullableNothingType)
+
+        val result0: Any? = inferred.quantileOrNull<Nothing?>(0.5, QuantileMethod.R1)
+        result0 shouldBe null
+        val result1: Any? = inferred.quantileOrNull<Nothing?>(0.5, QuantileMethod.R7)
+        result1 shouldBe null
+        val result2: Any? = empty.quantileOrNull<Nothing?>(0.5, QuantileMethod.R3)
+        result2 shouldBe null
+        val result3: Any? = empty.quantileOrNull<Nothing?>(0.5, QuantileMethod.R8)
+        result3 shouldBe null
     }
 
     @Test

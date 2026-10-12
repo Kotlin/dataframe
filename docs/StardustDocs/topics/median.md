@@ -15,6 +15,8 @@ All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Floa
 but no mix of different number types.
 In these cases, the return type is always `Double?`.
 When the number of values is even, the median is the average of the two middle values.
+Interpolation preserves identical infinite observations; combining opposite infinities can still produce NaN.
+An exact observation retains its signed zero, including a pair of identical negative zeros.
 
 The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)

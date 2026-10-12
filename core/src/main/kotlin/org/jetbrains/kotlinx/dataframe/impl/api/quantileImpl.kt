@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod
-import org.jetbrains.kotlinx.dataframe.math.quantileOrNull as sequenceQuantileOrNull
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
+import org.jetbrains.kotlinx.dataframe.math.quantileOrNull as sequenceQuantileOrNull
 
 /** Delegates selection to the existing engine without converting the selected value type. */
 @Suppress("UNCHECKED_CAST")
@@ -24,7 +24,11 @@ internal fun <T : Comparable<T & Any>?> DataColumn<T>.quantileSelectingOrNullImp
         QuantileMethod.Selecting.R3 -> QuantileEstimationMethod.R3
     }
     return asSequence().filterNotNull().sequenceQuantileOrNull(
-        p, type().withNullability(false), skipNaN, estimator, "quantile",
+        p,
+        type().withNullability(false),
+        skipNaN,
+        estimator,
+        "quantile",
     ) as T?
 }
 
@@ -45,7 +49,11 @@ internal fun <T> DataColumn<T>.quantileInterpolatingOrNullImpl(
         QuantileMethod.Interpolating.R8 -> QuantileEstimationMethod.R8
     }
     return asSequence().filterNotNull().sequenceQuantileOrNull(
-        p, inputType, skipNaN, estimator, "quantile",
+        p,
+        inputType,
+        skipNaN,
+        estimator,
+        "quantile",
     ) as Double?
 }
 
