@@ -4168,6 +4168,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/StdKt {
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZI)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZI)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILkotlin/jvm/functions/Function2;)D
+	public static final synthetic fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZI)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)D
 	public static final fun std (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)D
