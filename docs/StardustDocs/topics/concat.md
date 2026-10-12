@@ -24,10 +24,10 @@ Returns a [`DataFrame`](DataFrame.md) containing the receiver's rows followed by
 objects are not modified.
 
 ```text
-concat(vararg frames: DataFrame<T>): DataFrame<T>
-(concat frame | concat(frame)): DataFrame<Any>
-concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
-concat(rows: Iterable<DataRow<T>>): DataFrame<T>
+dataframe.concat(vararg frames: DataFrame<T>): DataFrame<T>
+(dataframe concat frame | dataframe.concat(frame)): DataFrame<Any>
+dataframe.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
+dataframe.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
 
 frame: DataFrame<T1>
 ```
