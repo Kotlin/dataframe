@@ -158,13 +158,13 @@ internal inline fun <T, C, R> Split<T, C>.by(
 
 /**
  * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html),
- * excluding the first group which is entire matched String.
+ * excluding the first group which is the entire matched String.
  * Example:
  * ```
  * dataFrameOf("str" to listOf("100 ml", "1 L"))
  *      .split { "str"<String>() }.match("(\\d+)\\s*(ml|l|L)").into("volume", "unit")
  * ```
- * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in original column
+ * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in the original column
  * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
  *
  * For more information: {@include [DocumentationUrls.Split]}

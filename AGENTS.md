@@ -136,7 +136,9 @@ into the `:samples` module is in progress; new documentation samples belong ther
 ## Constraints
 
 - Base all PRs on `master`; the current checked-out branch may be a feature branch (`git status` at session start).
-- Bug fixes require a reproducing test; new public APIs require docs + tests.
+- Bug fixes require a reproducing test; new public APIs require docs + tests. A change in behaviour that users
+  can observe also requires docs: the operation's website page and the KDoc of the public function a user calls,
+  not only the KDoc of an internal function or an extension point.
 - Public API is guarded by **binary-compatibility-validator** in every publishable module — when you change public
   signatures, run the `apiDump`/`apiCheck` Gradle tasks and commit the module's updated `api/*.api` dump.
 - DB tests in `dataframe-jdbc` are structured to run against either Dockerized or locally installed DBMS

@@ -125,6 +125,9 @@ To add one:
   `:samples`. Adding a sample to a `:core`-owned topic means moving that topic's samples over first.
 - **A new iframe needs `:samples:updateShadowResources`** on top of the generated HTML — without the
   `<resource>` entry in `_shadow_resources.md` the page silently shows no table.
+- **A removed or moved sample leaves its output behind.** Delete its old HTML under `resources/` and re-run
+  `:samples:updateShadowResources`. Nothing in the build reports the orphan, and the bot that stages
+  `resources/snippets/` never updates `_shadow_resources.md`, so its `<resource>` line outlives the file.
 - **An iframe `src` is the flat basename, never the on-disk path.** `updateShadowResources` registers
   resources by basename only (422 `<resource src="…">` entries, not one with a slash), so a nested
   source file is still referenced as `./resources/<file>.html`: `sliceRows.md:14` says

@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -20,8 +21,14 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Time
+import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL =
     "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
@@ -37,34 +44,34 @@ interface Table1 {
     val charactercol: String
     val characterncol: String
     val charcol: String
-    val datecol: java.sql.Date
+    val datecol: Date
     val doublecol: Double
-    val integercol: Int?
-    val jsoncol: String
-    val jsonbcol: String
+    val integercol: Int
+    val jsoncol: String? // no such column in the table yet: read as nulls
+    val jsonbcol: String? // no such column in the table yet: read as nulls
 }
 
 @DataSchema
 interface Table2 {
     val id: Int
-    val moneycol: String
+    val moneycol: BigDecimal
     val numericcol: BigDecimal
     val realcol: Float
     val smallintcol: Int
     val serialcol: Int
     val textcol: String?
-    val timecol: String
-    val timewithzonecol: String
-    val timestampcol: String
-    val timestampwithzonecol: String
-    val uuidcol: String
+    val timecol: Time
+    val timewithzonecol: OffsetTime
+    val timestampcol: Instant
+    val timestampwithzonecol: OffsetDateTime
+    val uuidcol: Uuid
 }
 
 @DataSchema
 interface ViewTable {
     val id: Int
     val bigintcol: Long
-    val textCol: String?
+    val textcol: String?
 }
 
 class PostgresH2Test {
@@ -235,7 +242,7 @@ class PostgresH2Test {
     @Test
     fun `read from tables`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>(verify = true)
         val result = df1.filter { "id"<Int>() == 1 }
 
         result[0][0] shouldBe 1
@@ -257,7 +264,7 @@ class PostgresH2Test {
         schema.columns["booleanarraycol"]!!.type.classifier shouldBe kotlin.Array::class
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>(verify = true)
         val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][4] shouldBe 1001
 
@@ -279,7 +286,7 @@ class PostgresH2Test {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>(verify = true)
         val result = df.filter { "id"<Int>() == 1 }
         result[0][2] shouldBe null
 
@@ -293,14 +300,14 @@ class PostgresH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1>()
+        val table1Df = dataframes[0].cast<Table1>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { "integercol"<Int?>()?.let { it > 12345 } ?: false }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
         table1Df[0][2] shouldBe 11
 
-        val table2Df = dataframes[1].cast<Table2>()
+        val table2Df = dataframes[1].cast<Table2>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
@@ -325,7 +332,7 @@ class PostgresH2Test {
     @Test
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>(verify = true)
         val result = df1.select("smallintcol")
             .add("smallintcol2") { "smallintcol"<Int?>() }
         result[0][1] shouldBe 11
@@ -339,7 +346,7 @@ class PostgresH2Test {
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>(verify = true)
 
         val result4 = df2.select("numericcol")
             .add("numericcol2") { "numericcol"<BigDecimal>() }
@@ -367,6 +374,11 @@ class PostgresH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 
     @Test

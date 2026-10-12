@@ -188,6 +188,13 @@ Use `.filter(predicate)` for filtering instead.
 | `df.select { colGroup.singleCol { predicate } }` | `df.select { colGroup.allCols().filter { predicate }.single() }` |
 | `df.select { colSet.single { predicate } }`      | `df.select { colSet.filter { predicate }.single() }`             |
 
+### `reorderColumnsBy` and `reorderColumnsByName` no longer reorder inside frame columns by default
+
+With `atAnyDepth = true` (the default), [`reorderColumnsBy`](reorder.md#reordercolumnsby) and
+[`reorderColumnsByName`](reorder.md#reordercolumnsbyname) now reorder the columns inside column groups only,
+like `colsAtAnyDepth()`. The columns inside the dataframes of frame columns keep their order.
+To reorder them too, as before, pass `inFrameColumns = true`: `df.reorderColumnsByName(inFrameColumns = true)`.
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.

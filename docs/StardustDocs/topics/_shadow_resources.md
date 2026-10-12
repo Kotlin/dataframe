@@ -114,6 +114,12 @@
 <resource src="dropNullsWhereAllNull.html"></resource>
 <resource src="dropNullsWhereAllNullSelector.html"></resource>
 <resource src="dropWhere_properties.html"></resource>
+<resource src="duplicateDataFrame.html"></resource>
+<resource src="duplicateDataFrameConcat.html"></resource>
+<resource src="duplicateDf.html"></resource>
+<resource src="duplicateRow.html"></resource>
+<resource src="duplicateRows.html"></resource>
+<resource src="duplicateRowsWhere_properties.html"></resource>
 <resource src="fillDf.html"></resource>
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
@@ -175,6 +181,7 @@
 <resource src="valuesOnGroupBySelectedColumns_properties.html"></resource>
 <resource src="indexingDf.html"></resource>
 <resource src="indicesGetRows.html"></resource>
+<resource src="iterateDf.html"></resource>
 <resource src="dfLeftImplicit.html"></resource>
 <resource src="dfRightImplicit.html"></resource>
 <resource src="notebook_test_join_10.html"></resource>
@@ -294,6 +301,17 @@
 <resource src="notebook_test_rename_3.html"></resource>
 <resource src="notebook_test_rename_4.html"></resource>
 <resource src="notebook_test_rename_5.html"></resource>
+<resource src="reorderByDesc.html"></resource>
+<resource src="reorderColumnsBy.html"></resource>
+<resource src="reorderColumnsByName.html"></resource>
+<resource src="reorderColumnsByNameTopLevel.html"></resource>
+<resource src="reorderColumnsByTopLevel.html"></resource>
+<resource src="reorderDf.html"></resource>
+<resource src="reorderEqualKeys_properties.html"></resource>
+<resource src="reorderInDifferentGroups_properties.html"></resource>
+<resource src="reorderInGroup_properties.html"></resource>
+<resource src="reorderSome.html"></resource>
+<resource src="reorder_properties.html"></resource>
 <resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_shuffle_2.html"></resource>
 <resource src="singleCondition_properties.html"></resource>
@@ -361,7 +379,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.ForHtml.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html"></resource>
 <resource src="extensionPropertiesApi1.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.byRow.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinct.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.distinctColumns.html"></resource>
@@ -370,11 +387,9 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getRowByIndex.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.xs.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.columnsFor.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.head.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.meanAggregationsSkipNA.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupByMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"></resource>
@@ -382,7 +397,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html"></resource>
@@ -393,10 +407,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromObject.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameLists.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinDefault.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinWithMatch.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerColumns.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareLeft.html"></resource>
@@ -424,7 +434,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flatten.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gather.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherNames.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.gatherWithMapping.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.group.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"></resource>
@@ -439,8 +448,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
@@ -450,7 +457,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.update.html"></resource>

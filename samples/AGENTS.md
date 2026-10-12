@@ -12,6 +12,12 @@ docs under `docs/StardustDocs/topics/`.
 **New documentation samples belong here**, not in `:core`. (Sample migration into this module is in progress —
 issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`korro` tasks that will be removed.)
 
+**Moving a page's samples here means deleting the `:core` originals in the same PR** (usually from
+`core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Access.kt`). Nothing reports a `:core` sample
+that no page imports any more, so the orphan stays, and the next person who edits it sees no change on the
+page. Before the PR, check that every function the page imported from `:core` is either deleted or still used by
+another page.
+
 A test that asserts what a page prints belongs here too, not in `:core`: the dependency runs
 `:samples` → `:core` (`build.gradle.kts` takes `:core` through its jars; `core/build.gradle.kts` has no
 dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` and has to copy the fixture

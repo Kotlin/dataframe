@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -17,9 +18,11 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.sql.Time
 import java.sql.Timestamp
 import java.util.Date
 import kotlin.reflect.typeOf
@@ -31,78 +34,80 @@ private const val URL = "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE
 @DataSchema
 interface Table1MySql {
     val id: Int
-    val bitCol: Boolean
+    val bitcol: Boolean
     val tinyintcol: Int
     val smallintcol: Int
     val mediumintcol: Int
     val mediumintunsignedcol: Int
     val integercol: Int
     val intcol: Int
-    val integerunsignedcol: Long
+    val integerunsignedcol: Int
     val bigintcol: Long
-    val floatcol: Float
+    val floatcol: Double
     val doublecol: Double
     val decimalcol: BigDecimal
-    val datecol: String
-    val datetimecol: String
-    val timestampcol: String
-    val timecol: String
-    val yearcol: String
+    val datecol: Date
+    val datetimecol: Instant
+    val timestampcol: Instant
+    val timecol: Time
+    val yearcol: Int
     val varcharcol: String
     val charcol: String
     val binarycol: ByteArray
     val varbinarycol: ByteArray
-    val tinyblobcol: ByteArray
-    val blobcol: ByteArray
-    val mediumblobcol: ByteArray
-    val longblobcol: ByteArray
+    val tinyblobcol: Blob
+    val blobcol: Blob
+    val mediumblobcol: Blob
+    val longblobcol: Blob
     val textcol: String
     val mediumtextcol: String
     val longtextcol: String
-    val enumcol: String
-    val setcol: Char
+    val enumcol: Any
+    val setcol: String? // no such column in the table yet: read as nulls
+    val data: ByteArray
 }
 
 @DataSchema
 interface Table2MySql {
     val id: Int
-    val bitcol: Boolean?
-    val tinyintcol: Int?
-    val smallintcol: Int?
-    val mediumintcol: Int?
-    val mediumintUnsignedcol: Int?
-    val integercol: Int?
-    val intcol: Int?
-    val integerUnsignedcol: Long?
-    val bigintcol: Long?
-    val floatcol: Float?
-    val doublecol: Double?
-    val decimalcol: Double?
-    val datecol: String?
-    val datetimecol: String?
-    val timestampcol: String?
-    val timecol: String?
-    val yearcol: String?
-    val varcharcol: String?
-    val charcol: String?
-    val binarycol: ByteArray?
-    val varbinarycol: ByteArray?
-    val tinyblobcol: ByteArray?
-    val blobcol: ByteArray?
-    val mediumblobcol: ByteArray?
-    val longblobcol: ByteArray?
+    val bitcol: Boolean
+    val tinyintcol: Int
+    val smallintcol: Int
+    val mediumintcol: Int
+    val mediumintunsignedcol: Int
+    val integercol: Int
+    val intcol: Int
+    val integerunsignedcol: Int
+    val bigintcol: Long
+    val floatcol: Double
+    val doublecol: Double
+    val decimalcol: BigDecimal
+    val datecol: Date
+    val datetimecol: Instant
+    val timestampcol: Instant
+    val timecol: Time
+    val yearcol: Int
+    val varcharcol: String
+    val charcol: String
+    val binarycol: ByteArray
+    val varbinarycol: ByteArray
+    val tinyblobcol: Blob
+    val blobcol: Blob
+    val mediumblobcol: Blob
+    val longblobcol: Blob
     val textcol: String?
     val mediumtextcol: String?
-    val longtextcol: String?
-    val enumcol: String?
-    val setcol: Char?
-    val jsoncol: String?
+    val longtextcol: String
+    val enumcol: Any
+    val setcol: String? // no such column in the table yet: read as nulls
+    val jsoncol: String? // no such column in the table yet: read as nulls
+    val data: ByteArray
 }
 
 @DataSchema
 interface Table3MySql {
     val id: Int
-    val enumcol: String
+    val enumcol: Any
 }
 
 class MySqlH2Test {
@@ -302,7 +307,7 @@ class MySqlH2Test {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>(verify = true)
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][26] shouldBe "textValue1"
 
@@ -319,7 +324,7 @@ class MySqlH2Test {
         schema.columns["longblobcol"]!!.type shouldBe typeOf<java.sql.Blob>()
         schema.columns["tinyblobcol"]!!.type shouldBe typeOf<java.sql.Blob>()
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>(verify = true)
         val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][26] shouldBe null
 
@@ -340,7 +345,7 @@ class MySqlH2Test {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>(verify = true)
         val result = df.filter { "id"<Int>() == 1 }
         result[0][1] shouldBe "Value1"
 
@@ -353,14 +358,14 @@ class MySqlH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MySql>()
+        val table1Df = dataframes[0].cast<Table1MySql>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { "integercol"<Int>() > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
 
-        val table2Df = dataframes[1].cast<Table2MySql>()
+        val table2Df = dataframes[1].cast<Table2MySql>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
@@ -372,7 +377,7 @@ class MySqlH2Test {
 
     @Test
     fun `reading numeric types`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>(verify = true)
 
         val result = df1.select("tinyintcol").add("tinyintcol2") { "tinyintcol"<Int>() }
 
@@ -423,5 +428,10 @@ class MySqlH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 }

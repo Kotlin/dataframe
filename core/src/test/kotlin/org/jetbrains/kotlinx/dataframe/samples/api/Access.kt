@@ -2,10 +2,8 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNaNs
@@ -26,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
 import org.jetbrains.kotlinx.dataframe.api.takeWhile
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -197,57 +194,6 @@ class Access : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun byColumn_strings() {
-        // SampleStart
-        df["name"][0]
-        df["name", "age"][3, 5, 6]
-        // SampleEnd
-        // TODO: df["age"][2..4]
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byColumn_properties() {
-        // SampleStart
-        df.name[0]
-        df.select { name and age }[3, 5, 6]
-        df.age[2..4]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byRow_strings() {
-        // SampleStart
-        df[0]["name"]
-        df[3, 5, 6]["name", "age"]
-        df[3..5]["age"]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun byRow_properties() {
-        // SampleStart
-        df[0].name
-        df[3, 5, 6].select { name and age }
-        df[3..5].age
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun iterableApi() {
-        // SampleStart
-        df.forEach { println(it) }
-        df.take(5)
-        df.drop(2)
-        df.chunked(10)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun distinct() {
         // SampleStart
         df.distinct()
@@ -291,68 +237,6 @@ class Access : TestBase() {
         df.distinctBy("age", "name")
         // same as
         df.groupBy("age", "name").mapToRows { group.first() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forRows_properties() {
-        // SampleStart
-        for (row in df) {
-            println(row.age)
-        }
-
-        df.forEach {
-            println(it.age)
-        }
-
-        df.rows().forEach {
-            println(it.age)
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forRows_strings() {
-        // SampleStart
-        for (row in df) {
-            println(row["age"])
-        }
-
-        df.forEach {
-            println(it["age"])
-        }
-
-        df.rows().forEach {
-            println(it["age"])
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forColumn() {
-        // SampleStart
-        df.columns().forEach {
-            println(it.name())
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun forCells() {
-        // SampleStart
-        // from top to bottom, then from left to right
-        df.values().forEach {
-            println(it)
-        }
-
-        // from left to right, then from top to bottom
-        df.values(byRows = true).forEach {
-            println(it)
-        }
         // SampleEnd
     }
 

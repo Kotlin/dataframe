@@ -34,6 +34,9 @@ public interface DocumentationUrls {
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     public typealias CompilerPlugin = Nothing
 
+    /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
+    public typealias Packaging = Nothing
+
     public interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         public typealias RowExpressions = Nothing
@@ -107,6 +110,15 @@ public interface DocumentationUrls {
     /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
     public typealias DistinctBy = Nothing
 
+    /** [See `duplicateRows` on the documentation website.]({@include [Url]}/duplicate.html#duplicaterows) */
+    public typealias DuplicateRows = Nothing
+
+    /** [See `duplicate` on a DataRow on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-datarow) */
+    public typealias DuplicateOnDataRow = Nothing
+
+    /** [See `duplicate` on a DataFrame on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-dataframe) */
+    public typealias DuplicateOnDataFrame = Nothing
+
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
     public typealias Flatten = Nothing
 
@@ -118,6 +130,15 @@ public interface DocumentationUrls {
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
     public typealias Move = Nothing
+
+    /** [See `reorder` on the documentation website.]({@include [Url]}/reorder.html) */
+    public typealias Reorder = Nothing
+
+    /** [See `reorderColumnsBy` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsby) */
+    public typealias ReorderColumnsBy = Nothing
+
+    /** [See `reorderColumnsByName` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsbyname) */
+    public typealias ReorderColumnsByName = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
     public typealias Group = Nothing
@@ -188,6 +209,15 @@ public interface DocumentationUrls {
 
     /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
     public typealias AsIterable = Nothing
+
+    /** [See iterating on the documentation website.]({@include [Url]}/iterate.html) */
+    public typealias Iterate = Nothing
+
+    /** [See `forEach` on a `DataColumn` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-datacolumn) */
+    public typealias IterateOnColumn = Nothing
+
+    /** [See `forEach` on a `GroupBy` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-groupby) */
+    public typealias IterateOnGroupBy = Nothing
 
     /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
     public typealias AsSequenceCol = Nothing

@@ -3,7 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io.db
 /**
  * Represents a column in a database table to keep all required meta-information.
  *
- * @property [name] the name of the column.
+ * @property [name] the name of the DataFrame column: the SQL `AS` alias, or the column name when there is
+ *   no alias, made unique within the result (see [<code>DbType.getTableColumnsMetadata</code>][DbType.getTableColumnsMetadata]).
  * @property [sqlTypeName] the SQL data type of the column.
  * @property [jdbcType] the JDBC data type of the column produced from [<code>java.sql.Types</code>][java.sql.Types].
  * @property [size] the declared width of the column, as reported by
@@ -54,7 +55,7 @@ public class TableColumnMetadata(
     /**
      * Creates a copy of the current `TableColumnMetadata` instance with optionally modified attributes.
      *
-     * @param name The name of the table column. Defaults to the current instance's `name`.
+     * @param name The name of the DataFrame column. Defaults to the current instance's `name`.
      * @param sqlTypeName The SQL type name of the column. Defaults to the current instance's `sqlTypeName`.
      * @param jdbcType The JDBC type of the column, represented as an integer. Defaults to the current instance's `jdbcType`.
      * @param size The size of the column. Defaults to the current instance's `size`.

@@ -298,6 +298,10 @@ you can delegate the creation of the connection to `DbConnectionConfig`.
 These functions execute an SQL query on the database and convert the result into a [`DataFrame`](DataFrame.md) object. 
 If a limit is provided, only that many rows will be returned from the result.
 
+A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+gives `CUSTOMER_ID` for this unquoted alias.
+
 **readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Execute a specific SQL query on the SQL database and retrieve the resulting data as an `AnyFrame`.

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io.local
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -23,15 +24,19 @@ private const val PASSWORD = "pass"
 @DataSchema
 interface ActorKDF {
     val id: Int
-    val firstName: String?
-    val lastName: String?
-    val gender: String?
+
+    @ColumnName("first_name")
+    val firstName: String
+
+    @ColumnName("last_name")
+    val lastName: String
+    val gender: String
 }
 
 @DataSchema
 interface RankedMoviesWithGenres {
-    val name: String?
-    val year: Int?
+    val name: String
+    val year: Int
     val rank: Float?
     val genres: String?
 }
@@ -50,7 +55,7 @@ class ImdbTestTest {
         val tableName = "actors"
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, tableName, 100).cast<ActorKDF>()
+            val df = DataFrame.readSqlTable(connection, tableName, 100).cast<ActorKDF>(verify = true)
             val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
@@ -71,7 +76,7 @@ class ImdbTestTest {
         val imdbTableName = "imdb.actors"
 
         DriverManager.getConnection(URL2, props).use { connection ->
-            val df = DataFrame.readSqlTable(connection, imdbTableName, 100).cast<ActorKDF>()
+            val df = DataFrame.readSqlTable(connection, imdbTableName, 100).cast<ActorKDF>(verify = true)
             val result = df.filter { "id"<Int>() in 11..19 }
             result[0][1] shouldBe "Víctor"
 
@@ -103,7 +108,7 @@ class ImdbTestTest {
         // for gradle or as classes under the hood in KNB
 
         DriverManager.getConnection(URL, props).use { connection ->
-            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>()
+            val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<RankedMoviesWithGenres>(verify = true)
             val result =
                 df.filter { "year"<Int?>()?.let { it > 2000 } ?: false }
             result[0][1] shouldBe 2003
