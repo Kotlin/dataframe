@@ -6,7 +6,7 @@ This folder holds the source code of our documentation website:
 Before writing or updating a page, read the [Documentation Guidelines](../DOCUMENTATION_GUIDELINES.md):
 they describe the topic structure, samples, and the standard writing workflow.
 When doing it with a coding agent, use the
-[`operation-website-documentation`](../.claude/skills/operation-website-documentation/SKILL.md) skill.
+[`operation-website-documentation`](../.agents/skills/operation-website-documentation/SKILL.md) skill.
 
 It's built using [Writerside](https://www.jetbrains.com/writerside/) and published
 by a [GitHub Action](../.github/workflows/main.yml).
