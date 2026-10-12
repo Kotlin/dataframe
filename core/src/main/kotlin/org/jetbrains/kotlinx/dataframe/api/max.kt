@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
@@ -245,10 +246,10 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * @return The first element for which [selector] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
+): T = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
 
 /**
  * Returns the first element of this [DataColumn] for which the given [selector]
@@ -280,10 +281,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  * @return The first element for which [selector] returns the maximum value,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.max<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? = Aggregators.max.invoke(skipNaN).cast<R>().aggregateByOrNull(this, selector)
 
 /**
  * Returns the maximum of the values that the given [selector] returns
@@ -318,10 +319,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * @return The maximum of the values [selector] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = maxOfOrNull(skipNaN, selector).suggestIfNull("maxOf")
+): R = maxOfOrNull(skipNaN, selector).suggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [selector] returns
@@ -357,10 +358,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * @return The maximum of the values [selector] returns,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNull(
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R? = Aggregators.max<R>(skipNaN).aggregateOf(this, selector)
+): R? = Aggregators.max.invoke(skipNaN).cast<R>().aggregateOf(this, selector)
 
 // endregion
 
@@ -603,10 +604,10 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = maxOrNull(skipNaN, columns).suggestIfNull("max")
+): C = maxOrNull(skipNaN, columns).suggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [DataFrame].
@@ -647,17 +648,17 @@ public fun <T> DataFrame<T>.max(vararg columns: String, skipNaN: Boolean = skipN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [DataFrame],
@@ -695,10 +696,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C? = Aggregators.max<C>(skipNaN).aggregateAll(this, columns)
+): C? = Aggregators.max.invoke(skipNaN).cast<C>().aggregateAll(this, columns)
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [DataFrame],
@@ -741,14 +742,14 @@ public fun <T> DataFrame<T>.maxOrNull(vararg columns: String, skipNaN: Boolean =
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C? = maxOrNull(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): C? = maxOrNull(skipNaN) { columns.toColumnSet() }
@@ -790,10 +791,10 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * @return The maximum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = maxOfOrNull(skipNaN, expression).suggestIfNull("maxOf")
+): C = maxOfOrNull(skipNaN, expression).suggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [expression] returns
@@ -832,10 +833,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  * @return The maximum of the values [expression] returns,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C? = Aggregators.max<C>(skipNaN).aggregateOf(this, expression)
+): C? = Aggregators.max.invoke(skipNaN).cast<C>().aggregateOf(this, expression)
 
 /**
  * Returns the first row of this [DataFrame] for which the given [expression]
@@ -872,7 +873,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  * @return The first [DataRow] for which [expression] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T> = maxByOrNull(skipNaN, expression).suggestIfNull("maxBy")
@@ -914,14 +915,14 @@ public fun <T> DataFrame<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefa
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
@@ -957,10 +958,10 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * @return The first [DataRow] for which [expression] returns the maximum value,
  *   or `null` if there are no values to compare.
  */
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T>? = Aggregators.max<C>(skipNaN).aggregateByOrNull(this, expression)
+): DataRow<T>? = Aggregators.max.invoke(skipNaN).cast<C>().aggregateByOrNull(this, expression)
 
 /**
  * Returns the first row of this [DataFrame] that has the largest value in the column with
@@ -998,14 +999,14 @@ public fun <T> DataFrame<T>.maxByOrNull(column: String, skipNaN: Boolean = skipN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T>? = Aggregators.max<C>(skipNaN).aggregateByOrNull(this, column)
+): DataRow<T>? = Aggregators.max.invoke(skipNaN).cast<C>().aggregateByOrNull(this, column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = maxByOrNull(column.toColumnAccessor(), skipNaN)
@@ -1191,11 +1192,11 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  */
 @Refine
 @Interpretable("GroupByMax2")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
+public fun <T, C : Comparable<*>?> Grouped<T>.max(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C?>,
-): DataFrame<T> = Aggregators.max<C>(skipNaN).aggregateAll(this, name, columns)
+): DataFrame<T> = Aggregators.max.invoke(skipNaN).cast<C>().aggregateAll(this, name, columns)
 
 /**
  * Aggregates this [GroupBy] by computing a single maximum of all the values
@@ -1246,7 +1247,7 @@ public fun <T> Grouped<T>.max(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
+public fun <T, C : Comparable<*>?> Grouped<T>.max(
     vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -1254,7 +1255,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
+public fun <T, C : Comparable<*>?> Grouped<T>.max(
     vararg columns: KProperty<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -1299,11 +1300,11 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  */
 @Refine
 @Interpretable("GroupByMaxOf")
-public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
+public inline fun <T, reified C : Comparable<*>?> Grouped<T>.maxOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = Aggregators.max<C>(skipNaN).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.max.invoke(skipNaN).cast<C>().aggregateOf(this, name, expression)
 
 /**
  * Reduces each group of this [GroupBy] to the first row for which the given [rowExpression]
@@ -1338,14 +1339,14 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *   for which [rowExpression] returns the maximum value.
  */
 @Interpretable("GroupByReduceExpression")
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.maxBy(
+public inline fun <T, G, reified R : Comparable<*>?> GroupBy<T, G>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = reduce { maxByOrNull(column, skipNaN) }
@@ -1386,7 +1387,7 @@ public fun <T, G> GroupBy<T, G>.maxBy(column: String, skipNaN: Boolean = skipNaN
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = maxBy(column.toColumnAccessor(), skipNaN)
@@ -1573,10 +1574,10 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
  *   in the selected columns.
  */
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
+public fun <T, R : Comparable<*>?> Pivot<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
-): DataRow<T> = delegate { max(skipNaN, columns) }
+): DataRow<T> = delegate { maxFor(separate = false, skipNaN, columns) }
 
 /**
  * Aggregates this [Pivot] by computing a single maximum of all the values
@@ -1618,14 +1619,14 @@ public fun <T> Pivot<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDe
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
+public fun <T, R : Comparable<*>?> Pivot<T>.max(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = max(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
+public fun <T, R : Comparable<*>?> Pivot<T>.max(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = max(skipNaN) { columns.toColumnSet() }
@@ -1669,7 +1670,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A single [DataRow] with, per [pivot] group, the maximum of the expression's results.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): DataRow<T> = delegate { maxOf(skipNaN, rowExpression) }
@@ -1709,14 +1710,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * @return A [ReducedPivot] holding, per group,
  *   the first row where the [rowExpression] produced the maximum result.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxBy(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = reduce { maxByOrNull(column, skipNaN) }
@@ -1760,7 +1761,7 @@ public fun <T> Pivot<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = maxBy(column.toColumnAccessor(), skipNaN)
@@ -1953,10 +1954,10 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
-): DataFrame<T> = Aggregators.max<R>(skipNaN).aggregateAll(this, columns)
+): DataFrame<T> = Aggregators.max.invoke(skipNaN).cast<R>().aggregateAll(this, columns)
 
 /**
  * Aggregates this [PivotGroupBy] by computing a single maximum of all the values
@@ -2001,14 +2002,14 @@ public fun <T> PivotGroupBy<T>.max(vararg columns: String, skipNaN: Boolean = sk
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(
     vararg columns: ColumnReference<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(
     vararg columns: KProperty<R>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = max(skipNaN) { columns.toColumnSet() }
@@ -2053,7 +2054,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the maximum of the expression's results.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): DataFrame<T> = aggregate { maxOfOrNull(skipNaN, rowExpression) }
@@ -2094,14 +2095,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the maximum result.
  */
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { maxByOrNull(skipNaN, rowExpression) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = reduce { maxByOrNull(column, skipNaN) }
@@ -2146,7 +2147,7 @@ public fun <T> PivotGroupBy<T>.maxBy(column: String, skipNaN: Boolean = skipNaND
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = maxBy(column.toColumnAccessor(), skipNaN)
@@ -2163,19 +2164,19 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(): T = max(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(): T? = maxOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T & Any =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T =
     maxBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(noinline selector: (T) -> R): T? =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxByOrNull(noinline selector: (T) -> R): T? =
     maxByOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(crossinline selector: (T) -> R): R & Any =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxOf(crossinline selector: (T) -> R): R =
     maxOf(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNull(crossinline selector: (T) -> R): R? =
+public inline fun <T, reified R : Comparable<*>?> DataColumn<T>.maxOfOrNull(crossinline selector: (T) -> R): R? =
     maxOfOrNull(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2183,7 +2184,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(): T? =
     rowMaxOfOrNull<T>(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> DataRow<*>.rowMaxOf(): T & Any = rowMaxOf(skipNaN = skipNaNDefault)
+public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(): T = rowMaxOf(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.max(): DataRow<T> = max(skipNaN = skipNaNDefault)
@@ -2207,7 +2208,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(vararg columns: KProperty
     maxFor(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(columns: ColumnsSelector<T, C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(columns: ColumnsSelector<T, C>): C =
     max(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2216,16 +2217,16 @@ public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any> =
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(vararg columns: ColumnReference<C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(vararg columns: ColumnReference<C>): C =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(vararg columns: KProperty<C>): C & Any =
+public fun <T, C : Comparable<*>?> DataFrame<T>.max(vararg columns: KProperty<C>): C =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C>): C? =
     maxOrNull(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2234,26 +2235,25 @@ public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any>? 
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C>): C? =
     maxOrNull(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(vararg columns: KProperty<C>): C? =
+public fun <T, C : Comparable<*>?> DataFrame<T>.maxOrNull(vararg columns: KProperty<C>): C? =
     maxOrNull(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
-    crossinline expression: RowExpression<T, C>,
-): C & Any = maxOf(skipNaN = skipNaNDefault, expression = expression)
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxOf(crossinline expression: RowExpression<T, C>): C =
+    maxOf(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxOfOrNull(
     crossinline expression: RowExpression<T, C>,
 ): C? = maxOfOrNull(skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T> = maxBy(skipNaN = skipNaNDefault, expression = expression)
 
@@ -2262,16 +2262,16 @@ public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxBy(column, sk
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(column: ColumnReference<C>): DataRow<T> =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(column: ColumnReference<C>): DataRow<T> =
     maxBy(column, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(column: KProperty<C>): DataRow<T> =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxBy(column: KProperty<C>): DataRow<T> =
     maxBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T>? = maxByOrNull(skipNaN = skipNaNDefault, expression = expression)
 
@@ -2280,13 +2280,12 @@ public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? = maxByOrNu
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(
-    column: ColumnReference<C>,
-): DataRow<T>? = maxByOrNull(column, skipNaN = skipNaNDefault)
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(column: ColumnReference<C>): DataRow<T>? =
+    maxByOrNull(column, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull(column: KProperty<C>): DataRow<T>? =
+public inline fun <T, reified C : Comparable<*>?> DataFrame<T>.maxByOrNull(column: KProperty<C>): DataRow<T>? =
     maxByOrNull(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2311,7 +2310,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(vararg columns: KProperty<C
     maxFor(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
+public fun <T, C : Comparable<*>?> Grouped<T>.max(
     name: String? = null,
     columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> = max(name, skipNaN = skipNaNDefault, columns = columns)
@@ -2322,32 +2321,30 @@ public fun <T> Grouped<T>.max(vararg columns: String, name: String? = null): Dat
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
+public fun <T, C : Comparable<*>?> Grouped<T>.max(
     vararg columns: ColumnReference<C>,
     name: String? = null,
 ): DataFrame<T> = max(columns = columns, name = name, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
-    vararg columns: KProperty<C>,
-    name: String? = null,
-): DataFrame<T> = max(columns = columns, name = name, skipNaN = skipNaNDefault)
+public fun <T, C : Comparable<*>?> Grouped<T>.max(vararg columns: KProperty<C>, name: String? = null): DataFrame<T> =
+    max(columns = columns, name = name, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
+public inline fun <T, reified C : Comparable<*>?> Grouped<T>.maxOf(
     name: String? = null,
     crossinline expression: RowExpression<T, C>,
 ): DataFrame<T> = maxOf(name, skipNaN = skipNaNDefault, expression = expression)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.maxBy(
+public inline fun <T, G, reified R : Comparable<*>?> GroupBy<T, G>.maxBy(
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = maxBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.maxBy(
     column: ColumnReference<C>,
 ): ReducedGroupBy<T, G> = maxBy(column, skipNaN = skipNaNDefault)
 
@@ -2356,9 +2353,8 @@ public fun <T, G> GroupBy<T, G>.maxBy(column: String): ReducedGroupBy<T, G> = ma
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
-    column: KProperty<C>,
-): ReducedGroupBy<T, G> = maxBy(column, skipNaN = skipNaNDefault)
+public inline fun <T, G, reified C : Comparable<*>?> GroupBy<T, G>.maxBy(column: KProperty<C>): ReducedGroupBy<T, G> =
+    maxBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Pivot<T>.max(separate: Boolean = false): DataRow<T> = max(separate, skipNaN = skipNaNDefault)
@@ -2388,32 +2384,32 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
 ): DataRow<T> = maxFor(columns = columns, separate = separate, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(columns: ColumnsSelector<T, R>): DataRow<T> =
+public fun <T, R : Comparable<*>?> Pivot<T>.max(columns: ColumnsSelector<T, R>): DataRow<T> =
     max(skipNaN = skipNaNDefault, columns = columns)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(vararg columns: ColumnReference<R>): DataRow<T> =
+public fun <T, R : Comparable<*>?> Pivot<T>.max(vararg columns: ColumnReference<R>): DataRow<T> =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(vararg columns: KProperty<R>): DataRow<T> =
+public fun <T, R : Comparable<*>?> Pivot<T>.max(vararg columns: KProperty<R>): DataRow<T> =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.maxOf(
     crossinline rowExpression: RowExpression<T, R>,
 ): DataRow<T> = maxOf(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxBy(
+public inline fun <T, reified R : Comparable<*>?> Pivot<T>.maxBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = maxBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(column: ColumnReference<C>): ReducedPivot<T> =
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.maxBy(column: ColumnReference<C>): ReducedPivot<T> =
     maxBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2421,7 +2417,7 @@ public fun <T> Pivot<T>.maxBy(column: String): ReducedPivot<T> = maxBy(column, s
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(column: KProperty<C>): ReducedPivot<T> =
+public inline fun <T, reified C : Comparable<*>?> Pivot<T>.maxBy(column: KProperty<C>): ReducedPivot<T> =
     maxBy(column, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2452,7 +2448,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
 ): DataFrame<T> = maxFor(columns = columns, separate = separate, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(columns: ColumnsSelector<T, R>): DataFrame<T> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(columns: ColumnsSelector<T, R>): DataFrame<T> =
     max(skipNaN = skipNaNDefault, columns = columns)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -2460,27 +2456,27 @@ public fun <T> PivotGroupBy<T>.max(vararg columns: String): DataFrame<T> =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(vararg columns: ColumnReference<R>): DataFrame<T> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(vararg columns: ColumnReference<R>): DataFrame<T> =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(vararg columns: KProperty<R>): DataFrame<T> =
+public fun <T, R : Comparable<*>?> PivotGroupBy<T>.max(vararg columns: KProperty<R>): DataFrame<T> =
     max(columns = columns, skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.maxOf(
     crossinline rowExpression: RowExpression<T, R>,
 ): DataFrame<T> = maxOf(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
+public inline fun <T, reified R : Comparable<*>?> PivotGroupBy<T>.maxBy(
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = maxBy(skipNaN = skipNaNDefault, rowExpression = rowExpression)
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.maxBy(
     column: ColumnReference<C>,
 ): ReducedPivotGroupBy<T> = maxBy(column, skipNaN = skipNaNDefault)
 
@@ -2489,8 +2485,7 @@ public fun <T> PivotGroupBy<T>.maxBy(column: String): ReducedPivotGroupBy<T> = m
 
 @AccessApiOverload
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
-    column: KProperty<C>,
-): ReducedPivotGroupBy<T> = maxBy(column, skipNaN = skipNaNDefault)
+public inline fun <T, reified C : Comparable<*>?> PivotGroupBy<T>.maxBy(column: KProperty<C>): ReducedPivotGroupBy<T> =
+    maxBy(column, skipNaN = skipNaNDefault)
 
 // endregion
