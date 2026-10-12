@@ -82,10 +82,12 @@ Operation documentation topic must contain comprehensive information about the o
   or shortcut (`drop`/`dropNulls`) operations are placed on the same page.
 * All argument descriptions; if any argument is enum specific to this operation, 
 describe its possible values and how they affect the operation result.
-* Describe in detail any non-obvious behavior and edge cases (empty, containing null, etc.),
-  but avoid mentioning implementation details.
+* Describe in detail any non-obvious behavior and edge cases (empty, containing null, frame columns
+  and columng groups, etc.), but avoid mentioning implementation details.
+  For most important cases, add an example sample. 
 * Documentation on the website should be aligned with the operation KDoc. 
   The documentation on the website may contain more detailed information than in KDoc, but certainly not less!
+  Type parameters can be omitted if they are not used in the operation directly.
 * Topic should contain an actual code example (extracted from tests-samples with [Korro samples](#korro)) 
   with an explicit input and output (generated with [Sample Helper](#sample-helper)).
   See [Operation Examples](#operation-examples)
@@ -365,8 +367,8 @@ We want to migrate all samples to the new way of saving HTML samples using [Samp
 
 All samples should be placed as tests in the [:samples](/samples) module only!
 
-To migrate to new samples, replace remove all old Korro marks and samples, and replace 
-them with new samples wrote in `:samples` tests (with fresh Korro marks) 
+To migrate to new samples, remove all old Korro marks and samples, and replace 
+them with new samples written in `:samples` tests (with fresh Korro marks) 
 and outputs created using [Sample Helper](#sample-helper).
 
 ## Standard operation documentation writing workflow
@@ -388,7 +390,7 @@ and outputs created using [Sample Helper](#sample-helper).
    ```Markdown
    <inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
    ```
-4) Add the test file and topic file pathes to Korro config in the
+4) Add the test file and topic file paths to Korro config in the
    [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
 5) Run Gradle tasks of `:sample module`: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
    * It's very important to run `clean` **before** `build`, `test` and `korro`:
