@@ -52,6 +52,12 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
             )
     }
 
+    if (method is QuantileEstimationMethod.Interpolating) {
+        require(type.isPrimitiveNumber()) {
+            "Cannot calculate the $name for non-primitive numbers with estimation method $method."
+        }
+    }
+
     // propagate NaN to return if they are not to be skipped
     if (type.canBeNaN && !skipNaN && any { it.isNaN }) {
         // ensure that using a selecting quantile estimation method always returns the same type as the input
@@ -70,7 +76,7 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
 
     if (size == 1) {
         val single = list.single()
-        return if (type.isPrimitiveNumber()) (single as Number).toDouble() else single
+        return if (method is QuantileEstimationMethod.Interpolating) (single as Number).toDouble() else single
     }
 
     return when (method) {
@@ -78,9 +84,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
             method.quantile<T>(p, list as List<T>)
 
         is QuantileEstimationMethod.Interpolating -> {
-            require(type.isPrimitiveNumber()) {
-                "Cannot calculate the $name for non-primitive numbers with estimation method $method."
-            }
             @Suppress("UNCHECKED_CAST")
             val convertedList =
                 if (type == typeOf<Double>()) {
@@ -227,10 +230,12 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         private interface PieceWiseLinear : Interpolating {
             override fun quantile(p: Double, values: List<Double>): Double {
                 val h = oneBasedIndexOfQuantile(p, values.size)
-                return values.quickSelect(floor(h).toInt() - 1) + (h - floor(h)) * (
-                    values.quickSelect(ceil(h).toInt() - 1) -
-                        values.quickSelect(floor(h).toInt() - 1)
-                )
+                val lower = values.quickSelect(floor(h).toInt() - 1)
+                val fraction = h - floor(h)
+                if (fraction == 0.0) return lower
+                val upper = values.quickSelect(ceil(h).toInt() - 1)
+                if (lower.toBits() == upper.toBits()) return lower
+                return lower + fraction * (upper - lower)
             }
         }
     }
