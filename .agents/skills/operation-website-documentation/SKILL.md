@@ -111,13 +111,7 @@ Links that are easy to forget — check them explicitly:
 - Mentioning `ColumnSet` or other column resolvers? Link
   `[`ColumnSet`](ColumnSelectors.md#column-resolvers)`.
 
-Do **not** write meta-commentary about which overloads the operation does *not* have. For example, never
-write anything like:
-
-> This operation doesn't select columns, so it has neither string column names nor Columns Selection DSL
-> overloads: the whole row is available inside the comparator, and any of its columns can be used there.
-
-The reader does not need to be told what is absent. State what the operation does and show it.
+Write only about overloads that method have!
 
 ### 4. Write the samples
 
