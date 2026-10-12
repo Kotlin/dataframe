@@ -64,7 +64,7 @@ import kotlin.reflect.KProperty
  * Each join type has a corresponding shortcut function:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], and [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
- * See also [<code>joinWith</code>][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by matching row values condition.
+ * See also [<code>joinWith</code>][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by a condition that matches row values.
  *
  *
  *
@@ -156,7 +156,7 @@ public fun <A, B> DataFrame<A>.join(
  * Each join type has a corresponding shortcut function:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], and [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
- * See also [<code>joinWith</code>][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by matching row values condition.
+ * See also [<code>joinWith</code>][org.jetbrains.kotlinx.dataframe.api.joinWith], which performs a join by a condition that matches row values.
  *
  *
  *
@@ -204,7 +204,7 @@ public fun <A, B> DataFrame<A>.join(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -271,7 +271,7 @@ public fun <A, B> DataFrame<A>.innerJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -316,7 +316,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -383,7 +383,7 @@ public fun <A, B> DataFrame<A>.leftJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -428,7 +428,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -495,7 +495,7 @@ public fun <A, B> DataFrame<A>.rightJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -540,7 +540,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -607,7 +607,7 @@ public fun <A, B> DataFrame<A>.fullJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -652,7 +652,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -719,7 +719,7 @@ public fun <A, B> DataFrame<A>.filterJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin], [<code>excludeJoin</code>][org.jetbrains.kotlinx.dataframe.api.excludeJoin].
  *
  *
@@ -764,7 +764,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin].
  *
  *
@@ -831,7 +831,7 @@ public fun <A, B> DataFrame<A>.excludeJoin(
  * [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as other shortcuts with each of join types:
+ * See also general [<code>join</code>][org.jetbrains.kotlinx.dataframe.api.join], as well as the shortcuts for the other join types:
  * [<code>innerJoin</code>][org.jetbrains.kotlinx.dataframe.api.innerJoin], [<code>leftJoin</code>][org.jetbrains.kotlinx.dataframe.api.leftJoin], [<code>rightJoin</code>][org.jetbrains.kotlinx.dataframe.api.rightJoin], [<code>filterJoin</code>][org.jetbrains.kotlinx.dataframe.api.filterJoin], [<code>fullJoin</code>][org.jetbrains.kotlinx.dataframe.api.fullJoin].
  *
  *

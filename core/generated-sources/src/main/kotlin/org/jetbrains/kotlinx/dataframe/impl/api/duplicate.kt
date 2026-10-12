@@ -11,21 +11,33 @@ import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toFrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
-internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> =
-    columns()
+private fun requirePositiveDuplicates(n: Int) {
+    require(n > 0) { "Number of duplicates must be greater than 0, but was $n" }
+}
+
+internal fun <T> DataFrame<T>.duplicateImpl(n: Int): FrameColumn<T> {
+    requirePositiveDuplicates(n)
+    return List(n) { this }.toFrameColumn()
+}
+
+internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int): DataFrame<T> {
+    requirePositiveDuplicates(n)
+    return columns()
         .map { it.duplicateValuesImpl(n) }
         .toDataFrame()
         .cast()
+}
 
-internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
-    require(n > 0) { "Number of duplicates must be greater than 0, but was $n" }
-    return when (this) {
+internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> =
+    when (this) {
         is ColumnGroup<*> ->
             DataColumn
                 .createColumnGroup(
@@ -42,7 +54,6 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
             }
         }
     }.cast()
-}
 
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterable<Int>): DataColumn<T> =
     when (this) {
@@ -73,14 +84,17 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterab
     }.cast()
 
 @PublishedApi
-internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<Int>): DataFrame<T> =
-    columns()
+internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<Int>): DataFrame<T> {
+    requirePositiveDuplicates(n)
+    return columns()
         .map { it.duplicateValuesImpl(n, indicesSorted) }
         .toDataFrame()
         .cast()
+}
 
-internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
-    owner.columns().map { col ->
+internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> {
+    requirePositiveDuplicates(n)
+    return owner.columns().map { col ->
         when (col) {
             is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicateImpl(n))
 
@@ -98,3 +112,4 @@ internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
             }
         }
     }.toDataFrame().cast()
+}

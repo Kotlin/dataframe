@@ -35,8 +35,10 @@ types.** `sqlTypeName` in the driver's metadata is byte-for-byte what you wrote 
 INTEGER affinity, but each keeps its literal declared name. There is no separate alias
 table — every declared name is resolved directly via the affinity tables below.
 
-Because SQLite is dynamically typed, the Xerial JDBC driver reports `getColumnClassName`
-based on the **actual stored value in the current row**, not on the declared column type. The
+Because SQLite is dynamically typed, the Xerial JDBC driver reports both `getColumnClassName`
+and the JDBC type of a column based on the **actual stored value in the first row**, not on the
+declared column type: a `BIGINT` column whose first row holds `'abc'` is reported as
+`Types.VARCHAR`. Only the declared type name stays the same whatever the rows hold. The
 raw values returned by `rs.getObject(int)` therefore fall into a fixed set — driver produces
 exactly one of `Integer` / `Long` / `Double` / `String` / `byte[]` / `null`, chosen per row
 from the storage class of that value.
@@ -57,24 +59,40 @@ DataFrame's SQLite handler resolves each column in the following order:
    String) to an actual Kotlin `Boolean`.
 4. **`DECIMAL` / `NUMERIC`** — no canonical numeric type; DataFrame trusts the driver-reported
    class of each column (`Int` / `Long` / `Double` / `ByteArray` / `String`).
-5. **Everything else** falls through to the base `DbType` end-to-end mapping. Note that
+5. **`INTEGER` affinity** — detected by a substring match on the declared type name (`INT`). The
+   column type is always `Long`, see [INTEGER affinity](#integer-affinity).
+6. **Everything else** falls through to the base `DbType` end-to-end mapping. Note that
    DataFrame may expect a special type for some SQL type names (for example, `UUID`), while the Xerial driver only provides primitives.
    Consider using [custom converters](#custom-converters) to handle these cases.
 
-Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
+Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Long?` instead of `Long`).
 
 ## INTEGER affinity
 
 Declared type contains `INT`.
 
+SQLite stores every integer as a 64-bit value, whatever width the declared type names, so every
+column with `INTEGER` affinity is read as `Long` — including `INT` and `TINYINT`. Each value is
+widened from the `Integer` or `Long` the driver returns, so the column type does not depend on
+which rows the table holds.
+
 | Declared type                        | DataFrame column type | Notes                                                         |
 |--------------------------------------|-----------------------|---------------------------------------------------------------|
-| `INT`                                | `Int`                 |                                                               |
-| `INTEGER`                            | `Int`                 | Also used implicitly for `INTEGER PRIMARY KEY` (rowid alias). |
-| `TINYINT`                            | `Int`                 |                                                               |
-| `SMALLINT`, `INT2`                   | `Int`                 |                                                               |
-| `MEDIUMINT`                          | `Int`                 |                                                               |
-| `BIGINT`, `INT8`, `UNSIGNED BIG INT` | `Long`                | Xerial reports `Types.BIGINT`; default map returns `Long`.    |
+| `INT`                                | `Long`                |                                                               |
+| `INTEGER`                            | `Long`                | Also used implicitly for `INTEGER PRIMARY KEY` (rowid alias). |
+| `TINYINT`                            | `Long`                |                                                               |
+| `SMALLINT`, `INT2`                   | `Long`                |                                                               |
+| `MEDIUMINT`                          | `Long`                |                                                               |
+| `BIGINT`, `INT8`, `UNSIGNED BIG INT` | `Long`                |                                                               |
+
+A `REAL` or `TEXT` value stored in such a column is not converted, because it cannot become a
+`Long` without losing data. Reading the table throws instead, for example:
+
+```text
+SQLite: cannot convert value of type java.lang.Double to Long from column 'bigintCol' (declared 'BIGINT'). Register a custom converter for this type or column via `Sqlite.withCustomConverters { }` to override the built-in mapping.
+```
+
+To read such a column anyway, register a [custom converter](#custom-converters) for it.
 
 ## REAL affinity
 
@@ -150,7 +168,7 @@ val sqlite = Sqlite.withCustomConverters {
 |------------------|---------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------|
 | `BOOLEAN`, `BIT` | INTEGER (0/1) | `Boolean`             | The preprocessor treats non-zero as `true`, zero as `false`.                                                                   |
 | `BOOLEAN`, `BIT` | REAL          | `Boolean`             | Same convention (non-zero → `true`).                                                                                           |
-| `BOOLEAN`, `BIT` | TEXT          | `Boolean`             | Case-insensitively accepts `true`/`1`/`yes`/`y`/`t` → `true` and `false`/`0`/`no`/`n`/`f` → `false`. Unrecognised text throws. |
+| `BOOLEAN`, `BIT` | TEXT          | `Boolean`             | Case-insensitively accepts `true`/`1`/`yes`/`y`/`t` → `true` and `false`/`0`/`no`/`n`/`f` → `false`. Unrecognized text throws. |
 
 `BOOL`/`BIT` substring in the declared name is also caught (e.g. columns declared `IS_ACTIVE_BOOL`).
 
@@ -165,7 +183,7 @@ value as-is (`Int`, `Long`, or `Double` depending on how each row was inserted).
 | `NUMERIC`         | REAL          | `Double`                |                                                                                                                                                                       |
 | `DECIMAL(P,S)`    | REAL          | `Double`                |                                                                                                                                                                       |
 | `DECIMAL(P,S)`    | INTEGER       | `Int` / `Long`          |                                                                                                                                                                       |
-| unrecognised type | any           | depends on stored value | E.g. a text value in a `CUSTOM_TYPE` column is reported as `Types.VARCHAR` and read as `String`. Use a [custom converter](#custom-converters) to pin a specific type. |
+| unrecognized type | any           | depends on stored value | E.g. a text value in a `CUSTOM_TYPE` column is reported as `Types.VARCHAR` and read as `String`. Use a [custom converter](#custom-converters) to pin a specific type. |
 
 Sometimes, a driver may return mixed `Int` and `Long` values for the same column,
 which can break column type detection.

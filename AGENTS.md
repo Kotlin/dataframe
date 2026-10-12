@@ -76,7 +76,8 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; `changeJarTask` makes `sources.jar` use
   those.
 - **Don't hand-edit generated sources, and don't grep/crawl the tree.** Every module built with KoDEx (`core`,
-  `dataframe-csv`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked `generated-sources/` copy,
+  `dataframe-csv`, `dataframe-json`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked
+  `generated-sources/` copy,
   plus checked-in accessors under `**/src/generated-dataschema-accessors/` and generated **HTML** under
   `docs/StardustDocs/resources/`. In `generated-sources/` the **implementation and public API are the same** as the
   hand-written `src/main/kotlin/…` — KoDEx only expands the KDoc and strips the doc-only fragments (declarations
@@ -135,7 +136,9 @@ into the `:samples` module is in progress; new documentation samples belong ther
 ## Constraints
 
 - Base all PRs on `master`; the current checked-out branch may be a feature branch (`git status` at session start).
-- Bug fixes require a reproducing test; new public APIs require docs + tests.
+- Bug fixes require a reproducing test; new public APIs require docs + tests. A change in behaviour that users
+  can observe also requires docs: the operation's website page and the KDoc of the public function a user calls,
+  not only the KDoc of an internal function or an extension point.
 - Public API is guarded by **binary-compatibility-validator** in every publishable module — when you change public
   signatures, run the `apiDump`/`apiCheck` Gradle tasks and commit the module's updated `api/*.api` dump.
 - DB tests in `dataframe-jdbc` are structured to run against either Dockerized or locally installed DBMS

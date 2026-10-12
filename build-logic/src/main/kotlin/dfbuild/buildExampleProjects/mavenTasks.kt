@@ -39,6 +39,11 @@ internal fun Project.setupMavenSyncVersionsTask(
         val sourceEditorConfig = file(".editorconfig")
 
         doLast {
+            // make mvnw executable
+            folder
+                .listFiles { it.nameWithoutExtension == "mvnw" }
+                ?.forEach { it.setExecutable(true) }
+
             // overwrite versions in pom.xml <properties>
             val pomFile = folder.resolve("pom.xml")
             val versionRegex = "( +)<([a-zA-Z0-9-]+)\\.version>[^<]+</([a-zA-Z0-9-]+).version>".toRegex()

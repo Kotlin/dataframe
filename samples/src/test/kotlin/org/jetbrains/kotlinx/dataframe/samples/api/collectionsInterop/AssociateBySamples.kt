@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api.collectionsInterop
 
 import org.jetbrains.kotlinx.dataframe.api.associateBy
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
@@ -23,6 +24,17 @@ class AssociateBySamples : DataFrameSampleHelper("associateBy", "api/collections
     fun notebook_test_associateBy_2() {
         // SampleStart
         df.associateBy { "${name.firstName} ${name.lastName}" }
-        // SampleEnd
+            // SampleEnd
+            .entries.joinToString(",\n  ", "{\n  ", "\n}") { "${it.key}: ${it.value}" }
+            .saveTextSample()
+    }
+
+    @Test
+    fun notebook_test_associateBy_3() {
+        // SampleStart
+        df.associateBy { city }
+            // SampleEnd
+            .entries.joinToString(",\n  ", "{\n  ", "\n}") { "${it.key}: ${it.value}" }
+            .saveTextSample()
     }
 }

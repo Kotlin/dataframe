@@ -61,7 +61,7 @@ val df = dataFrameOf(
 
 <!---END-->
 
-Returns a [`DataFrame`](DataFrame.md) with given column names and values.
+Returns a [`DataFrame`](DataFrame.md) with the given column names and values.
 
 <!---FUN createDataFrameOf-->
 
@@ -300,6 +300,8 @@ val df = students.toDataFrame {
 
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.readDataFrameFromDeepObjectWithExclude.html" width="100%"/>
 <!---END-->
+
+To do the same for a column inside an existing dataframe, use [`unfold`](unfold.md).
 
 ### DynamicDataFrameBuilder
 

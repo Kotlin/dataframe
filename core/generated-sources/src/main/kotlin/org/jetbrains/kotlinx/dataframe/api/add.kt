@@ -146,13 +146,14 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<DataFrame<*>>): DataFram
 public interface AddDataRow<out T> : DataRow<T> {
 
     /**
-     * Returns a new value that was already computed for some preceding row during current [<code>add</code>][add] or [<code>update</code>][update] column operation.
+     * Returns a new value that was already computed for some preceding row
+     * during the current [<code>add</code>][add] or [<code>update</code>][update] column operation.
      *
-     * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
+     * Can be used to compute a series of values with recurrence relations, e.g. fibonacci.
      *
      * For more information: [See `add` on the documentation website.](https://kotlin.github.io/dataframe/add.html)
      *
-     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
+     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have a new value yet
      */
     public fun <C> DataRow<*>.newValue(): C
 }

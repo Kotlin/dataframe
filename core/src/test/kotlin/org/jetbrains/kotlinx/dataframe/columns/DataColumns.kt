@@ -24,6 +24,9 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 class DataColumns : BaseTest() {
+
+    private val debugChecksEnabled: Boolean = BuildConfig::class.java.getField("DEBUG").getBoolean(null)
+
     @Test
     fun `create column with platform type from Api`() {
         val df1 = listOf(1, 2, 3).toDataFrame {
@@ -48,7 +51,7 @@ class DataColumns : BaseTest() {
 
     @Test
     fun `allow no nulls in frame columns`() {
-        if (BuildConfig.DEBUG) {
+        if (debugChecksEnabled) {
             shouldThrow<IllegalArgumentException> {
                 DataColumn.createFrameColumn(
                     name = "",

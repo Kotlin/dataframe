@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
+        alias(kodex)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -30,6 +31,7 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.commonTestUtils)
 }
 
 tasks.withType<KotlinCompile> {

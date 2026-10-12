@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
  *
  * @param name name of the generated interface
  * @param path URL or relative path to data.
- * If a path starts with protocol (http, https, ftp, jdbc), it's considered a URL.
+ * If a path starts with a protocol (http, https, ftp, jdbc), it's considered a URL.
  * Otherwise, it's treated as a relative path.
  * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
  * You can configure it by passing `dataframe.resolutionDir` option to preprocessor,

@@ -300,8 +300,8 @@ val fullNameColumn: DataColumn<String> = dfRepository.full_name
 
 But most importantly, you can use these properties in various operations!
 
-> In a notebook, you don't need to specify schema manually, but 
-> but you need to have **run a cell** containing a `DataFrame` variable 
+> In a notebook, you don't need to specify the schema manually, but 
+> you need to have **run a cell** containing a `DataFrame` variable 
 > to generate extension properties for it.
 > They can be used from the **next** cell onwards.
 > {style="warning"}

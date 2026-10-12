@@ -87,11 +87,11 @@ Specify schema with preferred method and execute the `assemble` task.
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-`@ImportDataSchema` annotation must be above package directive.
+The `@ImportDataSchema` annotation must be above the package directive.
 You can import schemas from a URL or from the relative path of a file.
-Relative path by default is resolved to the project root directory.
-You can configure it by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir`
-option to preprocessor.
+By default, a relative path is resolved against the project root directory.
+You can configure it by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) the `dataframe.resolutionDir`
+option to the preprocessor.
 For example:
 
 ```kotlin

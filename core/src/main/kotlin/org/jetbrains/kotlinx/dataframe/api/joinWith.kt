@@ -14,11 +14,11 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinWithImpl
  * A [JoinExpression] defines the matching condition between [rows][DataRow] of the two [DataFrame]s.
  * It provides access to row values from both the left and right [DataFrame]s
  * and expects a [Boolean] result indicating whether the rows match.
- * All combinations of rows from the left- and right [DataFrame] that satisfies
+ * All combinations of rows from the left and right [DataFrame] that satisfy
  * this condition are matched.
  *
  * This method is useful when rows should be matched based on custom logic
- * rather than simple values equality.
+ * rather than simple value equality.
  *
  * Creates a new [DataFrame] by combining [rows][DataRow]
  * from both inputs according to the [\joinExpression] matching rule.

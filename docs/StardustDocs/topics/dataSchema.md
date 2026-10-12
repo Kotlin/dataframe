@@ -63,7 +63,7 @@ df.rename { firstName }.into("name")
 
 ## Data Class
 
-DataSchema can be a top-level data class, in which case two additional API become available
+DataSchema can be a top-level data class, in which case two additional APIs become available
 
 ```kotlin
 @DataSchema
@@ -140,7 +140,7 @@ Nested structure can be a JSON that you read from a file.
 ]
 ```
 
-You get dataframe with this schema
+You get a dataframe with this schema
 
 ```text
 id: String

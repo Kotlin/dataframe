@@ -114,7 +114,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  *   (if present), else, this manually sets the column widths.
  *   The number of widths should match the number of columns.
  * @param parserOptions Optional [<code>parsing options</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions] for columns initially read as [<code>String</code>][String].
- *   Default, `null`.
+ *   Default: `null`.
  *
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *

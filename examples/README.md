@@ -5,6 +5,8 @@
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
 * [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example) IDEA project with a
   [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example. 
+* [Kotlin Toolchain example](projects/kotlin-dataframe-plugin-kotlin-toolchain-example) IDEA project with a
+  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
 * [android example](projects/android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
 Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
 * [movies](projects/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task

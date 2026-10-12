@@ -14,6 +14,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs.InputValuesSnippet
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -81,11 +85,54 @@ internal interface MaxDocs : CommonMinMaxDocs {
      * @include [SelectingColumns] {@include [SetMaxForOperationArg]}
      */
     typealias MaxForSelectingOptions = Nothing
+
+    /** @include [CommonStatisticsDocs.ColumnGroupsIgnoredSnippet] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ColumnGroupsIgnoredSnippet = Nothing
+
+    /** @include [CommonStatisticsDocs.ColumnsSelectorParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ColumnsSelectorParam = Nothing
+
+    /** @include [CommonStatisticsDocs.AggregateColumnsSelectorParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias AggregateColumnsSelectorParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ColumnNamesParam = Nothing
+
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]}
+     *   The values in these columns must be mutually comparable, else an [IllegalStateException] is thrown.
+     */
+    @ExcludeFromSources
+    typealias ComparableColumnNamesParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ExpressionParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ExpressionParam = Nothing
+
+    /** @include [CommonStatisticsDocs.RowValuesTypeParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias RowValuesTypeParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ResultColumnNameParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ResultColumnNameParam = Nothing
+
+    /** @include [CommonStatisticsDocs.ExpressionResultColumnNameParam] {@include [SetMaxStatisticArgs]} */
+    @ExcludeFromSources
+    typealias ExpressionResultColumnNameParam = Nothing
 }
 
 /** [The Max Operation][MaxDocs] */
 @ExcludeFromSources
 private typealias MaxDocsLink = Nothing
+
+/** {@set [STATISTIC] maximum}{@set [STATISTIC_VERB] compare}{@set [STATISTIC_COLUMN_NAME] `"max"`} */
+@ExcludeFromSources
+private typealias SetMaxStatisticArgs = Nothing
 
 /** {@set [SelectingColumns.OPERATION] [max][max]} */
 @ExcludeFromSources
@@ -109,6 +156,8 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * See also:
  * - [maxOrNull][DataColumn.maxOrNull] — returns `null` instead of throwing for a column with nothing to compare.
@@ -140,6 +189,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * See also:
  * - [max][DataColumn.max] — throws instead of returning `null` for a column with nothing to compare.
@@ -238,9 +289,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  * Returns the maximum of the values that the given [selector] returns
  * for each element of this [DataColumn].
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * Don't confuse [maxOf] with [maxBy][DataColumn.maxBy], which returns the element the maximum
  * [selector] value belongs to instead of that value.
@@ -272,9 +327,13 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  * Returns the maximum of the values that the given [selector] returns
  * for each element of this [DataColumn], or `null` if there is nothing to compare.
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * Don't confuse [maxOfOrNull] with [maxByOrNull][DataColumn.maxByOrNull], which returns the element
  * the maximum [selector] value belongs to instead of that value.
@@ -319,10 +378,13 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  *
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * See also:
  * - [rowMaxOf][DataRow.rowMaxOf] — throws instead of returning `null` when there's nothing to compare.
@@ -338,7 +400,7 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  * df[0].rowMaxOfOrNull<Int>()
  * ```
  *
- * @param [T] The type of the values to compare. Only columns of this type are taken into account.
+ * @include [MaxDocs.RowValuesTypeParam]
  * @include [MaxDocs.SkipNanParam]
  * @return The largest value of type [T] in this row, or `null` if there are no values to compare.
  */
@@ -350,10 +412,13 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  *
  * Only the values in the columns of type [T] (or `T?`) are taken into account;
  * all other columns of the row are ignored.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * See also:
  * - [rowMaxOfOrNull][DataRow.rowMaxOfOrNull] — returns `null` instead of throwing
@@ -370,7 +435,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * df[0].rowMaxOf<Int>()
  * ```
  *
- * @param [T] The type of the values to compare. Only columns of this type are taken into account.
+ * @include [MaxDocs.RowValuesTypeParam]
  * @include [MaxDocs.SkipNanParam]
  * @return The largest value of type [T] in this row.
  * @throws NoSuchElementException if there are no values to compare.
@@ -387,6 +452,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  *
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -445,8 +511,7 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns of this [DataFrame]
- *   to compute the maximum of.
+ * @include [MaxDocs.AggregateColumnsSelectorParam]
  * @return A single [DataRow] with the maximum of each selected column.
  */
 @Refine
@@ -481,7 +546,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * df.maxFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @include [MaxDocs.ColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each selected column.
  */
@@ -511,6 +576,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
  *
+ * @include [MaxDocs.ResultTypeSnippet]
+ *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
@@ -532,8 +599,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
- *   to compute the maximum of.
+ * @include [MaxDocs.ColumnsSelectorParam]
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -548,6 +614,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -569,7 +637,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * df.max("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @include [MaxDocs.ComparableColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return The largest value among all the values in the selected columns.
  * @throws NoSuchElementException if there are no values to compare.
@@ -599,6 +667,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  * @include [MaxDocs.NullOnEmptySnippet]
  *
+ * @include [MaxDocs.ResultTypeSnippet]
+ *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
@@ -621,8 +691,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns of this [DataFrame]
- *   to compute the maximum of.
+ * @include [MaxDocs.ColumnsSelectorParam]
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
  */
@@ -638,6 +707,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -660,7 +731,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * df.maxOrNull("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns of this [DataFrame] to compute the maximum of.
+ * @include [MaxDocs.ComparableColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return The largest value among all the values in the selected columns,
  *   or `null` if there are no values to compare.
@@ -688,9 +759,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * Don't confuse [maxOf] with [maxBy][DataFrame.maxBy], which returns the row the maximum
  * [expression] value belongs to instead of that value.
@@ -711,7 +786,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
+ * @include [MaxDocs.ExpressionParam]
  * @return The maximum of the values [expression] returns.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -726,9 +801,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullOnEmptySnippet]
+ *
+ * @include [MaxDocs.ResultTypeSnippet]
  *
  * Don't confuse [maxOfOrNull] with [maxByOrNull][DataFrame.maxByOrNull], which returns the row the
  * maximum [expression] value belongs to instead of that value.
@@ -749,7 +828,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
+ * @include [MaxDocs.ExpressionParam]
  * @return The maximum of the values [expression] returns,
  *   or `null` if there are no values to compare.
  */
@@ -789,7 +868,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
+ * @include [MaxDocs.ExpressionParam]
  * @return The first [DataRow] for which [expression] returns the maximum value.
  * @throws NoSuchElementException if there are no values to compare.
  */
@@ -874,7 +953,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
+ * @include [MaxDocs.ExpressionParam]
  * @return The first [DataRow] for which [expression] returns the maximum value,
  *   or `null` if there are no values to compare.
  */
@@ -943,6 +1022,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * and a column with the maximum for each suitable column.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -956,8 +1036,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -998,8 +1077,7 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1008,8 +1086,7 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
- *   to compute the maximum of.
+ * @include [MaxDocs.AggregateColumnsSelectorParam]
  * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
  */
 @Refine
@@ -1042,8 +1119,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1051,7 +1127,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * df.groupBy { city }.maxFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the maximum of each selected column per group.
  */
@@ -1099,8 +1175,7 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1109,11 +1184,9 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  * df.groupBy { city }.max("maxValue") { age and weight }
  * ```
  *
- * @param [name] The name of the resulting column.
- *   If `null` (the default), the name of the selected column is used if exactly one column
- *   is selected, and `"max"` otherwise.
+ * @include [MaxDocs.ResultColumnNameParam]
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnsSelectorParam]
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
@@ -1149,8 +1222,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1159,10 +1231,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * df.groupBy { city }.max("age", "weight", name = "maxValue")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
- * @param [name] The name of the resulting column.
- *   If `null` (the default), the name of the selected column is used if exactly one column
- *   is selected, and `"max"` otherwise.
+ * @include [MaxDocs.ComparableColumnNamesParam]
+ * @include [MaxDocs.ResultColumnNameParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
@@ -1199,6 +1269,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.NullCellOnEmptySnippet]
@@ -1212,8 +1284,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * - [aggregate][Grouped.aggregate] — the general way to aggregate groups.
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.GroupByStatistics]},
- * @include [DocumentationUrls.GroupByAggregationStatistics]
+ * @include [MaxDocs.GroupByUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1221,9 +1292,9 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * df.groupBy { city }.maxOf("maxRatio") { (weight ?: 0) / age }
  * ```
  *
- * @param [name] The name of the resulting column. If `null` (the default), `"max"` is used.
+ * @include [MaxDocs.ExpressionResultColumnNameParam]
  * @include [MaxDocs.SkipNanParam]
- * @param [expression] The [RowExpression] to compute the value to compare for each row.
+ * @include [MaxDocs.ExpressionParam]
  * @return A new [DataFrame] with the group keys and a single maximum per group.
  */
 @Refine
@@ -1332,10 +1403,11 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * of each suitable column of the corresponding group.
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1347,8 +1419,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1372,7 +1443,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1388,8 +1459,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1401,8 +1471,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @include [MaxDocs.SeparateParam]
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
- *   to compute the maximum of.
+ * @include [MaxDocs.AggregateColumnsSelectorParam]
  * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
  */
 public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
@@ -1420,7 +1489,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1434,8 +1503,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1443,7 +1511,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * df.pivot { city }.maxFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnNamesParam]
  * @include [MaxDocs.SeparateParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with the maximum of each selected column per [pivot] group.
@@ -1479,7 +1547,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1492,8 +1560,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1502,7 +1569,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnsSelectorParam]
  * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
  *   in the selected columns.
  */
@@ -1520,7 +1587,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1533,8 +1600,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1542,7 +1608,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * df.pivot { city }.max("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
+ * @include [MaxDocs.ComparableColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A single [DataRow] with, per [pivot] group, the largest value among all the values
  *   in the selected columns.
@@ -1573,9 +1639,11 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
@@ -1589,8 +1657,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  * - [Pivot aggregation][PivotDocs.Aggregation] — all other ways to aggregate a [Pivot].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1710,10 +1777,11 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * of the group corresponding to that [pivot] key (column) and [groupBy] key (row).
  * All columns whose values are mutually comparable are taken into account;
  * the other columns are simply left out of the result.
+ * @include [MaxDocs.ColumnGroupsIgnoredSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1726,8 +1794,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1751,7 +1818,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1769,8 +1836,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1780,8 +1846,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * @include [MaxDocs.SeparateParam]
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsForAggregateSelector] used to select the columns
- *   to compute the maximum of.
+ * @include [MaxDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the maximum of each selected column per group.
  */
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
@@ -1799,7 +1864,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1815,8 +1880,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1824,7 +1888,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * df.pivot { city }.groupBy { name.lastName }.maxFor("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnNamesParam]
  * @include [MaxDocs.SeparateParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with the maximum of each selected column per group.
@@ -1861,7 +1925,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1876,8 +1940,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1886,7 +1949,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
- * @param [columns] The [ColumnsSelector] used to select the columns to compute the maximum of.
+ * @include [MaxDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
@@ -1905,7 +1968,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1920,8 +1983,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin
@@ -1929,7 +1991,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * df.pivot { city }.groupBy { name.lastName }.max("age", "weight")
  * ```
  *
- * @param [columns] The names of the columns to compute the maximum of.
+ * @include [MaxDocs.ComparableColumnNamesParam]
  * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
@@ -1960,9 +2022,11 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptySnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
  *
  * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
@@ -1977,8 +2041,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *   a [PivotGroupBy].
  * - {@include [MaxDocsLink]} — an overview of all `max` modes.
  *
- * For more information: {@include [DocumentationUrls.PivotStatistics]},
- * @include [DocumentationUrls.PivotAggregationStatistics]
+ * @include [MaxDocs.PivotUrlsSnippet]
  *
  * ### Example
  * ```kotlin

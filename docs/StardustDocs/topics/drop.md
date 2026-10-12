@@ -14,7 +14,7 @@ df
 
 ## drop
 
-Removes all rows that satisfy [row condition](DataRow.md#row-conditions)
+Removes all rows that satisfy the [row condition](DataRow.md#row-conditions).
 
 **Related operations**: [](filterRows.md)
 

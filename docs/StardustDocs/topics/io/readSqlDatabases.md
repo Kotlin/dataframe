@@ -44,15 +44,15 @@ Also, there are a few **extension functions** available on `Connection`,
 * Methods for reading data from a database
     *  ```readDataFrame()``` on `Connection` or `DbConnectionConfig` 
   converts the result of an SQL query or SQL table to a `DataFrame` object.
-    *  ```readDataFrame()``` on `ResultSet` reads from created earlier `ResultSet`
+    *  ```readDataFrame()``` on `ResultSet` reads from a previously created `ResultSet`
 * Methods for reading table schemas from a database
     * ```getDataFrameSchema()``` on `Connection` or `DbConnectionConfig`
   for an SQL query result or the SQL table
-    * ```getDataFrameSchema()``` on `ResultSet` for created earlier `ResultSet`
+    * ```getDataFrameSchema()``` on `ResultSet` for a previously created `ResultSet`
 
 
 > **NOTE:** This is an experimental module, and for now, 
-> we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
+> we only support these databases: H2, MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
 > 
 > Moreover, since release 0.15 you can register a custom SQL database; read more in our [guide](readSqlFromCustomDatabase.md).
 >
@@ -297,6 +297,10 @@ you can delegate the creation of the connection to `DbConnectionConfig`.
 
 These functions execute an SQL query on the database and convert the result into a [`DataFrame`](DataFrame.md) object. 
 If a limit is provided, only that many rows will be returned from the result.
+
+A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+gives `CUSTOMER_ID` for this unquoted alias.
 
 **readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 

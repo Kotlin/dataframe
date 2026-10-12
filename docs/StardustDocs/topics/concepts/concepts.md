@@ -53,9 +53,9 @@ that correspond to the columns of a dataframe.
 In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. 
 In IntelliJ IDEA we’re featuring a compiler plugin that infers and transforms [`DataFrame`](DataFrame.md) schema while typing.
 You can now check out this [typical data wrangling pipeline](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example/src/main/kotlin/org/jetbrains/kotlinx/dataframe/examples/plugin/Main.kt) showcasing how it allows you to reliably use our most convenient extension properties API.
-The generated properties ensure you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
+The generated properties ensure you’ll never misspell a column name and don’t mess up its type, and of course nullability is also preserved.
 * [**Polymorphic**](schemas.md) —
-  if all columns of a [`DataFrame`](DataFrame.md) instance are presented in another dataframe,
+  if all columns of a [`DataFrame`](DataFrame.md) instance are present in another dataframe,
   then the first one will be seen as a superclass for the latter. 
 This means you can define a function on an interface with some set of columns
   and then execute it safely on any [`DataFrame`](DataFrame.md) which contains this same set of columns.

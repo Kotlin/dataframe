@@ -158,7 +158,7 @@ internal object DelimParams {
 
     /**
      * @param parserOptions Optional [<code>parsing options</code>][ParserOptions] for columns initially read as [<code>String</code>][String].
-     *   Default, `null`.
+     *   Default: `null`.
      *
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *

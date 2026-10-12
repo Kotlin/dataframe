@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
@@ -89,25 +88,6 @@ class Schemas {
     }
 
     fun DataFrame<Person>.countAdults() = count { it.age > 18 }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertTo() {
-        // SampleStart
-        @DataSchema
-        data class Name(val firstName: String, val lastName: String)
-
-        @DataSchema
-        data class Person(val name: Name, val age: Int?)
-
-        val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", "15", 60.0,
-            "Marley, Bob", "20", 73.5,
-        ).split { "name"<String>() }.by(",").inward("firstName", "lastName")
-
-        val persons = df.cast<Person>().toList()
-        // SampleEnd
-    }
 
     @Test
     @TransformDataFrameExpressions

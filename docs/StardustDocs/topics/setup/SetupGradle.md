@@ -40,7 +40,7 @@ You have successfully created a project with Gradle.
 
 ## Setup Kotlin DataFrame
 
-### 1. Add the plugin
+### 1. Add the plugin {id="kotlin-dataframe-compiler-plugin"}
 [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enables automatic generation of
 [extension properties](extensionPropertiesApi.md) and updates [data schemas](schemas.md)
 on-the-fly in Gradle projects, making development with Kotlin DataFrame faster,

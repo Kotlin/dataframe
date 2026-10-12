@@ -21,11 +21,13 @@ public abstract class AdvancedDbType(dbTypeInJdbcUrl: String) : DbType(dbTypeInJ
     private data class CacheKey(
         val sqlTypeName: String,
         val jdbcType: Int,
+        val size: Int,
         val javaClassName: String,
         val isNullable: Boolean,
     )
 
-    private fun TableColumnMetadata.cacheKey(): CacheKey = CacheKey(sqlTypeName, jdbcType, javaClassName, isNullable)
+    private fun TableColumnMetadata.cacheKey(): CacheKey =
+        CacheKey(sqlTypeName, jdbcType, size, javaClassName, isNullable)
 
     private val converterCache = mutableMapOf<CacheKey, AnyJdbcToDataFrameConverter>()
 

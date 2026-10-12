@@ -211,7 +211,7 @@ public interface TraversePropertiesDsl {
 }
 
 /**
- * Store values of given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ * Store values of the given type [T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: {@include [DocumentationUrls.CreateDataFrameFromIterable]}
  */

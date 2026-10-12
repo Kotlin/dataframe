@@ -57,7 +57,7 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
         - `generateAllExampleFoldersTests`: Cleans and generates Junit test classes for all example folders.
         - `runBuild<NameOfFolder(Dev)>`: Executes the generated Junit test class for the given folder and
           runs the build. This automatically syncs and generates the test classes beforehand.
-            - `publishLocal` is called automatically when dealing with a dev Maven test.
+            - `publishLocal` is called automatically when dealing with a dev Maven/Kotlin Toolchain test.
             - Android tests (folders with "android" in their name) require the `android.sdk.dir` gradle property to be set.
             Else, the test will be skipped.
         - `runBuild<Tag>ExampleFolders`: Runs a subset of builds. `Tag` can be `Dev`, `Gradle`, `Android`, etc.

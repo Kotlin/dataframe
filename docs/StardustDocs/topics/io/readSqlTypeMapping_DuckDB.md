@@ -101,7 +101,7 @@ DuckDB supports nested / composite types, which the DataFrame converter resolves
 | `JSON`     | *none*  | `String`; is tried to parse into frame column (`DataFrame`), column group (`DataRow`) or primitive | Read as JSON text and passed through `tryParse` + type inference. |
 | `ENUM`     | *none*  | `String`                                                                                           | Read as the enum label.                                           |
 | `GEOMETRY` | *none*  | `java.sql.Blob`                                                                                    | Binary WKB read as `Blob`.                                        |
-| `UNKNOWN`  | *none*  | `String`                                                                                           | Fallback for anything not recognised by the converter.            |
+| `UNKNOWN`  | *none*  | `String`                                                                                           | Fallback for anything not recognized by the converter.            |
 
 ## DuckDB specifics
 

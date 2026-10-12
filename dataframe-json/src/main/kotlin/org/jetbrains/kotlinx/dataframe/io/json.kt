@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
@@ -103,18 +104,35 @@ public class JSON(
      *  ]
      * ```
      *
-     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like (including `null` and `[]` values):
+     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like (including `null` values):
      * ```
-     * ⌌----------------------------------------------⌍
-     * |  | a:{b:Int?, value:String?, array:List<Int>}|
-     * |--|-------------------------------------------|
-     * | 0|         { b:null, value:"text", array:[] }|
-     * | 1|              { b:2, value:null, array:[] }|
-     * | 2|    { b:null, value:null, array:[6, 7, 8] }|
-     * ⌎----------------------------------------------⌏
+     * ⌌-----------------------------------------------⌍
+     * |  | a:{b:Int?, value:String?, array:List<Int>?}|
+     * |--|--------------------------------------------|
+     * | 0|        { b:null, value:"text", array:null }|
+     * | 1|             { b:2, value:null, array:null }|
+     * | 2|     { b:null, value:null, array:[6, 7, 8] }|
+     * ⌎-----------------------------------------------⌏
      * ```
      * So, for the type clashing argument it will create a [ColumnGroup] with the properties `value`, `array`,
      * and the unwrapped properties of the objects the property can be.
+     *
+     * Each of these columns only holds a value for the records that actually have that shape;
+     * for all other records it holds `null`, which makes all columns nullable:
+     *
+     * - `value` holds the JSON primitive, or `null` if the record is not a primitive.
+     * - `array` holds the JSON array as a [List], or `null` if the record is not an array
+     *   (note that this is different from an empty JSON array `[]`, which is read as an empty list).
+     *   When the arrays contain objects, `array` becomes a [FrameColumn] instead, in which a record
+     *   without an array is an empty [DataFrame], as frame columns cannot hold `null`.
+     * - the unwrapped object properties hold `null` if the record is not an object,
+     *   or if the object does not have that property.
+     *
+     * A JSON `null` record, as well as a missing property, is `null` in all these columns.
+     *
+     * Note that a type clash is not the only source of `value`/`array` columns; at the top level they're created
+     * for any JSON element that isn't an object.
+     * For more information: {@include [DocumentationUrls.JsonValueAndArrayColumns]}
      *
      * [ANY_COLUMNS] will create a [DataFrame] looking like:
      * ```
@@ -473,6 +491,40 @@ public fun DataRow.Companion.readJsonStr(
         unifyNumbers = unifyNumbers,
     ).single()
 
+/**
+ * Converts this [DataFrame] to a JSON array; each row becomes an element of that array.
+ *
+ * By default, a row is written as a JSON object: a [ColumnGroup] becomes a nested object,
+ * a [FrameColumn] becomes a nested array of objects, and a [List] value becomes a JSON array.
+ *
+ * There's one exception, so that a [DataFrame] read from JSON with a top-level type clash can be written back
+ * to its original form (see [TypeClashTactic]). Such a clash puts the elements that aren't objects into columns
+ * named "value" and "array", beside the objects' own properties.
+ * When one of the top-level columns is detected as such a "value" or "array" column — it's named "value" or
+ * "array" and only holds a value in rows where every other column holds none — a row is written as the record
+ * it was read from:
+ * - the value of the "value" column, if the row has one;
+ * - otherwise the array of the "array" column, if the row has one;
+ * - otherwise an object of the remaining columns, if any of them holds a value;
+ * - otherwise `null`.
+ *
+ * Only a *top-level* clash is restored like this:
+ * - A clash inside a [ColumnGroup] isn't: the group is written as an object, so its "value" and "array" columns
+ *   show up as ordinary properties.
+ * - A single-column [DataFrame] isn't either, since a lone "value"/"array" column is indistinguishable from one
+ *   the user named that way. So a JSON array of non-objects, which is read into just a "value" or "array" column,
+ *   doesn't round-trip: `[1,2,3]` is written back as `[{"value":1},{"value":2},{"value":3}]`.
+ *
+ * For more information: {@include [DocumentationUrls.JsonValueAndArrayColumns]}
+ *
+ * Note too that some JSON records are read into the exact same [DataFrame], so writing it back can only produce
+ * one of them: a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes
+ * `[1,{"label":"record"},null]`; and an empty array of objects is read as an empty nested [DataFrame], just like
+ * no array at all, so `[{"label":"record"},[{"a":1}],[]]` becomes `[{"label":"record"},[{"a":1}],null]`.
+ *
+ * @param prettyPrint Whether to format the output with indentation and line breaks. `false` by default.
+ * @return This [DataFrame] as a JSON string.
+ */
 public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
     val json = Json {
         this.prettyPrint = prettyPrint

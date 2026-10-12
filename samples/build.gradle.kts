@@ -1,7 +1,10 @@
 import io.github.devcrocod.korro.KorroGenerateTask
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.kotlin.dsl.libs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.nio.file.Files
+import kotlin.io.path.div
 import kotlin.io.path.name
 
 plugins {
@@ -117,18 +120,32 @@ korro {
                 include("info/*.md")
                 include("columnArithmetics.md")
                 include("ColumnSelectors.md")
+                include("concat.md")
+                include("concatDf.md")
                 include("groupBy.md")
                 include("map.md")
+                include("iterate.md")
                 include("pivot.md")
                 include("countDistinct.md")
                 include("fill.md")
                 include("drop.md")
+                include("duplicate.md")
                 include("filter.md")
+                include("toList.md")
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("sum.md")
+                include("mean.md")
+                include("std.md")
+                include("cumSum.md")
+                include("median.md")
+                include("percentile.md")
+                include("MigrationTo_1_0.md")
                 include("single.md")
                 include("indexing.md")
+                include("unfold.md")
+                include("reorder.md")
             },
         )
         baseDir = rootProject.file("docs/StardustDocs/topics")
@@ -209,3 +226,67 @@ tasks.register("updateShadowResources") {
         mdFile.writeText(content)
     }
 }
+
+// datasets from the root `data/` folder that are used in the docs
+val docsDatasets = listOf(
+    "movies.csv",
+    "jetbrains_repositories.csv",
+    "titanic.csv",
+)
+
+tasks.register<Copy>("syncDocsDatasets") {
+    group = "documentation"
+    description = "Copies datasets used in the docs from data/ to docs/StardustDocs/resources/datasets"
+
+    from(rootProject.file("data")) {
+        include(docsDatasets)
+    }
+    into(resourcesDir.toPath() / "datasets")
+}
+
+// region fail fast source dependency on :core
+val coreProjectPath = projects.core.path
+
+val compilerPluginClasspaths = configurations.matching {
+    it.name in setOf("compileClasspath", "testCompileClasspath")
+}
+
+val configurationsThatAffectCompilerPluginResolve = setOf("api", "implementation", "compileOnly", "compileOnlyApi")
+
+fun Configuration.coreDependencyPath(visited: MutableSet<Configuration> = mutableSetOf()): List<String>? {
+    if (!visited.add(this)) return null
+
+    dependencies.filterIsInstance<ProjectDependency>().forEach { dependency ->
+        if (dependency.path == coreProjectPath) return listOf(coreProjectPath)
+
+        rootProject.project(dependency.path).configurations
+            .filter { it.name in configurationsThatAffectCompilerPluginResolve }
+            .forEach { configuration ->
+                configuration.coreDependencyPath(visited)?.let {
+                    return listOf("${dependency.path}:${configuration.name}") + it
+                }
+            }
+    }
+
+    extendsFrom.forEach { configuration ->
+        configuration.coreDependencyPath(visited)?.let {
+            return listOf("${project.path}:${configuration.name}") + it
+        }
+    }
+
+    return null
+}
+
+gradle.projectsEvaluated {
+    compilerPluginClasspaths.forEach {
+        val dependencyPath = it.coreDependencyPath()
+        require(dependencyPath == null) {
+            val fullDependencyPath = listOf("${project.path}:${it.name}") + dependencyPath.orEmpty()
+            "Module ${project.path} with DataFrame compiler plugin cannot use source dependency $coreProjectPath " +
+                "on $it. Dependency path: ${fullDependencyPath.joinToString(" -> ")}. " +
+                "Depend on the prebuilt instrumentedJars artifact instead."
+        }
+    }
+}
+
+// endregion

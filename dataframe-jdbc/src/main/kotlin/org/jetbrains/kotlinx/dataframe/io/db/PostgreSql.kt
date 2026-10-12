@@ -11,10 +11,12 @@ import org.postgresql.util.PGInterval
 import org.postgresql.util.PGmoney
 import org.postgresql.util.PGobject
 import java.sql.ResultSet
+import java.sql.Types
 import java.util.Locale
 import kotlin.reflect.KType
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 /**
  * Represents the PostgreSql database type.
@@ -48,13 +50,37 @@ public object PostgreSql : DbType("postgresql") {
             .associateBy { it.typeName }
     }
 
+    /**
+     * `true` for a multi-bit `bit(n)` column, `n > 1`.
+     *
+     * The driver reports every `bit` column as [java.sql.Types.BIT] with `java.lang.Boolean` as its
+     * column class, but only single-bit columns actually come back as a [Boolean]; wider ones come
+     * back as a [PGobject] holding the bit string. The declared column width is the only thing in the
+     * metadata that tells the two apart, see [getExpectedJdbcType].
+     *
+     * That width is [TableColumnMetadata.size] — `0` when the driver reports no display size, in
+     * which case the column maps to [Boolean] as it did before. `bit varying`/`varbit` is excluded by
+     * the [TableColumnMetadata.sqlTypeName] check: the driver reports it as
+     * [java.sql.Types.OTHER] and it is read as an opaque [PGobject].
+     *
+     * Deliberately *not* named `isMultiBit` like the MySQL/MariaDB extension of the same shape in
+     * `util.kt`: this one resolves to a [String] column and that one to a [ByteArray] one.
+     */
+    private val TableColumnMetadata.isWideBitString: Boolean
+        get() = jdbcType == Types.BIT && sqlTypeName.lowercase() == "bit" && size > 1
+
     // TODO: Composite types like tableColumnMetadata.sqlTypeName = ROW("a" INTEGER, "b" CHARACTER VARYING(10))
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         val typeName = tableColumnMetadata.sqlTypeName.lowercase()
-        return if (typeName in pgObjectTypes) {
-            pgObjectTypes[typeName]!!.kType.withNullability(tableColumnMetadata.isNullable)
-        } else {
-            super.getExpectedJdbcType(tableColumnMetadata)
+        return when {
+            typeName in pgObjectTypes ->
+                pgObjectTypes[typeName]!!.kType.withNullability(tableColumnMetadata.isNullable)
+
+            // read as its bit-string form, e.g. "101", see getValueFromResultSet
+            tableColumnMetadata.isWideBitString ->
+                typeOf<String>().withNullability(tableColumnMetadata.isNullable)
+
+            else -> super.getExpectedJdbcType(tableColumnMetadata)
         }
     }
 
@@ -69,10 +95,13 @@ public object PostgreSql : DbType("postgresql") {
         expectedJdbcType: KType,
     ): J {
         val typeName = tableColumnMetadata.sqlTypeName.lowercase()
-        return if (typeName in pgObjectTypes) {
-            rs.getObject(columnIndex + 1, pgObjectTypes[typeName]!!.javaClass) as J
-        } else {
-            super.getValueFromResultSet(rs, columnIndex, tableColumnMetadata, expectedJdbcType)
+        return when {
+            typeName in pgObjectTypes -> rs.getObject(columnIndex + 1, pgObjectTypes[typeName]!!.javaClass) as J
+
+            // the value is a PGobject holding the bit string, see getExpectedJdbcType
+            tableColumnMetadata.isWideBitString -> rs.getString(columnIndex + 1) as J
+
+            else -> super.getValueFromResultSet(rs, columnIndex, tableColumnMetadata, expectedJdbcType)
         }
     }
 

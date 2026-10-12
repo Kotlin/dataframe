@@ -80,7 +80,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [filter](filter.md) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
 * [flatten](flatten.md) — remove column groupings recursively
-* [forEachRow](iterate.md) / [forEachColumn](iterate.md) — iterate over rows or columns
+* [forEach / forEachIndexed](iterate.md) — iterate over rows, columns, cells, the values of a column, or the key–group pairs of a `GroupBy`
 * [format](format.md) — conditional formatting for cell rendering
 * [gather](gather.md) — convert pairs of column names and values into new columns
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns

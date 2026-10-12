@@ -5,6 +5,6 @@ Both [`update`](update.md) and [`convert`](convert.md) can be used to change col
 Difference between these operations:
 * [`convert`](convert.md) allows changing the type of the column, [`update`](update.md) doesn't
 * [`parse`](parse.md) is a special case of [`convert`](convert.md) to convert String into different types automatically based on its contents
-* [`unfold`](unfold.md) is a special case of [`convert`](convert.md) to convert [`DataColumn`](DataColumn.md) of objects into [`ColumnGroup`](DataColumn.md#columngroup) based on properties of objects.
+* [`unfold`](unfold.md) is a special case of [`convert`](convert.md) that turns columns of objects into [`ColumnGroup`](DataColumn.md#columngroup)s, with a column for every public property of these objects.
 * [`update`](update.md) allows filtering cells to be updated, [`convert`](convert.md) doesn't
 * [`fill`](fill.md) is a special case of [`update`](update.md) to replace missing values

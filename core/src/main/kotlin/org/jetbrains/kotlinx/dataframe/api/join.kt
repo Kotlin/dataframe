@@ -49,7 +49,7 @@ private typealias JoinBehavior = Nothing
  * Each join type has a corresponding shortcut function:
  * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [filterJoin], and [excludeJoin].
  *
- * See also [joinWith], which performs a join by matching row values condition.
+ * See also [joinWith], which performs a join by a condition that matches row values.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -159,7 +159,7 @@ public fun <A, B> DataFrame<A>.join(
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [leftJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -210,7 +210,7 @@ public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: St
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [innerJoin], [rightJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -261,7 +261,7 @@ public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: Str
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [innerJoin], [leftJoin], [fullJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -312,7 +312,7 @@ public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: St
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -363,7 +363,7 @@ public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: Str
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [innerJoin], [leftJoin], [rightJoin], [fullJoin], [excludeJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
@@ -414,7 +414,7 @@ public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: S
  *
  * @include [JoinBehavior]
  *
- * See also general [join], as well as other shortcuts with each of join types:
+ * See also general [join], as well as the shortcuts for the other join types:
  * [innerJoin], [leftJoin], [rightJoin], [filterJoin], [fullJoin].
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]

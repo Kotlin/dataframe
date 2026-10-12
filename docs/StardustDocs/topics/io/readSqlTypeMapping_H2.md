@@ -67,7 +67,7 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | `TIME[(p)] WITH TIME ZONE`                       | *none*                          | `java.time.OffsetTime`     |                                                |
 | `TIMESTAMP[(p)] [WITHOUT TIME ZONE]`             | `DATETIME`, `SMALLDATETIME`     | `kotlin.time.Instant`      | Preprocessed from `java.sql.Timestamp`.        |
 | `TIMESTAMP[(p)] WITH TIME ZONE`                  | `DATETIMEOFFSET`, `TIMESTAMPTZ` | `java.time.OffsetDateTime` |                                                |
-| `INTERVAL YEAR[(p)]`, `INTERVAL MONTH[(p)]`, ... | *none*                          | `String` (*unsupported*    | Any of the 13 interval subtypes; read as text. |
+| `INTERVAL YEAR[(p)]`, `INTERVAL MONTH[(p)]`, ... | *none*                          | `Any`                      | Any of the 13 interval subtypes; the value is an `org.h2.api.Interval`. |
 
 ## Other types
 
@@ -75,11 +75,17 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 |---------------|---------|--------------------------|---------------------------------------------------------------------------------------------|
 | `UUID`        | *none*  | `kotlin.uuid.Uuid`       | Preprocessed from `java.util.UUID`. Driver reports `Types.BINARY` + `java.util.UUID` class. |
 | `JAVA_OBJECT` | `OTHER` | `Any`                    | Serialized Java object; read as opaque `Any`.                                               |
-| `ENUM`        | *none*  | `String`                 | User-declared enum labels.                                                                  |
-| `GEOMETRY`    | *none*  | `String` (*unsupported*) | Only WKT text.                                                                              |
-| `JSON`        | *none*  | `String`                 | JSON text.                                                                                  |
+| `ENUM`        | *none*  | `Any`                    | User-declared enum labels. The value is always a `String`, but the driver reports the column as `Types.OTHER`, so the column type stays `Any`. |
+| `GEOMETRY`    | *none*  | `Any`                    | Read as an opaque `Any`; the class of the value depends on whether JTS is on the classpath, and is an `org.locationtech.jts.geom.Geometry` when it is. |
+| `JSON`        | *none*  | `ByteArray`              | The JSON text as raw bytes: the driver returns a `byte[]` for this column. See the note below.  |
 | `ARRAY`       | *none*  | `Array<*>`               | Element type inferred; falls back to `Any` for heterogeneous arrays.                        |
 | `ROW(...)`    | *none*  | `String` (*unsupported*) |                                                                                             |
+
+A `JSON` column arrives as raw bytes rather than as text, so reading one and using it as a `String`
+takes an explicit decode — `convert { jsonCol }.with { it.toString(Charsets.UTF_8) }`. The same applies
+to `ENUM`, `GEOMETRY` and `INTERVAL`, whose columns are typed `Any`: the value has to be cast or
+converted before it can be used as the type it really is.
+{style="note"}
 
 ## Unsupported types
 

@@ -1,0 +1,275 @@
+[//]: # (title: Write)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Write-->
+
+[`DataFrame`](DataFrame.md) instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
+
+### Writing to CSV
+
+You can write [`DataFrame`](DataFrame.md) in CSV format to file, to `String` or to `Appendable`
+(i.e. to `Writer`).
+
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+
+<!---FUN writeCsv-->
+
+```kotlin
+df.writeCsv(file)
+```
+
+<!---END-->
+
+<!---FUN writeCsvStr-->
+
+```kotlin
+val csvStr = df.toCsvStr(delimiter = ';', recordSeparator = System.lineSeparator())
+```
+
+<!---END-->
+
+[`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) values will be serialized as JSON strings.
+
+### Writing to JSON
+
+You can write your [`DataFrame`](DataFrame.md) in JSON format to file, to string or to `Appendable`
+(i.e. to `Writer`).
+
+<!---FUN writeJson-->
+
+```kotlin
+df.writeJson(file)
+```
+
+<!---END-->
+
+<!---FUN writeJsonStr-->
+
+```kotlin
+val jsonStr = df.toJson(prettyPrint = true)
+```
+
+<!---END-->
+
+Each row is written as an element of a JSON array: a [`ColumnGroup`](DataColumn.md#columngroup) becomes a nested
+object, a [`FrameColumn`](DataColumn.md#framecolumn) becomes a nested array of objects, and a `List` value becomes
+a JSON array.
+
+There's one exception, so that a [`DataFrame`](DataFrame.md) read from JSON with a top-level
+[type clash](read.md#manage-type-clashes) can be written back to its original form. Such a clash puts the
+elements that aren't objects into ["value" and "array" columns](read.md#value-and-array-columns), beside the
+objects' own properties. When one of the top-level columns is detected as such a "value" or "array" column —
+it's named `value` or `array` and only holds a value in rows where every other column holds none — a row is
+written as the record it was read from:
+
+* the value of the "value" column, if the row has one;
+* otherwise the array of the "array" column, if the row has one;
+* otherwise an object of the remaining columns, if any of them holds a value;
+* otherwise `null`.
+
+For example:
+
+<!---FUN readAndWriteJson-->
+
+```kotlin
+DataFrame.readJsonStr("""[1,{"label":"record"},[123],null]""").toJson()
+```
+
+Output:
+
+[1,{"label":"record"},[123],null]
+
+<!---END-->
+
+> Only a *top-level* clash is restored like this:
+> * a clash inside a [`ColumnGroup`](DataColumn.md#columngroup) isn't — the group is written as its object, so
+>   its "value" and "array" columns show up as ordinary properties: `[{"a":"text"},{"a":[6,7,8]}]` is written
+>   back as `[{"a":{"value":"text","array":null}},{"a":{"value":null,"array":[6,7,8]}}]`;
+> * a single-column [`DataFrame`](DataFrame.md) isn't either, since a lone "value"/"array" column can't be told
+>   apart from one the user named that way. So a JSON array of non-objects, which is read into just a "value" or
+>   "array" column, doesn't round-trip: `[1,2,3]` is written back as
+>   `[{"value":1},{"value":2},{"value":3}]`.
+> {style="note"}
+
+> Some JSON records are read into the exact same [`DataFrame`](DataFrame.md), 
+> so writing it back can only produce:
+> * a row without any values is written as `null`, so `[1,{"label":"record"},{"label":null}]` becomes
+>   `[1,{"label":"record"},null]`;
+> * an empty array of objects is read as an empty nested [`DataFrame`](DataFrame.md), just like no array at all,
+>   so `[{"label":"record"},[{"a":1}],[]]` becomes `[{"label":"record"},[{"a":1}],null]`.
+>
+> Arrays of primitives don't have the latter problem: they're read into a nullable `List` column, where an empty
+> list and `null` stay distinct.
+> {style="note"}
+
+### Write to Excel spreadsheet
+
+Add dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
+```
+
+You can write your [`DataFrame`](DataFrame.md) in XLS, XLSX format to a file, `OutputStream` or Workbook object.
+
+<!---FUN writeXls-->
+
+```kotlin
+df.writeExcel(file)
+```
+
+<!---END-->
+
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+
+If you work directly with Apache POI, you can use created Workbook and Sheets in your code:
+
+<!---FUN writeXlsAppendAndPostProcessing-->
+
+```kotlin
+/**
+ * Do something with generated sheets. Here we set bold style for headers and italic style for first data column
+ */
+fun setStyles(sheet: Sheet) {
+    val headerFont = sheet.workbook.createFont()
+    headerFont.bold = true
+    val headerStyle = sheet.workbook.createCellStyle()
+    headerStyle.setFont(headerFont)
+
+    val indexFont = sheet.workbook.createFont()
+    indexFont.italic = true
+    val indexStyle = sheet.workbook.createCellStyle()
+    indexStyle.setFont(indexFont)
+
+    sheet.forEachIndexed { index, row ->
+        if (index == 0) {
+            for (cell in row) {
+                cell.cellStyle = headerStyle
+            }
+        } else {
+            row.first().cellStyle = indexStyle
+        }
+    }
+}
+
+// Create a workbook (or use existing)
+val wb = WorkbookFactory.create(true)
+
+// Create different sheets from different dataframes in the workbook
+val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
+val happyPersonsSheet =
+    df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
+val unhappyPersonsSheet =
+    df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+
+// Do anything you want by POI
+listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
+
+// Save the result
+file.outputStream().use { wb.write(it) }
+wb.close()
+```
+
+<!---END-->
+
+Add new sheets without using Apache POI directly by using a parameter to keep using the same file if it already exists
+
+<!---FUN writeXlsWithMultipleSheets-->
+
+```kotlin
+// Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
+df.writeExcel(file, sheetName = "allPersons")
+// Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
+df.filter { person -> person.isHappy }.remove("isHappy")
+    .writeExcel(file, sheetName = "happyPersons", keepFile = true)
+// Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
+df.filter { person -> !person.isHappy }.remove("isHappy")
+    .writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+```
+
+<!---END-->
+
+### Writing to Apache Arrow formats
+
+Add dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
+```
+
+> Make sure to follow an
+> [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) 
+> guide when using Java 9+
+> {style = "warning"}
+
+[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format)
+and [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files)
+to raw WritableByteChannel, OutputStream, File or ByteArray.
+
+Data may be saved "as is" (like exporting to new Excel file) or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
+if you have it (like inserting into existing SQL table).
+
+The first approach is quite easy:
+<!---FUN writeArrowFile-->
+
+```kotlin
+df.writeArrowIPC(file)
+// or
+df.writeArrowFeather(file)
+```
+
+<!---END-->
+(writing to file, opened stream or channel),
+<!---FUN writeArrowByteArray-->
+
+```kotlin
+val ipcByteArray: ByteArray = df.saveArrowIPCToByteArray()
+// or
+val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
+```
+
+<!---END-->
+(creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
+
+The second approach is a bit more tricky. You have to specify the schema itself and the casting behavior mode as `ArrowWriter` parameters.
+Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
+You can use `Mode.STRICT` (this is the default), `Mode.LOYAL` or any combination you want.
+The `ArrowWriter` object should be closed after use because Arrow uses random access buffers not managed by Java GC.
+Finally, you can specify a callback to be invoked if some data is lost or cannot be saved according to your schema.
+
+Here is a full example:
+<!---FUN writeArrowPerSchema-->
+
+```kotlin
+// Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
+// (including the DataFrame.columns().toArrowSchema() method), created manually, and so on.
+val schema = Schema.fromJSON(schemaJson)
+
+df.arrowWriter(
+
+    // Specify your schema
+    targetSchema = schema,
+
+    // Specify desired behavior mode
+    mode = ArrowWriter.Mode(
+        restrictWidening = true,
+        restrictNarrowing = true,
+        strictType = true,
+        strictNullable = false,
+    ),
+
+    // Specify mismatch subscriber
+    mismatchSubscriber = writeMismatchMessage,
+
+    ).use { writer: ArrowWriter ->
+
+    // Save to any format and sink, like in the previous example
+    writer.writeArrowFeather(file)
+}
+```
+
+<!---END-->
+On executing you should get two warnings:
+>Column "city" contains nulls but expected not nullable
+
+and
+
+> Column "isHappy" is not described in the target schema and was ignored

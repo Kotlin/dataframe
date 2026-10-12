@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.assertInferredTypesMatchSchema
 import org.jetbrains.kotlinx.dataframe.io.assertMatches
 import org.jetbrains.kotlinx.dataframe.io.db.DuckDb
@@ -305,6 +306,11 @@ class DuckDbTest {
     )
 
     // endregion
+
+    @Test
+    fun `an SQL alias names the column`() {
+        DriverManager.getConnection(URL).use { aliasesNameColumns(it) }
+    }
 
     @Test
     fun `read simple dataframe from DuckDB`() {

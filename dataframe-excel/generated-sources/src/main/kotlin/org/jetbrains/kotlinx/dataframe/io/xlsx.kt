@@ -32,12 +32,14 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.util.NAME_REPAIR_STRATEGY
 import org.jetbrains.kotlinx.dataframe.io.util.READ_EXCEL_OLD
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
@@ -77,6 +79,57 @@ internal class DefaultReadExcelMethod(path: String?) :
 
 private const val READ_EXCEL = "readExcel"
 private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
+private const val POI_MISSING_WORKBOOK_PROVIDER_PREFIX =
+    "Your InputStream was neither an OLE2 stream, nor an OOXML stream"
+private const val POI_PROVIDER_LIST_MARKER = "having providers:"
+private const val OLE2_FILE_MAGIC_MARKER = "FileMagic: OLE2"
+private const val OOXML_FILE_MAGIC_MARKER = "FileMagic: OOXML"
+private const val HSSF_WORKBOOK_FACTORY = "org.apache.poi.hssf.usermodel.HSSFWorkbookFactory"
+private const val XSSF_WORKBOOK_FACTORY = "org.apache.poi.xssf.usermodel.XSSFWorkbookFactory"
+private const val FAT_JAR_PACKAGING_DOCUMENTATION = "https://kotlin.github.io/dataframe/packaging.html"
+
+private inline fun createWorkbook(factory: () -> Workbook): Workbook =
+    try {
+        factory()
+    } catch (exception: IOException) {
+        throw addMissingServiceDescriptorHint(exception, ::isClassAvailable)
+    }
+
+internal fun addMissingServiceDescriptorHint(
+    exception: IOException,
+    isClassAvailable: (String) -> Boolean,
+): IOException {
+    val message = exception.message ?: return exception
+    if (!message.startsWith(POI_MISSING_WORKBOOK_PROVIDER_PREFIX) || POI_PROVIDER_LIST_MARKER !in message) {
+        return exception
+    }
+
+    val (fileFormat, expectedProvider) = when {
+        OLE2_FILE_MAGIC_MARKER in message -> "OLE2" to HSSF_WORKBOOK_FACTORY
+        OOXML_FILE_MAGIC_MARKER in message -> "OOXML" to XSSF_WORKBOOK_FACTORY
+        else -> return exception
+    }
+    if (!isClassAvailable(expectedProvider)) return exception
+
+    return IOException(
+        "Kotlin DataFrame: The Apache POI provider $expectedProvider required for this Excel format " +
+            "($fileFormat) is present on the classpath but was not discovered. If this application is packaged " +
+            "as a fat JAR, make sure META-INF/services resources are merged. See $FAT_JAR_PACKAGING_DOCUMENTATION",
+        exception,
+    )
+}
+
+private fun isClassAvailable(className: String): Boolean =
+    try {
+        Class.forName(className, false, WorkbookFactory::class.java.classLoader)
+        true
+    } catch (_: ClassNotFoundException) {
+        false
+    } catch (_: LinkageError) {
+        false
+    } catch (_: SecurityException) {
+        false
+    }
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -118,6 +171,9 @@ public fun DataFrame.Companion.readExcel(
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. [See Packaging into a fat JAR on the documentation website.](https://kotlin.github.io/dataframe/packaging.html)
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -142,7 +198,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = createWorkbook { WorkbookFactory.create(url.openStream()) }
     return wb.use {
         readExcel(
             wb,
@@ -170,7 +226,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(url.openStream())
+    val wb = createWorkbook { WorkbookFactory.create(url.openStream()) }
     return wb.use {
         readExcel(
             wb,
@@ -203,6 +259,9 @@ public fun DataFrame.Companion.readExcel(
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. [See Packaging into a fat JAR on the documentation website.](https://kotlin.github.io/dataframe/packaging.html)
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -269,6 +328,9 @@ public fun DataFrame.Companion.readExcel(
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. [See Packaging into a fat JAR on the documentation website.](https://kotlin.github.io/dataframe/packaging.html)
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -295,7 +357,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = createWorkbook { WorkbookFactory.create(inputStream, /* password = */ null) }
         return wb.use {
             readExcel(
                 it,
@@ -326,7 +388,7 @@ public fun DataFrame.Companion.readExcel(
     path.inputStream().use { inputStream ->
         setWorkbookTempDirectory()
         @Suppress("ktlint:standard:comment-wrapping")
-        val wb = WorkbookFactory.create(inputStream, /* password = */ null)
+        val wb = createWorkbook { WorkbookFactory.create(inputStream, /* password = */ null) }
         return wb.use {
             readExcel(
                 it,
@@ -362,6 +424,9 @@ public fun DataFrame.Companion.readExcel(
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. [See Packaging into a fat JAR on the documentation website.](https://kotlin.github.io/dataframe/packaging.html)
  *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
@@ -441,6 +506,9 @@ public fun DataFrame.Companion.readExcel(
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
+ * When packaging an application as a fat JAR, merge `META-INF/services` resources so Apache POI can discover
+ * all Excel format providers. [See Packaging into a fat JAR on the documentation website.](https://kotlin.github.io/dataframe/packaging.html)
+ *
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  * @param stringColumns range of columns to read as String regardless of a cell type.
@@ -465,7 +533,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = createWorkbook { WorkbookFactory.create(inputStream) }
     return wb.use {
         readExcel(
             it,
@@ -493,7 +561,7 @@ public fun DataFrame.Companion.readExcel(
     parseEmptyAsNull: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(inputStream)
+    val wb = createWorkbook { WorkbookFactory.create(inputStream) }
     return wb.use {
         readExcel(
             it,
@@ -786,7 +854,7 @@ public enum class WorkBookType {
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
@@ -813,7 +881,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
@@ -848,7 +916,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
  *
- * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: Path,
@@ -889,7 +957,7 @@ public fun <T> DataFrame<T>.writeExcel(
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
  * @param factory The [<code>Workbook</code>][Workbook] instance, allowing integration with an existing workbook.
  *
- * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     outputStream: OutputStream,
@@ -921,7 +989,7 @@ public fun <T> DataFrame<T>.writeExcel(
  *
  * @return The created [<code>Sheet</code>][Sheet] instance containing the DataFrame data.
  *
- * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or workbook already contains a sheet with this name.
+ * @throws [IllegalArgumentException] if the [<code>sheetName</code>][sheetName] is invalid or the workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,
@@ -1043,25 +1111,25 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
 
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
-        // so i think toString should do until more use cases arise.
+        // so I think toString should do until more use cases arise.
         else -> this.setCellValue(any.toString())
     }
 
 /**
- * Set LocalDateTime value correctly also if date have zero value in Excel.
+ * Set LocalDateTime value correctly also if the date has a zero value in Excel.
  * Zero dates are usually used for storing a time component only,
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
- * POI can not set 1899 year directly.
+ * POI cannot set the year 1899 directly.
  */
 private fun Cell.setTime(localDateTime: JavaLocalDateTime) {
     this.setCellValue(DateUtil.getExcelDate(localDateTime.plusDays(1)) - 1.0)
 }
 
 /**
- * Set Date value correctly also if date has zero value in Excel.
+ * Set Date value correctly also if the date has a zero value in Excel.
  * Zero dates are usually used for storing a time component only,
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
- * POI can not set 1899 year directly.
+ * POI cannot set the year 1899 directly.
  */
 private fun Cell.setDate(date: JavaDate) {
     val calStart = LocaleUtil.getLocaleCalendar()

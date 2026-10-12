@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import org.postgresql.geometric.PGbox
@@ -24,9 +25,11 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.Date
 import java.sql.SQLException
+import java.sql.SQLXML
 import java.sql.Types
 import java.util.UUID
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
 import java.sql.Time as SqlTime
 import java.sql.Timestamp as SqlTimestamp
 
@@ -43,12 +46,12 @@ interface Table1Postgres {
     val characterncol: String
     val charcol: String
     val circlecol: PGcircle
-    val datecol: java.sql.Date
+    val datecol: java.util.Date
     val doublecol: Double
-    val integercol: Int?
-    val intervalcol: String
-    val jsoncol: String
-    val jsonbcol: String
+    val integercol: Int
+    val intervalcol: PGInterval
+    val jsoncol: Any
+    val jsonbcol: Any
 }
 
 @DataSchema
@@ -56,7 +59,7 @@ interface Table2Postgres {
     val id: Int
     val linecol: PGline
     val lsegcol: PGlseg
-    val macaddrcol: String
+    val macaddrcol: Any
     val moneycol: PGmoney
     val numericcol: BigDecimal
     val pathcol: PGpath
@@ -67,20 +70,20 @@ interface Table2Postgres {
     val smallserialcol: Int
     val serialcol: Int
     val textcol: String?
-    val timecol: String
-    val timewithzonecol: String
-    val timestampcol: String
-    val timestampwithzonecol: String
-    val uuidcol: String
-    val xmlcol: String
+    val timecol: SqlTime
+    val timewithzonecol: SqlTime
+    val timestampcol: Instant
+    val timestampwithzonecol: Instant
+    val uuidcol: Any
+    val xmlcol: SQLXML
 }
 
 @DataSchema
 interface ViewTablePostgres {
     val id: Int
     val bigintcol: Long
-    val linecol: String
-    val textCol: String?
+    val linecol: PGline
+    val textcol: String?
 }
 
 internal fun createPostgresTestData(connection: Connection) {
@@ -264,7 +267,7 @@ abstract class PostgresTestBase {
     @Test
     fun `read from tables`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1Postgres>()
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1Postgres>(verify = true)
         val result = df1.filter { "id"<Int>() == 1 }
 
         result[0][2] shouldBe 11
@@ -287,7 +290,7 @@ abstract class PostgresTestBase {
         schema.columns["booleanarraycol"]!!.type.classifier shouldBe Array::class
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2Postgres>()
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2Postgres>(verify = true)
         val result2 = df2.filter { "id"<Int>() == 1 }
         result2[0][11] shouldBe 1001
         result2[0][13] shouldBe null
@@ -313,7 +316,7 @@ abstract class PostgresTestBase {
             JOIN table2 t2 ON t1.id = t2.id
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTablePostgres>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTablePostgres>(verify = true)
         val result = df.filter { "id"<Int>() == 1 }
         result[0][3] shouldBe null
 
@@ -327,14 +330,14 @@ abstract class PostgresTestBase {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1Postgres>()
+        val table1Df = dataframes[0].cast<Table1Postgres>(verify = true)
 
         table1Df.rowsCount() shouldBe 3
         table1Df.filter { "integercol"<Int?>()?.let { it > 12345 } ?: false }.rowsCount() shouldBe 2
         table1Df[0][1] shouldBe 1000L
         table1Df[0][2] shouldBe 11
 
-        val table2Df = dataframes[1].cast<Table2Postgres>()
+        val table2Df = dataframes[1].cast<Table2Postgres>(verify = true)
 
         table2Df.rowsCount() shouldBe 3
         table2Df.filter {
@@ -346,7 +349,7 @@ abstract class PostgresTestBase {
     @Test
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
-        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1Postgres>()
+        val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1Postgres>(verify = true)
         val result = df1.select("smallintcol")
             .add("smallintcol2") { "smallintcol"<Int>() }
         result[0][1] shouldBe 11
@@ -360,7 +363,7 @@ abstract class PostgresTestBase {
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
-        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2Postgres>()
+        val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2Postgres>(verify = true)
 
         val result3 = df2.select("moneycol")
             .add("moneycol2") { "moneycol"<PGmoney?>() }
@@ -398,5 +401,37 @@ abstract class PostgresTestBase {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
+    }
+
+    /**
+     * Guards the invariant behind #2087 across a wide surface of types,
+     * see [assertColumnTypesMatchValues].
+     */
+    @Test
+    fun `declared column types accept the values the driver returns`() {
+        connection.assertColumnTypesMatchValues(
+            dbType = PostgreSql,
+            createTableSql = POSTGRES_AUDIT_DDL,
+            insertRowSql = POSTGRES_AUDIT_INSERT,
+        )
+    }
+
+    /**
+     * Pins the column type each SQL type is read as — the claim the type-mapping page publishes,
+     * see [assertColumnTypes].
+     */
+    @Test
+    fun `columns are read as the type-mapping page documents`() {
+        connection.assertColumnTypes(
+            dbType = PostgreSql,
+            createTableSql = POSTGRES_AUDIT_DDL,
+            insertRowSql = POSTGRES_AUDIT_INSERT,
+            expected = POSTGRES_EXPECTED_TYPES,
+        )
     }
 }

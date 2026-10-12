@@ -948,7 +948,7 @@ df.pivot("isHappy").aggregate(separate = true) {
 <inline-frame src="./resources/pivotAggregateSeparate_properties.html" width="100%" height="500px"></inline-frame>
 
 #### Default values for aggregation
-By default, any aggregation function will result in a `null` value for those matrix cells where intersection of column and row keys produced an empty data group.
+By default, any aggregation function will result in a `null` value for those matrix cells where the intersection of column and row keys produced an empty data group.
 You can specify a default value for any aggregation by using the `default` infix function. This value will replace all `null` results of the aggregation function over non-empty data groups as well.
 To use one default value for all aggregation functions, use `default()` before aggregation.
 

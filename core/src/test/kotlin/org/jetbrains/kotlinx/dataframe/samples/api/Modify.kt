@@ -19,13 +19,11 @@ import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.byName
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
@@ -48,7 +46,6 @@ import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
-import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
@@ -72,7 +69,6 @@ import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -81,7 +77,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -376,44 +371,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun reorder_properties() {
-        // SampleStart
-        df.reorder { age..isHappy }.byName()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_strings() {
-        // SampleStart
-        df.reorder { "age".."isHappy" }.byName()
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderSome() {
-        // SampleStart
-        val df = dataFrameOf("c", "d", "a", "b")(
-            3, 4, 1, 2,
-            1, 1, 1, 1,
-        )
-        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
-            // SampleEnd
-            .columnNames() shouldBe listOf("c", "b", "a", "d")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderInGroup() {
-        // SampleStart
-        df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
-            // SampleEnd
-            .name.columnNames() shouldBe listOf("lastName", "firstName")
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun splitInplace_properties() {
         // SampleStart
         df.split { name.firstName }.by { it.asIterable() }.inplace()
@@ -461,16 +418,6 @@ class Modify : TestBase() {
         df.split { "name"["lastName"]<String>() }
             .by { it.asIterable() }.default(' ')
             .inward { "char$it" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitRegex() {
-        // SampleStart
-        val merged = df.merge { name.lastName and name.firstName }
-            .by { it[0] + " (" + it[1] + ")" }
-            .into("name")
         // SampleEnd
     }
 
@@ -634,15 +581,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun gatherNames() {
-        // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>()
-            .where { it > 0 }.keysInto("city")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun gather() {
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.into("city", "population")
@@ -684,82 +622,6 @@ class Modify : TestBase() {
         // SampleStart
         val score by columnOf(4, 5, 3, 5, 4, 5, 3)
         df.insert(score).at(2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatDataFrames() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        df.concat(df1, df2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumns() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        a.concat(b)
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumnsIterable() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        listOf(a, b).concat()
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatIterable() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        listOf(df1, df2).concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatRows() {
-        // SampleStart
-        val rows = listOf(df[2], df[4], df[5])
-        rows.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatFrameColumn() {
-        // SampleStart
-        val x = dataFrameOf("a", "b")(
-            1, 2,
-            3, 4,
-        )
-        val y = dataFrameOf("b", "c")(
-            5, 6,
-            7, 8,
-        )
-        val frameColumn by columnOf(x, y)
-        frameColumn.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatGroupBy() {
-        // SampleStart
-        df.groupBy { name }.concat()
         // SampleEnd
     }
 

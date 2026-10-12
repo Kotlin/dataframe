@@ -13,11 +13,13 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -342,7 +344,9 @@ public fun <T : Number?> DataColumn<T>.sum(skipNaN: Boolean = skipNaNDefault): T
  *
  *
  *
- * The result of [expression] is treated as the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -398,7 +402,9 @@ public inline fun <C, reified V : Short?> DataColumn<C>.sumOf(crossinline expres
  *
  *
  *
- * The result of [expression] is treated as the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -454,7 +460,9 @@ public inline fun <C, reified V : Byte?> DataColumn<C>.sumOf(crossinline express
  *
  *
  *
- * The result of [expression] is treated as the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -522,8 +530,9 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
  *
  * Only the values in the columns of a primitive number type (and in "mixed" [<code>Number</code>][Number] columns)
  * are taken into account; all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  * Since the values of different columns are summed together, the result is the sum of all those
  * values converted to their common type.
@@ -586,8 +595,9 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  *
  * Only the values in the columns of type [<code>Short</code>][Short] (or `Short?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -627,7 +637,8 @@ public fun DataRow<*>.rowSum(skipNaN: Boolean = skipNaNDefault): Number =
  * // The sum of all `Short` values in the first row, as an `Int`
  * df[0].rowSumOf<Short>()
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @return The sum of the [<code>Short</code>][Short] values in this row, as an [<code>Int</code>][Int].
@@ -642,8 +653,9 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  *
  * Only the values in the columns of type [<code>Byte</code>][Byte] (or `Byte?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -683,7 +695,8 @@ public inline fun <reified T : Short> DataRow<*>.rowSumOf(_kClass: KClass<Short>
  * // The sum of all `Byte` values in the first row, as an `Int`
  * df[0].rowSumOf<Byte>()
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @return The sum of the [<code>Byte</code>][Byte] values in this row, as an [<code>Int</code>][Int].
@@ -698,8 +711,9 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  *
  * Only the values in the columns of type [<code>Int</code>][Int] (or `Int?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -739,7 +753,8 @@ public inline fun <reified T : Byte> DataRow<*>.rowSumOf(_kClass: KClass<Byte> =
  * // The sum of all `Int` values ("age" and "weight") in the first row
  * df[0].rowSumOf<Int>()
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @return The sum of the [<code>Int</code>][Int] values in this row.
@@ -754,8 +769,9 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  *
  * Only the values in the columns of type [<code>Long</code>][Long] (or `Long?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -795,7 +811,8 @@ public inline fun <reified T : Int> DataRow<*>.rowSumOf(_kClass: KClass<Int> = I
  * // The sum of all `Long` values in the first row
  * df[0].rowSumOf<Long>()
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @return The sum of the [<code>Long</code>][Long] values in this row.
@@ -810,8 +827,9 @@ public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> =
  *
  * Only the values in the columns of type [<code>Float</code>][Float] (or `Float?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -854,7 +872,8 @@ public inline fun <reified T : Long> DataRow<*>.rowSumOf(_kClass: KClass<Long> =
  * // The sum of all `Float` values in the first row, ignoring `NaN` values
  * df[0].rowSumOf<Float>(skipNaN = true)
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -874,8 +893,9 @@ public inline fun <reified T : Float> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of type [<code>Double</code>][Double] (or `Double?`) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
  *
@@ -918,7 +938,8 @@ public inline fun <reified T : Float> DataRow<*>.rowSumOf(
  * // The sum of all `Double` values in the first row, ignoring `NaN` values
  * df[0].rowSumOf<Double>(skipNaN = true)
  * ```
- * @param [T] The type of the values to sum. Only columns of this type are taken into account.
+ * @param [T] The type of the values to sum.
+ *   Only columns of this type are taken into account.
  * @param [_kClass] Technical parameter to distinguish this overload from the others;
  *   you never need to supply it.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -940,8 +961,9 @@ public inline fun <reified T : Double> DataRow<*>.rowSumOf(
  *
  * Only the values in the columns of the given [<code>type</code>][type] (or its nullable variant) are taken into account;
  * all other columns of the row are ignored.
- * This includes columns inside [<code>column groups</code>][ColumnGroup].
- * To include those in the sum, [<code>flatten</code>][DataFrame.flatten] the DataFrame first.
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
+ * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  * This overload takes the type as a [<code>KType</code>][KType] argument; prefer the `reified` overloads, like
  * [<code>`rowSumOf`</code>][DataRow.rowSumOf]`<`[<code>`Int`</code>][Int]`>()`, whenever the type is known at compile time.
@@ -1011,10 +1033,13 @@ public fun DataRow<*>.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): 
  *
  *
  *
+ *
  * All columns of a primitive number type (and all "mixed" [<code>Number</code>][Number] columns) are taken into account;
  * the other columns are simply left out of the result.
  *
- * This includes columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
  * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
@@ -1293,7 +1318,8 @@ public fun <T, C : Number?> DataFrame<T>.sumFor(
  * df.sum { amount and bonus }
  * ```
  *
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return The sum of all the values in the selected columns, as an [<code>Int</code>][Int].
  */
 @JvmName("sumShort")
@@ -1364,7 +1390,8 @@ public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int
  * // The sum of all values in the "amount" and "bonus" columns of `Byte`s, as an `Int`
  * df.sum { amount and bonus }
  * ```
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return The sum of all the values in the selected columns, as an [<code>Int</code>][Int].
  */
 @JvmName("sumByte")
@@ -1441,7 +1468,8 @@ public fun <T, C : Byte?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int 
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return The sum of all the values in the selected columns.
  */
 @Suppress("UNCHECKED_CAST")
@@ -1562,7 +1590,9 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of the [expression] is considered the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -1599,7 +1629,8 @@ public fun <T, C : Number?> DataFrame<T>.sum(
  * // The sum of all halved "amount" values (of `Short`s), as an `Int`
  * df.sumOf { (amount / 2).toShort() }
  * ```
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return The sum of the values [<code>expression</code>][expression] returns, as an [<code>Int</code>][Int].
  */
 @JvmName("sumOfShort")
@@ -1619,7 +1650,9 @@ public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline express
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of the [expression] is considered the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -1656,7 +1689,8 @@ public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline express
  * // The sum of all halved "amount" values (of `Byte`s), as an `Int`
  * df.sumOf { (amount / 2).toByte() }
  * ```
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return The sum of the values [<code>expression</code>][expression] returns, as an [<code>Int</code>][Int].
  */
 @JvmName("sumOfByte")
@@ -1676,7 +1710,9 @@ public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expressi
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of the [expression] is considered the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -1720,7 +1756,8 @@ public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expressi
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return The sum of the values [<code>expression</code>][expression] returns.
  */
 @Suppress("UNCHECKED_CAST")
@@ -1744,10 +1781,13 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
  *
  *
  *
+ *
  * All columns of a primitive number type (and all "mixed" [<code>Number</code>][Number] columns) are taken into account;
  * the other columns are simply left out of the result.
  *
- * This includes columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
  * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
@@ -2055,7 +2095,8 @@ public fun <T, C : Number?> Grouped<T>.sumFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single sum per group.
  */
 @Refine
@@ -2182,7 +2223,9 @@ public fun <T, C : Number?> Grouped<T>.sum(
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of the [expression] is considered the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -2237,7 +2280,8 @@ public fun <T, C : Number?> Grouped<T>.sum(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return A new [<code>DataFrame</code>][DataFrame] with the group keys and a single sum per group.
  */
 @Refine
@@ -2261,10 +2305,13 @@ public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
  *
  *
  *
+ *
  * All columns of a primitive number type (and all "mixed" [<code>Number</code>][Number] columns) are taken into account;
  * the other columns are simply left out of the result.
  *
- * This includes columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
  * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
@@ -2369,6 +2416,8 @@ public fun <T> Pivot<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNa
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
+ *
+ *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
@@ -2455,6 +2504,8 @@ public fun <T, R : Number?> Pivot<T>.sumFor(
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
@@ -2554,6 +2605,8 @@ public fun <T, C : Number?> Pivot<T>.sumFor(
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
+ *
+ *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
@@ -2581,7 +2634,8 @@ public fun <T, C : Number?> Pivot<T>.sumFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the sum of all the values
  *   in the selected columns.
  */
@@ -2630,6 +2684,8 @@ public fun <T, C : Number?> Pivot<T>.sum(
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
@@ -2693,7 +2749,9 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of [expression] is treated as the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -2747,7 +2805,8 @@ public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: 
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return A single [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, the sum of the expression's results.
  */
 public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
@@ -2768,10 +2827,13 @@ public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
  *
  *
  *
+ *
  * All columns of a primitive number type (and all "mixed" [<code>Number</code>][Number] columns) are taken into account;
  * the other columns are simply left out of the result.
  *
- * This includes columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
+ *
+ *
+ * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
  * To include those in the sum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
  *
  *
@@ -2804,6 +2866,8 @@ public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
@@ -2879,6 +2943,8 @@ public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false, skipNaN: Boolean =
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
@@ -2966,6 +3032,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
@@ -3067,6 +3135,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
+ *
+ *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
@@ -3095,7 +3165,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns to compute the sum of.
+ * @param [columns] The [<code>ColumnsSelector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns
+ *   to compute the sum of.
  * @return A [<code>DataFrame</code>][DataFrame] with, per group, the sum of all the values in the selected columns.
  */
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
@@ -3143,6 +3214,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  *
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
+ *
+ *
  *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
@@ -3208,7 +3281,9 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  *
  * For more information: [See RowExpression on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#rowexpression)
  *
- * The result of the [expression] is considered the 'input' of this operation.
+ *
+ *
+ * The result of the expression is considered the 'input' of this operation.
  *
  *
  * All primitive number types are supported: [<code>Byte</code>][Byte], [<code>Short</code>][Short], [<code>Int</code>][Int], [<code>Long</code>][Long], [<code>Float</code>][Float], and [<code>Double</code>][Double].
@@ -3241,6 +3316,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * For more information about the resulting types:
  * [See "`sum` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/sum.html#type-conversion)
  *
+ *
+ *
  * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
@@ -3266,7 +3343,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
- * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum for each row.
+ * @param [expression] The [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] to compute the value to sum
+ *   for each row.
  * @return A [<code>DataFrame</code>][DataFrame] with, per group, the sum of the expression's results.
  */
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(

@@ -62,10 +62,17 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 |---------------------------------------|---------------|----------------------------------|-------------------------------------------|
 | `date`                                | *none*        | `java.util.Date`                 |                                           |
 | `time [without time zone] [(p)]`      | *none*        | `java.sql.Time`                  | `p` is fractional-second precision (0–6). |
-| `time with time zone [(p)]`           | `timetz`      | `java.time.OffsetTime`           |                                           |
+| `time with time zone [(p)]`           | `timetz`      | `java.sql.Time`                  | The offset is **not** kept — the driver reports the column as plain `TIME`. |
 | `timestamp [without time zone] [(p)]` | *none*        | `kotlin.time.Instant`            | Preprocessed from `java.sql.Timestamp`.   |
-| `timestamp with time zone [(p)]`      | `timestamptz` | `java.time.OffsetDateTime`       |                                           |
+| `timestamp with time zone [(p)]`      | `timestamptz` | `kotlin.time.Instant`            | Also preprocessed from `java.sql.Timestamp`; an `Instant` is a point in time, so no offset is carried. |
 | `interval [fields] [(p)]`             | *none*        | `org.postgresql.util.PGInterval` | PostgreSQL override.                      |
+
+Neither of the two time-zone-aware types keeps the UTC offset that was stored. A `timetz` value
+loses it outright, because the driver reports the column as a plain `time`; a `timestamptz` value
+keeps the instant it denotes but not the offset it was written with, because a `kotlin.time.Instant`
+is a point in time. Read the offset as a separate column if it matters — for example
+`SELECT timestamptzCol, to_char(timestamptzCol, 'OF') AS offset`.
+{style="warning"}
 
 ## Geometric types (PostgreSQL overrides)
 
@@ -85,47 +92,56 @@ Case-insensitive `sqlTypeName` lookup selects a PostgreSQL-specific PGobject wra
 
 | Canonical        | Aliases  | DataFrame column type | Notes                                                            |
 |------------------|----------|-----------------------|------------------------------------------------------------------|
-| `bit(n)`         | *none*   | `String`              | Reported by the driver as `String` — `"0"` and `"1"` characters. |
-| `bit varying(n)` | `varbit` | `String`              |                                                                  |
+| `bit(1)`         | *none*   | `Boolean`             | A single-bit column is the one case the driver really returns a `Boolean` for.       |
+| `bit(n)`, `n > 1`| *none*   | `String`              | The bit string, as `"0"` and `"1"` characters, e.g. `"101"`.                         |
+| `bit varying(n)` | `varbit` | `Any`                 | Read as the driver's `org.postgresql.util.PGobject`; call `toString()` for the bits. |
 
 ## UUID, XML, JSON
 
 | Canonical | Aliases | DataFrame column type | Notes                                                                                 |
 |-----------|---------|-----------------------|---------------------------------------------------------------------------------------|
-| `uuid`    | *none*  | `String`              | Read as text by default (for now). Use [`parse`](parse.md) to get `kotlin.uuid.Uuid`. |
-| `xml`     | *none*  | `String`              |                                                                                       |
-| `json`    | *none*  | `String`              | Raw JSON text.                                                                        |
-| `jsonb`   | *none*  | `String`              | Binary-stored JSON, read as text.                                                     |
+| `uuid`    | *none*  | `Any`                 | The value is a `java.util.UUID`; `toString()` gives the text form. See the note below. |
+| `xml`     | *none*  | `java.sql.SQLXML`     | The value is the driver's `org.postgresql.jdbc.PgSQLXML`.                             |
+| `json`    | *none*  | `Any`                 | The value is an `org.postgresql.util.PGobject`; `toString()` gives the JSON text.     |
+| `jsonb`   | *none*  | `Any`                 | The value is an `org.postgresql.util.PGobject`; `toString()` gives the JSON text.     |
+
+Unlike H2 and DuckDB, which read a `UUID` column as `kotlin.uuid.Uuid`, PostgreSQL leaves it typed
+`Any`. To get the same type here, convert the column after reading it:
+`convert { uuidCol }.with { Uuid.parse(it.toString()) }`.
+{style="note"}
 
 ## Network address types
 
+All four are read as `Any`, holding an `org.postgresql.util.PGobject`; call `toString()` for the text form.
+
 | Canonical  | Aliases | DataFrame column type | Notes                           |
 |------------|---------|-----------------------|---------------------------------|
-| `inet`     | *none*  | `String`              | IPv4 or IPv6 host / network.    |
-| `cidr`     | *none*  | `String`              | IPv4 or IPv6 network.           |
-| `macaddr`  | *none*  | `String`              | MAC address (6 bytes).          |
-| `macaddr8` | *none*  | `String`              | MAC address (8 bytes / EUI-64). |
+| `inet`     | *none*  | `Any`                 | IPv4 or IPv6 host / network.    |
+| `cidr`     | *none*  | `Any`                 | IPv4 or IPv6 network.           |
+| `macaddr`  | *none*  | `Any`                 | MAC address (6 bytes).          |
+| `macaddr8` | *none*  | `Any`                 | MAC address (8 bytes / EUI-64). |
 
 ## Range types
 
-Range types are read as `String` (their canonical `[lo,hi)` text form).
+Range types are read as `Any`, holding an `org.postgresql.util.PGobject`; `toString()` gives the
+canonical `[lo,hi)` text form.
 
 | Canonical                                                                                               | Aliases | DataFrame column type | Notes                                |
 |---------------------------------------------------------------------------------------------------------|---------|-----------------------|--------------------------------------|
-| `int4range`                                                                                             | *none*  | `String`              |                                      |
-| `int8range`                                                                                             | *none*  | `String`              |                                      |
-| `numrange`                                                                                              | *none*  | `String`              |                                      |
-| `tsrange`                                                                                               | *none*  | `String`              |                                      |
-| `tstzrange`                                                                                             | *none*  | `String`              |                                      |
-| `daterange`                                                                                             | *none*  | `String`              |                                      |
-| `int4multirange`, `int8multirange`, `nummultirange`, `tsmultirange`, `tstzmultirange`, `datemultirange` | *none*  | `String`              | Multi-ranges (PG 14+). Read as text. |
+| `int4range`                                                                                             | *none*  | `Any`                 |                                      |
+| `int8range`                                                                                             | *none*  | `Any`                 |                                      |
+| `numrange`                                                                                              | *none*  | `Any`                 |                                      |
+| `tsrange`                                                                                               | *none*  | `Any`                 |                                      |
+| `tstzrange`                                                                                             | *none*  | `Any`                 |                                      |
+| `daterange`                                                                                             | *none*  | `Any`                 |                                      |
+| `int4multirange`, `int8multirange`, `nummultirange`, `tsmultirange`, `tstzmultirange`, `datemultirange` | *none*  | `Any`                 | Multi-ranges (PG 14+).               |
 
 ## Full-text search
 
 | Canonical  | Aliases | DataFrame column type | Notes                 |
 |------------|---------|-----------------------|-----------------------|
-| `tsvector` | *none*  | `String`              | Text search document. |
-| `tsquery`  | *none*  | `String`              | Text search query.    |
+| `tsvector` | *none*  | `Any`                 | Text search document. |
+| `tsquery`  | *none*  | `Any`                 | Text search query.    |
 
 ## Object identifiers
 

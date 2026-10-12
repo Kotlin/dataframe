@@ -4,15 +4,15 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 
 /**
- * Detailed message about any mismatch when saving to Arrow format with user-defined schema that does not match with actual data.
- * Can be sent to callback, written to log or encapsulated to exception
+ * Detailed message about any mismatch when saving to Arrow format with a user-defined schema that does not match the actual data.
+ * Can be sent to a callback, written to a log, or wrapped in an exception
  */
 public sealed class ConvertingMismatch(
-    /** Name of the column with mismatch */
+    /** Name of the column with the mismatch */
     public open val column: String,
-    /** Number of first row with mismatch (0-based) if defined */
+    /** Number of the first row with a mismatch (0-based), if defined */
     public open val row: Int?,
-    /** Original exception if exist */
+    /** Original exception, if any */
     public open val cause: Exception?,
 ) {
 
@@ -29,12 +29,12 @@ public sealed class ConvertingMismatch(
     public sealed class NarrowingMismatch(column: String) : ConvertingMismatch(column, null, null) {
         public data class NotPresentedColumnIgnored(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, saving as is"
+                "Not nullable column \"$column\" is not present in actual data, saving as is"
         }
 
         public data class NotPresentedColumnError(override val column: String) : NarrowingMismatch(column) {
             override fun toString(): String =
-                "Not nullable column \"$column\" is not presented in actual data, can not save"
+                "Not nullable column \"$column\" is not present in actual data, can not save"
         }
     }
 

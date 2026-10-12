@@ -33,7 +33,7 @@ You can create column groups using the group operation or by splitting inward â€
 
 #### FrameColumn
 
-Special case of [`ValueColumn`](#valuecolumn) that stores another [`DataFrame`](DataFrame.md) objects as elements. 
+Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrame`](DataFrame.md) objects as elements. 
 
 [`DataFrame`](DataFrame.md) stored in [`FrameColumn`](DataColumn.md#framecolumn) may have different schemas. 
 
