@@ -54,14 +54,16 @@ dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` an
   itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup. The
   generated HTML outputs keep the full suffixed name (`./resources/x_properties.html`).
 - **Iframes / plots:** `DataFrameSampleHelper` (`SampleHelper`) saves DataFrames as HTML iframes into
-  `docs/StardustDocs/resources/` and Kandy plots as SVGs into `docs/StardustDocs/images/`; the
-  `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag per
-  generated file). These are all generated — don't edit them by hand. If a sample output changes, confirm the change
-  is intentional.
+  `docs/StardustDocs/resources/<subFolder>/<pageName>/` and Kandy plots as SVGs into `docs/StardustDocs/images/`;
+  the `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag
+  per generated file, keyed by file name only). So an `<inline-frame>` `src` is always **flat** —
+  `./resources/<testName>.html`, never the on-disk path; a nested `src` builds fine but renders an empty frame.
+  These are all generated — don't edit them by hand. If a sample output changes, confirm the change is intentional.
 
 ## Build / run
 
-Run in this order (`korro` **must** run after `test`):
+First delete the page's HTML output folder (`rm -rf docs/StardustDocs/resources/<subFolder>/<pageName>`; the tests
+recreate it), then run in this order (`korro` **must** run after `test`):
 
 ```bash
 ./gradlew :samples:clean :samples:build :samples:test
@@ -69,8 +71,11 @@ Run in this order (`korro` **must** run after `test`):
 ./gradlew :samples:updateShadowResources
 ```
 
-- **Never skip `clean`** before `build`/`test`/`korro`: otherwise stale korro output lines and sample outputs (incl.
+- **Never skip `clean`** before `build`/`test`/`korro`: otherwise stale korro output lines in `build/` (incl. those of
   renamed or deleted samples) survive and get injected into the docs.
+- `clean` does **not** remove HTML outputs — they are written straight into the tracked
+  `docs/StardustDocs/resources/`. Without deleting the page folder first, HTML of renamed or deleted samples stays
+  on disk and `updateShadowResources` registers it again.
 - The test task already sets `--add-opens java.base/java.nio=ALL-UNNAMED` (for Arrow).
 - After editing a sample file, run `./gradlew :samples:ktlintFormat :samples:ktlintCheck`.
 
@@ -86,9 +91,10 @@ Run in this order (`korro` **must** run after `test`):
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
   (`"age"<Int>()`). Use the Extension Properties API in the remaining examples.
 - **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
-  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.saveSample()` / `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting
-  (`.format` / `.formatHeader` / `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for
-  column-oriented ones). Reference each HTML output in the topic as an `<inline-frame>` right after its `<!---END-->`.
+  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.saveSample()` / `.saveTextSample()` for `String`/`CodeString`
+  — see above) and add highlighting (`.format` / `.formatHeader` / `.defaultHeaderFormatting { }` — rows for
+  row-oriented operations, headers for column-oriented ones). Reference each HTML output in the topic as an
+  `<inline-frame>` right after its `<!---END-->`.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
   etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ValueCountsSamples.kt`).
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without

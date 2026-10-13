@@ -81,8 +81,12 @@ To add one:
 3. **Put `<!---IMPORT …Samples-->` at the top and `<!---FUN funName-->` / `<!---END-->` in the topic.** For a
    `_properties` / `_strings` pair, write the **base** name without the suffix in `FUN`; korro wraps the
    variants into `<tabs>`/`<tab>` itself — never write the tab markup by hand.
-4. **Generate the result.** Run, in this order (`korro` must run after `test`, and **never skip `clean`** —
-   otherwise stale korro output lines and outputs of renamed/deleted samples get injected into the page):
+4. **Generate the result.** First delete the page's HTML output folder,
+   `rm -rf resources/<subFolder>/<pageName>` — `clean` only wipes `samples/build/`, while `SampleHelper` writes
+   HTML straight into the tracked `resources/`, so HTML of renamed/deleted samples would otherwise stay on disk
+   and be re-registered by `updateShadowResources`. The tests recreate the folder. Then run, in this order
+   (`korro` must run after `test`, and **never skip `clean`** — otherwise stale korro output lines in
+   `samples/build/` get injected into the page):
 
    ```bash
    ./gradlew :samples:clean :samples:build :samples:test
