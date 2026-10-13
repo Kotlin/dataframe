@@ -34,8 +34,9 @@ df.tail(numRows: Int = 5)
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_tail_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Default last 5 rows:
 <!---FUN notebook_test_tail_2-->
@@ -44,8 +45,9 @@ Default last 5 rows:
 df.tail()
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_tail_2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Specify number of rows:
 <!---FUN notebook_test_tail_3-->
@@ -54,5 +56,6 @@ Specify number of rows:
 df.tail(numRows = 2)
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_tail_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

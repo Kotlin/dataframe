@@ -37,8 +37,9 @@ When called on a [`DataColumn`](DataColumn.md), checks that none of the values i
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/noneDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Check that none of the persons' `age` is greater than 21:
 

@@ -51,8 +51,9 @@ The following dataframe will be used in the examples below:
 df
 ```
 
+<inline-frame src="./resources/dfDataRow.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/dfDataRow.html" width="100%"/>
 
 ## Row expressions
 Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) 
@@ -88,8 +89,9 @@ df.add("fullName") { "name"["firstName"] + " " + "name"["lastName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/addWithExpression.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/addWithExpression_properties.html" width="100%"/>
 
 ##### pivot {collapsible="true"}
 
@@ -111,8 +113,9 @@ df.pivot { city }.with { "name"["lastName"]<String>().uppercase() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotWithExpression.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/pivotWithExpression_properties.html" width="100%"/>
 
 ### `RowValueExpression`
 `RowValueExpression` computes a new value for every selected cell given the [`DataRow`](DataRow.md) of that cell 
@@ -144,8 +147,9 @@ df.update("weight").at(2, 3, 5).with { it ?: prev()?.get("weight") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/updateWithExpression.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/updateWithExpression_properties.html" width="100%"/>
 
 ##### convert {collapsible="true"}
 <!---FUN convertExpression-->
@@ -166,8 +170,9 @@ df.convert("city").notNull { (it as String).uppercase() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/convertExpression.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/convertExpression_properties.html" width="100%"/>
 
 ## Row conditions
 Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
@@ -192,6 +197,8 @@ Both `this` and `it` in `RowFilter` refer to the same [`DataRow`](DataRow.md).
 df
 ```
 
+<inline-frame src="./resources/dfDataRow.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 <inline-frame src="resources/filterWithConditionDf.html" width="100%"/>
 
@@ -213,8 +220,9 @@ df.filter { "name"["firstName"]<String>() == "Alice" && "age"<Int>() >= 18 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/filterWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/filterWithCondition_properties.html" width="100%"/>
 
 ##### drop {collapsible="true"}
 
@@ -236,8 +244,9 @@ df.drop { "city"<String?>() == null || "weight"<Int?>() == null }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/dropWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/dropWithCondition_properties.html" width="100%"/>
 
 ##### first {collapsible="true"}
 
@@ -259,8 +268,9 @@ df.first { "city"<String?>() == "Milan" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/firstWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/firstWithCondition_properties.html" width="100%"/>
 
 ##### count {collapsible="true"}
 
@@ -320,8 +330,9 @@ df.update("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/updateWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/updateWithCondition_properties.html" width="100%"/>
 
 ##### gather {collapsible="true"}
 
@@ -347,8 +358,9 @@ df.gather("age", "city", "weight", "isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/gatherWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/gatherWithCondition_properties.html" width="100%"/>
 
 ##### format {collapsible="true"}
 
@@ -376,8 +388,9 @@ df
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/formatWithCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/formatWithCondition_properties.html" width="100%"/>
 
 ## Row statistics
 

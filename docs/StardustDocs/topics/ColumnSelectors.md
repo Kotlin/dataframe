@@ -12,8 +12,9 @@ Unless stated otherwise, the examples on this page use the following dataframe:
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Column selectors are used in many operations:
 
@@ -23,8 +24,9 @@ Column selectors are used in many operations:
 df.select { age and name }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageSelect.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageRemove-->
 
@@ -32,8 +34,9 @@ df.select { age and name }
 df.remove { cols { it.hasNulls() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageRemove.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageGroup-->
 
@@ -41,8 +44,9 @@ df.remove { cols { it.hasNulls() } }
 df.group { cols { it.data != name } }.into { "nameless" }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageUpdate-->
 
@@ -50,8 +54,9 @@ df.group { cols { it.data != name } }.into { "nameless" }
 df.update { city }.notNull { it.lowercase() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageUpdate.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageGather-->
 
@@ -59,8 +64,9 @@ df.update { city }.notNull { it.lowercase() }
 df.gather { colsOf<Number>() }.into("key", "value")
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageGather.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageMove-->
 
@@ -68,8 +74,9 @@ df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageMove.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 For the `fillNaNs` example, the following dataframe is used:
 
@@ -79,8 +86,9 @@ For the `fillNaNs` example, the following dataframe is used:
 dfWithNaNs
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageFillNaNsDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUsageFillNaNs-->
 
@@ -88,8 +96,9 @@ dfWithNaNs
 dfWithNaNs.fillNaNs { colsAtAnyDepth().colsOf<Double?>() }.withZero()
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUsageFillNaNs.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Full DSL Grammar {collapsible="true"}
 
@@ -509,6 +518,8 @@ df.select { it["name"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsByColumnNameIt.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 same as
@@ -520,9 +531,9 @@ same as
 df.select { name }
 ```
 
-<!---END-->
+<inline-frame src="./resources/columnSelectorsByColumnName.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/columnSelectorsByColumnNameIt_properties.html" width="100%" height="500px"></inline-frame>
+<!---END-->
 
 <!---FUN columnSelectorsByColumnPath-->
 <tabs>
@@ -542,8 +553,9 @@ df.select { it["name"]["firstName"] } // same as df.select { "name"["firstName"]
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsByColumnPath.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsByColumnPath_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsWithNewName-->
 <tabs>
@@ -563,8 +575,9 @@ df.select { "name" named "Full Name" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsWithNewName.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsWithNewName_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsConverted-->
 <tabs>
@@ -584,8 +597,9 @@ df.select { "name"["firstName"]<String>().map { it.lowercase() } }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsConverted.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsConverted_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsArithmetic-->
 <tabs>
@@ -605,8 +619,9 @@ df.select { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsArithmetic.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsArithmetic_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsTwoColumns-->
 <tabs>
@@ -626,8 +641,9 @@ df.select { "name" and "age" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsTwoColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsTwoColumns_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsColumnRange-->
 <tabs>
@@ -647,8 +663,9 @@ df.select { "name".."age" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsColumnRange.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsColumnRange_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsAllColumnsOfGroup-->
 <tabs>
@@ -668,8 +685,9 @@ df.select { "name".allCols() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsAllColumnsOfGroup.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsAllColumnsOfGroup_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN columnSelectorsAtAnyDepthFromGroup-->
 <tabs>
@@ -689,8 +707,9 @@ df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/columnSelectorsAtAnyDepthFromGroup.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/columnSelectorsAtAnyDepthFromGroup_properties.html" width="100%" height="500px"></inline-frame>
 
 **Select columns by column index:**
 
@@ -701,8 +720,9 @@ df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
 df.select { col(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnsSelectorByIndex.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnsSelectorBySeveralIndices-->
 
@@ -711,8 +731,9 @@ df.select { col(2) }
 df.select { cols(0, 1, 3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnsSelectorBySeveralIndices.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnsSelectorByIndexRange-->
 
@@ -721,8 +742,9 @@ df.select { cols(0, 1, 3) }
 df.select { cols(1..4) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnsSelectorByIndexRange.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 **Other column selectors:**
 
@@ -732,6 +754,8 @@ df.select { cols(1..4) }
 // by condition
 df.select { cols { it.name().startsWith("a") } }
 ```
+
+<inline-frame src="./resources/columnSelectorsByCondition.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -755,8 +779,9 @@ df.select { nameStartsWith("a") }
 df.select { colsOf<Int?>() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsByType.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsByTypeWithCondition-->
 
@@ -765,8 +790,9 @@ df.select { colsOf<Int?>() }
 df.select { colsOf<Int?> { it.hasNulls() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsByTypeWithCondition.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAllTopLevel-->
 
@@ -775,8 +801,9 @@ df.select { colsOf<Int?> { it.hasNulls() } }
 df.select { all() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAllTopLevel.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsTake-->
 
@@ -785,8 +812,9 @@ df.select { all() }
 df.select { take(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsTake.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsTakeLast-->
 
@@ -795,8 +823,9 @@ df.select { take(2) }
 df.select { takeLast(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsTakeLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsDrop-->
 
@@ -805,8 +834,9 @@ df.select { takeLast(2) }
 df.select { drop(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsDrop.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsDropLast-->
 
@@ -815,8 +845,9 @@ df.select { drop(2) }
 df.select { dropLast(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsDropLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsFirst-->
 
@@ -825,8 +856,9 @@ df.select { dropLast(2) }
 df.select { first { it.hasNulls() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsFirst.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsLastInGroup-->
 
@@ -837,8 +869,9 @@ df.select {
 }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsLastInGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAtAnyDepthExcludingGroups-->
 
@@ -847,8 +880,9 @@ df.select {
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAtAnyDepthExcludingGroups.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAtAnyDepthIncludingGroups-->
 
@@ -857,8 +891,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 df.select { colsAtAnyDepth() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAtAnyDepthIncludingGroups.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAtAnyDepthWithCondition-->
 
@@ -867,8 +902,9 @@ df.select { colsAtAnyDepth() }
 df.select { colsAtAnyDepth().filter { it.name().contains("y") } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAtAnyDepthWithCondition.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAtAnyDepthByType-->
 
@@ -877,8 +913,9 @@ df.select { colsAtAnyDepth().filter { it.name().contains("y") } }
 df.select { colsAtAnyDepth().colsOf<String>() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAtAnyDepthByType.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsAllExcept-->
 
@@ -887,8 +924,9 @@ df.select { colsAtAnyDepth().colsOf<String>() }
 df.select { allExcept { colsOf<String>() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsAllExcept.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsUnion-->
 
@@ -897,8 +935,9 @@ df.select { allExcept { colsOf<String>() } }
 df.select { take(2) and col(3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsUnion.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 **Modify the set of selected columns:**
 
@@ -909,8 +948,9 @@ df.select { take(2) and col(3) }
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyTake.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyTakeLast-->
 
@@ -919,8 +959,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.take(3) }
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyTakeLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyDrop-->
 
@@ -929,8 +970,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.takeLast(3) }
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyDrop.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyDropLast-->
 
@@ -939,8 +981,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.drop(3) }
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyDropLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyFilter-->
 
@@ -949,8 +992,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.dropLast(3) }
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWith("age") } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyFilter.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyExcept-->
 
@@ -959,8 +1003,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() && it.name().startsWit
 df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyExcept.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN columnSelectorsModifyDistinct-->
 
@@ -969,8 +1014,9 @@ df.select { colsAtAnyDepth().filter { !it.isColumnGroup() }.except { age } }
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/columnSelectorsModifyDistinct.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Column Resolvers
 

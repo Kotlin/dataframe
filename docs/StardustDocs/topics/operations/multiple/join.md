@@ -42,9 +42,9 @@ Use the Join DSL when the key column names differ:
 dfAges
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_5-->
 
@@ -52,9 +52,9 @@ dfAges
 dfCities
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_5.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_6-->
 
@@ -65,9 +65,9 @@ dfCities
 dfAges.join(dfCities) { firstName match right.name }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_6.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Join with explicit keys (with the same names) {collapsible="true"}
 
@@ -79,9 +79,9 @@ If mapped columns have the same name, just select join columns (one or several) 
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_8.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_10-->
@@ -90,9 +90,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_10.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_11-->
 
@@ -103,9 +103,9 @@ dfRight
 dfLeft.join(dfRight) { name }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_11.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 > In this example, the "city" columns from the left and right dataframes do not match each other.
 > After joining, the "city" column from the right dataframe is included in the result dataframe
@@ -123,9 +123,9 @@ objects will be used as join columns:
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/dfLeftImplicit.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN dfRightImplicit-->
@@ -134,9 +134,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/dfRightImplicit.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_12-->
@@ -147,9 +147,9 @@ dfRight
 dfLeft.join(dfRight)
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_12.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 ## Join types
@@ -184,9 +184,9 @@ df.excludeJoin(otherDf) [ { joinColumns } ]
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -194,9 +194,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_15-->
 
@@ -207,9 +207,9 @@ dfRight
 dfLeft.innerJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_15.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Filter {collapsible="true"}
 
@@ -219,9 +219,9 @@ dfLeft.innerJoin(dfRight) { name and city }
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -229,9 +229,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_16-->
@@ -243,9 +243,9 @@ dfRight
 dfLeft.filterJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_16.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Left {collapsible="true"}
 
@@ -255,9 +255,9 @@ dfLeft.filterJoin(dfRight) { name and city }
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -265,9 +265,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_17-->
@@ -281,9 +281,9 @@ dfRight
 dfLeft.leftJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_17.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Right {collapsible="true"}
 
@@ -293,9 +293,9 @@ dfLeft.leftJoin(dfRight) { name and city }
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -303,9 +303,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_18-->
@@ -319,9 +319,9 @@ dfRight
 dfLeft.rightJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_18.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Full {collapsible="true"}
 
@@ -331,9 +331,9 @@ dfLeft.rightJoin(dfRight) { name and city }
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -341,9 +341,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_19-->
@@ -355,9 +355,9 @@ dfRight
 dfLeft.fullJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_19.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Exclude {collapsible="true"}
 
@@ -367,9 +367,9 @@ dfLeft.fullJoin(dfRight) { name and city }
 dfLeft
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_13.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_join_14-->
 
@@ -377,9 +377,9 @@ dfLeft
 dfRight
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_14.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 <!---FUN notebook_test_join_20-->
@@ -391,7 +391,7 @@ dfRight
 dfLeft.excludeJoin(dfRight) { name and city }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_join_20.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 

@@ -200,9 +200,9 @@ Our guides and examples actually use these web tables!
 df.toHtml().writeHtml("df.html")
 ```
 
-<!---END-->
+<inline-frame src="./resources/dfToHtml.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/dfToHtml.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 Alternatively, you can open it directly in your browser without saving it to a file
 using the `openInBrowser()` method.
@@ -227,9 +227,9 @@ save it as a web table:
 df.describe()
 ```
 
-<!---END-->
+<inline-frame src="./resources/dfDescribe.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/dfDescribe.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Provide Data Schema
 
@@ -296,6 +296,8 @@ to get the "full_name" column as a property:
 val fullNameColumn: DataColumn<String> = dfRepository.full_name
 ```
 
+<inline-frame src="./resources/dfRepositoryGetFullName.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 But most importantly, you can use these properties in various operations!
@@ -333,9 +335,9 @@ Select some columns:
 val dfSelected = dfRepository.select { full_name and stargazers_count and topics }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_5.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_5.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Row Filtering
 
@@ -358,9 +360,9 @@ Filter rows by "stargazers_count" value:
 val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_6.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_6.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Columns Rename
 
@@ -382,9 +384,9 @@ val dfRenamed = dfFiltered
     .rename { stargazers_count }.to("starsCount")
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_7.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_7.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 The schema is updated automatically after `rename` so you can use new extension properties right away:
 
@@ -424,9 +426,9 @@ val dfUpdated = dfRenamed
     .convert { topics }.with { it.removePrefix("[").removeSuffix("]").split(", ") }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_8.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_8.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 Check the new "topics" type out:
 
@@ -463,9 +465,9 @@ val dfWithIsIntellij = dfUpdated.add("isIntellij") {
 }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_10.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_10.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Grouping And Aggregating
 
@@ -486,9 +488,9 @@ Group `dfWithIsIntellij` by "isIntellij":
 val groupedByIsIntellij = dfWithIsIntellij.groupBy { isIntellij }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_11.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_11.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 A `GroupBy` can be [aggregated](groupBy.md#aggregation) — that is, 
 you can compute one or several summary statistics for each group.
@@ -507,9 +509,9 @@ along with a new "count" column with the group size:
 groupedByIsIntellij.count()
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_12.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_12.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 Compute several statistics with `.aggregate { }` that provides an expression for aggregating:
 
@@ -524,9 +526,9 @@ groupedByIsIntellij.aggregate {
 }
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_13.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_13.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Sorting Rows
 
@@ -544,9 +546,9 @@ val dfTop10 = dfWithIsIntellij
     .sortByDesc { starsCount }.take(10)
 ```
 
-<!---END-->
+<inline-frame src="./resources/notebook_test_quickstart_14.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/notebook_test_quickstart_14.html" width="705px" height="500px"></inline-frame>
+<!---END-->
 
 ## Plotting With Kandy
 
@@ -611,9 +613,9 @@ dfTop10.plot {
     .save("top_10_repos.svg", path = "plots/")
 ```
 
-<!---END-->
+<img src="notebook_test_quickstart_16.svg" alt="notebook_test_quickstart_16" width="705"/>
 
-![notebook_test_quickstart_16](notebook_test_quickstart_16.svg)
+<!---END-->
 
 ## Write DataFrame
 
