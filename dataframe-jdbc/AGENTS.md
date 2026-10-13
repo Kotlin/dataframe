@@ -56,7 +56,9 @@ wrongly read as non-null fails to read with `inferNullability = false`.
 
 **H2 in a compatibility mode delegates type mapping to the emulated database's `DbType`** (`H2(Mode.MySql)`
 → `MySql`, `Mode.MsSqlServer` → `MsSql`, and so on), but it reports *its own* metadata and returns *its own*
-value classes. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
+value classes. It delegates only `getExpectedJdbcType`: `getValueFromResultSet`, `getPreprocessedValueType`
+and `preprocessValue` stay H2's own, so a delegated branch that fires for H2 declares a type that H2 then never
+returns. So every condition in an overridden `getExpectedJdbcType` has to be chosen so that it excludes
 H2, and which field does that differs per case: `MariaDb` keys its blob branch on `jdbcType != Types.BLOB`,
 because H2 in MariaDB mode reports `Types.BLOB` and does return a real `java.sql.Blob`; `MsSql` keys its
 `Short` branch on `javaClassName`, because H2 in MSSQL mode reports `Types.SMALLINT` too but returns an
@@ -124,7 +126,9 @@ Test layout under `src/test/kotlin/.../io/` splits by how the DB is provided:
   `mssqlTest`, `duckDbTest`, `imdbTest`). They connect to either a Dockerized or a locally installed server;
   don't point them at a production database.
 - `io/db/jdbcTypesTest.kt` — SQL-type-to-KType mapping, asserted against synthetic
-  `TableColumnMetadata` rather than a live driver.
+  `TableColumnMetadata` rather than a live driver. Its metadata is only as true as its source: copy
+  `jdbcType` and `javaClassName` from a probe of the real driver, and do not cite such a test as evidence
+  of what a driver returns.
 - `io/db/tableColumnsMetadataTest.kt` — the fallbacks of `getTableColumnsMetadata`, on a proxy over an H2
   `ResultSet` that makes chosen `ResultSetMetaData` methods throw. No bundled driver reaches these
   branches on its own (H2, SQLite and DuckDB all answer `isNullable`), so a new fallback is tested the
@@ -153,6 +157,10 @@ Both assertions are called from every `*TestBase` and from `EmbeddedColumnTypeAu
 databases are covered. The expected types must come from a real run: read them off the failure message
 of a run with an incomplete map rather than deriving them by hand. Only the H2/SQLite/DuckDB half runs
 in the ordinary `test` task — the rest needs `testcontainersTest` and a working Docker.
+The probe row is a type fixture, not an example: some of its literals print degenerate values
+(`to_tsvector('a')` is an empty string, `a` being a stop word). Take a documented example value from a test
+that asserts that value. A `timestamptz`/`tstzrange` literal is parsed and printed in the session time zone,
+so a test that asserts its text sets `TIME ZONE` before the `INSERT` and resets it in `finally`.
 
 Test-only driver dependencies (MariaDB, MySQL, MSSQL, H2, SQLite, PostgreSQL, DuckDB, plus HikariCP and
 kotest-assertions) are declared `testImplementation` in `build.gradle.kts`. Run just this module with
