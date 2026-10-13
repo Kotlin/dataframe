@@ -20,12 +20,16 @@ Returns a [`DataFrame`](DataFrame.md) containing the first `numRows` rows, five 
 df.head(numRows: Int = 5)
 ```
 
-If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned.
-A negative `numRows` throws an `IllegalArgumentException`.
-
-The type of each column follows the values that are left: a nullable column
+If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
+as it is, column types included.
+Otherwise, each column keeps its runtime type except for nullability: a nullable column
 whose first `numRows` values contain no `null` becomes non-nullable in the result.
-In the examples below, `city` is `String?` in `df` and `String` in `df.head()`.
+In the examples below, the runtime type of `city` is `String?` in `df` and `String` in `df.head()`.
+
+When `numRows` is `0`, the result has no rows but keeps all columns,
+including the nested columns of column groups and frame columns.
+
+A negative `numRows` throws an `IllegalArgumentException`.
 
 This is equivalent to calling [`take`](sliceRows.md#take) with the same `numRows`.
 

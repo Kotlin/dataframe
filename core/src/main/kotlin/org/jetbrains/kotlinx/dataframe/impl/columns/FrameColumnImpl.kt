@@ -43,11 +43,13 @@ internal open class FrameColumnImpl<T> constructor(
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
-        DataColumn.createFrameColumn(name, values, schemaIfNoRowsLeft(values))
+        DataColumn.createFrameColumn(name, values, sourceSchemaIfNoNonEmptyFrameLeft(values))
 
-    // The schema is computed from the non-empty dataframes. When none is left (`head(0)`, a `filter` that
-    // keeps nothing), there is nothing to compute it from, so the nested columns of this column are kept.
-    private fun schemaIfNoRowsLeft(groups: List<DataFrame<T>>): Lazy<DataFrameSchema>? =
+    // The schema is computed from the non-empty dataframes. When none is left — an empty slice (`head(0)`,
+    // a `filter` that keeps nothing) or a slice of only empty dataframes — there is nothing to compute it from,
+    // so the schema of this column is kept. The lazy schema is shared, not copied: until it is read, the slice
+    // keeps the dataframes of this column reachable.
+    private fun sourceSchemaIfNoNonEmptyFrameLeft(groups: List<DataFrame<T>>): Lazy<DataFrameSchema>? =
         if (groups.none { it.nrow > 0 }) schema else null
 
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), schema, distinct)
@@ -63,7 +65,7 @@ internal open class FrameColumnImpl<T> constructor(
         return DataColumn.createFrameColumn(
             name = name,
             groups = groups,
-            schema = schemaIfNoRowsLeft(groups),
+            schema = sourceSchemaIfNoNonEmptyFrameLeft(groups),
         )
     }
 

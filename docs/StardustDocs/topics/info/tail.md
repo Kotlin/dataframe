@@ -21,11 +21,17 @@ Returns a [`DataFrame`](DataFrame.md) containing the last `numRows` rows, five b
 df.tail(numRows: Int = 5)
 ```
 
-If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned.
-A negative `numRows` throws an `IllegalArgumentException`.
-
-The type of each column follows the values that are left: a nullable column
+If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
+as it is, column types included.
+Otherwise, each column keeps its runtime type except for nullability: a nullable column
 whose last `numRows` values contain no `null` becomes non-nullable in the result.
+In the examples below, the runtime type of `city` stays `String?` in `df.tail()`, whose last five cities
+include a `null`, and becomes `String` in `df.tail(2)`.
+
+When `numRows` is `0`, the result has no rows but keeps all columns,
+including the nested columns of column groups and frame columns.
+
+A negative `numRows` throws an `IllegalArgumentException`.
 
 This is equivalent to calling [`takeLast`](sliceRows.md#takelast) with the same `numRows`.
 
@@ -42,7 +48,8 @@ df
 <!---END-->
 <inline-frame src="./resources/notebook_test_tail_1.html" width="100%" height="500px"></inline-frame>
 
-Default last 5 rows:
+The last five rows, by default:
+
 <!---FUN notebook_test_tail_2-->
 
 ```kotlin
@@ -52,11 +59,12 @@ df.tail()
 <!---END-->
 <inline-frame src="./resources/notebook_test_tail_2.html" width="100%" height="500px"></inline-frame>
 
-Specify number of rows:
+The last two rows:
+
 <!---FUN notebook_test_tail_3-->
 
 ```kotlin
-df.tail(numRows = 2)
+df.tail(2)
 ```
 
 <!---END-->

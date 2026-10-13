@@ -170,6 +170,8 @@ df.age.dropLast(5)
 
 Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
 
+If the condition holds for every row, the result has no rows.
+
 <!---FUN dropWhile-->
 
 ```kotlin

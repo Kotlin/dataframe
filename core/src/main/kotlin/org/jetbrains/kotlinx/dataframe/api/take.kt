@@ -77,7 +77,13 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
 /**
  * Returns a [DataFrame] containing the first [n] rows.
  *
- * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned
+ * as it is, column types included.
+ * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+ * whose first [n] values contain no `null` becomes non-nullable in the result.
+ *
+ * When [n] is `0`, the result has no rows but keeps all columns,
+ * including the nested columns of column groups and frame columns.
  *
  * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
@@ -101,7 +107,13 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
 /**
  * Returns a [DataFrame] containing the last [n] rows.
  *
- * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned.
+ * If [n] is greater than or equal to the number of rows, the whole [DataFrame] is returned
+ * as it is, column types included.
+ * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+ * whose last [n] values contain no `null` becomes non-nullable in the result.
+ *
+ * When [n] is `0`, the result has no rows but keeps all columns,
+ * including the nested columns of column groups and frame columns.
  *
  * For more information: {@include [DocumentationUrls.TakeLast]}
  *

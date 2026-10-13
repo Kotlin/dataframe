@@ -86,7 +86,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
-* [head](head.md) — get the first rows of [`DataFrame`](DataFrame.md), five by default
+* [head](head.md) — get the first `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [implode](implode.md) — collapse column values into lists grouping by other columns
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
@@ -117,7 +117,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
-* [tail](tail.md) — get the last rows of [`DataFrame`](DataFrame.md), five by default
+* [tail](tail.md) — get the last `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -9,7 +10,8 @@ import kotlin.reflect.typeOf
 /**
  * Tests the behavior of the `tail` API on a [DataFrame]:
  * the last five rows by default, the last `numRows` rows when given,
- * and the edge cases of `numRows`: more than the number of rows, zero, and negative.
+ * the edge cases of `numRows` (equal to and more than the number of rows, zero, negative),
+ * the nullability of the columns that are left, and the nested columns kept at zero rows.
  */
 @Suppress("ktlint:standard:argument-list-wrapping")
 class TailTests {
@@ -73,21 +75,34 @@ class TailTests {
     }
 
     @Test
-    fun `tail with zero rows keeps the nested columns of a frame column`() {
-        val grouped = dataFrameOf("k", "v")(1, "x", 2, "y").groupBy("k").toDataFrame()
+    fun `tail with zero rows keeps the nested columns of column groups and frame columns`() {
+        // `keys` is a column group, `group` is a frame column whose dataframes have the columns `k` and `v`
+        val nested = dataFrameOf("k", "v")(1, "x", 2, "y").groupBy("k").toDataFrame().group("k").into("keys")
 
-        val empty = grouped.tail(0)
+        val empty = nested.tail(0)
 
         empty.getFrameColumn("group").schema.value.columns.keys shouldBe setOf("k", "v")
+        empty.schema() shouldBe nested.schema()
     }
 
     @Test
-    fun `column type follows the values in the last numRows rows`() {
-        val nullable = dataFrameOf("w")(null, 2, 3)
+    fun `nullable column becomes non-nullable when its last numRows values have no null`() {
+        val nullable = dataFrameOf("w")(1, null, 3, 4)
         nullable["w"].type() shouldBe typeOf<Int?>()
 
         nullable.tail(2)["w"].type() shouldBe typeOf<Int>()
         nullable.tail(3)["w"].type() shouldBe typeOf<Int?>()
+    }
+
+    @Test
+    fun `tail with numRows covering all rows keeps the column types as they are`() {
+        // declared nullable, but holds no `null`
+        val declared = dataFrameOf(DataColumn.createValueColumn("w", listOf(1, 2), typeOf<Int?>()))
+
+        declared.tail()["w"].type() shouldBe typeOf<Int?>()
+        declared.tail(2)["w"].type() shouldBe typeOf<Int?>()
+        // with a row left out, the nullability follows the values
+        declared.tail(1)["w"].type() shouldBe typeOf<Int>()
     }
 
     @Test
