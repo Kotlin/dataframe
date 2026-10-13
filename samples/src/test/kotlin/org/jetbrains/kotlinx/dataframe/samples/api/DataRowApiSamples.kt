@@ -134,7 +134,10 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
 
     @Test
     fun filterWithConditionDf() {
-        df.format().perRowCol { row, _ ->
+        // SampleStart
+        df
+            // SampleEnd
+            .format().perRowCol { row, _ ->
             val lastName = row.name.lastName
             lastNameToColorFilter(lastName)?.let { color ->
                 background(color) and textColor(black)

@@ -191,16 +191,15 @@ Both `this` and `it` in `RowFilter` refer to the same [`DataRow`](DataRow.md).
 
 ##### filter {collapsible="true"}
 
-<!---FUN dfDataRow-->
+<!---FUN filterWithConditionDf-->
 
 ```kotlin
 df
 ```
 
-<inline-frame src="./resources/dfDataRow.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/filterWithConditionDf.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
-<inline-frame src="resources/filterWithConditionDf.html" width="100%"/>
 
 <!---FUN filterWithCondition-->
 <tabs>
