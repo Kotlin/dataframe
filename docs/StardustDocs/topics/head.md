@@ -1,16 +1,69 @@
 [//]: # (title: head)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
+<web-summary>
+Discover `head` operation in Kotlin DataFrame.
+</web-summary>
 
-Returns [`DataFrame`](DataFrame.md) containing first `n` (default 5) rows.
+<card-summary>
+Discover `head` operation in Kotlin DataFrame.
+</card-summary>
 
-<!---FUN head-->
+<link-summary>
+Discover `head` operation in Kotlin DataFrame.
+</link-summary>
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.info.HeadSamples-->
+
+Returns a [`DataFrame`](DataFrame.md) containing the first `numRows` rows, five by default.
+
+```text
+head(numRows: Int = 5): DataFrame
+```
+
+If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
+as it is, column types included.
+Otherwise, each column keeps its runtime type except for nullability: a nullable column
+whose first `numRows` values contain no `null` becomes non-nullable in the result.
+In the examples below, the runtime type of `city` is `String?` in `df` and `String` in `df.head()`.
+
+When `numRows` is `0`, the result has no rows but keeps all columns,
+including the nested columns of column groups and frame columns.
+
+A negative `numRows` throws an `IllegalArgumentException`.
+
+This is equivalent to calling [`take`](sliceRows.md#take) with the same `numRows`.
+
+**Related operations**: [`tail`](tail.md), [`take`](sliceRows.md#take), [`drop`](sliceRows.md#drop).
+
+### Examples
+
+<!---FUN headInput-->
+
+```kotlin
+df
+```
+
+<!---END-->
+<inline-frame src="./resources/headInput.html" width="100%" height="500px"></inline-frame>
+
+The first five rows, by default:
+
+<!---FUN headDefault-->
+
+```kotlin
+df.head()
+```
+
+<!---END-->
+<inline-frame src="./resources/headDefault.html" width="100%" height="500px"></inline-frame>
+
+The first three rows:
+
+<!---FUN headNumRows-->
 
 ```kotlin
 df.head(3)
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.head.html" width="100%"/>
 <!---END-->
-
-Similar to [`take`](sliceRows.md#take).
+<inline-frame src="./resources/headNumRows.html" width="100%" height="500px"></inline-frame>

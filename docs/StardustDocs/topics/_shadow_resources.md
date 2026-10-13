@@ -179,6 +179,9 @@
 <resource src="valuesOnGroupByAllColumns_properties.html"></resource>
 <resource src="valuesOnGroupByRenameColumns_properties.html"></resource>
 <resource src="valuesOnGroupBySelectedColumns_properties.html"></resource>
+<resource src="headDefault.html"></resource>
+<resource src="headInput.html"></resource>
+<resource src="headNumRows.html"></resource>
 <resource src="indexingDf.html"></resource>
 <resource src="indicesGetRows.html"></resource>
 <resource src="iterateDf.html"></resource>
@@ -389,7 +392,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Access.xs.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describe.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.describeColumns.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.head.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupByMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticGroupBySingle.html"></resource>
