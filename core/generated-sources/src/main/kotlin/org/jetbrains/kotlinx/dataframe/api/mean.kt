@@ -661,7 +661,8 @@ public fun <T, C : Number?> DataFrame<T>.meanFor(
  * df.meanFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -839,7 +840,8 @@ public fun <T, C : Number?> DataFrame<T>.mean(
  * df.mean("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1149,7 +1151,8 @@ public fun <T, C : Number?> Grouped<T>.meanFor(
  * df.groupBy { city }.meanFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1344,7 +1347,8 @@ public fun <T, C : Number?> Grouped<T>.mean(
  * df.groupBy { city }.mean("age", "weight", name = "average")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [name] The name of the resulting column.
  *   If `null` (the default), the name of the selected column is used if exactly one column
  *   is selected, and `"mean"` otherwise.
@@ -1574,13 +1578,9 @@ public fun <T> Pivot<T>.mean(skipNaN: Boolean = skipNaNDefault, separate: Boolea
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
  * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
@@ -1660,13 +1660,9 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -1692,7 +1688,8 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * df.pivot { city }.meanFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1769,13 +1766,9 @@ public fun <T, C : Number?> Pivot<T>.meanFor(
  * [See "`mean` Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/mean.html#type-conversion)
  *
  *
- * Result cells for which there exists a group, but there is nothing to average
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing to average
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become [<code>Double.NaN</code>][Double.NaN].
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2128,7 +2121,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  * df.pivot { city }.groupBy { name.lastName }.meanFor("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
@@ -2326,7 +2320,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  * df.pivot { city }.groupBy { name.lastName }.mean("age", "weight")
  * ```
  * @param [columns] The names of the columns to compute the mean of.
- *   These must be columns holding only primitive numbers, else an [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
+ *   These must be existing columns holding only primitive numbers,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
