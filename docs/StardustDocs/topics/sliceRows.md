@@ -52,6 +52,8 @@ df[0..2, 4..5]
 
 Returns a [`DataFrame`](DataFrame.md) containing the first `n` rows.
 
+[`head`](head.md) does the same, with five rows by default.
+
 <!---FUN take-->
 
 ```kotlin
@@ -77,6 +79,8 @@ df.age.take(5)
 ## takeLast
 
 Returns a [`DataFrame`](DataFrame.md) containing the last `n` rows.
+
+[`tail`](tail.md) does the same, with five rows by default.
 
 <!---FUN takeLast-->
 
