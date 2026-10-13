@@ -606,4 +606,7 @@ public interface DocumentationUrls {
 
     /** [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) */
     public typealias ApacheCsv = Nothing
+
+    /** [See PostgreSQL type mapping on the documentation website.]({@include [Url]}/readsqltypemapping-postgresql.html) */
+    public typealias ReadSqlTypeMappingPostgreSql = Nothing
 }

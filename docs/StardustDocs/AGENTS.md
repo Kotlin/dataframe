@@ -135,6 +135,12 @@ To add one:
   `src` builds fine and silently renders an empty frame.
 - After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
   — check the real set with `git diff --ignore-cr-at-eol`.
+- **A published URL is the topic file name lowercased, with `_` turned into `-`.**
+  `readSqlTypeMapping_PostgreSQL.md` is published as `readsqltypemapping-postgresql.html`; the plain
+  lowercased `readsqltypemapping_postgresql.html` is a 404. Before you add a `DocumentationUrls` entry or
+  any other link to the published site, fetch it (`curl -s -o /dev/null -w '%{http_code}' <url>` must
+  print `200`). For a page that is not published yet, take the form from the `href` the published parent
+  page uses for its siblings.
 
 ## Adding a new topic under an already-included folder
 
