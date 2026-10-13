@@ -94,10 +94,12 @@ To add one:
    ./gradlew :samples:updateShadowResources
    ```
 
-   Korro does not inject the `<inline-frame>` in `:samples`: add
-   `<inline-frame src="./resources/funName.html" width="100%" height="500px"></inline-frame>` by hand right
-   after `<!---END-->`. For a tabbed pair the iframe keeps the suffixed name of the variant shown
-   (`./resources/funName_properties.html`).
+   `saveDfHtmlSample()` / `savePlotSVGSample()` write the HTML/SVG and a korro output line, so korro injects
+   the `<inline-frame>` / `<img>` itself **inside** the `<!---FUN-->`…`<!---END-->` block. Don't add one by
+   hand after `<!---END-->` — it duplicates the generated one (remove such leftovers when you touch an old
+   page). The only hand-written iframe is for an output shown without code — a test with no
+   `// SampleStart` and no `FUN` mark. Output file names drop the `_properties` / `_strings` suffix, so a
+   tabbed pair's iframe is `./resources/funName.html`.
    The generated HTML only reaches the site once it is registered in
    `topics/_shadow_resources.md` — that is what `updateShadowResources` does; commit the new
    `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an
@@ -141,7 +143,7 @@ To add one:
   `resources/snippets/` never updates `_shadow_resources.md`, so its `<resource>` line outlives the file.
 - **An iframe `src` is the flat basename, never the on-disk path.** `updateShadowResources` registers
   resources by basename only (422 `<resource src="…">` entries, not one with a slash), so a nested
-  source file is still referenced as `./resources/<file>.html`: `sliceRows.md:14` says
+  source file is still referenced as `./resources/<file>.html`: `sliceRows.md:13` says
   `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
   `src` builds fine and silently renders an empty frame.
 - **Nothing validates links.** Writerside resolves topic links by file name (`DataFrame.md`, not a relative

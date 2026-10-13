@@ -51,11 +51,17 @@ dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` an
   hand-written shape is common but is the one that rots — prefer `saveSample`.
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
   `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java". Korro wraps the variants into `<tabs>`/`<tab>`
-  itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup. The
-  generated HTML outputs keep the full suffixed name (`./resources/x_properties.html`).
+  itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup.
+  `SampleHelper` cuts the `_properties`/`_strings` suffix off output file names too (`namePartsToRemove`), so both
+  variants write `./resources/x.html` — save the output in one of them only (usually `_properties`).
 - **Iframes / plots:** `DataFrameSampleHelper` (`SampleHelper`) saves DataFrames as HTML iframes into
-  `docs/StardustDocs/resources/<subFolder>/<pageName>/` and Kandy plots as SVGs into `docs/StardustDocs/images/`;
-  the `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag
+  `docs/StardustDocs/resources/<subFolder>/<pageName>/` and Kandy plots as SVGs into `docs/StardustDocs/images/`,
+  named after the test function without the suffix. It also writes a korro output line for them (its
+  `onDfHtmlSampleSaved` / `onPlotSampleSaved` hooks), so korro injects the `<inline-frame>` / `<img>` **inside** the
+  `<!---FUN-->`…`<!---END-->` block, together with any text output of the same test, in the order they were saved.
+  **Don't add one by hand after `<!---END-->`** — it duplicates the generated one. The only hand-written iframe is
+  for an output shown without code: a test with no `// SampleStart` and no `FUN` mark in the topic.
+  The `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag
   per generated file, keyed by file name only). So an `<inline-frame>` `src` is always **flat** —
   `./resources/<testName>.html`, never the on-disk path; a nested `src` builds fine but renders an empty frame.
   These are all generated — don't edit them by hand. If a sample output changes, confirm the change is intentional.
@@ -91,10 +97,10 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
   (`"age"<Int>()`). Use the Extension Properties API in the remaining examples.
 - **After** `// SampleEnd`: save outputs (`.saveDfHtmlSample()` for `DataFrame`/`DataColumn`/`GroupBy`, using
-  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.saveSample()` / `.saveTextSample()` for `String`/`CodeString`
-  — see above) and add highlighting (`.format` / `.formatHeader` / `.defaultHeaderFormatting { }` — rows for
-  row-oriented operations, headers for column-oriented ones). Reference each HTML output in the topic as an
-  `<inline-frame>` right after its `<!---END-->`.
+  `.toDataFrame()`/`.values()`/`.frames()` if needed; `.savePlotSVGSample()` for plots; `.saveSample()` /
+  `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
+  `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
+  every saved output into the topic itself, inside the sample's `FUN`/`END` block.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
   etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ValueCountsSamples.kt`).
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
