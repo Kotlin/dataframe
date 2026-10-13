@@ -9,6 +9,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -122,5 +125,14 @@ class DataColumns : BaseTest() {
             it.kind() shouldBe ColumnKind.Frame
             it.type().isSubtypeOf(typeOf<DataFrame<*>>()) shouldBe true
         }
+    }
+
+    @Test
+    fun `filter that keeps no row keeps the nested columns of a frame column`() {
+        val grouped = dataFrameOf("k", "v")(1, "x", 2, "y").groupBy("k").toDataFrame()
+
+        val empty = grouped.filter { false }
+
+        empty.getFrameColumn("group").schema.value.columns.keys shouldBe setOf("k", "v")
     }
 }

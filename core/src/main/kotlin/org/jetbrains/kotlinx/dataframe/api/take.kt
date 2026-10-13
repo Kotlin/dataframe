@@ -82,6 +82,7 @@ public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n
  * For more information: {@include [DocumentationUrls.TakeFirst]}
  *
  * See also:
+ * - [head][DataFrame.head] — the same operation, with five rows by default.
  * - [takeLast][DataFrame.takeLast] — takes the last [n] rows instead.
  * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [drop][DataFrame.drop]`(n: Int)` — drops the first [n] rows.
@@ -105,6 +106,7 @@ public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
  * For more information: {@include [DocumentationUrls.TakeLast]}
  *
  * See also:
+ * - [tail][DataFrame.tail] — the same operation, with five rows by default.
  * - [take][DataFrame.take] — takes the first [n] rows instead.
  * - [takeWhile][DataFrame.takeWhile] — takes the first rows while the predicate holds.
  * - [dropLast][DataFrame.dropLast] — drops the last [n] rows.

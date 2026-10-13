@@ -45,6 +45,9 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 **Never hand-write a ` ```kotlin ` block in a topic.** All Kotlin in the docs must be a Korro sample, so that it
 is compiled and run on every build — a hand-written block is the way a hallucinated or long-dead API reaches the
 website. Only `text`-fenced pseudo-grammar (`operation { columnMapping }: DataFrame`) is written by hand.
+One exception: the call signature at the top of an operation page (`df.tail(numRows: Int = 5)` on `tail.md`)
+may stay a hand-written `kotlin` block. It is not runnable code, it only shows the parameters and their defaults,
+so keep it in step with the function's declaration by hand.
 
 To add one:
 
