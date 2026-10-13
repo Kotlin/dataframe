@@ -171,7 +171,7 @@ internal interface CommonStatisticsDocs {
     typealias ExpressionResultIsInputSnippet = Nothing
 
     /**
-     * {@comment Note about what empty pivot intersections become. KDoc-snippet.}
+     * {@comment Note about what empty pivot intersections become. Only applies to [PivotGroupBy]. KDoc-snippet.}
      *
      * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
      */
