@@ -19,8 +19,8 @@ Returns a [`DataFrame`](DataFrame.md) containing the last `numRows` rows, five b
 
 **API reference**: [`tail`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/tail.html)
 
-```kotlin
-df.tail(numRows: Int = 5)
+```text
+tail(numRows: Int = 5): DataFrame
 ```
 
 If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
