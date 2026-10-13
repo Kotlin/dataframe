@@ -43,7 +43,14 @@ internal open class FrameColumnImpl<T> constructor(
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
-        DataColumn.createFrameColumn(name, values)
+        DataColumn.createFrameColumn(name, values, sourceSchemaIfNoNonEmptyFrameLeft(values))
+
+    // The schema is computed from the non-empty dataframes. When none is left — an empty slice (`head(0)`,
+    // a `filter` that keeps nothing) or a slice of only empty dataframes — there is nothing to compute it from,
+    // so the schema of this column is kept. The lazy schema is shared, not copied: until it is read, the slice
+    // keeps the dataframes of this column reachable.
+    private fun sourceSchemaIfNoNonEmptyFrameLeft(groups: List<DataFrame<T>>): Lazy<DataFrameSchema>? =
+        if (groups.none { it.nrow > 0 }) schema else null
 
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), schema, distinct)
 
@@ -53,11 +60,14 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun get(indices: Iterable<Int>): FrameColumn<T> =
-        DataColumn.createFrameColumn(
+    override fun get(indices: Iterable<Int>): FrameColumn<T> {
+        val groups = indices.map { values[it] }
+        return DataColumn.createFrameColumn(
             name = name,
-            groups = indices.map { values[it] },
+            groups = groups,
+            schema = sourceSchemaIfNoNonEmptyFrameLeft(groups),
         )
+    }
 
     override fun get(columnName: String) =
         throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")
