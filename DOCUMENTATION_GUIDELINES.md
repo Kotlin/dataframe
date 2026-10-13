@@ -326,9 +326,12 @@ If not specified, the whole body is used (not recommended!).
   write the **base** test name in the `FUN` directive, without the suffix
   (`valueCountsSelector_properties` + `valueCountsSelector_strings` → `<!---FUN valueCountsSelector-->`).
   Korro finds all suffixed variants itself and wraps them into `<tabs>`.
-  Note that the generated HTML outputs still have the full name with the suffix
-  (`./resources/valueCountsSelector_properties.html`).
-4) Code samples will be inserted between them after `korro` gradle task run.
+  The generated outputs have the base name too — [Sample Helper](#sample-helper) cuts off the suffix
+  (`./resources/valueCountsSelector.html`).
+4) Code samples **and their outputs** will be inserted between them after `korro` gradle task run:
+   the code, then everything the test saved with [Sample Helper](#sample-helper) — the `<inline-frame>`
+   for an HTML table, the `<img>` for a plot, the text output — in the order it was saved.
+   Don't add an `<inline-frame>` / `<img>` for a sample by hand — it would duplicate the generated one.
 Both files must be included in korro configuration in the 
 [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
 
@@ -339,8 +342,10 @@ Both files must be included in korro configuration in the
 [Kandy](https://github.com/Kotlin/kandy) plots as SVG, as well as `String` 
 or [`CodeString`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/generateCode.kt) as text samples
 with the special methods by running tests.
-Resulting samples have names equal to the test method name 
-(`test_name.html` or `test_name.txt`).
+Resulting samples have names equal to the test method name without the `_properties` / `_strings` suffix
+(`test_name.html` or `test_name.svg`; `test_name_properties` → `test_name.html`).
+Every saved output is also written as a Korro output line, so Korro inserts it into the topic
+inside the sample's `<!---FUN-->`…`<!---END-->` block automatically.
 
 Inherit test class from 
 [`DataFrameSampleHelper`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/DataFrameSampleHelper.kt).
@@ -348,17 +353,26 @@ Inherit test class from
 * Use `.saveDfHtmlSample()` for saving `DataFrame`, `DataColumn`, `GroupBy` or any other
 Kotlin DataFrame structure as an interactive HTML table sample 
 (if the receiver is not suitable, try to use `.toDataFrame()`, .`values()` or `.frames()`). 
-This table should be included as `<inline-frame>` in the topic file right 
-after the code sample (after `<!---END-->` for this sample).
+Korro inserts this table into the topic as an `<inline-frame>` right after the code sample,
+inside the `<!---FUN-->`…`<!---END-->` block — don't write it by hand.
+   * The only `<inline-frame>` written by hand is the one for an output shown without its code
+    (for example, a highlighted copy of the input dataframe): a test that only saves an output,
+    without `// SampleStart` / `// SampleEnd` and without `FUN` marks in the topic.
+   * For a `_properties` / `_strings` pair, save the output in one variant only (usually `_properties`):
+    both variants write the same file.
    * HTML outputs are saved into the [docs/StardustDocs/resources](docs/StardustDocs/resources) folder. 
     Subfolder names are defined by `DataFrameSampleHelper` arguments:
     `DataFrameSampleHelper("<pageName>", "api")` writes `resources/api/<pageName>/<testName>.html`.
    * The `<inline-frame>` `src` is nevertheless always the **flat** file name — `./resources/<testName>.html`,
-    never `./resources/api/<pageName>/<testName>.html`. Writerside finds the file through
+    never `./resources/api/<pageName>/<testName>.html` (the generated iframes already use it;
+    keep it in mind for a hand-written one and when checking links). Writerside finds the file through
     [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md), which registers resources by file name only;
     a nested `src` builds fine but renders an empty frame.
+* Use `.savePlotSVGSample()` for saving a [Kandy](https://github.com/Kotlin/kandy) plot as SVG
+  into [docs/StardustDocs/images](docs/StardustDocs/images); Korro inserts it as an `<img>`.
 * Use `.saveSample()` for saving text sample from the `String` or 
-[`CodeString`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/generateCode.kt).
+[`CodeString`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/generateCode.kt)
+(`.saveTextSample()` for a `String` that should be shown as a `text` block).
    * Text samples are saved into a temporary build folder and exported automatically while running `korro`.
 
 #### Migration from `:core`
@@ -390,13 +404,8 @@ and outputs created using [Sample Helper](#sample-helper).
    Write code samples as tests. Mark out code and the topic file with Korro marks (`IMPORT` in the
    beginning of the file, `FUN` and `END`).
    Add example outputs generation using [Sample Helper](#sample-helper) methods (`.save..()`).
-   For HTML dataframes, add them to the topic as `<inline-frame>` tags right after 
-   the code snippet ends (`<!---END-->`):
-   ```Markdown
-   <inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
-   ```
-   The `src` is always flat (`./resources/testName.html`), even though the file is written
-   into a subfolder — see [Sample Helper](#sample-helper).
+   Korro inserts the outputs (`<inline-frame>` for HTML dataframes, `<img>` for plots, text outputs)
+   into the `FUN`/`END` block itself — don't add them to the topic by hand.
 4) Add the test file and topic file paths to Korro config in the
    [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
 5) Run Gradle tasks of the `:samples` module: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
@@ -407,7 +416,8 @@ and outputs created using [Sample Helper](#sample-helper).
    [docs/StardustDocs/resources](docs/StardustDocs/resources) folder. So before running the tests, delete the
    page's output folder `docs/StardustDocs/resources/<subFolder>/<pageName>/` — the tests recreate it,
    and HTML of removed or renamed samples doesn't survive (and doesn't get registered by `updateShadowResources`).
-6) Check if code samples appear in the topic, HTML frames are added to resources.
+6) Check if code samples and their outputs (`<inline-frame>`s) appear inside the `FUN`/`END` blocks of the topic,
+   and HTML frames are added to resources.
 7) Run `updateShadowResources` Gradle task. This will update 
    a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build website correctly.
 8) Check the resulting page manually, 

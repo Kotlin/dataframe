@@ -41,7 +41,7 @@ Operation pages are never written from scratch. Use a completed similar operatio
 
 - If the user provided a reference page — use it.
 - Otherwise find one yourself: pick a page of a closely related operation that already has an
-  `IMPORT` directive, `FUN`/`END` marks and `<inline-frame>` outputs, and whose test lives in
+  `IMPORT` directive and `FUN`/`END` marks with generated `<inline-frame>` outputs inside them, and whose test lives in
   `samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/`. Good references:
   `docs/StardustDocs/topics/valueCounts.md` + `…/samples/api/ValueCountsSamples.kt`,
   `countDistinct.md`, `sliceRows.md`, `filter.md`. Tell the user which template you picked.
@@ -140,7 +140,8 @@ order of sections in the topic.
   and not recommended. Use the Extension Properties API in the remaining examples.
 - Save outputs with Sample Helper **after** `// SampleEnd`: `.saveDfHtmlSample()` for
   `DataFrame`/`DataColumn`/`GroupBy` (use `.toDataFrame()`/`.values()`/`.frames()` if needed),
-  `.saveSample()` for `String`/`CodeString`.
+  `.savePlotSVGSample()` for Kandy plots, `.saveSample()` / `.saveTextSample()` for
+  `String`/`CodeString`. Korro inserts all of them into the topic itself (see below).
 - Put `.format` / `.formatHeader` / `.defaultHeaderFormatting { }` highlighting after
   `// SampleEnd` too. Highlight rows for row-oriented operations, headers for column-oriented ones.
 - Use illustrative data — e.g. a frame that actually contains `null`s for `null`-related
@@ -159,23 +160,31 @@ at the top, then for each sample
 <!---FUN testName-->
 
 <!---END-->
-<inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
 ```
 
-The `src` is always the **flat** file name, `./resources/<testName>.html` — even though
+Korro fills the block with the sample code **and its outputs**: everything the test saved with
+Sample Helper — the `<inline-frame>` for `.saveDfHtmlSample()`, the `<img>` for
+`.savePlotSVGSample()`, the text of `.saveSample()` / `.saveTextSample()` — in the order it was
+saved. **Never write an `<inline-frame>` / `<img>` for a sample by hand** — it would duplicate the
+generated one. The only hand-written `<inline-frame>` is for an output shown without its code (e.g. a
+highlighted copy of the input): a test that only saves an output, with no `// SampleStart` and no
+`FUN` mark in the topic.
+
+The generated `src` is the **flat** file name, `./resources/<testName>.html` — even though
 `DataFrameSampleHelper("<pageName>", "api")` writes the file to
 `docs/StardustDocs/resources/api/<pageName>/<testName>.html`. `_shadow_resources.md` registers
 resources by file name only, so a nested `src` builds fine but renders an empty frame. Never
 "fix" a `src` to the on-disk path.
 
-For a tabbed pair, the `FUN` directive takes the **base** name without the suffix, while the
-iframe keeps the full file name of the variant whose output you show:
+For a tabbed pair, the `FUN` directive takes the **base** name without the suffix. Sample Helper
+cuts the `_properties` / `_strings` suffix off the output file names too, so the output of
+`valueCountsSelector_properties` is `./resources/valueCountsSelector.html`. Save the output in one
+variant only (usually `_properties`) — both variants write the same file:
 
 ```markdown
 <!---FUN valueCountsSelector-->
 
 <!---END-->
-<inline-frame src="./resources/valueCountsSelector_properties.html" width="100%" height="500px"></inline-frame>
 ```
 
 Then add both the topic path and the test path to the Korro config in `samples/build.gradle.kts`
@@ -219,10 +228,13 @@ re-register every stale file still on disk.
 Then verify, and report honestly if anything failed:
 
 - the test run passed;
-- code snippets were inserted between every `FUN`/`END` pair in the topic (no empty pairs);
+- code snippets were inserted between every `FUN`/`END` pair in the topic (no empty pairs), and
+  every sample that saves an output got its `<inline-frame>` / `<img>` **inside** its block;
+- no `<inline-frame>` duplicates a generated one right after `<!---END-->` (remove such leftovers
+  when updating an old page);
 - an HTML file exists in `docs/StardustDocs/resources/` **or one of its subfolders** (normally
-  `resources/api/<pageName>/`) for every `<inline-frame src>` you reference — the `src` itself stays
-  flat (note tab-generated names get the `_properties` / `_strings` suffix);
+  `resources/api/<pageName>/`) for every `<inline-frame src>` on the page — the `src` itself stays
+  flat, and output names have no `_properties` / `_strings` suffix;
 - no stale HTML of renamed or deleted samples is left in the page's output folder;
 - `_shadow_resources.md` was updated.
 
@@ -260,7 +272,8 @@ Fix every broken one, and report any you could not resolve.
 
 If the page still uses samples generated from `:core` tests:
 
-- Remove the old Korro marks/`IMPORT` from the topic and any old-style output embeds.
+- Remove the old Korro marks/`IMPORT` from the topic and any old-style output embeds, including
+  hand-written `<inline-frame>`s after `<!---END-->` — the new ones are generated inside the blocks.
 - Rewrite those samples as new tests in `:samples` (step 4) with Sample Helper outputs — do not
   carry over `@TransformDataFrameExpressions` or the explainer HTML.
 - Delete the now-unused sample functions from the `:core` test file if nothing else references
