@@ -13,4 +13,4 @@ This module is a friend module of [`:core`](../core) to be able to access intern
 See [Get started with Kotlin DataFrame on Jupyter Notebook](https://kotlin.github.io/dataframe/setupjupyter.html),
 and [Kotlin DataFrame Features in Kotlin Notebook](https://kotlin.github.io/dataframe/kotlin-dataframe-features-in-kotlin-notebook.html).
 
-This module targets java 11 because of the restriction from `org.jetbrains.kotlin.jupyter`.
+This module targets Java 11 because of the restriction from `org.jetbrains.kotlin.jupyter`.
