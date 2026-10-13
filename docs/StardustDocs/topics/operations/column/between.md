@@ -32,8 +32,9 @@ col.between(left, right, includeBoundaries)
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_between_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Check ages are between 18 and 25 inclusive:
 <!---FUN notebook_test_between_2-->
@@ -42,8 +43,9 @@ Check ages are between 18 and 25 inclusive:
 df.age.between(left = 18, right = 25)
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_between_2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Strictly between 18 and 25 (excluding boundaries):
 <!---FUN notebook_test_between_3-->
@@ -52,6 +54,7 @@ Strictly between 18 and 25 (excluding boundaries):
 df.age.between(left = 18, right = 25, includeBoundaries = false)
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_between_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 

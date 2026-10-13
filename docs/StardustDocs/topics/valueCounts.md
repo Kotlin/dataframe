@@ -27,8 +27,9 @@ The following dataframe will be used in the examples below:
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/valueCountsDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 For a [`DataFrame`](DataFrame.md), `dropNA = true` (default) excludes the entire row if any selected column contains
 an [`NA`](nanAndNa.md) value. [`NA`](nanAndNa.md) values in columns that are not selected do not affect the result.
@@ -39,8 +40,9 @@ an [`NA`](nanAndNa.md) value. [`NA`](nanAndNa.md) values in columns that are not
 df.valueCounts()
 ```
 
-<!---END-->
 <inline-frame src="./resources/valueCounts.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 To include rows with [`NA`](nanAndNa.md) values, set `dropNA = false`:
 
@@ -50,8 +52,9 @@ To include rows with [`NA`](nanAndNa.md) values, set `dropNA = false`:
 df.valueCounts(dropNA = false)
 ```
 
-<!---END-->
 <inline-frame src="./resources/valueCountsWithNA.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 You can specify columns that will be used to determine uniqueness:
 
@@ -71,8 +74,9 @@ df.valueCounts("name", dropNA = false)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/valueCountsSelector.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/valueCountsSelector_properties.html" width="100%" height="500px"></inline-frame>
 
 This operation can also be applied to a [`DataColumn`](DataColumn.md):
 
@@ -82,5 +86,6 @@ This operation can also be applied to a [`DataColumn`](DataColumn.md):
 df.age.valueCounts()
 ```
 
-<!---END-->
 <inline-frame src="./resources/valueCountsColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

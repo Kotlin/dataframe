@@ -41,9 +41,9 @@ pairSelector: (DataRow) -> Pair
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_associate_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Create a map from name to age using a pair selector:
 

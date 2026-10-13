@@ -373,9 +373,9 @@ interface PetStore {
 val df: DataFrame<PetStore.Pet> = PetStore.Pet.readJson("$baseUrl/pet/10")
 ```
 
-<!---END-->
+<inline-frame src="./resources/usingResult.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="resources/usingResult.html" width="100%"/>
+<!---END-->
 
 </procedure>
 

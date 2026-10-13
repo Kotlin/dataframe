@@ -22,8 +22,9 @@ Returns the first value in this [`DataColumn`](DataColumn.md). If the [`DataColu
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/firstOnColumnDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN firstOnColumn-->
 

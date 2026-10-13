@@ -26,8 +26,9 @@ if it contains more than one value.
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/singleOnColumnDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN singleOnColumn-->
 <tabs>

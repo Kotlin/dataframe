@@ -70,7 +70,7 @@ internal interface CommonMinMaxDocs : CommonStatisticsDocs {
     typealias NullCellOnEmptySnippet = Nothing
 
     /**
-     * {@comment Note about the behavior on empty input for the Pivot functions. KDoc-snippet.}
+     * {@comment Note about the behavior on empty input for the PivotGroupBy functions. KDoc-snippet.}
      *
      * Result cells for which there exists a group, but there is nothing left to compare
      * (for instance, because the group was empty or contained only `null` values)
@@ -82,7 +82,7 @@ internal interface CommonMinMaxDocs : CommonStatisticsDocs {
      * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
-    typealias NullCellOnEmptyPivotSnippet = Nothing
+    typealias NullCellOnEmptyPivotGroupBySnippet = Nothing
 
     /**
      * {@comment Note about the type of the result for the modes with a single result. KDoc-snippet.}

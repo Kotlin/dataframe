@@ -19,9 +19,9 @@ Related operations: [](updateConvert.md)
 df.parse()
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/parseAll.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 When no columns are specified, all `String` and `Char` columns are parsed,
@@ -35,9 +35,9 @@ To parse only particular columns, use a [column selector](ColumnSelectors.md):
 df.parse { date and value }
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Parsing Order
 
@@ -134,9 +134,9 @@ df.parse(
 )
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/parseWithOptions.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Global Parser Options
 
@@ -276,8 +276,9 @@ DataFrame.parser.addDateTimeFormat(format)
 columnOf("12/24 2023").parse()
 ```
 
+<inline-frame src="./resources/globalParserOptionsAddDateTimeFormatKotlin.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/globalParserOptionsAddDateTimeFormat_kotlin.html" width="100%" height="500px"></inline-frame>
 
 </tab>
 <tab title="Java">
@@ -305,8 +306,9 @@ DataFrame.parser.locale = Locale.US
 columnOf("12/24 2023").parse()
 ```
 
+<inline-frame src="./resources/globalParserOptionsAddDateTimeFormatJava.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/globalParserOptionsAddDateTimeFormat_java.html" width="100%" height="500px"></inline-frame>
 
 </tab></tabs>
 
@@ -327,8 +329,9 @@ DataFrame.parser.addDateTimeUnicodePattern<LocalDate>("MM/dd yyyy")
 columnOf("12/24 2023").parse()
 ```
 
+<inline-frame src="./resources/globalParserOptionsAddPatternKotlin.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/globalParserOptionsAddPattern_kotlin.html" width="100%" height="500px"></inline-frame>
 
 </tab>
 <tab title="Java">
@@ -348,8 +351,9 @@ DataFrame.parser.locale = Locale.US
 columnOf("12/24 2023").parse()
 ```
 
+<inline-frame src="./resources/globalParserOptionsAddPatternJava.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/globalParserOptionsAddPattern_java.html" width="100%" height="500px"></inline-frame>
 
 </tab></tabs>
 
@@ -398,8 +402,9 @@ columnOf("12/24 2023")
     )
 ```
 
+<inline-frame src="./resources/parserOptionsWithDateTimeFormatKotlin.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/parserOptionsWithDateTimeFormat_kotlin.html" width="100%" height="500px"></inline-frame>
 
 </tab>
 <tab title="Java">
@@ -435,9 +440,9 @@ columnOf("12/24 2023").parse(
 )
 ```
 
-<!---END-->
+<inline-frame src="./resources/parserOptionsWithDateTimeFormatJava.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="./resources/parserOptionsWithDateTimeFormat_java.html" width="100%" height="500px"></inline-frame>
+<!---END-->
 </tab></tabs>
 
 Example, parsing a date-time string by adding a custom pattern to [parser options](#parser-options):
@@ -460,8 +465,9 @@ columnOf("12/24 2023")
     )
 ```
 
+<inline-frame src="./resources/parserOptionsWithPatternKotlin.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/parserOptionsWithPattern_kotlin.html" width="100%" height="500px"></inline-frame>
 </tab>
 <tab title="Java">
 <!---FUN parserOptionsWithPatternJava-->
@@ -482,8 +488,9 @@ columnOf("12/24 2023")
     )
 ```
 
+<inline-frame src="./resources/parserOptionsWithPatternJava.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/parserOptionsWithPattern_java.html" width="100%" height="500px"></inline-frame>
 </tab></tabs>
 
 Some functions, like [`convertToLocalDate()`](convert.md), take a `DateTimeFormat` or Unicode date-time pattern

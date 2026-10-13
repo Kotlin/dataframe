@@ -10,8 +10,9 @@ Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/sliceRowsDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN getSeveralRowsByIndices-->
 
@@ -19,8 +20,9 @@ df
 df[0, 3, 4]
 ```
 
-<!---END-->
 <inline-frame src="./resources/getSeveralRowsByIndices.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Returns a [`DataFrame`](DataFrame.md) with rows inside given index ranges (including boundary indices):
 
@@ -30,8 +32,9 @@ Returns a [`DataFrame`](DataFrame.md) with rows inside given index ranges (inclu
 df[1..2]
 ```
 
-<!---END-->
 <inline-frame src="./resources/getSeveralRowsByRanges1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN getSeveralRowsByRanges2-->
 
@@ -39,8 +42,9 @@ df[1..2]
 df[0..2, 4..5]
 ```
 
-<!---END-->
 <inline-frame src="./resources/getSeveralRowsByRanges2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## take
 
@@ -52,8 +56,9 @@ Returns a [`DataFrame`](DataFrame.md) containing first `n` rows
 df.take(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/take.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) containing its first `n` values.
 
@@ -63,8 +68,9 @@ If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColum
 df.age.take(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/takeDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## takeLast
 
@@ -76,8 +82,9 @@ Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
 df.takeLast(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/takeLast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) containing its last `n` values.
 
@@ -87,8 +94,9 @@ If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColum
 df.age.takeLast(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/takeLastDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## takeWhile
 
@@ -100,8 +108,9 @@ Returns a [`DataFrame`](DataFrame.md) containing first rows that satisfy the giv
 df.takeWhile { isHappy }
 ```
 
-<!---END-->
 <inline-frame src="./resources/takeWhile.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## drop
 
@@ -113,8 +122,9 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except first `n` rows
 df.drop(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/drop.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) 
 containing all values of this [`DataColumn`](DataColumn.md) except the first `n` values.
@@ -125,8 +135,9 @@ containing all values of this [`DataColumn`](DataColumn.md) except the first `n`
 df.age.drop(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## dropLast
 
@@ -138,8 +149,9 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
 df.dropLast() // default 1
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropLast1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropLast2-->
 
@@ -147,8 +159,9 @@ df.dropLast() // default 1
 df.dropLast(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropLast2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), returns a [`DataColumn`](DataColumn.md) 
 containing all values of this [`DataColumn`](DataColumn.md) except the last `n` values.
@@ -159,8 +172,9 @@ containing all values of this [`DataColumn`](DataColumn.md) except the last `n` 
 df.age.dropLast(5)
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropLastDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## dropWhile
 
@@ -172,5 +186,6 @@ Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that
 df.dropWhile { isHappy }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropWhile.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

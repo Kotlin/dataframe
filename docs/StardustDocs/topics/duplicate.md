@@ -22,8 +22,9 @@ Every example on this page uses the same [`DataFrame`](DataFrame.md):
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/duplicateDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## duplicateRows
 
@@ -42,8 +43,9 @@ duplicateRows(n) { rowCondition }: DataFrame
 df.duplicateRows(3)
 ```
 
-<!---END-->
 <inline-frame src="./resources/duplicateRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 With a [row condition](DataRow.md#row-conditions), only the rows that match it are repeated.
 The other rows appear once, as before:
@@ -64,8 +66,9 @@ df.duplicateRows(3) { "age"<Int>() > 18 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/duplicateRowsWhere.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/duplicateRowsWhere_properties.html" width="100%" height="500px"></inline-frame>
 
 Values in column groups and frame columns are repeated together with their rows.
 The column names and types stay the same.
@@ -87,8 +90,9 @@ DataRow.duplicate(n): DataFrame
 df[1].duplicate(3)
 ```
 
-<!---END-->
 <inline-frame src="./resources/duplicateRow.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The result has the same columns as the dataframe the row comes from,
 column groups and frame columns included.
@@ -131,8 +135,9 @@ DataFrame.duplicate(n): FrameColumn
 df.duplicate(3)
 ```
 
-<!---END-->
 <inline-frame src="./resources/duplicateDataFrame.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 A dataframe gives a column without a name the name `untitled`, so the table above shows it this way.
 
@@ -145,7 +150,8 @@ To get one [`DataFrame`](DataFrame.md) with all rows of `df`, followed by all ro
 df.duplicate(2).concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/duplicateDataFrameConcat.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 **See also**: [`append`](append.md), [`concat`](concat.md), [`distinct`](distinct.md).

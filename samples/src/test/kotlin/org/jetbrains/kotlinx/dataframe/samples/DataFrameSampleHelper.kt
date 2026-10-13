@@ -16,25 +16,51 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
     SampleHelper(
         sampleName,
         subFolder,
-        "../docs/StardustDocs/images",
-        "../docs/StardustDocs/resources",
+        imagesFolder = "../docs/StardustDocs/images",
+        resourcesFolder = "../docs/StardustDocs/resources",
+        namePartsToRemove = listOf("_properties", "_strings"),
     ),
     TestBase {
 
-    fun fqnTestName(): String = "${this::class.java.name}.${testName.methodName}"
-
     private val korroOutputLinesDir: File = File("build/korroOutputLines")
 
+    /**
+     * Outputs saved by the current sample, in the order they were saved.
+     * A set, so saving the same output twice (e.g. two dataframes into one HTML file) inserts it only once.
+     */
+    private val korroOutputs = LinkedHashSet<String>()
+
+    /**
+     * Writes all outputs of the current sample into the korro output file, which korro inserts
+     * after the sample code inside the `<!---FUN-->`…`<!---END-->` block.
+     *
+     * The file is named after the fully qualified name of the sample function without the
+     * `_properties`/`_strings` suffix — this is how korro looks up an output for a sample or a group of samples.
+     */
+    private fun saveKorroOutput(output: String) {
+        korroOutputs += output
+        korroOutputLinesDir.mkdirs()
+        File(korroOutputLinesDir, "${this::class.java.name}.${sampleFileName()}")
+            .writeText(korroOutputs.joinToString(""))
+    }
+
+    override fun onDfHtmlSampleSaved(name: String) {
+        saveKorroOutput(
+            "\n<inline-frame src=\"./resources/$name.html\" width=\"100%\" height=\"500px\"></inline-frame>\n",
+        )
+    }
+
+    override fun onPlotSampleSaved(name: String) {
+        saveKorroOutput("\n<img src=\"$name.svg\" alt=\"$name\" width=\"705\"/>\n")
+    }
+
     fun String.saveSample(addOutputLine: Boolean = true) {
-        val fqnName = fqnTestName().replace("_dataframe", "")
         val text = if (addOutputLine) {
             "\nOutput:\n\n$this\n"
         } else {
             "\n$this\n"
         }
-
-        korroOutputLinesDir.mkdirs()
-        File(korroOutputLinesDir, fqnName).writeText(text)
+        saveKorroOutput(text)
     }
 
     fun CodeString.saveSample(addOutputLine: Boolean = true, addCodeBlock: Boolean = true) {

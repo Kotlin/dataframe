@@ -70,9 +70,9 @@ in cases where the schema cannot be inferred automatically from the source.
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_generate_docs_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_generate_docs_2-->
 

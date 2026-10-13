@@ -22,8 +22,9 @@ Every example on this page uses the same [`DataFrame`](DataFrame.md):
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/iterateDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## Iterate over rows
 

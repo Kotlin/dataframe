@@ -36,8 +36,9 @@ with the same values in random order using the provided source of randomness or 
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_shuffle_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Deterministic shuffle using a fixed seed:
 <!---FUN notebook_test_shuffle_2-->
@@ -46,5 +47,6 @@ Deterministic shuffle using a fixed seed:
 df.shuffle(Random(42))
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_shuffle_2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
