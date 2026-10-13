@@ -83,7 +83,7 @@ Operation documentation topic must contain comprehensive information about the o
 * All argument descriptions; if any argument is enum specific to this operation, 
 describe its possible values and how they affect the operation result.
 * Describe in detail any non-obvious behavior and edge cases (empty, containing null, frame columns
-  and columng groups, etc.), but avoid mentioning implementation details.
+  and column groups, etc.), but avoid mentioning implementation details.
   For most important cases, add an example sample. 
 * Documentation on the website should be aligned with the operation KDoc. 
   The documentation on the website may contain more detailed information than in KDoc, but certainly not less!
@@ -98,7 +98,7 @@ describe its possible values and how they affect the operation result.
 * For an operation that selects columns or uses row values, the basic usage example must always have two versions — one with the
   [Extension Properties API](docs/StardustDocs/topics/extensionPropertiesApi.md) and one with the
   [String API](docs/StardustDocs/topics/concepts/StringApi.md) — shown through `<tab>`.
-  * Korro inserts these tabs automatically when it sees `_properties` or `_strings` suffices
+  * Korro inserts these tabs automatically when it sees `_properties` or `_strings` suffixes
     in the test name — do not write `<tabs>`/`<tab>` markup manually for such samples.
     Use the base name (without the suffix) in the `FUN` directive.
   * Some operations can't be used with plain column names (`String`s):
@@ -227,7 +227,7 @@ with its own description, signature, parameters, and examples.
 
 #### Writerside summaries
 
-Every topic must have [Writerside summaries](https://www.jetbrains.com/help/writerside/inject-summary.html)
+Every topic must have [Writerside summaries](https://www.jetbrains.com/help/writerside/semantic-markup-reference.html)
 right after the title (and the Korro `IMPORT` directive, if any).
 They are used for the page metadata, cards, and link previews.
 
@@ -322,7 +322,7 @@ If not specified, the whole body is used (not recommended!).
 
 <!---END-->
 ```
-* For grouped samples (test names with the `_properties` / `_strings` suffices),
+* For grouped samples (test names with the `_properties` / `_strings` suffixes),
   write the **base** test name in the `FUN` directive, without the suffix
   (`valueCountsSelector_properties` + `valueCountsSelector_strings` → `<!---FUN valueCountsSelector-->`).
   Korro finds all suffixed variants itself and wraps them into `<tabs>`.
@@ -351,7 +351,12 @@ Kotlin DataFrame structure as an interactive HTML table sample
 This table should be included as `<inline-frame>` in the topic file right 
 after the code sample (after `<!---END-->` for this sample).
    * HTML outputs are saved into the [docs/StardustDocs/resources](docs/StardustDocs/resources) folder. 
-    Subfolder names are defined by `DataFrameSampleHelper` arguments.
+    Subfolder names are defined by `DataFrameSampleHelper` arguments:
+    `DataFrameSampleHelper("<pageName>", "api")` writes `resources/api/<pageName>/<testName>.html`.
+   * The `<inline-frame>` `src` is nevertheless always the **flat** file name — `./resources/<testName>.html`,
+    never `./resources/api/<pageName>/<testName>.html`. Writerside finds the file through
+    [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md), which registers resources by file name only;
+    a nested `src` builds fine but renders an empty frame.
 * Use `.saveSample()` for saving text sample from the `String` or 
 [`CodeString`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/generateCode.kt).
    * Text samples are saved into a temporary build folder and exported automatically while running `korro`.
@@ -362,7 +367,7 @@ after the code sample (after `<!---END-->` for this sample).
 
 Some samples are still generated from `:core` tests using Korro.
 Some of them use an outdated way to save HTML samples (called "dataframe explainer") and
-has `@TransformDataFrameExpressions` annotation. This is an outdated way to save HTML samples! **Do not use it!**
+have `@TransformDataFrameExpressions` annotation. This is an outdated way to save HTML samples! **Do not use it!**
 We want to migrate all samples to the new way of saving HTML samples using [Sample Helper](#sample-helper).
 
 All samples should be placed as tests in the [:samples](/samples) module only!
@@ -390,15 +395,21 @@ and outputs created using [Sample Helper](#sample-helper).
    ```Markdown
    <inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
    ```
+   The `src` is always flat (`./resources/testName.html`), even though the file is written
+   into a subfolder — see [Sample Helper](#sample-helper).
 4) Add the test file and topic file paths to Korro config in the
    [Gradle build script](samples/build.gradle.kts) (`korro{ docs { from(...) }; samples { from(...) } }`).
-5) Run Gradle tasks of `:sample module`: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
+5) Run Gradle tasks of the `:samples` module: `clean`, `build`, `test`, `korro`. `korro` must be run after `test`!
    * It's very important to run `clean` **before** `build`, `test` and `korro`:
-   otherwise stale artifacts from a previous build (outdated korro output lines, sample outputs,
-   removed or renamed samples) may survive and end up in the documentation.
+   otherwise outdated korro output lines (text samples in `samples/build/`) from a previous build,
+   including those of removed or renamed samples, may survive and end up in the documentation.
+   * `clean` does **not** touch HTML outputs: they are written straight into the tracked
+   [docs/StardustDocs/resources](docs/StardustDocs/resources) folder. So before running the tests, delete the
+   page's output folder `docs/StardustDocs/resources/<subFolder>/<pageName>/` — the tests recreate it,
+   and HTML of removed or renamed samples doesn't survive (and doesn't get registered by `updateShadowResources`).
 6) Check if code samples appear in the topic, HTML frames are added to resources.
 7) Run `updateShadowResources` Gradle task. This will update 
-   a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build wesbite correctly.
+   a special [_shadow_resources](docs/StardustDocs/topics/_shadow_resources.md) file to build website correctly.
 8) Check the resulting page manually, 
    by [running the website manually](docs/README.md#running-the-documentation-website-locally).
 

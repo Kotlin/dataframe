@@ -20,9 +20,10 @@ around it. If the two ever disagree, the guidelines win.
   - plus the two registration files: `docs/StardustDocs/d.tree` (site map) and
     `samples/build.gradle.kts` (Korro config).
 - **Everything else is generated** — inserted code blocks between `<!---FUN x-->` / `<!---END-->`,
-  `docs/StardustDocs/resources/*.html`, `docs/StardustDocs/images/*.svg`,
+  `docs/StardustDocs/resources/**/*.html`, `docs/StardustDocs/images/*.svg`,
   `docs/StardustDocs/topics/_shadow_resources.md`, `generated-sources/**`. Never hand-write or
-  hand-patch them; run the Gradle tasks below instead.
+  hand-patch them; run the Gradle tasks below instead. The only manual step allowed is deleting
+  the page's own output folder before regenerating it (step 5).
 - **Never write a sample snippet inline in the `.md`.** Snippets only come from tests via Korro.
 - Never use the legacy "dataframe explainer" / `@TransformDataFrameExpressions` mechanism, and never
   add samples to `:core`.
@@ -111,7 +112,7 @@ Links that are easy to forget — check them explicitly:
 - Mentioning `ColumnSet` or other column resolvers? Link
   `[`ColumnSet`](ColumnSelectors.md#column-resolvers)`.
 
-Write only about overloads that method have!
+Describe only the overloads the method actually has.
 
 ### 4. Write the samples
 
@@ -161,6 +162,12 @@ at the top, then for each sample
 <inline-frame src="./resources/testName.html" width="100%" height="500px"></inline-frame>
 ```
 
+The `src` is always the **flat** file name, `./resources/<testName>.html` — even though
+`DataFrameSampleHelper("<pageName>", "api")` writes the file to
+`docs/StardustDocs/resources/api/<pageName>/<testName>.html`. `_shadow_resources.md` registers
+resources by file name only, so a nested `src` builds fine but renders an empty frame. Never
+"fix" a `src` to the on-disk path.
+
 For a tabbed pair, the `FUN` directive takes the **base** name without the suffix, while the
 iframe keeps the full file name of the variant whose output you show:
 
@@ -187,7 +194,14 @@ operations on one line so the chain reads like a sentence.
 
 ### 5. Generate and verify
 
-Run, in this order (`korro` **must** run after `test`):
+First delete the page's HTML output folder, so that outputs of renamed or deleted samples don't
+survive (the tests recreate it):
+
+```bash
+rm -rf docs/StardustDocs/resources/api/<pageName>
+```
+
+Then run, in this order (`korro` **must** run after `test`):
 
 ```bash
 ./gradlew :samples:clean :samples:build :samples:test
@@ -195,17 +209,21 @@ Run, in this order (`korro` **must** run after `test`):
 ./gradlew :samples:updateShadowResources
 ```
 
-**Never skip `clean`, and always run it before `build`/`test`/`korro`.** Without it, stale artifacts
-from a previous build — outdated korro output lines, old sample outputs, snippets of samples you
-renamed or deleted — survive and get injected into the documentation, so the page silently shows
-wrong content.
+**Never skip `clean`, and always run it before `build`/`test`/`korro`.** Without it, outdated korro
+output lines (text samples in `samples/build/`, including those of samples you renamed or deleted)
+survive and get injected into the documentation, so the page silently shows wrong content.
+`clean` does **not** touch the HTML outputs — they live in the tracked `docs/StardustDocs/resources/`,
+which is why the page folder is deleted by hand above; `updateShadowResources` would otherwise
+re-register every stale file still on disk.
 
 Then verify, and report honestly if anything failed:
 
 - the test run passed;
 - code snippets were inserted between every `FUN`/`END` pair in the topic (no empty pairs);
-- an HTML file exists in `docs/StardustDocs/resources/` for every `<inline-frame src>` you
-  reference (note tab-generated names get the `_properties` / `_strings` suffix);
+- an HTML file exists in `docs/StardustDocs/resources/` **or one of its subfolders** (normally
+  `resources/api/<pageName>/`) for every `<inline-frame src>` you reference — the `src` itself stays
+  flat (note tab-generated names get the `_properties` / `_strings` suffix);
+- no stale HTML of renamed or deleted samples is left in the page's output folder;
 - `_shadow_resources.md` was updated.
 
 Do **not** build, run, or deploy the website. Just point the user to
@@ -220,8 +238,8 @@ Once the topic text is final, check every link you wrote or touched:
 - Anchors (`someTopic.md#section-anchor`, `#local-anchor`) — the heading must exist in the target
   file; Writerside anchors are the lowercased heading with spaces replaced by `-` and punctuation
   dropped. Also accept explicit `{id="..."}` anchors.
-- `<inline-frame src="./resources/x.html">` — the file must exist in `docs/StardustDocs/resources/` 
-  (and subfolders).
+- `<inline-frame src="./resources/x.html">` — the file `x.html` must exist in
+  `docs/StardustDocs/resources/` or one of its subfolders; the `src` itself must stay flat.
 - `<img src="...">` — the file must exist in `docs/StardustDocs/images/`.
 - **KDoc → website links** in
   `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt`
