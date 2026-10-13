@@ -555,7 +555,7 @@ internal val mySqlSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("INT UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
     // A multi-bit BIT(M) column returns a byte[] in both MySQL and MariaDB, while the column class
     // they report is `java.lang.Boolean` (MySQL) or `byte[]` (MariaDB) — neither of which the default
-    // mapping recognises, so it fell through to Boolean (#2087). BIT(1) really is a Boolean.
+    // mapping recognizes, so it fell through to Boolean (#2087). BIT(1) really is a Boolean.
     TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<ByteArray>(), size = 3),
     TypeMapping("BIT", Types.BIT, "byte[]", typeOf<ByteArray>(), size = 3),
 )

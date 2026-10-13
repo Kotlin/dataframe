@@ -142,7 +142,7 @@ public fun driverClassNameFromUrl(url: String): String {
  * `true` for a multi-bit `BIT(M)` column, `M > 1`, in MySQL and MariaDB.
  *
  * Both drivers return a `byte[]` for such a column, but neither reports a column class the default
- * mapping recognises as one: MySQL reports `java.lang.Boolean`, and MariaDB reports `byte[]` — the
+ * mapping recognizes as one: MySQL reports `java.lang.Boolean`, and MariaDB reports `byte[]` — the
  * source-code spelling, not the `"[B"` JVM binary name the default mapping looks for. So both used to
  * fall through to the [java.sql.Types.BIT] default, [Boolean], which does not match the values
  * (see #2087). A single-bit column really is a [Boolean] and is left alone.

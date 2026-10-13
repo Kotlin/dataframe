@@ -10,7 +10,7 @@ For instance, if you want to add a new page to the website, this needs to be sto
 [StardustDocs/topics](./StardustDocs/topics) folder,
 and included in the [StardustDocs/d.tree](./StardustDocs/d.tree) file.
 
-Images all README files can be stored in [docs/imgs](./imgs).
+Images for all README files can be stored in [docs/imgs](./imgs).
 
 ## Running the Documentation Website Locally
 
@@ -41,7 +41,7 @@ Images all README files can be stored in [docs/imgs](./imgs).
 ### Explainer dataframes
 
 > Warning: this approach is outdated! Use [`SampleHelper` approach](../samples/README.md#samplehelper) instead!
-> We are curently [migrating](https://github.com/Kotlin/dataframe/issues/898).
+> We are currently [migrating](https://github.com/Kotlin/dataframe/issues/898).
 
 `@TransformDataFrameExpressions` annotated test functions generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.
@@ -53,7 +53,7 @@ our "explainer" compiler plugin [:plugins:expressions-converter](../plugins/expr
 
 ### KDoc Preprocessor
 KDocs can also be exported to HTML, for them to be reused on the website.
-Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
+Elements annotated with `@ExportAsHtml` will have their generated content copied over to
 [docs/StardustDocs/resources/snippets/kdocs](StardustDocs/resources/snippets/kdocs).
 
 ### Korro code samples
