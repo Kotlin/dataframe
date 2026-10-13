@@ -11,7 +11,8 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 ## Structure
 
 - `topics/` — the **hand-authored** documentation: `.md` topic files plus `Home.topic` (XML). Subfolders include
-  `concepts/`, `guides/`, `schemas/`, `operations/`, `collectionsInterop/`, `dataSources/`, `setup/`, `access/`.
+  `concepts/`, `guides/`, `schemas/`, `operations/`, `collectionsInterop/`, `dataSources/`, `setup/`, `access/`,
+  `info/`, `io/`. A page is found by its file name, wherever it sits: `find docs/StardustDocs/topics -name <op>.md`.
   `topics/_shadow_resources.md` is a **generated** hidden topic (registered `hidden="true"` in `d.tree`).
 - `resources/` — **generated / asset content**: `snippets/` (Korro sample HTML + `snippets/kdocs/` = KoDEx
   `@ExportAsHtml` output + `snippets/manual/`), plus `api/`, `guides/`, `io/`, `modify/` (notebook/sample HTML
@@ -45,9 +46,6 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 **Never hand-write a ` ```kotlin ` block in a topic.** All Kotlin in the docs must be a Korro sample, so that it
 is compiled and run on every build — a hand-written block is the way a hallucinated or long-dead API reaches the
 website. Only `text`-fenced pseudo-grammar (`operation { columnMapping }: DataFrame`) is written by hand.
-One exception: the call signature at the top of an operation page (`df.tail(numRows: Int = 5)` on `tail.md`)
-may stay a hand-written `kotlin` block. It is not runnable code, it only shows the parameters and their defaults,
-so keep it in step with the function's declaration by hand.
 
 To add one:
 

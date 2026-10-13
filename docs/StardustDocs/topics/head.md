@@ -16,8 +16,8 @@ Discover `head` operation in Kotlin DataFrame.
 
 Returns a [`DataFrame`](DataFrame.md) containing the first `numRows` rows, five by default.
 
-```kotlin
-df.head(numRows: Int = 5)
+```text
+head(numRows: Int = 5): DataFrame
 ```
 
 If `numRows` is greater than or equal to the number of rows, the whole [`DataFrame`](DataFrame.md) is returned
