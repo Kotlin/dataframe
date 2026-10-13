@@ -13,4 +13,3 @@ local.properties
 # macOS
 .DS_Store
 /examples/notebooks/quickstart/jb_repos.xlsx
-/.claude/skills/
