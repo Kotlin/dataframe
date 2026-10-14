@@ -42,8 +42,9 @@ and [`pivot+groupBy`](pivot.md#pivot-groupby).
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/groupByDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN groupByDfGrouped-->
 <tabs>
@@ -61,8 +62,9 @@ df.groupBy("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByDfGrouped.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByDfGrouped_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN groupByTwoColumns-->
 <tabs>
@@ -80,8 +82,9 @@ df.groupBy { "name"["firstName"]<String>() and "isHappy" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByTwoColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByTwoColumns_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN groupByNewColumn-->
 <tabs>
@@ -99,8 +102,9 @@ df.groupBy { "age"<Int>() / 10 named "ageDecade" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByNewColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByNewColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 
 Grouping columns can be created inplace:
@@ -124,8 +128,9 @@ df.groupBy {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByExpr.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByExpr_properties.html" width="100%" height="500px"></inline-frame>
 
 
 With the optional ` moveToTop ` parameter, you can choose whether to make a selected *nested column* a top-level column:  
@@ -146,8 +151,9 @@ df.groupBy(moveToTop = true) { "name"["firstName"]<String>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMoveToTop.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByMoveToTop_properties.html" width="100%" height="500px"></inline-frame>
 
 
 or to keep it inside a `ColumnGroup`:
@@ -168,8 +174,9 @@ df.groupBy(moveToTop = false) { "name"["firstName"]<String>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMoveToTopFalse.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByMoveToTopFalse_properties.html" width="100%" height="500px"></inline-frame>
 
 Returns `GroupBy` object.
 
@@ -234,8 +241,9 @@ df.groupBy("isHappy").sortByGroup { mean("age") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/sortByGroupOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/sortByGroupOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### sortByCount {collapsible="true"}
 <!---FUN sortByCountOnGroupBy-->
@@ -254,8 +262,9 @@ df.groupBy("age").sortByCount()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/sortByCountOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/sortByCountOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### sortByKey {collapsible="true"}
 <!---FUN sortByKeyOnGroupBy-->
@@ -274,8 +283,9 @@ df.groupBy { age }.sortByKey()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/sortByKeyOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/sortByKeyOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### sortBy {collapsible="true"}
 <!---FUN sortByOnGroupBy-->
@@ -294,8 +304,9 @@ df.groupBy("isHappy").sortBy("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/sortByOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/sortByOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### updateGroups {collapsible="true"}
 <!---FUN updateGroupsOnGroupBy-->
@@ -314,8 +325,9 @@ df.groupBy("isHappy").updateGroups { sortByDesc("age").take(2) }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/updateGroupsOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/updateGroupsOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### filter {collapsible="true"}
 <!---FUN filterOnGroupBy-->
@@ -334,8 +346,9 @@ df.groupBy("isHappy").filter { group.median { "age"<Int>() } > 20 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/filterOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/filterOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### add {collapsible="true"}
 <!---FUN addOnGroupBy-->
@@ -354,8 +367,9 @@ df.groupBy("isHappy").add("isAdult") { "age"<Int>() >= 18 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/addOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/addOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ## Reducing
 
@@ -400,8 +414,9 @@ df.groupBy("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByDfGroupedReducing.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByDfGroupedReducing_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### first {collapsible="true"}
 <!---FUN groupByFirst-->
@@ -420,8 +435,9 @@ df.groupBy("isHappy").first { it["age"] == 30 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByFirst.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByFirst_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### last {collapsible="true"}
 <!---FUN groupByLast-->
@@ -440,8 +456,9 @@ df.groupBy("isHappy").last { it["weight"] == null }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByLast.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByLast_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### minBy {collapsible="true"}
 <!---FUN groupByMinBy-->
@@ -460,8 +477,9 @@ df.groupBy("isHappy").minBy("weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMinBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByMinBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### maxBy {collapsible="true"}
 <!---FUN groupByMaxBy-->
@@ -480,8 +498,9 @@ df.groupBy("isHappy").maxBy("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMaxBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByMaxBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### medianBy {collapsible="true"}
 <!---FUN groupByMedianBy-->
@@ -500,8 +519,9 @@ df.groupBy("isHappy").medianBy("weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMedianBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByMedianBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### percentileBy {collapsible="true"}
 <!---FUN groupByPercentileBy-->
@@ -520,8 +540,9 @@ df.groupBy("isHappy").percentileBy(25.0, "weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByPercentileBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByPercentileBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ### Step 2: transform the result to a [`DataFrame`](DataFrame.md)
 A `ReducedGroupBy` can be transformed into a [`DataFrame`](DataFrame.md) using the following functions:
@@ -552,8 +573,9 @@ df.groupBy("isHappy").minBy("age").concat()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByConcat.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByConcat_properties.html" width="100%" height="500px"></inline-frame>
 
 
 ##### values {collapsible="true"}
@@ -574,8 +596,9 @@ df.groupBy("isHappy").minBy("age").values("name", "age", "city")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByValues.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByValues_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### into {collapsible="true"}
 
@@ -595,8 +618,9 @@ df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByInto.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/groupByInto_properties.html" width="100%" height="500px"></inline-frame>
 
 ## Aggregation
 
@@ -651,8 +675,9 @@ df.groupBy("isHappy").concat()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/concatOnGroupBy_properties.html" width="100%"/>
 
 #### toDataFrame on GroupBy {collapsible="true"}
 Any `GroupBy` can be reinterpreted as [`DataFrame`](DataFrame.md) with [FrameColumn](DataColumn.md#framecolumn):
@@ -673,8 +698,9 @@ df.groupBy("isHappy").toDataFrame()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/toDfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/toDfOnGroupBy_properties.html" width="100%"/>
 
 #### concatWithKeys on GroupBy {collapsible="true"}
 <!---FUN concatWithKeysOnGroupBy-->
@@ -693,8 +719,9 @@ df.groupBy { expr { "age"<Int>() >= 18 } named "isAdult" }.concatWithKeys()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatWithKeysOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/concatWithKeysOnGroupBy_properties.html" width="100%"/>
 
 #### into on GroupBy {collapsible="true"}
 <!---FUN intoOnGroupBy-->
@@ -713,8 +740,9 @@ df.groupBy("isHappy").into("ages") { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/intoOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/intoOnGroupBy_properties.html" width="100%"/>
 
 #### values on GroupBy {collapsible="true"}
 ##### all columns
@@ -734,8 +762,9 @@ df.groupBy("isHappy").values()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/valuesOnGroupByAllColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/valuesOnGroupByAllColumns_properties.html" width="100%"/>
 
 ##### selected columns
 <!---FUN valuesOnGroupBySelectedColumns-->
@@ -754,8 +783,9 @@ df.groupBy("isHappy").values("name", "age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/valuesOnGroupBySelectedColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/valuesOnGroupBySelectedColumns_properties.html" width="100%"/>
 
 ##### rename columns
 <!---FUN valuesOnGroupByRenameColumns-->
@@ -774,8 +804,9 @@ df.groupBy("isHappy").values { "age" into "ages" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/valuesOnGroupByRenameColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/valuesOnGroupByRenameColumns_properties.html" width="100%"/>
 
 #### count on GroupBy {collapsible="true"}
 <!---FUN countOnGroupBy-->
@@ -794,8 +825,9 @@ df.groupBy("city").count()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/countOnGroupBy_properties.html" width="100%"/>
 
 #### countDistinct on GroupBy {collapsible="true"}
 <!---FUN countDistinctOnGroupBy-->
@@ -814,8 +846,9 @@ df.groupBy("city").countDistinct { "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countDistinctOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countDistinctOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 #### aggregate on GroupBy {collapsible="true"}
 <!---FUN aggregateOnGroupBy-->
@@ -854,8 +887,9 @@ df.groupBy("city").aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/aggregateOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/aggregateOnGroupBy_properties.html" width="100%"/>
 
 If only one aggregation function is used, the column name can be omitted:
 
@@ -875,8 +909,9 @@ df.groupBy("city").aggregate { maxBy("age")["name"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/aggregateOnGroupByWithoutInto.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/aggregateOnGroupByWithoutInto_properties.html" width="100%"/>
 
 ### Aggregation statistics
 [`Aggregation statistics`](summaryStatistics.md) are predefined shortcuts for common statistical aggregations such as sum, mean, median, and others.
@@ -924,8 +959,9 @@ df.groupBy("city").max() // max for every column with mutually comparable values
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/maxOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/maxOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN maxSelectedOnGroupBy-->
 <tabs>
@@ -943,8 +979,9 @@ df.groupBy("city").max("age", "weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/maxSelectedOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/maxSelectedOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN maxForOnGroupBy-->
 <tabs>
@@ -962,8 +999,9 @@ df.groupBy("isHappy").maxFor("age", "weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/maxForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/maxForOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN maxOfOnGroupBy-->
 <tabs>
@@ -981,8 +1019,9 @@ df.groupBy("isHappy").maxOf { if ("age"<Int>() < 30) "weight"<Int>() else null }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/maxOfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/maxOfOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN maxOnGroupByNameLength-->
 <tabs>
@@ -1007,8 +1046,9 @@ df.groupBy("city").max {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/maxOnGroupByNameLength.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/maxOnGroupByNameLength_properties.html" width="100%"/>
 
 ###### min {collapsible="true"}
 <!---FUN minOnGroupBy-->
@@ -1027,8 +1067,9 @@ df.groupBy("isHappy").min("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/minOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/minOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN minForOnGroupBy-->
 <tabs>
@@ -1052,8 +1093,9 @@ df.groupBy("city")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/minForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/minForOnGroupBy_properties.html" width="100%"/>
 
 ###### sum {collapsible="true"}
 <!---FUN sumOnGroupBy-->
@@ -1072,8 +1114,9 @@ df.groupBy("city").sum("weight", name = "totalWeight") // sum of weights into co
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/sumOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/sumOnGroupBy_properties.html" width="100%"/>
 
 ###### mean {collapsible="true"}
 <!---FUN meanOnGroupBy-->
@@ -1092,8 +1135,9 @@ df.groupBy("city").mean() // mean for every numeric column
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/meanOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/meanOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN meanOfOnGroupBy-->
 <tabs>
@@ -1113,8 +1157,9 @@ df.groupBy("city").meanOf("meanRatio") {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/meanOfOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/meanOfOnGroupBy_properties.html" width="100%"/>
 
 ###### std {collapsible="true"}
 <!---FUN stdOnGroupBy-->
@@ -1133,8 +1178,9 @@ df.groupBy("isHappy").std("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/stdOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/stdOnGroupBy_properties.html" width="100%"/>
 
 ###### median {collapsible="true"}
 <!---FUN medianOnGroupBy-->
@@ -1153,8 +1199,9 @@ df.groupBy("isHappy").median("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/medianOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/medianOnGroupBy_properties.html" width="100%"/>
 
 <!---FUN medianForOnGroupBy-->
 <tabs>
@@ -1174,8 +1221,9 @@ df.groupBy("city")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/medianForOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/medianForOnGroupBy_properties.html" width="100%"/>
 
 ###### percentile {collapsible="true"}
 <!---FUN percentileOnGroupBy-->
@@ -1194,8 +1242,9 @@ df.groupBy("isHappy").percentile(25.0) { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/percentileOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/percentileOnGroupBy_properties.html" width="100%"/>
 
 ## Mapping
 
@@ -1258,8 +1307,9 @@ df.groupBy("city").mapToRows { group.sortByDesc("age").firstOrNull() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMapToRows.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/groupByMapToRows_properties.html" width="100%"/>
 
 #### mapToFrames on GroupBy {collapsible="true"}
 The two oldest people for each first name, as a [FrameColumn](DataColumn.md#framecolumn).
@@ -1281,8 +1331,9 @@ df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/groupByMapToFrames.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/groupByMapToFrames_properties.html" width="100%"/>
 
 ## Pivot + GroupBy
 A `GroupBy` can be pivoted with the [`pivot`](pivot.md#pivot-groupby) method. It produces a `PivotGroupBy`
@@ -1304,7 +1355,8 @@ df.groupBy("isHappy").pivot { "name"["firstName"]<String>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/pivotOnGroupBy_properties.html" width="100%"/>
 
 For more information, see [`pivot + groupBy`](pivot.md#pivot-groupby)

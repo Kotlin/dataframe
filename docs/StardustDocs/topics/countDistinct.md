@@ -14,8 +14,9 @@ it returns the number of distinct rows in this [`DataFrame`](DataFrame.md).
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/countDistinctDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN countDistinct-->
 
@@ -60,12 +61,13 @@ Let's take this `GroupBy` as an example:
 df.groupBy { city }
 ```
 
-<!---END-->
 <inline-frame src="./resources/countDistinctGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Applying `countDistinct` to this `GroupBy` yields the following result:
 
-<!---FUN countDistinctOnGroupBy-->
+<!---FUN countDistinctOnGroupBySmallTable-->
 <tabs>
 <tab title="Properties">
 
@@ -81,8 +83,9 @@ df.groupBy("city").countDistinct()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countDistinctOnGroupBySmallTable.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countDistinctOnGroupBySmallTable_properties.html" width="100%" height="500px"></inline-frame>
 
 You can also specify which columns in the groups should be used to determine distinctness.
 
@@ -104,8 +107,9 @@ df.groupBy("city").countDistinct { "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countDistinctColumnsOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countDistinctColumnsOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 The default name of the new column is `countDistinct`, but you can choose a different one.
 
@@ -125,5 +129,6 @@ df.groupBy("city").countDistinct("uniqueFirstNames") { "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countDistinctColumnsCustomNameOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countDistinctColumnsCustomNameOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>

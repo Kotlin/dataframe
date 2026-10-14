@@ -50,8 +50,9 @@ columnGroup.chunked(size: Int)
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/notebook_test_chunked_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Fixed size chunks:
 <!---FUN notebook_test_chunked_2-->
@@ -60,9 +61,9 @@ Fixed size chunks:
 df.chunked(size = 2)
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_chunked_2.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Custom start indices:
 <!---FUN notebook_test_chunked_3-->
@@ -71,6 +72,6 @@ Custom start indices:
 df.chunked(startIndices = listOf(0, 1, 3), name = "segments")
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_chunked_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

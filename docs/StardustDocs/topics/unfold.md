@@ -41,8 +41,9 @@ val df = dataFrameOf(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/unfoldDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## unfold
 
@@ -62,8 +63,9 @@ df.unfold("student")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/unfold.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/unfold_properties.html" width="100%" height="500px"></inline-frame>
 
 The new columns are named after the properties, in the order of the primary constructor
 (for a class without one, in the order of their names),
@@ -96,8 +98,9 @@ df.unfold(maxDepth = 1) { col("student") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/unfoldMaxDepth.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/unfoldMaxDepth_properties.html" width="100%" height="500px"></inline-frame>
 
 Properties of a [`@DataSchema`](schemas.md) type, lists of them, [`DataRow`](DataRow.md)s,
 and [`DataFrame`](DataFrame.md)s are always unfolded into column groups and frame columns, whatever `maxDepth` is.
@@ -122,8 +125,9 @@ df.unfold(Student::name, Student::age) { col("student") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/unfoldRoots.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/unfoldRoots_properties.html" width="100%" height="500px"></inline-frame>
 
 `roots` can also be getter-like functions, such as `getX()`.
 They only apply to a column that can be unfolded:
@@ -156,8 +160,9 @@ DataColumn.unfold(roots, maxDepth): DataColumn
 df.student.unfold(maxDepth = 1)
 ```
 
-<!---END-->
 <inline-frame src="./resources/unfoldOnColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The properties are those of the type of the column as the compiler sees it.
 When that type cannot be unfolded itself, such as `Any?` of an untyped column (`df["student"]`),

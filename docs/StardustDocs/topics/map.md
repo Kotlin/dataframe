@@ -31,8 +31,9 @@ Every example on this page uses the same [`DataFrame`](DataFrame.md):
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/mapDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## map
 
@@ -85,8 +86,9 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/mapToColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/mapToColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 See [row expressions](DataRow.md#row-expressions)
 
@@ -139,8 +141,9 @@ df.mapToFrame {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/mapMany.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/mapMany_properties.html" width="100%" height="500px"></inline-frame>
 
 The result holds **only** the described columns, in the order in which they are described.
 This is what makes `mapToFrame` different from [`add`](add.md), where the columns of the original
@@ -169,8 +172,9 @@ mapIndexed(type) { index, value -> newValue }: DataColumn
 df.name.lastName.map { it.length }.rename("lastNameLength")
 ```
 
-<!---END-->
 <inline-frame src="./resources/mapOnColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The new column has the same name as the original one, so it is usually renamed on the spot
 or given a name by the operation it is passed to.
@@ -184,8 +188,9 @@ or given a name by the operation it is passed to.
 df.name.firstName.mapIndexed { i, firstName -> "${i + 1}. $firstName" }
 ```
 
-<!---END-->
 <inline-frame src="./resources/mapIndexedOnColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Which kind of column you get follows the type of the new column — the type argument, or the `type` given
 explicitly — and not the computed values:
@@ -241,8 +246,9 @@ df.groupBy { city }.map { group.rowsCount() }
 df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/mapToRowsOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN mapToFramesOnGroupBy-->
 
@@ -252,8 +258,9 @@ df.groupBy { city }.mapToRows { group.sortByDesc { age }.firstOrNull() }
 df.groupBy { name.firstName }.mapToFrames { group.sortByDesc { age }.take(2) }
 ```
 
-<!---END-->
 <inline-frame src="./resources/mapToFramesOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 `mapToFrames` names the new column after [`GroupBy.groups`](groupBy.md) (`"group"` by default);
 call `concat()` on it to get all of those dataframes back as one [`DataFrame`](DataFrame.md).

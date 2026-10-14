@@ -37,9 +37,9 @@ When called on a [`DataColumn`](DataColumn.md), checks that all values in the [`
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_all_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Check if all persons' `age` is greater than 21:
 

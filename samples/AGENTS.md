@@ -44,7 +44,10 @@ dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` an
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
   `_accessors` → "Accessors", `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java" (wrapped in
   `<tabs>`/`<tab>`).
-- **Iframes / plots:** `SampleHelper` saves DataFrames as HTML iframes and Kandy plots as SVGs; the
+- **Iframes / plots:** `SampleHelper` saves DataFrames as HTML iframes and Kandy plots as SVGs, named after the
+  test function without the `_properties`/`_strings` suffix. `DataFrameSampleHelper` also writes a korro output
+  line for them (its `onDfHtmlSampleSaved` / `onPlotSampleSaved` hooks), so korro injects the `<inline-frame>` /
+  `<img>` inside the `<!---FUN-->`…`<!---END-->` block, together with any text output of the same test. The
   `updateShadowResources` task regenerates `docs/StardustDocs/topics/_shadow_resources.md` (a `<resource>` tag per
   generated file). If a sample output changes, confirm the change is intentional.
 

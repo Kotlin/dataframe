@@ -85,8 +85,9 @@ To add one:
      as `JoinWith.kt` does. The `map` page went the first route in #2066: its samples moved to
      `samples/…/api/MapSamples.kt`, and `saveDfHtmlSample()` there renders a `DataColumn` and a `FrameColumn`
      with no annotation and no manual HTML at all.
-   - **`:samples`** — run the samples as tests to produce the HTML, then add the `<inline-frame>` line by hand
-     right after `<!---END-->`; korro does not inject it in this module.
+   - **`:samples`** — run the samples as tests: `saveDfHtmlSample()` / `savePlotSVGSample()` write the HTML/SVG
+     and a korro output line, so korro injects the `<inline-frame>` / `<img>` itself **inside** the
+     `<!---FUN-->`…`<!---END-->` block. Don't add one by hand after `<!---END-->` — it duplicates the generated one.
    In both modules the generated HTML only reaches the site once it is registered in
    `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
    `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an

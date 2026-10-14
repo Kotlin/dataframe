@@ -27,8 +27,9 @@ The examples on this page use the following dataframe:
 df
 ```
 
+<inline-frame src="./resources/reorderDf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderDf.html" width="100%"/>
 
 <!---FUN reorder-->
 <tabs>
@@ -46,8 +47,9 @@ df.reorder { "age".."isHappy" }.byName()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/reorder.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorder_properties.html" width="100%"/>
 
 The selected columns change places only with each other: they take the positions of the selected columns,
 in the new order. Positions of other columns do not change. The values in the columns do not change either.
@@ -67,8 +69,9 @@ val df = dataFrameOf("c", "d", "a", "b")(
 df.reorder("d", "b").cast<Int>().by { sum() }
 ```
 
+<inline-frame src="./resources/reorderSome.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderSome.html" width="100%"/>
 
 `byDesc` puts them in descending order:
 
@@ -82,8 +85,9 @@ val df = dataFrameOf("c", "d", "a", "b")(
 df.reorder("a", "b").cast<Int>().byDesc { sum() }
 ```
 
+<inline-frame src="./resources/reorderByDesc.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderByDesc.html" width="100%"/>
 
 Columns for which `columnExpression` gives equal results keep their original order.
 Here `name` and `city` have names of the same length,
@@ -105,8 +109,9 @@ df.reorder("age", "name", "city").byDesc { it.name().length }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/reorderEqualKeys.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderEqualKeys_properties.html" width="100%"/>
 
 If selected columns belong to different column groups, they are reordered within their groups,
 so no column moves to another group. Here `age` and `city` change places at the top level,
@@ -128,8 +133,9 @@ df.reorder { "age" and "city" and "name"["firstName"] and "name"["lastName"] }.b
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/reorderInDifferentGroups.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderInDifferentGroups_properties.html" width="100%"/>
 
 When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reordering is applied to its nested columns.
 A column group selected together with other columns moves as a whole, and its nested columns keep their order.
@@ -150,8 +156,9 @@ df.reorder("name").byName(desc = true)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/reorderInGroup.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderInGroup_properties.html" width="100%"/>
 
 ## reorderColumnsBy
 
@@ -180,8 +187,9 @@ With the default `atAnyDepth = true`, the columns inside `name` are reordered to
 df.reorderColumnsBy { name().length }
 ```
 
+<inline-frame src="./resources/reorderColumnsBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderColumnsBy.html" width="100%"/>
 
 With `atAnyDepth = false`, the columns inside `name` keep their order:
 
@@ -191,8 +199,9 @@ With `atAnyDepth = false`, the columns inside `name` keep their order:
 df.reorderColumnsBy(atAnyDepth = false) { name().length }
 ```
 
+<inline-frame src="./resources/reorderColumnsByTopLevel.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderColumnsByTopLevel.html" width="100%"/>
 
 ## reorderColumnsByName
 
@@ -220,8 +229,9 @@ With the default `atAnyDepth = true`, the columns inside `name` are reordered to
 df.reorderColumnsByName(desc = true)
 ```
 
+<inline-frame src="./resources/reorderColumnsByName.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderColumnsByName.html" width="100%"/>
 
 With `atAnyDepth = false`, the columns inside `name` keep their order:
 
@@ -231,5 +241,6 @@ With `atAnyDepth = false`, the columns inside `name` keep their order:
 df.reorderColumnsByName(atAnyDepth = false, desc = true)
 ```
 
+<inline-frame src="./resources/reorderColumnsByNameTopLevel.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/reorderColumnsByNameTopLevel.html" width="100%"/>
