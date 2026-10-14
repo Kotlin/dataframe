@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.GROUPED_MEDIAN_FOR_BINARY_COMPAT
 import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN_OR_NULL
 import kotlin.experimental.ExperimentalTypeInference
@@ -107,7 +108,7 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
     typealias MedianForSelectingOptions = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.ResultTypeSnippet]
+     * @include [CommonMedianPercentileDocs.ResultTypeSnippet] {@include [SetMedianStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Median.TypeConversion]}
      */
@@ -115,7 +116,7 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
     typealias ResultTypeSnippet = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.NumberResultSnippet]
+     * @include [CommonMedianPercentileDocs.NumberResultSnippet] {@include [SetMedianStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Median.TypeConversion]}
      */
@@ -123,7 +124,7 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
     typealias NumberResultSnippet = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.ComparableResultSnippet]
+     * @include [CommonMedianPercentileDocs.ComparableResultSnippet] {@include [SetMedianStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Median.TypeConversion]}
      */
@@ -142,9 +143,11 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
     @ExcludeFromSources
     typealias NullCellOnEmptySnippet = Nothing
 
-    /** @include [CommonMedianPercentileDocs.NullCellOnEmptyPivotSnippet] {@include [SetMedianStatisticArgs]} */
+    /**
+     * @include [CommonMedianPercentileDocs.NullCellOnEmptyPivotGroupBySnippet] {@include [SetMedianStatisticArgs]}
+     */
     @ExcludeFromSources
-    typealias NullCellOnEmptyPivotSnippet = Nothing
+    typealias NullCellOnEmptyPivotGroupBySnippet = Nothing
 
     /** @include [CommonMedianPercentileDocs.BySelectionSnippet] {@include [SetMedianStatisticArgs]} */
     @ExcludeFromSources
@@ -166,13 +169,18 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
-    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMedianStatisticArgs]} */
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMedianStatisticArgs]}
+     *   These must be existing columns holding self-comparable values,
+     *   else an [IllegalStateException] is thrown.
+     */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMedianStatisticArgs]}
-     *   The values in these columns must be mutually comparable, else an [IllegalStateException] is thrown.
+     *   These must be existing columns whose values are mutually comparable,
+     *   else an [IllegalStateException] is thrown.
      */
     @ExcludeFromSources
     typealias ComparableColumnNamesParam = Nothing
@@ -206,8 +214,6 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      *
      * $[NOTE]
      *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
-     *
      * See [Selecting Columns][MedianDocs.MedianForSelectingOptions].
      *
      * See also:
@@ -240,15 +246,13 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      * Returns a new [DataFrame] with one row per group, containing the group key columns
      * and a column with the median for each selected column.
      *
-     * $[INPUT]
+     * @include [MedianDocs.InputValuesSnippet]
      *
      * @include [MedianDocs.ResultTypeSnippet]
      *
      * @include [MedianDocs.NullCellOnEmptySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianForSelectingOptions].
      *
@@ -266,9 +270,6 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      */
     @ExcludeFromSources
     interface GroupedMedianForSnippet {
-
-        // The note about the supported input values; differs on whether there's a `skipNaN` parameter
-        typealias INPUT = Nothing
 
         // The note about the aggregate columns selector; can be omitted
         typealias NOTE = Nothing
@@ -293,8 +294,6 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      * @include [MedianDocs.ResultTypeSnippet]
      *
      * @include [MedianDocs.NullCellOnEmptySnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianSelectingOptions].
      *
@@ -330,11 +329,9 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      *
      * @include [MedianDocs.ResultTypeSnippet]
      *
-     * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+     * @include [MedianDocs.NullCellOnEmptySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianForSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -374,9 +371,7 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      *
      * @include [MedianDocs.ResultTypeSnippet]
      *
-     * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     * @include [MedianDocs.NullCellOnEmptySnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -412,11 +407,9 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      *
      * @include [MedianDocs.ResultTypeSnippet]
      *
-     * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+     * @include [MedianDocs.NullCellOnEmptyPivotGroupBySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianForSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -458,9 +451,7 @@ internal interface MedianDocs : CommonMedianPercentileDocs {
      *
      * @include [MedianDocs.ResultTypeSnippet]
      *
-     * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     * @include [MedianDocs.NullCellOnEmptyPivotGroupBySnippet]
      *
      * See [Selecting Columns][MedianDocs.MedianSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1190,8 +1181,6 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
  *
  * @include [MedianDocs.ComparableResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [medianOrNull][DataFrame.medianOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the median of.
@@ -1236,8 +1225,6 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSel
  *
  * @include [MedianDocs.ComparableResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [median][DataFrame.median] — throws instead of returning `null` when there's nothing
  *   to compute the median of.
@@ -1278,8 +1265,6 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(columns: Colu
  *
  * @include [MedianDocs.NumberResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [medianOrNull][DataFrame.medianOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the median of.
@@ -1319,8 +1304,6 @@ public fun <T, C> DataFrame<T>.median(
  * @include [MedianDocs.NullOnEmptySnippet]
  *
  * @include [MedianDocs.NumberResultSnippet]
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [median][DataFrame.median] — throws instead of returning `null` when there's nothing
@@ -1365,8 +1348,6 @@ public fun <T, C> DataFrame<T>.medianOrNull(
  *
  * @include [MedianDocs.ResultTypeSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [medianOrNull][DataFrame.medianOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the median of.
@@ -1401,8 +1382,6 @@ public fun <T> DataFrame<T>.median(vararg columns: String, skipNaN: Boolean = sk
  * @include [MedianDocs.NullOnEmptySnippet]
  *
  * @include [MedianDocs.ResultTypeSnippet]
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [median][DataFrame.median] — throws instead of returning `null` when there's nothing
@@ -1902,7 +1881,6 @@ public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T
 
 /**
  * @include [MedianDocs.GroupedMedianForSnippet]
- * @set [MedianDocs.GroupedMedianForSnippet.INPUT] {@include [MedianDocs.InputValuesSnippet]}
  * @set [MedianDocs.GroupedMedianForSnippet.NOTE] {@include [MedianDocs.AggregateColumnsSelectorSnippet]}
  * @set [MedianDocs.GroupedMedianForSnippet.EXAMPLE]
  * ```kotlin
@@ -1922,18 +1900,22 @@ public fun <T, C : Comparable<*>?> Grouped<T>.medianFor(
 
 /**
  * @include [MedianDocs.GroupedMedianForSnippet]
- * @set [MedianDocs.GroupedMedianForSnippet.INPUT] {@include [MedianDocs.ComparableInputValuesSnippet]}
  * @set [MedianDocs.GroupedMedianForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the median "age" and the median "weight"
  * df.groupBy { city }.medianFor("age", "weight")
  * ```
  * @include [MedianDocs.ColumnNamesParam]
+ * @include [MedianDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the median of each selected column per group.
  */
 @Refine
 @StringApiInterpretable(interpreter = "GroupByMedian0", stringArgument = "columns", targetArgument = "columns")
-public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
+public fun <T> Grouped<T>.medianFor(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
+    medianFor(skipNaN) { columns.toComparableColumns() }
+
+@Deprecated(GROUPED_MEDIAN_FOR_BINARY_COMPAT, level = DeprecationLevel.HIDDEN)
+public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = this.medianFor(*columns)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2159,7 +2141,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
  *
  * @include [MedianDocs.ResultTypeSnippet]
  *
- * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MedianDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -2249,7 +2231,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
  * ```
  * @include [MedianDocs.SkipNanParam]
  * @include [MedianDocs.ColumnsSelectorParam]
- * @return A single [DataRow] with, per [pivot] group, the median of all the values in the selected columns.
+ * @return A [DataRow] with, per [pivot] group, a single median of all the values in the selected columns.
  */
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     skipNaN: Boolean = skipNaNDefault,
@@ -2265,7 +2247,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
  * ```
  * @include [MedianDocs.ComparableColumnNamesParam]
  * @include [MedianDocs.SkipNanParam]
- * @return A single [DataRow] with, per [pivot] group, the median of all the values in the selected columns.
+ * @return A [DataRow] with, per [pivot] group, a single median of all the values in the selected columns.
  */
 public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     median(skipNaN) { columns.toComparableColumns() }
@@ -2299,7 +2281,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
  *
  * @include [MedianDocs.ResultTypeSnippet]
  *
- * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MedianDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [medianOf] with [medianBy][Pivot.medianBy], which returns the row of each group at
  * the median of the values the expression returns, instead of that value.
@@ -2438,7 +2420,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
  *
  * @include [MedianDocs.ResultTypeSnippet]
  *
- * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MedianDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -2527,7 +2509,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  * ```
  * @include [MedianDocs.SkipNanParam]
  * @include [MedianDocs.ColumnsSelectorParam]
- * @return A [DataFrame] with, per [pivot] and [groupBy] group, the median of all the values
+ * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single median of all the values
  *   in the selected columns.
  */
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
@@ -2544,7 +2526,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  * ```
  * @include [MedianDocs.ComparableColumnNamesParam]
  * @include [MedianDocs.SkipNanParam]
- * @return A [DataFrame] with, per [pivot] and [groupBy] group, the median of all the values
+ * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single median of all the values
  *   in the selected columns.
  */
 public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
@@ -2579,7 +2561,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  *
  * @include [MedianDocs.ResultTypeSnippet]
  *
- * @include [MedianDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MedianDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Don't confuse [medianOf] with [medianBy][PivotGroupBy.medianBy], which returns the row of each group at
  * the median of the values the expression returns, instead of that value.
