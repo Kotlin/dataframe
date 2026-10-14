@@ -16,14 +16,9 @@ or they return `null` when using the `-orNull` overloads.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`,
 but no mix of different number types.
-In these cases, the return type is always `Double?`.
+With the default estimator, the return type is `Double?`. Explicit selecting methods preserve the observation type.
 The results of the operation on these types are interpolated using
 [Quantile Estimation Method](#quantile-estimation-methods) R8.
-Interpolation preserves exact observations at integral estimated positions, including infinite endpoints,
-and identical infinite observations. Other non-finite interpolation arithmetic can produce NaN.
-Exact observations retain their signed zero.
-Use [`quantile`](operations/column/quantileOnColumn.md) to choose an estimator explicitly with a `[0, 1]` probability;
-the percentile default remains R8.
 
 The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
@@ -34,6 +29,8 @@ The index of the result of the operation on these types is rounded using
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
 When it's set to `true`, `NaN` values are ignored.
+For `-By`, the first NaN selects its original row or element unless NaN is skipped.
+Interpolation preserves exact observations at integral positions and identical infinities; other arithmetic can produce NaN.
 
 ### Quantile Estimation Methods
 
@@ -50,7 +47,8 @@ R8 was the recommended method by Hyndman and Fan,
 though other libraries, like [Numpy](https://numpy.org/doc/2.1/reference/generated/numpy.quantile.html)
 default to R7, so slightly different results are to be expected.
 
-In the future we might add an option to change the quantile estimation method.
+The `method` overloads allow choosing R1, R3, R7, or R8. See [statistical estimation methods](estimationMethods.md)
+for type-preserving selection, interpolation, and grouped operations.
 
 <!---FUN percentileModes-->
 

@@ -98,7 +98,11 @@ internal interface MaxDocs : CommonMinMaxDocs {
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
-    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]} */
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]}
+     *   These must be existing mutually comparable columns,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
+     */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
@@ -1407,7 +1411,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1443,7 +1447,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1489,7 +1493,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1547,7 +1551,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1587,7 +1591,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1643,7 +1647,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
@@ -1781,7 +1785,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1818,7 +1822,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1864,7 +1868,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1925,7 +1929,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1968,7 +1972,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -2026,7 +2030,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
