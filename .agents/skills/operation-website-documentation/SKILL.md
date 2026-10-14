@@ -81,7 +81,7 @@ If the page has no Writerside summaries yet, add all three right after the title
 Header and signature rules (see *Structure* in the guidelines for the details):
 
 - Parameters and examples are **headers** (`### Parameters`, `### Examples`), never bold paragraphs.
-- A separate [`DataColumn`](docs/StardustDocs/topics/concepts/DataColumn.md) overload goes at the end
+- A separate [`DataColumn`](../../../docs/StardustDocs/topics/concepts/DataColumn.md) overload goes at the end
   of the operation section under ``### `funName` on `DataColumn` ``, with its own description,
   signature, parameters, and examples.
 - Signatures are pseudocode **with types**, in a `text` code block, e.g.
@@ -89,7 +89,7 @@ Header and signature rules (see *Structure* in the guidelines for the details):
 - Types go in the **parameter descriptions too**, not only in the signature — as pseudocode (same
   style as the signature) or in words; for lambdas say what they receive and what they must return.
 - For columns arguments, state in the description how columns can be selected: by string names
-  and/or with the [Columns Selection DSL](docs/StardustDocs/topics/ColumnSelectors.md) (link it).
+  and/or with the [Columns Selection DSL](../../../docs/StardustDocs/topics/ColumnSelectors.md) (link it).
   Check the actual overloads: some operations are DSL-only; in some the string and DSL overloads
   work differently (e.g. `rename`) and must be described separately; some use a specialized DSL
   (`SortDsl`, `PivotDsl`, …) — name it, link its section, and say what it adds on top of the
@@ -245,8 +245,10 @@ Do **not** build, run, or deploy the website. Just point the user to
 
 Once the topic text is final, check every link you wrote or touched:
 
-- Markdown links to other topics (`[…](someTopic.md)`, `[…](concepts/x.md)`) — the target file must
-  exist under `docs/StardustDocs/topics/` (and subfolders), with the path relative to the current topic.
+- Markdown links to other topics (`[…](someTopic.md)`) — the target file must exist somewhere under
+  `docs/StardustDocs/topics/` (in any subfolder). Writerside resolves topics by file name, so links are
+  written as the **bare file name** (`DataRow.md`, not `concepts/DataRow.md`) — never "fix" a bare link
+  into a relative path; rewrite a path-style link (`concepts/x.md`) into the bare form instead.
 - Anchors (`someTopic.md#section-anchor`, `#local-anchor`) — the heading must exist in the target
   file; Writerside anchors are the lowercased heading with spaces replaced by `-` and punctuation
   dropped. Also accept explicit `{id="..."}` anchors.
