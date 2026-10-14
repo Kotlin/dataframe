@@ -118,9 +118,11 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
     typealias BigNumbersSnippet = Nothing
 
     /**
-     * {@comment Note about the type of the result of the overloads for primitive numbers. KDoc-snippet.}
+     * {@comment Note about the type of the result of the overloads for primitive numbers.
+     *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
-     * The result is a [Double], interpolated between the values using {@include [QuantileEstimationMethodLink]} R8.
+     * The resulting {@get [STATISTIC] statistic} is a [Double], interpolated between the values using
+     * {@include [QuantileEstimationMethodLink]} R8.
      * Converting [Long] values to [Double] may lose precision for very large values.
      * @include [DefaultMethodsOnlySnippet]
      *
@@ -130,9 +132,11 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
     typealias NumberResultSnippet = Nothing
 
     /**
-     * {@comment Note about the type of the result of the overloads for comparable values. KDoc-snippet.}
+     * {@comment Note about the type of the result of the overloads for comparable values.
+     *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
-     * The result is selected from the values using {@include [QuantileEstimationMethodLink]} R3,
+     * The resulting {@get [STATISTIC] statistic} is selected from the values using
+     * {@include [QuantileEstimationMethodLink]} R3,
      * so it has the same type as the values (minus nullability, if the values were nullable).
      * @include [DefaultMethodsOnlySnippet]
      */
@@ -141,13 +145,13 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
 
     /**
      * {@comment Note about the type of the result of the overloads that handle both primitive numbers
-     *    and other comparable values. KDoc-snippet.}
+     *    and other comparable values. KDoc-snippet. Uses the [STATISTIC] key.}
      *
-     * For primitive numbers, the result is a [Double], interpolated between the values using
-     * {@include [QuantileEstimationMethodLink]} R8.
+     * For primitive numbers, the resulting {@get [STATISTIC] statistic} is a [Double], interpolated between
+     * the values using {@include [QuantileEstimationMethodLink]} R8.
      * Converting [Long] values to [Double] may lose precision for very large values.
-     * For all other self-comparable values, the result is selected from the values using
-     * {@include [QuantileEstimationMethodLink]} R3, so it has the same type as those values.
+     * For all other self-comparable values, the resulting {@get [STATISTIC] statistic} is selected from
+     * the values using {@include [QuantileEstimationMethodLink]} R3, so it has the same type as those values.
      * @include [DefaultMethodsOnlySnippet]
      */
     @ExcludeFromSources
@@ -236,7 +240,7 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
     typealias NullCellOnEmptySnippet = Nothing
 
     /**
-     * {@comment Note about the behavior on empty input for the Pivot functions.
+     * {@comment Note about the behavior on empty input for the PivotGroupBy functions.
      *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
      * Result cells for which there exists a group, but there is nothing to compute the
@@ -246,7 +250,7 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      * @include [CommonStatisticsDocs.EmptyPivotIntersectionSnippet]
      */
     @ExcludeFromSources
-    typealias NullCellOnEmptyPivotSnippet = Nothing
+    typealias NullCellOnEmptyPivotGroupBySnippet = Nothing
 
     /**
      * {@comment Note about how the `-By` operations select their result.
