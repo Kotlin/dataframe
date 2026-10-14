@@ -74,7 +74,7 @@ You could find the following articles there:
 
 ### What's new
 
-1.0.0-rc01: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-rc01)
+1.0.0-rc02: [Release notes](https://github.com/Kotlin/dataframe/releases/tag/v1.0.0-rc02)
 
 ## Setup
 
@@ -87,7 +87,7 @@ Add dependencies in the `build.gradle.kts` script:
 
 ```kotlin
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-rc01")
+    implementation("org.jetbrains.kotlinx:dataframe:1.0.0-rc02")
 }
 ```
 
@@ -116,7 +116,7 @@ Add dependencies in the `pom.xml` configuration file:
 <dependency>
     <groupId>org.jetbrains.kotlinx</groupId>
     <artifactId>dataframe</artifactId>
-    <version>1.0.0-rc01</version>
+    <version>1.0.0-rc02</version>
 </dependency>
 ```
 
@@ -146,7 +146,7 @@ Add the DataFrame library dependency to your `module.yaml` file:
 
 ```yaml
 dependencies:
-  - org.jetbrains.kotlinx:dataframe:1.0.0-rc01
+  - org.jetbrains.kotlinx:dataframe:1.0.0-rc02
 ```
 
 `mavenCentral` is already configured by default in the Kotlin Toolchain, so no need to add it manually.
@@ -182,15 +182,15 @@ to get the latest stable version without updating the Kotlin kernel:
 Or manually specify the version:
 
 ```
-%use dataframe(1.0.0-rc01n)
+%use dataframe(1.0.0-rc02n)
 ```
 
 > [!WARNING]
 > Please, use `0.16.0-736` Kotlin Jupyter kernel version or higher for descriptor compatibility
 >
-> Use specified `1.0.0-rc01n` version in Kotlin Notebook.
+> Use specified `1.0.0-rc02n` version in Kotlin Notebook.
 > Due to [a known issue](https://github.com/Kotlin/dataframe/issues/1116),
-> common `dataframe:1.0.0-rc01` version works incorrectly in Notebook.
+> common `dataframe:1.0.0-rc02` version works incorrectly in Notebook.
 >
 > If you use [`kandy`](https://github.com/Kotlin/kandy) in your notebook, add it after the `dataframe`:
 > ```kotlin
@@ -289,6 +289,8 @@ other recommended versions.
 | 1.0.0-Beta5              | 8 / 11               | 2.3.20         | 0.16.0-736             | 19.0.0               | 2.3.20 / IDEA 2026.1+   | 0.8.4                    |
 | 1.0.0-rc01n  (notebooks) | 8 / 11               | 2.4.0          | 0.16.0-736             | 19.0.0               | -                       | 0.8.5                    |
 | 1.0.0-rc01               | 8 / 11               | 2.4.0          | 0.16.0-736             | 19.0.0               | 2.4.10 / IDEA 2026.1.4+ | 0.8.5                    |
+| 1.0.0-rc02n  (notebooks) | 8 / 11               | 2.4.21          | 0.16.0-736             | 19.0.0               | -                       | 0.8.6                    |
+| 1.0.0-rc02               | 8 / 11               | 2.4.21          | 0.16.0-736             | 19.0.0               | 2.4.21 / IDEA 2026.2.3+ | 0.8.6                    |
 
 ## Code of Conduct
 
