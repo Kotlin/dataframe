@@ -189,6 +189,11 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
 @HasSchema(schemaArg = 0)
 public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "RenameClause(df=$df, columns=$columns)"
+
+    /** @include [RenameClause.to] */
+    @Refine
+    @Interpretable("RenameInto")
+    public fun to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 }
 
 /**

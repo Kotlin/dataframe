@@ -3862,6 +3862,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/RemoveKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/RenameClause {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)V
+	public final fun to ([Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun toString ()Ljava/lang/String;
 }
 
