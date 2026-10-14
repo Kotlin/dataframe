@@ -304,6 +304,32 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
 @HasSchema(schemaArg = 0)
 public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "RenameClause(df=$df, columns=$columns)"
+
+    /** Renames the columns selected with [<code>rename</code>][org.jetbrains.kotlinx.dataframe.api.rename] to the specified [<code>newNames</code>][newNames],
+     * preserving their values and positions within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+     *
+     * The mapping is positional: [<code>newNames</code>][newNames] are applied in the order
+     * the columns were selected — the first selected column is renamed to the first name,
+     * the second to the second, and so on.
+     *
+     * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
+     *
+     * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar].
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename("col1", "col2").to("width", "length")
+     *
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename { col1 and col2 }.to("width", "length")
+     * ```
+     *
+     * @param newNames The new names for the selected columns, applied in order of selecting.
+     * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the columns renamed. */
+    @Refine
+    @Interpretable("RenameInto")
+    public fun to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 }
 
 /**
