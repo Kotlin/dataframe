@@ -211,7 +211,7 @@ See also
 [this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 
 ```kotlin
-val df = DataFrame
+val repos = DataFrame
     // Read DataFrame from the CSV file.
     .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
     // And convert it to match the `Repositories` schema.
