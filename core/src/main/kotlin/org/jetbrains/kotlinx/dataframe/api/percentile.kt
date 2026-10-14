@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
+import org.jetbrains.kotlinx.dataframe.util.GROUPED_PERCENTILE_FOR_BINARY_COMPAT
 import org.jetbrains.kotlinx.dataframe.util.ROW_PERCENTILE
 import org.jetbrains.kotlinx.dataframe.util.ROW_PERCENTILE_OR_NULL
 import kotlin.experimental.ExperimentalTypeInference
@@ -112,7 +113,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     typealias PercentileForSelectingOptions = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.ResultTypeSnippet]
+     * @include [CommonMedianPercentileDocs.ResultTypeSnippet] {@include [SetPercentileStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Percentile.TypeConversion]}
      */
@@ -120,7 +121,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     typealias ResultTypeSnippet = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.NumberResultSnippet]
+     * @include [CommonMedianPercentileDocs.NumberResultSnippet] {@include [SetPercentileStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Percentile.TypeConversion]}
      */
@@ -128,7 +129,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     typealias NumberResultSnippet = Nothing
 
     /**
-     * @include [CommonMedianPercentileDocs.ComparableResultSnippet]
+     * @include [CommonMedianPercentileDocs.ComparableResultSnippet] {@include [SetPercentileStatisticArgs]}
      *
      * For more information about the resulting types: {@include [DocumentationUrls.Percentile.TypeConversion]}
      */
@@ -147,9 +148,11 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     @ExcludeFromSources
     typealias NullCellOnEmptySnippet = Nothing
 
-    /** @include [CommonMedianPercentileDocs.NullCellOnEmptyPivotSnippet] {@include [SetPercentileStatisticArgs]} */
+    /**
+     * @include [CommonMedianPercentileDocs.NullCellOnEmptyPivotGroupBySnippet] {@include [SetPercentileStatisticArgs]}
+     */
     @ExcludeFromSources
-    typealias NullCellOnEmptyPivotSnippet = Nothing
+    typealias NullCellOnEmptyPivotGroupBySnippet = Nothing
 
     /** @include [CommonMedianPercentileDocs.BySelectionSnippet] {@include [SetPercentileStatisticArgs]} */
     @ExcludeFromSources
@@ -171,13 +174,18 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
-    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetPercentileStatisticArgs]} */
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetPercentileStatisticArgs]}
+     *   These must be existing columns holding self-comparable values,
+     *   else an [IllegalStateException] is thrown.
+     */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetPercentileStatisticArgs]}
-     *   The values in these columns must be mutually comparable, else an [IllegalStateException] is thrown.
+     *   These must be existing columns whose values are mutually comparable,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
      */
     @ExcludeFromSources
     typealias ComparableColumnNamesParam = Nothing
@@ -220,8 +228,6 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      *
      * $[NOTE]
      *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
-     *
      * See [Selecting Columns][PercentileDocs.PercentileForSelectingOptions].
      *
      * See also:
@@ -255,15 +261,13 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      * Returns a new [DataFrame] with one row per group, containing the group key columns
      * and a column with the percentile for each selected column.
      *
-     * $[INPUT]
+     * @include [PercentileDocs.InputValuesSnippet]
      *
      * @include [PercentileDocs.ResultTypeSnippet]
      *
      * @include [PercentileDocs.NullCellOnEmptySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileForSelectingOptions].
      *
@@ -281,9 +285,6 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      */
     @ExcludeFromSources
     interface GroupedPercentileForSnippet {
-
-        // The note about the supported input values; differs on whether there's a `skipNaN` parameter
-        typealias INPUT = Nothing
 
         // The note about the aggregate columns selector; can be omitted
         typealias NOTE = Nothing
@@ -308,8 +309,6 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      * @include [PercentileDocs.ResultTypeSnippet]
      *
      * @include [PercentileDocs.NullCellOnEmptySnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileSelectingOptions].
      *
@@ -345,11 +344,9 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      *
      * @include [PercentileDocs.ResultTypeSnippet]
      *
-     * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+     * @include [PercentileDocs.NullCellOnEmptySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileForSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -389,9 +386,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      *
      * @include [PercentileDocs.ResultTypeSnippet]
      *
-     * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     * @include [PercentileDocs.NullCellOnEmptySnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileSelectingOptions], or check out the
      * [`Pivot` Grammar][PivotDocs.Grammar].
@@ -428,11 +423,9 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      *
      * @include [PercentileDocs.ResultTypeSnippet]
      *
-     * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+     * @include [PercentileDocs.NullCellOnEmptyPivotGroupBySnippet]
      *
      * $[NOTE]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileForSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -474,9 +467,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
      *
      * @include [PercentileDocs.ResultTypeSnippet]
      *
-     * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
-     *
-     * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
+     * @include [PercentileDocs.NullCellOnEmptyPivotGroupBySnippet]
      *
      * See [Selecting Columns][PercentileDocs.PercentileSelectingOptions], or check out the
      * [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
@@ -1250,8 +1241,6 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
  *
  * @include [PercentileDocs.ComparableResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [percentileOrNull][DataFrame.percentileOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the percentile of.
@@ -1299,8 +1288,6 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
  *
  * @include [PercentileDocs.ComparableResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [percentile][DataFrame.percentile] — throws instead of returning `null` when there's nothing
  *   to compute the percentile of.
@@ -1344,8 +1331,6 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
  *
  * @include [PercentileDocs.NumberResultSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [percentileOrNull][DataFrame.percentileOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the percentile of.
@@ -1388,8 +1373,6 @@ public fun <T, C> DataFrame<T>.percentile(
  * @include [PercentileDocs.NullOnEmptySnippet]
  *
  * @include [PercentileDocs.NumberResultSnippet]
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [percentile][DataFrame.percentile] — throws instead of returning `null` when there's nothing
@@ -1436,8 +1419,6 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
  *
  * @include [PercentileDocs.ResultTypeSnippet]
  *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
- *
  * See also:
  * - [percentileOrNull][DataFrame.percentileOrNull] — returns `null` instead of throwing when there's
  *   nothing to compute the percentile of.
@@ -1476,8 +1457,6 @@ public fun <T> DataFrame<T>.percentile(
  * @include [PercentileDocs.NullOnEmptySnippet]
  *
  * @include [PercentileDocs.ResultTypeSnippet]
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
  * See also:
  * - [percentile][DataFrame.percentile] — throws instead of returning `null` when there's nothing
@@ -2021,7 +2000,6 @@ public fun <T> Grouped<T>.percentile(percentile: Double, skipNaN: Boolean = skip
 
 /**
  * @include [PercentileDocs.GroupedPercentileForSnippet]
- * @set [PercentileDocs.GroupedPercentileForSnippet.INPUT] {@include [PercentileDocs.InputValuesSnippet]}
  * @set [PercentileDocs.GroupedPercentileForSnippet.NOTE] {@include [PercentileDocs.AggregateColumnsSelectorSnippet]}
  * @set [PercentileDocs.GroupedPercentileForSnippet.EXAMPLE]
  * ```kotlin
@@ -2043,7 +2021,6 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
 
 /**
  * @include [PercentileDocs.GroupedPercentileForSnippet]
- * @set [PercentileDocs.GroupedPercentileForSnippet.INPUT] {@include [PercentileDocs.ComparableInputValuesSnippet]}
  * @set [PercentileDocs.GroupedPercentileForSnippet.EXAMPLE]
  * ```kotlin
  * // For each city, the first quartile of the "age" values and of the "weight" values
@@ -2051,12 +2028,20 @@ public fun <T, C : Comparable<*>?> Grouped<T>.percentileFor(
  * ```
  * @include [PercentileDocs.PercentileParam]
  * @include [PercentileDocs.ColumnNamesParam]
+ * @include [PercentileDocs.SkipNanParam]
  * @return A new [DataFrame] with the group keys and the given percentile of each selected column per group.
  */
 @Refine
 @StringApiInterpretable(interpreter = "GroupByPercentile0", stringArgument = "columns", targetArgument = "columns")
+public fun <T> Grouped<T>.percentileFor(
+    percentile: Double,
+    vararg columns: String,
+    skipNaN: Boolean = skipNaNDefault,
+): DataFrame<T> = percentileFor(percentile, skipNaN) { columns.toComparableColumns() }
+
+@Deprecated(GROUPED_PERCENTILE_FOR_BINARY_COMPAT, level = DeprecationLevel.HIDDEN)
 public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: String): DataFrame<T> =
-    percentileFor(percentile) { columns.toComparableColumns() }
+    this.percentileFor(percentile, *columns)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2302,7 +2287,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percent
  *
  * @include [PercentileDocs.ResultTypeSnippet]
  *
- * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+ * @include [PercentileDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -2403,7 +2388,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
  * @include [PercentileDocs.PercentileParam]
  * @include [PercentileDocs.SkipNanParam]
  * @include [PercentileDocs.ColumnsSelectorParam]
- * @return A single [DataRow] with, per [pivot] group, the given percentile of all the values
+ * @return A [DataRow] with, per [pivot] group, a single given percentile of all the values
  *   in the selected columns.
  */
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
@@ -2422,7 +2407,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
  * @include [PercentileDocs.PercentileParam]
  * @include [PercentileDocs.ComparableColumnNamesParam]
  * @include [PercentileDocs.SkipNanParam]
- * @return A single [DataRow] with, per [pivot] group, the given percentile of all the values
+ * @return A [DataRow] with, per [pivot] group, a single given percentile of all the values
  *   in the selected columns.
  */
 public fun <T> Pivot<T>.percentile(
@@ -2462,7 +2447,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
  *
  * @include [PercentileDocs.ResultTypeSnippet]
  *
- * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+ * @include [PercentileDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [percentileOf] with [percentileBy][Pivot.percentileBy], which returns the row of each group
  * at the percentile of the values the expression returns, instead of that value.
@@ -2611,7 +2596,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
  *
  * @include [PercentileDocs.ResultTypeSnippet]
  *
- * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+ * @include [PercentileDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -2711,7 +2696,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
  * @include [PercentileDocs.PercentileParam]
  * @include [PercentileDocs.SkipNanParam]
  * @include [PercentileDocs.ColumnsSelectorParam]
- * @return A [DataFrame] with, per [pivot] and [groupBy] group, the given percentile of all the values
+ * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single given percentile of all the values
  *   in the selected columns.
  */
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
@@ -2730,7 +2715,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  * @include [PercentileDocs.PercentileParam]
  * @include [PercentileDocs.ComparableColumnNamesParam]
  * @include [PercentileDocs.SkipNanParam]
- * @return A [DataFrame] with, per [pivot] and [groupBy] group, the given percentile of all the values
+ * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single given percentile of all the values
  *   in the selected columns.
  */
 public fun <T> PivotGroupBy<T>.percentile(
@@ -2770,7 +2755,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  *
  * @include [PercentileDocs.ResultTypeSnippet]
  *
- * @include [PercentileDocs.NullCellOnEmptyPivotSnippet]
+ * @include [PercentileDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Don't confuse [percentileOf] with [percentileBy][PivotGroupBy.percentileBy], which returns the row of each
  * group at the percentile of the values the expression returns, instead of that value.
