@@ -223,7 +223,13 @@ describe it at the end of the operation section under the header:
 ### `funName` on `DataColumn`
 ```
 
-with its own description, signature, parameters, and examples.
+with its own description, signature, parameters, and examples
+(see [`filter.md`](docs/StardustDocs/topics/filter.md)).
+
+If the operation is defined for several receivers (`DataFrame`, `DataRow`, `DataColumn`, `GroupBy`, `Iterable`, …)
+and the overloads differ substantially, treat each receiver as a separate operation of a
+[page with several operations](#pages-with-several-operations): give each its own `` ## `funName` on `Receiver` ``
+section, the `DataColumn` one included (see [`concat.md`](docs/StardustDocs/topics/concat.md)).
 
 #### Writerside summaries
 
@@ -392,8 +398,14 @@ and outputs created using [Sample Helper](#sample-helper).
 
 ## Standard operation documentation writing workflow
 
-0) Find a completed similar operation topic! Use it as a template, do not create a new one from scratch.
-   When writing / updating with agents, provide that topic as a context.
+0) Use a reference topic as a template, do not create a new one from scratch.
+   The reference topics, which fully follow these guidelines, are
+   [`filter.md`](docs/StardustDocs/topics/filter.md)
+   (with [`FilterSamples.kt`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/FilterSamples.kt))
+   and [`concat.md`](docs/StardustDocs/topics/concat.md)
+   (with [`ConcatSamples.kt`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/ConcatSamples.kt)).
+   Other topics may be outdated: take only the mechanics from them (Korro marks, samples), never the structure.
+   When writing / updating with agents, provide the template topic as a context.
 1) Create a topic as `.md` file in [docs/StardustDocs/topics](docs/StardustDocs/topics) if it doesn't exist yet.
    Add it to the [site map](docs/StardustDocs/d.tree).
 2) Write the topic content following rules and structure.

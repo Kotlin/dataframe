@@ -37,17 +37,22 @@ around it. If the two ever disagree, the guidelines win.
 
 ### 1. Get a template
 
-Operation pages are never written from scratch. Use a completed similar operation as a template:
+Operation pages are never written from scratch. Use a reference page as a template:
 
 - If the user provided a reference page — use it.
-- Otherwise find one yourself: pick a page of a closely related operation that already has an
-  `IMPORT` directive and `FUN`/`END` marks with generated `<inline-frame>` outputs inside them, and whose test lives in
-  `samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/`. Good references:
-  `docs/StardustDocs/topics/valueCounts.md` + `…/samples/api/ValueCountsSamples.kt`,
-  `countDistinct.md`, `sliceRows.md`, `filter.md`. Tell the user which template you picked.
+- Otherwise use one of the two reference pages, which fully follow the guidelines:
+  - `docs/StardustDocs/topics/filter.md` + `samples/…/samples/api/FilterSamples.kt` — a single
+    operation with a `DataColumn` overload;
+  - `docs/StardustDocs/topics/concat.md` + `samples/…/samples/api/ConcatSamples.kt` — an operation
+    with several receivers (`DataFrame`, `DataRow`, `DataColumn`, `GroupBy`, `Iterable`), each in its
+    own `##` section.
+
+  Tell the user which template you picked.
 
 Read both the template topic and its template test before writing anything, and mirror their
-structure, tone and formatting.
+structure, tone and formatting. Any other existing page may be outdated: you can look at it for
+the mechanics (`IMPORT`/`FUN`/`END`, the `:samples` test class, Sample Helper calls), but always take
+the structure (summaries, headers, signatures, parameters) from the guidelines and the two reference pages.
 
 ### 2. Gather the source of truth
 
@@ -147,7 +152,7 @@ order of sections in the topic.
 - Use illustrative data — e.g. a frame that actually contains `null`s for `null`-related
   operations. The shared dataset from `TestBase` (`peopleDf` etc.) is the default, but if it does
   not demonstrate the operation well, declare your own `@DataSchema` + `dataFrameOf(...)` in the
-  test class instead (see `ValueCountsSamples.kt`). Keep it small and meaningful.
+  test class instead (see `ConcatSamples.kt`). Keep it small and meaningful.
 - **Never use deprecated API** in samples or in the page text — no deprecated operations,
   overloads, or parameters, and nothing scheduled for removal. Document the current replacement
   instead. Check for `@Deprecated` on everything you call.

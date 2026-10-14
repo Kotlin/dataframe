@@ -229,7 +229,8 @@ youngest.concat(oldest)
 
 ## `concat` on `DataColumn`
 
-The result of `concat` on a [`DataColumn`](DataColumn.md) depends on the values stored in the column:
+Appends the values of other columns to a [`DataColumn`](DataColumn.md), or combines the values stored in a single
+column. What it returns depends on the values stored in the column:
 
 ```text
 column.concat(vararg other: DataColumn<T>): DataColumn<T>
@@ -321,18 +322,20 @@ repeated for every row in its group. An existing group column with the same name
 [`ReducedGroupBy.concat()`](groupBy.md#reducing) applies the stored reducer to every group and returns one result
 row per group, in group order.
 
-If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
-their first appearance in the reduced rows. Values missing from a reduced row follow the
-[schema-unification rules for `DataFrame`s](#concat-on-dataframe).
-
-If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
-missing every result column, so its values are filled according to the same rules.
+All three return a [`DataFrame`](DataFrame.md).
 
 ```text
 groupBy.concat(): DataFrame<G>
 groupBy.concatWithKeys(): DataFrame<G>
 reducedGroupBy.concat(): DataFrame<G>
 ```
+
+If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
+their first appearance in the reduced rows. Values missing from a reduced row follow the
+[schema-unification rules for `DataFrame`s](#concat-on-dataframe).
+
+If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
+missing every result column, so its values are filled according to the same rules.
 
 ### Examples {id="examples_groupby"}
 
@@ -359,7 +362,7 @@ grouped.concatWithKeys()
 
 ```kotlin
 val grouped = df.groupBy {
-    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+    expr { if (getValue<Int>("age") >= 20) "adult" else "teen" } named "ageGroup"
 }
 
 grouped.concatWithKeys()
@@ -389,7 +392,7 @@ grouped.concat()
 
 ```kotlin
 val grouped = df.groupBy {
-    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+    expr { if (getValue<Int>("age") >= 20) "adult" else "teen" } named "ageGroup"
 }
 
 grouped.concat()
