@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [<code>update</code>][update].
  *
  * ### Check out: [<code>Grammar</code>][FillNulls.Grammar]
@@ -152,7 +152,7 @@ private typealias SetFillNullsOperationArg = Nothing
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
@@ -208,7 +208,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
@@ -245,7 +245,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
@@ -272,7 +272,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNulls.Grammar]
@@ -357,7 +357,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [<code>`NaN`</code>][NaN] values with given value or expression.
+ * Replaces [<code>`NaN`</code>][NaN] values with the given value or expression.
  * Specific case of [<code>update</code>][update].
  *
  * ### Check out: [<code>Grammar</code>][FillNaNs.Grammar]
@@ -474,7 +474,7 @@ internal interface FillNaNs {
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
@@ -529,7 +529,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
@@ -565,7 +565,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = 
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
@@ -590,7 +590,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with given value or expression.
+ * Replaces [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNaNs.Grammar]
@@ -620,7 +620,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * ## The Fill NA Operation
  *
- * Replaces [<code>`NA`</code>][NA] values with given value or expression.
+ * Replaces [<code>`NA`</code>][NA] values with the given value or expression.
  * Specific case of [<code>update</code>][update].
  *
  * ### Check out: [<code>Grammar</code>][FillNA.Grammar]
@@ -737,7 +737,7 @@ internal interface FillNA {
 /**
  * ## The Fill NA Operation
  *
- * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
@@ -792,7 +792,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
 /**
  * ## The Fill NA Operation
  *
- * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
@@ -828,7 +828,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fi
 /**
  * ## The Fill NA Operation
  *
- * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]
@@ -853,7 +853,7 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
 /**
  * ## The Fill NA Operation
  *
- * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with given value or expression.
+ * Replaces [<code>`NA`</code>][org.jetbrains.kotlinx.dataframe.documentation.NA] values with the given value or expression.
  * Specific case of [<code>update</code>][org.jetbrains.kotlinx.dataframe.api.update].
  *
  * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.FillNA.Grammar]

@@ -10,7 +10,7 @@
     <toc-element topic="Guides-And-Examples.md">
         <toc-element topic="quickstart.md"/>
         <toc-element topic="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md">
-            <toc-element topic="Trobleshooting.md"/>
+            <toc-element topic="Troubleshooting.md" accepts-web-file-names="trobleshooting.html"/>
         </toc-element>
         <toc-element topic="Guide-for-backend-SQL-developers.md"/>
     </toc-element>

@@ -22,7 +22,7 @@ in [generated-sources](generated-sources).
 See the [KDoc Preprocessing Guide](../KODEX_KDOC_PREPROCESSING.md) for more information.
 
 KDocs can also be exported to HTML, for them to be reused on the website.
-Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
+Elements annotated with `@ExportAsHtml` will have their generated content copied over to
 [docs/StardustDocs/resources/snippets/kdocs](../docs/StardustDocs/resources/snippets/kdocs).
 
 ### ~~Korro~~ (NOTE: This is being moved to [:samples](../samples))

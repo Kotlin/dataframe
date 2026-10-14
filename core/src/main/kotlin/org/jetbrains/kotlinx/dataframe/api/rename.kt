@@ -89,6 +89,59 @@ internal interface RenameDocs {
      * `| `__`.`__[**`addSuffix`**][RenameClause.addSuffix]**`(`**`suffix: `[`String`][String]**`)`**
      */
     typealias Grammar = Nothing
+
+    /**
+     * Renames the columns selected with [rename] to the specified [newNames\],
+     * preserving their values and positions within the [DataFrame].
+     *
+     * The mapping is positional: [newNames\] are applied in the order
+     * the columns were selected — the first selected column is renamed to the first name,
+     * the second to the second, and so on.
+     *
+     * For more information: {@include [DocumentationUrls.Rename]}
+     *
+     * Check out [Grammar][RenameDocs.Grammar].
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename("col1", "col2").to("width", "length")
+     *
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename { col1 and col2 }.to("width", "length")
+     * ```
+     *
+     * @param [newNames\] The new names for the selected columns, applied in order of selecting.
+     * @return A new [DataFrame] with the columns renamed.
+     */
+    @ExcludeFromSources
+    typealias RenameToDocs = Nothing
+
+    /**
+     * Renames the columns selected with [rename] by applying the [transform\] expression
+     * to each of them. This expression receives the column together with its full path
+     * (as [ColumnWithPath]) and must return the new name for that column.
+     * The operation preserves the original columns’ values and their positions within the [DataFrame].
+     *
+     * For more information: {@include [DocumentationUrls.Rename]}
+     *
+     * Check out [Grammar][RenameDocs.Grammar] for more details.
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Rename all columns using their full path, delimited by "->"
+     * df.rename { colsAtAnyDepth() }.to { it.path.joinToString("->") }
+     *
+     * // Rename all `String` columns with uppercase
+     * df.rename { colsOf<String>() }.to { it.name.uppercase() }
+     * ```
+     *
+     * @param [transform\] A function that takes a [ColumnWithPath] for each selected column
+     * and returns the new column name.
+     * @return A new [DataFrame] with the columns renamed.
+     */
+    @ExcludeFromSources
+    typealias RenameToLambdaDocs = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [rename][rename]} */
@@ -166,7 +219,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
  * ```
- * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to rename.
+ * @param [cols\] The [Column Names][String] used to select the columns of this [DataFrame] to rename.
  */
 @StringApiInterpretable(interpreter = "Rename", stringArgument = "cols", targetArgument = "columns")
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
@@ -197,6 +250,22 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
 @HasSchema(schemaArg = 0)
 public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "RenameClause(df=$df, columns=$columns)"
+
+    /**
+     * @comment This overload prevents clashing with `to` [Pair] creation.
+     * @include [RenameDocs.RenameToDocs]
+     */
+    @Refine
+    @Interpretable("RenameInto")
+    public fun to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
+
+    /**
+     * @comment This overload prevents clashing with `to` [Pair] creation.
+     * @include [RenameDocs.RenameToLambdaDocs]
+     */
+    @Refine
+    @Interpretable("RenameIntoLambda")
+    public fun to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)
 }
 
 /**
@@ -277,30 +346,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
 @Deprecated(message = RENAME_INTO, replaceWith = ReplaceWith("to(*newNames)"))
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
-/**
- * Renames the columns selected with [rename] to the specified [newNames],
- * preserving their values and positions within the [DataFrame].
- *
- * The mapping is positional: [newNames] are applied in the order
- * the columns were selected — the first selected column is renamed to the first name,
- * the second to the second, and so on.
- *
- * For more information: {@include [DocumentationUrls.Rename]}
- *
- * Check out [Grammar][RenameDocs.Grammar].
- *
- * ### Examples:
- * ```kotlin
- * // Rename "col1" to "width" and "col2" to "length"
- * df.rename("col1", "col2").to("width", "length")
- *
- * // Rename "col1" to "width" and "col2" to "length"
- * df.rename { col1 and col2 }.to("width", "length")
- * ```
- *
- * @param newNames The new names for the selected columns, applied in order of selecting.
- * @return A new [DataFrame] with the columns renamed.
- */
+/** @include [RenameDocs.RenameToDocs] */
 @Refine
 @Interpretable("RenameInto")
 public fun <T, C> RenameClause<T, C>.to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
@@ -342,29 +388,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
     renameImpl(transform)
 
-/**
- * Renames the columns selected with [rename] by applying the [transform] expression
- * to each of them. This expression receives the column together with its full path
- * (as [ColumnWithPath]) and must return the new name for that column.
- * The operation preserves the original columns’ values and their positions within the [DataFrame].
- *
- * For more information: {@include [DocumentationUrls.Rename]}
- *
- * Check out [Grammar][RenameDocs.Grammar] for more details.
- *
- * ### Examples:
- * ```kotlin
- * // Rename all columns using their full path, delimited by "->"
- * df.rename { colsAtAnyDepth() }.to { it.path.joinToString("->") }
- *
- * // Rename all `String` columns with uppercase
- * df.rename { colsOf<String>() }.to { it.name.uppercase() }
- * ```
- *
- * @param transform A function that takes a [ColumnWithPath] for each selected column
- * and returns the new column name.
- * @return A new [DataFrame] with the columns renamed.
- */
+/** @include [RenameDocs.RenameToLambdaDocs] */
 @Refine
 @Interpretable("RenameIntoLambda")
 public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)

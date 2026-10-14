@@ -23,12 +23,24 @@ which they are passed or iterated.
 Returns a [`DataFrame`](DataFrame.md) containing the receiver's rows followed by all appended rows. The input
 objects are not modified.
 
-```kotlin
-dataFrame.concat(vararg frames: DataFrame<T>): DataFrame<T>
-dataFrame concat frame
-dataFrame.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
-dataFrame.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
+```text
+dataframe.concat(vararg frames: DataFrame<T>): DataFrame<T>
+(dataframe concat frame | dataframe.concat(frame)): DataFrame<Any>
+dataframe.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
+dataframe.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
+
+frame: DataFrame<T1>
 ```
+
+In the overload with the single `frame` parameter, `T` is the schema type of the receiver `DataFrame`,
+and `T1` is the schema type of the `frame` parameter. When enabled, the compiler plugin refines the declared
+`DataFrame<Any>` return type to a generated schema type that combines both input schemas.
+
+This overload can be called using either infix or regular call syntax.
+Infix notation reads naturally when concatenation is the complete expression, such as
+`val fullDf = df1 concat df2` or `return df1 concat df2`.
+When chaining another operation, prefer regular call syntax, such as `df1.concat(df2).head()`, instead of
+parenthesizing the infix expression.
 
 When `concat` combines dataframes, it unifies their schemas:
 
@@ -63,7 +75,7 @@ See also:
 
 * `vararg frames: DataFrame | frames: Iterable<DataFrame>` — the `DataFrame`s whose rows are appended.
   Vararg `frames` are processed in argument order; iterable `frames` are processed in iteration order.
-* `frame: DataFrame` — a single `DataFrame` appended with infix syntax.
+* `frame: DataFrame` — a single `DataFrame` appended using infix or regular call syntax.
 * `rows: Iterable<DataRow>` — the rows to append, processed in iteration order.
 
 ### Examples {id="examples_df"}
@@ -170,7 +182,7 @@ Appends one or more rows to a [`DataRow`](DataRow.md). Returns a [`DataFrame`](D
 followed by the supplied rows in argument order. If the rows have different schemas, they are unified according to
 the same rules as [`DataFrame.concat`](#concat-on-dataframe).
 
-```kotlin
+```text
 row.concat(vararg rows: DataRow<T>): DataFrame<T>
 ```
 
@@ -211,7 +223,7 @@ youngest.concat(oldest)
 
 The result of `concat` on a [`DataColumn`](DataColumn.md) depends on the values stored in the column:
 
-```kotlin
+```text
 column.concat(vararg other: DataColumn<T>): DataColumn<T>
 frameColumn.concat(): DataFrame<T>
 collectionColumn.concat(): List<T>
@@ -305,7 +317,7 @@ their first appearance in the reduced rows. Values missing from a reduced row fo
 If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
 missing every result column, so its values are filled according to the same rules.
 
-```kotlin
+```text
 groupBy.concat(): DataFrame<G>
 groupBy.concatWithKeys(): DataFrame<G>
 reducedGroupBy.concat(): DataFrame<G>
@@ -401,7 +413,7 @@ df.groupBy("city").first().concat()
 
 `concat()` combines an `Iterable` of dataframes, columns, or nullable rows in iteration order:
 
-```kotlin
+```text
 frames: Iterable<DataFrame<T>>
 frames.concat(): DataFrame<T>
 

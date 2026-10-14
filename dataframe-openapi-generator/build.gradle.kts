@@ -43,7 +43,7 @@ kotlinPublications {
     }
 }
 
-// uses jupyter for testing, so requires java 11 for that
+// uses jupyter for testing, so requires Java 11 for that
 tasks.compileTestKotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11

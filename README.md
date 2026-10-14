@@ -23,7 +23,7 @@
 Kotlin DataFrame provides type-safe, in-memory processing of tabular data on the JVM. 
 It reconciles Kotlin's static typing with the dynamic nature of data, 
 utilizing the full power of the Kotlin language with the interactive compiler plugin 
-that provides type-safe access to columns by evaluating structure changes on-the-fly in compile time
+that provides type-safe access to columns by evaluating structure changes on-the-fly at compile time.
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — the data processing pipeline is organized in a chain of `DataFrame` transformation operations.
@@ -211,31 +211,48 @@ See also
 [this example in Kotlin Notebook](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/readme_example.ipynb).
 
 ```kotlin
-val df = DataFrame
-    // Read DataFrame from the CSV file.
-    .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
-    // And convert it to match the `Repositories` schema.
-    .convertTo<Repositories>()
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.*
+import java.net.URL
 
-// Update the DataFrame.
-val reposUpdated = repos
-    // Rename columns to CamelCase.
-    .renameToCamelCase()
-    // Rename "stargazersCount" column to "stars".
-    .rename { stargazersCount }.into("stars")
-    // Filter by the number of stars:
-    .filter { stars > 50 }
-    // Convert values in the "topic" column (which were `String` initially)
-    // to the list of topics.
-    .convert { topics }.with {
-        val inner = it.removeSurrounding("[", "]")
-        if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
-    }
-    // Add a new column with the number of topics.
-    .add("topicCount") { topics.size }
+@DataSchema
+data class Repositories(
+    val full_name: String,
+    val html_url: URL,
+    val stargazers_count: Int,
+    val topics: String,
+    val watchers: Int,
+)
 
-// Write the updated DataFrame to a CSV file.
-reposUpdated.writeCsv("jetbrains_repositories_new.csv")
+fun main() {
+    val repos = DataFrame
+        // Read DataFrame from the CSV file.
+        .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+        // And convert it to match the `Repositories` schema.
+        .convertTo<Repositories>()
+
+    // Update the DataFrame.
+    val reposUpdated = repos
+        // Rename columns to CamelCase.
+        .renameToCamelCase()
+        // Rename "stargazersCount" column to "stars".
+        .rename { stargazersCount }.to("stars")
+        // Filter by the number of stars:
+        .filter { stars > 50 }
+        // Convert values in the "topic" column (which were `String` initially)
+        // to the list of topics.
+        .convert { topics }.with {
+            val inner = it.removeSurrounding("[", "]")
+            if (inner.isEmpty()) emptyList() else inner.split(',').map(String::trim)
+        }
+        // Add a new column with the number of topics.
+        .add("topicCount") { topics.size }
+
+    // Write the updated DataFrame to a CSV file.
+    reposUpdated.writeCsv("jetbrains_repositories_new.csv")
+}
 ```
 
 Explore [**more examples here**](https://kotlin.github.io/dataframe/guides-and-examples.html).

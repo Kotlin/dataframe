@@ -153,7 +153,7 @@ public interface GlobalParserOptions {
     public fun addDateTimePattern(pattern: String): Unit = addDateTimeUnicodePattern<LocalDateTime>(pattern)
 
     /**
-     * Adds a unicode date-time pattern to the global parser options of DataFrame.
+     * Adds a Unicode date-time pattern to the global parser options of DataFrame.
      *
      * NOTE: Requires `@OptIn(FormatStringsInDatetimeFormats::class)` to be used, as usage
      * of [addDateTimeFormat] is recommended.
