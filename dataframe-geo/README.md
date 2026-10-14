@@ -5,4 +5,4 @@ with geographical data.
 
 **Experimental**.
 
-This module targets java 11 because of the restriction from `org.jetbrains.kotlin.jupyter`.
+This module targets Java 11 because of the restriction from `org.jetbrains.kotlin.jupyter`.

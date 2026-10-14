@@ -21,9 +21,13 @@ fails if any unknown Gradle Wrapper JAR files are found.
 Anytime the source code changes on [master](https://github.com/Kotlin/dataframe/tree/master),
 this [GitHub Action](./workflows/generated-sources-master.yml) makes sure
 [`processKDocsMain`](../KODEX_KDOC_PREPROCESSING.md),
-and `korro` are run. If there have been any changes in either [core/generated-sources](../core/generated-sources) or
-[docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets), these are auto-committed to the branch, to keep
-it up to date.
+`korro`, and `syncExampleFolders` are run. If there have been any changes in the `generated-sources` folder of
+[core](../core/generated-sources), [dataframe-csv](../dataframe-csv/generated-sources),
+[dataframe-json](../dataframe-json/generated-sources), [dataframe-geo](../dataframe-geo/generated-sources),
+[dataframe-excel](../dataframe-excel/generated-sources) or [dataframe-jdbc](../dataframe-jdbc/generated-sources),
+or in [docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets),
+[docs/StardustDocs/topics](../docs/StardustDocs/topics) or [examples/projects](../examples/projects),
+these are auto-committed to the branch, to keep it up to date.
 
 ### Show generated code in PR
 
