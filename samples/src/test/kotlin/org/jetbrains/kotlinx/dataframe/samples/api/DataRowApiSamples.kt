@@ -138,11 +138,11 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         df
             // SampleEnd
             .format().perRowCol { row, _ ->
-            val lastName = row.name.lastName
-            lastNameToColorFilter(lastName)?.let { color ->
-                background(color) and textColor(black)
+                val lastName = row.name.lastName
+                lastNameToColorFilter(lastName)?.let { color ->
+                    background(color) and textColor(black)
+                }
             }
-        }
             .saveDfHtmlSample()
     }
 
