@@ -182,6 +182,10 @@ internal const val TRAVERSE_PROPERTIES_DSL =
 
 internal const val DF_STD_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
 
+internal const val GROUPED_MEDIAN_FOR_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
+internal const val GROUPED_PERCENTILE_FOR_BINARY_COMPAT = "This is here for binary compatibility. $MESSAGE_1_0"
+
 // endregion
 
 // region WARNING in 1.0, ERROR in 1.1
