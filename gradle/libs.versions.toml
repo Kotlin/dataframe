@@ -52,7 +52,8 @@ junit = "4.13.2" # Issue #426
 junit-jupiter = "5.11.3"
 # ignoreUpdates
 junit-platform = "1.11.3" # Issue #426
-konsist = "0.17.3"
+# ignoreUpdates
+konsist = "0.17.3" # Would require `:samples` to be bumped to Java 17
 kotestAsserions = "6.2.5"
 
 jsoup = "1.23.2"
