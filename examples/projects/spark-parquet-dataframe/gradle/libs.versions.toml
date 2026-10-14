@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.4.21"
-dataframe = "1.0.0-rc01"
+dataframe = "1.0.0-rc02"
 ktlint-gradle = "14.2.0"
 ktlint = "1.8.0"
 kandy = "0.8.5"
