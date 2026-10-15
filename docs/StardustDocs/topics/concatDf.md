@@ -1,6 +1,6 @@
 [//]: # (title: concat)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ConcatDfSamples-->
 
 <web-summary>
 Discover `concat` operation for Kotlin DataFrame.
