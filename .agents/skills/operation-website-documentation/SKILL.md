@@ -130,10 +130,15 @@ Links that are easy to forget — check them explicitly:
   `RowFilter`, `RowValueFilter` — a lambda with `DataRow` as the receiver)? Link it:
   `[row expression](DataRow.md#row-expressions)` / `[row condition](DataRow.md#row-conditions)`.
   Also add a note on what the lambda receives and how the row values are accessed, like in `filter.md`:
-  "The row condition receives each row both as `this` and as `it`, so the values of the row can be
-  accessed directly using [Extension Properties](extensionPropertiesApi.md) or
-  [`String` column accessors](StringApi.md#string-column-accessors), including the values of nested
-  columns of a [`ColumnGroup`](DataColumn.md#columngroup)." Adapt it to the lambda type:
+
+  ```markdown
+  The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed directly
+  using [Extension Properties](extensionPropertiesApi.md) or
+  [`String` column accessors](StringApi.md#string-column-accessors),
+  including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
+  ```
+
+  Adapt it to the lambda type:
   `RowValueExpression` / `RowValueFilter` get the row as `this` and the current value as `it`;
   `RowColumnExpression` gets `row` and `col` as parameters.
 - Mentioning `ColumnSet` or other column resolvers? Link
