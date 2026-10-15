@@ -39,7 +39,7 @@ Package root: `org.jetbrains.kotlinx.dataframe.geo`.
 - Registers a checked-in generated-accessors source root (`src/generated-dataschema-accessors/main/kotlin/`) —
   don't hand-edit those files. Uses `friendPaths` into `:core`.
 - Applies the `kodex` plugin (KDocs preprocessed; generated sources are build output — see root `AGENTS.md`).
-- Targets JDK 8 (`kotlinJvm8`); the README notes the Java-11 constraint that comes from the jupyter integration.
+- Targets JDK 8 (`kotlinJvm8`);
 
 ## Tests
 

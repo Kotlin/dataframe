@@ -67,7 +67,6 @@ random-access/Feather format (`readArrowFeather`/`writeArrowFeather`) — plus P
 **Description**: Geospatial column types and operations. **Experimental**
 - **Location**: `./dataframe-geo/`
 - **Dependencies**: core, GeoTools, JTS, Ktor client
-- **Note**: targets Java 11, a restriction inherited from `org.jetbrains.kotlin.jupyter`.
 
 ### dataframe-geo-jupyter
 **Description**: Jupyter rendering for geospatial data
