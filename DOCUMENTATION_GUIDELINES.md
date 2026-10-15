@@ -61,10 +61,12 @@ General rules for all pages:
     Also add a note on what the lambda receives and how the row values are accessed — for any kind of
     row expression or row condition (`RowExpression`, `RowValueExpression`, `RowFilter`, `RowValueFilter`, …).
     For example, for a `RowFilter` (see [`filter.md`](docs/StardustDocs/topics/filter.md)):
-    > The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed
-    > directly using [Extension Properties](extensionPropertiesApi.md) or
-    > [`String` column accessors](StringApi.md#string-column-accessors),
-    > including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
+    ```markdown
+    The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed directly
+    using [Extension Properties](extensionPropertiesApi.md) or
+    [`String` column accessors](StringApi.md#string-column-accessors),
+    including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
+    ```
 
     Adapt it to the lambda type: a `RowValueExpression` / `RowValueFilter` receives the row as `this`
     and the current value as `it`; a `RowColumnExpression` receives the row and the column as
