@@ -1,8 +1,8 @@
 [versions]
 # TODO Sync manually with module.yaml and build-config/plugin.yaml!
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 dataframe = "1.0.0-dev"
-kandy = "0.8.6-dev-107"
+kandy = "0.8.6"
 ktlint = "1.8.0"
 
 [libraries]

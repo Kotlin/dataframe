@@ -153,7 +153,7 @@ public interface GlobalParserOptions {
     public fun addDateTimePattern(pattern: String): Unit = addDateTimeUnicodePattern<LocalDateTime>(pattern)
 
     /**
-     * Adds a unicode date-time pattern to the global parser options of DataFrame.
+     * Adds a Unicode date-time pattern to the global parser options of DataFrame.
      *
      * NOTE: Requires `@OptIn(FormatStringsInDatetimeFormats::class)` to be used, as usage
      * of [<code>addDateTimeFormat</code>][addDateTimeFormat] is recommended.
@@ -428,7 +428,7 @@ public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format
     addDateTimeFormat(format = format, formatType = typeOf<T>())
 }
 
-/** Adds a unicode date-time pattern to the global parser options of DataFrame.
+/** Adds a Unicode date-time pattern to the global parser options of DataFrame.
  *
  * NOTE: Requires `@OptIn(FormatStringsInDatetimeFormats::class)` to be used, as usage
  * of [<code>addDateTimeFormat</code>][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.addDateTimeFormat] is recommended.

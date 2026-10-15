@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
 /**
  * ## The Fill Nulls Operation
  *
- * Replaces `null` values with given value or expression.
+ * Replaces `null` values with the given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNulls.Grammar]
@@ -166,7 +166,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 /**
  * ## The Fill NaNs Operation
  *
- * Replaces [`NaN`][NaN] values with given value or expression.
+ * Replaces [`NaN`][NaN] values with the given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNaNs.Grammar]
@@ -244,7 +244,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * ## The Fill NA Operation
  *
- * Replaces [`NA`][NA] values with given value or expression.
+ * Replaces [`NA`][NA] values with the given value or expression.
  * Specific case of [update].
  *
  * ### Check out: [Grammar][FillNA.Grammar]
