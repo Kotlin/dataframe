@@ -8,6 +8,10 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.NumberInputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.api.indexOfPercentileWithMethod
+import org.jetbrains.kotlinx.dataframe.impl.api.percentileWithMethodOrNull
+import org.jetbrains.kotlinx.dataframe.impl.api.quantileMethodConversion
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod
 import org.jetbrains.kotlinx.dataframe.math.indexOfMax
 import org.jetbrains.kotlinx.dataframe.math.indexOfMedian
 import org.jetbrains.kotlinx.dataframe.math.indexOfMin
@@ -268,4 +272,81 @@ public object Aggregators {
                 },
             )
         }
+
+    public fun percentileWithMethod(
+        percentile: Double,
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod<*, *>,
+    ): Aggregator<Comparable<Any>, Comparable<Any>?> = quantileWithMethod("percentile", percentile, skipNaN, method)
+
+    @Suppress("UNCHECKED_CAST")
+    private fun quantileWithMethod(
+        name: String,
+        percentile: Double,
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod<*, *>,
+    ): Aggregator<Comparable<Any>, Comparable<Any>?> {
+        require(percentile in 0.0..100.0) { "Percentile must be in range [0, 100]" }
+        return flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = quantileMethodConversion(method),
+            reducer = { type -> percentileWithMethodOrNull(percentile, type, skipNaN, method) as Comparable<Any>? },
+            indexOfResult = { type ->
+                require(method is QuantileEstimationMethod.Selecting) { "Row selection requires a selecting method" }
+                indexOfPercentileWithMethod(percentile, type, skipNaN, method)
+            },
+            statisticsParameters = buildMap {
+                put("skipNaN", skipNaN)
+                put("method", method)
+                if (name == "percentile") put("percentile", percentile)
+            },
+        ).create(name)
+    }
+
+    public fun medianWithMethod(
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod<*, *>,
+    ): Aggregator<Comparable<Any>, Comparable<Any>?> = quantileWithMethod("median", 50.0, skipNaN, method)
+
+    public fun <T> percentileCommon(
+        percentile: Double,
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod<*, *>,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        percentileWithMethod(percentile, skipNaN, method).cast2()
+
+    public fun <T> percentileComparables(
+        percentile: Double,
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod.Selecting,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        percentileWithMethod(percentile, skipNaN, method).cast2()
+
+    public fun <T> percentileNumbers(
+        percentile: Double,
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod.Interpolating,
+    ): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? =
+        percentileWithMethod(percentile, skipNaN, method).cast2()
+
+    public fun <T> medianCommon(
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod<*, *>,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? = medianWithMethod(skipNaN, method).cast2()
+
+    public fun <T> medianComparables(
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod.Selecting,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? = medianWithMethod(skipNaN, method).cast2()
+
+    public fun <T> medianNumbers(
+        skipNaN: Boolean,
+        method: QuantileEstimationMethod.Interpolating,
+    ): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? =
+        medianWithMethod(skipNaN, method).cast2()
 }

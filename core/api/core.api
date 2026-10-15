@@ -3062,8 +3062,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;Z)D
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Z)Ljava/lang/Comparable;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)D
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;)D
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Object;
@@ -3072,92 +3078,152 @@ public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)D
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)D
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)D
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
 	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
 	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
 	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
 	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static final fun medianByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;Z)Ljava/lang/Double;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Z)Ljava/lang/Comparable;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Double;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
 	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Double;
@@ -3611,8 +3677,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParserOptionsKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;Z)D
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Z)Ljava/lang/Comparable;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DZ)D
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;)D
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;)D
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;Z)Ljava/lang/Object;
@@ -3621,92 +3693,152 @@ public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)D
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZILjava/lang/Object;)D
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DZILjava/lang/Object;)D
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)D
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)D
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;DLjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
 	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
 	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static final fun percentileBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;DLjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
 	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
 	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static synthetic fun percentileBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static final fun percentileByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLjava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLjava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;Z)Ljava/lang/Double;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Z)Ljava/lang/Comparable;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DZ)Ljava/lang/Double;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;Z)Ljava/lang/Double;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
 	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Double;
+	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;DZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
 	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun percentileOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Double;
@@ -5685,12 +5817,20 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun max (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun medianCommon (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianCommon (ZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun medianComparables ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianComparables (ZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun medianNumbers (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianNumbers (ZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianWithMethod (ZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun min (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun percentileCommon (DZ)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun percentileCommon (DZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun percentileComparables (D)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun percentileComparables (DZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun percentileNumbers (DZ)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun percentileNumbers (DZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun percentileWithMethod (DZLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
@@ -5739,6 +5879,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDslKt {
 	public static final fun internal (Lorg/jetbrains/kotlinx/dataframe/aggregation/AggregateDsl;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/api/ConfigurableStatisticsImplKt {
+	public static final fun percentileByWithMethodOrNullImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ConstructorsKt {
@@ -6694,6 +6838,65 @@ public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
 public final class org/jetbrains/kotlinx/dataframe/math/MinMaxKt {
 	public static final fun maxOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
 	public static final fun minOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Companion;
+	public abstract fun oneBasedIndexOfQuantile (DI)Ljava/lang/Number;
+	public abstract fun quantile (DLjava/util/List;)Ljava/lang/Comparable;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Companion {
+	public final fun getR1 ()Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R1;
+	public final fun getR3 ()Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R3;
+	public final fun getR7 ()Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R7;
+	public final fun getR8 ()Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R8;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod {
+	public synthetic fun quantile (DLjava/util/List;)Ljava/lang/Comparable;
+	public fun quantile (DLjava/util/List;)Ljava/lang/Double;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R7 : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R7;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun oneBasedIndexOfQuantile (DI)Ljava/lang/Double;
+	public synthetic fun oneBasedIndexOfQuantile (DI)Ljava/lang/Number;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R8 : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Interpolating$R8;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun oneBasedIndexOfQuantile (DI)Ljava/lang/Double;
+	public synthetic fun oneBasedIndexOfQuantile (DI)Ljava/lang/Number;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R1 : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R1;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun oneBasedIndexOfQuantile (DI)Ljava/lang/Integer;
+	public synthetic fun oneBasedIndexOfQuantile (DI)Ljava/lang/Number;
+	public fun quantile (DLjava/util/List;)Ljava/lang/Comparable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R3 : org/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/math/QuantileEstimationMethod$Selecting$R3;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun oneBasedIndexOfQuantile (DI)Ljava/lang/Integer;
+	public synthetic fun oneBasedIndexOfQuantile (DI)Ljava/lang/Number;
+	public fun quantile (DLjava/util/List;)Ljava/lang/Comparable;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/QuantileKt {
