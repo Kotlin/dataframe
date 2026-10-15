@@ -492,10 +492,6 @@ private typealias SetMedianOperationArg = Nothing
 @ExcludeFromSources
 private typealias SetMedianForOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [medianOrNull][medianOrNull]} */
-@ExcludeFromSources
-private typealias SetMedianOrNullOperationArg = Nothing
-
 // endregion
 
 // region DataColumn
@@ -1191,7 +1187,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMedianOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples
  * ```kotlin
@@ -1236,7 +1232,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSel
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMedianOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples
  * ```kotlin
@@ -1275,7 +1271,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(columns: Colu
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMedianOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Example
  * ```kotlin
@@ -1316,7 +1312,7 @@ public fun <T, C> DataFrame<T>.median(
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetMedianOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Example
  * ```kotlin
@@ -1357,7 +1353,7 @@ public fun <T, C> DataFrame<T>.medianOrNull(
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMedianOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -1392,7 +1388,7 @@ public fun <T> DataFrame<T>.median(vararg columns: String, skipNaN: Boolean = sk
  *
  * For more information: {@include [DocumentationUrls.Median]}
  *
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetMedianOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
