@@ -9,6 +9,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -122,5 +126,37 @@ class DataColumns : BaseTest() {
             it.kind() shouldBe ColumnKind.Frame
             it.type().isSubtypeOf(typeOf<DataFrame<*>>()) shouldBe true
         }
+    }
+
+    @Test
+    fun `filter that keeps no row keeps the nested columns of a frame column`() {
+        val grouped = dataFrameOf("k", "v")(1, "x", 2, "y").groupBy("k").toDataFrame()
+
+        val empty = grouped.filter { false }
+
+        empty.getFrameColumn("group").schema.value.columns.keys shouldBe setOf("k", "v")
+        empty.schema() shouldBe grouped.schema()
+    }
+
+    @Test
+    fun `slicing a frame column recomputes its schema from the dataframes that are left`() {
+        // the schema of a frame column holds the columns shared by its non-empty dataframes
+        val column = DataColumn.createFrameColumn("g", listOf(dataFrameOf("a", "b")(1, 2), dataFrameOf("a")(3)))
+        column.schema.value.columns.keys shouldBe setOf("a")
+
+        (column[listOf(0)] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        (column[0..0] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+    }
+
+    @Test
+    fun `slicing a frame column down to empty dataframes keeps its schema`() {
+        val column = DataColumn.createFrameColumn("g", listOf(dataFrameOf("a", "b")(1, 2), emptyDataFrame()))
+        column.schema.value.columns.keys shouldBe setOf("a", "b")
+
+        // rows are left, but every dataframe in them is empty
+        (column[listOf(1)] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        (column[1..1] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
+        // no rows are left
+        (column[emptyList()] as FrameColumn<*>).schema.value.columns.keys shouldBe setOf("a", "b")
     }
 }

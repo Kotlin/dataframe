@@ -539,6 +539,9 @@ public interface DocumentationUrls {
     /** [See `requireColumn` on the documentation website.]({@include [Url]}/require.html) */
     public typealias Require = Nothing
 
+    /** [See `head` on the documentation website.]({@include [Url]}/head.html) */
+    public typealias Head = Nothing
+
     /** [See `tail` on the documentation website.]({@include [Url]}/tail.html) */
     public typealias Tail = Nothing
 

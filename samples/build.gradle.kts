@@ -135,6 +135,7 @@ korro {
                 include("count.md")
                 include("valueCounts.md")
                 include("sliceRows.md")
+                include("head.md")
                 include("sum.md")
                 include("mean.md")
                 include("std.md")

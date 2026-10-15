@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
@@ -43,5 +44,22 @@ class DropTests : ColumnsSelectionDslTests() {
             df.select { Person::name.dropLastColsWhile { it.name == "lastName" } },
             df.select { pathOf("name").dropLastColsWhile { it.name == "lastName" } },
         ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `dropWhile with a predicate that holds for every row drops all rows`() {
+        val numbers = dataFrameOf("n")(1, 2, 3)
+
+        val empty = numbers.dropWhile { true }
+
+        empty.rowsCount() shouldBe 0
+        empty.columnNames() shouldBe listOf("n")
+    }
+
+    @Test
+    fun `dropWhile drops the leading rows that satisfy the predicate`() {
+        val numbers = dataFrameOf("n")(1, 2, 3, 1)
+
+        numbers.dropWhile { "n"<Int>() < 3 } shouldBe dataFrameOf("n")(3, 1)
     }
 }

@@ -11,7 +11,8 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 ## Structure
 
 - `topics/` — the **hand-authored** documentation: `.md` topic files plus `Home.topic` (XML). Subfolders include
-  `concepts/`, `guides/`, `schemas/`, `operations/`, `collectionsInterop/`, `dataSources/`, `setup/`, `access/`.
+  `concepts/`, `guides/`, `schemas/`, `operations/`, `collectionsInterop/`, `dataSources/`, `setup/`, `access/`,
+  `info/`, `io/`. A page is found by its file name, wherever it sits: `find docs/StardustDocs/topics -name <op>.md`.
   `topics/_shadow_resources.md` is a **generated** hidden topic (registered `hidden="true"` in `d.tree`).
 - `resources/` — **generated / asset content**: `snippets/` (Korro sample HTML + `snippets/kdocs/` = KoDEx
   `@ExportAsHtml` output + `snippets/manual/`), plus `api/`, `guides/`, `io/`, `modify/` (notebook/sample HTML
