@@ -21,11 +21,13 @@ Returns a new [`DataFrame`](DataFrame.md) with the rows that satisfy the conditi
 If no row satisfies it, the result is an empty `DataFrame` with the same columns.
 
 ```text
-filter { row: DataRow -> Boolean }
+df.filter { row: DataRow -> Boolean }
 ```
 
-The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed
-directly, including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
+The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed directly
+using [Extension Properties](extensionPropertiesApi.md) or
+[`String` column accessors](StringApi.md#string-column-accessors),
+including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
 
 See also:
 
@@ -85,12 +87,12 @@ Returns a new [`DataColumn`](DataColumn.md) with the same name, containing only 
 original order.
 
 ```text
-column.filter { value: T -> Boolean }
+col.filter { value -> Boolean }
 ```
 
 #### Parameters {id="parameters_column"}
 
-* `predicate: (T) -> Boolean` — a lambda that receives a value of the column
+* `predicate: (value) -> Boolean` — a lambda that receives a value of the column
   and returns `true` if the value should be kept in the result.
 
 #### Examples {id="examples_column"}

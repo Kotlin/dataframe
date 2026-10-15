@@ -58,6 +58,17 @@ General rules for all pages:
   * If the operation takes a [row expression](docs/StardustDocs/topics/concepts/DataRow.md#row-expressions)
     or a [row condition](docs/StardustDocs/topics/concepts/DataRow.md#row-conditions) — don't forget to link it
     (`DataRow.md#row-expressions` / `DataRow.md#row-conditions`)!
+    Also add a note on what the lambda receives and how the row values are accessed — for any kind of
+    row expression or row condition (`RowExpression`, `RowValueExpression`, `RowFilter`, `RowValueFilter`, …).
+    For example, for a `RowFilter` (see [`filter.md`](docs/StardustDocs/topics/filter.md)):
+    > The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed
+    > directly using [Extension Properties](extensionPropertiesApi.md) or
+    > [`String` column accessors](StringApi.md#string-column-accessors),
+    > including the values of nested columns of a [`ColumnGroup`](DataColumn.md#columngroup).
+
+    Adapt it to the lambda type: a `RowValueExpression` / `RowValueFilter` receives the row as `this`
+    and the current value as `it`; a `RowColumnExpression` receives the row and the column as
+    the parameters `row` and `col`.
   * When linking dataframe structures, also link
     [`ColumnSet`](docs/StardustDocs/topics/ColumnSelectors.md#column-resolvers) and other column resolvers
     (`ColumnSelectors.md#column-resolvers`) where they are mentioned.
@@ -176,16 +187,55 @@ If a topic describes several operations (e.g., `sortBy` and `sortByDesc`), then:
 
 ##### Signatures
 
-Write signatures as pseudocode with types: a Kotlin-like call with parameter names and their types,
+Write signatures as pseudocode with types: a Kotlin-like call with the receiver, parameter names and their types,
 lambda parameters and the lambda result type. Use a `text` code block:
 
 ```text
-sortWith(comparator: Comparator<DataRow>)
-sortWith { row1: DataRow, row2: DataRow -> Int }
+df.sortWith(comparator: Comparator<DataRow>)
+df.sortWith { row1: DataRow, row2: DataRow -> Int }
 ```
 
 Optional parts are wrapped in square brackets, alternatives are separated with `|`,
 like in the operation grammar of complex operations.
+
+**Always write the receiver**, named after its type:
+
+| Type          | Name       |
+|---------------|------------|
+| `DataFrame`   | `df`       |
+| `DataColumn`  | `col`      |
+| `DataRow`     | `row`      |
+| `ColumnGroup` | `colGroup` |
+| `FrameColumn` | `frameCol` |
+| `GroupBy`     | `groupBy`  |
+| `Pivot`       | `pivot`    |
+
+Name arguments and lambda parameters of these types with the same prefixes:
+`otherDf: DataFrame`, `vararg dfs: DataFrame`, `rows: Iterable<DataRow>`, `vararg cols: DataColumn`,
+`{ row: DataRow -> Boolean }`.
+
+**Type parameters** (`<T>`, `<C>`, `<R>`, …) are written — in the signature and in the description — only if they
+carry meaning:
+
+* they take part in the function logic — for example, a `reified` type parameter that selects columns or values
+  by type, like `colsOf<T>()`;
+* or they connect the types of the input and the result — for example, `collectionColumn.concat(): List<T>`
+  for a `DataColumn<Collection<T>>`: the result elements have the type of the collections' elements.
+
+Otherwise omit them: `Iterable<DataRow>`, not `Iterable<DataRow<T>>`;
+`df.concat(vararg dfs: DataFrame): DataFrame`, not `DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T>`
+(the schema type `T` is the same everywhere and says nothing new).
+
+If a receiver or an argument needs a more specific type than its name tells (a column of collections, an
+`Iterable` of rows), declare it on a separate line of the signature block, after the calls:
+
+```text
+collectionColumn.concat(): List<T>
+
+collectionColumn: DataColumn<Collection<T>>
+```
+
+A receiver of a more specific kind may get a descriptive name (`collectionColumn`) instead of the plain prefix.
 
 ##### Parameters
 
@@ -227,9 +277,11 @@ with its own description, signature, parameters, and examples
 (see [`filter.md`](docs/StardustDocs/topics/filter.md)).
 
 If the operation is defined for several receivers (`DataFrame`, `DataRow`, `DataColumn`, `GroupBy`, `Iterable`, …)
-and the overloads differ substantially, treat each receiver as a separate operation of a
-[page with several operations](#pages-with-several-operations): give each its own `` ## `funName` on `Receiver` ``
-section, the `DataColumn` one included (see [`concat.md`](docs/StardustDocs/topics/concat.md)).
+and the overloads differ substantially, describe the `DataFrame` operation first, **without a header** — the page
+starts with it right after the summaries, like a single-operation page. Then give every other receiver its own
+`` ## `funName` on `Receiver` `` section with the same structure, the `DataColumn` one included
+(see [`concat.md`](docs/StardustDocs/topics/concat.md)).
+The "See also" section is written only once, in the `DataFrame` part.
 
 #### Writerside summaries
 
