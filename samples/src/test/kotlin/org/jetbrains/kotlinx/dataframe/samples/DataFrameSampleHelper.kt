@@ -28,7 +28,7 @@ abstract class DataFrameSampleHelper(sampleName: String, subFolder: String = "sa
      * Outputs saved by the current sample, in the order they were saved.
      * A set, so saving the same output twice (e.g. two dataframes into one HTML file) inserts it only once.
      */
-    private val korroOutputs = LinkedHashSet<String>()
+    private val korroOutputs = mutableSetOf<String>()
 
     /**
      * Writes all outputs of the current sample into the korro output file, which korro inserts
