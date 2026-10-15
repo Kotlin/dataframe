@@ -109,6 +109,8 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
 Documentation snippets are runnable tests. The `samples` module and `core`'s `samplesTest`/`korro` tasks execute
 sample code, save outputs, and inject them into the WriterSide docs under `docs/StardustDocs/`. Migration of samples
 into the `:samples` module is in progress; new documentation samples belong there.
+Rules for website topics and samples are in `DOCUMENTATION_GUIDELINES.md`; for an operation page use the
+`operation-website-documentation` skill (`.agents/skills/operation-website-documentation/SKILL.md`).
 
 ## Code style
 

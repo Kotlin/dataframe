@@ -2,6 +2,13 @@
 
 Guidance for the documentation site. See the root `AGENTS.md` for repo-wide rules.
 
+**Content rules for the website** (topic structure, summaries, samples, links, examples) live in
+[`DOCUMENTATION_GUIDELINES.md`](../../DOCUMENTATION_GUIDELINES.md) — read it before writing or updating a topic;
+this file only covers the mechanics of the site and its generators.
+For an operation page, use the
+[`operation-website-documentation`](../../.agents/skills/operation-website-documentation/SKILL.md) skill,
+which walks through that workflow step by step.
+
 ## What this is
 
 The Kotlin DataFrame documentation website, authored as a **JetBrains WriterSide** project (not a Gradle module).
@@ -44,7 +51,14 @@ Project marker: `project.ihp`; instance profile / table-of-contents: `d.tree`
 
 **Never hand-write a ` ```kotlin ` block in a topic.** All Kotlin in the docs must be a Korro sample, so that it
 is compiled and run on every build — a hand-written block is the way a hallucinated or long-dead API reaches the
-website. Only `text`-fenced pseudo-grammar (`operation { columnMapping }: DataFrame`) is written by hand.
+website. Only `text`-fenced pseudo-grammar / signatures (`sortWith(comparator: Comparator<DataRow>)`) are written
+by hand.
+
+**All new samples go to `:samples`** — never add samples to `:core`, and never use the legacy "dataframe explainer"
+(`@TransformDataFrameExpressions`, `DATAFRAME_SAVE_OUTPUTS`). The sample-writing rules themselves (one test file per
+page, `_properties`/`_strings` pairs, Sample Helper, formatting, no deprecated API) are in
+[`DOCUMENTATION_GUIDELINES.md`](../../DOCUMENTATION_GUIDELINES.md) and `samples/AGENTS.md`; below is only the
+site-side mechanics.
 
 To add one:
 
@@ -52,44 +66,42 @@ To add one:
    wholesale; `:samples` has an explicit `include(...)` allow-list in `samples/build.gradle.kts`. If the page
    already has an `<!---IMPORT ...-->` line, the class it names tells you the owner. Don't split one topic
    across both modules — both korro tasks would write the same file.
+   **If the topic is still `:core`-owned, migrate it first** (#898): remove the old Korro marks/`IMPORT` and
+   explainer outputs from the topic, rewrite its samples as `:samples` tests with Sample Helper outputs, delete
+   the now-unused `:core` sample functions, and keep the page's coverage at least as complete as before. Leave
+   `:core`'s korro config alone. `groupBy.md`, `pivot.md`, `countDistinct.md`, `filter.md` and `map.md` (#2066,
+   `samples/…/api/MapSamples.kt`) already went that way.
    A page dropped into one of the globbed folders joins the scan automatically, and korro's
    `behavior { ignoreMissing = true }` (`samples/build.gradle.kts:90`, `TODO(#898)`) turns a
    `<!---FUN name-->` with no matching sample into a printed `Cannot resolve FUN 'name'` on a **green**
    build. Eight such lines already arrive from `master`, so a new one is invisible in CI — read korro's
    own output after adding or moving a page, don't rely on the exit code.
-2. **Add the sample to that module's sample class**, with the body wrapped in `// SampleStart` / `// SampleEnd`.
-   New pages should go to `:samples` (migration #898); an existing `:core` page keeps its samples next to its
-   siblings. In `:core` a sample is a `@Test @TransformDataFrameExpressions fun` — see step 4 for when that
-   annotation is allowed. In `:samples` it is a plain `@Test fun`: the annotation is not used there at all
-   (it appears in nine `core/src/test` files and in none under `samples/`), and rendered output comes from
-   `SampleHelper` instead.
-3. **Put `<!---FUN funName-->` / `<!---END-->` in the topic** and run korro to fill it in
-   (`./gradlew core:korro`, or `samples:korro`). Suffix the function `_properties` / `_strings` to get tabs.
-4. **Get the rendered result.** The two modules do this differently.
-   - **`:core`** — run with `DATAFRAME_SAVE_OUTPUTS=1`; korro then injects the `<inline-frame>` itself and
-     writes the matching `resources/snippets/*.html`.
-     **Only annotate a sample with `@TransformDataFrameExpressions` when its last expression is a `DataFrame`
-     or a `GroupBy`.** The expressions converter renders nothing else, and it fails in two different ways:
-     a sample ending in a `DataColumn` or a `List` *fails* in `samplesTest`, while a sample that ends in one of
-     those *after* a renderable step silently falls back to rendering that step — so the page shows an
-     `<inline-frame>` of the intermediate `groupBy` under an example whose result is a `List`. Two such samples
-     then render byte-identical frames.
-     Dropping the annotation does **not** rescue such a sample: `TestBase.save()` runs for every `@Test` under
-     `DATAFRAME_SAVE_OUTPUTS` and then errors with `function doesn't have any dataframe expression`, so the test
-     fails either way (`convertColumnTo` in `Modify.kt` is one of the pre-existing `samplesTest` failures, not a
-     precedent to copy).
-     The ways out, best first: **move the page to `:samples`**, where a sample renders its result whatever its
-     type and no annotation is involved — that is the direction of #898 anyway, and `groupBy.md`, `pivot.md`,
-     `countDistinct.md` and `filter.md` already went that way; end the sample in a `DataFrame`; or, only while
-     the page is still `:core`-owned, render the result by hand with `PluginCallbackProxy.overrideHtmlOutput`,
-     as `JoinWith.kt` does. The `map` page went the first route in #2066: its samples moved to
-     `samples/…/api/MapSamples.kt`, and `saveDfHtmlSample()` there renders a `DataColumn` and a `FrameColumn`
-     with no annotation and no manual HTML at all.
-   - **`:samples`** — run the samples as tests: `saveDfHtmlSample()` / `savePlotSVGSample()` write the HTML/SVG
-     and a korro output line, so korro injects the `<inline-frame>` / `<img>` itself **inside** the
-     `<!---FUN-->`…`<!---END-->` block. Don't add one by hand after `<!---END-->` — it duplicates the generated one.
-   In both modules the generated HTML only reaches the site once it is registered in
-   `topics/_shadow_resources.md` — run `./gradlew :samples:updateShadowResources` and commit the new
+2. **Add the sample to the page's `:samples` test class** (a plain `@Test fun`, body wrapped in
+   `// SampleStart` / `// SampleEnd`, outputs saved with `SampleHelper` after `// SampleEnd`).
+3. **Put `<!---IMPORT …Samples-->` at the top and `<!---FUN funName-->` / `<!---END-->` in the topic.** For a
+   `_properties` / `_strings` pair, write the **base** name without the suffix in `FUN`; korro wraps the
+   variants into `<tabs>`/`<tab>` itself — never write the tab markup by hand.
+4. **Generate the result.** First delete the page's HTML output folder,
+   `rm -rf resources/<subFolder>/<pageName>` — `clean` only wipes `samples/build/`, while `SampleHelper` writes
+   HTML straight into the tracked `resources/`, so HTML of renamed/deleted samples would otherwise stay on disk
+   and be re-registered by `updateShadowResources`. The tests recreate the folder. Then run, in this order
+   (`korro` must run after `test`, and **never skip `clean`** — otherwise stale korro output lines in
+   `samples/build/` get injected into the page):
+
+   ```bash
+   ./gradlew :samples:clean :samples:build :samples:test
+   ./gradlew :samples:korro
+   ./gradlew :samples:updateShadowResources
+   ```
+
+   `saveDfHtmlSample()` / `savePlotSVGSample()` write the HTML/SVG and a korro output line, so korro injects
+   the `<inline-frame>` / `<img>` itself **inside** the `<!---FUN-->`…`<!---END-->` block. Don't add one by
+   hand after `<!---END-->` — it duplicates the generated one (remove such leftovers when you touch an old
+   page). The only hand-written iframe is for an output shown without code — a test with no
+   `// SampleStart` and no `FUN` mark. Output file names drop the `_properties` / `_strings` suffix, so a
+   tabbed pair's iframe is `./resources/funName.html`.
+   The generated HTML only reaches the site once it is registered in
+   `topics/_shadow_resources.md` — that is what `updateShadowResources` does; commit the new
    `<resource>` lines, otherwise the iframe is on the page but the table is not. The `src` of an
    `<inline-frame>` is a **flat filename**, while `SampleHelper` writes the file to
    `resources/<subFolder>/<sampleName>/`, so that index is what makes the two meet. Since it is keyed by the
@@ -131,9 +143,14 @@ To add one:
   `resources/snippets/` never updates `_shadow_resources.md`, so its `<resource>` line outlives the file.
 - **An iframe `src` is the flat basename, never the on-disk path.** `updateShadowResources` registers
   resources by basename only (422 `<resource src="…">` entries, not one with a slash), so a nested
-  source file is still referenced as `./resources/<file>.html`: `sliceRows.md:14` says
+  source file is still referenced as `./resources/<file>.html`: `sliceRows.md:13` says
   `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
   `src` builds fine and silently renders an empty frame.
+- **Nothing validates links.** Writerside resolves topic links by file name (`DataFrame.md`, not a relative
+  path); anchors are the lowercased heading with punctuation dropped and spaces → `-` (or an explicit
+  `{id="..."}`). When you add, rename, move or split a topic or section, also fix the KDoc → website URLs in
+  `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt`
+  (page = topic file name lowercased + `.html`) — a stale one silently points at a missing page.
 - After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
   — check the real set with `git diff --ignore-cr-at-eol`.
 

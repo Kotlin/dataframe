@@ -124,6 +124,9 @@
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
 <resource src="fillNulls.html"></resource>
+<resource src="filter.html"></resource>
+<resource src="filterColumn.html"></resource>
+<resource src="filterDf.html"></resource>
 <resource src="firstOnColumnDf.html"></resource>
 <resource src="formatHeader.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>
@@ -356,8 +359,6 @@
 <resource src="notebook_test_quickstart_7.html"></resource>
 <resource src="notebook_test_quickstart_8.html"></resource>
 <resource src="usingResult.html"></resource>
-<resource src="filter.html"></resource>
-<resource src="filterColumn.html"></resource>
 <resource src="formatExample.html"></resource>
 <resource src="formatExampleNumbers.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"></resource>
