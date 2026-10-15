@@ -44,8 +44,8 @@ Operation pages are never written from scratch. Use a reference page as a templa
   - `docs/StardustDocs/topics/filter.md` + `samples/…/samples/api/FilterSamples.kt` — a single
     operation with a `DataColumn` overload;
   - `docs/StardustDocs/topics/concat.md` + `samples/…/samples/api/ConcatSamples.kt` — an operation
-    with several receivers (`DataFrame`, `DataRow`, `DataColumn`, `GroupBy`, `Iterable`), each in its
-    own `##` section.
+    with several receivers: the `DataFrame` one first, without a header, then `DataRow`, `DataColumn`,
+    `GroupBy`, `Iterable`, each in its own `##` section.
 
   Tell the user which template you picked.
 
@@ -90,7 +90,18 @@ Header and signature rules (see *Structure* in the guidelines for the details):
   of the operation section under ``### `funName` on `DataColumn` ``, with its own description,
   signature, parameters, and examples.
 - Signatures are pseudocode **with types**, in a `text` code block, e.g.
-  `sortWith(comparator: Comparator<DataRow>)` / `sortWith { row1: DataRow, row2: DataRow -> Int }`.
+  `df.sortWith(comparator: Comparator<DataRow>)` / `df.sortWith { row1: DataRow, row2: DataRow -> Int }`.
+- **Always write the receiver**, named after its type: `DataFrame` → `df`, `DataColumn` → `col`,
+  `DataRow` → `row`, `ColumnGroup` → `colGroup`, `FrameColumn` → `frameCol`, `GroupBy` → `groupBy`,
+  `Pivot` → `pivot`. Name arguments and lambda parameters of these types with the same prefixes
+  (`otherDf: DataFrame`, `vararg dfs: DataFrame`, `rows: Iterable<DataRow>`, `vararg cols: DataColumn`).
+- **Omit type parameters** (`<T>`, `<C>`, …) in signatures and descriptions unless they carry meaning:
+  they take part in the function logic (e.g. a `reified` type parameter like in `colsOf<T>()`), or they
+  connect the input and result types (e.g. `collectionColumn.concat(): List<T>` for a
+  `DataColumn<Collection<T>>`). Otherwise write `Iterable<DataRow>`, not `Iterable<DataRow<T>>`.
+- If a receiver or an argument needs a more specific type than its name tells, declare it on a separate
+  line of the signature block after the calls (`collectionColumn: DataColumn<Collection<T>>`), not in a
+  comment. Such a receiver may get a descriptive name (`collectionColumn`) instead of the plain prefix.
 - Types go in the **parameter descriptions too**, not only in the signature — as pseudocode (same
   style as the signature) or in words; for lambdas say what they receive and what they must return.
 - For columns arguments, state in the description how columns can be selected: by string names
@@ -99,6 +110,10 @@ Header and signature rules (see *Structure* in the guidelines for the details):
   work differently (e.g. `rename`) and must be described separately; some use a specialized DSL
   (`SortDsl`, `PivotDsl`, …) — name it, link its section, and say what it adds on top of the
   Columns Selection DSL.
+- If the operation is defined for several receivers (`DataFrame`, `DataRow`, `DataColumn`, `GroupBy`,
+  `Iterable`, …): describe the `DataFrame` operation first, **without a header**, right after the
+  summaries; every other receiver gets its own ``## `funName` on `Receiver` `` section, the `DataColumn`
+  one included (see `concat.md`).
 - If the page describes several operations: each gets its own `##` section; don't add a list of the
   page's operations anywhere; and write *See also* only once — in the first operation section, in its
   usual place (after the description/notes, before `### Parameters`) — linking **only** to operations
@@ -114,6 +129,13 @@ Links that are easy to forget — check them explicitly:
 - The operation takes a **row expression** or **row condition** (`RowExpression`, `RowValueExpression`,
   `RowFilter`, `RowValueFilter` — a lambda with `DataRow` as the receiver)? Link it:
   `[row expression](DataRow.md#row-expressions)` / `[row condition](DataRow.md#row-conditions)`.
+  Also add a note on what the lambda receives and how the row values are accessed, like in `filter.md`:
+  "The row condition receives each row both as `this` and as `it`, so the values of the row can be
+  accessed directly using [Extension Properties](extensionPropertiesApi.md) or
+  [`String` column accessors](StringApi.md#string-column-accessors), including the values of nested
+  columns of a [`ColumnGroup`](DataColumn.md#columngroup)." Adapt it to the lambda type:
+  `RowValueExpression` / `RowValueFilter` get the row as `this` and the current value as `it`;
+  `RowColumnExpression` gets `row` and `col` as parameters.
 - Mentioning `ColumnSet` or other column resolvers? Link
   `[`ColumnSet`](ColumnSelectors.md#column-resolvers)`.
 
