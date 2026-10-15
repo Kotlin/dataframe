@@ -88,8 +88,9 @@ The following [`DataFrame`](DataFrame.md) is used in examples that share one inp
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Pass several dataframes as vararg arguments to append their rows in argument order:
 
@@ -103,8 +104,9 @@ val thirdBatch = dataFrameOf("name", "age", "city")("Charlie", 25, "London")
 firstBatch.concat(secondBatch, thirdBatch)
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFrames.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Schema unification examples
 
@@ -116,8 +118,9 @@ The following two dataframes have different schemas. Their `age` columns also ha
 peopleDf1
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFramesFirstInput.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN concatDataFramesSecondInput-->
 
@@ -125,8 +128,9 @@ peopleDf1
 peopleDf2
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFramesSecondInput.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 `concat` combines both schemas. The resulting `age` column contains
 `Int` and `Double` values and has the common runtime type `Number`. The missing `city` values are filled with
@@ -138,8 +142,9 @@ peopleDf2
 peopleDf1 concat peopleDf2
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFramesWithDifferentSchemas.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 New data can be added to a [`DataFrame`](DataFrame.md) as an iterable of rows:
 
@@ -156,8 +161,9 @@ val newPeople = dataFrameOf(
 registeredPeople.concat(newPeople.rows())
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFrameAndRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 An iterable of `DataFrame`s can be appended in the same way:
 
@@ -173,8 +179,9 @@ val newPeople = listOf(
 registeredPeople.concat(newPeople)
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataFrameAndIterable.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## `concat` on `DataRow`
 
@@ -216,8 +223,9 @@ youngest.concat(oldest)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatDataRows.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/concatDataRows_properties.html" width="100%" height="500px"></inline-frame>
 
 ## `concat` on `DataColumn`
 
@@ -257,8 +265,9 @@ Concatenating value columns keeps the name of the receiver and finds a common ty
 peopleDf1.age.concat(peopleDf2.age)
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatDataColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 A [`FrameColumn`](DataColumn.md#framecolumn) can store nested dataframes.
 `concat()` combines those dataframes in their order of appearance:
@@ -277,8 +286,9 @@ val teamMembers = columnOf(
 teamMembers.concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatFrameColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Concatenating a column of collections flattens all collection values. Empty collections add no elements:
 
@@ -294,8 +304,9 @@ val nameGroups = columnOf<Collection<String>>(
 nameGroups.concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatCollectionColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## `concat` on `GroupBy`
 
@@ -355,8 +366,9 @@ grouped.concatWithKeys()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatGroupByWithKeys.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/concatGroupByWithKeys_properties.html" width="100%" height="500px"></inline-frame>
 
 `concat()` does not include the `ageGroup` key column:
 
@@ -384,8 +396,9 @@ grouped.concat()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/concatGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 After a reducing operation such as [`first`](first.md), `concat()` applies the reducer and combines one selected
 row from every group:
@@ -406,8 +419,9 @@ df.groupBy("city").first().concat()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/concatReducedGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/concatReducedGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ## `concat` on `Iterable`
 
@@ -455,8 +469,9 @@ val batches = listOf(
 batches.concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatIterableDataFrames.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 An iterable of columns is concatenated into one column. Its name comes from the first input column:
 
@@ -471,8 +486,9 @@ val ageColumns = listOf(
 ageColumns.concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatIterableDataColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 A `null` element in an iterable of rows becomes a row with `null` values:
 
@@ -484,5 +500,6 @@ val rows = listOf(df[0], null, df[1])
 rows.concat()
 ```
 
-<!---END-->
 <inline-frame src="./resources/concatIterableRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

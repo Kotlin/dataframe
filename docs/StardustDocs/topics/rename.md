@@ -88,9 +88,9 @@ to that column's name and returns a reference with the updated name.
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Rename selected columns to "camelCase":
 
@@ -100,9 +100,9 @@ Rename selected columns to "camelCase":
 df.rename { ColumnA and `COLUMN-C` }.toCamelCase()
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_4.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Rename all columns (including nested) to "camelCase":
 
@@ -112,9 +112,9 @@ Rename all columns (including nested) to "camelCase":
 df.renameToCamelCase()
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_rename_5.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Transformation Rules and Examples
 

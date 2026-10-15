@@ -22,8 +22,9 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/filter.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/filter_properties.html" width="100%" height="500px"></inline-frame>
 
 
 ## filter on a DataColumn
@@ -46,5 +47,6 @@ df.age.filter { it > 17 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/filterColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/filterColumn_properties.html" width="100%" height="500px"></inline-frame>

@@ -44,9 +44,9 @@ keySelector: (DataRow) -> Key
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_associateBy_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Create a map with names as keys:
 

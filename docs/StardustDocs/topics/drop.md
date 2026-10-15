@@ -9,8 +9,9 @@ The examples on this page use the following dataframe:
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## drop
 
@@ -34,8 +35,9 @@ df.drop { it["weight"] == null || it["name"] == null }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/dropWhere.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/dropWhere_properties.html" width="100%" height="500px"></inline-frame>
 
 If called on a [`DataColumn`](DataColumn.md), removes all the values that match the predicate 
 and returns a [`DataColumn`](DataColumn.md) containing the values that do not match the predicate.
@@ -46,8 +48,9 @@ and returns a [`DataColumn`](DataColumn.md) containing the values that do not ma
 df.weight.drop { it != null && it < 60 }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropDataColumnByPredicate.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## dropNulls
 
@@ -64,8 +67,9 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.dropNulls()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNulls.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNullsWhereAllNull-->
 
@@ -74,8 +78,9 @@ df.dropNulls()
 df.dropNulls(whereAllNull = true)
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNullsWhereAllNull.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNullsSelector-->
 
@@ -84,8 +89,9 @@ df.dropNulls(whereAllNull = true)
 df.dropNulls { name }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNullsSelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNullsSelectorSeveralCols-->
 
@@ -94,8 +100,9 @@ df.dropNulls { name }
 df.dropNulls { name and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNullsSelectorSeveralCols.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNullsWhereAllNullSelector-->
 
@@ -104,8 +111,9 @@ df.dropNulls { name and weight }
 df.dropNulls(whereAllNull = true) { name and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNullsWhereAllNullSelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), removes `null` values from this [`DataColumn`](DataColumn.md), 
 adjusting the type accordingly.
@@ -116,8 +124,9 @@ adjusting the type accordingly.
 df.weight.dropNulls()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNullsDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## dropNaNs
 
@@ -134,8 +143,9 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.dropNaNs()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNs.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNaNsWhereAllNaN-->
 
@@ -144,8 +154,9 @@ df.dropNaNs()
 df.dropNaNs(whereAllNaN = true) { colsOf<Double?>() }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNsWhereAllNaN.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNaNsSelector-->
 
@@ -154,8 +165,9 @@ df.dropNaNs(whereAllNaN = true) { colsOf<Double?>() }
 df.dropNaNs { weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNsSelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNaNsSelectorSeveralCols-->
 
@@ -164,8 +176,9 @@ df.dropNaNs { weight }
 df.dropNaNs { age and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNsSelectorSeveralCols.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNaNsWhereAllNaNSelector-->
 
@@ -174,8 +187,9 @@ df.dropNaNs { age and weight }
 df.dropNaNs(whereAllNaN = true) { age and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNsWhereAllNaNSelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), removes [`NaN` values](nanAndNa.md#nan) from this [`DataColumn`](DataColumn.md),
 adjusting the type accordingly.
@@ -186,8 +200,9 @@ adjusting the type accordingly.
 df.weight.dropNaNs()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNaNsDataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## dropNA
 
@@ -204,8 +219,9 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df.dropNA()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNA.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNAWhereAllNA-->
 
@@ -214,8 +230,9 @@ df.dropNA()
 df.dropNA(whereAllNA = true)
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNAWhereAllNA.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNASelector-->
 
@@ -224,8 +241,9 @@ df.dropNA(whereAllNA = true)
 df.dropNA { weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNASelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNASelectorSeveralCols-->
 
@@ -234,8 +252,9 @@ df.dropNA { weight }
 df.dropNA { age and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNASelectorSeveralCols.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN dropNAWhereAllNASelector-->
 
@@ -244,8 +263,9 @@ df.dropNA { age and weight }
 df.dropNA(whereAllNA = true) { age and weight }
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNAWhereAllNASelector.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 If called on a [`DataColumn`](DataColumn.md), removes [`NA` values](nanAndNa.md#na) from this [`DataColumn`](DataColumn.md),
 adjusting the type accordingly.
@@ -256,5 +276,6 @@ adjusting the type accordingly.
 df.weight.dropNA()
 ```
 
-<!---END-->
 <inline-frame src="./resources/dropNADataColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

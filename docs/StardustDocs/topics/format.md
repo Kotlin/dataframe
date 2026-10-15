@@ -114,9 +114,9 @@ df
 ```
 
 </tab></tabs>
-<!---END-->
+<inline-frame src="./resources/formatExample.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="resources/formatExample_properties.html" width="100%"/>
+<!---END-->
 
 Alternatively, you could also customize the dataframe in a data-independent manner:
 
@@ -134,8 +134,9 @@ df2.format().perRowCol { row, col ->
 }
 ```
 
+<inline-frame src="./resources/formatExampleNumbers.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/formatExampleNumbers.html" width="100%"/>
 
 ## formatHeader
 
@@ -161,5 +162,6 @@ df
     .formatHeader { colsOf<Number?>() }.with { underline }
 ```
 
+<inline-frame src="./resources/formatHeader.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/formatHeader.html" width="100%"/>
