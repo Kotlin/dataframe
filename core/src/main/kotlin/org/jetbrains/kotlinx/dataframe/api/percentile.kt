@@ -510,10 +510,6 @@ private typealias SetPercentileOperationArg = Nothing
 @ExcludeFromSources
 private typealias SetPercentileForOperationArg = Nothing
 
-/** {@set [SelectingColumns.OPERATION] [percentileOrNull][percentileOrNull]} */
-@ExcludeFromSources
-private typealias SetPercentileOrNullOperationArg = Nothing
-
 // endregion
 
 // region DataColumn
@@ -1251,7 +1247,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.percentileFor(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPercentileOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples
  * ```kotlin
@@ -1299,7 +1295,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPercentileOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Examples
  * ```kotlin
@@ -1341,7 +1337,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPercentileOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Example
  * ```kotlin
@@ -1385,7 +1381,7 @@ public fun <T, C> DataFrame<T>.percentile(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample] {@include [SetPercentileOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnsSelectionDsl]
  *
  * ### Example
  * ```kotlin
@@ -1428,7 +1424,7 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetPercentileOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
@@ -1467,7 +1463,7 @@ public fun <T> DataFrame<T>.percentile(
  *
  * For more information: {@include [DocumentationUrls.Percentile]}
  *
- * @include [SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample] {@include [SetPercentileOrNullOperationArg]}
+ * @include [SelectingColumns.ColumnNamesApi]
  *
  * ### Example
  * ```kotlin
