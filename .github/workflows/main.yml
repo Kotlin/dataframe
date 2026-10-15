@@ -27,7 +27,7 @@ jobs:
       artifact: ${{ steps.generate-artifact.outputs.artifact }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Prepare for build
         run: |
           apt-get update
@@ -44,13 +44,13 @@ jobs:
           # zip -r $ARTIFACT sitemap.xml
         working-directory: ${{ github.workspace }}
       - name: Upload modified documentation artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: help
           path: artifacts/${{ env.ARTIFACT }}
           retention-days: 7
       - name: Upload algolia-indexes
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: algolia-indexes
           path: artifacts/${{ env.ALGOLIA_ARTIFACT }}
@@ -65,9 +65,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: help
       - name: Unzip artifact
@@ -96,8 +96,8 @@ jobs:
         image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-3
 
     steps: # Using v3 for compatibility with algolia-indexes
-        - uses: actions/checkout@v4
-        - uses: actions/download-artifact@v4
+        - uses: actions/checkout@v7
+        - uses: actions/download-artifact@v8
           with:
               name: algolia-indexes
         - uses: montudor/action-zip@v1

@@ -190,7 +190,7 @@ internal interface SelectingColumns {
 
         /**
          * {@comment
-         *    CColumn Names API with Example KDoc-topic.
+         *    Column Names API with Example KDoc-topic.
          *    Link to it with `@include [ColumnNamesWithExampleLink]`
          *    or paste it into KDoc with `@include [`Column Names API with Example`]`.
          * }
