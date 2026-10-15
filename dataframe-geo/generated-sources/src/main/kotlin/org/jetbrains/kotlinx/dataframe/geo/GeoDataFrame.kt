@@ -11,6 +11,10 @@ import org.jetbrains.kotlinx.dataframe.api.with
  * A data structure representing a geographical DataFrame, combining spatial data with
  * an optional Coordinate Reference System (CRS).
  *
+ * Integrates with [Kandy](https://kotlin.github.io/kandy/welcome.html) for plotting:
+ * - [Geo Examples](https://kotlin.github.io/kandy/geo.html)
+ * - [Geo Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html)
+ *
  * @param T The type parameter extending `WithGeometry`, indicating the presence of a geometry column.
  * @property df The underlying `DataFrame` containing geometries.
  * @property crs The coordinate reference system associated with the data, if any.
