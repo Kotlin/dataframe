@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.medianOf
 import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMedianOf
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
 import kotlin.experimental.ExperimentalTypeInference
@@ -375,5 +376,28 @@ class MedianTests {
             val b = "b"<Double>()
             if (b == 0.0) Double.NaN else "a"<Double>() / b
         } shouldBe 0.5 // Only 1.0/2.0 = 0.5 is valid
+    }
+
+    @Test
+    fun `medianBy selects the first NaN if skipNaN is false`() {
+        val col = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
+        val df = dataFrameOf("v", "g")(
+            5.0, 1,
+            2.0, 1,
+            Double.NaN, 1,
+            1.0, 1,
+            9.0, 1,
+        )
+
+        col.medianBy { it }.shouldBeNaN()
+        col.medianByOrNull { it }!!.shouldBeNaN()
+        (df.medianBy { "v"<Double>() }["v"] as Double).shouldBeNaN()
+        (df.medianBy("v")["v"] as Double).shouldBeNaN()
+        (df.medianByOrNull("v")!!["v"] as Double).shouldBeNaN()
+        (df.groupBy("g").medianBy("v").values()["v"][0] as Double).shouldBeNaN()
+
+        // With skipNaN=true, NaN values should be ignored
+        col.medianBy(skipNaN = true) { it } shouldBe 2.0
+        df.medianBy("v", skipNaN = true)["v"] shouldBe 2.0
     }
 }
