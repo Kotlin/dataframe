@@ -1,4 +1,4 @@
-package dfbuild
+package dfbuild.kodex
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
