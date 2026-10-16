@@ -1,8 +1,9 @@
+import dfbuild.findRootDir
 import dfbuild.kodex.KODEX_COMPONENT_NAME
 import dfbuild.kodex.addKodexVariants
 import dfbuild.kodex.createKodexComponent
-import dfbuild.findRootDir
 import dfbuild.kodex.isKodexComponentUsed
+import dfbuild.kodex.useKodexJarForApiValidation
 import nl.jolanrensen.kodex.gradle.KodexIsolationMode
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
@@ -78,17 +79,13 @@ extension.inputCacheFiles.convention(emptyList<Any>())
  */
 val skipKodex = project.hasProperty("skipKodex")
 
-/**
- * The ID of the `libs.publisher` plugin.
- * If it's applied to this project, the `kodexJava` component is created, see below.
- */
-val publisherPluginId = libs.plugins.publisher.get().pluginId
-
 val processKDocsMainName = "processKDocsMain"
 
 // The name of the new sourceSet and compilation created by KoDEx for the processed sources.
 val kodexSourceSetName = "mainKodex"
 val ktlintFormatKodexSourceSet = "runKtlintFormatOverMainKodexSourceSet"
+val kodexJarTaskName = "kodex${kodexSourceSetName.uppercaseFirstChar()}Jar"
+val kodexSourcesJarTaskName = "kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar"
 
 /*
  * Attaches KoDEx to the main sourceSet. This:
@@ -138,7 +135,11 @@ kodex {
         // only built when needed, like when publishing
         generateJar = true
         generateSourcesJar = true
+        // We need to be able to skip the jar and sources jar generation with skipKodex
         addJarsToAssemble = false
+        // Ordinarily, this replaces the jars in the `java` component with the KoDEx jar and sources jar.
+        // We will do this manually to keep the logic in the DataFrame project. It's a delicate API.
+        replaceArtifactsInJavaComponent = false
 
         task {
             sources = extension.kotlinMainSourcesDirectories
@@ -161,7 +162,7 @@ kodex {
  * ```
  * Publishing fails if this is forgotten, so we never accidentally publish the unprocessed jars.
  */
-pluginManager.withPlugin(publisherPluginId) {
+pluginManager.withPlugin(libs.plugins.publisher.get().pluginId) {
     if (skipKodex) return@withPlugin
 
     val kodexComponent = createKodexComponent()
@@ -171,8 +172,8 @@ pluginManager.withPlugin(publisherPluginId) {
     gradle.projectsEvaluated {
         addKodexVariants(
             component = kodexComponent,
-            jar = tasks.named<Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}Jar"),
-            sourcesJar = tasks.named<Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar"),
+            jar = tasks.named<Jar>(kodexJarTaskName),
+            sourcesJar = tasks.named<Jar>(kodexSourcesJarTaskName),
         )
     }
 
