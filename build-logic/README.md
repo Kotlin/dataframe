@@ -25,9 +25,12 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 
 - `dfbuild.kodex`: Sets up [KoDEx](https://github.com/Jolanrensen/KoDEx) KDoc preprocessing.
     Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
-    - This plugin modifies the `Jar` tasks such that its sources contain KoDEx-preprocessed sources.
+    - This plugin creates a `mainKodex` source set and compilation from the KoDEx-preprocessed sources,
+      with the jar tasks `kodexMainKodexJar` and `kodexMainKodexSourcesJar`.
+      These jars are published instead of the normal jar and sources jar
+      (so `@ExcludeFromSources` declarations are absent from both).
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
-    - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
+    - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
     - The plugin can be configured via the `kodexConvention` extension for your needs.
     - Modules the project depends on are included in the context of KoDEx.
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
