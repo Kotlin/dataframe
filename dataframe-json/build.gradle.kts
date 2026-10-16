@@ -1,3 +1,4 @@
+import dfbuild.componentToPublish
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -58,5 +59,7 @@ kotlinPublications {
         artifactId = project.name
         description = "Kotlin DataFrame: JSON support"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(componentToPublish()) }
     }
 }

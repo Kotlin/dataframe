@@ -1,3 +1,4 @@
+import dfbuild.componentToPublish
 import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
@@ -372,5 +373,7 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Kotlin DataFrame: core API"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(componentToPublish()) }
     }
 }

@@ -1,4 +1,8 @@
+import dfbuild.KODEX_COMPONENT_NAME
+import dfbuild.addKodexVariants
+import dfbuild.createKodexComponent
 import dfbuild.findRootDir
+import dfbuild.isKodexComponentUsed
 import nl.jolanrensen.kodex.gradle.KodexIsolationMode
 
 plugins {
@@ -72,6 +76,12 @@ extension.inputCacheFiles.convention(emptyList<Any>())
  */
 val skipKodex = project.hasProperty("skipKodex")
 
+/**
+ * The ID of the `libs.publisher` plugin.
+ * If it's applied to this project, the `kodexJava` component is created, see below.
+ */
+val publisherPluginId = libs.plugins.publisher.get().pluginId
+
 val processKDocsMainName = "processKDocsMain"
 
 // The name of the new sourceSet and compilation created by KoDEx for the processed sources.
@@ -86,8 +96,6 @@ val ktlintFormatKodexSourceSet = "runKtlintFormatOverMainKodexSourceSet"
  *    This makes sure `@ExcludeFromSources` is respected in the compiled classes too.
  *  - creates the `kodexMainKodexJar` and `kodexMainKodexSourcesJar` tasks, which create a jar and a sources jar
  *    from the KoDEx processed sources
- *  - replaces the jar and sources jar in the `java` component (used by the publisher) with these new jars,
- *    unless the `skipKodex` property is present.
  */
 kodex {
     preprocess(kotlin.sourceSets.main) {
@@ -130,13 +138,52 @@ kodex {
         generateSourcesJar = true
         addJarsToAssemble = false
 
-        // makes the publisher use the KoDEx jars
-        replaceArtifactsInJavaComponent = !skipKodex
-
         task {
             sources = extension.kotlinMainSourcesDirectories
             contextualSources.addAll(extension.contextualSourcesDirectories)
             inputCacheFiles.from(extension.inputCacheFiles)
+        }
+    }
+}
+
+/*
+ * When `libs.publisher` is applied too (in any order), and the `skipKodex` property is not present,
+ * this creates the `kodexJava` component: a copy of the `java` component, but with the KoDEx jar and sources jar.
+ * The publication of the module must select it explicitly with:
+ * ```kotlin
+ * kotlinPublications {
+ *     publication {
+ *         composeOf { from(componentToPublish()) }
+ *     }
+ * }
+ * ```
+ * Publishing fails if this is forgotten, so we never accidentally publish the unprocessed jars.
+ */
+pluginManager.withPlugin(publisherPluginId) {
+    if (skipKodex) return@withPlugin
+
+    val kodexComponent = createKodexComponent()
+
+    // Run as late as possible, as the `java` component's variants (like `sourcesElements`)
+    // may only be created in `afterEvaluate {}` and the KoDEx jar tasks are registered in `afterEvaluate {}` too.
+    gradle.projectsEvaluated {
+        addKodexVariants(
+            component = kodexComponent,
+            jar = tasks.named<org.gradle.jvm.tasks.Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}Jar"),
+            sourcesJar = tasks.named<org.gradle.jvm.tasks.Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar"),
+        )
+    }
+
+    val projectPath = path
+    gradle.taskGraph.whenReady {
+        val publishesThisProject = allTasks.any {
+            it.project.path == projectPath && it is AbstractPublishToMaven
+        }
+        check(!publishesThisProject || isKodexComponentUsed) {
+            "$projectPath applies both `dfbuild.kodex` and `libs.publisher`, but its publication does not use " +
+                "the '$KODEX_COMPONENT_NAME' component with the KoDEx-processed jars. " +
+                "Add `composeOf { from(componentToPublish()) }` to its `kotlinPublications { publication {} }`, " +
+                "or use `-PskipKodex` to publish the unprocessed jars."
         }
     }
 }
