@@ -6,13 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COLUMNS_PARAM
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COLUMN_SELECTION_DSL
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COMPARISON_OBJECT
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.SCOPE
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
