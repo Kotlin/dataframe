@@ -1,4 +1,4 @@
-import dfbuild.componentToPublish
+import dfbuild.kodex.kodexAwareComponentToPublish
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -77,7 +77,7 @@ kotlinPublications {
         description = "Kotlin DataFrame: GeoDataFrame API"
         packageName = artifactId
         // publishes the KoDEx-processed jars, see `dfbuild.kodex`
-        composeOf { from(componentToPublish()) }
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }
 
