@@ -27,8 +27,10 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
     - This plugin creates a `mainKodex` source set and compilation from the KoDEx-preprocessed sources,
       with the jar tasks `kodexMainKodexJar` and `kodexMainKodexSourcesJar`.
-      These jars are published instead of the normal jar and sources jar
-      (so `@ExcludeFromSources` declarations are absent from both).
+      If `libs.publisher` is applied too, a `kodexJava` component is created: the `java` component, but with
+      these jars instead of the normal jar and sources jar (so `@ExcludeFromSources` declarations are absent from both).
+      The publication must select it with `composeOf { from(componentToPublish()) }` in `kotlinPublications {}`,
+      otherwise publishing fails.
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
     - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
     - The plugin can be configured via the `kodexConvention` extension for your needs.
