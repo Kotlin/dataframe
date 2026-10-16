@@ -320,7 +320,7 @@ tasks.runKtlintFormatOverMainSourceSet {
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
-tasks.runKtlintFormatOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintFormatOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -332,7 +332,7 @@ tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.runKtlintCheckOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintCheckOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
