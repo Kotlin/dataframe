@@ -192,6 +192,17 @@ pluginManager.withPlugin(libs.plugins.publisher.get().pluginId) {
     }
 }
 
+/*
+ * When `libs.plugins.binary.compatibility.validator` is applied too (in any order),
+ * the `apiBuild` task (used by `apiCheck` and `apiDump`)
+ * reads the public API from the KoDEx-processed jar instead of the `main` classes.
+ * This way, the binary compatibility is validated against the jar we actually publish.
+ * This cannot be skipped with `skipKodex`.
+ */
+pluginManager.withPlugin(libs.plugins.binary.compatibility.validator.get().pluginId) {
+    useKodexJarForApiValidation(jarTaskName = kodexJarTaskName)
+}
+
 tasks.named(processKDocsMainName) {
     finalizedBy(ktlintFormatKodexSourceSet)
 }
