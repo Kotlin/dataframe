@@ -623,8 +623,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * @return A new [GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
  */
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
-    val set = selector.toColumnSet()
-    return sortByImpl { set.desc() }
+    return sortByImpl(selector, SortFlag.Reversed)
 }
 
 private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
