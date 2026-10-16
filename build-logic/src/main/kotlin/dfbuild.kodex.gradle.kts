@@ -1,9 +1,11 @@
-import dfbuild.KODEX_COMPONENT_NAME
-import dfbuild.addKodexVariants
-import dfbuild.createKodexComponent
+import dfbuild.kodex.KODEX_COMPONENT_NAME
+import dfbuild.kodex.addKodexVariants
+import dfbuild.kodex.createKodexComponent
 import dfbuild.findRootDir
-import dfbuild.isKodexComponentUsed
+import dfbuild.kodex.isKodexComponentUsed
 import nl.jolanrensen.kodex.gradle.KodexIsolationMode
+import org.gradle.jvm.tasks.Jar
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 plugins {
     alias(conventions.plugins.dfbuild.kotlinJvmCommon)
@@ -169,8 +171,8 @@ pluginManager.withPlugin(publisherPluginId) {
     gradle.projectsEvaluated {
         addKodexVariants(
             component = kodexComponent,
-            jar = tasks.named<org.gradle.jvm.tasks.Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}Jar"),
-            sourcesJar = tasks.named<org.gradle.jvm.tasks.Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar"),
+            jar = tasks.named<Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}Jar"),
+            sourcesJar = tasks.named<Jar>("kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar"),
         )
     }
 
@@ -224,5 +226,3 @@ idea {
         excludeDirs.add(file(extension.generatedSourcesFolderName.get()))
     }
 }
-
-fun String.uppercaseFirstChar(): String = replaceFirstChar { it.uppercase() }
