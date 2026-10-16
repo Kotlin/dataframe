@@ -46,7 +46,20 @@ using the `kodex {}` DSL of the KoDEx Gradle plugin. For each module applying it
 - The `kodexMainKodexJar` and `kodexMainKodexSourcesJar` tasks, which create a library- and sources jar
   from the `mainKodex` compilation and the processed sources, respectively.
 
-When you run any `publish` task, these KoDEx jars are published instead of the normal ones.
+If the module also applies `libs.publisher`, a `kodexJava` software component is created as well.
+It's a copy of the normal `java` component (same dependencies, attributes, and javadoc jar), 
+but with these KoDEx jars as library- and sources jar.
+The publication of the module selects it explicitly:
+```kotlin
+kotlinPublications {
+    publication {
+        // ...
+        composeOf { from(componentToPublish()) }
+    }
+}
+```
+This way, when you run any `publish` task, these KoDEx jars are published instead of the normal ones.
+If a module forgets this, publishing fails, so the unprocessed jars are never published by accident.
 The normal jar is still used within the build itself, for instance, by other modules depending on `core`.
 It's possible to optionally skip this step, for example, when you publish the library locally during development, 
 by providing the `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`.
