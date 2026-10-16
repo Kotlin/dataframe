@@ -120,7 +120,7 @@ df.writeExcel(file)
 
 Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
-If you work directly with Apache POI, you can use created Workbook and Sheets in your code:
+If you work directly with Apache POI, you can use the created Workbook and Sheets in your code:
 
 <!---FUN writeXlsAppendAndPostProcessing-->
 

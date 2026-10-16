@@ -135,11 +135,11 @@ Refer to
 [Get started with Kotlin DataFrame on Maven](https://kotlin.github.io/dataframe/setupmaven.html).
 This also describes how to set up the compiler plugin.
 
-* See [a Maven example project with the Kotlin DataFrame compiler plugin](examples/projects/kotlin-dataframe-plugin-gradle-example).
+* See [a Maven example project with the Kotlin DataFrame compiler plugin](examples/projects/kotlin-dataframe-plugin-maven-example).
 
 ### The Kotlin Toolchain
 
-Now the [Kotlin Toolchain](https://kotlin-toolchain.org/) exists as a unified entry point into Kotlin,
+Now that the [Kotlin Toolchain](https://kotlin-toolchain.org/) exists as a unified entry point into Kotlin,
 you can use it to get started with Kotlin DataFrame too.
 
 Add the DataFrame library dependency to your `module.yaml` file:
@@ -204,7 +204,7 @@ for details.
 
 ## Code example
 
-This example of Kotlin DataFrame code with
+This is an example of Kotlin DataFrame code with
 the [Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) enabled.
 See [the full project](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-dataframe-plugin-gradle-example).
 See also
