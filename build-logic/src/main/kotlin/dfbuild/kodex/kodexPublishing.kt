@@ -17,7 +17,7 @@ import javax.inject.Inject
  * The name of the software component created by `dfbuild.kodex` when `libs.publisher` is applied.
  * It's the same as the `java` component, but with the KoDEx-processed jar and sources jar.
  *
- * Use [componentToPublish] to select it in `kotlinPublications {}`.
+ * Use [kodexAwareComponentToPublish] to select it in `kotlinPublications {}`.
  */
 const val KODEX_COMPONENT_NAME = "kodexJava"
 
@@ -28,14 +28,14 @@ private const val KODEX_COMPONENT_USED = "dfbuild.kodex.componentUsed"
  * ```kotlin
  * kotlinPublications {
  *     publication {
- *         composeOf { from(componentToPublish()) }
+ *         composeOf { from(kodexAwareComponentToPublish()) }
  *     }
  * }
  * ```
  * This is the `kodexJava` component (with the KoDEx-processed jar and sources jar) if `dfbuild.kodex` is applied
  * and created it, or the normal `java` component otherwise (like when `-PskipKodex` is used).
  */
-fun Project.componentToPublish(): SoftwareComponent {
+fun Project.kodexAwareComponentToPublish(): SoftwareComponent {
     val kodexComponent = components.findByName(KODEX_COMPONENT_NAME)
     if (kodexComponent != null) {
         extra[KODEX_COMPONENT_USED] = true
@@ -44,11 +44,15 @@ fun Project.componentToPublish(): SoftwareComponent {
     return components.getByName("java")
 }
 
-/** Whether [componentToPublish] returned the `kodexJava` component. */
+/** Whether [kodexAwareComponentToPublish] returned the `kodexJava` component. */
 internal val Project.isKodexComponentUsed: Boolean
     get() = extra.has(KODEX_COMPONENT_USED) && extra[KODEX_COMPONENT_USED] == true
 
-internal abstract class SoftwareComponentFactoryProvider @Inject constructor(val factory: SoftwareComponentFactory)
+internal abstract class SoftwareComponentFactoryProvider
+    @Inject
+    constructor(
+        val factory: SoftwareComponentFactory,
+    )
 
 /**
  * Creates and registers the (still empty) [KODEX_COMPONENT_NAME] component.

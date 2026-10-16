@@ -54,7 +54,7 @@ The publication of the module selects it explicitly:
 kotlinPublications {
     publication {
         // ...
-        composeOf { from(componentToPublish()) }
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }
 ```

@@ -155,7 +155,7 @@ kodex {
  * ```kotlin
  * kotlinPublications {
  *     publication {
- *         composeOf { from(componentToPublish()) }
+ *         composeOf { from(kodexAwareComponentToPublish()) }
  *     }
  * }
  * ```
@@ -184,7 +184,8 @@ pluginManager.withPlugin(publisherPluginId) {
         check(!publishesThisProject || isKodexComponentUsed) {
             "$projectPath applies both `dfbuild.kodex` and `libs.publisher`, but its publication does not use " +
                 "the '$KODEX_COMPONENT_NAME' component with the KoDEx-processed jars. " +
-                "Add `composeOf { from(componentToPublish()) }` to its `kotlinPublications { publication {} }`, " +
+                "Add `composeOf { from(kodexAwareComponentToPublish()) }` to its " +
+                "`kotlinPublications { publication {} }`, " +
                 "or use `-PskipKodex` to publish the unprocessed jars."
         }
     }
