@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -240,11 +239,25 @@ public fun <T> DataRow<T>.next(): DataRow<T>? {
 public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T> =
     getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
-@Suppress("DEPRECATION_ERROR")
-public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
-    getRows(
-        (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),
-    )
+/**
+ * Returns a [DataFrame] containing rows at the offsets in [relativeIndices] from this row.
+ *
+ * Like [relative] with iterable offsets, this overload drops offsets outside the owning [DataFrame].
+ * An empty range or a range with no valid offsets returns a [DataFrame] with no rows.
+ * For example, `relative(-1..1)` selects the previous, current, and next rows when they exist.
+ *
+ * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
+ *
+ * @param [relativeIndices] Inclusive offsets from this row's index; zero selects this row.
+ * @return The rows at valid offsets, in ascending row order.
+ */
+public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> {
+    val df = df()
+    val index = index()
+    val first = relativeIndices.first.coerceAtLeast(-index)
+    val last = relativeIndices.last.coerceAtMost(df.nrow - 1 - index)
+    return if (first > last) df[emptyList<Int>()] else df[(first + index)..(last + index)]
+}
 
 public inline fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0

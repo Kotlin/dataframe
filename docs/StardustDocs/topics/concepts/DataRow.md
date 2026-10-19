@@ -29,9 +29,10 @@ and `value: Any?` for cell values;
 and `value: T` for cell values;
 * `getRow(Int): DataRow` — row from the [`DataFrame`](DataFrame.md) by a row index;
 * `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by absolute row indices;
-* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with a subset of rows selected by relative row indices:
-`relative(-1..1)` will return the previous, current, and next row. Requested indices will be coerced to the valid range
-and invalid indices will be skipped;
+* `relative(Iterable<Int>): DataFrame` / `relative(IntRange): DataFrame` — [`DataFrame`](DataFrame.md) with rows
+selected by offsets from the current row. `relative(-1..1)` returns the previous, current, and next rows when they exist.
+Offsets outside the owning dataframe are skipped. An empty range or a range entirely outside the dataframe returns
+no rows. Iterable offsets retain their requested order and duplicates;
 * `getValue<T>(columnName)` — cell value of type `T` by this row and the given `columnName`;
 * `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row 
 and the given `columnName` or `null` if there's no such column;
