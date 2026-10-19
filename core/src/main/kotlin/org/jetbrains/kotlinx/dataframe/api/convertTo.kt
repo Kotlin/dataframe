@@ -102,7 +102,7 @@ public interface ConvertSchemaDsl<in T> {
 }
 
 /**
- * Defines how to fill the specified columns in the destination schema that were not found in the original dataframe.
+ * Defines how to fill all specified columns in the destination schema that were not found in the original dataframe.
  * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
  *
  * For more information: {@include [DocumentationUrls.ConvertTo]}

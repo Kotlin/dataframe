@@ -211,7 +211,7 @@ Sometimes columns in your CSV can be interpreted differently depending on your s
 
 <inline-frame src="./resources/csvLocale.html" width="100%" height="500px"></inline-frame>
 
-Here a comma can be a decimal or thousands separator, and thus become different values.
+Here a comma can be a decimal- or thousands separator, and thus become different values.
 You can deal with it in multiple ways, for instance:
 
 1) Provide locale as a parser option

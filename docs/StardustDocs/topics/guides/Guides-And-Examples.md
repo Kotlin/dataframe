@@ -116,7 +116,7 @@ Explore our extensive collection of practical examples and real-world analytics 
 
 * [Reading Parquet files from Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe)
   — this project showcases how to export data and ML models from Apache Spark via reading from Parquet files. 
-[Kandy](https://kotlin.github.io/kandy/) is also used to visualize the exported data and Linear Regression model.
+[Kandy](https://kotlin.github.io/kandy/) is used to visualize the exported data and Linear Regression model.
 
 See also [Kandy User Guides](https://kotlin.github.io/kandy/user-guide.html)
 and [Examples Gallery](https://kotlin.github.io/kandy/examples.html)
