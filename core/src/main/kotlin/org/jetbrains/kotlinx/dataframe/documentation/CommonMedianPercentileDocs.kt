@@ -8,6 +8,9 @@ import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Interpolating.R7
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Interpolating.R8
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Selecting.R3
 
 /**
  * {@comment
@@ -38,18 +41,18 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      * which call these methods R1 to R9.
      *
      * DataFrame uses:
-     * - **R8** for primitive numbers ([Byte], [Short], [Int], [Long], [Float], and [Double]).
+     * - [**R8**][R8] for primitive numbers ([Byte], [Short], [Int], [Long], [Float], and [Double]).
      *   It interpolates linearly between the two values around the quantile, so the result is a [Double].
-     *   R8 is the method recommended by Hyndman and Fan.
+     *   [R8] is the method recommended by Hyndman and Fan.
      *   Other libraries, like [Numpy](https://numpy.org/doc/2.1/reference/generated/numpy.quantile.html),
-     *   default to R7, so slightly different results are to be expected.
-     *   For the median, R8 gives the middle value, or the mean of the two middle values
+     *   default to [R7], so slightly different results are to be expected.
+     *   For the median, [R8] gives the middle value, or the mean of the two middle values
      *   if the number of values is even.
-     * - **R3** for all other self-comparable values (like strings or dates), since those cannot be interpolated,
+     * - [**R3**][R3] for all other self-comparable values (like strings or dates), since those cannot be interpolated,
      *   and for all `-By` operations (like [medianBy][DataFrame.medianBy] and
      *   [percentileBy][DataFrame.percentileBy]), since those select an existing row or element,
      *   even if they compare numbers.
-     *   R3 selects the value whose rank (its 1-based position among the sorted values) is the closest to `N * p`,
+     *   [R3] selects the value whose rank (its 1-based position among the sorted values) is the closest to `N * p`,
      *   where `N` is the number of values and `p` is the requested quantile, like `0.5` for the median.
      *   Ties are rounded to the even rank. The result is thus always one of the values itself.
      *
@@ -122,7 +125,7 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
      * The resulting {@get [STATISTIC] statistic} is a [Double], interpolated between the values using
-     * {@include [QuantileEstimationMethodLink]} R8.
+     * {@include [QuantileEstimationMethodLink]} [R8].
      * Converting [Long] values to [Double] may lose precision for very large values.
      * @include [DefaultMethodsOnlySnippet]
      *
@@ -136,7 +139,7 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
      * The resulting {@get [STATISTIC] statistic} is selected from the values using
-     * {@include [QuantileEstimationMethodLink]} R3,
+     * {@include [QuantileEstimationMethodLink]} [R3],
      * so it has the same type as the values (minus nullability, if the values were nullable).
      * @include [DefaultMethodsOnlySnippet]
      */
@@ -148,10 +151,10 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      *    and other comparable values. KDoc-snippet. Uses the [STATISTIC] key.}
      *
      * For primitive numbers, the resulting {@get [STATISTIC] statistic} is a [Double], interpolated between
-     * the values using {@include [QuantileEstimationMethodLink]} R8.
+     * the values using {@include [QuantileEstimationMethodLink]} [R8].
      * Converting [Long] values to [Double] may lose precision for very large values.
      * For all other self-comparable values, the resulting {@get [STATISTIC] statistic} is selected from
-     * the values using {@include [QuantileEstimationMethodLink]} R3, so it has the same type as those values.
+     * the values using {@include [QuantileEstimationMethodLink]} [R3], so it has the same type as those values.
      * @include [DefaultMethodsOnlySnippet]
      */
     @ExcludeFromSources
@@ -257,7 +260,7 @@ internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {
      *    KDoc-snippet. Uses the [STATISTIC] key.}
      *
      * Which value lies at the {@get [STATISTIC] statistic} is determined using
-     * {@include [QuantileEstimationMethodLink]} R3, so no interpolation takes place, not even for numbers.
+     * {@include [QuantileEstimationMethodLink]} [R3], so no interpolation takes place, not even for numbers.
      * If [skipNaN\] is `false` and {@include [NaNLink]} values are encountered,
      * the first one with a {@include [NaNLink]} value is selected.
      * @include [DefaultMethodsOnlySnippet]
