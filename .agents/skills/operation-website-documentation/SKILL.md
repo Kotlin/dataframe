@@ -232,6 +232,19 @@ When the test file is written, run ktlint over it and fix what it reports:
 
 Note the deliberate `chain-method-continuation = disabled` style from `AGENTS.md`: group chained
 operations on one line so the chain reads like a sentence.
+If the line is too long, make sure the operation still "connects": start a new line only when a new
+operation starts, and break inside the lambdas of the operation instead:
+
+```kotlin
+df
+    .update {
+        colsAtAnyDepth().colsOf<Int>()
+    }.with {
+        sqrt(it * 1000) * it.pow(2.0)
+    }
+    .rename { a and b }.to("columnA", "columnB")
+    .print()
+```
 
 ### 5. Generate and verify
 
