@@ -156,7 +156,7 @@ val categories = listOf("Electronics", "Books", "Clothing")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html" width="100%"/>
 <!---END-->
 
-Use `from` in combination with loops to generate DataFrame:
+Use `from` in combination with loops to generate a DataFrame:
 
 <!---FUN createDataFrameWithFill-->
 

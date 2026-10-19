@@ -42,12 +42,13 @@ import kotlin.reflect.KProperty
 /**
  * Moves the specified [columns\] within the [DataFrame].
  *
- * This function does not immediately move the columns but instead select columns to move and
+ * This function does not immediately move the columns but instead selects columns to move and
  * returns a [MoveClause],
  * which serves as an intermediate step. The [MoveClause] allows specifying the final
  * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
  * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
- * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
+ * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame]
+ * with an updated column structure.
  *
  * Check out [Grammar].
  *
@@ -155,7 +156,7 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
  * Moves the specified [columns\] to a new position specified by
  * [newColumnIndex] within the [DataFrame].
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [DataFrame] with an updated column structure.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -259,7 +260,7 @@ public fun <T> DataFrame<T>.moveTo(
 
 /**
  * Moves the specified [columns\] to the [DataFrame] start (on top-level).
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [DataFrame] with an updated column structure.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -348,7 +349,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
 
 /**
  * Moves the specified [columns\] to the [DataFrame] end.
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [DataFrame] with an updated column structure.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -592,7 +593,7 @@ public fun <T, C> MoveClause<T, C>.under(
  * Moves columns, previously selected with [move] to a new position specified
  * by [columnIndex] within the [DataFrame].
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [DataFrame] with an updated column structure.
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *
@@ -614,7 +615,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * by [columnIndex]. If [insideGroup] is true, selected columns will be moved remaining within their [ColumnGroup],
  * else they will be moved to the top level.
  *
- * Returns a new [DataFrame] with updated columns structure.
+ * Returns a new [DataFrame] with an updated column structure.
  *
  * For more information: {@include [DocumentationUrls.Move]}
  *

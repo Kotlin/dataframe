@@ -211,7 +211,7 @@ Sometimes columns in your CSV can be interpreted differently depending on your s
 
 <inline-frame src="./resources/csvLocale.html" width="100%" height="500px"></inline-frame>
 
-Here a comma can be a decimal-, or thousands separator, and thus become different values.
+Here a comma can be a decimal- or thousands separator, and thus become different values.
 You can deal with it in multiple ways, for instance:
 
 1) Provide locale as a parser option
@@ -504,7 +504,7 @@ The second situation is a **type clash**, described below.
 By default, if a type clash occurs when reading JSON — the same property holds elements of different shapes across
 records (objects, values or arrays) 
 — a new [`column group`](DataColumn.md#columngroup) is created for that property.
-This column group contains a column for each children object property
+This column group contains a column for each child object property
 (across all records), and
 "value" and "array" columns following the logic of reading row values and arrays as 
 [described above](#value-and-array-columns).
@@ -558,7 +558,7 @@ are nullable. A JSON `null` element, as well as a missing property, is `null` in
 > element without an array is an empty [`DataFrame`](DataFrame.md), because frame columns cannot hold `null`.
 > {style="note"}
 
-Default type clash tactic makes it more convenient to work with the data, 
+The default type clash tactic makes it more convenient to work with the data, 
 but it can be confusing if you're not expecting it or if you
 just need the type to be an `Any`.
 

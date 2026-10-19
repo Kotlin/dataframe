@@ -48,7 +48,7 @@ import java.time.LocalDateTime as JavaLocalDateTime
 import java.util.Date as JavaDate
 
 /**
- * The `DbType` class represents a database type used for reading dataframe from the database.
+ * The `DbType` class represents a database type used for reading a dataframe from the database.
  *
  * @property [dbTypeInJdbcUrl] The name of the database as specified in the JDBC URL.
  */
@@ -57,15 +57,15 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
     /**
      * Represents the JDBC driver class name for a given database type.
      *
-     * NOTE: It's important for usage in dataframe-gradle-plugin for force class loading.
+     * NOTE: It's important for usage in dataframe-gradle-plugin to force class loading.
      *
      * @return The JDBC driver class name as a [String].
      */
     public abstract val driverClassName: String
 
     /**
-     * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by
-     * [readAllSqlTables], and [readAllSqlTables] as a filter when querying the database
+     * The table type(s) (`TABLE_TYPE`) of ordinary tables in the SQL database, used by the
+     * [readAllSqlTables] functions as a filter when querying the database
      * for all the tables it has using [DatabaseMetaData.getTables].
      *
      * This is usually "TABLE" or "BASE TABLE", which is what [tableTypes] is set to by default,
