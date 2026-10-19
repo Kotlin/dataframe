@@ -6,7 +6,6 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonWriteDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
