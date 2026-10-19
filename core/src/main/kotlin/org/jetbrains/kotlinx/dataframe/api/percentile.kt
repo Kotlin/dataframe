@@ -983,7 +983,7 @@ public fun DataRow<*>.rowPercentile(): Nothing = error(ROW_PERCENTILE)
  * ```kotlin
  * // The first quartile of all `String` values ("name"/"firstName", "name"/"lastName", and "city")
  * // in the first row, or `null` if there are none
- * df[0].rowPercentileOfOrNull<String>(25.0)
+ * df.flatten()[0].rowPercentileOfOrNull<String>(25.0)
  * ```
  *
  * @include [PercentileDocs.RowValuesTypeParam]
@@ -1023,7 +1023,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowPercentileOfOrNull(p
  * ```kotlin
  * // The first quartile of all `String` values ("name"/"firstName", "name"/"lastName", and "city")
  * // in the first row
- * df[0].rowPercentileOf<String>(25.0)
+ * df.flatten()[0].rowPercentileOf<String>(25.0)
  * ```
  *
  * @include [PercentileDocs.RowValuesTypeParam]

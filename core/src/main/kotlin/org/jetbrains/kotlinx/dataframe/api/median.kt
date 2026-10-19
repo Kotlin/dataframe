@@ -942,7 +942,7 @@ public fun DataRow<*>.rowMedian(): Nothing = error(ROW_MEDIAN)
  * ```kotlin
  * // The median of all `String` values ("name"/"firstName", "name"/"lastName", and "city") in the first row,
  * // or `null` if there are none
- * df[0].rowMedianOfOrNull<String>()
+ * df.flatten()[0].rowMedianOfOrNull<String>()
  * ```
  *
  * @include [MedianDocs.RowValuesTypeParam]
@@ -980,7 +980,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMedianOfOrNull(): T?
  * ### Example
  * ```kotlin
  * // The median of all `String` values ("name"/"firstName", "name"/"lastName", and "city") in the first row
- * df[0].rowMedianOf<String>()
+ * df.flatten()[0].rowMedianOf<String>()
  * ```
  *
  * @include [MedianDocs.RowValuesTypeParam]
