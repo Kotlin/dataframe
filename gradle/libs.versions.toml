@@ -36,7 +36,7 @@ serialization = "1.11.0"
 poi = "5.5.1"
 mariadb = "3.5.10"
 h2db = "2.5.252"
-mssql = "13.6.0.jre11"
+mssql = "13.6.1.jre11"
 mysql = "26.7.0"
 postgresql = "42.7.14"
 sqlite = "3.53.4.0"
@@ -54,7 +54,7 @@ junit-jupiter = "5.11.3"
 junit-platform = "1.11.3" # Issue #426
 # ignoreUpdates
 konsist = "0.17.3" # Would require `:samples` to be bumped to Java 17
-kotestAsserions = "6.2.5"
+kotestAsserions = "6.2.6"
 
 jsoup = "1.23.2"
 arrow = "19.0.0"
