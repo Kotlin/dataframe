@@ -93,8 +93,11 @@ Header and signature rules (see *Structure* in the guidelines for the details):
   `df.sortWith(comparator: Comparator<DataRow>)` / `df.sortWith { row1: DataRow, row2: DataRow -> Int }`.
 - **Always write the receiver**, named after its type: `DataFrame` → `df`, `DataColumn` → `col`,
   `DataRow` → `row`, `ColumnGroup` → `colGroup`, `FrameColumn` → `frameCol`, `GroupBy` → `groupBy`,
-  `Pivot` → `pivot`. Name arguments and lambda parameters of these types with the same prefixes
-  (`otherDf: DataFrame`, `vararg dfs: DataFrame`, `rows: Iterable<DataRow>`, `vararg cols: DataColumn`).
+  `Pivot` → `pivot`. The same prefixes are used for lambda parameters (`{ row: DataRow -> Boolean }`) and
+  receivers of other kinds (`dfs: Iterable<DataFrame>`).
+- **Parameters always keep their names from the library** — check the function declaration. Users pass
+  arguments by name, and the page must match the KDoc and IDE hints: `df.concat(vararg frames: DataFrame)`,
+  not `df.concat(vararg dfs: DataFrame)`; `col.concat(vararg other: DataColumn)`, not `vararg cols`.
 - **Omit type parameters** (`<T>`, `<C>`, …) in signatures and descriptions unless they carry meaning:
   they take part in the function logic (e.g. a `reified` type parameter like in `colsOf<T>()`), or they
   connect the input and result types (e.g. `collectionColumn.concat(): List<T>` for a

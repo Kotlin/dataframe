@@ -212,9 +212,13 @@ like in the operation grammar of complex operations.
 | `GroupBy`     | `groupBy`  |
 | `Pivot`       | `pivot`    |
 
-Name arguments and lambda parameters of these types with the same prefixes:
-`otherDf: DataFrame`, `vararg dfs: DataFrame`, `rows: Iterable<DataRow>`, `vararg cols: DataColumn`,
-`{ row: DataRow -> Boolean }`.
+**Parameters always keep their names from the library** — check them in the function declaration.
+A user can pass any argument by name (`df.concat(frames = listOf(df1, df2))`), and the page must match the KDoc
+and IDE hints, so never rename them for the docs: `df.concat(vararg frames: DataFrame)`, not
+`df.concat(vararg dfs: DataFrame)`; `col.concat(vararg other: DataColumn)`, not `col.concat(vararg cols: DataColumn)`.
+
+The prefixes above are only for the names that are not part of the API: receivers, lambda parameters
+(`{ row: DataRow -> Boolean }`), and receivers of other kinds (`dfs: Iterable<DataFrame>`, `cols: Iterable<DataColumn>`).
 
 **Type parameters** (`<T>`, `<C>`, `<R>`, …) are written — in the signature and in the description — only if they
 carry meaning:
@@ -225,7 +229,7 @@ carry meaning:
   for a `DataColumn<Collection<T>>`: the result elements have the type of the collections' elements.
 
 Otherwise omit them: `Iterable<DataRow>`, not `Iterable<DataRow<T>>`;
-`df.concat(vararg dfs: DataFrame): DataFrame`, not `DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T>`
+`df.concat(vararg frames: DataFrame): DataFrame`, not `DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T>`
 (the schema type `T` is the same everywhere and says nothing new).
 
 If a receiver or an argument needs a more specific type than its name tells (a column of collections, an

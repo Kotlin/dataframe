@@ -22,13 +22,13 @@ Returns a [`DataFrame`](DataFrame.md) containing the receiver's rows followed by
 objects are not modified.
 
 ```text
-df.concat(vararg dfs: DataFrame): DataFrame
-df concat otherDf | df.concat(otherDf: DataFrame): DataFrame
-df.concat(dfs: Iterable<DataFrame>): DataFrame
+df.concat(vararg frames: DataFrame): DataFrame
+df concat frame | df.concat(frame: DataFrame): DataFrame
+df.concat(frames: Iterable<DataFrame>): DataFrame
 df.concat(rows: Iterable<DataRow>): DataFrame
 ```
 
-The other overloads keep the schema of the receiver `DataFrame`, while the overload with the single `otherDf`
+The other overloads keep the schema of the receiver `DataFrame`, while the overload with the single `frame`
 parameter combines the schemas of both inputs: when enabled, the compiler plugin gives its result
 a generated schema type that contains the columns of both dataframes.
 
@@ -53,7 +53,7 @@ When `concat` combines dataframes, it unifies their schemas:
   and its nested columns are filled according to these same rules recursively.
 
 For overloads that append [`DataFrame`](DataFrame.md) objects, an appended `DataFrame` with no rows adds no rows,
-but its columns still participate in schema unification. Calling the vararg overload without any `dfs` or passing
+but its columns still participate in schema unification. Calling the vararg overload without any `frames` or passing
 an empty iterable of `DataFrame` objects returns the receiver as the same `DataFrame` instance.
 
 For the overload that appends [`DataRow`](DataRow.md) objects,
@@ -69,9 +69,9 @@ See also:
 
 ### Parameters {id="parameters_df"}
 
-* `vararg dfs: DataFrame | dfs: Iterable<DataFrame>` — the `DataFrame`s whose rows are appended.
-  Vararg `dfs` are processed in argument order; iterable `dfs` are processed in iteration order.
-* `otherDf: DataFrame` — a single `DataFrame` appended using infix or regular call syntax.
+* `vararg frames: DataFrame | frames: Iterable<DataFrame>` — the `DataFrame`s whose rows are appended.
+  Vararg `frames` are processed in argument order; iterable `frames` are processed in iteration order.
+* `frame: DataFrame` — a single `DataFrame` appended using infix or regular call syntax.
 * `rows: Iterable<DataRow>` — the rows to append, processed in iteration order.
 
 ### Examples {id="examples_df"}
@@ -229,14 +229,14 @@ Appends the values of other columns to a [`DataColumn`](DataColumn.md), or combi
 column. What it returns depends on the values stored in the column:
 
 ```text
-col.concat(vararg cols: DataColumn): DataColumn
+col.concat(vararg other: DataColumn): DataColumn
 frameCol.concat(): DataFrame
 collectionColumn.concat(): List<T>
 
 collectionColumn: DataColumn<Collection<T>>
 ```
 
-For value columns, `concat` appends the values from `cols` in argument order and preserves the receiver's name.
+For value columns, `concat` appends the values from `other` in argument order and preserves the receiver's name.
 With one input column, its runtime type is preserved. With two or more input columns that have the same runtime type,
 the result keeps this type except for its nullability. If their types differ, the result type is inferred from the
 concatenated values. If all input columns are empty, their runtime types determine the result type.
@@ -252,7 +252,7 @@ both the column values and the elements in each collection.
 
 ### Parameters {id="parameters_column"}
 
-* `vararg cols: DataColumn` — the columns whose values are appended to the receiver in argument order.
+* `vararg other: DataColumn` — the columns whose values are appended to the receiver in argument order.
 
 ### Examples {id="examples_column"}
 
