@@ -8,10 +8,10 @@ or other [`DataFrame`](DataFrame.md) objects.
 See [how to create columns](createColumn.md)
 
 ### Properties
-* `name: String` — name of the column; should be unique within containing dataframe
-* `path: ColumnPath` — path to the column; depends on the way column was retrieved from dataframe
+* `name: String` — name of the column; should be unique within the containing dataframe
+* `path: ColumnPath` — path to the column; depends on the way the column was retrieved from the dataframe
 * `type: KType` — type of elements in the column
-* `hasNulls: Boolean` — flag indicating whether column contains `null` values
+* `hasNulls: Boolean` — flag indicating whether the column contains `null` values
 * `values: Iterable<T>` — column data
 * `size: Int` — number of elements in the column
 

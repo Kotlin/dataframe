@@ -19,7 +19,7 @@ Here are the key features:
 
 ### Drag-and-Drop Data Files
 
-You can quickly load data into `DataFrame` into a notebook by simply dragging and dropping a file 
+You can quickly load data into a `DataFrame` in a notebook by simply dragging and dropping a file 
 (.csv/.json/.xlsx and .geojson/.shp) directly into the notebook editor:
 
 <video src="ktnb_drag_n_drop.mp4" controls=""/>
@@ -80,14 +80,14 @@ like copying text from a document, but with the structure and format of your dat
 
 ### Rendering of images in the cell
 
-Table widget can render `BufferedImage`s. 
+The table widget can render `BufferedImage`s. 
 Given a column of images, right-click on the cell and click `View Image` in the context menu.
  
 ![ktnb_cell_image.png](ktnb_cell_image.png)
 
 ### Clickable URI links
 
-String values starting with `https://`, `https://`, `file:/` are treated as clickable links that open, for example, your browser or file manager.
+String values starting with `http://`, `https://`, `file:/` are treated as clickable links that open, for example, your browser or file manager.
 Click on the cell to trigger a toolbar to appear.
 
 ![ktnb_clickable_link.png](ktnb_clickable_link.png)
