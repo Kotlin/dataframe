@@ -15,63 +15,8 @@ plugins {
     idea
 }
 
-/**
- * These settings can be modified using `kodexConvention {}`.
- */
-interface KodexConventionExtension {
-
-    /**
-     * Resolved Kotlin main SourceSet to be processed by KoDEx and
-     * form the eventual jar files.
-     *
-     * By default, this contains all source directories of `kotlin.sourceSets.main`.
-     */
-    val kotlinMainSourcesDirectories: SetProperty<File>
-
-    /**
-     * Any additional (resolved) Kotlin SourceSets to be processed by KoDEx,
-     * but that will not be included in the eventual jar files.
-     *
-     * This can be useful if you want to use `@sample` or `@includeFile`.
-     *
-     * By default, this contains the `:samples` test sources.
-     *
-     * NOTE: All `api`/`implementation`/`compileOnly` project dependencies of this project are
-     * automatically added as contextual sources by KoDEx, including their output caches.
-     * These projects must also apply `dfbuild.kodex`.
-     */
-    val contextualSourcesDirectories: SetProperty<List<File>>
-
-    /**
-     * The name of the generated sources folder. "generated-sources" by default.
-     */
-    val generatedSourcesFolderName: Property<String>
-
-    /**
-     * Any additional output caches of KoDEx tasks to use, see [contextualSourcesDirectories].
-     * Empty by default.
-     */
-    val inputCacheFiles: ConfigurableFileCollection
-}
-
-val extension = project.extensions.create<KodexConventionExtension>("kodexConvention")
-
-extension.generatedSourcesFolderName.convention("generated-sources")
-extension.kotlinMainSourcesDirectories.convention(
-    // read lazily, so any modifications to the main sourceSet in build files are present
-    provider {
-        kotlin.sourceSets.main.get()
-            .kotlin
-            .sourceDirectories
-            // important! This clones the collection
-            .toSet()
-    },
-)
-extension.contextualSourcesDirectories.convention(
-    // Adding the `:samples` module manually
-    listOf(listOf(findRootDir().resolve("samples/src/test/kotlin"))),
-)
-extension.inputCacheFiles.convention(emptyList<Any>())
+/** The name of the folder the KoDEx-processed sources are written to. */
+val generatedSourcesFolderName = "generated-sources"
 
 /**
  * If the `skipKodex` property is present, the normal, unprocessed, jar files are published.
@@ -101,7 +46,7 @@ kodex {
         taskName = processKDocsMainName
         newSourceSetName = kodexSourceSetName
 
-        target = extension.generatedSourcesFolderName.map { file(it) }
+        target = file(generatedSourcesFolderName)
 
         // false, so `runKtlintFormatOverMainKodexSourceSet` can format the output
         outputReadOnly = false
@@ -131,8 +76,11 @@ kodex {
                     .toList()
             },
         )
+        // Additional sources processed by KoDEx, but not included in the jar files,
+        // useful for `@sample` or `@includeFile`. Adding the `:samples` module manually.
+        contextualSourceSet(":samples", "test")
 
-        // only built when needed, like when publishing
+        // Yes, we would like KoDEx to register Jar-creation tasks
         generateJar = true
         generateSourcesJar = true
         // We need to be able to skip the jar and sources jar generation with skipKodex
@@ -140,16 +88,18 @@ kodex {
         // Ordinarily, this replaces the jars in the `java` component with the KoDEx jar and sources jar.
         // We will do this manually to keep the logic in the DataFrame project. It's a delicate API.
         replaceArtifactsInJavaComponent = false
-
-        task {
-            sources = extension.kotlinMainSourcesDirectories
-            contextualSources.addAll(extension.contextualSourcesDirectories)
-            inputCacheFiles.from(extension.inputCacheFiles)
-        }
     }
 }
 
+// Alias for processKDocsMain
+tasks.register("kodex") {
+    group = "KoDEx"
+    dependsOn(processKDocsMainName)
+}
+
 /*
+ * Configure KoDEx + maven publisher
+ *
  * When `libs.publisher` is applied too (in any order), and the `skipKodex` property is not present,
  * this creates the `kodexJava` component: a copy of the `java` component, but with the KoDEx jar and sources jar.
  * The publication of the module must select it explicitly with:
@@ -193,6 +143,8 @@ pluginManager.withPlugin(libs.plugins.publisher.get().pluginId) {
 }
 
 /*
+ * Configure KoDEx + Binary Compatibility Validator
+ *
  * When `libs.plugins.binary.compatibility.validator` is applied too (in any order),
  * the `apiBuild` task (used by `apiCheck` and `apiDump`)
  * reads the public API from the KoDEx-processed jar instead of the `main` classes.
@@ -203,39 +155,39 @@ pluginManager.withPlugin(libs.plugins.binary.compatibility.validator.get().plugi
     useKodexJarForApiValidation(jarTaskName = kodexJarTaskName)
 }
 
-tasks.named(processKDocsMainName) {
-    finalizedBy(ktlintFormatKodexSourceSet)
-}
+/*
+ * Configure KoDEx + KtLint
+ *
+ * Make sure KtLint runs on the processed sources, only when they are regenerated.
+ */
+pluginManager.withPlugin(libs.plugins.ktlint.gradle.get().pluginId) {
+    tasks.named(processKDocsMainName) {
+        finalizedBy(ktlintFormatKodexSourceSet)
+    }
+    // The processed sources are only compiled and packaged after they have been formatted
+    tasks.named {
+        it in listOf(
+            "compile${kodexSourceSetName.uppercaseFirstChar()}Kotlin",
+            "compile${kodexSourceSetName.uppercaseFirstChar()}Java",
+            "kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar",
+        )
+    }.configureEach {
+        dependsOn(ktlintFormatKodexSourceSet)
+    }
 
-// Alias for processKDocsMain
-tasks.register("kodex") {
-    group = "KoDEx"
-    dependsOn(processKDocsMainName)
-}
-
-// The processed sources are only compiled and packaged after they have been formatted
-tasks.named {
-    it in listOf(
-        "compile${kodexSourceSetName.uppercaseFirstChar()}Kotlin",
-        "compile${kodexSourceSetName.uppercaseFirstChar()}Java",
-        "kodex${kodexSourceSetName.uppercaseFirstChar()}SourcesJar",
-    )
-}.configureEach {
-    dependsOn(ktlintFormatKodexSourceSet)
-}
-
-// Skips `mainKodex` KtLint check on "normal" KtLint runs.
-// The formatting runs automatically after `processKDocsMain`
-tasks.named {
-    it == "ktlint${kodexSourceSetName.uppercaseFirstChar()}SourceSetCheck" ||
-        it == "runKtlintCheckOver${kodexSourceSetName.uppercaseFirstChar()}SourceSet"
-}.configureEach {
-    onlyIf { false }
+    // Skips `mainKodex` KtLint check on "normal" KtLint runs.
+    // The formatting runs automatically after `processKDocsMain`
+    tasks.named {
+        it == "ktlint${kodexSourceSetName.uppercaseFirstChar()}SourceSetCheck" ||
+            it == "runKtlintCheckOver${kodexSourceSetName.uppercaseFirstChar()}SourceSet"
+    }.configureEach {
+        onlyIf { false }
+    }
 }
 
 // Exclude the generated/processed sources from the IDE
 idea {
     module {
-        excludeDirs.add(file(extension.generatedSourcesFolderName.get()))
+        excludeDirs.add(file(generatedSourcesFolderName))
     }
 }

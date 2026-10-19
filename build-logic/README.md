@@ -33,8 +33,8 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
       otherwise publishing fails.
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
     - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
-    - The plugin can be configured via the `kodexConvention` extension for your needs.
-    - Modules the project depends on are included in the context of KoDEx.
+    - Modules the project depends on are included in the context of KoDEx,
+      as well as the `:samples` test sources (for `@sample`/`@includeFile`).
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
