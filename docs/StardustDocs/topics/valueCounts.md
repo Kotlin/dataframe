@@ -78,6 +78,9 @@ df.valueCounts("name", dropNA = false)
 
 <!---END-->
 
+If no observations are counted, the result has zero rows and retains the observed-value columns and count column.
+This includes empty input and rows excluded by `dropNA`.
+
 This operation can also be applied to a [`DataColumn`](DataColumn.md):
 
 <!---FUN valueCountsColumn-->

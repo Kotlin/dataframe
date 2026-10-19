@@ -49,6 +49,7 @@ private typealias ValueCountsParams = Nothing
  * - the distinct combinations of these values,
  * - a new [Int] column with the number of occurrences of each combination.
  * This column is called `"count"` by default unless it is overridden by [resultColumn\].
+ * If no rows are counted, the result still contains the selected top-level columns and the count column.
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
  * and a row is not counted at all if any of its selected values is {@include [NALink]}.
@@ -99,6 +100,7 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  * - the column with the distinct values of the original [DataColumn]
  * - a new [Int] column with the number of occurrences of each value.
  * This column is called `"count"` by default unless it is overridden by [resultColumn].
+ * If no values are counted, the result still contains the observed-value column and the count column.
  *
  * By default, the result is sorted by count in descending order (the most frequent value first),
  * and {@include [NALink]} values (`null`s and `NaN`s) are not counted.
@@ -148,7 +150,11 @@ public fun <T> DataColumn<T>.valueCounts(
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
-    val values = DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val values = if (grouped.isEmpty()) {
+        get(emptyList<Int>())
+    } else {
+        DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    }
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
     val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
