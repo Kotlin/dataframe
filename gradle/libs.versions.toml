@@ -87,7 +87,7 @@ jts = "1.20.0"
 kandy = "0.8.6"
 kotlin-dl = "0.5.2"
 
-exposed = "1.5.1"
+exposed = "1.6.0"
 hibernate = "7.4.13.Final"
 
 # check the versions down in the [libraries] section too!
