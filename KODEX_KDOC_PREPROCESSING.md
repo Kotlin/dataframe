@@ -327,8 +327,9 @@ only the code between these markers will be included in the KDoc.
 
 Gradle resolves `@sample` references into the `:samples` module, which is added as a contextual source, but the
 IntelliJ KoDEx plugin does not: the IDE hover then shows a `SampleDocProcessor` error instead of the KDoc.
-Until it does, write examples for `:core` KDocs as literal ` ```kotlin ` blocks and keep the asserting copy in
-`:samples`.
+This only affects the IDE preview: still write KDoc examples as `@sample` references to passing tests in
+`:samples`, not as literal ` ```kotlin ` blocks
+(see [Examples section](KDOC_GUIDELINES.md#examples-section)).
 
 ### `@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML
 

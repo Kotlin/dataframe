@@ -437,6 +437,65 @@ Start the section with
 ### Examples
 ```
 
+Do not write examples as literal ` ```kotlin ` blocks in a KDoc. Write each example as a passing test in the
+[`:samples`](samples) module and include it with the KoDEx
+[`@sample`](KODEX_KDOC_PREPROCESSING.md#sample-and-samplenocomments-including-code-samples) notation.
+KoDEx copies the code into a ` ```kt ` block of the processed KDoc, so the example compiles and is checked by
+the test run, and it can't go stale.
+
+Write the sample the same way as a sample for the documentation website
+(see [Samples information](DOCUMENTATION_GUIDELINES.md#samples-information)
+and [`samples/AGENTS.md`](samples/AGENTS.md)):
+
+* Put it in the sample class of the operation's website page
+  (`samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/<Operation>Samples.kt`), not in `:core`.
+* Reusing the website samples in KDocs is preferred, but not required: if they don't fit a KDoc,
+  write a separate sample for it in the same class.
+* Mark the shown code with `// SampleStart` and `// SampleEnd`. Put assertions (`shouldBe`, …) and
+  `.saveDfHtmlSample()` after `// SampleEnd`, so the KDoc shows only the call.
+* The test must not be ignored and must pass: `./gradlew :samples:test`.
+* Reference the sample by its fully qualified name.
+* Choose the API of the example by the overload:
+  * an overload with the Columns Selection DSL — the Extension Properties API (the `_properties` sample);
+  * an overload with `String` column names — the String API (the `_strings` sample);
+  * an overload with a row expression — both APIs. The website shows them in two tabs
+    (`_properties` and `_strings` samples); for a KDoc, you can instead write a single sample
+    (a name without the suffix) that contains both versions one after another.
+
+```kotlin
+/**
+ * ...
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataColumns]
+ *
+ * @param ...
+ */
+public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T>
+```
+
+with the sample in [`ConcatSamples.kt`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/ConcatSamples.kt):
+
+```kotlin
+@Test
+fun concatDataColumns() {
+    // SampleStart
+    peopleDf1.age.concat(peopleDf2.age)
+        // SampleEnd
+        .also { it shouldBe columnOf<Number>(20, 15, 25.0).named("age") }
+        .toDataFrame()
+        .saveDfHtmlSample()
+}
+```
+
+Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that shouldn't be copied.
+Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).
+
+The IntelliJ KoDEx plugin doesn't resolve references into `:samples` yet, so the IDE hover shows a
+`SampleDocProcessor` error instead of the KDoc. This only affects the preview in the IDE; the Gradle build
+resolves them.
+
 #### Data tables in examples
 
 By default, do not put data tables in a KDoc. KDoc renders Markdown tables without borders, so show
