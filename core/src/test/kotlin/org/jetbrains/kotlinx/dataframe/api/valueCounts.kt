@@ -266,7 +266,7 @@ class ValueCountsTests {
     }
 
     @Test
-    fun `value counts of an empty DataFrame retains all observed columns`() {
+    fun `value counts of an empty DataFrame retains all columns`() {
         val result = df.take(0).valueCounts()
 
         result.columnNames() shouldBe listOf("name", "city", "age", "count")
@@ -283,6 +283,7 @@ class ValueCountsTests {
         result.columnNames() shouldBe listOf("city", "count")
         result.nrow shouldBe 0
         result["city"].type() shouldBe typeOf<String>()
+        result["count"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -292,6 +293,8 @@ class ValueCountsTests {
 
         result.columnNames() shouldBe listOf("city", "count")
         result.nrow shouldBe 0
+        result["city"].type() shouldBe typeOf<String?>() // TODO #2034
+        result["count"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -302,6 +305,9 @@ class ValueCountsTests {
         result.columnNames() shouldBe listOf("details", "count")
         result["details"].asColumnGroup().columnNames() shouldBe listOf("name", "city")
         result.nrow shouldBe 0
+        result["details"].asColumnGroup()["name"].type() shouldBe typeOf<String?>() // TODO #2034
+        result["details"].asColumnGroup()["city"].type() shouldBe typeOf<String?>() // TODO #2034
+        result["count"].type() shouldBe typeOf<Int>()
     }
 
     // endregion
