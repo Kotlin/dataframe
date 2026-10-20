@@ -135,9 +135,8 @@ Marley, Bob  20   73.5
 Sometimes it is convenient to extract reusable code from Kotlin Notebook into the Kotlin JVM library.
 Schema interfaces should also be extracted if this code uses [Custom Data Schemas](#custom-data-schemas).
 
-In order to support them in Kotlin, you should register them in
-library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md) with `useSchema`
-function:
+In order to enable support for them in Kotlin, you should register them in the
+library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md) with the `useSchema` function:
 
 ```kotlin
 @DataSchema
