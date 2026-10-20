@@ -101,7 +101,7 @@ val ColumnsContainer<DataFrameType>.weight: DataColumn<Double> get() = this["wei
 val DataRow<DataFrameType>.weight: Double get() = this["weight"] as Double
 ```
 
-Despite `df` has additional column `weight`, previously defined functions for `DataFrame<Person>` will work for it:
+Even though `df` has an additional column `weight`, previously defined functions for `DataFrame<Person>` will work for it:
 
 <!---FUN splitNameWorks-->
 
@@ -135,7 +135,7 @@ Marley, Bob  20   73.5
 Sometimes it is convenient to extract reusable code from Kotlin Notebook into the Kotlin JVM library.
 Schema interfaces should also be extracted if this code uses [Custom Data Schemas](#custom-data-schemas).
 
-In order to enable support them in Kotlin, you should register them in
+In order to support them in Kotlin, you should register them in
 library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md) with `useSchema`
 function:
 

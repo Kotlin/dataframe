@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Group columns into [`ColumnsGroups`](DataColumn.md#columngroup). 
+Group columns into [`ColumnGroups`](DataColumn.md#columngroup). 
 
 ```text
 group { columns }
