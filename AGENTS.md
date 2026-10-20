@@ -73,8 +73,10 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
 `@ExportAsHtml`). See `KODEX_KDOC_PREPROCESSING.md` and `KDOC_GUIDELINES.md`.
 
 - **KoDEx** (an external KDoc-preprocessing tool, applied via the `kodex` convention plugin) expands the templated
-  KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; `changeJarTask` makes `sources.jar` use
-  those.
+  KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; the `mainKodex` compilation builds those
+  processed sources into KoDEx jars (so `@ExcludeFromSources` is stripped from both sources and compiled classes).
+  Publishing selects the `kodexJava` component via `composeOf { from(kodexAwareComponentToPublish()) }`, and
+  `apiBuild` (`apiDump`/`apiCheck`) reads the KoDEx jar to validate the published API.
 - **Don't hand-edit generated sources, and don't grep/crawl the tree.** Every module built with KoDEx (`core`,
   `dataframe-csv`, `dataframe-json`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked
   `generated-sources/` copy,
