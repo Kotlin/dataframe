@@ -39,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topmostChildren
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
@@ -490,6 +491,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
  */
 internal fun KType.toColumnKind(): ColumnKind =
     when {
+        this.isNothing -> ColumnKind.Value
         this.isSubtypeOf(typeOf<AnyFrame>()) -> ColumnKind.Frame
         this.isSubtypeOf(typeOf<AnyRow?>()) -> ColumnKind.Group
         else -> ColumnKind.Value
