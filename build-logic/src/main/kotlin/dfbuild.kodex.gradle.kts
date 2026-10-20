@@ -149,10 +149,11 @@ pluginManager.withPlugin(libs.plugins.publisher.get().pluginId) {
  * the `apiBuild` task (used by `apiCheck` and `apiDump`)
  * reads the public API from the KoDEx-processed jar instead of the `main` classes.
  * This way, the binary compatibility is validated against the jar we actually publish.
- * This cannot be skipped with `skipKodex`.
+ *
+ * This will also be skipped with `skipKodex`, since `apiCheck` would fail if run without KoDEx.
  */
 pluginManager.withPlugin(libs.plugins.binary.compatibility.validator.get().pluginId) {
-    useKodexJarForApiValidation(jarTaskName = kodexJarTaskName)
+    useKodexJarForApiValidation(kodexJarTaskName = kodexJarTaskName, skipApiValidation = skipKodex)
 }
 
 /*

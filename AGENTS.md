@@ -21,7 +21,7 @@ Gradle (Kotlin DSL), multi-module. Use the wrapper (`./gradlew`, or `gradlew.bat
 - `./gradlew <module>:test --tests "org.jetbrains.kotlinx.dataframe.SomeTest"` — run a single test class/method.
 - Add `-Pkotlin.dataframe.debug=true` when validating changes. It enables extra, heavier correctness checks that
   are off in production. PR/CI builds run with this flag (`build -Pkotlin.dataframe.debug=true`), so match it locally.
-- `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips KDoc
+- `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips `apiCheck` and KDoc
   preprocessing (see below); the result has "broken" KDocs, so it is for local dev only.
 
 Module names for `<module>:` come from `settings.gradle.kts` (e.g. `core`, `dataframe-csv`, `dataframe-jdbc`,
