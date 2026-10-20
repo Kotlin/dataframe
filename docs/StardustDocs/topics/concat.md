@@ -28,11 +28,7 @@ df.concat(frames: Iterable<DataFrame>): DataFrame
 df.concat(rows: Iterable<DataRow>): DataFrame
 ```
 
-The other overloads keep the schema of the receiver `DataFrame`, while the overload with the single `frame`
-parameter combines the schemas of both inputs: when enabled, the compiler plugin gives its result
-a generated schema type that contains the columns of both dataframes.
-
-This overload can be called using either infix or regular call syntax.
+`concat` overload with a single `DataFrame` argument can be called using either infix or regular call syntax.
 Infix notation reads naturally when concatenation is the complete expression, such as
 `val fullDf = df1 concat df2` or `return df1 concat df2`.
 When chaining another operation, prefer regular call syntax, such as `df1.concat(df2).head()`, instead of

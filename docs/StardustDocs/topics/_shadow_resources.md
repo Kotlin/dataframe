@@ -127,6 +127,7 @@
 <resource src="filter.html"></resource>
 <resource src="filterColumn.html"></resource>
 <resource src="filterDf.html"></resource>
+<resource src="filterWithRowLambda.html"></resource>
 <resource src="firstOnColumnDf.html"></resource>
 <resource src="formatHeader.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>

@@ -21,7 +21,7 @@ Returns a new [`DataFrame`](DataFrame.md) with the rows that satisfy the conditi
 If no row satisfies it, the result is an empty `DataFrame` with the same columns.
 
 ```text
-df.filter { row: DataRow -> Boolean }
+df.filter { DataRow.(DataRow) -> Boolean }
 ```
 
 The row condition receives each row both as `this` and as `it`, so the values of the row can be accessed directly
@@ -39,7 +39,7 @@ See also:
 
 ### Parameters
 
-* `predicate: (DataRow) -> Boolean` — a [row condition](DataRow.md#row-conditions)
+* `predicate: DataRow.(DataRow) -> Boolean` — a [row condition](DataRow.md#row-conditions)
   that returns `true` if the row should be kept in the result.
 
 ### Examples
@@ -76,6 +76,22 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 
 </tab></tabs>
 <inline-frame src="./resources/filter.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+The row can also be taken as an explicit lambda parameter instead of `it`.
+
+Besides the row values, the row condition can use the [`DataRow` API](DataRow.md#row-functions) —
+for example, the index of the row and the previous row.
+Keep the people starting from the third row whose previous person is happy:
+
+<!---FUN filterWithRowLambda-->
+
+```kotlin
+df.filter { row -> row.index() >= 2 && row.prev()!!.isHappy }
+```
+
+<inline-frame src="./resources/filterWithRowLambda.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 

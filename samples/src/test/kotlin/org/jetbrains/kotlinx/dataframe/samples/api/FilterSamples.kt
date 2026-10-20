@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -41,6 +42,14 @@ class FilterSamples : DataFrameSampleHelper("filter", "api") {
         // SampleStart
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
         // SampleEnd
+    }
+
+    @Test
+    fun filterWithRowLambda() {
+        // SampleStart
+        df.filter { row -> row.index() >= 2 && row.prev()!!.isHappy }
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 
     @Test
