@@ -19,7 +19,7 @@ Imploded columns will change their types:
 * `T` to `List<T>`
 * [`DataRow`](DataRow.md) to [`DataFrame`](DataFrame.md)
 
-Imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameColumn`](DataColumn.md#framecolumn)
+Imploded [`ColumnGroup`s](DataColumn.md#columngroup) will be converted into [`FrameColumn`s](DataColumn.md#framecolumn)
 
 <!---FUN implode-->
 

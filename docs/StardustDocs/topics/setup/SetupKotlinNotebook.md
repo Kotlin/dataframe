@@ -123,7 +123,7 @@ which walks you through the basics of working with Kotlin DataFrame inside a not
 [detailed guides and real-world examples](Guides-And-Examples.md),
 showcasing how Kotlin DataFrame can help with a variety of data tasks.
 
-* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that
+* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md) that
 make exploring and understanding your data easier and more effective.
 
 ## Memory Errors?

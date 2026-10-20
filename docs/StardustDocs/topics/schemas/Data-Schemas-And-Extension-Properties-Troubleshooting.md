@@ -58,7 +58,7 @@ make sure your data schema is compatible with the dataframe.
 * Use [`.cast<Schema>()`](cast.md) with `verify=true` for verifying the `Schema` compatibility.
 * Use [special methods](DataSchemaGenerationMethods.md) for generating a data schema code 
 instead of defining data schema manually. However, you may still need to edit a generated schema —
-adjust a type nullability or the whole type, since sometimes type can be inferred incorrect 
+adjust a type nullability or the whole type, since sometimes a type can be inferred incorrectly 
 if the data sample used for generation is not representative or if there's a bug in this `DataFrame`.
 
 ### Bug in the DataFrame reader

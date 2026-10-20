@@ -1,6 +1,6 @@
 # Static Interpretation of DataFrame API
 
-Plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
+The plugin evaluates dataframe operations, given compile-time known arguments such as constant String, resolved types, property access calls.
 It updates the return type of the function call to provide properties that match column names and types.
 The goal is to reflect the result of operations you apply to dataframe in types and have convenient typed API
 
@@ -26,7 +26,7 @@ For expressions with several operations, you can see how DataFrame changes at ea
 
 ## Visibility of the generated code
 
-Generated code itself is very similar to @DataSchema declarations in nature.
+The generated code itself is very similar to @DataSchema declarations in nature.
 Take this expression as an example:
 
 ```kotlin
@@ -69,11 +69,11 @@ But you cannot refer to these classes from your code, have them appear in the ex
 
 ## Scope of compiler plugin
 
-Compiler plugin aims to cover all functions where the result of the operation depends only on input schema and arguments that can be resolved at compile time.
+The compiler plugin aims to cover all functions where the result of the operation depends only on input schema and arguments that can be resolved at compile time.
 In the library, such functions are annotated with `@Refine` or `@Interpretable`.
 
 There are functions that are not supported:
 - `pivot`, `parse`, `read`, `ColumnSelectionDsl.filter`, etc. — operations where the resulting schema depends on data, so it's out of the scope 
-- `gather`, `split`, `implode`, some CS DSL functions — they will be supported in the future release
+- `gather`, `split`, `implode`, some CS DSL functions — they will be supported in a future release
 
 In Gradle projects it means that sometimes you'd need to provide [data schema](dataSchema.md) or fall back to String API.

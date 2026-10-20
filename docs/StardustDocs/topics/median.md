@@ -19,7 +19,7 @@ When the number of values is even, the median is the average of the two middle v
 The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
-When the number of values is even, the median is the low of the two middle values.
+When the number of values is even, the median is the lower of the two middle values.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
