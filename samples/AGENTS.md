@@ -9,6 +9,11 @@ details are here.
 Documentation snippets here are runnable tests: running them produces output that Korro injects into the WriterSide
 docs under `docs/StardustDocs/topics/`.
 
+It also holds the **KDoc examples**: public KDocs include them with the KoDEx `@sample` notation (KoDEx adds
+`samples/src/test/kotlin` as a contextual source), so the code a KDoc shows is a passing test here. Rename or
+delete a sample, and the `@sample` references to it break — search `src/main/kotlin` for the function name first.
+See the "Examples section" in `KDOC_GUIDELINES.md`.
+
 **New documentation samples belong here**, not in `:core`. (Sample migration into this module is in progress —
 issue #898; `:core` still has a legacy `samples` source set + `samplesTest`/`korro` tasks that will be removed.)
 
