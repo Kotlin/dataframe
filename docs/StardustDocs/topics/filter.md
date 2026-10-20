@@ -71,7 +71,7 @@ df.filter { age > 18 && name.firstName.startsWith("A") }
 <tab title="Strings">
 
 ```kotlin
-df.filter { getValue<Int>("age") > 18 && getColumnGroup("name").getValue<String>("firstName").startsWith("A") }
+df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>

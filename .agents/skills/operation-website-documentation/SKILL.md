@@ -18,7 +18,12 @@ around it. If the two ever disagree, the guidelines win.
   - topics — `docs/StardustDocs/topics/**/*.md`
   - sample tests — `samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/**`
   - plus the two registration files: `docs/StardustDocs/d.tree` (site map) and
-    `samples/build.gradle.kts` (Korro config).
+    `samples/build.gradle.kts` (Korro config);
+  - KDoc → website links — `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt`:
+    only the URL entries of the pages and sections you added, renamed, moved, or split (step 6);
+  - old `:core` samples — `core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt`:
+    **only deleting** the sample functions of the page you migrated, once nothing else references
+    them (step 7). Never add or change samples there.
 - **Everything else is generated** — inserted code blocks between `<!---FUN x-->` / `<!---END-->`,
   `docs/StardustDocs/resources/**/*.html`, `docs/StardustDocs/images/*.svg`,
   `docs/StardustDocs/topics/_shadow_resources.md`, `generated-sources/**`. Never hand-write or

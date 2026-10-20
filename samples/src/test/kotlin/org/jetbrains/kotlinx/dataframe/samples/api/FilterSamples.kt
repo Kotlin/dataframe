@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.format
-import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
@@ -40,7 +39,7 @@ class FilterSamples : DataFrameSampleHelper("filter", "api") {
     @Test
     fun filter_strings() {
         // SampleStart
-        df.filter { getValue<Int>("age") > 18 && getColumnGroup("name").getValue<String>("firstName").startsWith("A") }
+        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
         // SampleEnd
     }
 
