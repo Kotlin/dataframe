@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.NALink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.normalizeValueCountsImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -38,6 +39,27 @@ import kotlin.reflect.typeOf
 private typealias ValueCountsParams = Nothing
 
 /**
+ * With [normalize\] set to `true`, the count column contains [Double] proportions instead of [Int] counts.
+ * Each count is divided by the sum of the counts in the result, so excluded {@include [NALink]} values
+ * do not contribute to the denominator. With `false`, the result contains absolute [Int] counts.
+ *
+ * Empty input, or input with no counted observations, produces no rows. The count column still has the
+ * appropriate declared type: non-nullable [Double] when normalizing, or [Int] otherwise.
+ * Sorting, missing-value handling, and result-column naming follow the existing `valueCounts` operation.
+ * The default name remains `"count"` even when it holds proportions.
+ *
+ * The result has an unspecified schema because the count column's type depends on [normalize\].
+ * Use name-based column access; this overload does not generate compiler-plugin accessors.
+ *
+ * For more information: {@include [DocumentationUrls.ValueCounts]}
+ *
+ * @include [ValueCountsParams]
+ * @param [normalize\] Whether to return proportions. This argument is required to keep existing calls unchanged.
+ */
+@ExcludeFromSources
+private typealias NormalizedValueCountsDocs = Nothing
+
+/**
  * Returns a [DataFrame] containing the counts of unique rows (or combinations of selected values) in this [DataFrame].
  *
  * Rows are compared by the values in the selected [columns\]. If no columns are selected, values from
@@ -49,6 +71,7 @@ private typealias ValueCountsParams = Nothing
  * - the distinct combinations of these values,
  * - a new [Int] column with the number of occurrences of each combination.
  * This column is called `"count"` by default unless it is overridden by [resultColumn\].
+ * If no rows are counted, the result still contains the selected top-level columns and the count column.
  *
  * By default, the result is sorted by count in descending order (the most frequent combination first),
  * and a row is not counted at all if any of its selected values is {@include [NALink]}.
@@ -99,6 +122,7 @@ internal val defaultCountColumnName: String = ValueCount::count.name
  * - the column with the distinct values of the original [DataColumn]
  * - a new [Int] column with the number of occurrences of each value.
  * This column is called `"count"` by default unless it is overridden by [resultColumn].
+ * If no values are counted, the result still contains the observed-value column and the count column.
  *
  * By default, the result is sorted by count in descending order (the most frequent value first),
  * and {@include [NALink]} values (`null`s and `NaN`s) are not counted.
@@ -148,10 +172,31 @@ public fun <T> DataColumn<T>.valueCounts(
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
-    val values = DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val values = if (grouped.isEmpty()) {
+        get(emptyList<Int>())
+    } else {
+        DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    }
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
     val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
+}
+
+/**
+ * Returns the absolute or relative frequencies of unique values in this [DataColumn].
+ *
+ * @include [NormalizedValueCountsDocs]
+ * @return A [DataFrame] containing distinct values and their counts or proportions.
+ */
+public fun <T> DataColumn<T>.valueCounts(
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName,
+    normalize: Boolean,
+): DataFrame<*> {
+    val counts = valueCounts(sort, ascending, dropNA, resultColumn)
+    return if (normalize) counts.normalizeValueCountsImpl() else counts
 }
 
 // endregion
@@ -202,6 +247,29 @@ public fun <T> DataFrame<T>.valueCounts(
 }
 
 /**
+ * Returns the absolute or relative frequencies of distinct rows or selected value combinations in this [DataFrame].
+ *
+ * A row is excluded when [dropNA] is `true` and any selected value is {@include [NALink]}.
+ * Missing values in unselected columns do not affect the denominator.
+ *
+ * {@include [SelectingColumns.ColumnsSelectionDsl]}
+ * @include [NormalizedValueCountsDocs]
+ * @param [columns] The columns that determine uniqueness; `null` selects all columns.
+ * @return A [DataFrame] containing distinct value combinations and their counts or proportions.
+ */
+public fun <T> DataFrame<T>.valueCounts(
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName,
+    normalize: Boolean,
+    columns: ColumnsSelector<T, *>? = null,
+): DataFrame<*> {
+    val counts = valueCounts(sort, ascending, dropNA, resultColumn, columns)
+    return if (normalize) counts.normalizeValueCountsImpl() else counts
+}
+
+/**
  * {@include [CommonValueCountsDocs]}
  * {@include [SelectingColumns.ColumnNamesApi]}
  *
@@ -227,6 +295,26 @@ public fun <T> DataFrame<T>.valueCounts(
     dropNA: Boolean = true,
     resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
+
+/**
+ * Returns the absolute or relative frequencies of distinct combinations of the named [columns] in this [DataFrame].
+ *
+ * A row is excluded when [dropNA] is `true` and any selected value is {@include [NALink]}.
+ * Missing values in unselected columns do not affect the denominator.
+ *
+ * {@include [SelectingColumns.ColumnNamesApi]}
+ * @include [NormalizedValueCountsDocs]
+ * @param [columns] The names of the columns that determine uniqueness; no names selects all columns.
+ * @return A [DataFrame] containing distinct value combinations and their counts or proportions.
+ */
+public fun <T> DataFrame<T>.valueCounts(
+    vararg columns: String,
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName,
+    normalize: Boolean,
+): DataFrame<*> = valueCounts(sort, ascending, dropNA, resultColumn, normalize) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

@@ -265,5 +265,44 @@ class ValueCountsTests {
         df.drop(df.nrow).valueCounts().count() shouldBe 0
     }
 
+    @Test
+    fun `value counts of an empty DataFrame retains all observed columns`() {
+        val result = df.take(0).valueCounts()
+
+        result.columnNames() shouldBe listOf("name", "city", "age", "count")
+        result.nrow shouldBe 0
+        result["name"].type() shouldBe typeOf<String>()
+        result["age"].type() shouldBe typeOf<Int>()
+        result["count"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `value counts of an empty DataFrame retains selected columns`() {
+        val result = df.take(0).valueCounts("city")
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+        result["city"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `value counts retains selected columns when every row is dropped`() {
+        val input = dataFrameOf("city" to columnOf<String?>(null, null))
+        val result = input.valueCounts("city")
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+    }
+
+    @Test
+    fun `value counts of an empty column group retains its observed columns`() {
+        val input = df.group("name", "city").into("details").take(0)
+        val result = input["details"].valueCounts()
+
+        result.columnNames() shouldBe listOf("details", "count")
+        result["details"].asColumnGroup().columnNames() shouldBe listOf("name", "city")
+        result.nrow shouldBe 0
+    }
+
     // endregion
 }

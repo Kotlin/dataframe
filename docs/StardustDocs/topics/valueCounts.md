@@ -78,6 +78,9 @@ df.valueCounts("name", dropNA = false)
 
 <!---END-->
 
+If no observations are counted, the result has zero rows and retains the observed-value columns and count column.
+This includes empty input and rows excluded by `dropNA`.
+
 This operation can also be applied to a [`DataColumn`](DataColumn.md):
 
 <!---FUN valueCountsColumn-->
@@ -89,3 +92,35 @@ df.age.valueCounts()
 <inline-frame src="./resources/valueCountsColumn.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
+
+## Normalized counts
+
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.NormalizedValueCountsSamples-->
+
+Pass `normalize = true` to return relative frequencies: each count is divided by the sum of the counts that remain
+after applying `dropNA`. The generated count column has type `Double` and keeps the default name `count`.
+You can change its name with `resultColumn`; existing name-collision suffixes still apply.
+
+For the observations `a, a, null, b`, the default excludes `null`, so the proportions are `2/3` and `1/3`.
+
+<!---FUN valueCountsProportions-->
+<!---END-->
+
+With `dropNA = false`, missing observations contribute to the denominator. The same input has proportions
+`0.5`, `0.25`, and `0.25`, including a row for `null`:
+
+<!---FUN valueCountsProportionsIncludingNA-->
+<!---END-->
+
+For a dataframe, only the selected columns determine which rows are missing. Missing cells in unselected columns
+do not affect normalization. Empty input, or input with no counted observations, returns no rows and retains a
+non-nullable `Double` count column.
+
+To normalize independently within each group, apply the operation inside `updateGroups`:
+
+<!---FUN valueCountsProportionsPerGroup-->
+<!---END-->
+
+The `normalize` overloads return `DataFrame<*>`, since the output count type depends on the flag. Use name-based
+access such as `proportions["count"]`; generated compiler-plugin accessors are not available for these overloads.
+Passing `normalize = false` keeps absolute `Int` counts. Calls that omit `normalize` keep their existing typed API.
