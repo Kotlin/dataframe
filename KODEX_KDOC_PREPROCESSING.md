@@ -326,7 +326,8 @@ only the code between these markers will be included in the KDoc.
 `@sampleNoComments` is the same as `@sample`, but it will remove all KDocs from the code before pasting it here.
 
 Gradle resolves `@sample` references into the `:samples` module, which is added as a contextual source, but the
-IntelliJ KoDEx plugin does not: the IDE hover then shows a `SampleDocProcessor` error instead of the KDoc.
+IntelliJ KoDEx plugin does not: the IDE hover then shows a `SampleDocProcessor` error
+where the sample would be (the rest of the KDoc is rendered fine).
 This only affects the IDE preview: still write KDoc examples as `@sample` references to passing tests in
 `:samples`, not as literal ` ```kotlin ` blocks
 (see [Examples section](KDOC_GUIDELINES.md#examples-section)).

@@ -454,7 +454,10 @@ and [`samples/AGENTS.md`](samples/AGENTS.md)):
 * Mark the shown code with `// SampleStart` and `// SampleEnd`. Put assertions (`shouldBe`, …) and
   `.saveDfHtmlSample()` after `// SampleEnd`, so the KDoc shows only the call.
 * The test must not be ignored and must pass: `./gradlew :samples:test`.
-* Reference the sample by its fully qualified name.
+* Reference the sample by its fully qualified name, like
+  `@sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataColumns]`.
+  A short name with an import doesn't work: `:samples` depends on `:core` and the other modules, not the other way
+  around, so a sample can't be imported from inside them.
 * Choose the API of the example by the overload:
   * an overload with the Columns Selection DSL — the Extension Properties API (the `_properties` sample);
   * an overload with `String` column names — the String API (the `_strings` sample);
@@ -493,8 +496,8 @@ Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that s
 Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).
 
 The IntelliJ KoDEx plugin doesn't resolve references into `:samples` yet, so the IDE hover shows a
-`SampleDocProcessor` error instead of the KDoc. This only affects the preview in the IDE; the Gradle build
-resolves them.
+`SampleDocProcessor` error where the sample would be; the rest of the KDoc is rendered fine.
+This only affects the preview in the IDE; the Gradle build resolves them.
 
 #### Data tables in examples
 
