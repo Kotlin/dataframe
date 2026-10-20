@@ -1,3 +1,5 @@
+import dfbuild.kodex.kodexAwareComponentToPublish
+
 plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
@@ -58,6 +60,8 @@ kotlinPublications {
         artifactId = project.name
         description = "Kotlin DataFrame: JDBC support"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }
 
