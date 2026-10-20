@@ -150,8 +150,8 @@ public fun <T> DataColumn<T>.valueCounts(
     val nulls = if (dropNA) false else hasNulls()
     val values =
         if (grouped.isEmpty() && !isValueColumn()) {
-            // Preserve nested columns when there are no counted values.
-            take(0)
+            // #2034 Preserve nested columns even when the input is empty
+            this.take(0)
         } else {
             DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
         }
