@@ -474,7 +474,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the largest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.max()
+ * df.flatten().max()
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
