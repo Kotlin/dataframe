@@ -1100,7 +1100,7 @@ public inline fun <reified T> DataRow<*>.rowMedianOf(
  * ```kotlin
  * // A single row with the median value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.median()
+ * df.flatten().median()
  * ```
  *
  * @include [MedianDocs.SkipNanParam]
