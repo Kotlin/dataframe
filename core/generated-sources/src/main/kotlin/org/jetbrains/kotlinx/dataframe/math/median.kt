@@ -1,13 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
-import org.jetbrains.kotlinx.dataframe.impl.canBeNaN
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -102,41 +99,12 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
             )
     }
 
-    // propagate NaN to return if they are not to be skipped
-    if (nonNullType.canBeNaN && !skipNaN) {
-        for ((i, it) in this.withIndex()) {
-            if (it.isNaN) return i
-        }
-    }
-
-    val indexedSequence = this.mapIndexedNotNull { i, it ->
-        if (it == null) {
-            null
-        } else {
-            IndexedComparable(i, it)
-        }
-    }
-
     // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
-    val method = QuantileEstimationMethod.R3
-    val p = 0.5
-
-    // get the index where the median can be found in the sorted sequence
-    val indexEstimation = indexedSequence.quantileIndexEstimation(
-        p = p,
-        type = typeOf<IndexedComparable<Nothing>>(),
+    return quantileIndex(
+        p = 0.5,
+        type = type,
         skipNaN = skipNaN,
-        method = method,
+        method = QuantileEstimationMethod.R3,
         name = "median",
     )
-    if (indexEstimation.isNaN()) return this.indexOfFirst { it.isNaN }
-    if (indexEstimation < 0.0) return -1
-    require(indexEstimation == round(indexEstimation)) {
-        "median expected a whole number index from quantileIndexEstimation but was $indexEstimation"
-    }
-
-    val medianResult = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
-
-    // return the original unsorted index of the found result
-    return medianResult.index
 }
