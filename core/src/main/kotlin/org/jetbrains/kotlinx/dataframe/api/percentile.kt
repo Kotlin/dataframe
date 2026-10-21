@@ -1151,7 +1151,7 @@ public inline fun <reified T> DataRow<*>.rowPercentileOf(
  * ```kotlin
  * // A single row with the first quartile of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.percentile(25.0)
+ * df.flatten().percentile(25.0)
  * ```
  *
  * @include [PercentileDocs.PercentileParam]
