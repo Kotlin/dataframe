@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -102,6 +103,30 @@ class ValueCountsTests {
 
         result.columnNames() shouldBe listOf("city", "count")
         result.rowsCount() shouldBe 0
+    }
+
+    @Test
+    fun `value counts of an empty nullable value column preserves type when NA values are included`() {
+        val input = DataColumn.createByType("city", emptyList<String?>(), typeOf<String?>())
+        val result = input.valueCounts(dropNA = false)
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+        result["city"].isValueColumn() shouldBe true
+        result["city"].type() shouldBe typeOf<String?>()
+        result["count"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `value counts of an empty nullable value column drops nullability when NA values are excluded`() {
+        val input = DataColumn.createByType("city", emptyList<String?>(), typeOf<String?>())
+        val result = input.valueCounts()
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+        result["city"].isValueColumn() shouldBe true
+        result["city"].type() shouldBe typeOf<String>()
+        result["count"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -263,6 +288,51 @@ class ValueCountsTests {
     @Test
     fun `value counts of an empty DataFrame`() {
         df.drop(df.nrow).valueCounts().count() shouldBe 0
+    }
+
+    @Test
+    fun `value counts of an empty DataFrame retains all columns`() {
+        val result = df.take(0).valueCounts()
+
+        result.columnNames() shouldBe listOf("name", "city", "age", "count")
+        result.nrow shouldBe 0
+        result["name"].type() shouldBe typeOf<String>()
+        result["age"].type() shouldBe typeOf<Int>()
+        result["count"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `value counts of an empty DataFrame retains selected columns`() {
+        val result = df.take(0).valueCounts("city")
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+        result["city"].type() shouldBe typeOf<String>()
+        result["count"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `value counts retains selected columns when every row is dropped`() {
+        val input = dataFrameOf("city" to columnOf("London", null)).drop(1)
+        val result = input.valueCounts("city")
+
+        result.columnNames() shouldBe listOf("city", "count")
+        result.nrow shouldBe 0
+        result["city"].type() shouldBe typeOf<String>()
+        result["count"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `value counts of an empty column group retains its observed columns`() {
+        val input = df.group("name", "city").into("details").take(0)
+        val result = input["details"].valueCounts()
+
+        result.columnNames() shouldBe listOf("details", "count")
+        result["details"].asColumnGroup().columnNames() shouldBe listOf("name", "city")
+        result.nrow shouldBe 0
+        result["details"].asColumnGroup()["name"].type() shouldBe typeOf<String>()
+        result["details"].asColumnGroup()["city"].type() shouldBe typeOf<String>()
+        result["count"].type() shouldBe typeOf<Int>()
     }
 
     // endregion
