@@ -474,7 +474,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the smallest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.min()
+ * df.flatten().min()
  * ```
  *
  * @include [MinDocs.SkipNanParam]
