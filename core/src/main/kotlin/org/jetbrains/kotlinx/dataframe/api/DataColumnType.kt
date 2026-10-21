@@ -32,14 +32,11 @@ import kotlin.reflect.typeOf
  *
  * See also [isFrameColumn], [isValueColumn].
  *
- * ### Example
- * ```kotlin
- * val col: AnyCol = df["name"]
- * if (col.isColumnGroup()) {
- *     // `col` is a `ColumnGroup<*>` here
- *     col.columnNames()
- * }
- * ```
+ * Use [asColumnGroup] to cast a column to [ColumnGroup]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isColumnGroup]
  *
  * @return `true` if this column is a [ColumnGroup], `false` otherwise.
  */
@@ -57,14 +54,11 @@ public fun AnyCol.isColumnGroup(): Boolean {
  *
  * See also [isColumnGroup], [isValueColumn].
  *
- * ### Example
- * ```kotlin
- * val col: AnyCol = df["orders"]
- * if (col.isFrameColumn()) {
- *     // `col` is a `FrameColumn<*>` here
- *     col.schema.value
- * }
- * ```
+ * Use [asFrameColumn] to cast a column to [FrameColumn]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isFrameColumn]
  *
  * @return `true` if this column is a [FrameColumn], `false` otherwise.
  */
@@ -82,14 +76,11 @@ public fun AnyCol.isFrameColumn(): Boolean {
  *
  * See also [isColumnGroup], [isFrameColumn].
  *
- * ### Example
- * ```kotlin
- * val col: AnyCol = df["age"]
- * if (col.isValueColumn()) {
- *     // `col` is a `ValueColumn<*>` here
- *     col.distinct()
- * }
- * ```
+ * Use [asValueColumn] to cast a column to [ValueColumn]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isValueColumn]
  *
  * @return `true` if this column is a [ValueColumn], `false` otherwise.
  */
@@ -111,16 +102,8 @@ public fun AnyCol.isValueColumn(): Boolean {
  * See also [isSubtypeOf] with a reified type argument, [isType].
  *
  * ### Examples
- * ```kotlin
- * // `age: Int`
- * df["age"].isSubtypeOf(typeOf<Number>()) // true
- * df["age"].isSubtypeOf(typeOf<Int?>()) // true
- * df["age"].isSubtypeOf(typeOf<String>()) // false
  *
- * // `weight: Int?`
- * df["weight"].isSubtypeOf(typeOf<Int>()) // false
- * df["weight"].isSubtypeOf(typeOf<Number?>()) // true
- * ```
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isSubtypeOfKType]
  *
  * @param [type] the [KType] to check the column type against.
  * @return `true` if the column type is a subtype of [type], `false` otherwise.
@@ -141,16 +124,8 @@ public fun AnyCol.isSubtypeOf(type: KType): Boolean =
  * See also [isSubtypeOf] with a [KType] argument, [isType].
  *
  * ### Examples
- * ```kotlin
- * // `age: Int`
- * df["age"].isSubtypeOf<Number>() // true
- * df["age"].isSubtypeOf<Int?>() // true
- * df["age"].isSubtypeOf<String>() // false
  *
- * // `weight: Int?`
- * df["weight"].isSubtypeOf<Int>() // false
- * df["weight"].isSubtypeOf<Number?>() // true
- * ```
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isSubtypeOfReified]
  *
  * @param [T] the type to check the column type against.
  * @return `true` if the column type is a subtype of [T], `false` otherwise.
@@ -166,12 +141,8 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf
  * See also [isSubtypeOf].
  *
  * ### Examples
- * ```kotlin
- * // `age: Int`
- * df["age"].isType<Int>() // true
- * df["age"].isType<Int?>() // false
- * df["age"].isType<Number>() // false
- * ```
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isType]
  *
  * @param [T] the type to compare the column type with.
  * @return `true` if the column type is exactly [T], `false` otherwise.
@@ -205,6 +176,12 @@ public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixe
  *
  * Only the [List] class itself is matched: a column of a [List] subtype (like `ArrayList<*>`)
  * or of another [Collection] type (like `Set<*>`) is not considered a list column.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isList]
+ *
+ * @return `true` if the column type class is [List], `false` otherwise.
  */
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
