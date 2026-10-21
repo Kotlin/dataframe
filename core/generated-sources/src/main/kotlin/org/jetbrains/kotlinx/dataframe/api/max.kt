@@ -47,6 +47,8 @@ import kotlin.reflect.KProperty
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -209,6 +211,8 @@ internal interface MaxDocs : CommonMinMaxDocs {
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -262,6 +266,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefa
 
 /**
  * Returns the maximum of the values in this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
+ *
+ *
  *
  *
  *
@@ -322,6 +328,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -371,6 +379,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
 /**
  * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
  * returns the maximum value, or `null` if there is nothing to compare.
+ *
+ *
  *
  *
  *
@@ -428,6 +438,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  *
  *
  * The result of the expression is considered the 'input' of this operation.
+ *
+ *
  *
  *
  *
@@ -491,6 +503,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  *
  *
  * The result of the expression is considered the 'input' of this operation.
+ *
+ *
  *
  *
  *
@@ -570,6 +584,8 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -627,6 +643,8 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  *
  * Columns inside [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] are also excluded.
  * To include those in the maximum, [<code>flatten</code>][org.jetbrains.kotlinx.dataframe.DataFrame.flatten] the DataFrame first.
+ *
+ *
  *
  *
  *
@@ -696,6 +714,8 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -729,7 +749,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the largest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.max()
+ * df.flatten().max()
  * ```
  *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -744,6 +764,8 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
 
 /**
  * Returns the maximum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
+ *
+ *
  *
  *
  *
@@ -813,6 +835,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 
 /**
  * Returns the maximum of the values of each selected column of this [<code>DataFrame</code>][DataFrame] separately.
+ *
+ *
  *
  *
  *
@@ -886,6 +910,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
+ *
+ *
  *
  *
  *
@@ -984,6 +1010,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1071,6 +1099,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
 /**
  * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
+ *
+ *
  *
  *
  *
@@ -1168,6 +1198,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 /**
  * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
  * or `null` if there is nothing to compare.
+ *
+ *
  *
  *
  *
@@ -1274,6 +1306,8 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1348,6 +1382,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1418,6 +1454,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1472,6 +1510,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the largest value
  * in the column with the given name.
+ *
+ *
  *
  *
  *
@@ -1550,6 +1590,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1600,6 +1642,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the largest value in the column with
  * the given name, or `null` if there is nothing to compare.
+ *
+ *
  *
  *
  *
@@ -1681,6 +1725,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1737,6 +1783,8 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the maximum for each selected column.
+ *
+ *
  *
  *
  *
@@ -1813,6 +1861,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  * Returns a new [<code>DataFrame</code>][DataFrame] with one row per group, containing the group key columns
  * and a column with the maximum for each selected column.
+ *
+ *
  *
  *
  *
@@ -1900,6 +1950,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -1974,6 +2026,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  * a single column with the maximum per group.
  * That column is named [<code>name</code>][name], or, if [<code>name</code>][name] is `null`, after the selected column
  * if exactly one column is selected, and `"max"` otherwise.
+ *
+ *
  *
  *
  *
@@ -2080,6 +2134,8 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2162,6 +2218,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2223,6 +2281,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  * [<code>values</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.values], or [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy.into].
  *
  * See [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing] for more details.
+ *
+ *
  *
  *
  *
@@ -2291,6 +2351,8 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2350,6 +2412,8 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of each selected column of the corresponding group.
+ *
+ *
  *
  *
  *
@@ -2430,6 +2494,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the maximum
  * of each selected column of the corresponding group.
+ *
+ *
  *
  *
  *
@@ -2521,6 +2587,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2585,6 +2653,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * Returns a single [<code>DataRow</code>][DataRow] with the [<code>pivot</code>][pivot] keys as (nested) columns, containing the largest
  * value among all the values in the selected columns of the corresponding group.
+ *
+ *
  *
  *
  *
@@ -2679,6 +2749,8 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2748,6 +2820,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2808,6 +2882,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
 /**
  * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the first [<code>row</code>][DataRow]
  * that has the largest value in the given [<code>column</code>][column].
+ *
+ *
  *
  *
  *
@@ -2885,6 +2961,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -2949,6 +3027,8 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of each selected column
  * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
+ *
+ *
  *
  *
  *
@@ -3033,6 +3113,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the maximum of each selected column
  * of the group corresponding to that [<code>pivot</code>][pivot] key (column) and [<code>groupBy</code>][groupBy] key (row).
+ *
+ *
  *
  *
  *
@@ -3131,6 +3213,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -3202,6 +3286,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * Returns a [<code>DataFrame</code>][DataFrame] where each cell contains the largest value among all the values in the
  * selected columns of the group corresponding to that [<code>pivot</code>][pivot] key (column)
  * and [<code>groupBy</code>][groupBy] key (row).
+ *
+ *
  *
  *
  *
@@ -3302,6 +3388,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -3376,6 +3464,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
  * This includes all primitive number types, but no mix of different number types.
@@ -3437,6 +3527,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
 /**
  * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
  * the first [<code>row</code>][DataRow] that has the largest value in the given [<code>column</code>][column].
+ *
+ *
  *
  *
  *
