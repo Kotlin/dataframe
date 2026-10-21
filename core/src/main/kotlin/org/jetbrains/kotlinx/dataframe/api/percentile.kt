@@ -185,7 +185,7 @@ internal interface PercentileDocs : CommonMedianPercentileDocs {
     /**
      * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetPercentileStatisticArgs]}
      *   These must be existing columns whose values are mutually comparable,
-     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
+     *   else an [IllegalStateException] is thrown.
      */
     @ExcludeFromSources
     typealias ComparableColumnNamesParam = Nothing
