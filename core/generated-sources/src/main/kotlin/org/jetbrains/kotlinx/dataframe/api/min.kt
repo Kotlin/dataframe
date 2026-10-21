@@ -47,9 +47,12 @@ import kotlin.reflect.KProperty
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -209,9 +212,12 @@ internal interface MinDocs : CommonMinMaxDocs {
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -265,9 +271,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefa
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -322,9 +331,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -374,9 +386,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -431,9 +446,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -494,9 +512,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -570,9 +591,12 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -630,9 +654,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -696,9 +723,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -729,7 +759,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the smallest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.min()
+ * df.flatten().min()
  * ```
  *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -747,9 +777,12 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -816,9 +849,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -889,9 +925,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -984,9 +1023,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1074,9 +1116,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1171,9 +1216,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1274,9 +1322,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1348,9 +1399,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1418,9 +1472,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1475,9 +1532,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1550,9 +1610,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1603,9 +1666,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1681,9 +1747,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1740,9 +1809,12 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1816,9 +1888,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1900,9 +1975,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1977,9 +2055,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2080,9 +2161,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2162,9 +2246,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2226,9 +2313,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2291,9 +2381,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2353,9 +2446,12 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2433,9 +2529,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2521,9 +2620,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2588,9 +2690,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2679,9 +2784,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2748,9 +2856,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2811,9 +2922,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2885,9 +2999,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2952,9 +3069,12 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3036,9 +3156,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3131,9 +3254,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3205,9 +3331,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3302,9 +3431,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3376,9 +3508,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3440,9 +3575,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
