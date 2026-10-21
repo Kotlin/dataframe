@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Renames one or several columns without changing its location in [`DataFrame`](DataFrame.md).
+Renames one or several columns without changing their location in [`DataFrame`](DataFrame.md).
 
 ```kotlin
 df.rename { columns }.to(name)

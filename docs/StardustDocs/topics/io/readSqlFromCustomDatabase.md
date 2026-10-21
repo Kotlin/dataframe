@@ -106,7 +106,7 @@ object HSQLDB : DbType("hsqldb") {
 
 **Defining Helper Functions**
 
-You can define some utility functions to manage database connections and -tables.
+You can define some utility functions to manage database connections and tables.
 For this example, we'll create a small function that can populate the table with a schema and some sample data.
 
 <!---FUN helper_functions-->
@@ -344,7 +344,7 @@ DataFrame knows which types to expect from JDBC (type `J`).
 
 However, there are two other places where you can customize how DataFrame will handle reading from your database:
 
-1. **Preprocessing**: Override `preprocessValue()` and `getPreprocessedValueType() `to apply custom logic to individual 
+1. **Preprocessing**: Override `preprocessValue()` and `getPreprocessedValueType()` to apply custom logic to individual 
   values before they are inserted into a column (type `J` -> type `D`).
 2. **Column Building**: Override `buildDataColumn()` and `getTargetColumnSchema()` to customize how DataFrame turns
   a list of (preprocessed) values into an actual column (`List<D>` -> `DataColumn<P>`).
@@ -501,7 +501,7 @@ check our [DuckDB implementation](https://github.com/Kotlin/dataframe/blob/maste
 Another example is [SQLite](https://www.sqlite.org/datatype3.html), which uses [type affinity](https://www.sqlite.org/datatype3.html#type_affinity):
 every column is assigned one of five basic types, while the user-declared type serves as a hint and is exposed through metadata.
 
-However, the assigned column type does not always represent the actual values type,
+However, the assigned column type does not always represent the actual value type,
 or you may want to provide custom type converters from primitive types
 (for example, to convert a `DATETIME` value stored as a `String`).
 `AdvancedDbType` and `JdbcToDataFrameConverter` help with these cases,

@@ -15,8 +15,8 @@ Navigate a wide set of operations in Kotlin DataFrame — from filtering and gro
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
-The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+A data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
+The Kotlin DataFrame API is designed in a functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
@@ -33,7 +33,7 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <tip>
 
-You can play with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+You can play with the "people" dataset that is used in this guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
 
 </tip>
 
@@ -91,7 +91,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join two [`DataFrame`](DataFrame.md) objects by key columns
-* [joinWith](joinWith.md) — join two [`DataFrame`](DataFrame.md) object by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
+* [joinWith](joinWith.md) — join two [`DataFrame`](DataFrame.md) objects by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 
@@ -120,7 +120,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
-* [unfold](unfold.md) - unfold objects (normal class instances) in columns according to their properties
+* [unfold](unfold.md) — unfold objects (normal class instances) in columns according to their properties
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
 * [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 

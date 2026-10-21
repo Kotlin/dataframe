@@ -175,4 +175,4 @@ df.split { colGroup("name") }.by { it.values() }.intoRows()
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html" width="100%"/>
 <!---END-->
 
-Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.
+Equivalent to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.

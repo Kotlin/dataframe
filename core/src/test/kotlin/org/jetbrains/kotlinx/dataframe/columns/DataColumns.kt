@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.core.BuildConfig
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase.Person
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.junit.Test
@@ -122,5 +123,13 @@ class DataColumns : BaseTest() {
             it.kind() shouldBe ColumnKind.Frame
             it.type().isSubtypeOf(typeOf<DataFrame<*>>()) shouldBe true
         }
+    }
+
+    // Tests for issue #2034
+    @Test
+    fun `column of nulls with Nothing nullable type is ValueColumn`() {
+        val df = dataFrameOf("a")(null, null)
+        df["a"].kind() shouldBe ColumnKind.Value
+        df["a"].type() shouldBe nullableNothingType
     }
 }
