@@ -60,6 +60,13 @@ df.sortByDesc("age", "weight")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html" width="100%"/>
 <!---END-->
 
+## Sorting within groups
+
+On a [`GroupBy`](groupBy.md), `sortBy` and `sortByDesc` sort rows only within each group.
+
+To sort the groups themselves by their keys, use `sortByKey()` or `sortByKeyDesc()` instead.
+See [GroupBy transformations](groupBy.md#transformation) for other operations that reorder groups.
+
 ## sortWith
 
 Returns [`DataFrame`](DataFrame.md) sorted with comparator.

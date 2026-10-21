@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByKey
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCsv
@@ -71,7 +71,7 @@ fun main() {
     val step2 = step1
         .filter { year >= 0 && genres != "(no genres listed)" }
         .groupBy { year }
-        .sortBy { year }
+        .sortByKey()
         .pivot(inward = false) { genres }
         .aggregate {
             count() into "count"
