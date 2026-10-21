@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -16,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.StatisticResult
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
@@ -27,15 +25,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 
-@Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
+@Suppress("RemoveExplicitTypeArguments")
 internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
     toDataFrame()
         // sort the individual groups by the columns specified
         .update { groups }
         .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
-        // sort the groups by the columns specified (must be either be the keys column or "groups")
-        // will do nothing if the columns specified are not the keys column or "groups"
-        .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
         .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
@@ -57,6 +52,7 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     return this[permutation]
 }
 
+@Suppress("UNCHECKED_CAST")
 internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<Int> {
     assertIsComparable()
 
