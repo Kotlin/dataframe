@@ -26,12 +26,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
-import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestWhenNoElements
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.GROUPED_MEDIAN_FOR_BINARY_COMPAT
 import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN
@@ -528,7 +530,7 @@ private typealias SetMedianForOperationArg = Nothing
  * @return The median of the values in this column.
  * @throws NoSuchElementException if there are no values to compute the median of.
  */
-public fun <T : Comparable<T & Any>?> DataColumn<T>.median(): T & Any = medianOrNull().suggestIfNull("median")
+public fun <T : Comparable<T & Any>?> DataColumn<T>.median(): T & Any = medianOrNull().throwAndSuggestIfNull("median")
 
 /**
  * Returns the median of the comparable values in this [DataColumn],
@@ -602,7 +604,8 @@ public fun <T : Comparable<T & Any>?> DataColumn<T>.medianOrNull(): T? =
 public fun <T> DataColumn<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T & Any>?, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
+    where T : Comparable<T & Any>?, T : Number? =
+    medianOrNull(skipNaN = skipNaN).throwAndSuggestIfNull("median")
 
 /**
  * Returns the median of the numbers in this [DataColumn], as a [Double],
@@ -646,6 +649,8 @@ public fun <T> DataColumn<T>.medianOrNull(
  * Returns the element of this [DataColumn] at the median of the values that the given [selector]
  * returns for each element.
  *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
  * @include [MedianDocs.BySelectionSnippet]
@@ -678,11 +683,16 @@ public fun <T> DataColumn<T>.medianOrNull(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = medianByOrNull(skipNaN, selector).suggestIfNull("medianBy")
+): T =
+    Aggregators.medianCommon<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrElse { throwAndSuggestWhenNoElements("medianBy") }
 
 /**
  * Returns the element of this [DataColumn] at the median of the values that the given [selector]
  * returns for each element, or `null` if there is nothing to compute the median of.
+ *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
@@ -718,7 +728,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianBy(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.medianCommon<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? =
+    Aggregators.medianCommon<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrNull()
 
 /**
  * Returns the median of the comparable values that the given [expression] returns
@@ -764,7 +777,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianByOr
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOf(
     crossinline expression: (T) -> R,
-): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
+): R & Any = medianOfOrNull(expression).throwAndSuggestIfNull("medianOf")
 
 /**
  * Returns the median of the comparable values that the given [expression] returns
@@ -855,7 +868,7 @@ public inline fun <T, reified R> DataColumn<T>.medianOf(
     crossinline expression: (T) -> R,
 ): Double
     where R : Comparable<R & Any>?, R : Number? =
-    medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
+    medianOfOrNull(skipNaN, expression).throwAndSuggestIfNull("medianOf")
 
 /**
  * Returns the median of the numbers that the given [expression] returns
@@ -988,7 +1001,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMedianOfOrNull(): T?
  * @throws NoSuchElementException if there are no values to compute the median of.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMedianOf(): T =
-    rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
+    rowMedianOfOrNull<T>().throwAndSuggestIfNull("rowMedianOf")
 
 /**
  * Returns the median of the numbers of type [T] in this [DataRow], as a [Double],
@@ -1071,7 +1084,7 @@ public inline fun <reified T> DataRow<*>.rowMedianOfOrNull(
 public inline fun <reified T> DataRow<*>.rowMedianOf(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T>, T : Number = rowMedianOfOrNull<T>(skipNaN).suggestIfNull("rowMedianOf")
+    where T : Comparable<T>, T : Number = rowMedianOfOrNull<T>(skipNaN).throwAndSuggestIfNull("rowMedianOf")
 
 // endregion
 
@@ -1203,7 +1216,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.medianFor(
  */
 @OverloadResolutionByLambdaReturnType
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSelector<T, C>): C & Any =
-    medianOrNull(columns).suggestIfNull("median")
+    medianOrNull(columns).throwAndSuggestIfNull("median")
 
 /**
  * Returns a single median of all the comparable values in the selected columns of this [DataFrame],
@@ -1289,7 +1302,8 @@ public fun <T, C> DataFrame<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double
-    where C : Number?, C : Comparable<C & Any>? = medianOrNull(skipNaN, columns).suggestIfNull("median")
+    where C : Number?, C : Comparable<C & Any>? =
+    medianOrNull(skipNaN, columns).throwAndSuggestIfNull("median")
 
 /**
  * Returns a single median of all the numbers in the selected columns of this [DataFrame], as a [Double],
@@ -1367,7 +1381,7 @@ public fun <T, C> DataFrame<T>.medianOrNull(
  * @throws NoSuchElementException if there are no values to compute the median of.
  */
 public fun <T> DataFrame<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Any =
-    medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
+    medianOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("median")
 
 /**
  * Returns a single median of all the values in the columns of this [DataFrame] with the given names,
@@ -1408,7 +1422,7 @@ public fun <T> DataFrame<T>.medianOrNull(vararg columns: String, skipNaN: Boolea
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: ColumnReference<C>): C & Any =
-    medianOrNull(*columns).suggestIfNull("median")
+    medianOrNull(*columns).throwAndSuggestIfNull("median")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1422,7 +1436,7 @@ public fun <T, C> DataFrame<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
     where C : Comparable<C & Any>?, C : Number? =
-    medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
+    medianOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("median")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1435,7 +1449,7 @@ public fun <T, C> DataFrame<T>.medianOrNull(
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: KProperty<C>): C & Any =
-    medianOrNull(*columns).suggestIfNull("median")
+    medianOrNull(*columns).throwAndSuggestIfNull("median")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1449,7 +1463,7 @@ public fun <T, C> DataFrame<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
     where C : Comparable<C & Any>?, C : Number? =
-    medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
+    medianOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("median")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1506,7 +1520,7 @@ public fun <T, C> DataFrame<T>.medianOrNull(
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
-): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
+): R & Any = medianOfOrNull(expression).throwAndSuggestIfNull("medianOf")
 
 /**
  * Returns the median of the comparable values that the given [expression] returns
@@ -1602,7 +1616,7 @@ public inline fun <T, reified R> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
 ): Double
     where R : Comparable<R & Any>?, R : Number? =
-    medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
+    medianOfOrNull(skipNaN, expression).throwAndSuggestIfNull("medianOf")
 
 /**
  * Returns the median of the numbers that the given [expression] returns
@@ -1656,6 +1670,8 @@ public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
  *
  * @include [MedianDocs.RowExpressionSnippet]
  *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
  * @include [MedianDocs.BySelectionSnippet]
@@ -1691,7 +1707,7 @@ public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T> = medianByOrNull(skipNaN, expression).suggestIfNull("medianBy")
+): DataRow<T> = medianByOrNull(skipNaN, expression).throwAndSuggestIfNull("medianBy")
 
 /**
  * Returns the row of this [DataFrame] at the median of the values in the column with the given name.
@@ -1726,27 +1742,29 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
  * @throws NoSuchElementException if there are no values to compute the median of.
  */
 public fun <T> DataFrame<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
-    medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+    medianByOrNull(column, skipNaN).throwAndSuggestIfNull("medianBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+): DataRow<T> = medianByOrNull(column, skipNaN).throwAndSuggestIfNull("medianBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+): DataRow<T> = medianByOrNull(column, skipNaN).throwAndSuggestIfNull("medianBy")
 
 /**
  * Returns the row of this [DataFrame] at the median of the values that the given [expression]
  * returns for each row, or `null` if there is nothing to compute the median of.
  *
  * @include [MedianDocs.RowExpressionSnippet]
+ *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
@@ -2041,6 +2059,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.medianOf(
  *
  * @include [MedianDocs.RowExpressionSnippet]
  *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
  * @include [MedianDocs.BySelectionSnippet]
@@ -2312,6 +2332,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianOf(
  * at the median of the values that the given [rowExpression] returns for each row of that group.
  *
  * @include [MedianDocs.RowExpressionSnippet]
+ *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *
@@ -2594,6 +2616,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf
  * for each row of that group.
  *
  * @include [MedianDocs.RowExpressionSnippet]
+ *
+ * @include [MedianDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MedianDocs.ComparableInputValuesSnippet]
  *

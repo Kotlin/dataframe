@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.percentileByOrNull
@@ -328,5 +329,12 @@ class PercentileTests {
         col.percentileBy(100.0, skipNaN = true) { it } shouldBe 9.0
         df.percentileBy(100.0, skipNaN = true) { "v"<Double>() }["v"] shouldBe 9.0
         df.percentileBy(100.0, "v", skipNaN = true)["v"] shouldBe 9.0
+    }
+
+    // Issue #2175
+    @Test
+    fun `column percentileBy result is null`() {
+        val col = columnOf(1, null)
+        col.percentileBy(50.0) { it ?: 0 } shouldBe null
     }
 }

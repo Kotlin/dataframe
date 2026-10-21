@@ -24,12 +24,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
-import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestWhenNoElements
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MIN_NO_SKIPNAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MIN
@@ -185,7 +187,7 @@ private typealias SetMinOrNullOperationArg = Nothing
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefault): T =
-    minOrNull(skipNaN).suggestIfNull("min")
+    minOrNull(skipNaN).throwAndSuggestIfNull("min")
 
 /**
  * Returns the minimum of the values in this [DataColumn], or `null` if there is nothing to compare.
@@ -224,6 +226,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value.
  *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MinDocs.InputValuesSnippet]
  *
  * @include [MinDocs.ThrowsOnEmptySnippet]
@@ -252,11 +256,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = minByOrNull(skipNaN, selector).suggestIfNull("minBy")
+): T =
+    Aggregators.min<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrElse { throwAndSuggestWhenNoElements("minBy") }
 
 /**
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the minimum value, or `null` if there is nothing to compare.
+ *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MinDocs.InputValuesSnippet]
  *
@@ -287,7 +296,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.min<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? =
+    Aggregators.min<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrNull()
 
 /**
  * Returns the minimum of the values that the given [selector] returns
@@ -325,7 +337,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = minOfOrNull(skipNaN, selector).suggestIfNull("minOf")
+): R & Any = minOfOrNull(skipNaN, selector).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [selector] returns
@@ -445,7 +457,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boolean = skipNaNDefault): T =
-    rowMinOfOrNull<T>(skipNaN).suggestIfNull("rowMinOf")
+    rowMinOfOrNull<T>(skipNaN).throwAndSuggestIfNull("rowMinOf")
 
 // endregion
 
@@ -610,7 +622,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = minOrNull(skipNaN, columns).suggestIfNull("min")
+): C & Any = minOrNull(skipNaN, columns).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame].
@@ -647,21 +659,21 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any> =
-    minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+    minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [DataFrame],
@@ -797,7 +809,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = minOfOrNull(skipNaN, expression).suggestIfNull("minOf")
+): C & Any = minOfOrNull(skipNaN, expression).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [expression] returns
@@ -847,6 +859,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  * @include [MinDocs.RowExpressionSnippet]
  *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MinDocs.InputValuesSnippet]
  *
  * @include [MinDocs.ThrowsOnEmptySnippet]
@@ -879,7 +893,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T> = minByOrNull(skipNaN, expression).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(skipNaN, expression).throwAndSuggestIfNull("minBy")
 
 /**
  * Returns the first row of this [DataFrame] that has the smallest value
@@ -914,27 +928,29 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
-    minByOrNull(column, skipNaN).suggestIfNull("minBy")
+    minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = minByOrNull(column, skipNaN).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = minByOrNull(column, skipNaN).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 /**
  * Returns the first row of this [DataFrame] for which the given [expression] returns
  * the minimum value, or `null` if there is nothing to compare.
  *
  * @include [MinDocs.RowExpressionSnippet]
+ *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MinDocs.InputValuesSnippet]
  *
@@ -1317,6 +1333,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  * @include [MinDocs.RowExpressionSnippet]
  *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -1683,6 +1701,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  * for which the given [rowExpression] returns the minimum value.
  *
  * @include [MinDocs.RowExpressionSnippet]
+ *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MinDocs.InputValuesSnippet]
  *
@@ -2068,6 +2088,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  * @include [MinDocs.RowExpressionSnippet]
  *
+ * @include [MinDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MinDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -2167,7 +2189,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(): T = min(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = minOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T & Any =
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T =
     minBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)

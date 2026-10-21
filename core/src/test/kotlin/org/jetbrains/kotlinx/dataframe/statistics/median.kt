@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.medianByOrNull
@@ -399,5 +400,12 @@ class MedianTests {
         // With skipNaN=true, NaN values should be ignored
         col.medianBy(skipNaN = true) { it } shouldBe 2.0
         df.medianBy("v", skipNaN = true)["v"] shouldBe 2.0
+    }
+
+    // Issue #2175
+    @Test
+    fun `column medianBy result is null`() {
+        val col = columnOf(1, null)
+        col.medianBy { it ?: 0 } shouldBe null
     }
 }
