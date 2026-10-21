@@ -91,7 +91,8 @@ internal interface CommonStatisticsDocs {
      *
      * Only self-comparable values are supported: values of a type `T : Comparable<T>`
      * that are mutually comparable (like strings, primitive numbers, or dates).
-     * This includes all primitive number types, but no mix of different number types.
+     * This includes all primitive number types, but no mix of different number types,
+     * which would result in a [ClassCastException].
      */
     @ExcludeFromSources
     typealias SelfComparableValuesSnippet = Nothing
