@@ -195,6 +195,13 @@ With `atAnyDepth = true` (the default), [`reorderColumnsBy`](reorder.md#reorderc
 like `colsAtAnyDepth()`. The columns inside the dataframes of frame columns keep their order.
 To reorder them too, as before, pass `inFrameColumns = true`: `df.reorderColumnsByName(inFrameColumns = true)`.
 
+### `GroupBy.sortBy` and `sortByDesc` no longer reorder groups
+
+[`GroupBy.sortBy`](sortBy.md#sorting-within-groups) and `GroupBy.sortByDesc` now sort rows only within each group
+and preserve the order of key-group pairs. To sort the groups themselves by their keys, use `sortByKey` or
+`sortByKeyDesc` instead. If both the groups and their rows need to be sorted, call the corresponding operations
+separately.
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
