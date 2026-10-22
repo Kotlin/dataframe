@@ -30,7 +30,7 @@ internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>)
     toDataFrame()
         // sort the individual groups by the columns specified
         .update { groups }
-        .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+        .with { it.sortByImpl(UnresolvedColumnsPolicy.Fail, columns) }
         .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(

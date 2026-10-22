@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowMessage
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -102,6 +103,110 @@ class SortTests : TestBase() {
         shouldThrowMessage("Can not use ColumnGroup as sort column") {
             aggregate.sortBy { pathOf("L", "extra") }
         }
+    }
+
+    @Suppress("DEPRECATION")
+    @Test
+    fun `grouped sort reports a missing nested column`() {
+        val grouped = df.group { age }.into("group").groupBy { name.firstName }
+        val path = pathOf("group", "missing")
+        val message = "Could not update column 'group': " +
+            "Column 'group/missing' not found among columns of 'group': [age]."
+
+        shouldThrow<IllegalStateException> { grouped.sortBy { path } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc { path } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortBy(path) }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc(path) }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort rejects an extra group segment in the path`() {
+        val grouped = df.group { age }.into("group").groupBy { name.firstName }
+        val path = pathOf("group", "group", "age")
+        val message = "Could not update column 'group': " +
+            "Column 'group/group' not found among columns of 'group': [age]."
+
+        shouldThrow<IllegalStateException> { grouped.sortByDesc { path } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortBy { path } }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort reports a missing column even when another column exists`() {
+        val grouped = df.groupBy { name.firstName }
+        val message = "Could not update column 'group': " +
+            "Column 'missing' not found among [name, age, city, weight, isHappy]."
+
+        shouldThrow<IllegalStateException> { grouped.sortBy("age", "missing") }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc("age", "missing") }.message shouldBe message
+        shouldThrow<IllegalStateException> {
+            grouped.sortBy { age and "missing"<Int>() }
+        }.message shouldBe message
+        shouldThrow<IllegalStateException> {
+            grouped.sortByDesc { age and "missing"<Int>() }
+        }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort reports a missing column in an expression`() {
+        val grouped = df.groupBy { name.firstName }
+        val message = "Could not update column 'group': " +
+            "Column 'missing' not found among [name, age, city, weight, isHappy]."
+
+        shouldThrow<IllegalStateException> {
+            grouped.sortBy { expr { "missing"<Int>() * 2 } }
+        }.message shouldBe message
+        shouldThrow<IllegalStateException> {
+            grouped.sortByDesc { expr { "missing"<Int>() * 2 } }
+        }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort reports a missing column with sort flags`() {
+        val grouped = df.groupBy { name.firstName }
+        val path = pathOf("name", "missing")
+        val message = "Could not update column 'group': " +
+            "Column 'name/missing' not found among columns of 'name': [firstName, lastName]."
+
+        shouldThrow<IllegalStateException> { grouped.sortBy { path.reversed() } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc { path.reversed() } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortBy { path.nullsLast() } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc { path.nullsLast() } }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort reports a column missing only in a later group`() {
+        val grouped = df.groupBy { name.firstName }.updateGroups {
+            if (name.firstName[0] == "Bob") remove { age } else this
+        }
+        grouped.groups.toList().map { it.containsColumn("age") } shouldBe listOf(true, false, true)
+        val message = "Could not update column 'group': Column 'age' not found among [name, city, weight, isHappy]."
+
+        shouldThrow<IllegalStateException> { grouped.sortBy { age } }.message shouldBe message
+        shouldThrow<IllegalStateException> { grouped.sortByDesc { age } }.message shouldBe message
+    }
+
+    @Test
+    fun `grouped sort resolves nested paths within each group`() {
+        val grouped = df.group { age }.into("group").groupBy { name.firstName }
+        val path = pathOf("group", "age")
+
+        val ascending = grouped.sortBy { path }
+        ascending.keys shouldBe grouped.keys
+        ascending.groups.toList().map { it[path].toList() } shouldBe
+            listOf(listOf(15, 20), listOf(30, 45), listOf(20, 30, 40))
+
+        val descending = grouped.sortByDesc { path }
+        descending.keys shouldBe grouped.keys
+        descending.groups.toList().map { it[path].toList() } shouldBe
+            listOf(listOf(20, 15), listOf(45, 30), listOf(40, 30, 20))
+    }
+
+    @Test
+    fun `grouped sort allows an empty column selection`() {
+        val grouped = df.groupBy { name.firstName }
+
+        grouped.sortBy { none() }.toDataFrame() shouldBe grouped.toDataFrame()
+        grouped.sortByDesc { none() }.toDataFrame() shouldBe grouped.toDataFrame()
     }
 
     @Test
