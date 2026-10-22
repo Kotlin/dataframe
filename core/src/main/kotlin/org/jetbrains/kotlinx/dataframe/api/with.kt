@@ -40,6 +40,8 @@ private typealias PivotWithColumnReferenceSnippet = Nothing
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
+ * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
+ *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.withOnPivot_properties]
@@ -59,7 +61,7 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
 // region ReducedPivot
 
 /**
- * Transforms this [ReducedPivot] by evaluating the given [row expression][expression] on the single row
+ * Aggregates this [ReducedPivot] by evaluating the given [row expression][expression] on the single row
  * selected by the reducer in each pivot group.
  *
  * @include [PivotWithColumnReferenceSnippet]
@@ -113,7 +115,7 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
 // region ReducedPivotGroupBy
 
 /**
- * Transforms this [ReducedPivotGroupBy] by evaluating the given [row expression][expression] on the single row
+ * Aggregates this [ReducedPivotGroupBy] by evaluating the given [row expression][expression] on the single row
  * selected by the reducer in each group defined by the grouping and pivot keys.
  *
  * @include [PivotWithColumnReferenceSnippet]
