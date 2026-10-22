@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -26,12 +27,28 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 
 @Suppress("RemoveExplicitTypeArguments")
-internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
-    toDataFrame()
-        // sort the individual groups by the columns specified
-        .update { groups }
-        .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
-        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
+internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> {
+    if (groups.size() == 0 && groups.schema.value.columns.isNotEmpty()) {
+        try {
+            // With no groups to sort, resolve the selector against the preserved group schema
+            DataFrame.empty(groups.schema.value).cast<G>().getSortColumns(columns, UnresolvedColumnsPolicy.Fail)
+        } catch (e: Exception) {
+            throw IllegalStateException("Can not sort GroupBy: ${e.message}", e)
+        }
+    }
+
+    val sorted = try {
+        toDataFrame()
+            // sort the individual groups by the columns specified
+            .update { groups }
+            .with { it.sortByImpl(UnresolvedColumnsPolicy.Fail, columns) }
+    } catch (e: IllegalStateException) {
+        val cause = e.cause ?: e
+        throw IllegalStateException("Can not sort GroupBy: ${cause.message}", cause)
+    }
+
+    return sorted.asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
+}
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
