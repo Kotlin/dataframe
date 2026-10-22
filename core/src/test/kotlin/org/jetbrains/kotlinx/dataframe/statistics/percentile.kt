@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
-import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.percentileByOrNull

@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minByOrNull
