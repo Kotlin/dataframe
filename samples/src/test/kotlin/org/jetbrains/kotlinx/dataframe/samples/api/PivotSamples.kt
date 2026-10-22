@@ -514,6 +514,22 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
         // SampleEnd
     }
 
+    @Test
+    fun withOnPivotGroupBy() {
+        // SampleStart
+        df.groupBy { city }.pivot { isHappy }.with { name.lastName }
+        df.groupBy("city").pivot("isHappy").with { "name"["lastName"]<String>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun withOnReducedPivotGroupBy() {
+        // SampleStart
+        df.groupBy { city }.pivot { isHappy }.maxBy { age }.with { name.lastName }
+        df.groupBy("city").pivot("isHappy").maxBy("age").with { "name"["lastName"]<String>() }
+        // SampleEnd
+    }
+
     // endregion
 
     // region aggregate
