@@ -64,6 +64,8 @@ df.sortByDesc("age", "weight")
 
 On a [`GroupBy`](groupBy.md), `sortBy` and `sortByDesc` sort rows only within each group.
 
+If a referenced column cannot be found in a group, both functions throw an exception.
+
 To sort the groups themselves by their keys, use `sortByKey()` or `sortByKeyDesc()` instead.
 See [GroupBy transformations](groupBy.md#transformation) for other operations that reorder groups.
 
