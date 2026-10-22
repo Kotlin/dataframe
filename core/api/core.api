@@ -1211,12 +1211,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelec
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnGroupPartOfGrammar {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DslGrammar$ColumnSetPartOfGrammar {
-}
-
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDslKt {
 	public static final fun asSingleColumn (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
@@ -3122,8 +3116,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final synthetic fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -3139,7 +3132,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -3673,8 +3665,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final synthetic fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -3690,7 +3681,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -5387,55 +5377,10 @@ public final class org/jetbrains/kotlinx/dataframe/dataTypes/IMG {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$AccessApis {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$ColumnArithmetics {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$DataRow {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Drop {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Fill {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Map {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Mean {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Median {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$MinMax {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$NanAndNa {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Percentile {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Std {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls$Sum {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$UsageTemplateExample {
 }
 
 public abstract interface annotation class org/jetbrains/kotlinx/dataframe/documentation/ExcludeFromSources : java/lang/annotation/Annotation {
@@ -5549,9 +5494,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/DataFrameSize {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/ExceptionUtilsKt {
-	public static final synthetic fun suggestIfNull (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun throwAndSuggestIfNull (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun throwAndSuggestWhenNoElements (Ljava/lang/String;)Ljava/lang/Void;
+	public static final fun suggestIfNull (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/NumberTypeUtilsKt {
@@ -5725,10 +5668,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggregationKt {
 	public static final fun aggregateValue (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoElementAtIndex {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoElementAtIndex;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/OfRowExpressionKt {
