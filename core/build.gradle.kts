@@ -4,6 +4,7 @@ import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.named
 import org.intellij.lang.annotations.Language
+import org.jetbrains.dokka.gradle.tasks.DokkaBaseTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -334,6 +335,10 @@ tasks.runKtlintCheckOverTestSourceSet {
 }
 
 tasks.named { it == "runKtlintCheckOverMainKodexSourceSet" }.configureEach {
+    dependsOn(tasks.generateKeywordsSrc)
+}
+
+tasks.withType<DokkaBaseTask>().configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
