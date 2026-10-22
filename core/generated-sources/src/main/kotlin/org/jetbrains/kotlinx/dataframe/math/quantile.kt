@@ -102,7 +102,7 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
  * Returns -1.0 if the sequence [<code>this</code>][this] is empty.
  * Returns [<code>Double.NaN</code>][Double.NaN] if `!`[<code>skipNaN</code>][skipNaN] and a NaN is encountered.
  */
-internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
+private fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
     p: Double,
     type: KType,
     skipNaN: Boolean,
@@ -148,6 +148,64 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
     if (size == 1) return 0.0
 
     return method.indexOfQuantile(p, size).toDouble()
+}
+
+/**
+ * Returns the index of the [<code>p</code>][p]-quantile in the unsorted sequence [<code>this</code>][this], selected using [<code>method</code>][method].
+ * - `-1` if empty or all `null` (or all NaN if [<code>skipNaN</code>][skipNaN])
+ * - index of the first NaN if `!`[<code>skipNaN</code>][skipNaN] and [<code>this</code>][this] contains NaN
+ * - index of the selected value else
+ *
+ * NaN values are detected at runtime when [<code>type</code>][type] could hold them,
+ * including erased types like `Comparable<Any>`, used by the `column: String` overloads.
+ */
+internal fun <T : Comparable<T & Any>?> Sequence<T>.quantileIndex(
+    p: Double,
+    type: KType,
+    skipNaN: Boolean,
+    method: QuantileEstimationMethod.Selecting,
+    name: String = "quantile",
+): Int {
+    // Whether to run the heavy check for NaNs
+    // This needs to be done for Doubles, Floats, or erased types for the String API
+    val couldContainNaN = type.withNullability(false).let {
+        it.canBeNaN ||
+            it == typeOf<Comparable<Any>>() ||
+            it == typeOf<Any>()
+    }
+
+    // propagate NaN to return if they are not to be skipped
+    if (couldContainNaN && !skipNaN) {
+        val indexOfFirstNaN = indexOfFirst { it.isNaN }
+        if (indexOfFirstNaN >= 0) return indexOfFirstNaN
+    }
+
+    // nulls are always skipped, NaNs only remain here if skipNaN
+    val indexedSequence = this.mapIndexedNotNull { i, it ->
+        if (it == null || (couldContainNaN && it.isNaN)) {
+            null
+        } else {
+            IndexedComparable(i, it)
+        }
+    }
+
+    // get the index where the quantile can be found in the sorted sequence
+    val indexEstimation = indexedSequence.quantileIndexEstimation(
+        p = p,
+        type = typeOf<IndexedComparable<Nothing>>(),
+        skipNaN = skipNaN,
+        method = method,
+        name = name,
+    )
+    if (indexEstimation < 0.0) return -1
+    require(indexEstimation == round(indexEstimation)) {
+        "$name expected a whole number index from quantileIndexEstimation but was $indexEstimation"
+    }
+
+    val result = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
+
+    // return the original unsorted index of the found result
+    return result.index
 }
 
 /**
