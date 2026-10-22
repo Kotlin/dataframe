@@ -52,6 +52,12 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
             )
     }
 
+    if (method is QuantileEstimationMethod.Interpolating) {
+        require(type.isPrimitiveNumber()) {
+            "Cannot calculate the $name for non-primitive numbers with estimation method $method."
+        }
+    }
+
     // propagate NaN to return if they are not to be skipped
     if (type.canBeNaN && !skipNaN && any { it.isNaN }) {
         // ensure that using a selecting quantile estimation method always returns the same type as the input
@@ -70,7 +76,7 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
 
     if (size == 1) {
         val single = list.single()
-        return if (type.isPrimitiveNumber()) (single as Number).toDouble() else single
+        return if (method is QuantileEstimationMethod.Interpolating) (single as Number).toDouble() else single
     }
 
     return when (method) {
@@ -78,9 +84,6 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
             method.quantile<T>(p, list as List<T>)
 
         is QuantileEstimationMethod.Interpolating -> {
-            require(type.isPrimitiveNumber()) {
-                "Cannot calculate the $name for non-primitive numbers with estimation method $method."
-            }
             @Suppress("UNCHECKED_CAST")
             val convertedList =
                 if (type == typeOf<Double>()) {
@@ -151,6 +154,11 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
 }
 
 /**
+ * Estimators accepted by the configurable percentile and median overloads.
+ * Selecting methods R1/R3 return an existing observation; interpolating methods R7/R8 return Double.
+ * Operations without an explicit method retain their defaults: R8 for primitive numbers,
+ * R3 for other self-comparables and for operations that select an original element or row.
+ *
  * Inspired by Hyndman and Fan (1996) Sample Quantiles in Statistical Packages. The American Statistician, 50, 361-365.
  * DOI:10.1080/00031305.1996.10473566
  *
@@ -163,27 +171,37 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
  *
  * TODO https://github.com/Kotlin/dataframe/issues/1121
  *   - add R2, R4, R5, R6, R9
- *   - make public if configurable for percentile function
  */
-internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
+public sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
     /**
      * Gives the (1-based) index of the [p]-quantile for a distribution of size [count].
      * If the result `h` is a whole number, the `h`'th smallest of the [count] values is the quantile estimate.
      * If not, `h` is an estimation of the index of the p-quantile. Rounding or interpolation needs to occur to get
      * the actual quantile estimate.
+     *
+     * @param p A finite probability in `[0, 1]` (unlike the percentile API's `[0, 100]`).
+     * @param count The strictly positive sample size.
+     * @throws IllegalArgumentException If the probability is invalid or the sample size is not positive.
      */
-    fun oneBasedIndexOfQuantile(p: Double, count: Int): Index
+    public fun oneBasedIndexOfQuantile(p: Double, count: Int): Index
 
-    fun quantile(p: Double, values: List<Value>): Value
+    /**
+     * Computes the quantile from nonempty, non-null observations without modifying [values].
+     * Observations need not be sorted. Use the percentile/median operations to handle nulls and NaN.
+     * @throws IllegalArgumentException If [p] is outside `[0, 1]` or [values] is empty.
+     */
+    public fun quantile(p: Double, values: List<Value>): Value
 
-    sealed interface Selecting : QuantileEstimationMethod<Comparable<Any>, Int> {
+    public sealed interface Selecting : QuantileEstimationMethod<Comparable<Any>, Int> {
 
         /** Inverse of the empirical distribution function. */
-        data object R1 : Selecting {
-            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int =
-                ceil(p * count).toInt()
+        public data object R1 : Selecting {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int {
+                requireQuantileSample(p, count)
+                return ceil(p * count).toInt()
                     .coerceIn(1..count)
+            }
 
             @Suppress("UNCHECKED_CAST")
             override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
@@ -193,11 +211,13 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         }
 
         /** The observation closest to `count * p` */
-        data object R3 : Selecting {
+        public data object R3 : Selecting {
             // following apache commons + paper instead of wikipedia
-            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int =
-                round(count * p).toInt()
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int {
+                requireQuantileSample(p, count)
+                return round(count * p).toInt()
                     .coerceIn(1..count)
+            }
 
             @Suppress("UNCHECKED_CAST")
             override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
@@ -208,41 +228,57 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
     }
 
     // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
-    sealed interface Interpolating : QuantileEstimationMethod<Double, Double> {
+    public sealed interface Interpolating : QuantileEstimationMethod<Double, Double> {
+
+        override fun quantile(p: Double, values: List<Double>): Double {
+            val h = oneBasedIndexOfQuantile(p, values.size)
+            val lower = values.quickSelect(floor(h).toInt() - 1)
+            val fraction = h - floor(h)
+            if (fraction == 0.0) return lower
+            val upper = values.quickSelect(ceil(h).toInt() - 1)
+            if (lower.toBits() == upper.toBits()) return lower
+            return lower + fraction * (upper - lower)
+        }
 
         /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
-        data object R7 : Interpolating, PieceWiseLinear {
-            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double =
-                ((count - 1.0) * p + 1.0)
+        public data object R7 : Interpolating {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double {
+                requireQuantileSample(p, count)
+                return ((count - 1.0) * p + 1.0)
                     .coerceIn(1.0..count.toDouble())
+            }
         }
 
         /** Linear interpolation of the approximate medians for order statistics. Recommended by H & F. */
-        data object R8 : Interpolating, PieceWiseLinear {
-            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double =
-                ((count + 1.0 / 3.0) * p + 1.0 / 3.0)
+        public data object R8 : Interpolating {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double {
+                requireQuantileSample(p, count)
+                return ((count + 1.0 / 3.0) * p + 1.0 / 3.0)
                     .coerceIn(1.0..count.toDouble())
-        }
-
-        private interface PieceWiseLinear : Interpolating {
-            override fun quantile(p: Double, values: List<Double>): Double {
-                val h = oneBasedIndexOfQuantile(p, values.size)
-                return values.quickSelect(floor(h).toInt() - 1) + (h - floor(h)) * (
-                    values.quickSelect(ceil(h).toInt() - 1) -
-                        values.quickSelect(floor(h).toInt() - 1)
-                )
             }
         }
     }
 
     // shortcuts to the various estimation methods
     // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
-    companion object {
-        val R1 = Selecting.R1
-        val R3 = Selecting.R3
-        val R7 = Interpolating.R7
-        val R8 = Interpolating.R8
+    public companion object {
+        /** Shortcut for the selecting [Selecting.R1] estimator. */
+        public val R1: Selecting.R1 = Selecting.R1
+
+        /** Shortcut for the selecting [Selecting.R3] estimator. */
+        public val R3: Selecting.R3 = Selecting.R3
+
+        /** Shortcut for the interpolating [Interpolating.R7] estimator. */
+        public val R7: Interpolating.R7 = Interpolating.R7
+
+        /** Shortcut for the interpolating [Interpolating.R8] estimator. */
+        public val R8: Interpolating.R8 = Interpolating.R8
     }
+}
+
+private fun requireQuantileSample(p: Double, count: Int) {
+    require(p in 0.0..1.0) { "Quantile probability must be in range [0, 1]" }
+    require(count > 0) { "Quantile estimation requires a nonempty sample" }
 }
 
 // overload to get the right comparable type

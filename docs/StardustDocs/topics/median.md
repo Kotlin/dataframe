@@ -13,7 +13,7 @@ or they return `null` when using the `-orNull` overloads.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`,
 but no mix of different number types.
-In these cases, the return type is always `Double?`.
+With the default estimator, the return type is `Double?`. Explicit selecting methods preserve the observation type.
 When the number of values is even, the median is the average of the two middle values.
 
 The operation is also available for self-comparable columns
@@ -24,6 +24,10 @@ When the number of values is even, the median is the lower of the two middle val
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.
 When it's set to `true`, `NaN` values are ignored.
+For `-By`, the first NaN selects its original row or element unless NaN is skipped.
+Interpolation preserves exact observations at integral positions and identical infinities; other arithmetic can produce NaN.
+
+The `method` overloads allow choosing R1, R3, R7, or R8. See [statistical estimation methods](estimationMethods.md).
 
 <!---FUN medianModes-->
 
