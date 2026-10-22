@@ -24,12 +24,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
-import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestWhenNoElements
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MAX_NO_SKIPNAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MAX
@@ -47,9 +49,12 @@ import kotlin.reflect.KProperty
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -209,9 +214,12 @@ internal interface MaxDocs : CommonMinMaxDocs {
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -258,16 +266,19 @@ internal interface MaxDocs : CommonMinMaxDocs {
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefault): T =
-    maxOrNull(skipNaN).suggestIfNull("max")
+    maxOrNull(skipNaN).throwAndSuggestIfNull("max")
 
 /**
  * Returns the maximum of the values in this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -322,9 +333,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -366,7 +384,10 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
+): T =
+    Aggregators.max<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrElse { throwAndSuggestWhenNoElements("maxBy") }
 
 /**
  * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
@@ -374,9 +395,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -419,7 +447,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.max<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? =
+    Aggregators.max<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrNull()
 
 /**
  * Returns the maximum of the values that the given [<code>selector</code>][selector] returns
@@ -431,9 +462,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -482,7 +516,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = maxOfOrNull(skipNaN, selector).suggestIfNull("maxOf")
+): R & Any = maxOfOrNull(skipNaN, selector).throwAndSuggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [<code>selector</code>][selector] returns
@@ -494,9 +528,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -570,9 +607,12 @@ public fun DataRow<*>.rowMax(): Nothing = error(ROW_MAX)
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -630,9 +670,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -679,7 +722,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boolean = skipNaNDefault): T =
-    rowMaxOfOrNull<T>(skipNaN).suggestIfNull("rowMaxOf")
+    rowMaxOfOrNull<T>(skipNaN).throwAndSuggestIfNull("rowMaxOf")
 
 // endregion
 
@@ -696,9 +739,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -729,7 +775,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the largest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.max()
+ * df.flatten().max()
  * ```
  *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -747,9 +793,12 @@ public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -816,9 +865,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -889,9 +941,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -977,16 +1032,19 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = maxOrNull(skipNaN, columns).suggestIfNull("max")
+): C & Any = maxOrNull(skipNaN, columns).throwAndSuggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1052,21 +1110,21 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any> =
-    maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+    maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C & Any = maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C & Any = maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
@@ -1074,9 +1132,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1171,9 +1232,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1274,9 +1338,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1328,7 +1395,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = maxOfOrNull(skipNaN, expression).suggestIfNull("maxOf")
+): C & Any = maxOfOrNull(skipNaN, expression).throwAndSuggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [<code>expression</code>][expression] returns
@@ -1348,9 +1415,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1418,9 +1488,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1467,7 +1544,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T> = maxByOrNull(skipNaN, expression).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(skipNaN, expression).throwAndSuggestIfNull("maxBy")
 
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the largest value
@@ -1475,9 +1552,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1520,21 +1600,21 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
-    maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+    maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression] returns
@@ -1550,9 +1630,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1603,9 +1690,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1681,9 +1771,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1740,9 +1833,12 @@ public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1816,9 +1912,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1900,9 +1999,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1977,9 +2079,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2080,9 +2185,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2162,9 +2270,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2226,9 +2341,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2291,9 +2409,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2353,9 +2474,12 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2433,9 +2557,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2521,9 +2648,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2588,9 +2718,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2679,9 +2812,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2748,9 +2884,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2811,9 +2954,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2885,9 +3031,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2952,9 +3101,12 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3036,9 +3188,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3131,9 +3286,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3205,9 +3363,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3302,9 +3463,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3376,9 +3540,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3440,9 +3611,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.maxBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3509,7 +3683,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(): T = max(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(): T? = maxOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T & Any =
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T =
     maxBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
