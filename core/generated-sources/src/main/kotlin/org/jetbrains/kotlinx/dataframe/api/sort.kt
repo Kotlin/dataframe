@@ -501,10 +501,10 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
 // region GroupBy
 
 /**
- * Sorts this [<code>GroupBy</code>][GroupBy] group rows by the specified [<code>columns</code>][cols] in ascending order.
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][cols] in ascending order.
  *
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
- * with the groups sorted according to the selected columns.
+ * with rows sorted within each group according to the selected columns.
  *
  *
  *
@@ -513,12 +513,15 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
  *
  * The order in which columns are selected determines the sort priority.
  *
- * Don't confuse this with [<code>sortByGroup</code>][sortByGroup] and [<code>sortByKey</code>][sortByKey] that sort key-group pairs order.
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCount</code>][sortByCount], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
  *
  * See also
  *   - [<code>`sortBy { }`</code>][GroupBy.sortBy] overload that uses [<code>SortDsl</code>][SortDsl]
  * for selecting columns, allowing specifying sort directions and `null`s position.
  *   - [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows in descending order.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCount</code>][sortByCount] and [<code>sortByCountAsc</code>][sortByCountAsc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out [<code>`GroupBy grammar`</code>][Grammar].
  *
@@ -533,7 +536,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
  * ```
  *
  * @param cols The [<code>Column Names</code>][String] that defines which columns are used for sorting.
- * @return A new [<code>GroupBy</code>][GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
  */
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
@@ -547,10 +550,13 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
     sortBy { cols.toColumnSet() }
 
 /**
- * Sorts this [<code>GroupBy</code>][GroupBy] group rows by the specified [<code>columns</code>][selector] in ascending (default) or descending order.
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][selector]
+ * in ascending (default) or descending order.
  *
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
- * with the groups sorted according to the selected columns.
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCount</code>][sortByCount], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
  *
  * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
  *
@@ -570,7 +576,11 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
  *
  * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
- * See also [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows in descending order by default.
+ * See also
+ *   - [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows in descending order by default.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCount</code>][sortByCount] and [<code>sortByCountAsc</code>][sortByCountAsc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out [<code>`GroupBy grammar`</code>][Grammar].
  *
@@ -594,16 +604,18 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
  * ```
  *
  * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
- *                for sorting, in which order and direction.
- * @return A new [<code>GroupBy</code>][GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
+ *                for sorting within each group, in which order and direction.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
  */
 public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): GroupBy<T, G> = sortByImpl(selector)
 
 /**
- * Sorts this [<code>DataFrame</code>][DataFrame] rows by the specified [<code>columns</code>][cols] in descending order.
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][cols] in descending order.
  *
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
- * with the groups sorted according to the selected columns.
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCount</code>][sortByCount], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
  *
  *
  *
@@ -616,6 +628,9 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  *   - [<code>`sortByDesc { }`</code>][GroupBy.sortByDesc] overload that uses [<code>SortDsl</code>][SortDsl]
  * for selecting columns, allowing specifying sort directions and `null`s position.
  *   - [<code>sortBy</code>][GroupBy.sortBy] that sorts rows in ascending order.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCount</code>][sortByCount] and [<code>sortByCountAsc</code>][sortByCountAsc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out [<code>`GroupBy grammar`</code>][Grammar].
  *
@@ -630,7 +645,7 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  * ```
  *
  * @param cols The [<code>Column Names</code>][String] that define which columns are used for sorting.
- * @return A new [<code>GroupBy</code>][GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
  */
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: String): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
 
@@ -645,10 +660,13 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
     sortByDesc { cols.toColumnSet() }
 
 /**
- * Sorts this [<code>GroupBy</code>][GroupBy] group rows by the specified [<code>columns</code>][selector] in ascending or descending (default) order.
+ * Sorts rows within each group of this [<code>GroupBy</code>][GroupBy] by the specified [<code>columns</code>][selector]
+ * in ascending or descending (default) order.
  *
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups,
- * with the groups sorted according to the selected columns.
+ * with rows sorted within each group according to the selected columns.
+ *
+ * Don't confuse this with [<code>sortByGroup</code>][sortByGroup], [<code>sortByCount</code>][sortByCount], and [<code>sortByKey</code>][sortByKey], which sort key-group pairs instead.
  *
  * Select columns to sort by, adjust sorting order and `null`s position using [<code>SortDsl</code>][SortDsl].
  *
@@ -668,7 +686,11 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  *
  * See [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl].
  *
- * See also [<code>sortBy</code>][GroupBy.sortBy] that sorts rows in ascending order by default.
+ * See also
+ *   - [<code>sortBy</code>][GroupBy.sortBy] that sorts rows in ascending order by default.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort key-group pairs by values computed for each group.
+ *   - [<code>sortByCount</code>][sortByCount] and [<code>sortByCountAsc</code>][sortByCountAsc] that sort key-group pairs by group size.
+ *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out [<code>`GroupBy grammar`</code>][Grammar].
  *
@@ -692,8 +714,8 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * ```
  *
  * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
- *                for sorting, in which order and direction.
- * @return A new [<code>GroupBy</code>][GroupBy] with same keys and groups with the original rows sorted based on the specified columns.
+ *                for sorting within each group, in which order and direction.
+ * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
  */
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
     val set = selector.toColumnSet()
@@ -719,7 +741,7 @@ private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts the group rows.
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByGroupDesc</code>][sortByGroupDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values descending.
@@ -759,7 +781,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroup(
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts the group rows.
+ * Don't confuse this with [<code>sortByDesc</code>][GroupBy.sortByDesc] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByGroup</code>][sortByGroup] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values ascending.
@@ -795,7 +817,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts the group rows.
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByCount</code>][sortByCount] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes descending.
@@ -816,7 +838,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts the group rows.
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByCountAsc</code>][sortByCountAsc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes in ascending order.
@@ -837,7 +859,7 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc {
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts the group rows.
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByKey</code>][sortByKey] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values ascending.
@@ -863,7 +885,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
  * Returns a new [<code>GroupBy</code>][GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts the group rows.
+ * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
  *   - [<code>sortByKeyDesc</code>][sortByKeyDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values descending.
