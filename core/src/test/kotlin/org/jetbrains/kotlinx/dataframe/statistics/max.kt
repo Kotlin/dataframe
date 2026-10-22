@@ -341,4 +341,11 @@ class MaxTests {
             if (b == 0.0) Double.NaN else "a"<Double>() / b
         } shouldBe 0.5 // Only 1.0/2.0 = 0.5 is valid
     }
+
+    // Issue #2175
+    @Test
+    fun `column maxBy result is null`() {
+        val col = columnOf(-1, null)
+        col.maxBy { it ?: 0 } shouldBe null
+    }
 }

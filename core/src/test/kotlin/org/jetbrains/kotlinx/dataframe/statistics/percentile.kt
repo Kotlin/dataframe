@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.percentileFor
 import org.jetbrains.kotlinx.dataframe.api.percentileOf
 import org.jetbrains.kotlinx.dataframe.api.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowPercentileOf
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.junit.Test
 import kotlin.experimental.ExperimentalTypeInference
@@ -303,5 +304,36 @@ class PercentileTests {
         val doubleWithNaN = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
         doubleWithNaN.percentile(50.0).shouldBeNaN() // Percentile functions should return NaN if any value is NaN
         doubleWithNaN.percentile(50.0, skipNaN = true) shouldBe 3.5 // With skipNaN=true, NaN values should be ignored
+    }
+
+    @Test
+    fun `percentileBy selects the first NaN if skipNaN is false`() {
+        val col = columnOf(5.0, 2.0, Double.NaN, 1.0, 9.0)
+        val df = dataFrameOf("v", "g")(
+            5.0, 1,
+            2.0, 1,
+            Double.NaN, 1,
+            1.0, 1,
+            9.0, 1,
+        )
+
+        col.percentileBy(50.0) { it }.shouldBeNaN()
+        col.percentileByOrNull(50.0) { it }!!.shouldBeNaN()
+        (df.percentileBy(50.0) { "v"<Double>() }["v"] as Double).shouldBeNaN()
+        (df.percentileBy(50.0, "v")["v"] as Double).shouldBeNaN()
+        (df.percentileByOrNull(50.0, "v")!!["v"] as Double).shouldBeNaN()
+        (df.groupBy("g").percentileBy(50.0, "v").values()["v"][0] as Double).shouldBeNaN()
+
+        // With skipNaN=true, NaN values should be ignored
+        col.percentileBy(100.0, skipNaN = true) { it } shouldBe 9.0
+        df.percentileBy(100.0, skipNaN = true) { "v"<Double>() }["v"] shouldBe 9.0
+        df.percentileBy(100.0, "v", skipNaN = true)["v"] shouldBe 9.0
+    }
+
+    // Issue #2175
+    @Test
+    fun `column percentileBy result is null`() {
+        val col = columnOf(1, null)
+        col.percentileBy(50.0) { it ?: 0 } shouldBe null
     }
 }
