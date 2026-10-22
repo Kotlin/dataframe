@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.intellij.lang.annotations.Language
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import java.io.Serializable
 
 /**
