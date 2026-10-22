@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.NALink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -26,7 +27,7 @@ import kotlin.reflect.KProperty
  *
  * The other columns are used as grouping keys and keep their types.
  *
- * If [\dropNA] is `true`, `NA` values are removed from the merged lists.
+ * If [\dropNA] is `true`, {@include [NALink]} values are removed from the merged lists.
  *
  * Imploded columns will change their types:
  * - `T` to `List<T>`;
@@ -43,7 +44,7 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 internal interface ImplodeDocs {
     /**
-     * @param [\dropNA] If `true`, removes `NA` values (`null`, [Double.NaN] or [Float.NaN])
+     * @param [\dropNA] If `true`, removes {@include [NALink]} values (`null`, [Double.NaN] or [Float.NaN])
      *   from the merged lists. `false` by default.
      */
     typealias DropNASnippet = Nothing
@@ -61,7 +62,7 @@ internal interface ImplodeDocs {
  * Each value of the resulting row is a [List] of all values in the corresponding column.
  * A [ColumnGroup] is converted into a [DataFrame] containing its rows.
  *
- * If [dropNA] is `true`, `NA` values are removed from the merged lists.
+ * If [dropNA] is `true`, {@include [NALink]} values are removed from the merged lists.
  *
  * It is the same as `df.implode(dropNA) { all() }[0]`.
  *
