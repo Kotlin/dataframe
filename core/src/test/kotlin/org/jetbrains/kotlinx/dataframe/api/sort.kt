@@ -258,6 +258,15 @@ class SortTests : TestBase() {
     }
 
     @Test
+    fun `grouped sort accepts valid selections after all groups are filtered out`() {
+        val grouped = df.groupBy { name.firstName }.filter { false }
+        grouped.groups.size() shouldBe 0
+
+        grouped.sortBy("age").toDataFrame() shouldBe grouped.toDataFrame()
+        grouped.sortByDesc { age }.toDataFrame() shouldBe grouped.toDataFrame()
+    }
+
+    @Test
     fun `grouped sort with type-safe selector sorts rows within groups`() {
         val grouped = df.groupBy { name.firstName }
         val actual = grouped.sortBy { age }

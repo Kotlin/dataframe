@@ -28,7 +28,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 @Suppress("RemoveExplicitTypeArguments")
 internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> {
-    if (groups.size() == 0) {
+    if (groups.size() == 0 && groups.schema.value.columns.isNotEmpty()) {
         try {
             // With no groups to sort, resolve the selector against the preserved group schema
             DataFrame.empty(groups.schema.value).cast<G>().getSortColumns(columns, UnresolvedColumnsPolicy.Fail)
