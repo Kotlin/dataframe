@@ -25,11 +25,19 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 
 - `dfbuild.kodex`: Sets up [KoDEx](https://github.com/Jolanrensen/KoDEx) KDoc preprocessing.
     Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
-    - This plugin modifies the `Jar` tasks such that its sources contain KoDEx-preprocessed sources.
+    - This plugin creates a `mainKodex` source set and compilation from the KoDEx-preprocessed sources,
+      with the jar tasks `kodexMainKodexJar` and `kodexMainKodexSourcesJar`.
+      If `libs.publisher` is applied too, a `kodexJava` component is created: the `java` component, but with
+      these jars instead of the normal jar and sources jar (so `@ExcludeFromSources` declarations are absent from both).
+      The publication must select it with `composeOf { from(kodexAwareComponentToPublish()) }` in `kotlinPublications {}`,
+      otherwise publishing fails.
+      If the binary compatibility validator is applied too, it will read the public API from the KoDEx-processed
+      jars instead of unprocessed ones.
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
-    - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
-    - The plugin can be configured via the `kodexConvention` extension for your needs.
-    - Modules the project depends on are included in the context of KoDEx.
+    - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
+      The binary compatibility validator will also be skipped, since `apiCheck` would fail if run without KoDEx.
+    - Modules the project depends on are included in the context of KoDEx,
+      as well as the `:samples` test sources (for `@sample`/`@includeFile`).
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
