@@ -23,26 +23,130 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
+/**
+ * Returns `true` if this column is a [ColumnGroup],
+ * i.e., its [kind][DataColumn.kind] is [ColumnKind.Group].
+ *
+ * This function has a contract: when it returns `true`, the compiler smart-casts this column
+ * to [ColumnGroup]`<*>`.
+ *
+ * See also [isFrameColumn], [isValueColumn].
+ *
+ * Use [asColumnGroup] to cast a column to [ColumnGroup]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isColumnGroup]
+ *
+ * @return `true` if this column is a [ColumnGroup], `false` otherwise.
+ */
 public fun AnyCol.isColumnGroup(): Boolean {
     contract { returns(true) implies (this@isColumnGroup is ColumnGroup<*>) }
     return kind() == ColumnKind.Group
 }
 
+/**
+ * Returns `true` if this column is a [FrameColumn],
+ * i.e., its [kind][DataColumn.kind] is [ColumnKind.Frame].
+ *
+ * This function has a contract: when it returns `true`, the compiler smart-casts this column
+ * to [FrameColumn]`<*>`.
+ *
+ * See also [isColumnGroup], [isValueColumn].
+ *
+ * Use [asFrameColumn] to cast a column to [FrameColumn]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isFrameColumn]
+ *
+ * @return `true` if this column is a [FrameColumn], `false` otherwise.
+ */
 public fun AnyCol.isFrameColumn(): Boolean {
     contract { returns(true) implies (this@isFrameColumn is FrameColumn<*>) }
     return kind() == ColumnKind.Frame
 }
 
+/**
+ * Returns `true` if this column is a [ValueColumn],
+ * i.e., its [kind][DataColumn.kind] is [ColumnKind.Value].
+ *
+ * This function has a contract: when it returns `true`, the compiler smart-casts this column
+ * to [ValueColumn]`<*>`.
+ *
+ * See also [isColumnGroup], [isFrameColumn].
+ *
+ * Use [asValueColumn] to cast a column to [ValueColumn]`<*>` without the check.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isValueColumn]
+ *
+ * @return `true` if this column is a [ValueColumn], `false` otherwise.
+ */
 public fun AnyCol.isValueColumn(): Boolean {
     contract { returns(true) implies (this@isValueColumn is ValueColumn<*>) }
     return kind() == ColumnKind.Value
 }
 
+/**
+ * Returns `true` if the [type][DataColumn.type] of this column is a subtype of the given [type].
+ *
+ * Nullability is respected: a column of a nullable type (like `Int?`)
+ * is not a subtype of a non-nullable type (like `Int`),
+ * while a column of a non-nullable type is a subtype of its nullable counterpart.
+ *
+ * Unlike [isType], this check allows subtypes:
+ * a column of type `Int` is a subtype of `Number`, but it is not of type `Number`.
+ *
+ * See also [isSubtypeOf] with a reified type argument, [isType].
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isSubtypeOfKType]
+ *
+ * @param [type] the [KType] to check the column type against.
+ * @return `true` if the column type is a subtype of [type], `false` otherwise.
+ */
 public fun AnyCol.isSubtypeOf(type: KType): Boolean =
     this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
+/**
+ * Returns `true` if the [type][DataColumn.type] of this column is a subtype of [T].
+ *
+ * Nullability is respected: a column of a nullable type (like `Int?`)
+ * is not a subtype of a non-nullable type (like `Int`),
+ * while a column of a non-nullable type is a subtype of its nullable counterpart.
+ *
+ * Unlike [isType], this check allows subtypes:
+ * a column of type `Int` is a subtype of `Number`, but it is not of type `Number`.
+ *
+ * See also [isSubtypeOf] with a [KType] argument, [isType].
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isSubtypeOfReified]
+ *
+ * @param [T] the type to check the column type against.
+ * @return `true` if the column type is a subtype of [T], `false` otherwise.
+ */
 public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
 
+/**
+ * Returns `true` only if the [type][DataColumn.type] of this column is exactly [T].
+ *
+ * Unlike [isSubtypeOf], no subtyping is allowed and nullability must match as well:
+ * a column of type `Int` is neither of type `Number` nor of type `Int?`.
+ *
+ * See also [isSubtypeOf].
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isType]
+ *
+ * @param [T] the type to compare the column type with.
+ * @return `true` if the column type is exactly [T], `false` otherwise.
+ */
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 
 /** Returns `true` when this column's type is a subtype of `Number?` */
@@ -66,6 +170,19 @@ public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
  */
 public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
 
+/**
+ * Returns `true` when the class of this column's [type][DataColumn.type] is [List],
+ * i.e., the column holds `List<*>` (or `List<*>?`) values.
+ *
+ * Only the [List] class itself is matched: a column of a [List] subtype (like `ArrayList<*>`)
+ * or of another [Collection] type (like `Set<*>`) is not considered a list column.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.column.DataColumnTypeSamples.isList]
+ *
+ * @return `true` if the column type class is [List], `false` otherwise.
+ */
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
 /** @include [valuesAreComparable] */
