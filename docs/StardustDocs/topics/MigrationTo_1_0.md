@@ -202,6 +202,10 @@ and preserve the order of key-group pairs. To sort the groups themselves by thei
 `sortByKeyDesc` instead. If both the groups and their rows need to be sorted, call the corresponding operations
 separately.
 
+| 0.15                                            | 1.0                                                     |
+|-------------------------------------------------|---------------------------------------------------------|
+| `df.groupBy { city }.sortBy { city and day }`   | `df.groupBy { city }.sortByKey().sortBy { day }`        |
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
