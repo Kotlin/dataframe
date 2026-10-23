@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.isEmpty
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
@@ -28,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 @Suppress("RemoveExplicitTypeArguments")
 internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> {
-    if (groups.size() == 0 && groups.schema.value.columns.isNotEmpty()) {
+    if (groups.isEmpty && groups.schema.value.columns.isNotEmpty()) {
         try {
             // With no groups to sort, resolve the selector against the preserved group schema
             DataFrame.empty(groups.schema.value).cast<G>().getSortColumns(columns, UnresolvedColumnsPolicy.Fail)
