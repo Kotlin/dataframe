@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchemaDoc
 import org.jetbrains.kotlinx.dataframe.schema.plus
 
 /**
