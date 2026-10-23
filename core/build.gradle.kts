@@ -1,3 +1,4 @@
+import dfbuild.kodex.kodexAwareComponentToPublish
 import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
@@ -320,7 +321,7 @@ tasks.runKtlintFormatOverMainSourceSet {
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
-tasks.runKtlintFormatOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintFormatOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -332,7 +333,7 @@ tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.runKtlintCheckOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintCheckOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -372,5 +373,7 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Kotlin DataFrame: core API"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }
