@@ -126,7 +126,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      *  [<code>**`all`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     *  `| `**`all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     *  `| `**`all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
      *
      *
@@ -142,7 +142,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`all`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
      *
      *
      *
@@ -158,7 +158,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`allCols`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
      *
      *
@@ -182,7 +182,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         /** [<code>**`Before`**</code>][ColumnsSelectionDsl.allColsBefore] */
         public typealias Before = Nothing
 
-        /** [<code>**`After`**</code>][ColumnsSelectionDsl.allAfter] */
+        /** [<code>**`After`**</code>][ColumnsSelectionDsl.allColsAfter] */
         public typealias After = Nothing
 
         /** [<code>**`From`**</code>][ColumnsSelectionDsl.allColsFrom] */

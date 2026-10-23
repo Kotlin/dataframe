@@ -66,7 +66,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  [<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -80,7 +80,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      *  [<code>`columnSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -94,7 +94,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      *  [<code>`columnGroup`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -106,13 +106,13 @@ public interface ColsOfKindColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colGroups] */
+        /** [<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colsOfKind] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colsOfKind] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[<code>**`colsOfKind`**</code>][ColumnsSelectionDsl.colsOfKind] */
         public typealias ColumnGroupName = Nothing
     }
 
