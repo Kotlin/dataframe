@@ -11,7 +11,7 @@ kotlinpoet = "2.4.0"
 # After changing it, run `./gradlew updateDaemonJvm` and commit the regenerated properties file.
 gradle-jdk = "21"
 
-dokka = "2.2.0"
+dokka = "2.3.0-Beta"
 libsPublisher = "2.2.0-rc3-dev-59"
 
 # Latest release version of DataFrame, used in examples
