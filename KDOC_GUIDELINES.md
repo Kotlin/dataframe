@@ -198,7 +198,7 @@ In the future, we want to have nice topic names with backticks
 
 All KDoc-helpers must be `internal` or `private`!
 
-Some of KDoc-helpers can be used both as -snippets and -topics.
+Some KDoc-helpers can be used both as snippets and as topics.
 
 ### Common KDoc-helpers
 
@@ -330,13 +330,13 @@ and it should be continued with other methods. Also add a note about the [operat
 For example (from the `insert` KDoc):
 
 ```
- * This function does not immediately insert the new column but instead specify a column to insert and
+ * This function does not immediately insert the new column but instead specifies a column to insert and
  * returns an [InsertClause],
  * which serves as an intermediate step.
  * The [InsertClause] object provides methods to insert a new column using:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [at][InsertClause.at] - inserts a new column at the specified position.
  *
  * Each method returns a new [DataFrame] with the inserted column.
  * 

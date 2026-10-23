@@ -283,18 +283,20 @@ public enum class Infer {
  */
 public enum class NullabilityOptions {
     /**
-     * Use only actual data, set [DataColumn.hasNulls] to true if and only if there are null values in the column.
-     * On empty dataset use False.
+     * Use only actual data, set [DataColumn.hasNulls] to `true` if and only if there are null values in the column.
+     * On an empty dataset, use `false`.
      */
     Infer,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value. Throw exception if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value.
+     * Throws an exception if the column should be not nullable but there are null values.
      */
     Checking,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value by default. Change False to True if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value by default.
+     * Change `false` to `true` if the column should be not nullable but there are null values.
      */
     Widening,
 }
@@ -302,7 +304,8 @@ public enum class NullabilityOptions {
 public class NullabilityException : Exception()
 
 /**
- * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
+ * @return whether the column should be marked nullable for the current [NullabilityOptions] value
+ * with actual [data] and [expectedNulls] per some schema/signature.
  * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
  */
 public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {

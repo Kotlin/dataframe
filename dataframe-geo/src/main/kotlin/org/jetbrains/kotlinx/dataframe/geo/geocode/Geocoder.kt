@@ -23,7 +23,7 @@ import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.io.geojson.GeoJsonReader
 
 /**
- * Experimental geo coding utility.
+ * Experimental geocoding utility.
  */
 @Experimental
 public object Geocoder {

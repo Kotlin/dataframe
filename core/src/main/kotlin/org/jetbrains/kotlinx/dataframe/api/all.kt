@@ -132,7 +132,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         /** [**`Before`**][ColumnsSelectionDsl.allColsBefore] */
         public typealias Before = Nothing
 
-        /** [**`After`**][ColumnsSelectionDsl.allAfter] */
+        /** [**`After`**][ColumnsSelectionDsl.allColsAfter] */
         public typealias After = Nothing
 
         /** [**`From`**][ColumnsSelectionDsl.allColsFrom] */
