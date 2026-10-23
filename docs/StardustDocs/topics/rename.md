@@ -60,6 +60,16 @@ df.rename("age").to {
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html" width="100%"/>
 <!---END-->
 
+## Adding a prefix or suffix
+
+Use `rename { columns }.addPrefix(prefix)` or `rename { columns }.addSuffix(suffix)` to add text to the names of
+selected columns. These operations preserve column values, types, and positions. An empty prefix or suffix leaves
+the names unchanged.
+
+Nested columns can be selected explicitly. Selecting a column group changes the group's name without renaming
+its children; select the children as well to rename them. If a new name conflicts with another column at the same
+level, the operation reports the same duplicate-name error as other `rename` operations.
+
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.RenameToCamelCase-->
 
 ## renameToCamelCase
