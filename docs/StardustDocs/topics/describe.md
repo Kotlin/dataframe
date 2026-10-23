@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
 
+**API reference**: [`describe`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/describe.html)
+
 ```kotlin
 describe [ columns ]
 ```

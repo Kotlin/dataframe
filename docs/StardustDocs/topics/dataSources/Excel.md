@@ -16,6 +16,8 @@ Learn how to read and write Excel files using Kotlin DataFrame with just a singl
 
 Kotlin DataFrame supports reading from and writing to Excel files in both `.xls` and `.xlsx` formats.
 
+**API reference**: [`readExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/read-excel.html), [`writeExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/write-excel.html), [dataframe-excel module](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/index.html)
+
 Requires the [`dataframe-excel` module](Modules.md#dataframe-excel), 
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
 artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

@@ -5,6 +5,8 @@
 Returns a [`DataFrame`](DataFrame.md) containing the counts of the unique values in a [`DataFrame`](DataFrame.md)
 or [`DataColumn`](DataColumn.md).
 
+**API reference**: [`valueCounts`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/value-counts.html)
+
 ```kotlin
 valueCounts(sort = true, ascending = false, dropNA = true, resultColumn = "count")
      [ { columns } ]

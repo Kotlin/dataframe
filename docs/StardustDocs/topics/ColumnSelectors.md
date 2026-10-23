@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ColumnSelectorsSamples-->
 
-[`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns: the Columns Selection DSL.
+[`DataFrame`](DataFrame.md) provides a DSL for selecting an arbitrary set of columns:
+the Columns Selection DSL (see [`ColumnsSelectionDsl` Dokka API](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-columns-selection-dsl/index.html)).
 
 Unless stated otherwise, the examples on this page use the following dataframe:
 
