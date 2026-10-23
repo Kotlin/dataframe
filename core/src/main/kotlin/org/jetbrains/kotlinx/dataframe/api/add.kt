@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -295,10 +293,10 @@ public class AddDsl<T>(
     @PublishedApi
     internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
+    public fun add(column: ColumnReference<*>): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
     @Interpretable("AddDslReferencePlus")
-    public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
+    public operator fun ColumnReference<*>.unaryPlus(): Boolean = add(this)
 
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
@@ -329,7 +327,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
-    public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
+    public infix fun String.from(column: ColumnReference<*>): Boolean = add(column.rename(this))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -340,7 +338,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
-    public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
+    public infix fun ColumnReference<*>.into(name: String): Boolean = add(rename(name))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -355,11 +353,11 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+    public infix fun ColumnAccessor<DataRow<*>>.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
+    public fun group(column: ColumnAccessor<DataRow<*>>, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
     @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
@@ -376,7 +374,7 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
+    public infix fun AddGroup<T>.into(column: ColumnAccessor<DataRow<*>>): Unit = into(column.name())
 }
 
 /**

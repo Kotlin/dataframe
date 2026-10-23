@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -72,7 +71,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumnSet() }
+public fun <T> DataFrame<T>.remove(vararg columns: ColumnReference<*>): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**
  * @include [CommonRemoveDocs]
@@ -95,7 +94,7 @@ public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> =
 
 @Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
+public infix operator fun <T> DataFrame<T>.minus(column: ColumnReference<*>): DataFrame<T> = remove(column)
 
 @Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload

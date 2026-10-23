@@ -10,7 +10,7 @@ import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
-import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -28,7 +28,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
  * name, type and nullability as [this]
  */
-public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
+public fun DataColumn<*>.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
     return when (column) {
@@ -163,7 +163,7 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
  * and Parquet mark values already normalized to UTC. Sub-microsecond instants lose their last three digits at that
  * precision, reported as [ConvertingMismatch.PrecisionReduced]; see [DEFAULT_INSTANT_UNIT] for why.
  */
-public fun List<AnyCol>.toArrowSchema(
+public fun List<DataColumn<*>>.toArrowSchema(
     mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
 ): Schema {
     val fields = this.map { it.toArrowField(mismatchSubscriber) }

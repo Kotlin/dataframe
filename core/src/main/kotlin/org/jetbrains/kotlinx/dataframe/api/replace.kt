@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -43,9 +42,9 @@ public class ReplaceClause<T, C>(internal val df: DataFrame<T>, internal val col
     override fun toString(): String = "ReplaceClause(df=$df, columns=$columns)"
 }
 
-public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T> = with(columns.toList())
+public fun <T, C> ReplaceClause<T, C>.with(vararg columns: DataColumn<*>): DataFrame<T> = with(columns.toList())
 
-public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
+public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<DataColumn<*>>): DataFrame<T> {
     var index = 0
     return with {
         require(index < newColumns.size) {

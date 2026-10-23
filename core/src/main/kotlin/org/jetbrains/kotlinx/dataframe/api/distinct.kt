@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -14,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.DISTINCT_RETURN
 import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.PHRASE_ENDING
 import org.jetbrains.kotlinx.dataframe.api.DistinctDocs.SEE_ALSO
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -105,7 +105,7 @@ public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = dis
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.distinct(vararg columns: ColumnReference<*>): DataFrame<T> =
     distinct { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -126,7 +126,7 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.distinctBy(vararg columns: ColumnReference<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
 
 /**
