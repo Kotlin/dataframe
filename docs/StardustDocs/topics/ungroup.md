@@ -4,6 +4,8 @@
 
 Replaces [`ColumnGroup`](DataColumn.md#columngroup) with its nested columns. 
 
+**API reference**: [`ungroup`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/ungroup.html)
+
 ```text
 ungroup { columns }
 ```

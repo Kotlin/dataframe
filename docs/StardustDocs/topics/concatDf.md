@@ -16,6 +16,8 @@ Discover `concat` operation for Kotlin DataFrame.
 
 Combines rows from multiple [`DataFrame`](DataFrame.md) objects and returns a single `DataFrame`.
 
+**API reference**: [`concat`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/concat.html)
+
 <!---FUN concatDfDataFrames-->
 
 ```kotlin

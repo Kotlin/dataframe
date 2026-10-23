@@ -18,6 +18,8 @@ and the Kotlin type produced when the column is read into a DataFrame in `H2.Mod
 Aliases are canonicalized by H2 at `CREATE TABLE` time, so DataFrame only ever sees the
 canonical type; they are listed in the same row as the canonical type for reference.
 
+**API reference**: [`H2`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-h2/index.html)
+
 For non-`Regular` modes, H2 delegates to the emulated dialect — see the [Mode section](#h2-modes) below.
 
 Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).

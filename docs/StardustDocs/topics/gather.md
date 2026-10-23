@@ -4,6 +4,8 @@
 
 Converts several columns into two columns `key` and `value`. `key` column will contain names of original columns, `value` column will contain values from original columns.
 
+**API reference**: [`gather`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/gather.html)
+
 This operation is reverse to [](pivot.md)
 
 ```kotlin

@@ -7,6 +7,8 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 Although [`DataFrame`](DataFrame.md)
 doesn't implement the [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
 or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)

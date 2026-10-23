@@ -4,6 +4,8 @@
 
 Joins two [`DataFrame`](DataFrame.md) objects by a join expression. 
 
+**API reference**: [`joinWith`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/join-with.html)
+
 ```kotlin
 joinWith(otherDf, type = JoinType.Inner) { joinExpression }
 

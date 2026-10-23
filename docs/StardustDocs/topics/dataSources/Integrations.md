@@ -15,6 +15,8 @@ How to connect Kotlin DataFrame with data sources like Exposed, Apache Spark, or
 Some data sources are not officially supported in the Kotlin DataFrame API yet —
 but you can still integrate them easily using custom code.
 
+**API reference**: [dataframe-geo module](https://kotlin.github.io/dataframe/api-docs/dataframe-geo/index.html)
+
 Below is a list of example integrations with other data frameworks.
 These examples demonstrate how to bridge Kotlin DataFrame with external libraries or APIs.
 

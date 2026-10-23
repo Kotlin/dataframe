@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows that satisfy [row condition](DataRow.md#row-conditions)
 
+**API reference**: [`filter`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/filter.html)
+
 **Related operations**: [](filterRows.md)
 
 <!---FUN filter-->

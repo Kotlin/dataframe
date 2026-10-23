@@ -3,6 +3,8 @@
 
 This section describes ways to create a [`DataColumn`](DataColumn.md).
 
+**API reference**: [`columnOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column-of.html), [`toColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-column.html)
+
 ### columnOf
 
 Returns new column with the given elements.

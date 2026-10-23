@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
+**API reference**: [`getColumns`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/get-columns.html)
+
 Get single column by column name:
 
 <!---FUN getColumnByName-->

@@ -17,6 +17,8 @@ When reading from a JDBC database, DataFrame determines the Kotlin type of each 
 two steps using `DbType` — a class responsible for handling column metadata and creating
 [`DataFrame`](DataFrame.md) columns based on it:
 
+**API reference**: [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html)
+
 1. **Type resolution** — the SQL/JDBC type reported by the driver is mapped to a JDBC-side
    Kotlin type (`DbType.getExpectedJdbcType`).
 2. **Value preprocessing** — a few JDBC types are converted to more idiomatic Kotlin types

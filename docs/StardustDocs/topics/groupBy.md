@@ -4,6 +4,8 @@
 
 Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
+**API reference**: [`groupBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/group-by.html), [`GroupBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-group-by/index.html)
+
 The `groupBy` function returns a `GroupBy` object. 
 A `GroupBy` is a dataframe-like structure that contains one or more key columns and a `group` [`FrameColumn`](DataColumn.md#framecolumn).
 Key columns contain all unique combinations of key values, and the `group` [`FrameColumn`](DataColumn.md#framecolumn) 

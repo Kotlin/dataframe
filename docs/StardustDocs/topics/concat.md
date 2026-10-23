@@ -20,6 +20,8 @@ Appends the rows of one or more [`DataFrame`](DataFrame.md) objects or an iterab
 objects to a `DataFrame`. Rows from every input keep their order, and the inputs are processed in the order in
 which they are passed or iterated.
 
+**API reference**: [`concat`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/concat.html)
+
 Returns a [`DataFrame`](DataFrame.md) containing the receiver's rows followed by all appended rows. The input
 objects are not modified.
 

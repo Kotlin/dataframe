@@ -19,6 +19,8 @@ with format auto-detection and parsing options.
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
+**API reference**: [`read`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.io/read.html), [`readCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/read-csv.html), [`readJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/read-json.html), [`readExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/read-excel.html), [`readArrow`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/read-arrow.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 Reading from SQL databases is also supported.
 Read [here](readSqlDatabases.md) to know more 
 or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
