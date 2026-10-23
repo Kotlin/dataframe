@@ -4,6 +4,8 @@
 
 Splits list-like values in given columns and spreads them vertically. Values in other columns are duplicated.
 
+**API reference**: [`explode`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/explode.html)
+
 ```text
 explode(dropEmpty = true) [ { columns } ]
 ```

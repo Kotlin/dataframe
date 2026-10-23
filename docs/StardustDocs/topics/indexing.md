@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.IndexingSamples-->
 
+**API reference**: [`DataFrame`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-frame/index.html), [`DataRow`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-row/index.html)
+
 The examples on this page use the following [`DataFrame`](DataFrame.md):
 
 <!---FUN indexingDf-->

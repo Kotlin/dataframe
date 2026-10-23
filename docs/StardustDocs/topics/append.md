@@ -1,6 +1,9 @@
 [//]: # (title: append)
 
 Adds one or several rows to [`DataFrame`](DataFrame.md)
+
+**API reference**: [`append`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/append.html)
+
 ```kotlin
 df.append(
     "Mike", 15,

@@ -1,6 +1,8 @@
 [//]: # (title: Modify)
 <show-structure depth="3"/>
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 <tip> 
 
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new instance of [`DataFrame`](DataFrame.md).

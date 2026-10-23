@@ -4,6 +4,8 @@
 
 Returns a [`DataFrame`](DataFrame.md) containing the first `n` (default 5) rows.
 
+**API reference**: [`head`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/head.html)
+
 <!---FUN head-->
 
 ```kotlin

@@ -8,3 +8,5 @@
 * [`first`](firstOnColumn.md) — returns the first value in a [`DataColumn`](DataColumn.md)
 * [`last`](lastOnColumn.md) — returns the last value in a [`DataColumn`](DataColumn.md)
 * [`single`](singleOnColumn.md) — returns the single value in a [`DataColumn`](DataColumn.md)
+
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)

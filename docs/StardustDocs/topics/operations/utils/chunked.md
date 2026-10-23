@@ -18,6 +18,8 @@ Discover `chunked` operation in Kotlin DataFrame.
 Splits a [`DataFrame`](DataFrame.md) into consecutive sub-dataframes (chunks) and returns them as a
 [`FrameColumn`](DataColumn.md#framecolumn). Chunks are formed in order and do not overlap.
 
+**API reference**: [`chunked`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/chunked.html)
+
 Each chunk contains at most the specified number of rows.
 The resulting `FrameColumn`’s name can be customized; by default, it is "groups."
 

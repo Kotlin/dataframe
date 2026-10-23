@@ -18,6 +18,8 @@ with full schema inference and flexible JDBC setup.
 
 These functions allow you to interact with an SQL database using the Kotlin DataFrame library.
 
+**API reference**: [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html), [`readSqlQuery`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-query.html), [`readAllSqlTables`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-all-sql-tables.html), [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html)
+
 There are two main blocks of available functionality:
 * Methods for reading data from a database
   *  ```DataFrame.readSqlTable()``` reads a specific database table

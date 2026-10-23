@@ -37,6 +37,8 @@ See also:
   which keep or remove only the first rows that satisfy a condition.
 * [Filter rows](filterRows.md), an overview of the operations that filter rows.
 
+**API reference**: [`filter`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/filter.html)
+
 ### Parameters
 
 * `predicate: DataRow.(DataRow) -> Boolean` — a [row condition](DataRow.md#row-conditions)
