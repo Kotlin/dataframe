@@ -34,13 +34,13 @@ import kotlin.reflect.KProperty
 // region insert
 
 /**
- * This function does not immediately insert the new column but instead specify a column to insert and
+ * This function does not immediately insert the new column but instead specifies a column to insert and
  * returns an [InsertClause],
  * which serves as an intermediate step.
  * The [InsertClause] object provides methods to insert a new column using:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [at][InsertClause.at] - inserts a new column at the specified position.
  *
  * Each method returns a new [DataFrame] with the inserted column.
  *
@@ -167,14 +167,14 @@ public inline fun <T, reified R> DataFrame<T>.insert(
  * An intermediate class used in the [insert] operation.
  *
  * This class itself does not perform any insertions — it is a transitional step
- * before specifying how to insert the selected columns.
+ * before specifying where to insert the new column.
  * It must be followed by one of the inserting methods
  * to produce a new [DataFrame] with an inserted column.
  *
  * Use the following methods to perform the insertion:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [at][InsertClause.at] - inserts a new column at the specified position.
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  */

@@ -58,13 +58,13 @@ public interface ColsOfKindColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
+        /** [**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
         public typealias PlainDslName = Nothing
 
-        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
         public typealias ColumnSetName = Nothing
 
-        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
+        /** __`.`__[**`colsOfKind`**][ColumnsSelectionDsl.colsOfKind] */
         public typealias ColumnGroupName = Nothing
     }
 
