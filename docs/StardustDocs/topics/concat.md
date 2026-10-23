@@ -14,8 +14,6 @@ Discover `concat` operation for Kotlin DataFrame.
 Discover `concat` operation for Kotlin DataFrame.
 </link-summary>
 
-## `concat` on `DataFrame`
-
 Appends the rows of one or more [`DataFrame`](DataFrame.md) objects or an iterable of [`DataRow`](DataRow.md)
 objects to a `DataFrame`. Rows from every input keep their order, and the inputs are processed in the order in
 which they are passed or iterated.
@@ -24,19 +22,13 @@ Returns a [`DataFrame`](DataFrame.md) containing the receiver's rows followed by
 objects are not modified.
 
 ```text
-dataframe.concat(vararg frames: DataFrame<T>): DataFrame<T>
-(dataframe concat frame | dataframe.concat(frame)): DataFrame<Any>
-dataframe.concat(frames: Iterable<DataFrame<T>>): DataFrame<T>
-dataframe.concat(rows: Iterable<DataRow<T>>): DataFrame<T>
-
-frame: DataFrame<T1>
+df.concat(vararg frames: DataFrame): DataFrame
+df concat frame | df.concat(frame: DataFrame): DataFrame
+df.concat(frames: Iterable<DataFrame>): DataFrame
+df.concat(rows: Iterable<DataRow>): DataFrame
 ```
 
-In the overload with the single `frame` parameter, `T` is the schema type of the receiver `DataFrame`,
-and `T1` is the schema type of the `frame` parameter. When enabled, the compiler plugin refines the declared
-`DataFrame<Any>` return type to a generated schema type that combines both input schemas.
-
-This overload can be called using either infix or regular call syntax.
+`concat` overload with a single `DataFrame` argument can be called using either infix or regular call syntax.
 Infix notation reads naturally when concatenation is the complete expression, such as
 `val fullDf = df1 concat df2` or `return df1 concat df2`.
 When chaining another operation, prefer regular call syntax, such as `df1.concat(df2).head()`, instead of
@@ -187,10 +179,10 @@ registeredPeople.concat(newPeople)
 
 Appends one or more rows to a [`DataRow`](DataRow.md). Returns a [`DataFrame`](DataFrame.md) containing the receiver
 followed by the supplied rows in argument order. If the rows have different schemas, they are unified according to
-the same rules as [`DataFrame.concat`](#concat-on-dataframe).
+the same rules as for `DataFrame`s (see [schema unification examples](#schema-unification-examples)).
 
 ```text
-row.concat(vararg rows: DataRow<T>): DataFrame<T>
+row.concat(vararg rows: DataRow): DataFrame
 ```
 
 ### Parameters {id="parameters_row"}
@@ -229,12 +221,15 @@ youngest.concat(oldest)
 
 ## `concat` on `DataColumn`
 
-The result of `concat` on a [`DataColumn`](DataColumn.md) depends on the values stored in the column:
+Appends the values of other columns to a [`DataColumn`](DataColumn.md), or combines the values stored in a single
+column. What it returns depends on the values stored in the column:
 
 ```text
-column.concat(vararg other: DataColumn<T>): DataColumn<T>
-frameColumn.concat(): DataFrame<T>
+col.concat(vararg other: DataColumn): DataColumn
+frameCol.concat(): DataFrame
 collectionColumn.concat(): List<T>
+
+collectionColumn: DataColumn<Collection<T>>
 ```
 
 For value columns, `concat` appends the values from `other` in argument order and preserves the receiver's name.
@@ -253,7 +248,7 @@ both the column values and the elements in each collection.
 
 ### Parameters {id="parameters_column"}
 
-* `vararg other: DataColumn<T>` — the columns whose values are appended to the receiver in argument order.
+* `vararg other: DataColumn` — the columns whose values are appended to the receiver in argument order.
 
 ### Examples {id="examples_column"}
 
@@ -321,18 +316,20 @@ repeated for every row in its group. An existing group column with the same name
 [`ReducedGroupBy.concat()`](groupBy.md#reducing) applies the stored reducer to every group and returns one result
 row per group, in group order.
 
+All three return a [`DataFrame`](DataFrame.md).
+
+```text
+groupBy.concat(): DataFrame
+groupBy.concatWithKeys(): DataFrame
+reducedGroupBy.concat(): DataFrame
+```
+
 If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
 their first appearance in the reduced rows. Values missing from a reduced row follow the
-[schema-unification rules for `DataFrame`s](#concat-on-dataframe).
+schema-unification rules for `DataFrame`s (see [schema unification examples](#schema-unification-examples)).
 
 If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
 missing every result column, so its values are filled according to the same rules.
-
-```text
-groupBy.concat(): DataFrame<G>
-groupBy.concatWithKeys(): DataFrame<G>
-reducedGroupBy.concat(): DataFrame<G>
-```
 
 ### Examples {id="examples_groupby"}
 
@@ -359,7 +356,7 @@ grouped.concatWithKeys()
 
 ```kotlin
 val grouped = df.groupBy {
-    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+    expr { if (getValue<Int>("age") >= 20) "adult" else "teen" } named "ageGroup"
 }
 
 grouped.concatWithKeys()
@@ -389,7 +386,7 @@ grouped.concat()
 
 ```kotlin
 val grouped = df.groupBy {
-    expr { if ("age"<Int>() >= 20) "adult" else "teen" } named "ageGroup"
+    expr { if (getValue<Int>("age") >= 20) "adult" else "teen" } named "ageGroup"
 }
 
 grouped.concat()
@@ -428,19 +425,18 @@ df.groupBy("city").first().concat()
 `concat()` combines an `Iterable` of dataframes, columns, or nullable rows in iteration order:
 
 ```text
-frames: Iterable<DataFrame<T>>
-frames.concat(): DataFrame<T>
+dfs.concat(): DataFrame
+cols.concat(): DataColumn
+rows.concat(): DataFrame
 
-columns: Iterable<DataColumn<T>>
-columns.concat(): DataColumn<T>
-
-rows: Iterable<DataRow<T>?>
-rows.concat(): DataFrame<T>
+dfs: Iterable<DataFrame>
+cols: Iterable<DataColumn>
+rows: Iterable<DataRow?>
 ```
 
-For `Iterable<DataFrame>`, `concat` uses the same schema-unification rules as
-[`DataFrame.concat`](#concat-on-dataframe). A `DataFrame` with no rows adds no rows, but its columns still
-participate in schema unification. An empty iterable returns an empty [`DataFrame`](DataFrame.md).
+For `Iterable<DataFrame>`, `concat` uses the same schema-unification rules as `DataFrame.concat`
+(see [schema unification examples](#schema-unification-examples)). A `DataFrame` with no rows adds no rows,
+but its columns still participate in schema unification. An empty iterable returns an empty [`DataFrame`](DataFrame.md).
 
 For `Iterable<DataColumn>`, the values form one result column. The result keeps the name of the first column and
 uses the same type rules as [`DataColumn.concat`](#concat-on-datacolumn). An empty iterable returns an empty column.
