@@ -312,6 +312,9 @@ public interface DocumentationUrls {
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
+    /** [See `implode` on the documentation website.]({@include [Url]}/implode.html) */
+    public typealias Implode = Nothing
+
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
 
