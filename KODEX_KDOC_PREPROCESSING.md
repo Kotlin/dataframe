@@ -364,6 +364,10 @@ This is useful to clean up the sources and delete interfaces or classes that are
 
 The annotation is not a KDoc tag but a normal Kotlin annotation detected by KoDEx.
 
+Excluding a declaration also excludes everything nested inside it, so don't repeat the annotation
+on the members of an excluded interface or class: a typealias nested in an `@ExcludeFromSources`
+interface is already excluded.
+
 Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's also possible to
 exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
 like `@file:ExcludeFromSources`.
