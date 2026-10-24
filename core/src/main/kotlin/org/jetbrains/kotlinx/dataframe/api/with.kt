@@ -21,6 +21,13 @@ import kotlin.reflect.typeOf
 private typealias PivotWithOneOrManyResultSnippet = Nothing
 
 /**
+ * For each pivot cell: a group with no row selected by the reducer yields `null` (type `V?`),
+ * otherwise the value produced by the expression (type `V`).
+ */
+@ExcludeFromSources
+private typealias PivotWithReducedResultSnippet = Nothing
+
+/**
  * If [expression\] returns a column reference, it is resolved to that column's value in the row
  * the expression was evaluated on.
  */
@@ -63,6 +70,8 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
 /**
  * Aggregates this [ReducedPivot] by evaluating the given [row expression][expression] on the single row
  * selected by the reducer in each pivot group.
+ *
+ * @include [PivotWithReducedResultSnippet]
  *
  * @include [PivotWithColumnReferenceSnippet]
  *
@@ -117,6 +126,8 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
 /**
  * Aggregates this [ReducedPivotGroupBy] by evaluating the given [row expression][expression] on the single row
  * selected by the reducer in each group defined by the grouping and pivot keys.
+ *
+ * @include [PivotWithReducedResultSnippet]
  *
  * @include [PivotWithColumnReferenceSnippet]
  *
