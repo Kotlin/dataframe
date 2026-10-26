@@ -2,6 +2,8 @@ plugins {
     alias(conventions.plugins.dfbuild.base)
     // enables the linter for every Kotlin module in the project
     alias(conventions.plugins.dfbuild.ktlint)
+    // enables the dokka plugin for every Kotlin module in the project
+    alias(conventions.plugins.dfbuild.dokka)
 
     alias(libs.plugins.kotlin.jvm)
 }
