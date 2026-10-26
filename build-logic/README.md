@@ -27,18 +27,25 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
     Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
     - This plugin creates a `mainKodex` source set and compilation from the KoDEx-preprocessed sources,
       with the jar tasks `kodexMainKodexJar` and `kodexMainKodexSourcesJar`.
-      If `libs.publisher` is applied too, a `kodexJava` component is created: the `java` component, but with
+    - If `libs.publisher` is applied too, a `kodexJava` component is created: the `java` component, but with
       these jars instead of the normal jar and sources jar (so `@ExcludeFromSources` declarations are absent from both).
       The publication must select it with `composeOf { from(kodexAwareComponentToPublish()) }` in `kotlinPublications {}`,
       otherwise publishing fails.
-      If the binary compatibility validator is applied too, it will read the public API from the KoDEx-processed
+    - If the binary compatibility validator is applied too, it will read the public API from the KoDEx-processed
       jars instead of unprocessed ones.
+    - If Dokka is applied too, it will use the KoDEx-processed sources instead of unprocessed ones.
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
     - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
       The binary compatibility validator will also be skipped, since `apiCheck` would fail if run without KoDEx.
     - Modules the project depends on are included in the context of KoDEx,
       as well as the `:samples` test sources (for `@sample`/`@includeFile`).
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
+
+- `dfbuild.dokka`: Sets up Dokka for the project.
+    - This plugin is meant for all published modules.
+    - `dokkaGeneratePublicationHtml` can be run to build all docs project-wide.
+    - GitHub actions make sure the docs are built and published to the website.
+    - The `Build Dokka API Docs`/`Run Docs Website Locally` configurations can be used to preview the results on the website.
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
    like `BuildConfig.VERSION` and `BuildConfig.DEBUG`.
