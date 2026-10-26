@@ -815,6 +815,31 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
         .sortBy { keys.columns().toColumnSet().reversed().nullsLast(nullsLast) }
         .asGroupBy(groups)
 
+/**
+ * Sorts the key-group pairs of this [GroupBy] by selected keys descending.
+ *
+ * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [sortByDesc][GroupBy.sortByDesc] that sorts rows within groups.
+ *
+ * See also
+ *   - [sortByKey] that sorts the key-group pairs of this [GroupBy] by the selected key values ascending.
+ *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
+ *
+ * Check out [`GroupBy grammar`][Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.GroupByTransformation]}
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.sortBySelectedKeysDescOnGroupBy]
+ *
+ * @include [NullsLastArgumentDescription]
+ * @param selector The [Sort Columns Selector][SortColumnsSelector] that defines which keys are used for sorting,
+ * in which order and direction.
+ * @return A new [GroupBy] with its key-group pairs sorted by the selected keys.
+ */
 public fun <T, G, C> GroupBy<T, G>.sortByKeyDesc(
     nullsLast: Boolean = false,
     selector: SortColumnsSelector<T, C>,
@@ -848,6 +873,31 @@ public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T
         .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
         .asGroupBy(groups)
 
+/**
+ * Sorts the key-group pairs of this [GroupBy] by selected keys ascending.
+ *
+ * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
+ * The contents of the groups remain unchanged.
+ *
+ * Don't confuse this with [sortBy][GroupBy.sortBy] that sorts rows within groups.
+ *
+ * See also
+ *   - [sortByKeyDesc] that sorts the key-group pairs of this [GroupBy] by the selected key values descending.
+ *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
+ *
+ * Check out [`GroupBy grammar`][Grammar].
+ *
+ * For more information: {@include [DocumentationUrls.GroupByTransformation]}
+ *
+ * ### Example
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.sortBySelectedKeysOnGroupBy_properties]
+ *
+ * @include [NullsLastArgumentDescription]
+ * @param selector The [Sort Columns Selector][SortColumnsSelector] that defines which keys are used for sorting,
+ * in which order and direction.
+ * @return A new [GroupBy] with its key-group pairs sorted by the selected keys.
+ */
 public fun <T, G, C> GroupBy<T, G>.sortByKey(
     nullsLast: Boolean = false,
     selector: SortColumnsSelector<T, C>,
