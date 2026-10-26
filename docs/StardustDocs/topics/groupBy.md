@@ -15,7 +15,7 @@ groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey() | .sortByKeyDesc() | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey() [ { columns } ] | .sortByKeyDesc() [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
                   [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
