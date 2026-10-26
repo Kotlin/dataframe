@@ -227,7 +227,7 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
- * @return The previous [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
+ * @return The next [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
  */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()
