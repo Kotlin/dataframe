@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
@@ -48,6 +49,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByGroup
 import org.jetbrains.kotlinx.dataframe.api.sortByKey
+import org.jetbrains.kotlinx.dataframe.api.sortByKeyDesc
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.take
@@ -305,6 +307,28 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { age }.sortByKey()
         // SampleEnd
+    }
+
+    @Test
+    fun sortBySelectedKeysOnGroupBy_properties() {
+        // SampleStart
+        val sorted = df.groupBy { city and age }.sortByKey { age and city.reversed() }
+        // SampleEnd
+
+        sorted.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
+        sorted.keys.city.toList() shouldBe
+            listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+    }
+
+    @Test
+    fun sortBySelectedKeysDescOnGroupBy() {
+        // SampleStart
+        val sorted = df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+        // SampleEnd
+
+        sorted.keys.city.toList() shouldBe
+            listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
+        sorted.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
     }
 
     @Test
