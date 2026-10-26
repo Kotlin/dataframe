@@ -23,6 +23,8 @@ Gradle (Kotlin DSL), multi-module. Use the wrapper (`./gradlew`, or `gradlew.bat
   are off in production. PR/CI builds run with this flag (`build -Pkotlin.dataframe.debug=true`), so match it locally.
 - `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips `apiCheck` and KDoc
   preprocessing (see below); the result has "broken" KDocs, so it is for local dev only.
+- `./gradlew dokkaGeneratePublicationHtml` — build the multi-module Dokka API reference into `build/dokka/html`
+  (what CI deploys under `https://kotlin.github.io/dataframe/api-docs/`). Takes several minutes, as it runs KoDEx first.
 
 Module names for `<module>:` come from `settings.gradle.kts` (e.g. `core`, `dataframe-csv`, `dataframe-jdbc`,
 `dataframe-json`, `dataframe-arrow`, `dataframe-excel`, `dataframe-jupyter`).
@@ -77,6 +79,13 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   processed sources into KoDEx jars (so `@ExcludeFromSources` is stripped from both sources and compiled classes).
   Publishing selects the `kodexJava` component via `composeOf { from(kodexAwareComponentToPublish()) }`, and
   `apiBuild` (`apiDump`/`apiCheck`) reads the KoDEx jar to validate the published API.
+- **Dokka documents the KoDEx-processed sources too.** In KoDEx modules, `dfbuild.kodex` suppresses the `main` Dokka
+  source set and enables `mainKodex` instead (display name copied from `main`), so the API reference shows the
+  expanded KDocs. With `-PskipKodex`, Dokka falls back to the plain `main` sources. Dokka's HTML styling (logo,
+  footer, homepage link) lives in `dfbuild.dokka` and `docs/dokka/`.
+- **`processKDocsMain` does not track its output files** — it only checks that `generated-sources/` is non-empty.
+  After reverting or editing anything under `*/generated-sources`, run `./gradlew processKDocsMain --rerun`, or
+  Dokka/the KoDEx jars are built from the stale files.
 - **Don't hand-edit generated sources, and don't grep/crawl the tree.** Every module built with KoDEx (`core`,
   `dataframe-csv`, `dataframe-json`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked
   `generated-sources/` copy,
