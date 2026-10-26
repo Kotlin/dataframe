@@ -537,6 +537,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
  *
  * @param cols The [<code>Column Names</code>][String] that defines which columns are used for sorting.
  * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
  */
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
@@ -606,6 +607,7 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
  * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
  *                for sorting within each group, in which order and direction.
  * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
  */
 public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): GroupBy<T, G> = sortByImpl(selector)
 
@@ -646,6 +648,7 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  *
  * @param cols The [<code>Column Names</code>][String] that define which columns are used for sorting.
  * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
  */
 public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: String): GroupBy<T, G> = sortByDesc { cols.toColumnSet() }
 
@@ -716,6 +719,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * @param selector The [<code>Sort Columns Selector</code>][SortColumnsSelector] that defines which columns are used
  *                for sorting within each group, in which order and direction.
  * @return A new [<code>GroupBy</code>][GroupBy] with rows sorted within each group and the original key-group order preserved.
+ * @throws IllegalStateException if a referenced column cannot be resolved in a group.
  */
 public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupBy<T, G> {
     val set = selector.toColumnSet()
