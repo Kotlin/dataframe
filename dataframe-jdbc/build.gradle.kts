@@ -5,6 +5,7 @@ plugins {
         alias(kotlinJvm8)
         alias(buildConfig)
         alias(kodex)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)
