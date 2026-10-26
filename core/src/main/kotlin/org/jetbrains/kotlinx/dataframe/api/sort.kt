@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.sortByKeyImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.index
@@ -814,6 +815,14 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
         .sortBy { keys.columns().toColumnSet().reversed().nullsLast(nullsLast) }
         .asGroupBy(groups)
 
+public fun <T, G, C> GroupBy<T, G>.sortByKeyDesc(
+    nullsLast: Boolean = false,
+    selector: SortColumnsSelector<T, C>,
+): GroupBy<T, G> {
+    val set = selector.toColumnSet()
+    return sortByKeyImpl(nullsLast) { set.reversed() }
+}
+
 /**
  * Sorts the key-group pairs of this [GroupBy] by the keys ascending.
  *
@@ -838,5 +847,10 @@ public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T
     toDataFrame()
         .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
         .asGroupBy(groups)
+
+public fun <T, G, C> GroupBy<T, G>.sortByKey(
+    nullsLast: Boolean = false,
+    selector: SortColumnsSelector<T, C>,
+): GroupBy<T, G> = sortByKeyImpl(nullsLast, selector)
 
 // endregion
