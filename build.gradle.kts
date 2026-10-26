@@ -52,6 +52,7 @@ dependencies {
     dokka(projects.dataframeGeoJupyter)
     dokka(projects.dataframeOpenapi)
     dokka(projects.dataframeOpenapiGenerator)
+    dokka(projects.dataframeJupyter)
 }
 
 group = "org.jetbrains.kotlinx"
