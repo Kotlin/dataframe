@@ -90,10 +90,10 @@ internal interface GroupByDocs {
      * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`\[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`\[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
