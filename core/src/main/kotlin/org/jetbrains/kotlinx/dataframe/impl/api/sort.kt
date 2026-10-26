@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.isEmpty
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.internalValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
@@ -49,6 +50,16 @@ internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>)
     }
 
     return sorted.asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
+}
+
+internal fun <T, G, C> GroupBy<T, G>.sortByKeyImpl(
+    nullsLast: Boolean,
+    columns: SortColumnsSelector<T, C>,
+): GroupBy<T, G> {
+    val keyColumns = columns.toColumnSet().resolve(keys, UnresolvedColumnsPolicy.Fail)
+    return toDataFrame()
+        .sortByImpl { createColumnSet { keyColumns }.nullsLast(nullsLast) }
+        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn() }
 }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
