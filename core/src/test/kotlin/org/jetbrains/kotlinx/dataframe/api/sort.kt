@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.testSets.DsSalaries
 import org.jetbrains.kotlinx.dataframe.testSets.companyLocation
@@ -359,14 +360,139 @@ class SortTests : TestBase() {
 
         listOf(
             grouped.sortByKey(),
+            grouped.sortByKey { "key"<String>() },
             grouped.sortByGroup { min("value") },
             grouped.sortByCountAsc(),
         ).forEach { it.toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 0, 2)] }
 
         listOf(
             grouped.sortByKeyDesc(),
+            grouped.sortByKeyDesc { "key"<String>() },
             grouped.sortByGroupDesc { min("value") },
             grouped.sortByCount(),
         ).forEach { it.toDataFrame() shouldBe grouped.toDataFrame()[listOf(2, 0, 1)] }
+    }
+
+    @Test
+    fun `sort by selected keys preserves encounter order for ties`() {
+        val grouped = df.groupBy { name.firstName and age }
+
+        grouped.sortByKey { age }.toDataFrame() shouldBe
+            grouped.toDataFrame()[listOf(0, 2, 5, 4, 6, 3, 1)]
+        grouped.sortByKeyDesc { age }.toDataFrame() shouldBe
+            grouped.toDataFrame()[listOf(1, 3, 4, 6, 2, 5, 0)]
+    }
+
+    @Test
+    fun `sort by selected keys preserves priority and reversed flags with nested keys`() {
+        val grouped = df.groupBy(moveToTop = false) { name.firstName and age }
+        val selectors = listOf<SortColumnsSelector<Person, *>>(
+            { age and name.firstName.reversed() },
+            { age and pathOf("name", "firstName").reversed() },
+        )
+
+        selectors.forEach { selector ->
+            grouped.sortByKey(selector = selector).toDataFrame() shouldBe
+                grouped.toDataFrame()[listOf(0, 2, 5, 6, 4, 3, 1)]
+            grouped.sortByKeyDesc(selector = selector).toDataFrame() shouldBe
+                grouped.toDataFrame()[listOf(1, 3, 4, 6, 5, 2, 0)]
+        }
+    }
+
+    @Test
+    fun `sort by selected keys supports nullsLast argument and column flag`() {
+        val grouped = df.groupBy { name.firstName and weight }
+
+        grouped.sortByKey { weight }.keys.weight.toList() shouldBe listOf(null, 54, 55, 68, 87, 90)
+        grouped.sortByKeyDesc { weight }.keys.weight.toList() shouldBe listOf(90, 87, 68, 55, 54, null)
+
+        listOf(
+            grouped.sortByKey(nullsLast = true) { weight },
+            grouped.sortByKey { weight.nullsLast() },
+        ).forEach { it.keys.weight.toList() shouldBe listOf(54, 55, 68, 87, 90, null) }
+
+        listOf(
+            grouped.sortByKeyDesc(nullsLast = true) { weight },
+            grouped.sortByKeyDesc { weight.nullsLast() },
+        ).forEach { it.keys.weight.toList() shouldBe listOf(null, 90, 87, 68, 55, 54) }
+    }
+
+    @Test
+    fun `sort by selected keys evaluates expressions on key rows`() {
+        val grouped = df.groupBy { age }
+
+        grouped.sortByKey { expr { -age } }.keys.age.toList() shouldBe listOf(45, 40, 30, 20, 15)
+        grouped.sortByKeyDesc { expr { -age } }.keys.age.toList() shouldBe listOf(15, 20, 30, 40, 45)
+    }
+
+    @Test
+    fun `sort by all keys excludes the groups column`() {
+        val grouped = df.groupBy { age }
+
+        grouped.sortByKey { all() }.toDataFrame() shouldBe grouped.toDataFrame()[listOf(0, 2, 4, 3, 1)]
+        grouped.sortByKeyDesc { all() }.toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 3, 4, 2, 0)]
+    }
+
+    @Test
+    fun `sort by all selected keys matches sorting by all keys`() {
+        val grouped = df.groupBy { name.firstName and age }
+
+        grouped.sortByKey { all() }.toDataFrame() shouldBe grouped.sortByKey().toDataFrame()
+        grouped.sortByKeyDesc { all() }.toDataFrame() shouldBe grouped.sortByKeyDesc().toDataFrame()
+    }
+
+    @Test
+    fun `sort by selected keys composes with sorting rows within groups`() {
+        val grouped = dataFrameOf(
+            "key" to columnOf("b", "b", "a", "a"),
+            "value" to columnOf(1, 2, 3, 4),
+        ).groupBy("key")
+
+        val sorted = grouped.sortByKey { "key"<String>().reversed() }.sortByDesc { "value"<Int>() }
+
+        sorted.keys["key"].toList() shouldBe listOf("b", "a")
+        sorted.groups.toList().map { it["value"].toList() } shouldBe listOf(listOf(2, 1), listOf(4, 3))
+    }
+
+    @Test
+    fun `sort by selected keys rejects non-key columns`() {
+        val grouped = df.groupBy { age }
+        val selectors = listOf<Pair<String, SortColumnsSelector<Person, *>>>(
+            "name" to { name.firstName },
+            "group" to { pathOf("group") },
+            "missing" to { age and "missing"<Int>() },
+        )
+
+        selectors.forEach { (missing, selector) ->
+            shouldThrowMessage("Column '$missing' not found among [age].") {
+                grouped.sortByKey(selector = selector)
+            }
+            shouldThrowMessage("Column '$missing' not found among [age].") {
+                grouped.sortByKeyDesc(selector = selector)
+            }
+        }
+    }
+
+    @Test
+    fun `sort by selected keys validates keys without groups`() {
+        val grouped = df.filter { false }.groupBy { age }
+
+        grouped.sortByKey { age }.toDataFrame() shouldBe grouped.toDataFrame()
+        grouped.sortByKeyDesc { age }.toDataFrame() shouldBe grouped.toDataFrame()
+
+        shouldThrowMessage("Column 'missing' not found among [age].") {
+            grouped.sortByKey { "missing"<Int>() }
+        }
+        shouldThrowMessage("Column 'missing' not found among [age].") {
+            grouped.sortByKeyDesc { "missing"<Int>() }
+        }
+    }
+
+    @Test
+    fun `sort by no keys preserves key-group pairs`() {
+        val grouped = df.groupBy { name.firstName and age }
+
+        grouped.sortByKey { none() }.toDataFrame() shouldBe grouped.toDataFrame()
+        grouped.sortByKeyDesc { none() }.toDataFrame() shouldBe grouped.toDataFrame()
     }
 }
