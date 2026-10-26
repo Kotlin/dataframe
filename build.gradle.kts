@@ -100,6 +100,8 @@ kotlinPublications {
             developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
             developer("Jolanrensen", "Jolan Rensen", "jolan.rensen@jetbrains.com")
             developer("zaleslaw", "Aleksei Zinovev", "aleksei.zinovev@jetbrains.com")
+            developer("AndreiKingsley", "Andrei Kislitsyn", "andrei.kislitsyn@jetbrains.com")
+            developer("Allex-Nik", "Aleksandr Nikolaev", "aleksandr.nikolaev@jetbrains.com")
             developer("ermolenkodev", "Nikita Ermolenko", "nikita.ermolenko@jetbrains.com")
             developer("nikitinas", "Anatoly Nikitin", "anatoly.nikitin@jetbrains.com")
         }
