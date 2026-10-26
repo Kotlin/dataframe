@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -95,13 +94,13 @@ public fun DataRow<*>.containsKey(columnName: String): Boolean = owner.containsC
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun DataRow<*>.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: ColumnReference<*>): Boolean = owner.containsColumn(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun DataRow<*>.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun DataRow<*>.contains(column: AnyColumnReference): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: ColumnReference<*>): Boolean = containsKey(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

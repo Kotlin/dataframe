@@ -107,7 +107,7 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
-public fun AnyCol.setNullable(nullable: Boolean): AnyCol =
+public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
     if (nullable) {
         this.castToNullable()
     } else {
@@ -132,13 +132,13 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
-public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+public fun DataColumn<*>.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
 
 @JvmName("asColumnGroupUntyped")
-public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+public fun DataColumn<*>.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asFrameColumnUntyped")
-public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+public fun DataColumn<*>.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()

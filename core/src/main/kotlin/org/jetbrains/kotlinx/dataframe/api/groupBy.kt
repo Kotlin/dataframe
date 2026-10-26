@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -19,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -443,7 +443,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupB
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: Boolean = true): GroupBy<T, T> =
+public fun <T> DataFrame<T>.groupBy(vararg cols: ColumnReference<*>, moveToTop: Boolean = true): GroupBy<T, T> =
     groupBy(moveToTop) { cols.toColumnSet() }
 
 // endregion
@@ -485,7 +485,7 @@ public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelec
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
+public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 /**
  * {@include [CommonGroupByForPivotDocs]}

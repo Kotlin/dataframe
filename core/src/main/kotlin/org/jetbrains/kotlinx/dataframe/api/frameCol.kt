@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -191,7 +190,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.frameCol(
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -268,13 +267,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
-    public fun AnyColumnGroupAccessor.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(name)
 
     /**
      * @include [FrameColNameDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn<C>(name).ensureIsFrameColumn()
 
     /**
@@ -368,13 +367,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
-    public fun AnyColumnGroupAccessor.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> = frameCol<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
+        frameCol<Any?>(path)
 
     /**
      * @include [FrameColPathDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn<C>(path).ensureIsFrameColumn()
 
     /**
@@ -475,15 +475,16 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     @AccessApiOverload
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
-    public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
-        this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(
+        property: KProperty<DataFrame<C>>,
+    ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**
      * @include [FrameColKPropertyDocs] {@set [CommonFrameColDocs.RECEIVER] myColumnGroup.}
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
     /**

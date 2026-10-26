@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -189,8 +188,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
-        this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(
+        colGroup: ColumnAccessor<DataRow<C>>,
+    ): ColumnAccessor<DataRow<C>> = this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
@@ -265,13 +265,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
@@ -370,13 +370,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
@@ -481,7 +481,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     @JvmName("colGroupDataRowKProperty")
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
@@ -489,7 +489,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**

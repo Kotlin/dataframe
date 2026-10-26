@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -178,7 +177,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
  *
  * See [Grammar][InsertDocs.Grammar] for more details.
  */
-public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: AnyCol) {
+public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: DataColumn<*>) {
     override fun toString(): String = "InsertClause(df=$df, column=$column)"
 }
 

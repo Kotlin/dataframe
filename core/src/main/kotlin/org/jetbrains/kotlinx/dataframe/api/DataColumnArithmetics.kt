@@ -413,7 +413,7 @@ private interface ColumnPlusStringDocs {
 /**
  * @include [ColumnPlusStringDocs]
  */
-public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toString() + str }
+public operator fun DataColumn<*>.plus(str: String): DataColumn<String> = map { it.toString() + str }
 
 /**
  * @include [ColumnPlusStringDocs]
