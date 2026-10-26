@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.exceptions
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.type
@@ -12,5 +11,5 @@ import org.jetbrains.kotlinx.dataframe.type
  * If generated extension property causes this exception, this is a bug in the library
  * You can work around this problem by referring to [<code>column</code>][column] using String API
  */
-public class ColumnTypeMismatchesColumnValuesException(public val column: AnyCol, cause: Throwable) :
+public class ColumnTypeMismatchesColumnValuesException(public val column: DataColumn<*>, cause: Throwable) :
     RuntimeException("Failed to convert column '${column.name()}'", cause)

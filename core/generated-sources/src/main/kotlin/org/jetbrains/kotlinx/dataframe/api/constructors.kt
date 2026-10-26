@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -16,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -53,15 +51,16 @@ public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(
 @AccessApiOverload
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 
-public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
+public fun <T> ColumnReference<DataRow<*>>.column(): ColumnDelegate<T> = ColumnDelegate(this)
 
-public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnReference<DataRow<*>>.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
-public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
+public fun <T> ColumnReference<DataRow<*>>.column(path: ColumnPath): ColumnAccessor<T> =
+    ColumnAccessorImpl(this.path() + path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> =
+public fun <T> ColumnReference<DataRow<*>>.column(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 
 public inline fun <reified T> column(
@@ -101,26 +100,28 @@ public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 @AccessApiOverload
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
-public fun ColumnGroupReference.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
+public fun ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
+public fun <T> ColumnReference<DataRow<*>>.valueColumn(): ColumnDelegate<T> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
+public fun ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<Any?> =
+    ColumnAccessorImpl(path() + name)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnReference<DataRow<*>>.valueColumn(name: String): ColumnAccessor<T> =
+    ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
+public fun ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
+public fun <T> ColumnReference<DataRow<*>>.valueColumn(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
+public fun <T> ColumnReference<DataRow<*>>.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
@@ -151,34 +152,34 @@ public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<Data
 @AccessApiOverload
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
-public fun ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
+public fun ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<*>> = ColumnDelegate(this)
 
 @JvmName("columnGroupTyped")
-public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
+public fun <T> ColumnReference<DataRow<*>>.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
+public fun ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(path() + name)
 
 @JvmName("columnGroupTyped")
-public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
+public fun <T> ColumnReference<DataRow<*>>.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
+public fun ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupTyped")
-public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
+public fun <T> ColumnReference<DataRow<*>>.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupDataRowKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
+public fun <T> ColumnReference<DataRow<*>>.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
+public fun <T> ColumnReference<DataRow<*>>.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
@@ -209,39 +210,40 @@ public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<Da
 @AccessApiOverload
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
-public fun ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
+public fun ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<*>> = ColumnDelegate(this)
 
 @JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
+public fun <T> ColumnReference<DataRow<*>>.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
-public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
+public fun ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(path() + name)
 
 @JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
+public fun <T> ColumnReference<DataRow<*>>.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
+public fun ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<*>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
+public fun <T> ColumnReference<DataRow<*>>.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("frameColumnDataFrameKProperty")
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
-    ColumnAccessorImpl(this.path() + property.name)
+public fun <T> ColumnReference<DataRow<*>>.frameColumn(
+    property: KProperty<DataFrame<T>>,
+): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(this.path() + property.name)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
+public fun <T> ColumnReference<DataRow<*>>.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
 // endregion
 
-public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
+public class ColumnDelegate<T>(private val parent: ColumnReference<DataRow<*>>? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
 
     public infix fun named(name: String): ColumnAccessor<T> =
@@ -384,9 +386,9 @@ public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(
 
 public class DataFrameBuilder(private val header: List<String>) {
 
-    public operator fun invoke(vararg columns: AnyCol): DataFrame<*> = invoke(columns.asIterable())
+    public operator fun invoke(vararg columns: DataColumn<*>): DataFrame<*> = invoke(columns.asIterable())
 
-    public operator fun invoke(columns: Iterable<AnyCol>): DataFrame<*> {
+    public operator fun invoke(columns: Iterable<DataColumn<*>>): DataFrame<*> {
         val cols = columns.asList()
         require(cols.size == header.size) { "Number of columns differs from number of column names" }
         return cols.mapIndexed { i, col ->
@@ -406,7 +408,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
 
-    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
+    public fun withColumns(columnBuilder: (String) -> DataColumn<*>): DataFrame<*> =
         header
             .map { columnBuilder(it) named it } // create the columns and make sure to rename them to the given header
             .toDataFrame()
@@ -534,7 +536,7 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * @param col The column to add to the DataFrame builder.
      * @return The final unique name assigned to the column.
      */
-    public fun add(col: AnyCol): String {
+    public fun add(col: DataColumn<*>): String {
         val originalName = col.name()
         if (checkDuplicateValues && generator.contains(originalName)) {
             if (cols[originalName] == col) return originalName
@@ -581,7 +583,7 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
      * @param column The name of the column to retrieve.
      * @return The column corresponding to the specified name, or `null` if no such column exists.
      */
-    public fun get(column: String): AnyCol? = cols[column]
+    public fun get(column: String): DataColumn<*>? = cols[column]
 
     /**
      * Converts the current [<code>DynamicDataFrameBuilder</code>][DynamicDataFrameBuilder] instance into a [<code>DataFrame</code>][DataFrame].

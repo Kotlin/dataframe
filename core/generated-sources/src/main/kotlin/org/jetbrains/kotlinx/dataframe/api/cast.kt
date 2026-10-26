@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -17,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import kotlin.reflect.typeOf
 
@@ -77,7 +75,7 @@ public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
 public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
 
 @Interpretable("AnyColCast")
-public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
+public fun <T> DataColumn<*>.cast(): DataColumn<T> = this as DataColumn<T>
 
 public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
 

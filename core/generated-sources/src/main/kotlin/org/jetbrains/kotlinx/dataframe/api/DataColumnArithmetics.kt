@@ -2,60 +2,18 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_INT_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_ZERO_ERROR
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_COLUMN_TYPE
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_EXAMPLE
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_EXAMPLE_NUMBER
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusStringDocs.COLUMN_PLUS_STRING_RECEIVER
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusStringDocs.COLUMN_PLUS_STRING_RETURN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_DESCRIPTION
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_OPERATION
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_DESCRIPTION
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_RETURN
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_DIVIDEND_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_INT_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_ZERO_ERROR
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_COLUMN_TYPE
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NUMBER_TYPE
 import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_NUMBER_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -658,7 +616,7 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] of [<code>String</code>][String] values where each element is the result
  * of concatenating the corresponding element of this [<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol] with [<code>str</code>][str].
  */
-public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toString() + str }
+public operator fun DataColumn<*>.plus(str: String): DataColumn<String> = map { it.toString() + str }
 
 /**
  * Returns a [<code>ColumnReference</code>][ColumnReference] of [<code>String</code>][String] values
