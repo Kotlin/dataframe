@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -12,12 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.Issues
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -424,7 +418,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
@@ -931,7 +925,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -986,7 +980,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(name: String): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
@@ -1669,7 +1663,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1724,7 +1718,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
-    public fun <C> AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(path: ColumnPath): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
@@ -2288,7 +2282,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**

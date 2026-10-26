@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -11,11 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.beforeImpl
@@ -283,7 +278,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
  *
  * See [<code>Grammar</code>][InsertDocs.Grammar] for more details.
  */
-public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: AnyCol) {
+public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: DataColumn<*>) {
     override fun toString(): String = "InsertClause(df=$df, column=$column)"
 }
 

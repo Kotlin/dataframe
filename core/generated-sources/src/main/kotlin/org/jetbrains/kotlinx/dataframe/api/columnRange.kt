@@ -1,13 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -152,7 +149,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun String.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun String.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
@@ -245,7 +242,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun KProperty<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
     /**
@@ -274,7 +271,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: String): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
@@ -303,7 +300,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
-    public operator fun AnyColumnReference.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         rangeTo(endInclusive.toColumnAccessor())
 
     /**
@@ -333,7 +330,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      */
     @Interpretable("ColumnRange")
-    public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
+    public operator fun ColumnReference<*>.rangeTo(endInclusive: ColumnReference<*>): ColumnSet<*> =
         createColumnSet { context ->
             val startPath = this@rangeTo.resolveSingle(context)!!.path
             val endPath = endInclusive.resolveSingle(context)!!.path

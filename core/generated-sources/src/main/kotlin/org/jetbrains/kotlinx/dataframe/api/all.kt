@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -14,19 +13,15 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.Issues
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
@@ -834,7 +829,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllAfter0")
-    public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
+    public fun <C> ColumnSet<C>.allAfter(column: ColumnReference<*>): ColumnSet<C> = allAfter(column.path())
 
     /** ## All (Cols) After
      *
@@ -1151,7 +1146,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllAfter2")
-    public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
+    public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnReference<*>): ColumnSet<*> = allAfter(column.path())
 
     /** ## All (Cols) After
      *
@@ -1479,7 +1474,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun SingleColumn<DataRow<*>>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allColsAfter(column: ColumnReference<*>): ColumnSet<*> =
         allColsAfter(column.path())
 
     /** ## All (Cols) After
@@ -1793,7 +1788,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun String.allColsAfter(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsAfter(column)
+    public fun String.allColsAfter(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsAfter(column)
 
     /** ## All (Cols) After
      *
@@ -2115,7 +2110,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<*>.allColsAfter(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
     /** ## All (Cols) After
@@ -2429,7 +2424,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun ColumnPath.allColsAfter(column: AnyColumnReference): ColumnSet<*> =
+    public fun ColumnPath.allColsAfter(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
     /** ## All (Cols) After
@@ -2815,7 +2810,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllFrom0")
-    public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
+    public fun <C> ColumnSet<C>.allFrom(column: ColumnReference<*>): ColumnSet<C> = allFrom(column.path())
 
     /** ## All (Cols) From
      *
@@ -3130,7 +3125,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllFrom2")
-    public fun ColumnsSelectionDsl<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnReference<*>): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
     /** ## All (Cols) From
@@ -3458,7 +3453,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun SingleColumn<DataRow<*>>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allColsFrom(column: ColumnReference<*>): ColumnSet<*> =
         allColsFrom(column.path())
 
     /** ## All (Cols) From
@@ -3772,7 +3767,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun String.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun String.allColsFrom(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4094,7 +4089,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsFrom(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<*>.allColsFrom(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
@@ -4408,7 +4403,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun ColumnPath.allColsFrom(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsFrom(column)
+    public fun ColumnPath.allColsFrom(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsFrom(column)
 
     /** ## All (Cols) From
      *
@@ -4792,7 +4787,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllBefore0")
-    public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
+    public fun <C> ColumnSet<C>.allBefore(column: ColumnReference<*>): ColumnSet<C> = allBefore(column.path())
 
     /** ## All (Cols) Before
      *
@@ -5110,7 +5105,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllBefore2")
-    public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
+    public fun ColumnsSelectionDsl<*>.allBefore(column: ColumnReference<*>): ColumnSet<*> = allBefore(column.path())
 
     /** ## All (Cols) Before
      *
@@ -5435,7 +5430,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun SingleColumn<DataRow<*>>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allColsBefore(column: ColumnReference<*>): ColumnSet<*> =
         allColsBefore(column.path())
 
     /** ## All (Cols) Before
@@ -5750,7 +5745,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun String.allColsBefore(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsBefore(column)
+    public fun String.allColsBefore(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
      *
@@ -6072,7 +6067,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<*>.allColsBefore(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
@@ -6386,7 +6381,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun ColumnPath.allColsBefore(column: AnyColumnReference): ColumnSet<*> =
+    public fun ColumnPath.allColsBefore(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
     /** ## All (Cols) Before
@@ -6771,7 +6766,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllUpTo0")
-    public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
+    public fun <C> ColumnSet<C>.allUpTo(column: ColumnReference<*>): ColumnSet<C> = allUpTo(column.path())
 
     /** ## All (Cols) Up To
      *
@@ -7087,7 +7082,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
     @Interpretable("AllUpTo2")
-    public fun ColumnsSelectionDsl<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
+    public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnReference<*>): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
     /** ## All (Cols) Up To
@@ -7415,7 +7410,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+    public fun SingleColumn<DataRow<*>>.allColsUpTo(column: ColumnReference<*>): ColumnSet<*> =
         allColsUpTo(column.path())
 
     /** ## All (Cols) Up To
@@ -7729,7 +7724,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun String.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun String.allColsUpTo(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *
@@ -8051,7 +8046,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun KProperty<*>.allColsUpTo(column: AnyColumnReference): ColumnSet<*> =
+    public fun KProperty<*>.allColsUpTo(column: ColumnReference<*>): ColumnSet<*> =
         columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
@@ -8365,7 +8360,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] and absolutely.
      */
-    public fun ColumnPath.allColsUpTo(column: AnyColumnReference): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
+    public fun ColumnPath.allColsUpTo(column: ColumnReference<*>): ColumnSet<*> = columnGroup(this).allColsUpTo(column)
 
     /** ## All (Cols) Up To
      *

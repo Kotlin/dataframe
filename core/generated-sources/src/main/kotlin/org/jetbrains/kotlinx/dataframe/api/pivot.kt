@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,17 +16,13 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
@@ -544,7 +539,7 @@ public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = nul
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivot(vararg columns: AnyColumnReference, inward: Boolean? = null): Pivot<T> =
+public fun <T> DataFrame<T>.pivot(vararg columns: ColumnReference<*>, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -692,7 +687,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -872,7 +867,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -962,7 +957,7 @@ public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumns
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: Boolean = true): PivotGroupBy<G> =
+public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
 /**
@@ -1211,7 +1206,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolea
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1382,7 +1377,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1525,7 +1520,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Bool
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivot(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): PivotGroupBy<T> = pivot(inward) { columns.toColumnSet() }
 
@@ -1652,7 +1647,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inwar
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotMatches(inward) { columns.toColumnSet() }
 
@@ -1779,7 +1774,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotCounts(inward) { columns.toColumnSet() }
 
