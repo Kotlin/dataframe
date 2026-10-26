@@ -41,6 +41,8 @@ via *`String` column accessors*.
 or with any other [CS DSL methods](ColumnSelectors.md#functions-overview).
 
 String column accessors are created using special functions.
+Use `col(...)` and `colGroup(...)` as the canonical accessor constructors.
+Legacy `column(...)` and `columnGroup(...)` constructor aliases are kept for backward compatibility.
 In the Columns Selection DSL, they have the special type `ColumnAccessor`,
 while in row expressions they resolve to concrete value types.
 
