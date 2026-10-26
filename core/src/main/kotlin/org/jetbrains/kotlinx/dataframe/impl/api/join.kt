@@ -234,11 +234,12 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             )
 
             ColumnKind.Frame -> {
-                // rows without a match on the other side have no frame, so they get
+                // rows without a match on the other side have no dataframe, so they get
                 // an empty dataframe with the schema of the source column instead of null
-                val frameSchema by srcColumn.data.asAnyFrameColumn().schema
-                val groups = columnValues.map { (it as AnyFrame?) ?: DataFrame.empty(frameSchema) }
-                DataColumn.createFrameColumn(srcColumn.name, groups)
+                val frameSchema = srcColumn.asAnyFrameColumn().schema
+                val emptyFrame by lazy { DataFrame.empty(frameSchema.value) }
+                val groups = columnValues.map { (it as AnyFrame?) ?: emptyFrame }
+                DataColumn.createFrameColumn(srcColumn.name, groups, frameSchema.takeIf { groups.all { it.nrow == 0 } })
             }
 
             ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")

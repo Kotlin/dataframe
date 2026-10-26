@@ -63,4 +63,21 @@ class JoinTests {
         fullFrames.forEach { it.schema() shouldBe frameSchema }
         fullJoined.toString()
     }
+
+    @Test
+    fun `join without matched rows keeps the schema of the frame column`() {
+        val left = dataFrameOf("id")(100, 101)
+        val right = (0..5).toDataFrame {
+            "id" from { it }
+            "frame" from {
+                (0..3).toDataFrame {
+                    "col" from { it }
+                }
+            }
+        }
+
+        val frames = left.leftJoin(right)["frame"].asAnyFrameColumn()
+        frames.toList().all { it.isEmpty() } shouldBe true
+        frames.schema.value.columns.keys shouldBe setOf("col")
+    }
 }
