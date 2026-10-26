@@ -258,7 +258,7 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
  *
  * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
  *
- * @return The previous [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the last in the [<code>DataFrame</code>][DataFrame].
+ * @return The next [<code>DataRow</code>][DataRow] if it exists, or `null` if the current row is the last in the [<code>DataFrame</code>][DataFrame].
  */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()
