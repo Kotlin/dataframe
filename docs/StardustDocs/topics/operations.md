@@ -19,6 +19,9 @@ A data transformation pipeline usually consists of several modification operatio
 The Kotlin DataFrame API is designed in a functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
+For full signature details and KDocs of all operations, see the
+[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
+
 <!---FUN multiCallOperations-->
 
 ```kotlin
