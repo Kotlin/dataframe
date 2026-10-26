@@ -47,7 +47,7 @@ The library is organized modularly. You can browse the API reference for each mo
 - Complete data transformation operations (`filter`, `select`, `update`, `move`, `join`, `groupBy`, `pivot`, etc.).
 - Statistical calculations, aggregations, schema manipulation, and type inference.
 
-### I/O & Formats
+### I/O, Formats, and Integrations
 
 - **[dataframe-csv](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/index.html)**: Reading and writing CSV and
   TSV formats with automatic header and delimiter detection.
@@ -59,9 +59,8 @@ The library is organized modularly. You can browse the API reference for each mo
   Apache Arrow memory format, Feather, and IPC streams.
 - **[dataframe-jdbc](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/index.html)**: Reading from and writing
   to SQL databases via JDBC (PostgreSQL, MySQL, MariaDB, MS SQL Server, SQLite, H2, DuckDB).
-
-### Integrations & Geospatial
-
+- **[dataframe-jupyter](https://kotlin.github.io/dataframe/api-docs/dataframe-jupyter/index.html)**: Module for
+  Jupyter/Kotlin Notebook and Datalore support.
 - **[dataframe-geo](https://kotlin.github.io/dataframe/api-docs/dataframe-geo/index.html)**: Geospatial column types,
   geometries, and GeoJSON support.
 - **[dataframe-geo-jupyter](https://kotlin.github.io/dataframe/api-docs/dataframe-geo-jupyter/index.html)**: Interactive
