@@ -14,6 +14,7 @@ plugins {
         alias(buildConfig)
         alias(kodex)
         alias(keywordsGenerator)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)

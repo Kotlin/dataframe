@@ -9,6 +9,7 @@ plugins {
         alias(kotlinJvm8)
         alias(buildExampleProjects)
         alias(caupain)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)

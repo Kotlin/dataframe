@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm11)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)
