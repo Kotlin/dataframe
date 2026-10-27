@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
@@ -113,7 +114,7 @@ internal interface SplitDocs {
      * - [match][Split.match] — splits each [String] value into the capturing groups of a [Regex].
      * - [default][SplitWithTransform.default] — sets the value for the parts that are missing in some rows.
      *
-     * Columns of [Iterable] (e.g., [List]), [DataFrame], and [Pair] values can be split without [by][Split.by]:
+     * Columns of [Iterable] (e.g., [List]), [DataFrame] (a [FrameColumn]), and [Pair] values can be split without [by][Split.by]:
      * into their elements, rows, and components, respectively.
      */
     @ExcludeFromSources
