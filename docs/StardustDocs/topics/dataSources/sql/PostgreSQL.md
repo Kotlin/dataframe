@@ -16,6 +16,8 @@ Read PostgreSQL data into Kotlin DataFrame with JDBC support.
 
 Kotlin DataFrame supports reading from a [PostgreSQL](https://www.postgresql.org) database using JDBC.
 
+**API reference**: [`PostgreSql`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-postgre-sql/index.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

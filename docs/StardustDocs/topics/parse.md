@@ -3,6 +3,8 @@
 
 Returns a [`DataFrame`](DataFrame.md) in which the given `String` and `Char` columns are parsed into other types.
 
+**API reference**: [`parse`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/parse.html)
+
 This is a special case of the [](convert.md) operation.
 
 This parsing operation is sometimes executed implicitly, for example, when [reading from CSV](read.md) or

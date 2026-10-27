@@ -4,6 +4,8 @@
 
 Return cross-section from the [`DataFrame`](DataFrame.md).
 
+**API reference**: [`xs`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/xs.html)
+
 Filters [`DataFrame`](DataFrame.md) by matching key values with key columns and removes key columns.
 
 ```

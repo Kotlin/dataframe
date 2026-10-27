@@ -5,6 +5,8 @@
 This operation splits every value in the given columns into several values 
 and optionally spreads them horizontally or vertically.
 
+**API reference**: [`split`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/split.html)
+
 ```text
 df.split { columns }
     [.cast<Type>()]

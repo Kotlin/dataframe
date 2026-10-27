@@ -5,6 +5,8 @@
 Returns a [`DataFrame`](DataFrame.md) in which the selected columns of objects are turned into
 [`ColumnGroup`](DataColumn.md#columngroup)s, with a column for every public property of these objects.
 
+**API reference**: [`unfold`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/unfold.html)
+
 **Related operations**: [](updateConvert.md)
 
 ```text

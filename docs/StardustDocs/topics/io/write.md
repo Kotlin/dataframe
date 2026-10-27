@@ -3,6 +3,8 @@
 
 [`DataFrame`](DataFrame.md) instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
 
+**API reference**: [`writeCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/write-csv.html), [`writeJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/write-json.html), [`writeExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/write-excel.html), [`writeArrowFeather`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/write-arrow-feather.html)
+
 ### Writing to CSV
 
 You can write [`DataFrame`](DataFrame.md) in CSV format to file, to `String` or to `Appendable`

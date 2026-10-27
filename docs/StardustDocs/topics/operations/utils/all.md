@@ -17,6 +17,8 @@ Discover `all` operation in Kotlin DataFrame.
 
 Checks if all rows in the [](DataFrame.md) satisfy the predicate.
 
+**API reference**: [`all`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/all.html)
+
 Returns `Boolean` — `true` if every row satisfies the predicate, `false` otherwise.
 
 ```kotlin

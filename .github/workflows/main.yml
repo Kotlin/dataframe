@@ -56,24 +56,52 @@ jobs:
           path: artifacts/${{ env.ALGOLIA_ARTIFACT }}
           retention-days: 7
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    # Requires the build-job results
-    needs: build-job
+  build-dokka:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-      - name: Download artifact
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Build Dokka HTML
+        run: ./gradlew dokkaGeneratePublicationHtml
+      - name: Upload Dokka artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dokka-html
+          path: build/dokka/html/
+          retention-days: 7
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Requires the build-job and build-dokka results
+    needs: [build-job, build-dokka]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Download WriterSide artifact
         uses: actions/download-artifact@v8
         with:
           name: help
-      - name: Unzip artifact
+      - name: Download Dokka artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dokka-html
+          path: dokka-dir
+      - name: Unzip WriterSide artifact
         uses: montudor/action-zip@v1
         with:
           args: unzip -qq ${{ env.ARTIFACT }} -d dir
+      - name: Copy Dokka output into dir/api-docs
+        run: |
+          mkdir -p dir/api-docs
+          cp -r dokka-dir/* dir/api-docs/
       - name: Fix permissions
         run: sudo chown -R $USER:$USER dir
       - name: Generate llms.txt index

@@ -18,6 +18,8 @@ if the [`DataFrame`](DataFrame.md) is empty, and
 [`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
 if it has more than one row.
 
+**API reference**: [`single`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/single.html)
+
 The examples on this page use the following [`DataFrame`](DataFrame.md):
 
 <!---FUN singleDf-->

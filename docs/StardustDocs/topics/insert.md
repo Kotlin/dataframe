@@ -4,6 +4,8 @@
 
 Inserts new column at specific position in [`DataFrame`](DataFrame.md). 
 
+**API reference**: [`insert`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/insert.html)
+
 ```text
 insert 
     (columnName) { rowExpression } | (column)
