@@ -381,12 +381,14 @@ class SortTests : TestBase() {
         ).groupBy("key")
 
         listOf(
+            grouped.sortByKey(),
             grouped.sortByKey { "key"<String>() },
             grouped.sortByGroup { min("value") },
             grouped.sortByCountAsc(),
         ).forEach { it.toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 0, 2)] }
 
         listOf(
+            grouped.sortByKeyDesc(),
             grouped.sortByKeyDesc { "key"<String>() },
             grouped.sortByGroupDesc { min("value") },
             grouped.sortByCount(),
