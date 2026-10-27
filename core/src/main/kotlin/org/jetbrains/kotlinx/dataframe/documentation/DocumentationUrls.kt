@@ -619,6 +619,26 @@ public interface DocumentationUrls {
     /** [See `indices` on the documentation website.]({@include [Url]}/indexing.html#row-indices) */
     public typealias Indices = Nothing
 
+    /** [See `getColumn` on the documentation website.]({@include [Url]}/getcolumn.html) */
+    public interface GetColumn {
+
+        /** [See `getColumnGroup` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumngroup) */
+        public typealias GetColumnGroup = Nothing
+
+        /** [See `getColumns` on the documentation website.]({@include [Url]}/getcolumn.html#getcolumns) */
+        public typealias GetColumns = Nothing
+    }
+
+    /** [See "Get rows" on the documentation website.]({@include [Url]}/getrow.html) */
+    public typealias GetRow = Nothing
+
+    /** [See `rows` on the documentation website.]({@include [Url]}/rows.html) */
+    public interface Rows {
+
+        /** [See `rowsReversed` on the documentation website.]({@include [Url]}/rows.html#rowsreversed) */
+        public typealias RowsReversed = Nothing
+    }
+
     /** [See `JsonPath` on the documentation website.]({@include [Url]}/read.html#specify-key-value-paths) */
     public typealias JsonPath = Nothing
 
