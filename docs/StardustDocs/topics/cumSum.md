@@ -14,7 +14,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 **Parameters:**
 * `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
-  When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
+  When `false`, all values after the first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)
