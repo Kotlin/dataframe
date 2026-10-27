@@ -172,6 +172,8 @@
 <resource src="sortByGroupOnGroupBy.html"></resource>
 <resource src="sortByKeyOnGroupBy.html"></resource>
 <resource src="sortByOnGroupBy.html"></resource>
+<resource src="sortBySelectedKeysDescOnGroupBy.html"></resource>
+<resource src="sortBySelectedKeysOnGroupBy.html"></resource>
 <resource src="stdOnGroupBy.html"></resource>
 <resource src="sumOnGroupBy.html"></resource>
 <resource src="toDfOnGroupBy.html"></resource>
