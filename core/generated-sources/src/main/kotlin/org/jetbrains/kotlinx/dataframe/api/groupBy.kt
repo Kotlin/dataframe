@@ -98,10 +98,10 @@ internal interface GroupByDocs {
      * `[ `__`.`__[<code>**`sortByCountAsc`**</code>][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[<code>**`sortByKey`**</code>][GroupBy.sortByKey]**`() `**`]`
+     * `[ `__`.`__[<code>**`sortByKey`**</code>][GroupBy.sortByKey]**`() `**`[ `**`{ `**`columns: `[<code>`SortColumnsSelector`</code>][SortColumnsSelector]**` }`**` ] ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ `__`.`__[<code>**`sortByKeyDesc`**</code>][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `[ `__`.`__[<code>**`sortByKeyDesc`**</code>][GroupBy.sortByKeyDesc]**`() `**`[ `**`{ `**`columns: `[<code>`SortColumnsSelector`</code>][SortColumnsSelector]**` }`**` ] ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `[ `__`.`__[<code>**`sortBy`**</code>][GroupBy.sortBy]**`  {  `**`columns: `[<code>`ColumnsSelector`</code>][ColumnsSelector]**`  }  `**`]`
