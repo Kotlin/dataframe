@@ -35,7 +35,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
  *
- * A [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but that expects a [<code>Boolean</code>][Boolean] as result.
+ * A [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but expects a [<code>Boolean</code>][Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 
