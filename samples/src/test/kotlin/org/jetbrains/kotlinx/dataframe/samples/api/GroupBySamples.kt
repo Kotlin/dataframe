@@ -297,6 +297,9 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { age }.sortByKey()
             // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 30, 40, 45)
+            }
             .toDataFrame()
             .defaultHeaderFormatting { age }
             .saveDfHtmlSample()
