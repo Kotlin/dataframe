@@ -186,7 +186,7 @@ A `GroupBy` can be transformed into a new `GroupBy` using one of the following m
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
 * `sortByCount` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain;
-* [`sortByKey`](sortByKey.md) / [`sortByKeyDesc`](sortByKey.md#sortbykeydesc) — sorts the **order of groups**
+* `sortByKey` / `sortByKeyDesc` — sorts the **order of groups**
   (and their corresponding keys) by the grouping key values;
 * [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;
 * `updateGroups` — transforms each group into a new one using the provided transforming function;
