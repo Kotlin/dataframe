@@ -833,7 +833,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.sortBySelectedKeysDescOnGroupBy]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.sortBySelectedKeysDescOnGroupBy_properties]
  *
  * @include [NullsLastArgumentDescription]
  * @param selector The [Sort Columns Selector][SortColumnsSelector] that defines which keys are used for sorting,
