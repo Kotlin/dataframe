@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  *
  * @include [AddDataRowNote]
  *
- * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
+ * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but expects a [Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 

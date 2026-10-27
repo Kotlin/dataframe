@@ -1,6 +1,6 @@
 [//]: # (title: minBy)
 
-Returns the first [row](DataRow.md) that has the smallest value in the given column, or throws exception 
+Returns the first [row](DataRow.md) that has the smallest value in the given column, or throws an exception 
 if [`DataFrame`](DataFrame.md) is empty.
 
 ## minByOrNull

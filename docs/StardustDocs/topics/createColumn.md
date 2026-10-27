@@ -5,7 +5,7 @@ This section describes ways to create a [`DataColumn`](DataColumn.md).
 
 ### columnOf
 
-Returns new column with the given elements.
+Returns a new column with the given elements.
 The column [`type`](DataColumn.md#properties) is deduced from the compile-time type of the elements inside.
 The column [`name`](DataColumn.md#properties) is taken from the name of the variable.
 
@@ -42,7 +42,7 @@ val fullName by columnOf(firstName, lastName)
 
 <!---END-->
 
-When column elements are [`DataFrame`](DataFrame.md) objects it returns a [`FrameColumn`](DataColumn.md#framecolumn):
+When column elements are [`DataFrame`](DataFrame.md) objects, it returns a [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN createFrameColumn-->
 
