@@ -77,10 +77,10 @@ internal interface SplitDocs {
      * `\[ `__`.`__[**`cast`**][Split.cast]**`<`**`C`**`>() `**`\]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`by`**][Split.by]**`(`**`delimiters: `[`Char`][Char]` | `[`String`][String]**`, ..`**`\[`**`, `**`trim, ignoreCase, limit`\]`**`) `**
+     * `\[ `__`.`__[**`by`**][Split.by]**`(`**`delimiters: `[`Char`][Char]` | `[`String`][String]**`, ..`**`\[`**`, `**`trim, ignoreCase, limit\]`**`)`**
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`by`**][Split.by]**`(`**`regex: `[`Regex`][Regex]`\[`**`, `**`trim, limit`\]`**`) `**
+     * `| `__`.`__[**`by`**][Split.by]**`(`**`regex: `[`Regex`][Regex]`\[`**`, `**`trim, limit\]`**`) `**
      *
      * {@include [Indent]}
      * `| `__`.`__[**`by`**][Split.by]**`  {  `**`splitter: `[`DataRow`][DataRow]`<T>.(C) -> `[`Iterable`][Iterable]`<R>`**` } `**
@@ -92,10 +92,10 @@ internal interface SplitDocs {
      * `\[ `__`.`__[**`default`**][SplitWithTransform.default]**`(`**`value: R?`**`) `**`\]`
      *
      * {@include [Indent]}
-     * __`.`__[**`into`**][SplitWithTransform.into]**`(`**`names: `[`String`][String]**`, ..`**`) `**`\[ `**`{ `**`extraNamesGenerator: `[`ColumnNamesGenerator`][ColumnNamesGenerator]**` } `**`\]`
+     * __`.`__[**`into`**][SplitWithTransform.into]**`(`**`names: `[`String`][String]**`, ..) `**`\[ `**`{ `**`extraNamesGenerator: `[`ColumnNamesGenerator`][ColumnNamesGenerator]**` } `**`\]`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`inward`**][SplitWithTransform.inward]**`(`**`names: `[`String`][String]**`, ..`**`) `**`\[ `**`{ `**`extraNamesGenerator: `[`ColumnNamesGenerator`][ColumnNamesGenerator]**` } `**`\]`
+     * `| `__`.`__[**`inward`**][SplitWithTransform.inward]**`(`**`names: `[`String`][String]**`, ..) `**`\[ `**`{ `**`extraNamesGenerator: `[`ColumnNamesGenerator`][ColumnNamesGenerator]**` } `**`\]`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`intoColumns`**][Split.intoColumns]**`()`**
