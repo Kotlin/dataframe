@@ -32,7 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
  *   like `{@set [STATISTIC] mean}`. The statistic KDoc-topics then wrap these snippets, like:
  *   `@include [CommonStatisticsDocs.ColumnsSelectorParam] {@include [SetMeanStatisticArgs]}`.
  *
- *   NOTE: this cannot be @ExcludedFromSources because [CommonMinMaxDocs] and the other statistics
+ *   NOTE: this cannot be @ExcludeFromSources because [CommonMinMaxDocs] and the other statistics
  *   KDoc-topics use it as supertype.
  */
 internal interface CommonStatisticsDocs {
@@ -193,7 +193,7 @@ internal interface CommonStatisticsDocs {
     /**
      * {@comment Note about what empty pivot intersections become. Only applies to [PivotGroupBy]. KDoc-snippet.}
      *
-     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] are used.
+     * For empty pivot intersections, `null` or the [set default][PivotGroupBy.default] is used.
      */
     @ExcludeFromSources
     typealias EmptyPivotIntersectionSnippet = Nothing

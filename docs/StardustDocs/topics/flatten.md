@@ -9,7 +9,7 @@ flatten  [ { columns } ]
 ```
 
 Columns will keep their original names after flattening.
-Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
 
 **Related operations**: [](groupUngroupFlatten.md)
 

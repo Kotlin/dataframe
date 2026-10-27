@@ -4,7 +4,7 @@
 
 Merges several columns into a single column. 
 
-Reverse operation to [`split`](split.md)
+**Reverse operation:** [`split`](split.md)
 
 ```kotlin
 merge { columns }

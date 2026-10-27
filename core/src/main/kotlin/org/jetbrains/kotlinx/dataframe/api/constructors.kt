@@ -322,7 +322,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
  * @throws [DuplicateColumnNamesException] if column names are not unique
- * @throws [UnequalColumnSizesException] if column size are not equal
+ * @throws [UnequalColumnSizesException] if column sizes are not equal
  * @param columns columns for [DataFrame]
  */
 public fun dataFrameOf(columns: Iterable<BaseColumn<*>>): DataFrame<*> {

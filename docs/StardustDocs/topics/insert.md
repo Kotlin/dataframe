@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Inserts new column at specific position in [`DataFrame`](DataFrame.md). 
+Inserts a new column at a specific position in [`DataFrame`](DataFrame.md). 
 
 ```text
 insert 
