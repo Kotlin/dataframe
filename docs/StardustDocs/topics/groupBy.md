@@ -15,7 +15,7 @@ groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey() | .sortByKeyDesc() | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountAsc() | .sortByKey() [ { columns } ] | .sortByKeyDesc() [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
                   [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
@@ -186,7 +186,8 @@ A `GroupBy` can be transformed into a new `GroupBy` using one of the following m
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
 * `sortByCount` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain;
-* `sortByKey` / `sortByKeyDesc` — sorts the **order of groups** (and their corresponding keys) by the grouping key values;
+* [`sortByKey`](sortByKey.md) / [`sortByKeyDesc`](sortByKey.md#sortbykeydesc) — sorts the **order of groups**
+  (and their corresponding keys) by the grouping key values;
 * [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;
 * `updateGroups` — transforms each group into a new one using the provided transforming function;
 * [`filter`](filter.md) — filters out keys and corresponding groups that
@@ -279,13 +280,54 @@ df.groupBy { age }.sortByKey()
 <tab title="Strings">
 
 ```kotlin
-df.groupBy { age }.sortByKey()
+df.groupBy("age").sortByKey()
 ```
 
 </tab></tabs>
 <inline-frame src="./resources/sortByKeyOnGroupBy.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
+
+<!---FUN sortBySelectedKeysOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city and age }.sortByKey { age and city.reversed() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city", "age").sortByKey { "age"<Int>() and "city"<String?>().reversed() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortBySelectedKeysOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN sortBySelectedKeysDescOnGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city", "age").sortByKeyDesc(nullsLast = true) { "city"<String?>() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/sortBySelectedKeysDescOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
 
 #### sortBy {collapsible="true"}
 <!---FUN sortByOnGroupBy-->
