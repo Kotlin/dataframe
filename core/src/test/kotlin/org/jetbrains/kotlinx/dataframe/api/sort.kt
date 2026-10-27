@@ -352,6 +352,28 @@ class SortTests : TestBase() {
     }
 
     @Test
+    fun `sortByKey correctly sorts key value pairs`() {
+        val grouped = dataFrameOf(
+            "key" to columnOf("b", "b", "a", "c", "c", "c"),
+            "value" to columnOf(4, 2, 1, 6, 5, 3),
+        ).groupBy("key")
+
+        grouped.sortByKey().toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 0, 2)]
+        grouped.sortByKeyDesc().toDataFrame() shouldBe grouped.toDataFrame()[listOf(2, 0, 1)]
+    }
+
+    @Test
+    fun `sortByKey with nullsLast`() {
+        val grouped = dataFrameOf(
+            "key" to columnOf("b", "b", null, "c", "c", "c"),
+            "value" to columnOf(4, 2, 1, 6, 5, 3),
+        ).groupBy("key")
+
+        grouped.sortByKey(nullsLast = true).toDataFrame() shouldBe grouped.toDataFrame()[listOf(0, 2, 1)]
+        grouped.sortByKeyDesc(nullsLast = true).toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 2, 0)]
+    }
+
+    @Test
     fun `grouped outer sorting preserves group contents`() {
         val grouped = dataFrameOf(
             "key" to columnOf("b", "b", "a", "c", "c", "c"),
@@ -359,14 +381,12 @@ class SortTests : TestBase() {
         ).groupBy("key")
 
         listOf(
-            grouped.sortByKey(),
             grouped.sortByKey { "key"<String>() },
             grouped.sortByGroup { min("value") },
             grouped.sortByCountAsc(),
         ).forEach { it.toDataFrame() shouldBe grouped.toDataFrame()[listOf(1, 0, 2)] }
 
         listOf(
-            grouped.sortByKeyDesc(),
             grouped.sortByKeyDesc { "key"<String>() },
             grouped.sortByGroupDesc { min("value") },
             grouped.sortByCount(),

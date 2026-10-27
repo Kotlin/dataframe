@@ -811,9 +811,7 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc {
  * @return A new [GroupBy] with its key-group pairs sorted by the keys.
  */
 public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy { keys.columns().toColumnSet().reversed().nullsLast(nullsLast) }
-        .asGroupBy(groups)
+    sortByKeyDesc(nullsLast) { all() }
 
 /**
  * Sorts the key-group pairs of this [GroupBy] by selected keys descending.
@@ -868,10 +866,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByKeyDesc(
  * @include [NullsLastArgumentDescription]
  * @return A new [GroupBy] with its key-group pairs sorted by the keys.
  */
-public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
-        .asGroupBy(groups)
+public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> = sortByKey(nullsLast) { all() }
 
 /**
  * Sorts the key-group pairs of this [GroupBy] by selected keys ascending.
