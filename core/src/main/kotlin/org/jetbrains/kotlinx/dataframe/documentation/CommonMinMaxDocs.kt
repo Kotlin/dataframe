@@ -8,7 +8,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
  *    The snippets that all summary statistics have in common are inherited from
  *    [CommonStatisticsDocs] and can be included in the same way.
  *
- *    NOTE: this cannot be @ExcludedFromSources because `MinDocs` and `MaxDocs` use it as supertype.
+ *    NOTE: this cannot be @ExcludeFromSources because `MinDocs` and `MaxDocs` use it as supertype.
  * }
  */
 internal interface CommonMinMaxDocs : CommonStatisticsDocs {

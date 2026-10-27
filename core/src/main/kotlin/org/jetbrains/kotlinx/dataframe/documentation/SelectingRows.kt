@@ -53,7 +53,7 @@ internal interface SelectingRows {
      * }
      *
      * The [predicate\] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
-     * given value as `it`
+     * the given value as `it`
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
