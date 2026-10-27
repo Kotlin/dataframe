@@ -305,30 +305,62 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     @Test
     fun sortByKeyOnGroupBy_strings() {
         // SampleStart
-        df.groupBy { age }.sortByKey()
+        df.groupBy("age").sortByKey()
         // SampleEnd
     }
 
     @Test
     fun sortBySelectedKeysOnGroupBy_properties() {
         // SampleStart
-        val sorted = df.groupBy { city and age }.sortByKey { age and city.reversed() }
-        // SampleEnd
-
-        sorted.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
-        sorted.keys.city.toList() shouldBe
-            listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+        df.groupBy { city and age }.sortByKey { age and city.reversed() }
+            // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
+                it.keys.city.toList() shouldBe
+                    listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+            }
+            .toDataFrame()
+            .defaultHeaderFormatting { city and age }
+            .saveDfHtmlSample()
     }
 
     @Test
-    fun sortBySelectedKeysDescOnGroupBy() {
+    fun sortBySelectedKeysOnGroupBy_strings() {
         // SampleStart
-        val sorted = df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
-        // SampleEnd
+        df.groupBy("city", "age").sortByKey { "age"<Int>() and "city"<String?>().reversed() }
+            // SampleEnd
+            .also {
+                it.keys.age.toList() shouldBe listOf(15, 18, 20, 20, 30, 30, 30, 40, 45)
+                it.keys.city.toList() shouldBe
+                    listOf("London", "Dubai", "Moscow", null, "Tokyo", "Moscow", "Milan", "Milan", "Dubai")
+            }
+    }
 
-        sorted.keys.city.toList() shouldBe
-            listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
-        sorted.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
+    @Test
+    fun sortBySelectedKeysDescOnGroupBy_properties() {
+        // SampleStart
+        df.groupBy { city and age }.sortByKeyDesc(nullsLast = true) { city }
+            // SampleEnd
+            .also {
+                it.keys.city.toList() shouldBe
+                    listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
+                it.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
+            }
+            .toDataFrame()
+            .defaultHeaderFormatting { city and age }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun sortBySelectedKeysDescOnGroupBy_strings() {
+        // SampleStart
+        df.groupBy("city", "age").sortByKeyDesc(nullsLast = true) { "city"<String?>() }
+            // SampleEnd
+            .also {
+                it.keys.city.toList() shouldBe
+                    listOf(null, "Tokyo", "Moscow", "Moscow", "Milan", "Milan", "London", "Dubai", "Dubai")
+                it.keys.age.toList() shouldBe listOf(20, 30, 20, 30, 40, 30, 15, 45, 18)
+            }
     }
 
     @Test
