@@ -3052,7 +3052,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -3122,7 +3122,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3209,7 +3209,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3307,7 +3307,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3384,7 +3384,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3484,7 +3484,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.

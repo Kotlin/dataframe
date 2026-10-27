@@ -4249,7 +4249,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -4331,7 +4331,7 @@ public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolea
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
@@ -4423,7 +4423,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -4529,7 +4529,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MedianDocs.MedianSelectingOptions], or check out the
  * [<code>`PivotGroupBy` Grammar</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
@@ -4612,7 +4612,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * See [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.MedianDocs.MedianSelectingOptions], or check out the
  * [<code>`PivotGroupBy` Grammar</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupByDocs.Grammar].
@@ -4718,7 +4718,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Don't confuse [<code>medianOf</code>][medianOf] with [<code>medianBy</code>][PivotGroupBy.medianBy], which returns the row of each group at
  * the median of the values the expression returns, instead of that value.
