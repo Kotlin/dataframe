@@ -65,7 +65,21 @@ It's possible to optionally skip this step, for example, when you publish the li
 by providing the `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`.
 The normal, unprocessed, jars are published then.
 
+The same goes for the [Dokka API reference](https://kotlin.github.io/dataframe/api-docs/index.html).
+Dokka creates a Dokka source set for every Kotlin source set, so also for `mainKodex`.
+`dfbuild.kodex` suppresses the `main` one and documents `mainKodex` instead
+(with the same display name, like "jvm"), so the API reference shows the processed KDocs
+and respects `@ExcludeFromSources`. Running any Dokka task, like `./gradlew dokkaGeneratePublicationHtml`,
+runs `processKDocsMain` (and the ktlint formatting of its output) first.
+With `-PskipKodex`, Dokka documents the normal, unprocessed, `main` sources instead.
+
 `core:processKDocsMain` can also be run separately if you just want to see the result of the KDoc processing by KoDEx.
+
+> [!NOTE]
+> `processKDocsMain` only checks whether `generated-sources` is non-empty to decide whether it's up to date;
+> it doesn't track the generated files themselves.
+> So if you revert or edit files in `generated-sources`, run `./gradlew processKDocsMain --rerun`
+> before building the jars or Dokka, otherwise the stale files are used.
 
 To make sure the generated sources can be seen and reviewed on GitHub,
 since [PR #731](https://github.com/Kotlin/dataframe/pull/731),
