@@ -58,7 +58,7 @@ internal class ConfiguredAggregateColumn<C> private constructor(
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
         resolve(context, columns).singleOrNull()
 
-    companion object {
+    companion {
 
         fun <C> withPath(src: SingleColumn<C>, newPath: ColumnPath): SingleColumn<C> =
             when (src) {

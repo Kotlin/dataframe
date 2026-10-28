@@ -340,7 +340,7 @@ public object KotlinNotebookPluginUtils {
     }
 
     public data class IdeBuildNumber(val ideName: String, val majorVersion: Int, val buildId: Int) {
-        public companion object {
+        companion {
             public fun fromString(buildNumber: String): IdeBuildNumber? {
                 val parts = buildNumber.split(";")
                 return if (parts.size >= 3) constructIdeBuildNumber(parts) else null

@@ -17,7 +17,7 @@ class MariadbLocalTest : MariadbTestBase() {
 
     override fun connect(database: String?): Connection = openConnection(database)
 
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         private fun openConnection(database: String?): Connection =

@@ -75,7 +75,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.agg
     data: Grouped<T>,
     resultName: String? = null,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = data.aggregateOf(resultName, expression, this as Aggregator<C, R>)
+): DataFrame<T> = data.aggregateOf(resultName, expression, this as Aggregator<C & Any, R>)
 
 /**
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!
@@ -85,7 +85,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.agg
 internal inline fun <T, reified C : Any?, reified R : Any?> Aggregator<*, R>.aggregateOf(
     data: PivotGroupBy<T>,
     crossinline expression: RowExpression<T, C>,
-): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)
+): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C & Any, R>)
 
 /**
  * @param C is used to infer whether there are nulls in the values fed to the aggregator!

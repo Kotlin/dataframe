@@ -750,7 +750,7 @@ private fun Schema<*>.toOpenApiType(getRefMarker: GetRefMarker): OpenApiTypeResu
 
         val anyOfTypes = anyOf
             .mapNotNull { it.type }
-            .mapNotNull(OpenApiType.Companion::fromStringOrNull)
+            .mapNotNull(OpenApiType::fromStringOrNull)
             .distinct()
 
         val allTypes = anyOfTypes + anyOfRefs

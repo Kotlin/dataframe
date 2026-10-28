@@ -34,8 +34,8 @@ internal interface SinkSource<T : Any> :
 @Suppress("UNCHECKED_CAST")
 internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSource<Any> {
 
-    @Suppress("ktlint:standard:comment-wrapping", "ktlint:standard:no-consecutive-comments")
-    companion object {
+    companion {
+        @Suppress("ktlint:standard:comment-wrapping", "ktlint:standard:no-consecutive-comments")
         val SINK_FACTORY: SinkFactory = SinkFactory.of(
             // unused in Parsers.DEFAULT:
             /* byteSinkSupplier = */ { ListSink(it, BYTE) as SinkSource<ByteArray> },

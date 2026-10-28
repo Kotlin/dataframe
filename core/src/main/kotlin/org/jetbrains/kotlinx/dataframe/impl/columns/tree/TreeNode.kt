@@ -9,7 +9,7 @@ internal class TreeNode<T>(
     override val parent: TreeNode<T>? = null,
 ) : ReadonlyTreeNode<T> {
 
-    companion object {
+    companion {
         fun <T> createRoot(data: T) = TreeNode<T>("", 0, data)
     }
 

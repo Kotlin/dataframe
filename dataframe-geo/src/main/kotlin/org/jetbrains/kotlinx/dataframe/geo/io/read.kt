@@ -43,7 +43,7 @@ internal typealias ReadGeoJsonSnippet = Nothing
  * @param [path] a [String] path to GeoJSON file
  * @return a new [GeoDataFrame] with the data from the GeoJSON file
  */
-public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
+public companion fun GeoDataFrame.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
 
 /**
  * @include [ReadGeoJsonSnippet]
@@ -51,7 +51,7 @@ public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = r
  * @param [url] a [URL] of GeoJSON file
  * @return a new [GeoDataFrame] with the data from the GeoJSON file
  */
-public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
+public companion fun GeoDataFrame.readGeoJson(url: URL): GeoDataFrame<*> =
     url.openStream().use { inputStream ->
         val featureCollection = FeatureJSON().readFeatureCollection(inputStream) as SimpleFeatureCollection
         featureCollection.toGeoDataFrame()
@@ -63,7 +63,8 @@ public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
  * @param [path] a [String] path to GeoJSON file
  * @return a new [GeoDataFrame] with the data from the GeoJSON file
  */
-public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFrame.readGeoJson(path)
+@JvmName("DataFrameReadGeoJson")
+public companion fun DataFrame.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFrame.readGeoJson(path)
 
 /**
  * @include [ReadGeoJsonSnippet]
@@ -71,7 +72,8 @@ public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoD
  * @param [url] a [URL] of GeoJSON file
  * @return a new [GeoDataFrame] with the data from the GeoJSON file
  */
-public fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
+@JvmName("DataFrameReadGeoJson")
+public companion fun DataFrame.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
 
 /**
  * {@comment `readShapefile` KDoc-snippet}
@@ -108,7 +110,7 @@ internal typealias ReadShapefileSnippet = Nothing
  * @param path path to a Shapefile (*.shp or *.shp.gz file), or to a directory containing such a file
  * @return a new [GeoDataFrame] with the data from the Shapefile
  */
-public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
+public companion fun GeoDataFrame.readShapefile(path: String): GeoDataFrame<*> {
     val url = if (isUrl(path)) resolveRemoteShapefileUrl(URI(path).toURL()) else resolveShapefileUrl(path)
     return readShapeFileImpl(url)
 }
@@ -119,7 +121,7 @@ public fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {
  * @param url URL of a Shapefile (*.shp or *.shp.gz file) or of a directory containing such a file
  * @return a new [GeoDataFrame] with the data from the Shapefile
  */
-public fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
+public companion fun GeoDataFrame.readShapefile(url: URL): GeoDataFrame<*> {
     val resolvedUrl = if (url.protocol == "file") {
         resolveShapefileUrl(url.path)
     } else {
@@ -174,7 +176,8 @@ private fun findShapefileInDirectory(dir: File): File =
  * @param path path to a Shapefile (*.shp or *.shp.gz file), or to a directory containing such a file
  * @return a new [GeoDataFrame] with the data from the Shapefile
  */
-public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
+@JvmName("DataFrameReadShapefile")
+public companion fun DataFrame.readShapefile(path: String): GeoDataFrame<*> = GeoDataFrame.readShapefile(path)
 
 /**
  * @include [ReadShapefileSnippet]
@@ -182,4 +185,5 @@ public fun DataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = Ge
  * @param url URL of a Shapefile (*.shp or *.shp.gz file) or of a directory containing such a file
  * @return a new [GeoDataFrame] with the data from the Shapefile
  */
-public fun DataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> = GeoDataFrame.readShapefile(url)
+@JvmName("DataFrameReadShapefile")
+public companion fun DataFrame.readShapefile(url: URL): GeoDataFrame<*> = GeoDataFrame.readShapefile(url)

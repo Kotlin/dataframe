@@ -124,7 +124,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
     override fun toString(): kotlin.String = name.toString()
 
-    companion object {
+    companion {
 
         val all: List<OpenApiType> = listOf(String, Integer, Number, Boolean, Object, Array, Any)
 
@@ -148,7 +148,7 @@ internal enum class OpenApiIntegerFormat(val value: String) {
     INT64("int64"),
     ;
 
-    companion object {
+    companion {
         fun fromStringOrNull(value: String?): OpenApiIntegerFormat? = values().firstOrNull { it.value == value }
     }
 }
@@ -159,7 +159,7 @@ internal enum class OpenApiNumberFormat(val value: String) {
     DOUBLE("double"),
     ;
 
-    companion object {
+    companion {
         fun fromStringOrNull(value: String?): OpenApiNumberFormat? = values().firstOrNull { it.value == value }
     }
 }
@@ -173,7 +173,7 @@ internal enum class OpenApiStringFormat(val value: String) {
     BINARY("binary"),
     ;
 
-    companion object {
+    companion {
         fun fromStringOrNull(value: String?): OpenApiStringFormat? = values().firstOrNull { it.value == value }
     }
 }

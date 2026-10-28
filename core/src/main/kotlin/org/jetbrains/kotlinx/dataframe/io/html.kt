@@ -831,7 +831,7 @@ public class DataFrameHtmlData(
 
     public operator fun component3(): String = script
 
-    public companion object {
+    companion {
         /**
          * @return CSS and JS required to render DataFrame tables
          * Can be used as a starting point to create page with multiple tables
@@ -871,7 +871,7 @@ public data class DisplayConfiguration(
     var enableFallbackStaticTables: Boolean = true,
     var downsizeBufferedImage: Boolean = true,
 ) {
-    public companion object {
+    companion {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
 
@@ -942,7 +942,7 @@ public data class DisplayConfiguration(
 
 @JvmInline
 public value class RendererDecimalFormat private constructor(internal val format: String) {
-    public companion object {
+    companion {
         public fun fromPrecision(precision: Int): RendererDecimalFormat {
             require(precision >= 0) { "precision must be >= 0. for custom format use RendererDecimalFormat.of" }
             return RendererDecimalFormat("%.${precision}f")
@@ -950,7 +950,7 @@ public value class RendererDecimalFormat private constructor(internal val format
 
         public fun of(format: String): RendererDecimalFormat = RendererDecimalFormat(format)
 
-        internal val DEFAULT: RendererDecimalFormat = fromPrecision(DEFAULT_PRECISION)
+        internal val DEFAULT: RendererDecimalFormat get() = fromPrecision(DEFAULT_PRECISION)
     }
 }
 

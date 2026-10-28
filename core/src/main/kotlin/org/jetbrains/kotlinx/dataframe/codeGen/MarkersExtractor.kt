@@ -34,7 +34,7 @@ public sealed interface FieldKind {
     public val shouldBeConvertedToColumnGroup: Boolean get() = false
     public val shouldBeConvertedToFrameColumn: Boolean get() = false
 
-    public companion object {
+    companion {
         // Should be in sync with compiler plugin
         public fun <T> of(
             value: T,

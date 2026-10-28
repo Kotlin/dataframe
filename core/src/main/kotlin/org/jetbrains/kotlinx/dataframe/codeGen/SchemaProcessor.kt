@@ -15,7 +15,7 @@ internal interface SchemaProcessor {
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ): Marker
 
-    companion object {
+    companion {
         fun create(
             namePrefix: String,
             existingMarkers: Iterable<Marker> = emptyList(),

@@ -879,7 +879,7 @@ class DelimCsvTsvTests {
         }.message!!.shouldContain("Check `colTypes`")
     }
 
-    companion object {
+    companion {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")
         private val simpleCsvUtf16le = testCsv("testCSV-utf-16-le-bom")

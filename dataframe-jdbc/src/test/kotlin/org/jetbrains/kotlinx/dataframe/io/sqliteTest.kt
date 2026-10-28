@@ -56,7 +56,7 @@ interface FlagSqlite {
 }
 
 class SqliteTest {
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         /**

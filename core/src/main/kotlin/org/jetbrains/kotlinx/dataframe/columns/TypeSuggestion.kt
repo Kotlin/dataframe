@@ -16,7 +16,7 @@ import kotlin.reflect.KType
  */
 public sealed interface TypeSuggestion {
 
-    public companion object {
+    companion {
 
         /** Creates a new [TypeSuggestion] instance based on the given parameters. */
         public fun create(suggestedType: KType?, guessType: Boolean): TypeSuggestion =

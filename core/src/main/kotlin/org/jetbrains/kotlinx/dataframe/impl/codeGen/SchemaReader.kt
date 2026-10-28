@@ -22,7 +22,7 @@ import java.net.URL
  */
 @Deprecated(SUPPORTED_DATAFRAME_FORMAT, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
+public companion val CodeGenerator.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
     get() = { url, formats ->
         try {
             val (format, df) = url.openStream().use {
@@ -57,7 +57,7 @@ public sealed interface DfReadResult {
  * It tries to guess the format based on the given [formats] and returns [CodeGenerationReadResult.Success],
  * or returns [CodeGenerationReadResult.Error] if it fails.
  */
-public val CodeGenerator.Companion.urlCodeGenReader: (
+public companion val CodeGenerator.urlCodeGenReader: (
     url: URL,
     name: String,
     formats: List<SupportedFormat>,

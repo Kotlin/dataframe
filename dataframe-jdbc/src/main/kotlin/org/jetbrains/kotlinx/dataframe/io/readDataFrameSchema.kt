@@ -35,7 +35,7 @@ import kotlin.reflect.typeOf
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrameSchema.Companion.readSqlTable(
+public companion fun DataFrameSchema.readSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
     dbType: DbType? = null,
@@ -73,7 +73,7 @@ public fun DataFrameSchema.Companion.readSqlTable(
  * @return the schema of the SQL table as a [DataFrameSchema] object.
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.readSqlTable(
+public companion fun DataFrameSchema.readSqlTable(
     dataSource: DataSource,
     tableName: String,
     dbType: DbType? = null,
@@ -94,7 +94,7 @@ public fun DataFrameSchema.Companion.readSqlTable(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrameSchema.Companion.readSqlTable(
+public companion fun DataFrameSchema.readSqlTable(
     connection: Connection,
     tableName: String,
     dbType: DbType? = null,
@@ -133,7 +133,7 @@ public fun DataFrameSchema.Companion.readSqlTable(
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrameSchema.Companion.readSqlQuery(
+public companion fun DataFrameSchema.readSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     dbType: DbType? = null,
@@ -175,7 +175,7 @@ public fun DataFrameSchema.Companion.readSqlQuery(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.readSqlQuery(
+public companion fun DataFrameSchema.readSqlQuery(
     dataSource: DataSource,
     sqlQuery: String,
     dbType: DbType? = null,
@@ -196,7 +196,7 @@ public fun DataFrameSchema.Companion.readSqlQuery(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrameSchema.Companion.readSqlQuery(
+public companion fun DataFrameSchema.readSqlQuery(
     connection: Connection,
     sqlQuery: String,
     dbType: DbType? = null,
@@ -323,7 +323,7 @@ public fun Connection.readDataFrameSchema(sqlQueryOrTableName: String, dbType: D
  * @param [dbType] the type of database that the [ResultSet] belongs to, could be a custom object, provided by user.
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun DataFrameSchema.Companion.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
+public companion fun DataFrameSchema.readResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet, dbType)
     val expectedJdbcTypes = getExpectedJdbcTypes(dbType, tableColumns)
     val preprocessedValueTypes = getPreprocessedValueTypes(dbType, tableColumns, expectedJdbcTypes)
@@ -363,7 +363,7 @@ public fun ResultSet.readDataFrameSchema(dbType: DbType): DataFrameSchema = Data
  * in that case the [dbType] will be recognized from the [dbConfig].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrameSchema.Companion.readAllSqlTables(
+public companion fun DataFrameSchema.readAllSqlTables(
     dbConfig: DbConnectionConfig,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> =
@@ -406,7 +406,7 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrameSchema.Companion.readAllSqlTables(
+public companion fun DataFrameSchema.readAllSqlTables(
     dataSource: DataSource,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> {
@@ -423,7 +423,7 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
  * in that case the [dbType] will be recognized from the [connection].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrameSchema.Companion.readAllSqlTables(
+public companion fun DataFrameSchema.readAllSqlTables(
     connection: Connection,
     dbType: DbType? = null,
 ): Map<String, DataFrameSchema> {

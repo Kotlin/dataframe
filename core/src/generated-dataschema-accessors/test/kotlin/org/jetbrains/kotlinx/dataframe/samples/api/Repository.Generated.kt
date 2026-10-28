@@ -20,7 +20,7 @@ interface Repository {
     val stargazersCount: Int
     val topics: String
     val watchers: Int
-    public companion object {
+    companion {
       public const val defaultPath: kotlin.String = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
 
       public val defaultDelimiter: kotlin.Char = ','

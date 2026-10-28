@@ -22,7 +22,7 @@ class MsSqlContainerTest : MsSqlTestBase() {
             PASSWORD,
         )
 
-    companion object {
+    companion {
         private val mssql: MSSQLServerContainer = MSSQLServerContainer(BuildConfig.MSSQL_IMAGE).apply {
             acceptLicense()
             withPassword(PASSWORD)

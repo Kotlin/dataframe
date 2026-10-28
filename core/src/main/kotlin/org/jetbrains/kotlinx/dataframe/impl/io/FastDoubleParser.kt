@@ -244,42 +244,42 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
      * They are only added by [withFallback] if they don't interfere with symbols already in the provided [locale]
      * (so ',' is not added as grouping separator if '.' is already the locale's decimal separator).
      */
-    internal companion object {
+    companion {
         private val allDecimalFormatSymbols by lazy {
             Locale.getAvailableLocales().map { DecimalFormatSymbols.getInstance(it) }
         }
-        val MINUS_SIGNS by lazy {
+        internal val MINUS_SIGNS by lazy {
             allDecimalFormatSymbols.mapNotNullTo(mutableSetOf()) { it.minusSign }.toCharArray()
         }
-        val INFINITIES by lazy {
+        internal val INFINITIES by lazy {
             allDecimalFormatSymbols.mapNotNullTo(mutableSetOf()) { it.infinity }
                 .plus(arrayOf("∞", "inf", "infinity", "infty"))
                 .toTypedArray()
         }
-        val PLUS_INFINITIES by lazy { INFINITIES.map { "+$it" }.toTypedArray() }
-        val MINUS_INFINITIES by lazy {
+        internal val PLUS_INFINITIES by lazy { INFINITIES.map { "+$it" }.toTypedArray() }
+        internal val MINUS_INFINITIES by lazy {
             INFINITIES.flatMap { inf -> MINUS_SIGNS.map { min -> min + inf } }.toTypedArray()
         }
-        val NANS by lazy {
+        internal val NANS by lazy {
             allDecimalFormatSymbols.mapNotNullTo(mutableSetOf()) { it.naN }
                 .plus(arrayOf("nan", "na", "n/a"))
                 .toTypedArray()
         }
-        val WHITE_SPACES = charArrayOf(' ', '\u00A0', '\u2009', '\u202F', '\t')
-        val GROUPING_SEPARATORS by lazy {
+        internal val WHITE_SPACES = charArrayOf(' ', '\u00A0', '\u2009', '\u202F', '\t')
+        internal val GROUPING_SEPARATORS by lazy {
             allDecimalFormatSymbols.mapNotNullTo(mutableSetOf()) { it.groupingSeparator }
                 .plus(arrayOf('\'', '˙', *WHITE_SPACES.toTypedArray()))
                 .toCharArray()
         }
-        val DECIMAL_SEPARATORS by lazy {
+        internal val DECIMAL_SEPARATORS by lazy {
             allDecimalFormatSymbols.flatMapTo(mutableSetOf()) {
                 listOfNotNull(it.decimalSeparator, it.monetaryDecimalSeparator)
             }.plus(arrayOf('·', '⎖'))
                 .toCharArray()
         }
-        val EXPONENTS by lazy {
+        internal val EXPONENTS by lazy {
             allDecimalFormatSymbols.mapNotNullTo(mutableSetOf()) { it.exponentSeparator }.toTypedArray()
         }
-        val numberFormatSymbolsCache = mutableMapOf<Locale, NumberFormatSymbols>()
+        internal val numberFormatSymbolsCache = mutableMapOf<Locale, NumberFormatSymbols>()
     }
 }

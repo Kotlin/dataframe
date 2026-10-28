@@ -627,7 +627,7 @@ class RenderingTests : JupyterReplTestCase() {
         formatted.hasFormattedColumns() shouldBe true
     }
 
-    companion object {
+    companion {
         /**
          * Set the system property for the IDE version needed for specific serialization testing purposes.
          */

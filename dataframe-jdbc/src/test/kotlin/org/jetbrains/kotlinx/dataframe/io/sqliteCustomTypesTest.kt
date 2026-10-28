@@ -23,7 +23,7 @@ import kotlin.time.Instant
 
 class SqliteTestCustomTypes {
 
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         // Dataset from https://github.com/Kotlin/dataframe/issues/964
@@ -298,7 +298,7 @@ class SqliteTestCustomTypes {
      */
     class DynamicTypes {
 
-        companion object {
+        companion {
             private lateinit var connection: Connection
 
             // simple table with int and long nullable columns

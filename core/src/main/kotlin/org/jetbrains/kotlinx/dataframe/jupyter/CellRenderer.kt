@@ -11,7 +11,7 @@ public data class RenderedContent(
     val fullContent: String?,
     val isFormatted: Boolean,
 ) {
-    public companion object {
+    companion {
 
         public fun media(
             @Language("HTML") html: String,

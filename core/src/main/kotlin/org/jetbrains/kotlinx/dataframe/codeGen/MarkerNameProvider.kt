@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
  * Name conflicts are resolved by numerical suffix
  */
 public sealed interface MarkerNameProvider {
-    public companion object {
+    companion {
         /**
          * [MarkerNameProvider] that generates a name from the column name.
          * It uses the last component of the [ColumnPath], converts it to camel case and capitalizes it.

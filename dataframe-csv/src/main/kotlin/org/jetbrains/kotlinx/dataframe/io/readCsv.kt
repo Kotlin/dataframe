@@ -47,7 +47,7 @@ import kotlin.io.path.inputStream
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     path: Path,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -100,7 +100,7 @@ public fun DataFrame.Companion.readCsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     file: File,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -153,7 +153,7 @@ public fun DataFrame.Companion.readCsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     url: URL,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -206,7 +206,7 @@ public fun DataFrame.Companion.readCsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     fileOrUrl: String,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -261,7 +261,7 @@ public fun DataFrame.Companion.readCsv(
  * @include [CommonReadDelimDocs.CommonReadParams]
  * @include [ADJUST_CSV_SPECS]
  */
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     inputStream: InputStream,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -307,7 +307,7 @@ public fun DataFrame.Companion.readCsv(
 // region deprecations
 
 @Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     path: Path,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -348,7 +348,7 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     file: File,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -389,7 +389,7 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     url: URL,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -430,7 +430,7 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     fileOrUrl: String,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
@@ -471,7 +471,7 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @Deprecated(READ_CSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readCsv(
+public companion fun DataFrame.readCsv(
     inputStream: InputStream,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,

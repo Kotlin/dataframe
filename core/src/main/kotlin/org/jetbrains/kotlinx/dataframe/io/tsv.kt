@@ -53,7 +53,7 @@ private const val TAB_CHAR = '\t'
     replaceWith = ReplaceWith(READ_TSV_FILE_OR_URL_REPLACE, READ_TSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readTSV(
+public companion fun DataFrame.readTSV(
     fileOrUrl: String,
     header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
@@ -84,7 +84,7 @@ public fun DataFrame.Companion.readTSV(
     replaceWith = ReplaceWith(READ_TSV_FILE_REPLACE, READ_TSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readTSV(
+public companion fun DataFrame.readTSV(
     file: File,
     header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
@@ -111,7 +111,7 @@ public fun DataFrame.Companion.readTSV(
     replaceWith = ReplaceWith(READ_TSV_URL_REPLACE, READ_TSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readTSV(
+public companion fun DataFrame.readTSV(
     url: URL,
     header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
@@ -138,7 +138,7 @@ public fun DataFrame.Companion.readTSV(
     replaceWith = ReplaceWith(READ_TSV_STREAM_REPLACE, READ_TSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readTSV(
+public companion fun DataFrame.readTSV(
     stream: InputStream,
     header: List<String> = listOf(),
     isCompressed: Boolean = false,

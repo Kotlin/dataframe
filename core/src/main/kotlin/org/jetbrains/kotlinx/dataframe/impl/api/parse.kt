@@ -767,8 +767,6 @@ internal object Parsers : GlobalParserOptions {
             val typeClashTactic = Class.forName($$"org.jetbrains.kotlinx.dataframe.io.JSON$TypeClashTactic")
             val readJsonStr = klass.getMethod(
                 "readJsonStr",
-                // this =
-                DataFrame.Companion::class.java,
                 // text =
                 String::class.java,
                 // header =
@@ -784,8 +782,6 @@ internal object Parsers : GlobalParserOptions {
             return@lazy { text: String ->
                 readJsonStr.invoke(
                     null,
-                    // this =
-                    DataFrame.Companion,
                     // text =
                     text,
                     // header =
@@ -811,8 +807,6 @@ internal object Parsers : GlobalParserOptions {
             val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
             val readJsonStr = klass.getMethod(
                 "readJsonStr",
-                // this =
-                DataRow.Companion::class.java,
                 // text =
                 String::class.java,
                 // header =
@@ -828,8 +822,6 @@ internal object Parsers : GlobalParserOptions {
             return@lazy { text: String ->
                 readJsonStr.invoke(
                     null,
-                    // this =
-                    DataRow.Companion,
                     // text =
                     text,
                     // header =
@@ -1057,7 +1049,7 @@ internal object Parsers : GlobalParserOptions {
 }
 
 @FormatStringsInDatetimeFormats
-internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: KType): DateTimeFormat<out Any> {
+internal companion fun DateTimeFormat.fromPattern(pattern: String, formatType: KType): DateTimeFormat<out Any> {
     val formatType = formatType.withNullability(false)
     val formatBuilder: (DateTimeFormatBuilder.() -> Unit) -> DateTimeFormat<out Any> =
         when (formatType) {

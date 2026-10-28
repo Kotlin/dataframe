@@ -156,7 +156,7 @@ class ImageSerializationTests {
         return true
     }
 
-    companion object {
+    companion {
         private val DEFAULT = Base64ImageEncodingOptions()
         private val GZIP_ON_RESIZE_OFF = Base64ImageEncodingOptions(options = GZIP_ON)
         private val GZIP_OFF_RESIZE_OFF = Base64ImageEncodingOptions(options = ALL_OFF)

@@ -153,7 +153,7 @@ internal class DirectedAcyclicGraph<T> private constructor(
         }.build()
     }
 
-    companion object {
+    companion {
         fun <T> builder(): Builder<T> = Builder()
     }
 }
@@ -163,9 +163,8 @@ internal class DirectedAcyclicGraph<T> private constructor(
  *
  * @see DirectedAcyclicGraph
  */
-@OptIn(ExperimentalTypeInference::class)
 internal fun <T> buildDag(
-    @BuilderInference builder: DirectedAcyclicGraph.Builder<T>.() -> Unit,
+    builder: DirectedAcyclicGraph.Builder<T>.() -> Unit,
 ): DirectedAcyclicGraph<T> = DirectedAcyclicGraph.builder<T>().apply(builder).build()
 
 /**

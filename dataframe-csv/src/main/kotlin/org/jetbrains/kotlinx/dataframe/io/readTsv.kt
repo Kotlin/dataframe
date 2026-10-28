@@ -47,7 +47,7 @@ import kotlin.io.path.inputStream
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     path: Path,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -100,7 +100,7 @@ public fun DataFrame.Companion.readTsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     file: File,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -153,7 +153,7 @@ public fun DataFrame.Companion.readTsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     url: URL,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -206,7 +206,7 @@ public fun DataFrame.Companion.readTsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     fileOrUrl: String,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -261,7 +261,7 @@ public fun DataFrame.Companion.readTsv(
  * @include [CommonReadDelimDocs.CommonReadParams]
  * @include [ADJUST_CSV_SPECS]
  */
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     inputStream: InputStream,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -307,7 +307,7 @@ public fun DataFrame.Companion.readTsv(
 // region deprecations
 
 @Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     path: Path,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -348,7 +348,7 @@ public fun DataFrame.Companion.readTsv(
     )
 
 @Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     file: File,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -389,7 +389,7 @@ public fun DataFrame.Companion.readTsv(
     )
 
 @Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     url: URL,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -430,7 +430,7 @@ public fun DataFrame.Companion.readTsv(
     )
 
 @Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     fileOrUrl: String,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,
@@ -471,7 +471,7 @@ public fun DataFrame.Companion.readTsv(
     )
 
 @Deprecated(READ_TSV_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readTsv(
+public companion fun DataFrame.readTsv(
     inputStream: InputStream,
     delimiter: Char = TSV_DELIMITER,
     header: List<String> = HEADER,

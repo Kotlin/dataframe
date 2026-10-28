@@ -251,7 +251,7 @@ class Write : TestBase, DataFrameSampleHelper("write", "io") {
         }
     }
 
-    companion object {
+    companion {
         private fun useTempFile(action: (File) -> Unit) {
             val file = kotlin.io.path.createTempFile("dataframeWriteTest")
             action(file.toFile())

@@ -105,8 +105,8 @@ public open class Marker(
 
     public fun implementsAll(schemas: Iterable<Marker>): Boolean = schemas.all { implements(it) }
 
-    internal companion object {
-        operator fun invoke(
+    companion {
+        internal operator fun invoke(
             name: String,
             isOpen: Boolean,
             fields: List<GeneratedField>,

@@ -17,7 +17,7 @@ import kotlin.reflect.typeOf
  *   If set to `true`, [Long] and [ULong] will be joined to [Double] in the graph.
  */
 internal data class UnifiedNumberTypeOptions(val useBigNumbers: Boolean, val allowLongToDoubleConversion: Boolean) {
-    companion object {
+    companion {
         val DEFAULT = UnifiedNumberTypeOptions(
             useBigNumbers = true,
             allowLongToDoubleConversion = false,

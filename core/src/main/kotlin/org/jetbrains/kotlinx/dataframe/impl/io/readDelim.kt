@@ -17,7 +17,7 @@ import java.io.Reader
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-internal fun DataFrame.Companion.readDelimImpl(
+internal companion fun DataFrame.readDelimImpl(
     reader: Reader,
     format: CSVFormat,
     colTypes: Map<String, ColType>,

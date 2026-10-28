@@ -111,7 +111,7 @@ interface Table3MySql {
 }
 
 class MySqlH2Test {
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

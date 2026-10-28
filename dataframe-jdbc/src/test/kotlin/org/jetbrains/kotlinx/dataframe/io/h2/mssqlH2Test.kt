@@ -66,7 +66,7 @@ interface Table1MSSSQL {
 }
 
 class MSSQLH2Test {
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

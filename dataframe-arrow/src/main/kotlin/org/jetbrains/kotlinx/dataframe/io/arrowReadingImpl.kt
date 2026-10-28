@@ -597,7 +597,7 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
-internal fun DataFrame.Companion.readArrowIPCImpl(
+internal companion fun DataFrame.readArrowIPCImpl(
     channel: ReadableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -606,7 +606,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
 /**
  * Read [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
-internal fun DataFrame.Companion.readArrowFeatherImpl(
+internal companion fun DataFrame.readArrowFeatherImpl(
     channel: SeekableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -615,7 +615,7 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
 /**
  * Read [Arrow any format](https://arrow.apache.org/java/current/ipc.html#reading-writing-ipc-formats) data from existing [reader]
  */
-internal fun DataFrame.Companion.readArrowImpl(
+internal companion fun DataFrame.readArrowImpl(
     reader: ArrowReader,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
@@ -670,7 +670,7 @@ private fun resolveArrowDatasetUris(fileUris: Array<String>): Array<String> =
 /**
  * Read [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html) from [fileUris]
  */
-internal fun DataFrame.Companion.readArrowDatasetImpl(
+internal companion fun DataFrame.readArrowDatasetImpl(
     fileUris: Array<String>,
     fileFormat: FileFormat,
     nullability: NullabilityOptions = NullabilityOptions.Infer,

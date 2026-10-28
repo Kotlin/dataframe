@@ -24,8 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import java.io.File
@@ -163,7 +161,7 @@ internal const val VALUE_COLUMN_NAME: String = "value"
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [file].
  */
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     file: File,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -187,7 +185,7 @@ public fun DataFrame.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [path].
  */
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     path: Path,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -211,7 +209,7 @@ public fun DataFrame.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [file].
  */
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     file: File,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -235,7 +233,7 @@ public fun DataRow.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [path].
  */
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     path: Path,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -259,7 +257,7 @@ public fun DataRow.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [path].
  */
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     path: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -283,7 +281,7 @@ public fun DataFrame.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [path].
  */
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     path: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -307,7 +305,7 @@ public fun DataRow.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [url].
  */
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     url: URL,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -333,7 +331,7 @@ public fun DataFrame.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [url].
  */
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     url: URL,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -359,7 +357,7 @@ public fun DataRow.Companion.readJson(
  * @return [DataFrame] from the given [stream].
  */
 @OptIn(ExperimentalSerializationApi::class)
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -380,7 +378,7 @@ public fun DataFrame.Companion.readJson(
     message = "This function exists for binary compatibility",
     level = DeprecationLevel.HIDDEN,
 )
-public fun DataFrame.Companion.readJson(
+public companion fun DataFrame.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -406,7 +404,7 @@ public fun DataFrame.Companion.readJson(
  * @param format [Json] format to use for parsing. Defaults to [Json.Default].
  * @return [DataRow] from the given [stream].
  */
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -427,7 +425,7 @@ public fun DataRow.Companion.readJson(
     message = "This function exists for binary compatibility",
     level = DeprecationLevel.HIDDEN,
 )
-public fun DataRow.Companion.readJson(
+public companion fun DataRow.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -451,7 +449,7 @@ public fun DataRow.Companion.readJson(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataFrame] from the given [text].
  */
-public fun DataFrame.Companion.readJsonStr(
+public companion fun DataFrame.readJsonStr(
     @Language("json") text: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -476,7 +474,7 @@ public fun DataFrame.Companion.readJsonStr(
  * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default.
  * @return [DataRow] from the given [text].
  */
-public fun DataRow.Companion.readJsonStr(
+public companion fun DataRow.readJsonStr(
     @Language("json") text: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
@@ -615,7 +613,7 @@ public class Base64ImageEncodingOptions(
     public val isLimitSizeOn: Boolean
         get() = options and LIMIT_SIZE_ON == LIMIT_SIZE_ON
 
-    public companion object {
+    companion {
         public const val ALL_OFF: Int = 0
         public const val GZIP_ON: Int = 1 // 2^0
         public const val LIMIT_SIZE_ON: Int = 2 // 2^1

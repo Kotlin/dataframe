@@ -18,8 +18,6 @@ public interface AdditionalProperty<T> : NameValueProperty<T> {
 
     /** Value of the property. */
     override val value: T
-
-    public companion object
 }
 
 private const val DEPRECATION_MESSAGE = "'key' has been renamed to 'name'."

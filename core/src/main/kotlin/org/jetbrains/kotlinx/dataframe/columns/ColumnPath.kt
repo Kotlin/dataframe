@@ -16,7 +16,7 @@ public data class ColumnPath(val path: List<String>) :
     List<String> by path,
     ColumnAccessor<Any?> {
 
-    internal companion object {
+    companion {
         internal val EMPTY = ColumnPath(emptyList())
     }
 

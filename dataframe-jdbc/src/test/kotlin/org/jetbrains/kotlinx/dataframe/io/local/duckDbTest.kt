@@ -62,7 +62,7 @@ class DuckDbTest {
         @ColumnName("hire_date")
         val hireDate: LocalDate,
     ) {
-        companion object {
+        companion {
             val expected = listOf(
                 Person(1, "John Doe", 30, 50000.0, LocalDate(2020, 1, 15)),
                 Person(2, "Jane Smith", 28, 55000.0, LocalDate(2021, 3, 20)),
@@ -198,7 +198,7 @@ class DuckDbTest {
         @ColumnName("varchar_col")
         val varcharCol: String,
     ) {
-        companion object {
+        companion {
             val expected = listOf(
                 GeneralPurposeTypes(
                     bigintCol = 9223372036854775807L,

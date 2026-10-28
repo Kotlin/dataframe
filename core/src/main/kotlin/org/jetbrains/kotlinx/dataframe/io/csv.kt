@@ -129,7 +129,7 @@ internal fun isCompressed(url: URL) = isCompressed(url.path)
     message = APACHE_CSV,
     level = DeprecationLevel.HIDDEN, // clashes with the new readDelim
 )
-public fun DataFrame.Companion.readDelimStr(
+public companion fun DataFrame.readDelimStr(
     text: String,
     delimiter: Char = ',',
     colTypes: Map<String, ColType> = mapOf(),
@@ -149,7 +149,7 @@ public fun DataFrame.Companion.readDelimStr(
     replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.ERROR,
 )
-public fun DataFrame.Companion.read(
+public companion fun DataFrame.read(
     fileOrUrl: String,
     delimiter: Char,
     header: List<String> = listOf(),
@@ -165,7 +165,7 @@ public fun DataFrame.Companion.read(
     replaceWith = ReplaceWith(READ_CSV_FILE_OR_URL_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readCSV(
+public companion fun DataFrame.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
     header: List<String> = listOf(),
@@ -197,7 +197,7 @@ public fun DataFrame.Companion.readCSV(
     replaceWith = ReplaceWith(READ_CSV_FILE_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readCSV(
+public companion fun DataFrame.readCSV(
     file: File,
     delimiter: Char = ',',
     header: List<String> = listOf(),
@@ -227,7 +227,7 @@ public fun DataFrame.Companion.readCSV(
     replaceWith = ReplaceWith(READ_CSV_URL_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readCSV(
+public companion fun DataFrame.readCSV(
     url: URL,
     delimiter: Char = ',',
     header: List<String> = listOf(),
@@ -256,7 +256,7 @@ public fun DataFrame.Companion.readCSV(
     replaceWith = ReplaceWith(READ_CSV_STREAM_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readCSV(
+public companion fun DataFrame.readCSV(
     stream: InputStream,
     delimiter: Char = ',',
     header: List<String> = listOf(),
@@ -306,7 +306,7 @@ private fun getFormat(
     replaceWith = ReplaceWith(READ_DELIM_STREAM_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     inStream: InputStream,
     delimiter: Char = ',',
     header: List<String> = listOf(),
@@ -369,7 +369,7 @@ public enum class ColType {
     StdlibInstant,
     ;
 
-    public companion object {
+    companion {
 
         /**
          * You can add a default column type to the `colTypes` parameter
@@ -429,7 +429,7 @@ public fun ColType.toKType(): KType =
     replaceWith = ReplaceWith(READ_DELIM_READER_REPLACE),
     level = DeprecationLevel.WARNING,
 )
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.builder()
         .setHeader()

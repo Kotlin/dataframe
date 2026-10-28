@@ -295,7 +295,7 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
 
     // shortcuts to the various estimation methods
     // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
-    companion object {
+    companion {
         val R1 = Selecting.R1
         val R3 = Selecting.R3
         val R7 = Interpolating.R7

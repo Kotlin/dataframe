@@ -75,7 +75,7 @@ interface ViewTable {
 }
 
 class PostgresH2Test {
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

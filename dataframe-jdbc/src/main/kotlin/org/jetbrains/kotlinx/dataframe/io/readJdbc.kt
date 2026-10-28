@@ -61,7 +61,7 @@ internal typealias SqlAliasNamesColumnSnippet = Nothing
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the data from the SQL table.
  */
-public fun DataFrame.Companion.readSqlTable(
+public companion fun DataFrame.readSqlTable(
     dbConfig: DbConnectionConfig,
     tableName: String,
     limit: Int? = null,
@@ -94,7 +94,7 @@ public fun DataFrame.Companion.readSqlTable(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrame.Companion.readSqlTable(
+public companion fun DataFrame.readSqlTable(
     dataSource: DataSource,
     tableName: String,
     limit: Int? = null,
@@ -134,7 +134,7 @@ public fun DataFrame.Companion.readSqlTable(
  *
  * @see [DriverManager.getConnection]
  */
-public fun DataFrame.Companion.readSqlTable(
+public companion fun DataFrame.readSqlTable(
     connection: Connection,
     tableName: String,
     limit: Int? = null,
@@ -242,7 +242,7 @@ private fun executeQueryAndBuildDataFrame(
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return the DataFrame containing the result of the SQL query.
  */
-public fun DataFrame.Companion.readSqlQuery(
+public companion fun DataFrame.readSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     limit: Int? = null,
@@ -281,7 +281,7 @@ public fun DataFrame.Companion.readSqlQuery(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrame.Companion.readSqlQuery(
+public companion fun DataFrame.readSqlQuery(
     dataSource: DataSource,
     sqlQuery: String,
     limit: Int? = null,
@@ -320,7 +320,7 @@ public fun DataFrame.Companion.readSqlQuery(
  *
  * @see [DriverManager.getConnection]
  */
-public fun DataFrame.Companion.readSqlQuery(
+public companion fun DataFrame.readSqlQuery(
     connection: Connection,
     sqlQuery: String,
     limit: Int? = null,
@@ -571,7 +571,7 @@ public fun DataSource.readDataFrame(
  *
  * @see [java.sql.ResultSet]
  */
-public fun DataFrame.Companion.readResultSet(
+public companion fun DataFrame.readResultSet(
     resultSet: ResultSet,
     dbType: DbType,
     limit: Int? = null,
@@ -636,7 +636,7 @@ public fun ResultSet.readDataFrame(dbType: DbType, limit: Int? = null, inferNull
  *
  * @see [java.sql.ResultSet]
  */
-public fun DataFrame.Companion.readResultSet(
+public companion fun DataFrame.readResultSet(
     resultSet: ResultSet,
     connection: Connection,
     limit: Int? = null,
@@ -711,7 +711,7 @@ public fun ResultSet.readDataFrame(
  *   This allows for custom tuning of fetch size, query timeout, and other JDBC parameters.
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
-public fun DataFrame.Companion.readAllSqlTables(
+public companion fun DataFrame.readAllSqlTables(
     dbConfig: DbConnectionConfig,
     catalogue: String? = null,
     limit: Int? = null,
@@ -765,7 +765,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  *
  * @see [DataSource.getConnection]
  */
-public fun DataFrame.Companion.readAllSqlTables(
+public companion fun DataFrame.readAllSqlTables(
     dataSource: DataSource,
     catalogue: String? = null,
     limit: Int? = null,
@@ -799,7 +799,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  *
  * @see [DriverManager.getConnection]
  */
-public fun DataFrame.Companion.readAllSqlTables(
+public companion fun DataFrame.readAllSqlTables(
     connection: Connection,
     catalogue: String? = null,
     limit: Int? = null,

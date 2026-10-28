@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.DataColumn.createByType
+import org.jetbrains.kotlinx.dataframe.DataColumn.createValueColumn
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -52,7 +54,7 @@ import kotlin.reflect.typeOf
  */
 public interface DataColumn<out T> : BaseColumn<T> {
 
-    public companion object {
+    companion {
 
         /**
          * Creates [ValueColumn] using given [name], [values] and [type].
@@ -77,30 +79,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 name = name,
                 type = getValuesType(values, type, infer),
                 defaultValue = defaultValue,
-            )
-
-        /**
-         * Creates [ValueColumn] using given [name], [values] and reified column [type].
-         *
-         * The column [type] will be defined at compile-time using [T] argument.
-         * Be careful with casting; values are NOT checked to adhere to `reified` type [T] for efficiency,
-         * unless you specify [infer].
-         *
-         * @param T type of the column
-         * @param name name of the column
-         * @param values list of column values
-         * @param infer column type inference mode
-         */
-        public inline fun <reified T> createValueColumn(
-            name: String,
-            values: List<T>,
-            infer: Infer = Infer.None,
-        ): ValueColumn<T> =
-            createValueColumn(
-                name = name,
-                values = values,
-                type = typeOf<T>(),
-                infer = infer,
             )
 
         /**
@@ -194,28 +172,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
 
-        /**
-         * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
-         * type [T].
-         *
-         * This is generally safe, as [T] can be inferred by the compiler,
-         * and more efficient than [createByInference].
-         *
-         * Be careful when casting occurs; Values in [values] are NOT checked to adhere to the given/inferred type [T],
-         * nor do we check whether there are unexpected nulls among the values.
-         *
-         * It's recommended to use [createValueColumn], [createColumnGroup], and [createFrameColumn] instead.
-         *
-         * @param T the (unchecked) common type of [values]
-         * @param name the name of the column
-         * @param values the values to represent each row in the column
-         * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
-         */
-        public inline fun <reified T> createByType(
-            name: String,
-            values: List<T>,
-            infer: Infer = Infer.None,
-        ): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
+
 
         /**
          * Creates an empty [DataColumn] with given [name] of type [Nothing].
@@ -225,10 +182,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
          */
         public fun empty(name: String = ""): DataColumn<Nothing> =
             createValueColumn(name, emptyList<Unit>(), nothingType).cast()
-
-        /** Creates an empty [DataColumn] of type [T] with given [name]. */
-        public inline fun <reified T> emptyOf(name: String = ""): DataColumn<T> =
-            createValueColumn(name, emptyList<T>(), typeOf<T>()).cast()
 
         // region deprecated
 
@@ -279,14 +232,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 infer = infer,
             )
 
-        @Deprecated(
-            message = CREATE,
-            replaceWith = ReplaceWith(CREATE_INLINE_REPLACE, CREATE_BY_TYPE_IMPORT),
-            level = DeprecationLevel.ERROR,
-        )
-        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
-            createByType(name = name, values = values, type = typeOf<T>(), infer = infer)
-
         // endregion
     }
 
@@ -307,6 +252,66 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     public override operator fun get(range: IntRange): DataColumn<T>
 }
+
+@Deprecated(
+    message = CREATE,
+    replaceWith = ReplaceWith(CREATE_INLINE_REPLACE, CREATE_BY_TYPE_IMPORT),
+    level = DeprecationLevel.ERROR,
+)
+public inline companion fun <reified T> DataColumn.create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
+    createByType(name = name, values = values, type = typeOf<T>(), infer = infer)
+
+/**
+ * Creates [ValueColumn] using given [name], [values] and reified column [type].
+ *
+ * The column [type] will be defined at compile-time using [T] argument.
+ * Be careful with casting; values are NOT checked to adhere to `reified` type [T] for efficiency,
+ * unless you specify [infer].
+ *
+ * @param T type of the column
+ * @param name name of the column
+ * @param values list of column values
+ * @param infer column type inference mode
+ */
+public inline companion fun <reified T> DataColumn.createValueColumn(
+    name: String,
+    values: List<T>,
+    infer: Infer = Infer.None,
+): ValueColumn<T> =
+    DataColumn.createValueColumn(
+        name = name,
+        values = values,
+        type = typeOf<T>(),
+        infer = infer,
+    )
+
+
+/** Creates an empty [DataColumn] of type [T] with given [name]. */
+public inline companion fun <reified T> DataColumn.emptyOf(name: String = ""): DataColumn<T> =
+    createValueColumn(name, emptyList<T>(), typeOf<T>()).cast()
+
+/**
+ * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
+ * type [T].
+ *
+ * This is generally safe, as [T] can be inferred by the compiler,
+ * and more efficient than [createByInference].
+ *
+ * Be careful when casting occurs; Values in [values] are NOT checked to adhere to the given/inferred type [T],
+ * nor do we check whether there are unexpected nulls among the values.
+ *
+ * It's recommended to use [createValueColumn], [createColumnGroup], and [createFrameColumn] instead.
+ *
+ * @param T the (unchecked) common type of [values]
+ * @param name the name of the column
+ * @param values the values to represent each row in the column
+ * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
+ */
+public inline companion fun <reified T> DataColumn.createByType(
+    name: String,
+    values: List<T>,
+    infer: Infer = Infer.None,
+): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
 
 public val DataColumn<*>.name: String get() = name()
 public val DataColumn<*>.path: ColumnPath get() = path()

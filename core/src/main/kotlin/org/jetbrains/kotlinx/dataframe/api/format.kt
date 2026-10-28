@@ -42,7 +42,7 @@ import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
-import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent.Companion.media
+import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent.media
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.FORMATTING_DSL

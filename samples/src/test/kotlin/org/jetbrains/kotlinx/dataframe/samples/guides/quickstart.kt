@@ -312,7 +312,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         // SampleEnd
     }
 
-    companion object {
+    companion {
         @JvmStatic
         @AfterClass
         fun removeGeneratedFiles() {

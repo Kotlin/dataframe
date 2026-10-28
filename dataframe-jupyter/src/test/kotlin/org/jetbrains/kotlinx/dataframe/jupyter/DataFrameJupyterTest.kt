@@ -17,7 +17,7 @@ abstract class DataFrameJupyterTest :
 fun interface CodeReplacer {
     fun replace(code: String): String
 
-    companion object {
+    companion {
         val DEFAULT = CodeReplacer { it }
 
         fun byMap(replacements: Map<String, String>) =
@@ -34,7 +34,7 @@ fun interface CodeReplacer {
 fun interface CellClause {
     fun isAccepted(cell: Cell): Boolean
 
-    companion object {
+    companion {
         val IS_CODE = CellClause { it.type == Cell.Type.CODE }
     }
 }
@@ -47,7 +47,7 @@ infix fun CellClause.and(other: CellClause): CellClause =
         acceptedThis && acceptedOther
     }
 
-fun CellClause.Companion.stopAfter(breakClause: CellClause) =
+companion fun CellClause.stopAfter(breakClause: CellClause) =
     object : CellClause {
         var clauseTriggered: Boolean = false
 

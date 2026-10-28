@@ -113,7 +113,7 @@ private const val JSON_STRING =
         "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
 class MariadbH2Test {
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

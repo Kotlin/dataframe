@@ -64,7 +64,7 @@ public class Aggregator<in Value : Any, out Return : Any?>(
     override fun toString(): String =
         "Aggregator(name='$name', aggregationHandler=$aggregationHandler, inputHandler=$inputHandler, multipleColumnsHandler=$multipleColumnsHandler)"
 
-    internal companion object {
+    companion {
 
         /**
          * Factory function for creating an [Aggregator] instance given a name.

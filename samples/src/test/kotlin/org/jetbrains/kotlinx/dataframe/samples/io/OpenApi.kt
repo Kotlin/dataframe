@@ -87,7 +87,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val status: Status?
                 val complete: Boolean?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 
@@ -127,7 +127,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val id: Long?
                 val name: String?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 
@@ -167,7 +167,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val phone: String?
                 val userStatus: Int?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 
@@ -201,7 +201,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val id: Long?
                 val name: String?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 
@@ -239,7 +239,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val tags: DataFrame<Tag?>
                 val status: Status1?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 
@@ -280,7 +280,7 @@ class OpenApiSamples : DataFrameSampleHelper(sampleName = "openapi", subFolder =
                 val type: String?
                 val message: String?
 
-                public companion object {
+                companion {
                     public val keyValuePaths: List<JsonPath>
                         get() = listOf()
 

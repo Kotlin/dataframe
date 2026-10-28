@@ -43,17 +43,10 @@ public interface DataFrame<out T> :
     Aggregatable<T>,
     ColumnsContainer<T> {
 
-    public companion object {
+    companion {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
 
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
-
-        /**
-         * Creates a DataFrame with empty columns (rows = 0).
-         * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
-         *
-         */
-        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
 
         /**
          * Creates a DataFrame with empty columns (rows = 0).
@@ -155,6 +148,14 @@ public interface DataFrame<out T> :
 
     // endregion
 }
+
+/**
+ * Creates a DataFrame with empty columns (rows = 0).
+ * Can be used as a "null object" in aggregation operations, operations that work on columns (select, reorder, ...)
+ *
+ */
+public inline companion fun <reified T> DataFrame.emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
+
 
 // region get columns
 

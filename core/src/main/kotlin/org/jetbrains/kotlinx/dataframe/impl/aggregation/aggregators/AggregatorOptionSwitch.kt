@@ -18,8 +18,7 @@ public class AggregatorOptionSwitch1<in Param1, in Value : Any, out Return : Any
             getAggregator(param1).create(name)
         }
 
-    @Suppress("FunctionName")
-    public companion object {
+    companion {
 
         /**
          * Creates [AggregatorOptionSwitch1].
@@ -30,6 +29,7 @@ public class AggregatorOptionSwitch1<in Param1, in Value : Any, out Return : Any
          *   MyAggregator.Factory(param1)
          * }
          */
+        @Suppress("FunctionName")
         public fun <Param1, Value : Any, Return : Any?> Factory(
             getAggregator: (param1: Param1) -> AggregatorProvider<Value, Return>,
         ): Provider<AggregatorOptionSwitch1<Param1, Value, Return>> =
@@ -55,8 +55,7 @@ public class AggregatorOptionSwitch2<in Param1, in Param2, in Value : Any, out R
             getAggregator(param1, param2).create(name)
         }
 
-    @Suppress("FunctionName")
-    public companion object {
+    companion {
 
         /**
          * Creates [AggregatorOptionSwitch2].
@@ -67,6 +66,7 @@ public class AggregatorOptionSwitch2<in Param1, in Param2, in Value : Any, out R
          *   MyAggregator.Factory(param1, param2)
          * }
          */
+        @Suppress("FunctionName")
         internal fun <Param1, Param2, Value : Any, Return : Any?> Factory(
             getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<Value, Return>,
         ) = Provider { name -> AggregatorOptionSwitch2(name, getAggregator) }

@@ -37,7 +37,7 @@ public interface ArrowWriter : AutoCloseable {
     public val mode: Mode
     public val mismatchSubscriber: (ConvertingMismatch) -> Unit
 
-    public companion object {
+    companion {
 
         public fun create(
             dataFrame: AnyFrame,
@@ -59,7 +59,7 @@ public interface ArrowWriter : AutoCloseable {
         public val strictType: Boolean,
         public val strictNullable: Boolean,
     ) {
-        public companion object {
+        companion {
             public val STRICT: Mode = Mode(true, true, true, true)
             public val LOYAL: Mode = Mode(false, false, false, false)
         }

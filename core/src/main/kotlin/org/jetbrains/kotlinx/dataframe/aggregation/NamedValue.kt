@@ -13,7 +13,7 @@ public data class NamedValue internal constructor(
     var default: Any?,
     val guessType: Boolean = false,
 ) {
-    public companion object {
+    companion {
         internal fun create(
             path: ColumnPath,
             value: Any?,

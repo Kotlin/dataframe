@@ -9,7 +9,7 @@ import java.net.URL
 // TODO: helper functions created to support existing hierarchy https://github.com/Kotlin/dataframe/issues/450
 @Deprecated("SupportedDataFrameFormat is deprecated. Will be ERROR in 1.0.", level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public val CodeGenerator.Companion.databaseCodeGenReader: (url: URL, name: String) -> CodeGenerationReadResult
+public companion val CodeGenerator.databaseCodeGenReader: (url: URL, name: String) -> CodeGenerationReadResult
     get() = { url, name ->
         try {
             val code = buildCodeForDB(url, name)

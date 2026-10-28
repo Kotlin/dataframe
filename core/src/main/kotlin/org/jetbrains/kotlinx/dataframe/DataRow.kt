@@ -155,7 +155,7 @@ public interface DataRow<out T> {
 
     public operator fun ColumnReference<Double>.div(a: Long): Double = get(this) / a
 
-    public companion object {
+    companion {
         public val empty: AnyRow = DataFrame.empty(1)[0]
     }
 }

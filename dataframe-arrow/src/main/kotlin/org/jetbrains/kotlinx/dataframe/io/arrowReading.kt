@@ -72,7 +72,7 @@ internal object Allocator {
  * [kotlin.time.Instant]; a zone-less `Timestamp(unit, null)` stays [kotlinx.datetime.LocalDateTime]. The zone
  * is display metadata — the stored values are already normalized to UTC and are not shifted on read.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     channel: ReadableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -89,7 +89,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * [kotlin.time.Instant]; a zone-less `Timestamp(unit, null)` stays [kotlinx.datetime.LocalDateTime]. The zone
  * is display metadata — the stored values are already normalized to UTC and are not shifted on read.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     channel: SeekableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -103,7 +103,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowIPC(file.toPath(), nullability)
@@ -115,7 +115,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = Files.newByteChannel(path).use { readArrowIPC(it, nullability = nullability) }
@@ -126,7 +126,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     byteArray: ByteArray,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it, nullability = nullability) }
@@ -137,7 +137,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     stream: InputStream,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it, nullability = nullability) }
@@ -148,7 +148,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
@@ -169,7 +169,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowIPC(
+public companion fun DataFrame.readArrowIPC(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
@@ -187,7 +187,7 @@ public fun DataFrame.Companion.readArrowIPC(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowFeather(file.toPath(), nullability)
@@ -199,7 +199,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     path: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = Files.newByteChannel(path).use { readArrowFeather(it, nullability = nullability) }
@@ -210,7 +210,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     byteArray: ByteArray,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it, nullability = nullability) }
@@ -221,7 +221,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     stream: InputStream,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowFeather(stream.readBytes(), nullability)
@@ -232,7 +232,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
@@ -252,7 +252,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrowFeather(
+public companion fun DataFrame.readArrowFeather(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
@@ -268,7 +268,7 @@ public fun DataFrame.Companion.readArrowFeather(
  * A `Timestamp` column that carries a time zone is read as [kotlin.time.Instant], a zone-less one as
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
-public fun DataFrame.Companion.readArrow(
+public companion fun DataFrame.readArrow(
     reader: ArrowReader,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowImpl(reader, nullability)
@@ -280,7 +280,7 @@ public fun DataFrame.Companion.readArrow(
  * [kotlinx.datetime.LocalDateTime]; see [readParquet] for the full rule.
  */
 public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = NullabilityOptions.Infer): AnyFrame =
-    DataFrame.Companion.readArrowImpl(this, nullability)
+    DataFrame.readArrowImpl(this, nullability)
 
 /**
  * Read [Parquet](https://parquet.apache.org/) data from existing [urls] by using [Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html)
@@ -302,7 +302,7 @@ public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = Nullability
  * neither applied nor returned. Only the instant comes back; use
  * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
-public fun DataFrame.Companion.readParquet(
+public companion fun DataFrame.readParquet(
     vararg urls: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
     batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
@@ -336,7 +336,7 @@ public fun DataFrame.Companion.readParquet(
  * neither applied nor returned. Only the instant comes back; use
  * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
-public fun DataFrame.Companion.readParquet(
+public companion fun DataFrame.readParquet(
     vararg strUrls: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
     batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
@@ -362,7 +362,7 @@ public fun DataFrame.Companion.readParquet(
  * neither applied nor returned. Only the instant comes back; use
  * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
-public fun DataFrame.Companion.readParquet(
+public companion fun DataFrame.readParquet(
     vararg paths: Path,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
     batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
@@ -396,7 +396,7 @@ public fun DataFrame.Companion.readParquet(
  * neither applied nor returned. Only the instant comes back; use
  * `convert { … }.with { it.toLocalDateTime(zone) }` for wall-clock values in a zone you pick.
  */
-public fun DataFrame.Companion.readParquet(
+public companion fun DataFrame.readParquet(
     vararg files: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
     batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,

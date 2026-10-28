@@ -40,7 +40,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         readDfMethod: DefaultReadDfMethod? = null,
     ): CodeWithTypeCastGenerator
 
-    public companion object {
+    companion {
         public fun create(useFqNames: Boolean = true): CodeGenerator =
             if (useFqNames) {
                 CodeGeneratorImpl(FullyQualifiedNames)

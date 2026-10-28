@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * @include [DataFrameSchemaDoc]
  */
 public interface DataFrameSchema {
-    public companion object;
 
     /**
      * A map that defines the schema of the columns within a [DataFrameSchema].

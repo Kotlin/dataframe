@@ -53,7 +53,7 @@ import kotlin.io.path.inputStream
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     path: Path,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -106,7 +106,7 @@ public fun DataFrame.Companion.readDelim(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     file: File,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -159,7 +159,7 @@ public fun DataFrame.Companion.readDelim(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     url: URL,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -212,7 +212,7 @@ public fun DataFrame.Companion.readDelim(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     fileOrUrl: String,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -267,7 +267,7 @@ public fun DataFrame.Companion.readDelim(
  * @include [CommonReadDelimDocs.CommonReadParams]
  * @include [ADJUST_CSV_SPECS]
  */
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     inputStream: InputStream,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -313,7 +313,7 @@ public fun DataFrame.Companion.readDelim(
 // region deprecations
 
 @Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     path: Path,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -354,7 +354,7 @@ public fun DataFrame.Companion.readDelim(
     )
 
 @Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     file: File,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -395,7 +395,7 @@ public fun DataFrame.Companion.readDelim(
     )
 
 @Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     url: URL,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -436,7 +436,7 @@ public fun DataFrame.Companion.readDelim(
     )
 
 @Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     fileOrUrl: String,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
@@ -477,7 +477,7 @@ public fun DataFrame.Companion.readDelim(
     )
 
 @Deprecated(READ_DELIM_BINARY_COMPATIBILITY, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readDelim(
+public companion fun DataFrame.readDelim(
     inputStream: InputStream,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,

@@ -392,7 +392,7 @@ public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T:
 @Suppress("INVISIBLE_REFERENCE")
 private interface ReplCodeGenerator : org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator {
 
-    companion object {
+    companion {
         fun create(): ReplCodeGenerator =
             object :
                 ReplCodeGenerator,

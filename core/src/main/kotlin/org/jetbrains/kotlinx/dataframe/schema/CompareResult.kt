@@ -84,7 +84,7 @@ public enum class CompareResult {
             else -> other
         }
 
-    public companion object {
+    companion {
         public fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean): CompareResult =
             when {
                 thisIsNullable == otherIsNullable -> Matches

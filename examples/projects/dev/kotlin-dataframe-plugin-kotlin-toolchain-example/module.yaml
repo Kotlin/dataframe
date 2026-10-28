@@ -23,7 +23,7 @@ repositories:
 
 settings:
   kotlin:
-    version: 2.4.21 # TODO $libs.versions.kotlin
+    version: 2.5.0-Beta2 # TODO $libs.versions.kotlin
     dataframe:
       enabled: true
       # If you don't use libs.versions.toml for dependencies, you can specify the library version like this:

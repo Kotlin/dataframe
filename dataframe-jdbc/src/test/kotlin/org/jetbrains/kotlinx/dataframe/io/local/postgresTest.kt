@@ -15,7 +15,7 @@ private const val PASSWORD = "pass"
 class PostgresLocalTest : PostgresTestBase() {
     override val connection: Connection get() = Companion.connection
 
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

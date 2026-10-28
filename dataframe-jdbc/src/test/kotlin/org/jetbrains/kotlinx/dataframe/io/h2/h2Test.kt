@@ -112,7 +112,7 @@ interface TestTableData {
 }
 
 class JdbcTest {
-    companion object {
+    companion {
         private lateinit var connection: Connection
         private lateinit var dataSource: HikariDataSource
 

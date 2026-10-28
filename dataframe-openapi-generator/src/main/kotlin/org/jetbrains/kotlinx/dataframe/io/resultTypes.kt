@@ -22,7 +22,7 @@ internal sealed interface MarkerResult {
     /** Successfully found or created [marker]. */
     data class OpenApiMarker(val marker: org.jetbrains.kotlinx.dataframe.io.OpenApiMarker) : MarkerResult
 
-    companion object {
+    companion {
         fun fromNullable(schema: org.jetbrains.kotlinx.dataframe.io.OpenApiMarker?): MarkerResult =
             if (schema == null) CannotFindRefMarker else OpenApiMarker(schema)
     }
@@ -59,7 +59,7 @@ internal fun interface ProduceAdditionalMarker {
      */
     operator fun invoke(validName: ValidFieldName, marker: OpenApiMarker, isTopLevelObject: Boolean): String
 
-    companion object {
+    companion {
         /** No-op implementation. Passes through `validName`. */
         val NOOP = ProduceAdditionalMarker { validName, _, _ -> validName.quotedIfNeeded }
     }

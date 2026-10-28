@@ -7,7 +7,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 class MsSqlTest {
-    companion object {
+    companion {
         @BeforeClass
         @JvmStatic
         fun setUpClass() {

@@ -52,7 +52,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
                 MariaDb -> MariaDbType
             }
 
-        public companion object {
+        companion {
             /**
              * Creates a Mode from the given DbType.
              *
@@ -99,7 +99,7 @@ public open class H2(public val mode: Mode = Mode.Regular) : DbType("h2") {
      * @see [extractDBTypeFromConnection]
      * @see [createH2Instance]
      */
-    public companion object {
+    companion {
 
         @Deprecated("Use Mode.MySql.value instead", ReplaceWith("Mode.MySql.value"))
         public const val MODE_MYSQL: String = "MySQL"

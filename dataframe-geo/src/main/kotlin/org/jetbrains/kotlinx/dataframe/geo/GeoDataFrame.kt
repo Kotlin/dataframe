@@ -79,7 +79,7 @@ public class GeoDataFrame<T : WithGeometry>(public val df: DataFrame<T>, public 
 
     override fun toString(): String = "GeoDataFrame(df=$df, crs=$crs)"
 
-    public companion object {
+    companion {
         public val DEFAULT_CRS: CoordinateReferenceSystem = CRS.decode("EPSG:4326", true)
     }
 }

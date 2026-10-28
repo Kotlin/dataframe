@@ -686,7 +686,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
      */
     public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
-    public companion object {
+    companion {
         internal val groupedColumnAccessor = column<AnyFrame>("group")
     }
 }

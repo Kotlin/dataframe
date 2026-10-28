@@ -334,7 +334,7 @@ public interface GlobalParserOptions {
 }
 
 /** @include [GlobalParserOptions] */
-public val DataFrame.Companion.parser: GlobalParserOptions
+public companion val DataFrame.parser: GlobalParserOptions
     get() = Parsers
 
 /**

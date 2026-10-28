@@ -25,7 +25,7 @@ import org.junit.Before
 @Suppress("ktlint:standard:argument-list-wrapping")
 public open class TestBase {
 
-    companion object {
+    companion {
         internal const val OUTPUTS = "DATAFRAME_SAVE_OUTPUTS"
     }
 

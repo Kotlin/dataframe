@@ -131,7 +131,7 @@ public class MethodArguments {
 
     internal class Argument(val name: String, val property: PropertySpec)
 
-    public companion object {
+    companion {
         public val EMPTY: MethodArguments get() = MethodArguments()
     }
 }
@@ -224,7 +224,7 @@ internal fun readCodeForGeneration(
 }
 
 @Suppress("DEPRECATION_ERROR")
-internal fun DataFrame.Companion.read(
+internal companion fun DataFrame.read(
     stream: InputStream,
     format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
@@ -244,7 +244,7 @@ internal fun DataFrame.Companion.read(
 }
 
 @Suppress("DEPRECATION_ERROR")
-internal fun DataFrame.Companion.read(
+internal companion fun DataFrame.read(
     path: Path,
     format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
@@ -274,17 +274,17 @@ internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
+public companion fun DataFrame.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(file.toPath(), header)
 
 @Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
+public companion fun DataRow.read(file: File, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(file.toPath(), header).single()
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
+public companion fun DataFrame.read(url: URL, header: List<String> = emptyList()): AnyFrame =
     when {
         isFile(url) -> read(urlAsFile(url), header)
 
@@ -303,17 +303,17 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
 
 @Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
+public companion fun DataRow.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
+public companion fun DataFrame.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asUrl(path), header)
 
 @Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataRow.Companion.read(path: String, header: List<String> = emptyList()): AnyRow =
+public companion fun DataRow.read(path: String, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
@@ -334,7 +334,7 @@ public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRo
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList()): AnyFrame =
+public companion fun DataFrame.read(path: Path, header: List<String> = emptyList()): AnyFrame =
     read(
         path = path,
         format = guessFormat(path)?.also {
@@ -345,7 +345,7 @@ public fun DataFrame.Companion.read(path: Path, header: List<String> = emptyList
 
 @Deprecated(message = DATAROW_READ, level = DeprecationLevel.ERROR)
 @Suppress("DEPRECATION_ERROR")
-public fun DataRow.Companion.read(path: Path, header: List<String> = emptyList()): AnyRow =
+public companion fun DataRow.read(path: Path, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(path, header).single()
 
 @Deprecated(message = DATAFRAME_READ, level = DeprecationLevel.ERROR)

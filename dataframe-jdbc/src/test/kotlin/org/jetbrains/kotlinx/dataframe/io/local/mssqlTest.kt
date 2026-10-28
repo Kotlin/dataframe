@@ -22,7 +22,7 @@ class MsSqlLocalTest : MsSqlTestBase() {
             PASSWORD,
         )
 
-    companion object {
+    companion {
         private lateinit var connection: Connection
 
         @BeforeClass

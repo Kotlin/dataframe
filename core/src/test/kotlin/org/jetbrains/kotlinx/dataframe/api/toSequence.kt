@@ -22,7 +22,7 @@ class ToSequenceTests {
         }
     }
 
-    companion object {
+    companion {
         // Number of `Counted` instances created so far
         var created = 0
     }

@@ -16,7 +16,7 @@ private const val DATABASE_NAME = "test"
 class PostgresContainerTest : PostgresTestBase() {
     override val connection: Connection get() = Companion.connection
 
-    companion object {
+    companion {
         private val postgres: PostgreSQLContainer = PostgreSQLContainer(BuildConfig.POSTGRES_IMAGE).apply {
             withDatabaseName(DATABASE_NAME)
             withUsername(USER_NAME)

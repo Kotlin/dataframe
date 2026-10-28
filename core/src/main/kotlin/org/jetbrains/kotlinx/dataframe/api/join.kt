@@ -534,7 +534,7 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
 
-    public companion object {
+    companion {
         /**
          * **For internal use only.**
          * Not intended for public API consumption.

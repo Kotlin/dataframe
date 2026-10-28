@@ -182,7 +182,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
 
     data class CodeCellData(val code: String, val outputs: List<Output>)
 
-    companion object {
+    companion {
         const val NOTEBOOK_EXAMPLES_PATH = "../examples/notebooks/dev"
 
         fun testFile(folder: String, fileName: String) = fileName to "$NOTEBOOK_EXAMPLES_PATH/$folder/$fileName"

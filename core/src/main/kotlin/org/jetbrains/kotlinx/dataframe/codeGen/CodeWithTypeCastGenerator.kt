@@ -14,7 +14,7 @@ public data class CodeWithTypeCastGenerator(
     val typeCastGenerator: TypeCastGenerator = TypeCastGenerator.Empty,
 ) {
 
-    public companion object {
+    companion {
         public const val EMPTY_DECLARATIONS: Code = ""
 
         @Deprecated("", ReplaceWith("TypeCastGenerator.Empty"))
@@ -76,7 +76,7 @@ public fun interface TypeCastGenerator {
 
         override fun toString(): String = addCastTo($$"$var$")
 
-        public companion object {
+        companion {
             public operator fun invoke(vararg types: String): TypeCastGenerator = DataFrameApi(types)
         }
     }

@@ -9,6 +9,10 @@ plugins {
 kotlin {
     explicitApi()
     jvmToolchain(libs.versions.gradle.jdk.get().toInt())
+    compilerOptions {
+        freeCompilerArgs.add("-Xcompanion-blocks")
+        freeCompilerArgs.add("-Xcompanion-blocks-and-extensions")
+    }
 }
 
 // Adds the instrumentedJars configuration/artifact to all Kotlin sub-projects.

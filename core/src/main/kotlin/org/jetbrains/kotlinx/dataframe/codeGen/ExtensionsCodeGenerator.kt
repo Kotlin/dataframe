@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
 public interface ExtensionsCodeGenerator {
     public fun generate(marker: IsolatedMarker): CodeWithTypeCastGenerator
 
-    public companion object {
+    companion {
         public fun create(): ExtensionsCodeGenerator = ExtensionsCodeGeneratorImpl(ShortNames)
     }
 }

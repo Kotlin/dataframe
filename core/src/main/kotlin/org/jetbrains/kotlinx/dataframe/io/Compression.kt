@@ -15,7 +15,7 @@ import java.util.zip.ZipInputStream
  * Custom decompression algorithms can be added by creating an instance of [Compression].
  */
 public fun interface Compression<I : InputStream> {
-    public companion object {
+    companion {
         public fun of(fileOrUrl: String): Compression<*> =
             when (fileOrUrl.split(".").last()) {
                 "gz" -> Gzip

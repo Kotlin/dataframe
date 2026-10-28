@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 
-internal fun AdditionalProperty.Companion.getMarker(typeArguments: List<String>) =
+internal companion fun AdditionalProperty.getMarker(typeArguments: List<String>) =
     Marker(
         name = AdditionalProperty::class.qualifiedName!!,
         isOpen = false,

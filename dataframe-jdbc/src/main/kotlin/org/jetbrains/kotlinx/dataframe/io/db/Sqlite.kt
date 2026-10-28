@@ -556,7 +556,7 @@ public class Sqlite(
             DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password)
         }
 
-    public companion object {
+    companion {
         /**
          * Default [Sqlite] instance with no custom overrides.
          *

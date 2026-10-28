@@ -113,7 +113,7 @@ public class ValidFieldName private constructor(private val identifier: String, 
 
     override fun toString(): String = identifier
 
-    public companion object {
+    companion {
         public fun of(name: String): ValidFieldName {
             val needsQuote = name.needsQuoting()
             var result = name

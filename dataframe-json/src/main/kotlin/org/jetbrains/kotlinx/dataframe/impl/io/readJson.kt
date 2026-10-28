@@ -38,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
+import org.jetbrains.kotlinx.dataframe.emptyOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollector
 import org.jetbrains.kotlinx.dataframe.impl.asList

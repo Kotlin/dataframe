@@ -287,7 +287,7 @@ internal inline fun <reified T> markerName(): String =
 /**
  * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
  */
-public val NameNormalizer.Companion.toCamelCaseByDelimiter: NameNormalizer
+public companion val NameNormalizer.toCamelCaseByDelimiter: NameNormalizer
     get() = NameNormalizer.toCamelCaseFrom(setOf('\t', ' ', '_'))
 
 /**
@@ -298,7 +298,7 @@ public val NameNormalizer.Companion.toCamelCaseByDelimiter: NameNormalizer
  *
  * @see [NameNormalizer.Companion.toCamelCaseByDelimiter]
  */
-public val NameNormalizer.Companion.default: NameNormalizer
+public companion val NameNormalizer.default: NameNormalizer
     get() = NameNormalizer.id()
 
 /**

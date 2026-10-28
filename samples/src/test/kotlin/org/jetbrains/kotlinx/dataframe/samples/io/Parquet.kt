@@ -26,28 +26,28 @@ class Parquet {
     interface ReadParquetOverloads {
         // SampleStart
         // 1) URLs
-        public fun DataFrame.Companion.readParquet(
+        public companion fun DataFrame.readParquet(
             vararg urls: URL,
             nullability: NullabilityOptions = NullabilityOptions.Infer,
             batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
         ): AnyFrame
 
         // 2) Strings (interpreted as file paths or URLs, e.g., "data/file.parquet", "file://", or "http(s)://")
-        public fun DataFrame.Companion.readParquet(
+        public companion fun DataFrame.readParquet(
             vararg strUrls: String,
             nullability: NullabilityOptions = NullabilityOptions.Infer,
             batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
         ): AnyFrame
 
         // 3) Paths
-        public fun DataFrame.Companion.readParquet(
+        public companion fun DataFrame.readParquet(
             vararg paths: Path,
             nullability: NullabilityOptions = NullabilityOptions.Infer,
             batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,
         ): AnyFrame
 
         // 4) Files
-        public fun DataFrame.Companion.readParquet(
+        public companion fun DataFrame.readParquet(
             vararg files: File,
             nullability: NullabilityOptions = NullabilityOptions.Infer,
             batchSize: Long = ARROW_PARQUET_DEFAULT_BATCH_SIZE,

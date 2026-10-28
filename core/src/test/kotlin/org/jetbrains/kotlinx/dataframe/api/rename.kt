@@ -11,7 +11,7 @@ import org.junit.Test
 @Suppress("ktlint:standard:argument-list-wrapping")
 class RenameTests : ColumnsSelectionDslTests() {
 
-    companion object {
+    companion {
         val simpleDf = dataFrameOf("a", "b", "c")(
             1, 2, 3,
             4, 5, 6,
@@ -194,7 +194,7 @@ class RenameTests : ColumnsSelectionDslTests() {
 }
 
 class RenameToCamelCaseTests {
-    companion object {
+    companion {
         val nestedDf = dataFrameOf("test_name")(dataFrameOf("another_name")(1))
         val nestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(1).first(),

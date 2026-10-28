@@ -41,15 +41,15 @@ public class Jdbc :
         DefaultReadJdbcMethod(pathRepresentation)
 }
 
-private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
+private companion fun DataFrame.readJDBC(stream: File): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-private fun DataFrame.Companion.readJDBC(path: Path): DataFrame<*> {
+private companion fun DataFrame.readJDBC(path: Path): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-private fun DataFrame.Companion.readJDBC(stream: InputStream): DataFrame<*> {
+private companion fun DataFrame.readJDBC(stream: InputStream): DataFrame<*> {
     TODO("Not yet implemented")
 }
 

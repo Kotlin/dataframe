@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @include [CSV_DELIMITER]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-public fun DataFrame.Companion.readCsvStr(
+public companion fun DataFrame.readCsvStr(
     text: String,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,

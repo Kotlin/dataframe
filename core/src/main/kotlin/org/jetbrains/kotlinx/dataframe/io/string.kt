@@ -169,8 +169,6 @@ public interface StringBorderStyle {
         public override val vertical: String = "│"
         public override val headerSplit: String = "┼"
     }
-
-    public companion object
 }
 
 internal class PreparedTable(

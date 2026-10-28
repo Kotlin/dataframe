@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.jupyter.testkit.ToEmptyLibraryResolver
 
 /**  Mirrors [ReplProvider.forLibrariesTesting] but `extraCompilerArguments` to set opt-in's. */
 @Suppress("unused")
-fun ReplProvider.Companion.forLibrariesTesting(
+companion fun ReplProvider.forLibrariesTesting(
     libraries: Collection<String>,
     extraCompilerArguments: List<String> = emptyList(),
 ): ReplProvider =

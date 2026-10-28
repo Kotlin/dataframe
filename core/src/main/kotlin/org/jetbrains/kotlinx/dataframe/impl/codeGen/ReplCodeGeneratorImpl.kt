@@ -31,7 +31,7 @@ import kotlin.uuid.Uuid
 
 internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
-    companion object {
+    companion {
         internal val markerInterfacePrefix = "_DataFrameType"
     }
 

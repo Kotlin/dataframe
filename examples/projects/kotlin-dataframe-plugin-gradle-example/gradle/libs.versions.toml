@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.4.21"
+kotlin = "2.5.0-Beta2"
 dataframe = "1.0.0-rc02"
 kandy = "0.8.6"
 ktlint-gradle = "14.2.0"

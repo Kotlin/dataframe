@@ -17,7 +17,7 @@ class PostgresConnectionUrlContainerTest : PostgresConnectionUrlTestBase() {
 
     override val password: String get() = PASSWORD
 
-    companion object {
+    companion {
         private val postgres: PostgreSQLContainer = PostgreSQLContainer(BuildConfig.POSTGRES_IMAGE).apply {
             withDatabaseName(DATABASE_NAME)
             withUsername(USER_NAME)

@@ -18,7 +18,7 @@ internal interface ReplCodeGenerator {
 
     fun process(markerClass: KClass<*>): Code
 
-    companion object {
+    companion {
         fun create(): ReplCodeGenerator = ReplCodeGeneratorImpl()
     }
 }
