@@ -15,6 +15,8 @@ Overview of common utility operations in Kotlin DataFrame.
 
 Explore frequently used helpers for querying and transforming your data:
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 - [`all`](all.md) — Check whether all rows satisfy a predicate. 
 - [`any`](any.md) — Check whether any row satisfies a predicate.
 - [`chunked`](chunked.md) — Split a [`DataFrame`](DataFrame.md) into consecutive chunks and return them as a 

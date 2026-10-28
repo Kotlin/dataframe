@@ -2,6 +2,10 @@
 
 [`DataFrame`](DataFrame.md) can represent hierarchical data structures using two special types of columns:
 
+**API reference**: [`ColumnGroup`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.columns/-column-group/index.html),
+[`FrameColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.columns/-frame-column/index.html),
+[`ValueColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.columns/-value-column/index.html)
+
 * [`ColumnGroup`](DataColumn.md#columngroup) is a group of [columns](DataColumn.md)
 * [`FrameColumn`](DataColumn.md#framecolumn) is a column of [dataframes](DataFrame.md)
 

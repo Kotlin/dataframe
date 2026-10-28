@@ -4,6 +4,8 @@
 
 Computes the cumulative sum of values in the selected columns.
 
+**API reference**: [`cumSum`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cum-sum.html)
+
 ```text
 cumSum(skipNA = true) [ { columns } ]
 ```

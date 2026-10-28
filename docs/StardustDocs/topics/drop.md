@@ -2,7 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DropNullsNansNaSamples-->
 
+**API reference**: [`drop`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/drop.html)
+
 The examples on this page use the following dataframe:
+
 <!---FUN dropDf-->
 
 ```kotlin

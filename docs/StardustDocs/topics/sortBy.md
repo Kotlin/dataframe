@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows sorted by one or several columns.
 
+**API reference**: [`sortBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/sort-by.html)
+
 By default, columns are sorted in ascending order with `null` values going first. Available modifiers:
 * `.desc` — changes column sort order from ascending to descending
 * `.nullsLast` — forces `null` values to be placed at the end of the order

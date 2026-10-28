@@ -9,11 +9,11 @@ plugins {
         alias(kotlinJvm8)
         alias(buildExampleProjects)
         alias(caupain)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)
         alias(serialization) apply false
-        alias(dokka)
     }
 }
 
@@ -42,6 +42,18 @@ dependencies {
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
+
+    dokka(projects.core)
+    dokka(projects.dataframeArrow)
+    dokka(projects.dataframeExcel)
+    dokka(projects.dataframeJdbc)
+    dokka(projects.dataframeCsv)
+    dokka(projects.dataframeJson)
+    dokka(projects.dataframeGeo)
+    dokka(projects.dataframeGeoJupyter)
+    dokka(projects.dataframeOpenapi)
+    dokka(projects.dataframeOpenapiGenerator)
+    dokka(projects.dataframeJupyter)
 }
 
 group = "org.jetbrains.kotlinx"

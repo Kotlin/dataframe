@@ -5,6 +5,8 @@
 Converts a [`DataFrame`](DataFrame.md) into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/)
 of data class instances, one per row, in the order of the rows.
 
+**API reference**: [`toList`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-list.html)
+
 ```text
 toList()
 toListOf<T>()

@@ -9,6 +9,8 @@ using [HyperSQL (HSQLDB)](https://hsqldb.org/) as an example. By following these
 you will be able to integrate your custom database into the DataFrame library,
 allowing for seamless DataFrame creation, manipulation, and querying.
 
+**API reference**: [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 This guide is intended for Gradle projects,
 but the experience will be similar in Kotlin Notebooks,
 as demonstrated in
