@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.by
@@ -15,6 +16,8 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.inward
+import org.jetbrains.kotlinx.dataframe.api.match
+import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.splitInto
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -54,8 +57,149 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
         ),
     ).cast()
 
+    private fun merged() =
+        peopleDf.merge { name.lastName and name.firstName }
+            .by { "${it[0]} (${it[1]})" }
+            .into("name")
+
+    @Test
+    fun splitInplace_properties() {
+        val df = peopleDf
+        // SampleStart
+        df.split { name.firstName }.by { it.asIterable() }.inplace()
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 10 }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun splitInplace_strings() {
+        val df = peopleDf
+        // SampleStart
+        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 10 }
+            .saveDfHtmlSample()
+    }
+
     @Test
     fun split_properties() {
+        val df = peopleDf
+        // SampleStart
+        df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
+            // SampleEnd
+            .also {
+                it.getColumnGroup("name")["char1"].toList() shouldBe
+                    listOf('C', 'D', 'D', 'C', 'M', 'W', 'B', 'S', 'B', 'J')
+                it.getColumnGroup("name")["char2"].toList() shouldBe
+                    listOf('o', 'y', 'a', 'h', 'a', 'o', 'y', 'm', 'r', 'o')
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun split_strings() {
+        val df = peopleDf
+        // SampleStart
+        df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
+            // SampleEnd
+            .also {
+                it.getColumnGroup("name")["char1"].toList() shouldBe
+                    listOf('C', 'D', 'D', 'C', 'M', 'W', 'B', 'S', 'B', 'J')
+                it.getColumnGroup("name")["char2"].toList() shouldBe
+                    listOf('o', 'y', 'a', 'h', 'a', 'o', 'y', 'm', 'r', 'o')
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun split1_properties() {
+        val df = peopleDf
+        // SampleStart
+        df.split { name.lastName }
+            .by { it.asIterable() }.default(' ')
+            .inward { "char$it" }
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 10 }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun split1_strings() {
+        val df = peopleDf
+        // SampleStart
+        df.split { "name"["lastName"]<String>() }
+            .by { it.asIterable() }.default(' ')
+            .inward { "char$it" }
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 10 }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun splitRegex1() {
+        val merged = merged()
+        // SampleStart
+        merged.split { "name"<String>() }
+            .match("""(.*) \((.*)\)""")
+            .inward("firstName", "lastName")
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 10 }
+            .saveDfHtmlSample()
+    }
+
+    @Suppress("ktlint:standard:argument-list-wrapping")
+    @Test
+    fun splitFrameColumn() {
+        // SampleStart
+        val df1 = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+        val df2 = dataFrameOf("a", "b")(
+            5, 6,
+            7, 8,
+            9, 10,
+        )
+        val df = dataFrameOf(
+            "id" to columnOf("x", "y"),
+            "group" to columnOf(df1, df2),
+        )
+
+        df.split { "group"<AnyFrame>() }.intoColumns()
+            // SampleEnd
+            .also {
+                it.getColumnGroup("group")["a"].toList() shouldBe listOf(listOf(1, 4), listOf(5, 7, 9))
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun splitIntoRows_properties() {
+        val df = peopleDf
+        // SampleStart
+        df.split { name.firstName }.by { it.asIterable() }.intoRows()
+
+        df.split { name }.by { it.values() }.intoRows()
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 20 }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun splitIntoRows_strings() {
+        val df = peopleDf
+        // SampleStart
+        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
+
+        df.split { colGroup("name") }.by { it.values() }.intoRows()
+            // SampleEnd
+            .also { it.rowsCount() shouldBe 20 }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun splitByDelimiter() {
         // SampleStart
         // Split each full name by the space into two new columns
         df.split { name }.by(" ").into("firstName", "lastName")
@@ -68,7 +212,7 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
     }
 
     @Test
-    fun split_strings() {
+    fun splitColumnNames() {
         // SampleStart
         // Split each full name by the space into two new columns
         df.split("name").by(" ").into("firstName", "lastName")
@@ -260,34 +404,6 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
     }
 
     @Test
-    fun splitIntoColumns() {
-        // SampleStart
-        // Each `DataFrame` of orders becomes a single row of the "orders" column group,
-        // where each column stores a `List` of the values of the original column
-        df.split { orders }.intoColumns()
-            // SampleEnd
-            .also {
-                it.getColumnGroup("orders")["item"].toList() shouldBe
-                    listOf(listOf("Book", "Pen"), listOf("Lamp"), emptyList())
-            }
-    }
-
-    @Test
-    fun splitIntoRows() {
-        // SampleStart
-        // Split each address by commas, placing each part in a separate row.
-        // Values in other columns are duplicated
-        df.split { address }.by(",").intoRows()
-            // SampleEnd
-            .also {
-                it["address"].toList() shouldBe
-                    listOf("London", "Baker Street", "221B", "Paris", "Rue de Rivoli", "Milan")
-                it["name"].toList() shouldBe
-                    listOf("Alice Cooper", "Alice Cooper", "Alice Cooper", "Bob Dylan", "Bob Dylan", "Charlie Chaplin")
-            }
-    }
-
-    @Test
     fun splitIterableIntoRows() {
         // SampleStart
         // Place each phone in a separate row.
@@ -310,18 +426,6 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
             .also {
                 it.getColumnGroup("orders")["item"].toList() shouldBe listOf("Book", "Pen", "Lamp", null)
                 it["name"].toList() shouldBe listOf("Alice Cooper", "Alice Cooper", "Bob Dylan", "Charlie Chaplin")
-            }
-    }
-
-    @Test
-    fun splitInplace() {
-        // SampleStart
-        // Split each address by commas, keeping the parts as a `List` in the "address" column
-        df.split { address }.by(",").inplace()
-            // SampleEnd
-            .also {
-                it["address"].toList() shouldBe
-                    listOf(listOf("London", "Baker Street", "221B"), listOf("Paris", "Rue de Rivoli"), listOf("Milan"))
             }
     }
 
