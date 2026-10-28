@@ -239,7 +239,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
                 val frameSchema = srcColumn.asAnyFrameColumn().schema
                 val emptyFrame by lazy { DataFrame.empty(frameSchema.value) }
                 val groups = columnValues.map { (it as AnyFrame?) ?: emptyFrame }
-                DataColumn.createFrameColumn(srcColumn.name, groups, frameSchema.takeIf { groups.all { it.nrow == 0 } })
+                DataColumn.createFrameColumn(srcColumn.name, groups, frameSchema)
             }
 
             ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
