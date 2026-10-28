@@ -262,7 +262,7 @@ public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, 
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.split_strings]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitColumnNames]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to split.
@@ -525,7 +525,7 @@ public fun <T, C> Split<T, C>.by(
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.split_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitByDelimiter]
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitByStringDelimiters]
  *
@@ -591,13 +591,12 @@ internal inline fun <T, C, R> Split<T, C>.by(
 /**
  * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html),
  * excluding the first group which is the entire matched String.
- * Example:
- * ```
- * dataFrameOf("str" to listOf("100 ml", "1 L"))
- *      .split { "str"<String>() }.match("(\\d+)\\s*(ml|l|L)").into("volume", "unit")
- * ```
  * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in the original column
  * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitRegex1]
  *
  * For more information: {@include [DocumentationUrls.Split]}
  */
@@ -867,7 +866,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitInward]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.split1_properties]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
@@ -1006,7 +1005,7 @@ public fun <T> Split<T, String>.inward(
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitIntoColumns]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitFrameColumn]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @param [C] The [DataFrame] type of the values in the columns selected by [split].
@@ -1098,7 +1097,7 @@ internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitIntoRows]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitIntoRows_properties]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
@@ -1153,7 +1152,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFra
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitInplace]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitInplace_properties]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
