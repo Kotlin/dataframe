@@ -140,7 +140,6 @@ interface Person {
     val name: String
 }
 ```
-```
 
 Read the [`DataFrame`](DataFrame.md) from the CSV file and specify the schema with 
 [`.convertTo()`](convertTo.md) or [`cast()`](cast.md):
