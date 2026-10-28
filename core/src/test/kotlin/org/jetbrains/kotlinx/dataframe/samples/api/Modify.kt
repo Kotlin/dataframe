@@ -39,19 +39,14 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.mapValues
-import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
@@ -76,7 +71,6 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
-import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
@@ -369,111 +363,6 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
-    @Test
-    @TransformDataFrameExpressions
-    fun splitInplace_properties() {
-        // SampleStart
-        df.split { name.firstName }.by { it.asIterable() }.inplace()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitInplace_strings() {
-        // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split_properties() {
-        // SampleStart
-        df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split_strings() {
-        // SampleStart
-        df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split1_properties() {
-        // SampleStart
-        df.split { name.lastName }
-            .by { it.asIterable() }.default(' ')
-            .inward { "char$it" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split1_strings() {
-        // SampleStart
-        df.split { "name"["lastName"]<String>() }
-            .by { it.asIterable() }.default(' ')
-            .inward { "char$it" }
-        // SampleEnd
-    }
-
-    private val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitRegex1() {
-        // SampleStart
-        merged.split { "name"<String>() }
-            .match("""(.*) \((.*)\)""")
-            .inward("firstName", "lastName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitFrameColumn() {
-        // SampleStart
-        val df1 = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            4, 5, 6,
-        )
-        val df2 = dataFrameOf("a", "b")(
-            5, 6,
-            7, 8,
-            9, 10,
-        )
-        val df = dataFrameOf(
-            "id" to columnOf("x", "y"),
-            "group" to columnOf(df1, df2)
-        )
-
-        df.split { "group"<AnyFrame>() }.intoColumns()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitIntoRows_properties() {
-        // SampleStart
-        df.split { name.firstName }.by { it.asIterable() }.intoRows()
-
-        df.split { name }.by { it.values() }.intoRows()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitIntoRows_strings() {
-        // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
-
-        df.split { colGroup("name") }.by { it.values() }.intoRows()
-        // SampleEnd
-    }
 
     @Test
     @TransformDataFrameExpressions

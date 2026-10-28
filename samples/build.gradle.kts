@@ -141,6 +141,7 @@ korro {
                 include("cumSum.md")
                 include("median.md")
                 include("percentile.md")
+                include("split.md")
                 include("MigrationTo_1_0.md")
                 include("single.md")
                 include("indexing.md")
