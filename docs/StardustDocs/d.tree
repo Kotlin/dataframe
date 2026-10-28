@@ -183,6 +183,7 @@
             </toc-element>
             <toc-element topic="cumulativeStatistics.md">
                 <toc-element topic="cumSum.md"/>
+                <toc-element topic="operations/column/cumMinOnColumn.md"/>
             </toc-element>
             <toc-element topic="statisticalRelationship.md">
                 <toc-element topic="corr.md"/>
