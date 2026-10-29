@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) without column groupings under selected columns.
 
+**API reference**: [`flatten`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/flatten.html)
+
 ```text
 flatten  [ { columns } ]
 ```

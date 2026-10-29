@@ -134,6 +134,12 @@ To add one:
   source file is still referenced as `./resources/<file>.html`: `sliceRows.md:14` says
   `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
   `src` builds fine and silently renders an empty frame.
+- **Link to the Dokka API reference with absolute URLs.** Dokka's HTML is not part of this project; CI
+  (`main.yml`) copies `build/dokka/html` into the site as `api-docs/`. Every relative inline link to it
+  (`api-docs/…`, `./api-docs/…`, `/api-docs/…`, raw `<a href>`) fails with `REF002` and renders as plain text,
+  so topics use `https://kotlin.github.io/dataframe/api-docs/…`. The `Run Docs Website Locally` run
+  configuration rewrites those to `api-docs/…` for the local preview. Only a `<toc-element href>` in `d.tree`
+  may be relative.
 - After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
   — check the real set with `git diff --ignore-cr-at-eol`.
 

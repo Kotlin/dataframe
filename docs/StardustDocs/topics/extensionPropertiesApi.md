@@ -7,6 +7,8 @@ They are generated based on a [dataframe schema](schemas.md),
 with the name and type of properties inferred from the name and type of the corresponding columns.
 It also works for all types of hierarchical dataframes.
 
+**API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html)
+
 > The behavior of data schema generation differs between the 
 > [Compiler Plugin](Compiler-Plugin.md) and [Kotlin Notebook](SetupKotlinNotebook.md).
 >

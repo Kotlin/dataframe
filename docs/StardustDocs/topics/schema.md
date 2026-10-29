@@ -4,6 +4,8 @@
 
 Returns a [`DataFrameSchema`](schemas.md) object with the [`DataFrame`](DataFrame.md) schema description. It can be printed to see column structure.
 
+**API reference**: [`schema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/schema.html)
+
 [`ColumnGroups`](DataColumn.md#columngroup) are marked by indentation:
 
 <!---FUN schema-->

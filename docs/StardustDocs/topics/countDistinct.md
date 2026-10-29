@@ -5,6 +5,8 @@
 
 Counts distinct rows or distinct combinations of values in selected columns.
 
+**API reference**: [`countDistinct`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/count-distinct.html)
+
 When `countDistinct` is used on a [`DataFrame`](DataFrame.md), 
 it returns the number of distinct rows in this [`DataFrame`](DataFrame.md).
 

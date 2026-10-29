@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
+**API reference**: [`getRow`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/get-row.html), [`getRowOrNull`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/get-row-or-null.html)
+
 Get single [`DataRow`](DataRow.md) by [index](indexing.md):
 
 <!---FUN getRowByIndex-->
