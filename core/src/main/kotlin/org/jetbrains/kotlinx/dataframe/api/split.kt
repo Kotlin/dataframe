@@ -43,14 +43,14 @@ import kotlin.reflect.typeOf
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
- * This function does not split anything immediately — it returns a [Split] builder,
- * which serves as an intermediate step. No work is done until one of the terminal methods is called.
+ * This function does not split anything immediately — it returns a [Split] instance,
+ * which serves as an intermediate step. No work is done until one of the terminal functions is called.
  *
  * Optionally, define how each value is split into parts:
  * @include [SplitDocs.SplittingMethodsSnippet]
  *
  * Finally, choose where the parts are stored:
- * @include [SplitDocs.TerminalMethodsSnippet]
+ * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
  * - [intoColumns][Split.intoColumns] — turns a column of [DataFrame]s into a [column group][ColumnGroup],
  *   where each cell holds a [List] of the values of the corresponding [DataFrame] column.
  *
@@ -112,21 +112,21 @@ internal interface SplitDocs {
      * - [by][Split.by] — splits each value by [Char] or [String] delimiters, by a [Regex],
      *   or with a custom splitter function.
      * - [match][Split.match] — splits each [String] value into the capturing groups of a [Regex].
-     * - [default][SplitWithTransform.default] — sets the value for the parts that are missing in some rows.
+     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
      *
-     * Columns of [Iterable] (e.g., [List]), [DataFrame] (a [FrameColumn]), and [Pair] values can be split without [by][Split.by]:
-     * into their elements, rows, and components, respectively.
+     * Columns of [Iterable] (e.g., [List]), [DataFrame] (a [frame column][FrameColumn]), and [Pair] values can be split without [by][Split.by]:
+     * into their elements, rows (so into a [column group][ColumnGroup]), and components, respectively.
      */
     @ExcludeFromSources
     typealias SplittingMethodsSnippet = Nothing
 
     /**
-     * - [into][SplitWithTransform.into] — stores the parts in new columns, which replace the original column.
-     * - [inward][SplitWithTransform.inward] — stores the parts in new columns nested inside
+     * - [into][$[INTERMEDIATE_CLASS].into] — stores the parts in new columns, which replace the original column.
+     * - [inward][$[INTERMEDIATE_CLASS].inward] — stores the parts in new columns nested inside
      *   a [column group][ColumnGroup], which replaces the original column and keeps its name.
-     * - [intoRows][SplitWithTransform.intoRows] — places each part in a separate row,
+     * - [intoRows][$[INTERMEDIATE_CLASS].intoRows] — places each part in a separate row,
      *   duplicating the values in the other columns.
-     * - [inplace][SplitWithTransform.inplace] — stores the parts as a [List] in the original column.
+     * - [inplace][$[INTERMEDIATE_CLASS].inplace] — stores the parts as a [List] in the original column.
      */
     @ExcludeFromSources
     typealias TerminalMethodsSnippet = Nothing
@@ -137,6 +137,10 @@ internal interface SplitDocs {
      */
     @ExcludeFromSources
     typealias PARTS = Nothing
+
+    // Either 'Split' or 'SplitWithTransform'
+    @ExcludeFromSources
+    typealias INTERMEDIATE_CLASS = Nothing
 
     /**
      * {@set [PARTS] The values are split into parts as defined by the previous [by][Split.by],
@@ -291,7 +295,7 @@ public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C>
  * @include [SplitDocs.SplittingMethodsSnippet]
  *
  * Use the following methods to complete the splitting:
- * @include [SplitDocs.TerminalMethodsSnippet]
+ * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
  * - [intoColumns][Split.intoColumns] — turns a column of [DataFrame]s into a [column group][ColumnGroup],
  *   where each cell holds a [List] of the values of the corresponding [DataFrame] column.
  *
@@ -347,7 +351,7 @@ public class Split<T, C>(
  * Use [default][SplitWithTransform.default] to set the value for the parts that are missing in some rows.
  *
  * Use the following methods to complete the splitting:
- * @include [SplitDocs.TerminalMethodsSnippet]
+ * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
  *
  * Each of these methods returns a new [DataFrame].
  *
@@ -494,19 +498,27 @@ public fun <T, C> Split<T, C>.by(
     }
 
 /**
- * Example:
- * ```
- * dataFrameOf("str" to listOf("1    2 3     4"))
- *   .split("str").by("\\s+".toRegex())
- *   // when the list of explicitly specified columnNames is not long enough (or none at all),
- *   // names for additional columns are generates
- *   .into()
- * ```
- * Result:
- * ```
- *    split1 split2 split3 split4
- *         1      2      3      4
- * ```
+ * Defines how each value of the columns selected by [split] is split into parts:
+ * the [String] representation of each non-`null` value is split around matches of [regex].
+ * The regex matches are not included in the resulting parts.
+ * The parts are trimmed if [trim] is `true` (default), and their number is limited by [limit] if it's positive.
+ * `null` values are split into no parts.
+ *
+ * To split a [String] into its regex capturing groups instead, use [match][Split.match].
+ *
+ * @include [SplitDocs.SplittingStepSnippet]
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitByRegex]
+ *
+ * @include [SplitDocs.TypeParamTSnippet]
+ * @include [SplitDocs.TypeParamCSnippet]
+ * @param [regex] The regular expression to split the values around.
+ * @param [trim] Whether to remove leading and trailing whitespace from each part. `true` by default.
+ * @param [limit] The maximum number of parts; the last part contains the rest of the value.
+ *   `0` (no limit) by default.
+ * @return A [SplitWithTransform] that splits the values around matches of [regex].
  */
 @Interpretable("ByRegex")
 public fun <T, C> Split<T, C>.by(
@@ -636,7 +648,7 @@ internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
  * Splits the values of the columns selected by [split] into parts and stores them in new columns,
  * which replace each original column at its position and nesting level.
  *
- * {@get [SplitDocs.PARTS]}
+ * $[SplitDocs.PARTS]
  * The `i`-th part of each value is stored in the `i`-th new column.
  *
  * @include [SplitDocs.ColumnCountSnippet]
@@ -815,7 +827,7 @@ public fun <T> Split<T, String>.into(
  * Splits the values of the columns selected by [split] into parts and stores them in new columns,
  * nested inside a [column group][ColumnGroup] that replaces each original column and keeps its name.
  *
- * {@get [SplitDocs.PARTS]}
+ * $[SplitDocs.PARTS]
  * The `i`-th part of each value is stored in the `i`-th new column.
  *
  * @include [SplitDocs.ColumnCountSnippet]
@@ -1030,7 +1042,7 @@ public fun <T, C : DataFrame<*>> Split<T, C>.intoColumns(): DataFrame<T> =
  * Splits the values of the columns selected by [split] into parts and places each part in a separate row,
  * duplicating the values in the other columns.
  *
- * {@get [SplitDocs.PARTS]}
+ * $[SplitDocs.PARTS]
  * The type of each split column changes from the type of its values to the type of their parts.
  * When several columns are split, their parts are aligned in the resulting rows, like in [explode].
  *
@@ -1120,7 +1132,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = t
  * Splits the values of the columns selected by [split] into parts and stores them as a [List]
  * in the original columns, keeping their positions and names.
  *
- * {@get [SplitDocs.PARTS]}
+ * $[SplitDocs.PARTS]
  * The type of each split column becomes a [List] of the type of the parts; `null` values become empty [List]s.
  *
  * See also [intoRows][SplitWithTransform.intoRows], which also places each part in a separate row.
