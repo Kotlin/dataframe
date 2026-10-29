@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
@@ -20,8 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.splitInto
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -51,11 +49,20 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
         "phones" to columnOf<List<String>>(listOf("+44 20 1234", "+44 77 5678"), listOf("+33 1 2345"), emptyList()),
         "location" to columnOf(51.52 to -0.16, 48.86 to 2.35, 45.46 to 9.19),
         "orders" to columnOf(
-            dataFrameOf("item" to columnOf("Book", "Pen"), "price" to columnOf(12.5, 1.5)),
-            dataFrameOf("item" to columnOf("Lamp"), "price" to columnOf(30.0)),
-            dataFrameOf("item" to emptyList<String>().toColumn(), "price" to emptyList<Double>().toColumn()),
+            dataFrameOf(
+                "item" to columnOf("Book", "Pen"),
+                "price" to columnOf(12.5, 1.5),
+            ),
+            dataFrameOf(
+                "item" to columnOf("Lamp"),
+                "price" to columnOf(30.0),
+            ),
+            dataFrameOf(
+                "item" to DataColumn.emptyOf<String>(),
+                "price" to DataColumn.emptyOf<Double>(),
+            ),
         ),
-    ).cast()
+    ).cast() // TODO cast warning due to: #2196
 
     private fun merged() =
         peopleDf.merge { name.lastName and name.firstName }
@@ -258,6 +265,19 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
             .also {
                 it["city"].toList() shouldBe listOf("London", "Paris", "Milan")
                 it["rest"].toList() shouldBe listOf("Baker Street, 221B", "Rue de Rivoli", null)
+            }
+    }
+
+    @Test
+    fun splitByRegex() {
+        // SampleStart
+        // Split each address around commas and any surrounding whitespace
+        df.split { address }.by("""\s*,\s*""".toRegex()).into("city", "street", "house")
+            // SampleEnd
+            .also {
+                it["city"].toList() shouldBe listOf("London", "Paris", "Milan")
+                it["street"].toList() shouldBe listOf("Baker Street", "Rue de Rivoli", null)
+                it["house"].toList() shouldBe listOf("221B", null, null)
             }
     }
 
