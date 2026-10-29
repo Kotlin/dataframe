@@ -43,6 +43,11 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
         val orders: DataFrame<Order>
     }
 
+    @DataSchema
+    interface TagData {
+        val tags: Set<String>
+    }
+
     private val df: DataFrame<Customer> = dataFrameOf(
         "name" to columnOf("Alice Cooper", "Bob Dylan", "Charlie Chaplin"),
         "address" to columnOf("London, Baker Street, 221B", "Paris, Rue de Rivoli", "Milan"),
@@ -352,6 +357,15 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
                 it["primaryPhone"].toList() shouldBe listOf("+44 20 1234", "+33 1 2345", null)
                 it["secondaryPhone"].toList() shouldBe listOf("+44 77 5678", null, null)
             }
+    }
+
+    @Test
+    fun splitIterableInplace() {
+        val df = dataFrameOf("tags" to columnOf(setOf("red", "blue"), setOf("green"))).cast<TagData>()
+        // SampleStart
+        df.split { tags }.inplace()
+            // SampleEnd
+            .also { it["tags"].toList() shouldBe listOf(listOf("red", "blue"), listOf("green")) }
     }
 
     @Test

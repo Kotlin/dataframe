@@ -105,6 +105,10 @@ internal interface SplitDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[**`inplace`**][SplitWithTransform.inplace]**`()`**
+     *
+     * For [Iterable], [DataFrame], and [Pair] values, the [by][Split.by] or [match][Split.match] step can be omitted.
+     * [Pair] values can be split directly with [into][Split.into] or [inward][Split.inward], each of which takes
+     * exactly two names. [intoColumns][Split.intoColumns] is available only for [DataFrame] values.
      */
     typealias Grammar = Nothing
 
@@ -142,9 +146,17 @@ internal interface SplitDocs {
     @ExcludeFromSources
     typealias INTERMEDIATE_CLASS = Nothing
 
+    /*
+     * The key for a @set that describes the value used for missing parts in the terminal methods
+     * of the `split` operation.
+     */
+    @ExcludeFromSources
+    typealias MISSING = Nothing
+
     /**
      * {@set [PARTS] The values are split into parts as defined by the previous [by][Split.by],
      * [match][Split.match], or [default][SplitWithTransform.default] step.}
+     * {@set [MISSING] the [default][SplitWithTransform.default] value (`null` if not set)}
      */
     @ExcludeFromSources
     typealias SetTransformParts = Nothing
@@ -152,6 +164,7 @@ internal interface SplitDocs {
     /**
      * {@set [PARTS] Each [Iterable] value (e.g., a [List]) is split into its elements,
      * so no [by][Split.by] step is needed.}
+     * {@set [MISSING] the [default][SplitWithTransform.default] value (`null` if not set)}
      */
     @ExcludeFromSources
     typealias SetIterableParts = Nothing
@@ -159,6 +172,7 @@ internal interface SplitDocs {
     /**
      * {@set [PARTS] Each [DataFrame] value is split into its rows, so no [by][Split.by] step is needed.
      * As the parts are [DataRow]s, the resulting columns are [column groups][ColumnGroup].}
+     * {@set [MISSING] `null`}
      */
     @ExcludeFromSources
     typealias SetDataFrameParts = Nothing
@@ -184,8 +198,8 @@ internal interface SplitDocs {
     /**
      * The number of new columns is the maximum number of parts among the values of the original column,
      * or the number of the given [names\] if it's larger.
-     * Values that are split into fewer parts get the [default][SplitWithTransform.default] value
-     * (`null` if not set) in the remaining columns; `null` values get it in all new columns.
+     * Values that are split into fewer parts get $[MISSING] in the remaining columns.
+     * `null` values are split into no parts, so they get it in all new columns.
      */
     @ExcludeFromSources
     typealias ColumnCountSnippet = Nothing
@@ -396,8 +410,10 @@ public typealias ColumnNamesGenerator<C> = ColumnWithPath<C>.(extraColumnIndex: 
  * Sets the [value] for the parts that are missing in some rows
  * when the [Iterable] values of the columns selected by [split] are split into their elements.
  *
- * The values are split into as many new columns (or list elements) as the longest value has elements;
+ * The values are split into as many new columns as the longest value has elements;
  * shorter values, as well as `null` values, get [value] in the remaining positions instead of `null`.
+ * The default value only affects [into][SplitWithTransform.into] and [inward][SplitWithTransform.inward];
+ * it is ignored by [intoRows][SplitWithTransform.intoRows] and [inplace][SplitWithTransform.inplace].
  *
  * @include [SplitDocs.SplittingStepSnippet]
  *
@@ -424,14 +440,10 @@ public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, S
  *
  * The values are split into as many new columns as the value with the most parts has;
  * values with fewer parts, as well as `null` values, get [value] in the remaining columns instead of `null`.
+ * The default value only affects [into][SplitWithTransform.into] and [inward][SplitWithTransform.inward];
+ * it is ignored by [intoRows][SplitWithTransform.intoRows] and [inplace][SplitWithTransform.inplace].
  *
- * This is an intermediate step of the [split] operation; it returns a new [SplitWithTransform],
- * which can be completed with [into][SplitWithTransform.into], [inward][SplitWithTransform.inward],
- * [intoRows][SplitWithTransform.intoRows], or [inplace][SplitWithTransform.inplace].
- *
- * For more information: {@include [DocumentationUrls.Split]}
- *
- * See [Grammar][SplitDocs.Grammar].
+ * @include [SplitDocs.SplittingStepSnippet]
  *
  * ### Examples
  *
@@ -601,16 +613,28 @@ internal inline fun <T, C, R> Split<T, C>.by(
 // region match
 
 /**
- * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html),
- * excluding the first group which is the entire matched String.
- * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in the original column
- * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ * Defines how each [String] value is split into its [Regex] capturing groups.
+ * The whole string must match [regex], as matching uses [Regex.matchEntire].
+ * The entire match (group 0) is omitted; groups that do not participate in the match become `null`.
+ * Strings that do not match, and `null` values, are split into no parts.
+ * To split around regex matches instead, use [by][Split.by].
+ *
+ * @include [SplitDocs.SplittingStepSnippet]
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitRegex1]
  *
- * For more information: {@include [DocumentationUrls.Split]}
+ * @include [SplitDocs.TypeParamTSnippet]
+ * @include [SplitDocs.TypeParamCSnippet]
+ */
+@ExcludeFromSources
+private typealias CommonMatchDocs = Nothing
+
+/**
+ * @include [CommonMatchDocs]
+ * @param [regex] The regular expression pattern to compile with [String.toRegex].
+ * @return A [SplitWithTransform] that splits the values into the capturing groups of [regex].
  */
 @Interpretable("MatchStringRegex")
 public fun <T, C : String?> Split<T, C>.match(
@@ -618,7 +642,9 @@ public fun <T, C : String?> Split<T, C>.match(
 ): SplitWithTransform<T, C, String?> = match(regex.toRegex())
 
 /**
- * @include [match]
+ * @include [CommonMatchDocs]
+ * @param [regex] The regular expression whose capturing groups define the parts.
+ * @return A [SplitWithTransform] that splits the values into the capturing groups of [regex].
  */
 @Interpretable("MatchRegex")
 public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> =
@@ -704,7 +730,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
 @Interpretable("SplitWithTransformInto0")
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     vararg names: String,
-    extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null,
+    extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = into(names.toList(), extraNamesGenerator)
 
 /**
@@ -722,7 +748,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
  */
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     names: List<String>,
-    extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null,
+    extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> =
     splitImpl(this) { numberOfNewCols ->
         if (extraNamesGenerator != null && names.size < numberOfNewCols) {
@@ -1135,7 +1161,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = t
  * $[SplitDocs.PARTS]
  * The type of each split column becomes a [List] of the type of the parts; `null` values become empty [List]s.
  *
- * See also [intoRows][SplitWithTransform.intoRows], which also places each part in a separate row.
+ * See also [intoRows][SplitWithTransform.intoRows], which places each part in a separate row instead.
  *
  * @include [SplitDocs.TerminalStepSnippet]
  *
@@ -1148,6 +1174,10 @@ private typealias CommonSplitInplaceDocs = Nothing
 
 /**
  * @include [CommonSplitInplaceDocs] {@include [SplitDocs.SetIterableParts]}
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples.splitIterableInplace]
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @param [C] The [Iterable] type of the values in the columns selected by [split].
