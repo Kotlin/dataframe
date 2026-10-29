@@ -325,6 +325,12 @@
 <resource src="takeLast.html"></resource>
 <resource src="takeLastDataColumn.html"></resource>
 <resource src="takeWhile.html"></resource>
+<resource src="split.html"></resource>
+<resource src="split1.html"></resource>
+<resource src="splitFrameColumn.html"></resource>
+<resource src="splitInplace.html"></resource>
+<resource src="splitIntoRows.html"></resource>
+<resource src="splitRegex1.html"></resource>
 <resource src="notebook_test_tail_1.html"></resource>
 <resource src="notebook_test_tail_2.html"></resource>
 <resource src="notebook_test_tail_3.html"></resource>
@@ -441,11 +447,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.update.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateAsFrame.html"></resource>

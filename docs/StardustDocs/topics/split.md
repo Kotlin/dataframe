@@ -1,6 +1,6 @@
 [//]: # (title: split)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SplitSamples-->
 
 This operation splits every value in the given columns into several values 
 and optionally spreads them horizontally or vertically.
@@ -46,7 +46,8 @@ df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html" width="100%"/>
+<inline-frame src="./resources/splitInplace.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 ## Split horizontally
@@ -81,7 +82,8 @@ df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html" width="100%"/>
+<inline-frame src="./resources/split.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 <!---FUN split1-->
@@ -104,7 +106,8 @@ df.split { "name"["lastName"]<String>() }
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html" width="100%"/>
+<inline-frame src="./resources/split1.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 `String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) patterns:
@@ -117,7 +120,8 @@ merged.split { "name"<String>() }
     .inward("firstName", "lastName")
 ```
 
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html" width="100%"/>
+<inline-frame src="./resources/splitRegex1.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
@@ -136,11 +140,13 @@ val df2 = dataFrameOf("a", "b")(
 )
 val df = dataFrameOf(
     "id" to columnOf("x", "y"),
-    "group" to columnOf(df1, df2)
+    "group" to columnOf(df1, df2),
 )
 
 df.split { "group"<AnyFrame>() }.intoColumns()
 ```
+
+<inline-frame src="./resources/splitFrameColumn.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -172,7 +178,8 @@ df.split { colGroup("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>
-<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html" width="100%"/>
+<inline-frame src="./resources/splitIntoRows.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 Equivalent to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.
