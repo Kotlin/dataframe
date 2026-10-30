@@ -64,7 +64,7 @@ private typealias CommonUngroupDocs = Nothing
  * ```kotlin
  * // Ungroups "groupA" and "groupB" column groups
  * df.ungroup { groupA and groupB }
- * // Ungroups all column groups at any depth which name contains "group" substring
+ * // Ungroups all column groups at any depth whose name contains the "group" substring
  * df.ungroup { colsAtAnyDepth().colGroups { it.name().contains("group") } }
  * ```
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the column groups of this [DataFrame] to ungroup.

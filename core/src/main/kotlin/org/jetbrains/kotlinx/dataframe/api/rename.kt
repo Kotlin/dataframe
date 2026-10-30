@@ -42,7 +42,7 @@ import kotlin.reflect.KProperty
  * The [RenameClause] object provides methods to rename selected columns using:
  * - [to(name)][RenameClause.to] - renames selected columns to the specified names.
  * - [to { nameExpression }][RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [toCamelCase()][RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [DataFrame] with the renamed columns.
