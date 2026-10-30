@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -98,37 +99,6 @@ public interface WithoutNullsColumnsSelectionDsl {
 
         /** __`.`__[<code>**`colsWithoutNulls`**</code>][ColumnsSelectionDsl.colsWithoutNulls] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## (Cols) Without Nulls
-     * Returns a new [<code>ColumnSet</code>][ColumnSet] that contains only columns in [this] that do not have `null` values.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [<code>column groups</code>][ColumnGroup], `withoutNulls` is named `colsWithoutNulls` to avoid confusion.
-     *
-     * For more information: [See (Cols) Without Nulls on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-without-nulls)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For Example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>all</code>][ColumnsSelectionDsl.all]`().`[<code>nameContains</code>][ColumnsSelectionDsl.colsNameContains]`("middleName").`[<code>withoutNulls</code>][ColumnSet.withoutNulls]`() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>withoutNulls</code>][ColumnsSelectionDsl.withoutNulls]`() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { Type::userData.`[<code>colsWithoutNulls</code>][SingleColumn.colsWithoutNulls]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @return A [<code>ColumnSet</code>][ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
-     */
-    private interface CommonWithoutNullsDocs {
-
-        typealias EXAMPLE = Nothing
     }
 
     /**

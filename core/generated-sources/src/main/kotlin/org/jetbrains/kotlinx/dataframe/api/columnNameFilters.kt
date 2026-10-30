@@ -393,43 +393,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     *
-     *
-     * @param [regex] what the column name should contain to be included in the result.
-     *
-     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
-     *   all columns containing [regex] in their name.
-     * @see [nameEndsWith]
-     * @see [nameStartsWith]
-     *
-     */
-    private typealias NameContainsRegexDocs = Nothing
-
-    /**
-     * ## (Cols) Name Contains
-     * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
-     * [regex] in their name.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
-     *
-     * This function is a shorthand for [<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  {  `[regex][regex]` `[<code>in</code>][String.contains]` it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
-     *
-     * For more information: [See `Column Name Filters` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#column-name-filters)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>nameContains</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsNameContains]`("my") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[<code>nameContains</code>][kotlin.String.colsNameContains]`(`[<code>Regex</code>][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::someGroupCol.`[<code>nameContains</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
-     *
-     * #### Examples for this overload:
-     *
      * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>cols</code>][ColumnsSelectionDsl.cols]` { .. }.`[<code>nameContains</code>][ColumnSet.nameContains]`(`[<code>Regex</code>][Regex]`("order-[0-9]+")) }`
      *
      * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>().`[<code>nameContains</code>][ColumnSet.nameContains]`(`[<code>Regex</code>][Regex]`("order-[0-9]+")) }`

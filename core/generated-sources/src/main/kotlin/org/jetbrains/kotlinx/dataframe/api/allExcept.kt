@@ -228,7 +228,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -335,7 +335,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -442,7 +442,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -549,7 +549,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -656,7 +656,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -763,7 +763,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -871,7 +871,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -979,7 +979,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1086,7 +1086,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1197,7 +1197,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1305,7 +1305,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1412,7 +1412,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1519,7 +1519,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1627,7 +1627,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1739,7 +1739,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1863,7 +1863,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -1971,7 +1971,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2080,7 +2080,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2192,7 +2192,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2308,7 +2308,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2416,7 +2416,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2525,7 +2525,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2633,7 +2633,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2757,7 +2757,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2865,7 +2865,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -2974,7 +2974,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3082,7 +3082,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3209,7 +3209,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3318,7 +3318,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3429,7 +3429,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3538,7 +3538,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3649,7 +3649,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3758,7 +3758,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3869,7 +3869,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -3993,7 +3993,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4101,7 +4101,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4210,7 +4210,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4323,7 +4323,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4447,7 +4447,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4555,7 +4555,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4664,7 +4664,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4776,7 +4776,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -4903,7 +4903,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5012,7 +5012,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5121,7 +5121,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5234,7 +5234,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5358,7 +5358,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5466,7 +5466,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *
@@ -5575,7 +5575,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup.`[<code>except</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *

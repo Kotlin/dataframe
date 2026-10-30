@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -107,44 +108,6 @@ public interface ValueColsColumnsSelectionDsl {
 
         /** __`.`__[<code>**`valueCols`**</code>][ColumnsSelectionDsl.valueCols] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Value Columns
-     * Creates a subset of columns from [this] that are [<code>ValueColumns</code>][ValueColumn].
-     *
-     * You can optionally use a [filter] to only include certain columns.
-     * [<code>valueCols</code>][valueCols] can be called using any of the supported [<code>APIs</code>][AccessApis] (+ [<code>ColumnPath</code>][ColumnPath]).
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * For more information: [See `valueCols` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>valueCols</code>][ColumnsSelectionDsl.valueCols]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>valueCols</code>][ColumnsSelectionDsl.valueCols]`() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColGroup".`[<code>valueCols</code>][String.valueCols]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param [filter] An optional [<code>predicate</code>][Predicate] to filter the value columns by.
-     * @return A [<code>ColumnSet</code>][ColumnSet] of [<code>ValueColumns</code>][ValueColumn].
-     * @see [ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.colGroups]
-     * @see [ColumnsSelectionDsl.cols]
-     */
-    private interface CommonValueColsDocs {
-
-        /** Example argument */
-        typealias EXAMPLE = Nothing
     }
 
     /**

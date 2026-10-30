@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -106,15 +107,6 @@ public operator fun DataRow<*>.contains(column: ColumnReference<*>): Boolean = c
 public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
-
-/**
- * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][DataRow].
- *
- * For more information: [See Row Functions on the documentation website.](https://kotlin.github.io/dataframe/datarow.html#row-functions)
- *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
- */
-internal typealias DiffDocs = Nothing
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous [<code>DataRow</code>][DataRow].
