@@ -104,8 +104,8 @@ jobs:
         run: |
           mkdir -p dir/api-docs
           cp -r dokka-dir/* dir/api-docs/
-      - name: Generate llms.txt index
-        run: node docs/scripts/llms/generate-llms-index.mjs dir
+#      - name: Generate llms.txt index
+#        run: node docs/scripts/llms/generate-llms-index.mjs dir
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
