@@ -6,9 +6,6 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson
@@ -38,9 +35,11 @@ import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
  *   Default: empty list.
  * @param recordSeparator The character that separates records in a CSV / TSV file.
  *   Default: `'\n'`, a Unix-newline.
- * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
+ * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat] configuration.
+ *   Default: `{ it }`.
  *
- *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
+ *   Before instantiating the [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat],
+ *   the [<code>CSVFormat.Builder</code>][org.apache.commons.csv.CSVFormat.Builder] will be passed to this lambda.
  *   This will allow you to configure/overwrite any CSV / TSV writing options.
  */
 internal fun writeDelimImpl(

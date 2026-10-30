@@ -2,23 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FIXED_COLUMN_WIDTHS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HAS_FIXED_WIDTH_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HEADER
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EMPTY_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_EXCESS_COLUMNS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.IGNORE_SURROUNDING_SPACES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSER_OPTIONS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PARSE_PARALLEL
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.READ_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.SKIP_LINES
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TEXT_READ
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TRIM_INSIDE_QUOTED
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.TSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 
 /**
@@ -107,7 +90,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.api.parser]) will be queried.
  *
  *   The only exceptions are:
  *   - [<code>nullStrings</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,

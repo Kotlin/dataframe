@@ -3,18 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_FORMAT
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COMMENT_CHAR
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.CSV_DELIMITER
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ESCAPE_CHAR
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.FILE_WRITE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.HEADER_COMMENTS
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.INCLUDE_HEADER
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.PATH_WRITE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.QUOTE_MODE
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.RECORD_SEPARATOR
-import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 import java.io.File
 import java.io.FileWriter
@@ -272,9 +260,11 @@ public fun AnyFrame.writeCsv(
  *   Default: empty list.
  * @param recordSeparator The character that separates records in a CSV / TSV file.
  *   Default: `'\n'`, a Unix-newline.
- * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
+ * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat] configuration.
+ *   Default: `{ it }`.
  *
- *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
+ *   Before instantiating the [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat],
+ *   the [<code>CSVFormat.Builder</code>][org.apache.commons.csv.CSVFormat.Builder] will be passed to this lambda.
  *   This will allow you to configure/overwrite any CSV / TSV writing options.
  */
 public fun AnyFrame.writeCsv(

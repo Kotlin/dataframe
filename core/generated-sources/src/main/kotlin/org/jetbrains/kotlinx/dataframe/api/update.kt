@@ -166,17 +166,6 @@ public class Update<T, C>(
      */
     public typealias UpdateSelectingOptions = Nothing
 
-    /** @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias DslParam = Nothing
-
-    /** @param [columns] The [<code>Column References</code>][ColumnReference] of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnAccessorsParam = Nothing
-
-    /** @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias KPropertiesParam = Nothing
-
-    /** @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnNamesParam = Nothing
     // endregion
 }
 
