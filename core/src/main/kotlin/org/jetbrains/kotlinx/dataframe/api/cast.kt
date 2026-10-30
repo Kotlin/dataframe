@@ -73,7 +73,7 @@ public inline fun <reified T> DataFrame<*>.castTo(
 
 public fun <T> DataRow<*>.cast(): DataRow<T> = this as DataRow<T>
 
-public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
+public inline fun <reified T> DataRow<*>.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[index()]
 
 @Interpretable("AnyColCast")
 public fun <T> DataColumn<*>.cast(): DataColumn<T> = this as DataColumn<T>
