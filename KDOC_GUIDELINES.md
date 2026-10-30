@@ -137,8 +137,8 @@ More about `@set` and `@get` conventions [here](#setget-references).
 internal interface ~SnippetDescription~Snippet {
     /*
      * The key for a @set that will define the operation name for the snippet example.
+     * Not annotated: everything nested in an `@ExcludeFromSources` interface is excluded with it.
      */
-    @ExcludeFromSources
     typealias OPERATION = Nothing
 }
 
