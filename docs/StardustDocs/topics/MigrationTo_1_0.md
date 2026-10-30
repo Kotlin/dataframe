@@ -310,7 +310,7 @@ df.parse(
 ```
 
 </td>
-<td>If you want to force parsing to Java date-time types, you no longer have use skipTypes, you can simply change the `dateTime` argument.</td>
+<td>If you want to force parsing to Java date-time types, you no longer have to use skipTypes; you can simply change the `dateTime` argument.</td>
 </tr>
 <tr>
 <td>
@@ -387,7 +387,7 @@ ParserOptions(
 ```
 
 </td>
-<td>Locale for date-time only works for Java types. If you need Kotlin types ánd a locale use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
+<td>Locale for date-time only works for Java types. If you need Kotlin types and a locale, use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
 </tr>
 <tr>
 <td rowspan="2">

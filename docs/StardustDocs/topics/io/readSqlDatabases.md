@@ -411,7 +411,7 @@ val df = DataFrame.readResultSet(resultSet, PostgreSql)
 
 **readResultSet(resultSet: ResultSet, connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
-Another variant, we use a JDBC connection: `Connection` object.
+Another variant uses a JDBC `Connection` object.
 
 <!---FUN readResultSetConnection-->
 
@@ -736,7 +736,7 @@ based on
 
 ## Schema reading for all non-system tables
 
-These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
+These functions return a map from table names to [`DataFrameSchema`](schema.md) for all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
 **DataFrameSchema.readAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType?): Map<String, DataFrameSchema>**

@@ -61,7 +61,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
- * Don't confuse this with [group], which groups column into
+ * Don't confuse this with [group], which groups columns into a
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.

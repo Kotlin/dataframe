@@ -187,7 +187,7 @@ df.rename { name }.into("firstName")
 > you can [`cast`](cast.md) to a new data schema or use the String API.
 > { style = "warning" }
 
-See [Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example) 
+See the [Compiler Plugin Example](https://github.com/Kotlin/dataframe/blob/master/examples/projects/kotlin-dataframe-plugin-gradle-example) 
 IDEA project with basic Extension Properties API examples.
 </tab>
 </tabs>
