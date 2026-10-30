@@ -196,10 +196,10 @@ internal interface SplitDocs {
     typealias TerminalStepSnippet = Nothing
 
     /**
-     * The number of new columns is the maximum number of parts among the values of the original column,
-     * or the number of the given [names\] if it's larger.
-     * Values that are split into fewer parts get $[MISSING] in the remaining columns.
-     * `null` values are split into no parts, so they get it in all new columns.
+     * How many new columns are created depends on the maximum number of parts among the values of the original column,
+     * or the number of the given [names\].
+     * Values that are split into fewer parts than the number of new columns get $[MISSING] in the remaining columns.
+     * `null` values cannot be split, so they become `null` in all new columns.
      */
     @ExcludeFromSources
     typealias ColumnCountSnippet = Nothing
@@ -614,7 +614,7 @@ internal inline fun <T, C, R> Split<T, C>.by(
 
 /**
  * Defines how each [String] value is split into its [Regex] capturing groups.
- * The whole string must match [regex], as matching uses [Regex.matchEntire].
+ * The whole string must match [regex\], as matching uses [Regex.matchEntire].
  * The entire match (group 0) is omitted; groups that do not participate in the match become `null`.
  * Strings that do not match, and `null` values, are split into no parts.
  * To split around regex matches instead, use [by][Split.by].
