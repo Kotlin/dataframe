@@ -30,7 +30,7 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 and make working with your data both convenient and type-safe.
 
 * [Enhanced Column Selection DSL](https://blog.jetbrains.com/kotlin/2024/07/enhanced-column-selection-dsl-in-kotlin-dataframe/)
-  — explore a powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
+  — explore the powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
 * [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)
   — discover interactive Kotlin DataFrame outputs in
   [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
