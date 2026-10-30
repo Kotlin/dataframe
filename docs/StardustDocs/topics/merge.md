@@ -4,6 +4,8 @@
 
 Merges several columns into a single column. 
 
+**API reference**: [`merge`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/merge.html)
+
 **Reverse operation:** [`split`](split.md)
 
 ```kotlin

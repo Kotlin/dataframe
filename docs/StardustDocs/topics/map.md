@@ -7,6 +7,8 @@ into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/
 a [`DataFrame`](DataFrame.md), a [`DataColumn`](DataColumn.md),
 or a [`FrameColumn`](DataColumn.md#framecolumn).
 
+**API reference**: [`map`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/map.html)
+
 **Related operations**: [](addRemove.md)
 
 All `map` operations share the name but differ in what they go over and what they give back:

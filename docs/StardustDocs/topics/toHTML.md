@@ -8,6 +8,8 @@
 Rendering of hierarchical tables in HTML is supported by JS and CSS definitions
 that can be found in project resources.
 
+**API reference**: [`toHtml`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.io/to-h-t-m-l.html)
+
 A `DataFrame` can also be formatted before being converted to HTML.
 See [](format.md) for how to do this.
 

@@ -19,6 +19,8 @@ and the Kotlin type produced when the column is read into a DataFrame. PostgreSQ
 canonicalizes aliases at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
+**API reference**: [`PostgreSQL`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-postgre-sql/index.html)
+
 Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
 
 ## Numeric types

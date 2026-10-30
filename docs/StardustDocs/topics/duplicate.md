@@ -8,6 +8,8 @@ Repeats rows or whole dataframes:
 of the row, and [`duplicate`](#duplicate-on-a-dataframe) on a [`DataFrame`](DataFrame.md) makes a
 [`FrameColumn`](DataColumn.md#framecolumn) out of copies of the whole dataframe.
 
+**API reference**: [`duplicate`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/duplicate.html)
+
 **Related operations**: [](appendDuplicate.md)
 
 The number of copies `n` counts the original too, so `n = 1` gives one copy.
