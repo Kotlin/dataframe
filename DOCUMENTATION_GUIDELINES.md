@@ -105,6 +105,7 @@ describe its possible values and how they affect the operation result.
   with an explicit input and output (generated with [Sample Helper](#sample-helper)).
   See [Operation Examples](#operation-examples)
 * Topic should contain links to all related operations (including reverse if there is one).
+* If there's a relevant page on the API reference, link to it.
 
 #### Operation Examples
 
@@ -162,12 +163,13 @@ fun selectTwoCols() {
 3) Operation description.
    1) First — what it actually does ("Adds ...", "Computes ...", "Removes...", "Sorts ...").
    2) Then — what it returns ("Returns ...").
-4) Method(s) [signature](#signatures). For complex operations — complete operation grammar.
-5) Any important notes.
-6) See also section — links to reverse or generally reversed operations.
-7) `### Parameters` — [parameters description](#parameters) with their types.
-8) `### Examples` — examples (code sample with outputs).
-9) The [`DataColumn` overload](#datacolumn-overloads) section, if the operation has one.
+4) An API reference link like '**API reference**: [`name`](https://kotlin.github.io/dataframe/api-docs/...)'
+5) Method(s) [signature](#signatures). For complex operations — complete operation grammar.
+6) Any important notes.
+7) See also section — links to reverse or generally reversed operations.
+8) `### Parameters` — [parameters description](#parameters) with their types.
+9) `### Examples` — examples (code sample with outputs).
+10) The [`DataColumn` overload](#datacolumn-overloads) section, if the operation has one.
 
 Parameters and examples are always separate headers (`### Parameters`, `### Examples`),
 not bold paragraphs, so that every operation section looks the same.
