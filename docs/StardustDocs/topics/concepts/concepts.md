@@ -26,7 +26,7 @@ You can think of it like a spreadsheet or SQL table, or a dictionary of series o
 
 The handiness of this abstraction is not in the table itself but in a set of operations defined on it. 
 The Kotlin DataFrame library is an idiomatic Kotlin DSL defining such operations. 
-The process of working with dataframe is often called *data wrangling* which 
+The process of working with a dataframe is often called *data wrangling*, which 
 is the process of transforming and mapping data from one "raw" data form into another format 
 that is more appropriate for analytics and visualization. 
 The goal of data wrangling is to ensure quality and useful data.

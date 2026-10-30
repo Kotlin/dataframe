@@ -33,7 +33,7 @@ Projects compatible with the latest dev/master version are located in the [examp
 
 All examples are tested by the main project in debug mode when `gradlew test` is run
 (or manually by`gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
-Android example projects, require the `android.sdk.dir=` property to be set.
+Android example projects require the `android.sdk.dir=` property to be set.
 
 Versions inside the example projects are overwritten automatically upon `gradlew assemble`
 (or manually by `gradlew syncAllExampleFolders`).
@@ -47,7 +47,7 @@ Small artificial dataset used in [DataFrame API examples](https://kotlin.github.
 ___
 * puzzles ([notebook](notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
-complex problems where need to think. This notebook will show you how to solve these tasks with Kotlin 
+complex problems where you need to think. This notebook will show you how to solve these tasks with Kotlin 
 DataFrame in a laconic, beautiful style.
 ___
 * movies ([notebook](notebooks/movies/movies.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/89IMYb1zbHZxHfwAta6eKP)) &ndash;
@@ -59,7 +59,7 @@ Explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API 
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
 * github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/P9n6jYL4mmY1gx3phz5TsX)) &ndash;
-This notebook shows the hierarchical dataframes look like and how to work with them.
+This notebook shows what hierarchical dataframes look like and how to work with them.
 ___
 * titanic ([notebook](notebooks/titanic/Titanic.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/B5YeMMONSAR78FgKQ9yJyW)) &ndash;
 Let's see how the new library will show itself on the famous Titanic dataset.
