@@ -209,6 +209,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * @include [CommonNameContainsDocs]
      * @set [CommonNameContainsDocs.ARGUMENT] [regex\] */
+    @ExcludeFromSources
     private typealias NameContainsRegexDocs = Nothing
 
     /**
