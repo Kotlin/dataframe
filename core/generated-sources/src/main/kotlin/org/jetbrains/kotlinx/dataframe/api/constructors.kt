@@ -284,6 +284,8 @@ public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*>
         },
     ).asColumnGroup()
 
+@Refine
+@Interpretable("ColumnOfFrames")
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
 public fun columnOf(columns: Iterable<BaseColumn<*>>): DataColumn<DataRow<*>> =
