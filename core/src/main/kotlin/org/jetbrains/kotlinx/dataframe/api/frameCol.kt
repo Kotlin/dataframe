@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -155,9 +156,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the frame column.
+     * @param [frameCol\] The [ColumnAccessor] pointing to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias FrameColReferenceDocs = Nothing
 
     /**
@@ -228,6 +230,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
+    @ExcludeFromSources
     private typealias FrameColNameDocs = Nothing
 
     /**
@@ -328,6 +331,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
+    @ExcludeFromSources
     private typealias FrameColPathDocs = Nothing
 
     /**
@@ -430,6 +434,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias FrameColKPropertyDocs = Nothing
 
     /**
@@ -552,6 +557,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias FrameColIndexDocs = Nothing
 
     /**

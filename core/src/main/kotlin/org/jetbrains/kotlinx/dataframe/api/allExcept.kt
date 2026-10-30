@@ -173,7 +173,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * So:
      *
-     * `df.`[select][DataFrame.select]` { colGroup.`[except][SingleColumn.except]` { col } }`
+     * `df.`[select][DataFrame.select]` { colGroup.`[except][ColumnsSelectionDsl.except]` { col } }`
      *
      * is shorthand for:
      *

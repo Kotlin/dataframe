@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -155,9 +156,10 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the column group.
+     * @param [colGroup\] The [ColumnAccessor] pointing to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupReferenceDocs = Nothing
 
     /**
@@ -226,6 +228,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
+    @ExcludeFromSources
     private typealias ColGroupNameDocs = Nothing
 
     /**
@@ -330,6 +333,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
+    @ExcludeFromSources
     private typealias ColGroupPathDocs = Nothing
 
     /**
@@ -436,6 +440,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupKPropertyDocs = Nothing
 
     /**
@@ -557,6 +562,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ColGroupIndexDocs = Nothing
 
     /**
