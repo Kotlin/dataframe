@@ -37,7 +37,7 @@ import kotlin.reflect.KProperty
  * The [<code>RenameClause</code>][RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][DataFrame] with the renamed columns.
@@ -172,7 +172,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  * The [<code>RenameClause</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the renamed columns.
@@ -241,7 +241,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * The [<code>RenameClause</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the renamed columns.
