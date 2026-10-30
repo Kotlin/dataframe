@@ -285,6 +285,23 @@ public fun columnOf(vararg columns: Pair<String, BaseColumn<*>>): ColumnGroup<*>
         },
     ).asColumnGroup()
 
+/**
+ * Creates a [FrameColumn] from the given [frames].
+ *
+ * The schema of the resulting column is the intersection of the schemas of all given (non-empty) [frames].
+ *
+ * {@include [DocumentationUrls.ColumnOf]}
+ *
+ * Example:
+ * ```kotlin
+ * val frameColumn = columnOf(
+ *   dataFrameOf("a" to columnOf(1, 2), "b" to columnOf("x", "y")),
+ *   dataFrameOf("a" to columnOf(3)),
+ * )
+ * ```
+ */
+@Refine
+@Interpretable("ColumnOfFrames")
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
 public fun columnOf(columns: Iterable<BaseColumn<*>>): DataColumn<DataRow<*>> =
