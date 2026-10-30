@@ -299,15 +299,15 @@ For operation topics, use the same template for all pages, with the operation na
 
 ```xml
 <web-summary>
-Discover `operationName` operation for Kotlin DataFrame.
+Discover the `operationName` operation for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `operationName` operation for Kotlin DataFrame.
+Discover the `operationName` operation for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `operationName` operation for Kotlin DataFrame.
+Discover the `operationName` operation for Kotlin DataFrame.
 </link-summary>
 ```
 

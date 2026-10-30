@@ -3,15 +3,15 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.FilterSamples-->
 
 <web-summary>
-Discover `filter` operation for Kotlin DataFrame.
+Discover the `filter` operation for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `filter` operation for Kotlin DataFrame.
+Discover the `filter` operation for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `filter` operation for Kotlin DataFrame.
+Discover the `filter` operation for Kotlin DataFrame.
 </link-summary>
 
 Keeps only the rows of a [`DataFrame`](DataFrame.md) that satisfy a [row condition](DataRow.md#row-conditions).

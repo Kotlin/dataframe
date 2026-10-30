@@ -3,15 +3,15 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ConcatDfSamples-->
 
 <web-summary>
-Discover `concat` operation for Kotlin DataFrame.
+Discover the `concat` operation for Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `concat` operation for Kotlin DataFrame.
+Discover the `concat` operation for Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `concat` operation for Kotlin DataFrame.
+Discover the `concat` operation for Kotlin DataFrame.
 </link-summary>
 
 Combines rows from multiple [`DataFrame`](DataFrame.md) objects and returns a single `DataFrame`.
