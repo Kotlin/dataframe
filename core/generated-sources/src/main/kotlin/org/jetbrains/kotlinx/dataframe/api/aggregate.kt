@@ -49,7 +49,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * #### Example
  * ```kotlin
  * df.pivot { city }.aggregate {
- *   // Сount rows within each pivot group and store the result
+ *   // Count rows within each pivot group and store the result
  *   // into a new "total" column (a new sub-column under each key column)
  *   count() into "total"
  *
@@ -114,7 +114,7 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * #### Examples
  * ```kotlin
  * df.groupBy { city }.aggregate {
- *   // Сount rows within each group and store the result
+ *   // Count rows within each group and store the result
  *   // into a new "total" column
  *   count() into "total"
  *

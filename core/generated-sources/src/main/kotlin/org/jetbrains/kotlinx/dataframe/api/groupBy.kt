@@ -65,7 +65,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * Don't confuse this with [<code>group</code>][group], which groups column into
+ * Don't confuse this with [<code>group</code>][group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * See also [<code>pivot</code>][DataFrame.pivot] that groups rows of [<code>DataFrame</code>][DataFrame] vertically.
@@ -492,7 +492,7 @@ internal interface GroupByDocs {
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups column into
+ * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.
@@ -580,7 +580,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
  *
  * For more information: [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
  *
- * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups column into
+ * Don't confuse this with [<code>group</code>][org.jetbrains.kotlinx.dataframe.api.group], which groups columns into a
  * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * See also [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.DataFrame.pivot] that groups rows of [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] vertically.

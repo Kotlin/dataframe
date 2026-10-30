@@ -108,7 +108,7 @@ public fun <T, C> Split<T, C>.by(
  * dataFrameOf("str" to listOf("1    2 3     4"))
  *   .split("str").by("\s+".toRegex())
  *   // when the list of explicitly specified columnNames is not long enough (or none at all),
- *   // names for additional columns are generates
+ *   // names for additional columns are generated
  *   .into()
  * ```
  * Result:

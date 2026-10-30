@@ -31,7 +31,7 @@ import kotlin.reflect.KProperty
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][GroupClause.into] and,
+ * as [<code>into</code>][GroupClause.into],
  * that return a new [<code>DataFrame</code>][DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][Grammar].
  *
@@ -144,7 +144,7 @@ internal interface GroupDocs {
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into],
  * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
@@ -200,7 +200,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into],
  * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *

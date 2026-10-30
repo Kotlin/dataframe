@@ -131,7 +131,7 @@ internal interface UngroupDocs {
  * ```kotlin
  * // Ungroups "groupA" and "groupB" column groups
  * df.ungroup { groupA and groupB }
- * // Ungroups all column groups at any depth which name contains "group" substring
+ * // Ungroups all column groups at any depth whose name contains the "group" substring
  * df.ungroup { colsAtAnyDepth().colGroups { it.name().contains("group") } }
  * ```
  * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the column groups of this [<code>DataFrame</code>][DataFrame] to ungroup.

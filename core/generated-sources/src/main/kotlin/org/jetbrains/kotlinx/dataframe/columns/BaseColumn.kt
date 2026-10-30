@@ -16,7 +16,7 @@ import kotlin.reflect.KType
 /**
  * Column with [<code>type</code>][type], [<code>name</code>][name]/[<code>path</code>][path] and [<code>values</code>][values]
  * Base interface for all three kinds of columns: [<code>ValueColumn</code>][ValueColumn], [<code>ColumnGroup</code>][ColumnGroup] and [<code>FrameColumn</code>][FrameColumn].
- * Column operations that doesn't clash by signature with [<code>DataFrame</code>][DataFrame] operations can be defined for [<code>BaseColumn</code>][BaseColumn]
+ * Column operations that don't clash by signature with [<code>DataFrame</code>][DataFrame] operations can be defined for [<code>BaseColumn</code>][BaseColumn]
  *
  * @param T type of values contained in column.
  * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
