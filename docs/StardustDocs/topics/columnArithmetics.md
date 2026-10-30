@@ -6,6 +6,8 @@ Kotlin DataFrame provides operators for applying simple arithmetic, logical, str
 to [`DataColumn`](DataColumn.md) and `ColumnReference` values. These operations include, for example, adding a value 
 to each cell in a column, multiplying a column by a value, and comparing elements in a column with a value.
 
+**API reference**: [`DataColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-column/index.html)
+
 ## When useful
 
 In most transformations, these column operations are usually not the preferred approach in Kotlin DataFrame, 

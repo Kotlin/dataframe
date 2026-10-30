@@ -148,6 +148,12 @@ To add one:
   `{id="..."}`). When you add, rename, move or split a topic or section, also fix the KDoc → website URLs in
   `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt`
   (page = topic file name lowercased + `.html`) — a stale one silently points at a missing page.
+- **Link to the Dokka API reference with absolute URLs.** Dokka's HTML is not part of this project; CI
+  (`main.yml`) copies `build/dokka/html` into the site as `api-docs/`. Every relative inline link to it
+  (`api-docs/…`, `./api-docs/…`, `/api-docs/…`, raw `<a href>`) fails with `REF002` and renders as plain text,
+  so topics use `https://kotlin.github.io/dataframe/api-docs/…`. The `Run Docs Website Locally` run
+  configuration rewrites those to `api-docs/…` for the local preview. Only a `<toc-element href>` in `d.tree`
+  may be relative.
 - After a generator run `git status` over-reports on Windows (`core.autocrlf=true`, no `.gitattributes`)
   — check the real set with `git diff --ignore-cr-at-eol`.
 

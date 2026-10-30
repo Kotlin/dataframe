@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows in reversed order.
 
+**API reference**: [`reverse`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/reverse.html)
+
 **Related operations**: [](reorderRows.md)
 
 <!---FUN reverse-->

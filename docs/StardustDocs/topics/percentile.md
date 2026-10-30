@@ -4,6 +4,8 @@
 
 Computes the specified [percentile](https://en.wikipedia.org/wiki/Percentile) of values.
 
+**API reference**: [`percentile`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/percentile.html)
+
 This is also called the "centile" or the 100-[quantile](https://en.wikipedia.org/wiki/Quantile).
 
 The 25th percentile is also known as the first [quartile](https://en.wikipedia.org/wiki/Quartile) (Q1),

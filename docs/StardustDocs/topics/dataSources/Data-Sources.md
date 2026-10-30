@@ -16,6 +16,8 @@ One of the key aspects of working with data is being able to read from and write
 Kotlin DataFrame provides seamless support for a wide range of formats to integrate into your data workflows.  
 Below you'll find a list of supported sources along with instructions on how to read and write data using them.
 
+**API reference**: [`dataframe-csv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/index.html), [`dataframe-json`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/index.html), [`dataframe-excel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/index.html), [`dataframe-arrow`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/index.html), [`dataframe-jdbc`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/index.html)
+
 - [JSON](JSON.md)
     - [OpenAPI](OpenAPI.md) 
 - [CSV / TSV](CSV-TSV.md)

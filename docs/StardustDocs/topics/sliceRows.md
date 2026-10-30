@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SliceRowsSamples-->
 
+**API reference**: [`take`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/take.html), [`drop`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/drop.html)
+
 Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
 <!---FUN sliceRowsDf-->

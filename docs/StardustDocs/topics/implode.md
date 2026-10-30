@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) where values in given columns are merged into lists grouped by other columns.
 
+**API reference**: [`implode`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/implode.html)
+
 ```text
 implode(dropNA = false) [ { columns } ]
 ```

@@ -5,6 +5,8 @@
 Returns [`DataFrame`](DataFrame.md) which contains all columns from the original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
+**API reference**: [`add`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/add.html)
+
 `add` appends columns to the end of the dataframe by default.
 If you want to add a single column to a specific position in the dataframe, use [insert](insert.md).
 

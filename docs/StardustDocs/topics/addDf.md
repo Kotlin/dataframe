@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`DataFrame`](DataFrame.md) objects.
 
+**API reference**: [`add`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/add.html)
+
 <!---FUN addDataFrames-->
 
 ```kotlin

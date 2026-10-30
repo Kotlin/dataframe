@@ -4,6 +4,8 @@
 
 Group columns into [`ColumnGroups`](DataColumn.md#columngroup). 
 
+**API reference**: [`group`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/group.html)
+
 ```text
 group { columns }
     .into(groupName) | .into { groupNameExpression }

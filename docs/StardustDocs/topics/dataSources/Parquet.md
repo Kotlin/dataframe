@@ -16,6 +16,8 @@ Kotlin DataFrame can read Parquet files through Apache Arrow’s Dataset API. Le
 
 Kotlin DataFrame supports reading [Apache Parquet](https://parquet.apache.org/) files through the Apache Arrow integration.
 
+**API reference**: [`readParquet`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/read-parquet.html), [dataframe-arrow module](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/index.html)
+
 Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is included by default in the general [`dataframe`](Modules.md#dataframe-general) artifact and when using `%use dataframe` for Kotlin Notebook.
 
 > We currently only support READING Parquet via Apache Arrow; writing Parquet is not supported in Kotlin DataFrame.

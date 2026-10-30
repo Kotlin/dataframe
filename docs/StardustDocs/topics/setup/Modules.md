@@ -5,6 +5,8 @@ In addition, Kotlin DataFrame provides several [plugins](#plugins)
 that significantly enhance the development experience 
 — making it more convenient, powerful, and enjoyable to work with.
 
+**API reference**: [API reference](https://kotlin.github.io/dataframe/api-docs/index.html)
+
 <table>
   <thead>
     <tr>

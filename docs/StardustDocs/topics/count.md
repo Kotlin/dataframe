@@ -4,6 +4,8 @@
 
 Counts the number of rows.
 
+**API reference**: [`count`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/count.html)
+
 <!---FUN countDf-->
 
 ```kotlin

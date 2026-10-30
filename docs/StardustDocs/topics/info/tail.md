@@ -17,6 +17,8 @@ Discover `tail` operation in Kotlin DataFrame.
 
 Returns a [`DataFrame`](DataFrame.md) with the last five rows.
 
+**API reference**: [`tail`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/tail.html)
+
 This is equivalent to calling [`takeLast`](sliceRows.md#takelast) with the same `numRows` argument.
 By default, `numRows = 5`.
 

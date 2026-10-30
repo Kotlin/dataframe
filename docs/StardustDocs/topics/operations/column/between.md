@@ -18,6 +18,8 @@ Return a Boolean DataColumn indicating whether each value lies between two bound
 Returns a [`DataColumn`](DataColumn.md) of `Boolean` values indicating whether each element in this column
 lies between the given lower and upper boundaries.
 
+**API reference**: [`between`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/between.html)
+
 If `includeBoundaries` is `true` (default), values equal to the lower or upper boundary are also considered in range.
 
 ```kotlin

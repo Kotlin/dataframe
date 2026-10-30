@@ -4,6 +4,8 @@
 
 Computes the [median](https://en.wikipedia.org/wiki/Median) of values.
 
+**API reference**: [`median`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/median.html)
+
 This is also called the "middle" of a sorted list, the "50th [percentile](percentile.md)", or
 the 2-[quantile](https://en.wikipedia.org/wiki/Quantile).
 
