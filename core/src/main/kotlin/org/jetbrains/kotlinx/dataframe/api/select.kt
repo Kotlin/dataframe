@@ -170,8 +170,9 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [ColumnGroup] to select from.
      * @throws [IllegalArgumentException\] If [this\] is not a [ColumnGroup].
      * @return A [ColumnSet] containing the columns selected by [selector\].
-     * @see [SingleColumn.except\]
+     * @see [ColumnsSelectionDsl.except\]
      */
+    @ExcludeFromSources
     private interface CommonSelectDocs {
 
         typealias EXAMPLE = Nothing

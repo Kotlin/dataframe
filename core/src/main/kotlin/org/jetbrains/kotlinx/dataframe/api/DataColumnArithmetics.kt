@@ -551,6 +551,7 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
  * @return A {@get [NUMBER_MINUS_COLUMN_COLUMN_TYPE] [DataColumn]} containing the results
  * of subtracting the corresponding element of [\column] from this {@get [NUMBER_MINUS_COLUMN_NUMBER_TYPE] [Int]}.
  */
+@ExcludeFromSources
 private interface NumberMinusColumnDocs {
     // the type of the column passed to the function and returned by the function
     typealias NUMBER_MINUS_COLUMN_COLUMN_TYPE = Nothing

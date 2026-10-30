@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -85,6 +86,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
+    @ExcludeFromSources
     private interface CommonWithoutNullsDocs {
 
         typealias EXAMPLE = Nothing

@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -98,6 +99,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups\]
      * @see [ColumnsSelectionDsl.cols\]
      */
+    @ExcludeFromSources
     private interface CommonValueColsDocs {
 
         /** Example argument */

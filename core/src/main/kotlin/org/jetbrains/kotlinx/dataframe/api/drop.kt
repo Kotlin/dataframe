@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
@@ -233,6 +234,7 @@ public interface DropColumnsSelectionDsl {
      * - [take][ColumnsSelectionDsl.take] — keeps only the first `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing all columns except the first [n\].
      */
+    @ExcludeFromSources
     private typealias CommonDropFirstDocs = Nothing
 
     /**
@@ -310,6 +312,7 @@ public interface DropColumnsSelectionDsl {
      * - [takeLast][ColumnsSelectionDsl.takeLast] — keeps only the last `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing all columns except the last [n\].
      */
+    @ExcludeFromSources
     private typealias CommonDropLastDocs = Nothing
 
     /**
@@ -389,6 +392,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing all columns except the first
      * ones adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonDropWhileDocs = Nothing
 
     /**
@@ -470,6 +474,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing all columns except the last
      * ones adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonDropLastWhileDocs = Nothing
 
     /**
