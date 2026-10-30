@@ -20,7 +20,7 @@
     </variables>
     <sitemap change-frequency="monthly"/>
 
-    <llms-txt/>
+    <llms-txt>true</llms-txt>
 
     <build-profile instance="d">
         <variables>
