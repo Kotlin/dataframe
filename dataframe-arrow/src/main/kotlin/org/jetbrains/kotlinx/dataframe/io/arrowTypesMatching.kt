@@ -74,8 +74,9 @@ internal const val NANOS_PER_SECOND: Long = 1_000_000_000L
  *
  * Every Arrow timestamp vector stores a `Long` counting this many parts of a second since the epoch, so this is the
  * divisor that splits such a value into whole seconds plus a sub-second remainder — and the multiplier that puts it
- * back together. Shared by the reader ([DataFrame.readArrowFeather]) and the writer ([AnyFrame.arrowWriter]) so the
- * two can never disagree about a unit.
+ * back together. Shared by the reader
+ * ([DataFrame.readArrowFeather][org.jetbrains.kotlinx.dataframe.io.readArrowFeather]) and the writer
+ * ([AnyFrame.arrowWriter][org.jetbrains.kotlinx.dataframe.io.arrowWriter]) so the two can never disagree about a unit.
  */
 internal val TimeUnit.perSecond: Long
     get() = when (this) {
