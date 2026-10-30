@@ -27,11 +27,13 @@ import kotlin.reflect.KProperty
  *
  * The other columns are used as grouping keys and keep their types.
  *
- * If [\dropNA] is `true`, {@include [NALink]} values are removed from the merged lists.
+ * If [\dropNA] is `true`, {@include [NALink]} values are removed from the merged lists of value columns.
  *
  * Imploded columns will change their types:
  * - `T` to `List<T>`;
- * - [DataRow] to [DataFrame] — an imploded [ColumnGroup] is converted into a [FrameColumn].
+ * - [DataRow] to [DataFrame].
+ *
+ * An imploded [ColumnGroup] is converted into a [FrameColumn].
  *
  * Reverse operation: [explode].
  *
@@ -44,8 +46,9 @@ import kotlin.reflect.KProperty
 @ExcludeFromSources
 internal interface ImplodeDocs {
     /**
-     * @param [\dropNA] If `true`, removes {@include [NALink]} values (`null`, [Double.NaN] or [Float.NaN])
-     *   from the merged lists. `false` by default.
+     * @param [\dropNA] If `true`, {@include [NALink]} values (`null`, [Double.NaN] or [Float.NaN])
+     *   are removed from the merged lists. `false` by default.
+     *   Has no effect on imploded column groups and frame columns.
      *   Values are removed from each imploded column independently, so when several columns are imploded
      *   at once, their lists may stop lining up by position, and [explode] will not restore the original rows.
      */
@@ -53,7 +56,7 @@ internal interface ImplodeDocs {
 
     /**
      * @return A new [DataFrame] with one row per distinct combination of values in the other columns,
-     *   where the [\columns] contain merged lists of values.
+     *   where the specified [\columns] contain merged lists of values.
      */
     typealias ReturnSnippet = Nothing
 
@@ -95,9 +98,9 @@ internal interface ImplodeDocs {
  * Each value of the resulting row is a [List] of all values in the corresponding column.
  * A [ColumnGroup] is converted into a [DataFrame] containing its rows.
  *
- * If [dropNA] is `true`, {@include [NALink]} values are removed from the merged lists.
+ * If [dropNA] is `true`, {@include [NALink]} values are removed from the merged lists of value columns.
  *
- * It is the same as `df.implode(dropNA) { all() }[0]`.
+ * It is the same as `df.implode(dropNA) { all() }.single()`.
  *
  * Reverse operation: [explode].
  *
@@ -119,7 +122,7 @@ internal interface ImplodeDocs {
  */
 @Refine
 @Interpretable("ImplodeDefault")
-public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implode(dropNA) { all() }[0]
+public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implode(dropNA) { all() }.single()
 
 /**
  * {@include [ImplodeDocs]}

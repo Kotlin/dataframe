@@ -11,7 +11,8 @@ implode(dropNA = false) [ { columns } ]
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 **Parameters:**
-* `dropNA` — if `true`, removes `NA` values from merged lists.
+* `dropNA` — if `true`, `NA` values are removed from the merged lists of value columns.
+  Has no effect on imploded column groups and frame columns.
 
 **Reverse operation:** [`explode`](explode.md)
 
