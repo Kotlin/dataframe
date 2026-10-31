@@ -4,6 +4,7 @@
 !.idea/runConfigurations/*.xml
 !.idea/externalDependencies.xml
 !.idea/vcs.xml
+!.idea/icon.png
 .gradle
 .kotlin
 build
