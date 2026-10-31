@@ -52,7 +52,7 @@ Here is a list of links for each database supported in Kotlin DataFrame:
 |------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
 | [MariaDB](readSqlTypeMapping_MariaDB.md)       | Default `DbType` + overrides for unsigned integer types.                                                               |
 | [MySQL](readSqlTypeMapping_MySQL.md)           | Default `DbType` + overrides for unsigned integer types.                                                               |
-| [PostgreSQL](readSqlTypeMapping_PostgreSQL.md) | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...).                                                |
+| [PostgreSQL](readSqlTypeMapping_PostgreSQL.md) | Default `DbType` + `PGobject` overrides (`box`, `point`, `money`, ...); types with no driver class of their own (`json`, network, range, ...) as `String`; `uuid` as `kotlin.uuid.Uuid`. |
 | [MS SQL Server](readSqlTypeMapping_MsSql.md)   | Default `DbType`, no overrides.                                                                                        |
 | [H2](readSqlTypeMapping_H2.md)                 | Default `DbType` in `Regular` mode; other modes delegate to another dialect.                                           |
 | [SQLite](readSqlTypeMapping_SQLite.md)         | `AdvancedDbType` with custom converters for boolean, date-time and numeric types. Accepts user-provided converters.    |
