@@ -126,9 +126,11 @@ All four are read as `String`, holding the address as PostgreSQL prints it.
 ## Range types
 
 Range and multirange types are read as `String`, holding the range as PostgreSQL prints it. That text
-can differ from the inserted one: a range of integers or dates is printed in its canonical form,
-with an inclusive lower and an exclusive upper bound, so the `int4range` `(1,3]` is read as `[2,4)`.
-The bounds are not parsed.
+can differ from the inserted one, because PostgreSQL itself, not Kotlin DataFrame, rewrites a range of
+integers or dates to its canonical form, with an inclusive lower and an exclusive upper bound
+(see [discrete range types](https://www.postgresql.org/docs/current/rangetypes.html#RANGETYPES-DISCRETE)
+in the PostgreSQL documentation). For example, the `int4range` `(1,3]` is read as `[2,4)`.
+The text is returned as the driver gives it, and the bounds are not parsed.
 
 | Canonical                                                                                               | Aliases | DataFrame column type | Notes                                                                                   |
 |---------------------------------------------------------------------------------------------------------|---------|-----------------------|-----------------------------------------------------------------------------------------|
