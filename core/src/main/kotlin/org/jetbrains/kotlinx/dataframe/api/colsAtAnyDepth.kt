@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
@@ -79,7 +80,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.firstCol]`() }`
      * {@include [LineBreak]}
      * `// The columns at any depth excluding the top-level`
      *
@@ -114,6 +115,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten\]
      * @see [ColumnsSelectionDsl.simplify\]
      */
+    @ExcludeFromSources
     private interface CommonAtAnyDepthDocs {
 
         /** Example argument */
@@ -124,7 +126,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth0")
     @Deprecated(
@@ -139,7 +141,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth0")
     public fun ColumnSet<*>.colsAtAnyDepth(): ColumnSet<*> = colsAtAnyDepthInternal { true }
@@ -148,7 +150,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
      *
      * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      */
@@ -166,7 +168,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
      *
      * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      */
@@ -177,7 +179,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth2")
     @Deprecated(
@@ -193,7 +195,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`().filter  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth2")
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(): ColumnSet<*> =
@@ -203,7 +205,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Deprecated(
         message = COLS_AT_ANY_DEPTH,
@@ -217,7 +219,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`().filter  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     public fun String.colsAtAnyDepth(): ColumnSet<*> = columnGroup(this).colsAtAnyDepth { true }
 
@@ -225,7 +227,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsAtAnyDepth][KProperty.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsAtAnyDepth][KProperty.colsAtAnyDepth]`  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -236,7 +238,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun ColumnPath.colsAtAnyDepth(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<*> =
@@ -246,7 +248,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][kotlin.collections.contains]` it.`[values][DataColumn.values]`() } }`
      */
     public fun ColumnPath.colsAtAnyDepth(): ColumnSet<*> = columnGroup(this).colsAtAnyDepth { true }
 

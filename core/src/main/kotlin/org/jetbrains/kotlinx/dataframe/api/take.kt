@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
@@ -197,6 +198,7 @@ public interface TakeColumnsSelectionDsl {
      * - [drop][ColumnsSelectionDsl.drop] — drops the first `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing the first [n\] columns.
      */
+    @ExcludeFromSources
     private typealias CommonTakeFirstDocs = Nothing
 
     /**
@@ -275,6 +277,7 @@ public interface TakeColumnsSelectionDsl {
      * - [dropLast][ColumnsSelectionDsl.dropLast] — drops the last `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing the last [n\] columns.
      */
+    @ExcludeFromSources
     private typealias CommonTakeLastDocs = Nothing
 
     /**
@@ -356,6 +359,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing the first columns
      * adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonTakeFirstWhileDocs = Nothing
 
     /**
@@ -439,6 +443,7 @@ public interface TakeColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing the last columns
      * adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonTakeLastWhileDocs = Nothing
 
     /**

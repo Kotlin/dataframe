@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -179,6 +180,7 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
  * @param [C\] The type of the (group) column.
  * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  */
+@ExcludeFromSources
 private typealias SingleColumnAsColumnGroupDocs = Nothing
 
 /** @include [SingleColumnAsColumnGroupDocs] */
@@ -274,6 +276,7 @@ public enum class Infer {
      * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
+    @ExcludeFromSources
     internal typealias ParamDoc = Nothing
 }
 
