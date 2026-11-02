@@ -272,9 +272,11 @@ public fun AnyFrame.writeDelim(
  *   Default: empty list.
  * @param recordSeparator The character that separates records in a CSV / TSV file.
  *   Default: `'\n'`, a Unix-newline.
- * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
+ * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat] configuration.
+ *   Default: `{ it }`.
  *
- *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
+ *   Before instantiating the [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat],
+ *   the [<code>CSVFormat.Builder</code>][org.apache.commons.csv.CSVFormat.Builder] will be passed to this lambda.
  *   This will allow you to configure/overwrite any CSV / TSV writing options.
  */
 public fun AnyFrame.writeDelim(

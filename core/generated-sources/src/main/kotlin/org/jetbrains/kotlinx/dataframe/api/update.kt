@@ -166,17 +166,6 @@ public class Update<T, C>(
      */
     public typealias UpdateSelectingOptions = Nothing
 
-    /** @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias DslParam = Nothing
-
-    /** @param [columns] The [<code>Column References</code>][ColumnReference] of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnAccessorsParam = Nothing
-
-    /** @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias KPropertiesParam = Nothing
-
-    /** @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnNamesParam = Nothing
     // endregion
 }
 
@@ -342,6 +331,27 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 @Interpretable("UpdateWhere")
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     Update(df = df, filter = filter and predicate, columns = columns)
+
+/** ## At
+ * Only update the columns at certain given [<code>row indices</code>][CommonUpdateAtFunctionDoc.RowIndicesParam]:
+ *
+ * Either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg` indices.
+ *
+ * For example:
+ *
+ * `df.`[<code>update</code>][update]` { city }.`[<code>at</code>][at]`(5..10).`[<code>with</code>][with]` { "Paris" }`
+ *
+ * `df.`[<code>update</code>][update]` { name }.`[<code>at</code>][at]`(1, 2, 3, 4).`[<code>with</code>][with]` { "Empty" }`
+ *
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
+ *
+ * ### This At Overload
+ */
+private interface CommonUpdateAtFunctionDoc {
+
+    /** The indices of the rows to update. Either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg` indices. */
+    typealias RowIndicesParam = Nothing
+}
 
 /**
  * ## At

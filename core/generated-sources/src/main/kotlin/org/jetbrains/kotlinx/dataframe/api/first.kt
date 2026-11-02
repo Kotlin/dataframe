@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -569,42 +570,6 @@ public interface FirstColumnsSelectionDsl {
 
         /** __`.`__[<code>**`firstCol`**</code>][ColumnsSelectionDsl.firstCol] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## First (Col)
-     *
-     * Returns the first column from [this] that adheres to the optional given [condition].
-     * If no column adheres to the given [condition], [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [<code>column groups</code>][ColumnGroup], `first` is named `firstCol` instead to avoid confusion.
-     *
-     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### Examples:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>first</code>][ColumnsSelectionDsl.first]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("order") } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>firstCol</code>][String.firstCol]` { it.`[<code>name</code>][ColumnReference.name]`().`[<code>startsWith</code>][String.startsWith]`("year") } }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param [condition] The optional [<code>ColumnFilter</code>][ColumnFilter] condition that the column must adhere to.
-     * @return A [<code>SingleColumn</code>][SingleColumn] containing the first column
-     *   that adheres to the given [condition].
-     * @throws [NoSuchElementException] if no column adheres to the given [condition].
-     * @see [ColumnsSelectionDsl.last]
-     */
-    private interface CommonFirstDocs {
-
-        /** Examples key */
-        typealias Examples = Nothing
     }
 
     /**

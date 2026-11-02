@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApis
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -103,44 +104,6 @@ public interface ColGroupsColumnsSelectionDsl {
 
         /** __`.`__[<code>**`colGroups`**</code>][ColumnsSelectionDsl.colGroups] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Column Groups
-     * Creates a subset of columns from [this] that are [<code>ColumnGroups</code>][ColumnGroup].
-     *
-     * You can optionally use a [filter] to only include certain columns.
-     * [<code>colGroups</code>][colGroups] can be called using any of the supported [<code>APIs</code>][AccessApis] (+ [<code>ColumnPath</code>][ColumnPath]).
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * For more information: [See `colGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-columns-frame-columns-column-groups)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]` { it.`[<code>name</code>][ColumnReference.name]`.`[<code>startsWith</code>][String.startsWith]`("my") } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColGroup".`[<code>colGroups</code>][String.colGroups]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param [filter] An optional [<code>predicate</code>][Predicate] to filter the column groups by.
-     * @return A [<code>ColumnSet</code>][ColumnSet] of [<code>ColumnGroups</code>][ColumnGroup].
-     * @see [ColumnsSelectionDsl.colsOfKind]
-     * @see [ColumnsSelectionDsl.cols]
-     * @see [ColumnsSelectionDsl.frameCols]
-     * @see [ColumnsSelectionDsl.valueCols]
-     */
-    private interface CommonColGroupsDocs {
-
-        /** Example argument */
-        typealias EXAMPLE = Nothing
     }
 
     /**
