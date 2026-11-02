@@ -126,6 +126,7 @@ korro {
                 include("append.md")
                 include("appendNulls.md")
                 include("concat.md")
+                include("cast.md")
                 include("concatDf.md")
                 include("groupBy.md")
                 include("inferType.md")
