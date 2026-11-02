@@ -66,7 +66,7 @@ plugin-publish = "2.2.1"
 shadow = "9.6.1"
 # ignoreUpdates
 android-gradle-api = "7.3.1" # unused for now
-ktor = "3.6.0"
+ktor = "3.6.1"
 # ignoreUpdates
 kotlin-compile-testing = "0.7.1" # unused for now
 hikari = "7.1.0"
