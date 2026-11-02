@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS
 import org.jetbrains.kotlinx.dataframe.util.COLS_IN_GROUPS_REPLACE
@@ -102,60 +103,6 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
         /** __`.`__[<code>**`colsInGroups`**</code>][ColumnsSelectionDsl.colsInGroups] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Cols in Groups
-     *
-     * [<code>colsInGroups</code>][colsInGroups] is a function that returns all columns at the top-levels of
-     * all [<code>column groups</code>][ColumnGroup] in [this]. This is useful if you want to select all columns that are
-     * "one level deeper".
-     *
-     * NOTE: This function should not be confused with [<code>cols</code>][ColumnsSelectionDsl.cols], which operates on all
-     * columns directly in [this], or with [<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth], which operates on all
-     * columns in [this] at any depth.
-     *
-     * For more information: [See `colsInGroups` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-in-groups)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * To get only the columns inside all column groups in a [<code>DataFrame</code>][DataFrame], instead of having to write:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { colGroupA.`[<code>cols</code>][ColumnsSelectionDsl.cols]`() `[<code>and</code>][ColumnsSelectionDsl.and]` colGroupB.`[<code>cols</code>][ColumnsSelectionDsl.cols]`() ...  }`
-     *
-     * you can use:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsInGroups</code>][ColumnsSelectionDsl.colsInGroups]`() }`
-     *
-     * and
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsInGroups</code>][ColumnsSelectionDsl.colsInGroups]`().`[<code>nameContains</code>][ColumnsSelectionDsl.nameContains]`("user") }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Similarly, you can take the columns inside all [<code>column groups</code>][ColumnGroup] in a [<code>ColumnSet</code>][ColumnSet]:
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>nameContains</code>][ColumnsSelectionDsl.nameContains]`("my").`[<code>colsInGroups</code>][ColumnSet.colsInGroups]`() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     * #### Examples of this overload:
-     *
-     *
-     *
-     * @see [ColumnsSelectionDsl.cols]
-     * @see [ColumnsSelectionDsl.colGroups]
-     * @return A [<code>ColumnSet</code>][ColumnSet] containing the cols.
-     */
-    private interface ColsInGroupsDocs {
-
-        /** Example argument to use */
-        typealias EXAMPLE = Nothing
     }
 
     /**

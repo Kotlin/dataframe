@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -246,60 +247,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column.
-     */
-    private typealias ValueColReferenceDocs = Nothing
-
-    /**
-     * ## Value Col
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a value column with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>valueColumn</code>][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a value column.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a value column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `valueCol` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(SomeType::valueColB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(valueColumnA) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
-     *
-     * @see [valueColumn]
-     * @see [ColumnsSelectionDsl.colGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -354,7 +302,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
@@ -415,7 +363,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
@@ -469,7 +417,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
@@ -523,7 +471,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -579,7 +527,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
+     * @param [valueCol] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
@@ -588,60 +536,6 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     // endregion
 
     // region name
-
-    /**
-     * ## Value Col
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a value column with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>valueColumn</code>][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a value column.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a value column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `valueCol` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(SomeType::valueColB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`("valueColumnName") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColumnName") }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
-     *
-     * @see [valueColumn]
-     * @see [ColumnsSelectionDsl.colGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     * @param [name] The name of the value column.
-     */
-    private typealias ValueColNameDocs = Nothing
 
     /**
      * ## Value Col
@@ -1379,60 +1273,6 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      * @param [path] The path to the value column.
      */
-    private typealias ValueColPathDocs = Nothing
-
-    /**
-     * ## Value Col
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a value column with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>valueColumn</code>][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a value column.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a value column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `valueCol` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(SomeType::valueColB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`("pathTo"["valueColumnName"] ) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("pathTo"["valueColumnName"] ) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
-     *
-     * @see [valueColumn]
-     * @see [ColumnsSelectionDsl.colGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     * @param [path] The path to the value column.
-     */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path).ensureIsValueColumn()
@@ -2116,59 +1956,6 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
      * @param [C] The type of the value column.
      */
-    private typealias ValueColKPropertyDocs = Nothing
-
-    /**
-     * ## Value Col
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a value column with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>valueColumn</code>][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a value column.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a value column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `valueCol` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(SomeType::valueColB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(Type::valueColumnA) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
-     *
-     * @see [valueColumn]
-     * @see [ColumnsSelectionDsl.colGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
-     * @param [C] The type of the value column.
-     */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
     public fun <C> valueCol(property: KProperty<C>): SingleColumn<C> = valueColumn(property).ensureIsValueColumn()
@@ -2456,61 +2243,6 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     // endregion
 
     // region index
-
-    /**
-     * ## Value Col
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a value column with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>valueColumn</code>][org.jetbrains.kotlinx.dataframe.api.valueColumn] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a value column.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a value column inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `valueCol` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>("valueColA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(SomeType::valueColB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`(0) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.valueCol]`<`[<code>String</code>][String]`>(0) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the value column with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a value column.
-     *
-     * @see [valueColumn]
-     * @see [ColumnsSelectionDsl.colGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
-     */
-    private typealias ValueColIndexDocs = Nothing
 
     /**
      * ## Value Col

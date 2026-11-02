@@ -7,12 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NU
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_EXAMPLE_NUMBER
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NUMBER_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_SEE_ALSO
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import java.math.BigDecimal
@@ -910,49 +904,6 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
 // endregion
 
 // region NumberMinusColumn
-
-/**
- * Returns a [<code>DataColumn</code>][DataColumn] where each element is the result of subtracting
- * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
- *
- *
- *
- * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
- *
- * See also [<code>plus</code>][DataColumn.plus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
- *
- * ### Example
- * ```kotlin
- * // Given a budget of 1000 euros per employee,
- * // compute the remaining budget for each employee after expenses
- * val remainingBudget = 1000 - df.expenses
- * ```
- *
- * @param [column] A [<code>DataColumn</code>][DataColumn] containing the elements to subtract
- * from this [<code>Int</code>][Int].
- *
- * @return A [<code>DataColumn</code>][DataColumn] containing the results
- * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
- */
-private interface NumberMinusColumnDocs {
-    // the type of the column passed to the function and returned by the function
-    typealias NUMBER_MINUS_COLUMN_COLUMN_TYPE = Nothing
-
-    // the type of the number on which the function is applied
-    typealias NUMBER_MINUS_COLUMN_NUMBER_TYPE = Nothing
-
-    // the example used in the documentation
-    typealias NUMBER_MINUS_COLUMN_EXAMPLE = Nothing
-
-    // adjustment of the example to use different types of numbers
-    typealias NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER = Nothing
-
-    // `See also` section in the documentation
-    typealias NUMBER_MINUS_COLUMN_SEE_ALSO = Nothing
-
-    // info about handling `null` values
-    typealias NUMBER_MINUS_COLUMN_NULL_NOTE = Nothing
-}
 
 /**
  * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting
