@@ -321,26 +321,6 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
 
 /**
  * Calculates the correlation of specified [<code>columns</code>][otherColumns]
- * with values in the columns previously selected with [<code>corr</code>][corr].
- *
- * Returns a correlation matrix represented by a [<code>DataFrame</code>][DataFrame],
- * where rows and columns correspond to the selected column sets,
- * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
- *
- * Check out [<code>Grammar</code>][Grammar].
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See also: [<code>Selecting Columns</code>][SelectingOptions].
- *
- * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
- */
-internal typealias CorrWithDocs = Nothing
-
-/**
- * Calculates the correlation of specified [<code>columns</code>][otherColumns]
  * with values in the columns previously selected with [<code>corr</code>][org.jetbrains.kotlinx.dataframe.api.corr].
  *
  * Returns a correlation matrix represented by a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame],

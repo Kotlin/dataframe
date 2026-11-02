@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -271,40 +272,6 @@ public interface SingleColumnsSelectionDsl {
 
         /** __`.`__[<code>**`singleCol`**</code>][ColumnsSelectionDsl.singleCol] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Single (Col)
-     * Returns the single column from [this].
-     * If there is no column, [<code>NoSuchElementException</code>][NoSuchElementException] is thrown.
-     * If there are multiple columns, [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [<code>column groups</code>][ColumnGroup], `single` is named `singleCol` instead to avoid confusion.
-     *
-     * For more information: [See First (Col), Last (Col), Single (Col) on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#first-col-last-col-single-col)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### Examples:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  { `[<code>nameStartsWith</code>][ColumnsSelectionDsl.nameStartsWith]`("order").`[<code>single</code>][ColumnsSelectionDsl.single]`() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsNameStartsWith</code>][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[<code>singleCol</code>][String.singleCol]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @return A [<code>SingleColumn</code>][SingleColumn] containing the single column.
-     * @throws [NoSuchElementException] if there are no columns in [this].
-     * @throws [IllegalArgumentException] if there is more than one column in [this].
-     */
-    private interface CommonSingleDocs {
-
-        /** Examples key */
-        typealias Examples = Nothing
     }
 
     /**
