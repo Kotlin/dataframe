@@ -95,7 +95,7 @@ hibernate = "7.4.14.Final"
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
 spark3 = "3.3.2" # ignoreUpdates
-spark4 = "4.2.0"
+spark4 = "4.3.0"
 
 multik = "0.3.1"
 
