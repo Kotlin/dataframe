@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -113,8 +114,9 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * @return [firstRowValue\] for the first row; difference between expression computed for current and previous row for the following rows
  */
+@ExcludeFromSources
 internal typealias DiffDocs = Nothing
 
 /**
