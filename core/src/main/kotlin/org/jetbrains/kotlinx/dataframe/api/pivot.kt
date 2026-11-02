@@ -581,6 +581,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
  *
  * ### This `pivotCounts` Overload
  */
+@ExcludeFromSources
 internal typealias DataFramePivotCountsCommonDocs = Nothing
 
 /**
@@ -719,6 +720,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  *
  * ### This `pivotMatches` Overload
  */
+@ExcludeFromSources
 internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
@@ -795,6 +797,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *
  * ### This `pivotCounts` Overload
  */
+@ExcludeFromSources
 internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**

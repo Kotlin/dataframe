@@ -203,7 +203,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [allUpTo\]
      * @see [ColumnsSelectionDsl.allExcept\]
      * @see [all\]
-     * @see [cols\]
+     * @see [ColumnsSelectionDsl.cols\]
      */
     @Suppress("ClassName")
     @ExcludeFromSources
@@ -347,6 +347,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllAfterDocs = Nothing
 
     /**
@@ -585,6 +586,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllFromDocs = Nothing
 
     /**
@@ -821,6 +823,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllBeforeDocs = Nothing
 
     /**
@@ -1058,6 +1061,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
+    @ExcludeFromSources
     private typealias AllUpToDocs = Nothing
 
     /**
