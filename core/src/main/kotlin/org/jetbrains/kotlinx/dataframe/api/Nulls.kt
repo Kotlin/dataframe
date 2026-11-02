@@ -354,6 +354,7 @@ internal interface DropNulls {
      *   If `true`, rows are dropped if all selected cells are `null`.
      *   If `false`, rows are dropped if any of the selected cells is `null`.
      */
+    @ExcludeFromSources
     typealias WhereAllNullParam = Nothing
 
     /**
@@ -480,6 +481,7 @@ internal interface DropNA {
      *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
      *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
+    @ExcludeFromSources
     typealias WhereAllNAParam = Nothing
 
     /**
@@ -600,6 +602,7 @@ internal interface DropNaNs {
      *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
      *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
      */
+    @ExcludeFromSources
     typealias WhereAllNaNParam = Nothing
 
     /**
