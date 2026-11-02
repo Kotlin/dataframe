@@ -1,10 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
-import io.deephaven.csv.CsvSpecs
-import org.apache.commons.csv.CSVFormat
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
@@ -17,8 +13,7 @@ import java.nio.charset.Charset
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
  */
-@ExcludeFromSources
-@Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
+@Suppress("ktlint:standard:class-naming", "KDocUnresolvedReference")
 internal object DelimParams {
 
     /**

@@ -232,7 +232,6 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  *
  * ### This At Overload
  */
-@ExcludeFromSources
 private interface CommonUpdateAtFunctionDoc {
 
     /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */
