@@ -58,7 +58,7 @@ import java.time.LocalTime as JavaLocalTime
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For more information: [See Global Parser Options on the documentation website.](https://kotlin.github.io/dataframe/parse.html#global-parser-options)
@@ -564,7 +564,7 @@ public typealias DateTimeComponentsFallback = Nothing
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:
@@ -760,7 +760,7 @@ public class ParserOptions(
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:

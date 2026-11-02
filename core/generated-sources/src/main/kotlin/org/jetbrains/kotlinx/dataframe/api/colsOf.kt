@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -131,60 +132,6 @@ public interface ColsOfColumnsSelectionDsl {
 
         /** __`.`__[<code>**`colsOf`**</code>][ColumnsSelectionDsl.colsOf] */
         public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Cols Of
-     *
-     * Returns a [<code>ColumnSet</code>][ColumnSet] of columns from [this] that are a subtype of the given type [C], optionally filtered
-     * by [filter].
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * __NOTE:__ Null-filled columns of type [<code>Nothing?</code>][Nothing] will be included when selecting [<code>`colsOf`</code>][colsOf]`<T?>()`.
-     *   This is because [<code>Nothing</code>][Nothing] is considered a subtype of all other types in Kotlin.
-     *   To exclude these columns, call `.`[<code>filter</code>][ColumnsSelectionDsl.filter]` { !it.`[<code>allNulls</code>][DataColumn.allNulls]`() }`
-     *   after it.
-     *
-     * For more information: [See `colsOf` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-of)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Alternatively, [<code>colsOf</code>][colsOf] can also be called on existing columns:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`>() }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup"<Type>().`[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>Int</code>][Int]`> { it.`[<code>size</code>][DataColumn.size]` > 10 } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Finally, [<code>colsOf</code>][colsOf] can also take a [<code>KType</code>][KType] argument instead of a reified type.
-     * This is useful when the type is not known at compile time or when the API function cannot be inlined.
-     *
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<`[<code>Int</code>][Int]`>(`[<code>typeOf</code>][typeOf]`<`[<code>Int</code>][Int]`>()) { it: `[<code>DataColumn</code>][DataColumn]`<`[<code>Int</code>][Int]`> -> it.`[<code>size</code>][DataColumn.size]` > 10 } }`
-     *
-     * #### Examples for this overload:
-     */
-    private interface CommonColsOfDocs {
-
-        /** @return A [<code>ColumnSet</code>][ColumnSet] containing the columns of given type that were included by [filter]. */
-        typealias Return = Nothing
-
-        /** @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included. */
-        typealias FilterParam = Nothing
     }
 
     /**

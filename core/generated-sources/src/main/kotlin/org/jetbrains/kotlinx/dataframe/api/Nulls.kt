@@ -879,6 +879,88 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
 /**
  * ## The Drop Nulls Operation
  *
+ * Removes rows with `null` values. Specific case of [<code>drop</code>][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][DropNullsSelectingOptions]).
+ *
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ *
+ * See also [<code>fillNulls</code>][fillNulls], which replaces `null` values instead of removing rows.
+ */
+internal interface DropNulls {
+
+    /**
+     * @param whereAllNull `false` by default.
+     *   If `true`, rows are dropped if all selected cells are `null`.
+     *   If `false`, rows are dropped if any of the selected cells is `null`.
+     */
+    typealias WhereAllNullParam = Nothing
+
+    /**
+     *
+     *
+     *
+     * ## Selecting Columns
+     *
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * can be done in the following ways:
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into one or more columns.
+     *
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
+     *
+     * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     *
+     * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     *
+     *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNulls</code>][org.jetbrains.kotlinx.dataframe.api.dropNulls]`("length", "age")`
+     *
+     *
+     *
+     */
+    typealias DropNullsSelectingOptions = Nothing
+}
+
+/**
+ * ## The Drop Nulls Operation
+ *
  * Removes rows with `null` values. Specific case of [<code>drop</code>][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions]).
@@ -1061,6 +1143,87 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 // endregion
 
 // region dropNA
+
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [<code>`NA`</code>][NA] values. Specific case of [<code>drop</code>][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][DropNASelectingOptions]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [<code>`NA`</code>][NA]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NA`</code>][NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ *
+ * See also [<code>fillNA</code>][fillNA], which replaces [<code>`NA`</code>][NA] values instead of removing rows.
+ */
+internal interface DropNA {
+
+    /**
+     * @param whereAllNA `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [<code>`NA`</code>][NA].
+     *   If `false`, rows are dropped if any of the selected cells is [<code>`NA`</code>][NA].
+     */
+    typealias WhereAllNAParam = Nothing
+
+    /**
+     *
+     *
+     *
+     * ## Selecting Columns
+     *
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * can be done in the following ways:
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into one or more columns.
+     *
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
+     *
+     * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     *
+     * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     *
+     *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNA</code>][org.jetbrains.kotlinx.dataframe.api.dropNA]`("length", "age")`
+     *
+     *
+     *
+     */
+    typealias DropNASelectingOptions = Nothing
+}
 
 /**
  * ## The Drop `NA` Operation
@@ -1248,6 +1411,87 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
 // endregion
 
 // region dropNaNs
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [<code>`NaN`</code>][Double.isNaN] values. Specific case of [<code>drop</code>][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [<code>Selecting Columns</code>][DropNaNsSelectingOptions]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [<code>`NaN`</code>][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [<code>`NaN`</code>][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ *
+ * See also [<code>fillNaNs</code>][fillNaNs], which replaces [<code>`NaN`</code>][NaN] values instead of removing rows.
+ */
+internal interface DropNaNs {
+
+    /**
+     * @param whereAllNaN `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [<code>`NaN`</code>][Double.isNaN].
+     *   If `false`, rows are dropped if any of the selected cells is [<code>`NaN`</code>][Double.isNaN].
+     */
+    typealias WhereAllNaNParam = Nothing
+
+    /**
+     *
+     *
+     *
+     * ## Selecting Columns
+     *
+     * Selecting columns for various [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] operations
+     * can be done in the following ways:
+     * ### 1. [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnsSelectionDsl.ColumnsSelectionDslWithExample]
+     *
+     *
+     *
+     *
+     * Select or express columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     *
+     * This DSL is initiated by a [<code>Columns Selector</code>][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [<code>ColumnsResolver</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into one or more columns.
+     *
+     * The Columns Selection DSL allows using [<code>Extension Properties</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.ExtensionPropertiesApi]
+     * for specifying columns type- and name-safe.
+     *
+     * Check out: [<code>Columns Selection DSL Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[<code>and</code>][ColumnsSelectionDsl.and]` age }`
+     *
+     * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     *
+     * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`  {  `[<code>colsOf</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[<code>Double</code>][Double]`>() }`
+     *
+     *
+     *
+     * > There's also a 'single column' variant used sometimes: [<code>Column Selection DSL</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnSelectionDsl.ColumnsSelectionDslWithExample].
+     * ### 2. [<code>Column names</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesApi.ColumnNamesApiWithExample]
+     *
+     *
+     *
+     *
+     * Select single or multiple columns using their names as [<code>String</code>][String]s.
+     * ([<code>String API</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApi]).
+     *
+     * #### For example:
+     *
+     * <code>`df`</code>`.`[<code>dropNaNs</code>][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`("length", "age")`
+     *
+     *
+     *
+     */
+    typealias DropNaNsSelectingOptions = Nothing
+}
 
 /**
  * ## The Drop `NaN` Operation
