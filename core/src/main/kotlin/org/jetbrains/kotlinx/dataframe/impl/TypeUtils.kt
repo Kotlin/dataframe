@@ -411,7 +411,7 @@ internal fun guessValueType(
  *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
  *   so the function will return [DataRow].
  * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
- *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
+ *   number-type that can hold all number values lossless in [values]. See `commonNumberClass`.
  *   Unsigned numbers are not supported.
  *   If false, the result of encountering multiple number types would be [Number].
  */

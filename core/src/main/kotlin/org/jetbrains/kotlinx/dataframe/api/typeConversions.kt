@@ -273,7 +273,7 @@ public enum class Infer {
     ;
 
     /**
-     * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
+     * @param [infer\] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
     @ExcludeFromSources

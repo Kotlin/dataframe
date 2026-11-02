@@ -29,7 +29,7 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [ColumnPath] without the last [size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropLastChildren]
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for `ColumnsSelectionDsl.dropLastChildren`
      * instead.
      */
     public fun dropLast(size: Int = 1): ColumnPath = ColumnPath(path.dropLast(size))
@@ -37,7 +37,7 @@ public data class ColumnPath(val path: List<String>) :
     /**
      * Returns a shortened [ColumnPath] without the first [size] elements.
      *
-     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for [ColumnsSelectionDsl.dropChildren]
+     * NOTE: If called from the [ColumnsSelectionDsl], you might be looking for `ColumnsSelectionDsl.dropChildren`
      * instead.
      */
     public fun dropFirst(size: Int = 1): ColumnPath = ColumnPath(path.drop(size))

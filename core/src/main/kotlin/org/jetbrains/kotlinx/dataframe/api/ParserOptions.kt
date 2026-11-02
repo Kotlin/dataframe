@@ -60,7 +60,7 @@ import java.time.LocalTime as JavaLocalTime
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [DateTimeParserOptions][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For more information: {@include [DocumentationUrls.GlobalParserOptions]}
@@ -597,7 +597,7 @@ public class ParserOptions(
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [DateTimeParserOptions][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:
