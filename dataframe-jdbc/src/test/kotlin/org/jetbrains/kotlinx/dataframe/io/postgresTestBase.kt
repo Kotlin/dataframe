@@ -7,7 +7,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
@@ -30,6 +35,7 @@ import java.sql.Types
 import java.util.UUID
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 import java.sql.Time as SqlTime
 import java.sql.Timestamp as SqlTimestamp
 
@@ -50,8 +56,8 @@ interface Table1Postgres {
     val doublecol: Double
     val integercol: Int
     val intervalcol: PGInterval
-    val jsoncol: Any
-    val jsonbcol: Any
+    val jsoncol: String
+    val jsonbcol: String
 }
 
 @DataSchema
@@ -59,7 +65,7 @@ interface Table2Postgres {
     val id: Int
     val linecol: PGline
     val lsegcol: PGlseg
-    val macaddrcol: Any
+    val macaddrcol: String
     val moneycol: PGmoney
     val numericcol: BigDecimal
     val pathcol: PGpath
@@ -74,7 +80,7 @@ interface Table2Postgres {
     val timewithzonecol: SqlTime
     val timestampcol: Instant
     val timestampwithzonecol: Instant
-    val uuidcol: Any
+    val uuidcol: Uuid
     val xmlcol: SQLXML
 }
 
@@ -406,6 +412,243 @@ abstract class PostgresTestBase {
     @Test
     fun `an SQL alias names the column`() {
         aliasesNameColumns(connection)
+    }
+
+    @Test
+    fun `json, network, bit-string, text-search and range columns are read as the text PostgreSQL prints`() {
+        @Language("SQL")
+        val createTable =
+            """
+            CREATE TABLE text_form_types(
+              jsonCol JSON, jsonbCol JSONB, inetCol INET, cidrCol CIDR,
+              macaddrCol MACADDR, macaddr8Col MACADDR8, varbitCol VARBIT(3),
+              tsvectorCol TSVECTOR, tsqueryCol TSQUERY,
+              int4rangeCol INT4RANGE, int8rangeCol INT8RANGE, numrangeCol NUMRANGE,
+              tsrangeCol TSRANGE, tstzrangeCol TSTZRANGE, daterangeCol DATERANGE,
+              int4multirangeCol INT4MULTIRANGE, int8multirangeCol INT8MULTIRANGE,
+              nummultirangeCol NUMMULTIRANGE, tsmultirangeCol TSMULTIRANGE,
+              tstzmultirangeCol TSTZMULTIRANGE, datemultirangeCol DATEMULTIRANGE
+            )
+            """.trimIndent()
+
+        @Language("SQL")
+        val insertRows =
+            """
+            INSERT INTO text_form_types VALUES
+              ('{"k":1}','{"k":1}','10.0.0.1','10.0.0.0/8',
+               '08:00:2b:01:02:03','08:00:2b:01:02:03:04:05',B'101',
+               'fat cat','fat & cat',
+               '(1,3]','[1,2)','[1.0,2.0)',
+               '[2024-01-01,2024-01-02)','[2024-01-01,2024-01-02)','[2024-01-01,2024-01-02]',
+               '{[1,2)}','{[1,2)}','{[1.0,2.0)}',
+               '{[2024-01-01,2024-01-02)}','{[2024-01-01,2024-01-02)}','{[2024-01-01,2024-01-02)}'),
+              (NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+               NULL,NULL)
+            """.trimIndent()
+
+        try {
+            connection.createStatement().use { st ->
+                // a tstzrange is both parsed and printed in the session time zone
+                st.execute("SET TIME ZONE 'UTC'")
+                st.execute("DROP TABLE IF EXISTS text_form_types")
+                st.execute(createTable)
+                st.execute(insertRows)
+            }
+
+            val df = DataFrame.readSqlTable(connection, "text_form_types")
+
+            // lists every column that is not read as String?, not only the first one
+            df.columns().associate { it.name() to it.type() }.filterValues { it != typeOf<String?>() } shouldBe
+                emptyMap()
+            // the schema read without the data declares the same types
+            DataFrameSchema.readSqlTable(connection, "text_form_types").columns.mapValues { it.value.type } shouldBe
+                df.columns().associate { it.name() to it.type() }
+            df[0].toMap() shouldBe mapOf(
+                // json keeps the text as written, jsonb prints PostgreSQL's normalized form
+                "jsoncol" to """{"k":1}""",
+                "jsonbcol" to """{"k": 1}""",
+                "inetcol" to "10.0.0.1",
+                "cidrcol" to "10.0.0.0/8",
+                "macaddrcol" to "08:00:2b:01:02:03",
+                "macaddr8col" to "08:00:2b:01:02:03:04:05",
+                "varbitcol" to "101",
+                "tsvectorcol" to "'cat' 'fat'",
+                "tsquerycol" to "'fat' & 'cat'",
+                // a range of integers or dates is printed in its canonical form, [lower,upper)
+                "int4rangecol" to "[2,4)",
+                "int8rangecol" to "[1,2)",
+                "numrangecol" to "[1.0,2.0)",
+                "tsrangecol" to """["2024-01-01 00:00:00","2024-01-02 00:00:00")""",
+                "tstzrangecol" to """["2024-01-01 00:00:00+00","2024-01-02 00:00:00+00")""",
+                "daterangecol" to "[2024-01-01,2024-01-03)",
+                "int4multirangecol" to "{[1,2)}",
+                "int8multirangecol" to "{[1,2)}",
+                "nummultirangecol" to "{[1.0,2.0)}",
+                "tsmultirangecol" to """{["2024-01-01 00:00:00","2024-01-02 00:00:00")}""",
+                "tstzmultirangecol" to """{["2024-01-01 00:00:00+00","2024-01-02 00:00:00+00")}""",
+                "datemultirangecol" to "{[2024-01-01,2024-01-02)}",
+            )
+            df[1].values() shouldBe List(df.columnsCount()) { null }
+        } finally {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS text_form_types")
+                st.execute("RESET TIME ZONE")
+            }
+        }
+    }
+
+    @Test
+    fun `parse turns json objects into a column group and json arrays into a frame column`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS json_parse")
+                st.execute("CREATE TABLE json_parse(objectCol JSONB, arrayCol JSON)")
+                st.execute(
+                    """
+                    INSERT INTO json_parse VALUES
+                      ('{"a": 1, "b": "x"}', '[{"a": 1}, {"a": 2}]'),
+                      ('{"a": 2, "b": "y"}', '[{"a": 3}]')
+                    """.trimIndent(),
+                )
+            }
+
+            // needs dataframe-json on the classpath, as this module's tests have it
+            val parsed = DataFrame.readSqlTable(connection, "json_parse").parse()
+
+            parsed["objectcol"].kind() shouldBe ColumnKind.Group
+            parsed.getColumnGroup("objectcol")["a"].toList() shouldBe listOf(1, 2)
+            parsed.getColumnGroup("objectcol")["b"].toList() shouldBe listOf("x", "y")
+            parsed["arraycol"].kind() shouldBe ColumnKind.Frame
+            parsed.getFrameColumn("arraycol").toList().map { it["a"].toList() } shouldBe listOf(listOf(1, 2), listOf(3))
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS json_parse") }
+        }
+    }
+
+    @Test
+    fun `a tstzrange is printed in the session time zone`() {
+        fun readRange(timeZone: String): Any? {
+            connection.createStatement().use { it.execute("SET TIME ZONE '$timeZone'") }
+            return DataFrame.readSqlTable(connection, "tstzrange_type")["rangecol"][0]
+        }
+
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS tstzrange_type")
+                st.execute("CREATE TABLE tstzrange_type(rangeCol TSTZRANGE)")
+                // the bounds carry an explicit offset, so the stored range does not depend on the session
+                st.execute("INSERT INTO tstzrange_type VALUES ('[2024-01-01 00:00:00+00,2024-01-02 00:00:00+00)')")
+            }
+
+            readRange("UTC") shouldBe """["2024-01-01 00:00:00+00","2024-01-02 00:00:00+00")"""
+            readRange("Asia/Tokyo") shouldBe """["2024-01-01 09:00:00+09","2024-01-02 09:00:00+09")"""
+        } finally {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS tstzrange_type")
+                st.execute("RESET TIME ZONE")
+            }
+        }
+    }
+
+    @Test
+    fun `bit columns wider than one bit are read as their bits`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS bit_type")
+                st.execute("CREATE TABLE bit_type(bit1Col BIT(1), bit3Col BIT(3))")
+                st.execute("INSERT INTO bit_type VALUES (B'1', B'101')")
+            }
+
+            val df = DataFrame.readSqlTable(connection, "bit_type")
+
+            df["bit1col"].type() shouldBe typeOf<Boolean>()
+            df["bit3col"].type() shouldBe typeOf<String>()
+            df[0].values() shouldBe listOf(true, "101")
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS bit_type") }
+        }
+    }
+
+    @Test
+    fun `composite columns are read as Any holding a PGobject`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS composite_type")
+                st.execute("DROP TYPE IF EXISTS pair_type")
+                st.execute("CREATE TYPE pair_type AS (a INT, b TEXT)")
+                st.execute("CREATE TABLE composite_type(pairCol pair_type)")
+                st.execute("INSERT INTO composite_type VALUES (ROW(1, 'x'))")
+            }
+
+            val df = DataFrame.readSqlTable(connection, "composite_type")
+
+            df["paircol"].type() shouldBe typeOf<Any>()
+            val value = df["paircol"][0] as PGobject
+            value.type shouldBe "pair_type"
+            value.value shouldBe "(1,x)"
+
+            // an anonymous ROW(...) has no type of its own
+            val anonymous = DataFrame.readSqlQuery(connection, "SELECT ROW(1, 'x') AS anonCol")
+            anonymous["anoncol"].type() shouldBe typeOf<Any>()
+            (anonymous["anoncol"][0] as PGobject).value shouldBe "(1,x)"
+        } finally {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS composite_type")
+                st.execute("DROP TYPE IF EXISTS pair_type")
+            }
+        }
+    }
+
+    @Test
+    fun `array elements of uuid, json and network types keep the driver's classes`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS array_types")
+                st.execute("CREATE TABLE array_types(uuidArrayCol UUID[], jsonbArrayCol JSONB[], inetArrayCol INET[])")
+                st.execute(
+                    """
+                    INSERT INTO array_types VALUES (
+                      ARRAY['a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'::uuid],
+                      ARRAY['{"k":1}'::jsonb],
+                      ARRAY['10.0.0.1'::inet])
+                    """.trimIndent(),
+                )
+            }
+
+            val df = DataFrame.readSqlTable(connection, "array_types")
+
+            // pins the current behaviour: unlike the scalar columns, array elements are not converted,
+            // and the driver itself is not consistent about them — jsonb elements come as String, inet ones as PGobject
+            df.columns().associate { col ->
+                col.name() to "${col.type()} of ${(col[0] as Array<*>).single()!!.javaClass.name}"
+            } shouldBe mapOf(
+                "uuidarraycol" to "kotlin.Array<*> of java.util.UUID",
+                "jsonbarraycol" to "kotlin.Array<*> of java.lang.String",
+                "inetarraycol" to "kotlin.Array<*> of org.postgresql.util.PGobject",
+            )
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS array_types") }
+        }
+    }
+
+    @Test
+    fun `uuid columns are read as Uuid`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS uuid_type")
+                st.execute("CREATE TABLE uuid_type(uuidCol UUID)")
+                st.execute("INSERT INTO uuid_type VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'), (NULL)")
+            }
+
+            val df = DataFrame.readSqlTable(connection, "uuid_type")
+
+            df["uuidcol"].type() shouldBe typeOf<Uuid?>()
+            // the schema read without the data declares the same type
+            DataFrameSchema.readSqlTable(connection, "uuid_type").columns["uuidcol"]!!.type shouldBe typeOf<Uuid?>()
+            df["uuidcol"].toList() shouldBe listOf(Uuid.parse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"), null)
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS uuid_type") }
+        }
     }
 
     /**

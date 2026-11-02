@@ -382,6 +382,24 @@ class PostgresH2Test {
     }
 
     @Test
+    fun `JSON column is read as ByteArray, not as the PostgreSQL text form`() {
+        try {
+            connection.createStatement().use { st ->
+                st.execute("DROP TABLE IF EXISTS json_type")
+                st.execute("CREATE TABLE json_type(jsonCol JSON)")
+                st.execute("""INSERT INTO json_type VALUES (JSON '{"k":1}')""")
+            }
+
+            val df = DataFrame.readSqlTable(connection, "json_type")
+
+            df["jsoncol"].type() shouldBe typeOf<ByteArray>()
+            (df["jsoncol"][0] as ByteArray).toString(Charsets.UTF_8) shouldBe """{"k":1}"""
+        } finally {
+            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS json_type") }
+        }
+    }
+
+    @Test
     fun `readSqlQuery should execute a WITH clause and return results`() {
         try {
             // Step 1: Create a temporary table

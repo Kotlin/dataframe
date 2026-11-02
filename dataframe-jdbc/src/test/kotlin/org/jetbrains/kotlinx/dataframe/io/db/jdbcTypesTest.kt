@@ -298,6 +298,31 @@ class JdbcTypesTest {
         }
 
         @Test
+        fun `PGobject types without a dedicated driver class map to String`() {
+            assertMappings(PostgreSql, postgreSqlTextFormMappings)
+        }
+
+        @Test
+        fun `uuid maps to Uuid`() {
+            assertMappings(PostgreSql, listOf(postgreSqlUuidMapping))
+        }
+
+        @Test
+        fun `JSON and UUID of H2 in PostgreSQL mode keep the H2 mapping`() {
+            // H2 in PostgreSQL mode delegates its type mapping to PostgreSql, but reports its own
+            // metadata: a JSON column comes back as a byte array, and a UUID column as Types.BINARY.
+            // Both values are read differently from the PostgreSQL driver's, so neither may switch
+            // to the PostgreSQL mapping.
+            assertMappings(
+                H2(H2.Mode.PostgreSql),
+                listOf(
+                    TypeMapping("JSON", Types.OTHER, "[B", typeOf<ByteArray>()),
+                    TypeMapping("UUID", Types.BINARY, "java.util.UUID", typeOf<Uuid>()),
+                ),
+            )
+        }
+
+        @Test
         fun `unknown jdbcType falls back to String`() {
             assertUnknownMapsToString(PostgreSql)
         }
@@ -578,6 +603,38 @@ internal val postgreSqlSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<Boolean>(), size = 1),
     TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<String>(), size = 3),
 )
+
+/**
+ * PostgreSQL types the driver returns as a plain `PGobject`, with no class of their own. They are read
+ * as the text PostgreSQL prints for the value (#2103). The column classes are the ones the driver
+ * reports: `PGobject` for `json`/`jsonb`, `java.lang.String` for the rest.
+ */
+internal val postgreSqlTextFormMappings: List<TypeMapping> = listOf(
+    TypeMapping("json", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("jsonb", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("inet", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("cidr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr8", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsvector", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsquery", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("varbit", Types.OTHER, "java.lang.String", typeOf<String>(), size = 3),
+    TypeMapping("int4range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("numrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("daterange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int4multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("nummultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("datemultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+)
+
+/** The PostgreSQL driver reports `uuid` as `Types.OTHER` and returns a `java.util.UUID` (#2103). */
+internal val postgreSqlUuidMapping: TypeMapping = TypeMapping("uuid", Types.OTHER, "java.util.UUID", typeOf<Uuid>())
 
 // -------------------- SQLite-specific mappings --------------------
 //
