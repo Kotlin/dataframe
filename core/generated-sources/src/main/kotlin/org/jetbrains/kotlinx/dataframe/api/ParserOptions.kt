@@ -58,7 +58,7 @@ import java.time.LocalTime as JavaLocalTime
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For more information: [See Global Parser Options on the documentation website.](https://kotlin.github.io/dataframe/parse.html#global-parser-options)
@@ -420,7 +420,7 @@ public enum class ParseDateTimeLibrary {
  * See also: [<code>DateTimeComponents fallback mechanism</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeComponentsFallback]
  *
  * @param [format][org.jetbrains.kotlinx.dataframe.api.format] the date-time format to add.
- * @param [formatType] the expected date-time type of the [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format].
+ * @param [T] the expected date-time type of the [<code>format</code>][org.jetbrains.kotlinx.dataframe.api.format].
  * @see [addDateTimeUnicodePattern][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.addDateTimeUnicodePattern] */
 public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format: DateTimeFormat<out T>) {
     addDateTimeFormat(format = format, formatType = typeOf<T>())
@@ -452,7 +452,7 @@ public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format
  * See also: [<code>DateTimeComponents fallback mechanism</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeComponentsFallback]
  *
  * @param [pattern] the date-time pattern to add.
- * @param [formatType] the expected date-time type of the [<code>pattern</code>][pattern].
+ * @param [T] the expected date-time type of the [<code>pattern</code>][pattern].
  *
  * @see [addDateTimeFormat][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.addDateTimeFormat]
  * @see [DateTimeFormatBuilder.byUnicodePattern] */
@@ -479,7 +479,7 @@ public inline fun <reified T : Any> GlobalParserOptions.addDateTimeUnicodePatter
  * For more information: [See Parsing Date-time Strings on the documentation website.](https://kotlin.github.io/dataframe/parse.html#parsing-date-time-strings)
  *
  * @param [formatter] the Java date-time formatter to add.
- * @param [formatType] the expected java date-time type of the [<code>formatter</code>][formatter].
+ * @param [T] the expected java date-time type of the [<code>formatter</code>][formatter].
  *   If `null`, the formatter will be attempted for [<code>JavaLocalDateTime</code>][JavaLocalDateTime], [<code>JavaLocalDate</code>][JavaLocalDate], [<code>JavaLocalTime</code>][JavaLocalTime],
  *   and [<code>JavaInstant</code>][JavaInstant].
  * @see [addJavaDateTimePattern][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.addJavaDateTimePattern] */
@@ -505,7 +505,7 @@ public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimeForm
  * For more information: [See Parsing Date-time Strings on the documentation website.](https://kotlin.github.io/dataframe/parse.html#parsing-date-time-strings)
  *
  * @param [pattern] the date-time pattern to add.
- * @param [formatType] the expected java date-time type of the [<code>pattern</code>][pattern].
+ * @param [T] the expected java date-time type of the [<code>pattern</code>][pattern].
  *   If `null`, the pattern will be attempted for [<code>JavaLocalDateTime</code>][JavaLocalDateTime], [<code>JavaLocalDate</code>][JavaLocalDate], [<code>JavaLocalTime</code>][JavaLocalTime],
  *   and [<code>JavaInstant</code>][JavaInstant].
  * @see [addJavaDateTimeFormatter][org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions.addJavaDateTimeFormatter] */
@@ -564,7 +564,7 @@ public typealias DateTimeComponentsFallback = Nothing
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:
@@ -760,7 +760,7 @@ public class ParserOptions(
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [<code>DateTimeParserOptions</code>][DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [<code>DateTimeParserOptions</code>][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:
