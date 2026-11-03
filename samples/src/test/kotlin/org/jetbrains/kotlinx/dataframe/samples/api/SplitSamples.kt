@@ -152,9 +152,9 @@ class SplitSamples : DataFrameSampleHelper("split", "api") {
     fun splitRegex1() {
         val merged = merged()
         // SampleStart
-        merged.split { "name"<String>() }
+        merged.split { name }
             .match("""(.*) \((.*)\)""")
-            .inward("firstName", "lastName")
+            .inward("lastName", "firstName")
             // SampleEnd
             .also { it.rowsCount() shouldBe 10 }
             .saveDfHtmlSample()

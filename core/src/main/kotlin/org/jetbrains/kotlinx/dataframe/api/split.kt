@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -38,13 +39,21 @@ import kotlin.reflect.typeOf
 // region split
 
 /**
- * Splits the values of the selected [\columns] into several parts and stores these parts
- * in new columns, in new rows, or as [List]s in the original columns.
+ * Splits the values of the selected [\columns] into several values or parts and optionally spreads them
+ * in new columns (horizontally), in new rows (vertically), or as [List]s in the original columns.
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
- * This function does not split anything immediately — it returns a [Split] instance,
- * which serves as an intermediate step. No work is done until one of the terminal functions is called.
+ * This operation allows splitting:
+ * - [Iterable] columns by their contents;
+ * - [String] columns by a delimiter or a regular expression;
+ * - [frame columns][FrameColumn] into [rows][DataRow] (becoming [column groups][ColumnGroup]);
+ * - Any other column by a custom splitter function.
+ *
+ * This is a multistep operation that starts with this function.
+ * It does not split anything immediately — it returns a [Split] instance,
+ * which serves as an intermediate step that should be followed by optional configurational functions
+ * and a terminal function. The result is a new [DataFrame] where the split has occurred.
  *
  * Optionally, define how each value is split into parts:
  * @include [SplitDocs.SplittingMethodsSnippet]
@@ -199,13 +208,14 @@ internal interface SplitDocs {
      * How many new columns are created depends on the maximum number of parts among the values of the original column,
      * or the number of the given [names\].
      * Values that are split into fewer parts than the number of new columns get $[MISSING] in the remaining columns.
-     * `null` values cannot be split, so they become `null` in all new columns.
+     * `null` values cannot be split, so they become $[MISSING] in all new columns.
      */
     @ExcludeFromSources
     typealias ColumnCountSnippet = Nothing
 
     /**
-     * If a name is already taken at the place where a new column is inserted, a numeric suffix is added to it.
+     * If a name is already taken at the place where a new column is inserted,
+     * they will be [automatically renamed][AutoRenamingColumnsInDataFrame].
      */
     @ExcludeFromSources
     typealias NameConflictSnippet = Nothing
@@ -243,6 +253,14 @@ internal interface SplitDocs {
     /** @param [R\] The type of the parts the values are split into. */
     @ExcludeFromSources
     typealias TypeParamRSnippet = Nothing
+
+    /** @include [ExplodeDocs.DropEmptyParam] */
+    @ExcludeFromSources
+    typealias DropEmptyParam = Nothing
+
+    /** @include [ExplodeDocs.DropEmptySnippet] */
+    @ExcludeFromSources
+    typealias DropEmptySnippet = Nothing
 }
 
 /** {@set [SelectingColumns.OPERATION] [split][split]} */
@@ -276,7 +294,7 @@ public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, 
  * @include [SelectingColumns.ColumnNamesApi] {@include [SetSplitOperationArg]}
  *
  * As the type of the selected columns is unknown, the values are treated as [Any].
- * Use [cast][Split.cast] to specify their type for the following steps.
+ * Optionally [cast][Split.cast] to specify their type for the following steps.
  *
  * ### Examples
  *
@@ -349,6 +367,7 @@ public class Split<T, C>(
      * @param [P] The new type of the values in the selected columns.
      * @return This [Split] with the values treated as [P].
      */
+    @Suppress("UNCHECKED_CAST")
     public fun <P> cast(): Split<T, P> = this as Split<T, P>
 
     override fun toString(): String = "Split(df=$df, columns=$columns)"
@@ -1074,7 +1093,8 @@ public fun <T, C : DataFrame<*>> Split<T, C>.intoColumns(): DataFrame<T> =
  * The type of each split column changes from the type of its values to the type of their parts.
  * When several columns are split, their parts are aligned in the resulting rows, like in [explode].
  *
- * Values that are split into no parts, like `null`s, are handled according to [dropEmpty\].
+ * Values that are split into no parts, like `null`s, are handled according to [dropEmpty\]:
+ * @include [SplitDocs.DropEmptySnippet]
  *
  * It's equivalent to [inplace][SplitWithTransform.inplace] followed by [explode].
  *
@@ -1099,7 +1119,7 @@ private typealias CommonSplitIntoRowsDocs = Nothing
  * @include [SplitDocs.TypeParamTSnippet]
  * @param [C] The [Iterable] type of the values in the columns selected by [split].
  * @param [R] The type of the elements of the [Iterable] values.
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [SplitDocs.DropEmptyParam]
  * @return A new [DataFrame] with a separate row for each element.
  */
 @JvmName("intoRowsTC")
@@ -1118,7 +1138,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
  *
  * @include [SplitDocs.TypeParamTSnippet]
  * @param [C] The [DataFrame] type of the values in the columns selected by [split].
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [SplitDocs.DropEmptyParam]
  * @return A new [DataFrame] with a separate row for each row of the [DataFrame] values.
  */
 @JvmName("intoRowsFrame")
@@ -1142,7 +1162,7 @@ internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
  * @include [SplitDocs.TypeParamRSnippet]
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [SplitDocs.DropEmptyParam]
  * @return A new [DataFrame] with a separate row for each part.
  */
 @Refine
