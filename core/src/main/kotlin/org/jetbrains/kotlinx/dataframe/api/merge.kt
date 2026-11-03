@@ -101,7 +101,7 @@ private typealias CommonMergeDocs = Nothing
  * @include [SelectingColumns.ColumnsSelectionDsl] {@include [SetMergeOperationArg]}
  * ### Examples
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.merge_properties]
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDefault_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDefault]
  * @param [selector] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to merge.
  */
 @Interpretable("Merge0")
@@ -112,7 +112,7 @@ public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, 
  * @include [CommonMergeDocs]
  * @include [SelectingColumns.ColumnNamesApi] {@include [SetMergeOperationArg]}
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.merge_strings]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeColumnNames]
  * @param [columns] The [column names][String] used to select the columns of this [DataFrame] to merge.
  */
 @StringApiInterpretable(interpreter = "Merge0", stringArgument = "columns", targetArgument = "selector")
@@ -197,7 +197,7 @@ public class MergeWithTransform<T, C, R>(
  * See [Grammar].
  *
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeNotNull_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeNotNull]
  * @return A new [Merge] instance with `null` values excluded from the merged values.
  */
 @ExcludeFromSources
@@ -244,7 +244,7 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataF
 /**
  * @include [MergeIntoNameSnippet]
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDefault_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDefault]
  * @param [columnName] The name of the column to store the merged values in.
  * @return A new [DataFrame] with the merged column.
  */
@@ -276,7 +276,7 @@ private typealias MergeIntoListSnippet = Nothing
 /**
  * @include [MergeIntoListSnippet]
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoList_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoList]
  * @return The merged values, one per row.
  */
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
@@ -288,7 +288,7 @@ public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
 /**
  * @include [MergeIntoListSnippet]
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoList_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoList]
  * @return The merged values, one per row.
  */
 public fun <T, C, R> MergeWithTransform<T, C, R>.intoList(): List<R> =
@@ -330,7 +330,7 @@ private fun <C> List<C>.filterNotNullAndEmptyRows(notNull: Boolean): List<C> =
 /**
  * @include [MergeIntoPathSnippet]
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoPath_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoPath]
  * @param [path] The [path][ColumnPath] of the column to store the merged values in.
  * @return A new [DataFrame] with the merged column.
  */
@@ -365,7 +365,7 @@ public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFra
 /**
  * @include [MergeIntoPathSnippet]
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoPath_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeIntoPath]
  * @param [path] The [path][ColumnPath] of the column to store the merged values in.
  * @return A new [DataFrame] with the merged column.
  */
@@ -383,7 +383,7 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> =
  * See [Grammar].
  *
  * ### Example
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeAsStrings_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeAsStrings]
  * @return A new [MergeWithTransform] instance with the values joined into a [String].
  */
 @Interpretable("MergeId")
@@ -451,8 +451,8 @@ public fun <T, C, R> Merge<T, C, R>.by(
  * See [Grammar].
  *
  * ### Examples
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeSameWith_properties]
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDifferentWith_properties]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeSameWith]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.MergeSamples.mergeDifferentWith]
  *
  * @param [transform] The transformation applied to the collected values to produce the merged value.
  * @param [infer] The [type inference][Infer] of the merged column.

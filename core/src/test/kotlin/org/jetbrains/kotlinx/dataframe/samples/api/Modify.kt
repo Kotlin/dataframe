@@ -477,52 +477,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun merge() {
-        // SampleStart
-        // Merge two columns into one column "fullName"
-        df.merge { name.firstName and name.lastName }.by(" ").into("fullName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeIntoList() {
-        // SampleStart
-        // Merge data from two columns into List<String>
-        df.merge { name.firstName and name.lastName }.by(",").intoList()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeSameWith() {
-        // SampleStart
-        df.merge { name.firstName and name.lastName }
-            .by { it[0] + " (" + it[1].uppercase() + ")" }
-            .into("fullName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeDifferentWith() {
-        // SampleStart
-        df.merge { name.firstName and age and isHappy }
-            .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
-            .into("status")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeDefault() {
-        // SampleStart
-        df.merge { colsOf<Number>() }.into("data")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun explode_strings() {
         // SampleStart
         val df = dataFrameOf("a", "b")(
