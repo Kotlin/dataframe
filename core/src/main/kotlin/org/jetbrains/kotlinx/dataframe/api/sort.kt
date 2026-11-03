@@ -478,7 +478,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
  *   - [sortByCount] and [sortByCountAsc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -526,7 +526,7 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
  *   - [sortByCount] and [sortByCountAsc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -574,7 +574,7 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  *   - [sortByCount] and [sortByCountAsc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -623,7 +623,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  *   - [sortByCount] and [sortByCountAsc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -687,7 +687,7 @@ private typealias NullsLastArgumentDescription = Nothing
  *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -726,7 +726,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroup(
  *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -761,7 +761,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] d on computed values.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -782,7 +782,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -803,7 +803,7 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc {
  *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
@@ -837,7 +837,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(
  *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *
- * Check out [`GroupBy grammar`][Grammar].
+ * Check out the [`GroupBy grammar`][Grammar].
  *
  * For more information: {@include [DocumentationUrls.GroupByTransformation]}
  *
