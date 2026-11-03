@@ -60,11 +60,17 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  */
 @ExcludeFromSources
 internal interface ExplodeDocs {
+
     /**
-     * @param [dropEmpty] If `true`, removes rows with empty [List]s or [DataFrame]s.
-     *                  If `false`, such rows will be exploded into `null` values.
+     * If `true`, rows with empty [List]s or [DataFrame]s are removed.
+     * If `false`, such rows will be exploded into `null` values.
      */
     typealias DropEmptySnippet = Nothing
+
+    /**
+     * @param [dropEmpty] {@include [DropEmptySnippet]}
+     */
+    typealias DropEmptyParam = Nothing
 
     /**
      * If not specified, all applicable columns (i.e., of type [List] or [DataFrame]) will be exploded.
@@ -99,7 +105,7 @@ internal interface ExplodeDocs {
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [ExplodeDocs.DropEmptyParam]
  * @param selector The [ColumnsSelector] used to select columns to explode.
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDocs.ReturnSnippet]
@@ -131,7 +137,7 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [ExplodeDocs.DropEmptyParam]
  * @param columns The [column names][String] used to select columns to explode.
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDocs.ReturnSnippet]
@@ -200,7 +206,7 @@ internal interface ExplodeDataRowDocs {
  * row.explode { hobbies and scores }
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [ExplodeDocs.DropEmptyParam]
  * @param columns The [ColumnsSelector] used to select columns to explode.
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDataRowDocs.ReturnSnippet]
@@ -225,7 +231,7 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * @include [ExplodeDocs.DropEmptySnippet]
+ * @include [ExplodeDocs.DropEmptyParam]
  * @param columns The [column names][String] used to select columns to explode.
  * @include [ExplodeDocs.DefaultExplodeColumnsSnippet]
  * @include [ExplodeDataRowDocs.ReturnSnippet]
