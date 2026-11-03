@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDslSnippet
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs
@@ -110,12 +111,11 @@ internal interface CommonStatisticsDocs {
     typealias RowExpressionSnippet = Nothing
 
     /**
-     * {@comment Note about the aggregate columns selector of the `-For` modes. KDoc-snippet.}
+     * {@comment Note about the [ColumnsForAggregateSelector] overloads. KDoc-snippet.}
      *
-     * The columns are selected with the [ColumnsForAggregateSelectionDsl] — an extension of the
-     * Columns Selection DSL which lets you rename the result of a column with
-     * [`into`][ColumnsForAggregateSelectionDsl.into] and supply a
-     * [`default`][ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+     * Select the columns using the [ColumnsForAggregateSelectionDsl].
+     *
+     * @include [ColumnsForAggregateSelectionDslSnippet]
      */
     @ExcludeFromSources
     typealias AggregateColumnsSelectorSnippet = Nothing

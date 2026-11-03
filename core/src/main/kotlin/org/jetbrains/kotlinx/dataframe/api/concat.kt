@@ -362,25 +362,24 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
 // region ReducedGroupBy
 
 /**
- * Applies the stored reducer to every group and returns a [DataFrame] containing one resulting row per group, in
+ * Returns a [DataFrame] containing the reduced row of every group of this [ReducedGroupBy], in
  * the order in which the groups appear in the underlying [GroupBy].
+ *
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
  *
  * If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
  * their first appearance in the reduced rows. A value column missing from a reduced row is filled with `null`.
  *
  * @include [ConcatDocs.MissingColumnValues]
  *
- * If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
- * missing every result column, so its values are filled according to the same rules.
+ * If no row is selected in a group (for example, if no row of the group satisfies
+ * the predicate of [first][GroupBy.first]), the result still contains one row for that group.
+ * This row is treated as missing every result column, so its values are filled according to the same rules.
  *
- * For more information:
- *
- * {@include [DocumentationUrls.GroupBy]}
- *
- * {@include [DocumentationUrls.Concat]}
+ * For more information: {@include [DocumentationUrls.GroupByReducing]} {@include [DocumentationUrls.Concat]}
  *
  * See also:
- * - [GroupBy.concat] — concatenates the group rows without applying a reducer.
+ * - [GroupBy.concat] — concatenates all rows of all groups, without reducing them.
  * - [GroupBy.concatWithKeys] — also adds grouping keys that are missing from the groups.
  *
  * ### Examples
