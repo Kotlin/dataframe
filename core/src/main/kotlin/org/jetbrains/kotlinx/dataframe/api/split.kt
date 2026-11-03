@@ -55,13 +55,7 @@ import kotlin.reflect.typeOf
  * which serves as an intermediate step that should be followed by optional configurational functions
  * and a terminal function. The result is a new [DataFrame] where the split has occurred.
  *
- * Optionally, define how each value is split into parts:
- * @include [SplitDocs.SplittingMethodsSnippet]
- *
- * Finally, choose where the parts are stored:
- * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
- * - [intoColumns][Split.intoColumns] — turns a column of [DataFrame]s into a [column group][ColumnGroup],
- *   where each cell holds a [List] of the values of the corresponding [DataFrame] column.
+ * @include [SplitDocs.SplitStepsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
  *
  * Each of these methods returns a new [DataFrame].
  *
@@ -122,27 +116,80 @@ internal interface SplitDocs {
     typealias Grammar = Nothing
 
     /**
+     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
+     * - [cast][Split.cast] — changes the type of the values in the columns selected by [split] for the following steps,
+     *   without checking or converting the values themselves.
+     */
+    @ExcludeFromSources
+    typealias ConfigurationMethodsSnippet = Nothing
+
+    /**
+     * This step defines how each cell value is split. It can be skipped if the column values already contain
+     * [Iterable] or [DataFrame]s.
      * - [by][Split.by] — splits each value by [Char] or [String] delimiters, by a [Regex],
      *   or with a custom splitter function.
      * - [match][Split.match] — splits each [String] value into the capturing groups of a [Regex].
-     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
-     *
-     * Columns of [Iterable] (e.g., [List]), [DataFrame] (a [frame column][FrameColumn]), and [Pair] values can be split without [by][Split.by]:
-     * into their elements, rows (so into a [column group][ColumnGroup]), and components, respectively.
      */
     @ExcludeFromSources
-    typealias SplittingMethodsSnippet = Nothing
+    typealias TransformationMethodsSnippet = Nothing
+
+    /**
+     * - [inplace][$[INTERMEDIATE_CLASS].inplace] — stores the parts as a [List] in the original column.
+     */
+    @ExcludeFromSources
+    typealias InplaceMethodsSnippet = Nothing
 
     /**
      * - [into][$[INTERMEDIATE_CLASS].into] — stores the parts in new columns, which replace the original column.
      * - [inward][$[INTERMEDIATE_CLASS].inward] — stores the parts in new columns nested inside
      *   a [column group][ColumnGroup], which replaces the original column and keeps its name.
+     */
+    @ExcludeFromSources
+    typealias HorizontalMethodsSnippet = Nothing
+
+    /**
+     * - [intoColumns][Split.intoColumns] — turns a column of [DataFrame]s into a [column group][ColumnGroup],
+     *   where each cell holds a [List] of the values of the corresponding [DataFrame] column.
+     */
+    @ExcludeFromSources
+    typealias IntoColumnsMethodSnippet = Nothing
+
+    /**
      * - [intoRows][$[INTERMEDIATE_CLASS].intoRows] — places each part in a separate row,
      *   duplicating the values in the other columns.
-     * - [inplace][$[INTERMEDIATE_CLASS].inplace] — stores the parts as a [List] in the original column.
+     */
+    @ExcludeFromSources
+    typealias VerticalMethodsSnippet = Nothing
+
+    /**
+     * This step defines where to store the results. You can put resulting values inplace as [Lists][List]
+     * or spread them into new columns or rows.
+     *
+     * #### Split inplace
+     * @include [InplaceMethodsSnippet]
+     *
+     * #### Split horizontally
+     * @include [HorizontalMethodsSnippet]
+     * @include [IntoColumnsMethodSnippet]
+     *
+     * #### Split vertically
+     * @include [VerticalMethodsSnippet]
      */
     @ExcludeFromSources
     typealias TerminalMethodsSnippet = Nothing
+
+    /**
+     * ### Configuration (optional)
+     * @include [ConfigurationMethodsSnippet]
+     *
+     * ### Transformation
+     * @include [TransformationMethodsSnippet]
+     *
+     * ### Terminal method
+     * @include [TerminalMethodsSnippet]
+     */
+    @ExcludeFromSources
+    typealias SplitStepsSnippet = Nothing
 
     /*
      * The key for a @set that describes how the values are split into parts in the terminal methods
@@ -323,13 +370,7 @@ public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C>
  * This class itself does not split anything — it only holds the [DataFrame] and the columns selected by [split].
  * The values are split only when one of the terminal methods is called.
  *
- * Use the following methods to define how each value is split into parts:
- * @include [SplitDocs.SplittingMethodsSnippet]
- *
- * Use the following methods to complete the splitting:
- * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
- * - [intoColumns][Split.intoColumns] — turns a column of [DataFrame]s into a [column group][ColumnGroup],
- *   where each cell holds a [List] of the values of the corresponding [DataFrame] column.
+ * @include [SplitDocs.SplitStepsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
  *
  * Each of these methods returns a new [DataFrame].
  *
@@ -384,7 +425,15 @@ public class Split<T, C>(
  * Use [default][SplitWithTransform.default] to set the value for the parts that are missing in some rows.
  *
  * Use the following methods to complete the splitting:
- * @include [SplitDocs.TerminalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
+ *
+ * #### Split inplace
+ * @include [SplitDocs.InplaceMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
+ *
+ * #### Split horizontally
+ * @include [SplitDocs.HorizontalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
+ *
+ * #### Split vertically
+ * @include [SplitDocs.VerticalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
  *
  * Each of these methods returns a new [DataFrame].
  *
