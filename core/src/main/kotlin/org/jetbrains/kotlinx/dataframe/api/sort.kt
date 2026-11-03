@@ -791,30 +791,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
 public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc { nrow }
 
 /**
- * Sorts the key-group pairs of this [GroupBy] by the keys descending.
- *
- * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
- * The contents of the groups remain unchanged.
- *
- * Don't confuse this with [sortBy][GroupBy.sortBy] that sorts rows within groups.
- *
- * See also
- *   - [sortByKey] that sorts the key-group pairs of this [GroupBy] by the key values ascending.
- *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
- *
- * Check out [`GroupBy grammar`][Grammar].
- *
- * For more information: {@include [DocumentationUrls.GroupByTransformation]}
- *
- * @include [NullsLastArgumentDescription]
- * @return A new [GroupBy] with its key-group pairs sorted by the keys.
- */
-public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
-    sortByKeyDesc(nullsLast) { all() }
-
-/**
- * Sorts the key-group pairs of this [GroupBy] by selected keys descending.
+ * Sorts the key-group pairs of this [GroupBy] by selected keys descending, or by all keys if [selector] is omitted.
  *
  * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
@@ -835,41 +812,20 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): Group
  *
  * @include [NullsLastArgumentDescription]
  * @param selector The [Sort Columns Selector][SortColumnsSelector] that defines which keys are used for sorting,
- * in which order and direction.
+ * in which order and direction. Selects all keys by default.
  * @return A new [GroupBy] with its key-group pairs sorted by the selected keys.
  */
-public fun <T, G, C> GroupBy<T, G>.sortByKeyDesc(
+@OptIn(ExperimentalVersionOverloading::class)
+public fun <T, G> GroupBy<T, G>.sortByKeyDesc(
     nullsLast: Boolean = false,
-    selector: SortColumnsSelector<T, C>,
+    @IntroducedAt("1.0") selector: SortColumnsSelector<T, *> = { all() },
 ): GroupBy<T, G> {
     val set = selector.toColumnSet()
     return sortByKeyImpl(nullsLast) { set.reversed() }
 }
 
 /**
- * Sorts the key-group pairs of this [GroupBy] by the keys ascending.
- *
- * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
- * The contents of the groups remain unchanged.
- *
- * Don't confuse this with [sortBy][GroupBy.sortBy] that sorts rows within groups.
- *
- * See also
- *   - [sortByKeyDesc] that sorts the key-group pairs of this [GroupBy] by the key values descending.
- *   - [sortByCount] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
- *
- * Check out [`GroupBy grammar`][Grammar].
- *
- * For more information: {@include [DocumentationUrls.GroupByTransformation]}
- *
- * @include [NullsLastArgumentDescription]
- * @return A new [GroupBy] with its key-group pairs sorted by the keys.
- */
-public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> = sortByKey(nullsLast) { all() }
-
-/**
- * Sorts the key-group pairs of this [GroupBy] by selected keys ascending.
+ * Sorts the key-group pairs of this [GroupBy] by selected keys ascending, or by all keys if [selector] is omitted.
  *
  * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
@@ -890,12 +846,13 @@ public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T
  *
  * @include [NullsLastArgumentDescription]
  * @param selector The [Sort Columns Selector][SortColumnsSelector] that defines which keys are used for sorting,
- * in which order and direction.
+ * in which order and direction. Selects all keys by default.
  * @return A new [GroupBy] with its key-group pairs sorted by the selected keys.
  */
-public fun <T, G, C> GroupBy<T, G>.sortByKey(
+@OptIn(ExperimentalVersionOverloading::class)
+public fun <T, G> GroupBy<T, G>.sortByKey(
     nullsLast: Boolean = false,
-    selector: SortColumnsSelector<T, C>,
+    @IntroducedAt("1.0") selector: SortColumnsSelector<T, *> = { all() },
 ): GroupBy<T, G> = sortByKeyImpl(nullsLast, selector)
 
 // endregion
