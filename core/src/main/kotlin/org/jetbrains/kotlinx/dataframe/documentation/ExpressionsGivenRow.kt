@@ -54,7 +54,6 @@ internal interface ExpressionsGivenRow {
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
      */
-    @ExcludeFromSources
     typealias AddDataRowNote = Nothing
 
     /**
