@@ -101,11 +101,11 @@ Available parser options:
 
 * `locale: Locale` is used to [parse doubles](#parsing-doubles) (and Java date-time types)
     * Global default locale is `Locale.getDefault()`
-* `dateTime: DateTimeParserOptions` can be used to force parsing to Kotlin-, or Java date-time classes, and override
+* `dateTime: DateTimeParserOptions` can be used to force parsing to Kotlin or Java date-time classes and override
   default and custom global date-time formats. By default, it's `null`, meaning we try Kotlin types first,
   and if that fails, we try Java types. See [](#parsing-date-time-strings).
   This argument was added in DataFrame 1.0.0-Beta5.
-* `nullStrings: List<String>` is used to treat particular strings as `null` value
+* `nullStrings: List<String>` is used to treat particular strings as `null` values
     * Global default null strings are `["null", "NULL", "NA", "N/A"]`.
     * When [reading from CSV](read.md), these are expanded to
       `["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]`.
@@ -245,8 +245,8 @@ Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encou
 
 By default, DataFrame tries parsing date-time strings using
 
-- Custom [global](#global-parser-options) Kotlin-, and Java date-time formats, if provided;
-- Default Kotlin-, and Java ISO date-time formats.
+- Custom [global](#global-parser-options) Kotlin and Java date-time formats, if provided;
+- Default Kotlin and Java ISO date-time formats.
 
 You can customize this behavior from the [](#global-parser-options) by:
 
@@ -511,11 +511,10 @@ and finally to the default system locale.
 
 **Kotlin `DateTimeComponents` fallback mechanism:**
 
-When using [`DataFrame.convert` or `DataColumn.convertTo`](convert.md) to
-convert from `String` to a kotlinx-datetime type, like `LocalDate`, fails to parse,
-the `DateTimeComponents` fallback-mechanism kicks in.
-Oftentimes it may namely be possible to parse the date-time string to the more flexible `DateTimeComponents`
-first and then convert that to `LocalDate` with a potential little loss of information.
+When [`DataFrame.convert` or `DataColumn.convertTo`](convert.md) cannot convert a `String` to a kotlinx-datetime
+type, such as `LocalDate`, the `DateTimeComponents` fallback mechanism kicks in.
+Often, it is possible to parse the date-time string into the more flexible `DateTimeComponents` type and then convert
+it to `LocalDate`, potentially losing a little information.
 This means we can successfully call:
 
 ```kotlin
