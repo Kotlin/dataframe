@@ -17,13 +17,24 @@ import org.jetbrains.kotlinx.dataframe.util.AGGREGATE_DSL_PATH_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.PATH_OF_IMPORT
 
 /**
+ * {@comment Description of the DSL without [default][ColumnsForAggregateSelectionDsl.default],
+ *    which only has an effect in pivot aggregations. KDoc-snippet.}
+ *
  * The [Columns For Aggregate Selection DSL][ColumnsForAggregateSelectionDsl] allows selecting columns
  * to aggregate, just like the {@include [ColumnsSelectionDslLink]}.
  * It also allows configuring how the aggregation result of each selected column is stored:
  * - [into][ColumnsForAggregateSelectionDsl.into] sets the name
  *   (or the [path][ColumnPath], see [pathOf]) of the resulting column.
  *   If several columns are selected, their results are put into a [column group][ColumnGroup]
- *   with this name, keeping the names of the columns;
+ *   with this name, keeping the names of the columns.
+ */
+@ExcludeFromSources
+internal typealias ColumnsForAggregateSelectionDslWithoutDefaultSnippet = Nothing
+
+/**
+ * {@comment Full description of the DSL. KDoc-snippet.}
+ *
+ * @include [ColumnsForAggregateSelectionDslWithoutDefaultSnippet]
  * - [default][ColumnsForAggregateSelectionDsl.default] sets the value used in [pivot] aggregations
  *   instead of `null` results, including the [pivot] cells without any rows.
  */

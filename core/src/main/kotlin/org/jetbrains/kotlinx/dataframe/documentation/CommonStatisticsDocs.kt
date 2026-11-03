@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDslSnippet
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDslWithoutDefaultSnippet
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.DuplicateColumnPathInsertException
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs
@@ -119,6 +120,17 @@ internal interface CommonStatisticsDocs {
      */
     @ExcludeFromSources
     typealias AggregateColumnsSelectorSnippet = Nothing
+
+    /**
+     * {@comment [AggregateColumnsSelectorSnippet] without [default][ColumnsForAggregateSelectionDsl.default],
+     *    for the overloads outside of pivot aggregations, where it has no effect. KDoc-snippet.}
+     *
+     * Select the columns using the [ColumnsForAggregateSelectionDsl].
+     *
+     * @include [ColumnsForAggregateSelectionDslWithoutDefaultSnippet]
+     */
+    @ExcludeFromSources
+    typealias AggregateColumnsSelectorWithoutDefaultSnippet = Nothing
 
     /**
      * @comment The shared `skipNaN` parameter documentation. KDoc-snippet.

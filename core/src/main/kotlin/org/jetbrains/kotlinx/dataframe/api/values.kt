@@ -146,7 +146,7 @@ public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: KProperty<*>): Dat
  *
  * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
  *
- * @include [CommonStatisticsDocs.AggregateColumnsSelectorSnippet]
+ * @include [CommonStatisticsDocs.AggregateColumnsSelectorWithoutDefaultSnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
