@@ -287,53 +287,6 @@ public interface SelectColumnsSelectionDsl {
     }
 
     /**
-     * ## Select from [<code>ColumnGroup</code>][ColumnGroup]
-     *
-     * Perform a selection of columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
-     * any [<code>ColumnGroup</code>][ColumnGroup]. This is more powerful than the [<code>cols</code>][ColumnsSelectionDsl.cols] filter, because now all
-     * operations of the DSL are at your disposal.
-     *
-     * The scope of the new DSL instance is relative to
-     * the [<code>ColumnGroup</code>][ColumnGroup] you are selecting from.
-     *
-     * The [<code>invoke</code>][ColumnsSelectionDsl.invoke] operator is overloaded to work as a shortcut for this method.
-     *
-     * For more information: [See Select from Column Group on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#select-from-column-group)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>select</code>][SingleColumn.select]`  { someCol  `[<code>and</code>][ColumnsSelectionDsl.and]` `[<code>colsOf</code>][SingleColumn.colsOf]`<`[<code>String</code>][String]`>() } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  { "myGroupCol"  `[<code>{</code>][String.select]`  "colA" and  `[<code>expr</code>][ColumnsSelectionDsl.expr]`  { 0 }  `[<code>}</code>][String.select]` }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>select</code>][ColumnPath.select]` { "colA" and "colB" } }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { it["myGroupCol"].`[<code>asColumnGroup</code>][DataColumn.asColumnGroup]`()`[<code>() {</code>][SingleColumn.select]`  "colA" and "colB"  `[<code>}</code>][SingleColumn.select]` }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     * See also [<code>except</code>][ColumnsSelectionDsl.except]/[<code>allExcept</code>][ColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
-     *
-     * @param [selector] The [<code>ColumnsSelector</code>][ColumnsSelector] to use for the selection.
-     * @receiver The [<code>ColumnGroup</code>][ColumnGroup] to select from.
-     * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][ColumnGroup].
-     * @return A [<code>ColumnSet</code>][ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
-     */
-    private interface CommonSelectDocs {
-
-        typealias EXAMPLE = Nothing
-    }
-
-    /**
      * ## Select from [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
      *
      * Perform a selection of columns using the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] on
@@ -375,7 +328,7 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Interpretable("NestedSelect")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
@@ -423,7 +376,7 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -472,7 +425,7 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Interpretable("StringSelect")
     public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
@@ -523,7 +476,7 @@ public interface SelectColumnsSelectionDsl {
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Interpretable("ColumnPathSelect")
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)

@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
 import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH
 import org.jetbrains.kotlinx.dataframe.util.COLS_AT_ANY_DEPTH_REPLACE
@@ -109,67 +110,6 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     /**
      * ## Cols At Any Depth
      *
-     * Returns all columns in [this] at any depth (so also inside [<code>Column Groups</code>][ColumnGroup])
-     *
-     * This function can also be followed by another [<code>ColumnSet</code>][ColumnSet] filter function like
-     * [<code>colsOf</code>][ColumnsSelectionDsl.colsOf], [<code>single</code>][ColumnsSelectionDsl.single], or [<code>valueCols</code>][ColumnsSelectionDsl.valueCols].
-     *
-     * For more information: [See `colsAtAnyDepth` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#cols-at-any-depth)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     * #### For example:
-     * `// Depth-first search to a column containing the value "Alice"`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() }.`[<code>first</code>][ColumnsSelectionDsl.firstCol]`() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// The columns at any depth excluding the top-level`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>colsAtAnyDepth</code>][ColumnSet.colsAtAnyDepth]`() }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value- and frame columns at any depth`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][FilterColumnsSelectionDsl.filter]` { !it.`[<code>isColumnGroup</code>][DataColumn.isColumnGroup]` } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * `// All value columns at any depth nested under a column group named "myColGroup"`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>colsAtAnyDepth</code>][SingleColumn.colsAtAnyDepth]`().`[<code>valueCols</code>][ColumnsSelectionDsl.valueCols]`() }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * #### Converting from deprecated syntax:
-     *
-     * `dfs  { condition } -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]`().`[<code>filter</code>][FilterColumnsSelectionDsl.filter]` { condition }`
-     *
-     * `allDfs(includeGroups = false) -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]`().`[<code>filter</code>][FilterColumnsSelectionDsl.filter]` { includeGroups || !it.`[<code>isColumnGroup</code>][DataColumn.isColumnGroup]`() }`
-     *
-     * `dfsOf<Type> { condition } -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]`().`[<code>colsOf</code>][ColumnsSelectionDsl.colsOf]`<Type> { condition }`
-     *
-     * [<code>cols</code>][ColumnsSelectionDsl.cols]` { condition }.recursively() -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]`().`[<code>filter</code>][FilterColumnsSelectionDsl.filter]` { condition }`
-     *
-     * [<code>first</code>][ColumnsSelectionDsl.first]` { condition }.rec() -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]` { condition }.`[<code>first</code>][ColumnsSelectionDsl.first]`()`
-     *
-     * [<code>all</code>][ColumnsSelectionDsl.all]`().recursively() -> `[<code>colsAtAnyDepth</code>][colsAtAnyDepth]`()`
-     *
-     * @see [DataFrame.flatten]
-     * @see [ColumnsSelectionDsl.simplify]
-     */
-    private interface CommonAtAnyDepthDocs {
-
-        /** Example argument */
-        typealias Examples = Nothing
-    }
-
-    /**
-     * ## Cols At Any Depth
-     *
      * Returns all columns in [this] at any depth (so also inside [<code>Column Groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup])
      *
      * This function can also be followed by another [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] filter function like
@@ -181,7 +121,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -203,7 +143,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -245,7 +185,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -267,7 +207,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroups</code>][ColumnsSelectionDsl.colGroups]`().`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -303,7 +243,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -325,7 +265,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() }.`[<code>first</code>][ColumnsSelectionDsl.first]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() }.`[<code>first</code>][ColumnsSelectionDsl.first]`() }`
      *
      * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[<code>isColumnGroup</code>][DataColumn.isColumnGroup]` } }`
      *
@@ -370,7 +310,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -392,7 +332,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() }.`[<code>first</code>][ColumnsSelectionDsl.first]`() }`
+     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() }.`[<code>first</code>][ColumnsSelectionDsl.first]`() }`
      *
      * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter { !it.`[<code>isColumnGroup</code>][DataColumn.isColumnGroup]` } }`
      *
@@ -430,7 +370,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -452,7 +392,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>colsAtAnyDepth</code>][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>colsAtAnyDepth</code>][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -495,7 +435,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -517,7 +457,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>colsAtAnyDepth</code>][SingleColumn.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { myColGroup.`[<code>colsAtAnyDepth</code>][SingleColumn.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -554,7 +494,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -576,7 +516,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsAtAnyDepth</code>][String.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsAtAnyDepth</code>][String.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -617,7 +557,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -639,7 +579,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsAtAnyDepth</code>][String.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "myColumnGroup".`[<code>colsAtAnyDepth</code>][String.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -674,7 +614,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -696,7 +636,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsAtAnyDepth</code>][KProperty.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { Type::myColumnGroup.`[<code>colsAtAnyDepth</code>][KProperty.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -734,7 +674,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -756,7 +696,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *
@@ -793,7 +733,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
+     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colsAtAnyDepth</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`().`[<code>filter</code>][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]` { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][org.jetbrains.kotlinx.dataframe.DataColumn.values]`() }.`[<code>first</code>][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -815,7 +755,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][Iterable.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
+     * `df.`[<code>select</code>][DataFrame.select]` { "pathTo"["myGroupCol"].`[<code>colsAtAnyDepth</code>][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[<code>in</code>][kotlin.collections.contains]` it.`[<code>values</code>][DataColumn.values]`() } }`
      *
      * #### Converting from deprecated syntax:
      *

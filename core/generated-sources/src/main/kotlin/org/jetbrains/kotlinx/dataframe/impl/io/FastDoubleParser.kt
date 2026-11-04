@@ -241,7 +241,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
     /**
      * Here we store all possible decimal format symbols of all locales on the system.
      * These will be used as fallbacks for the selected locale.
-     * They are only added by [<code>withFallback</code>][withFallback] if they don't interfere with symbols already in the provided [<code>locale</code>][locale]
+     * They are only added by `withFallback` if they don't interfere with symbols already in the provided [<code>locale</code>][locale]
      * (so ',' is not added as grouping separator if '.' is already the locale's decimal separator).
      */
     internal companion object {
