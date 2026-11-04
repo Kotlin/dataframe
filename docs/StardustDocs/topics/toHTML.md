@@ -52,7 +52,7 @@ val htmlData = dataFrameOf(
 
 ### Render clickable links
 
-Values of `java.net.URL` are rendered as `<a>` tag
+Values of `java.net.URL` are rendered as an `<a>` tag.
 
 <!---FUN displayURL-->
 
