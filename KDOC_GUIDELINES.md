@@ -647,6 +647,12 @@ The grammars are also almost always decorated with highlighted code snippets all
 
 No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
 
+If several steps are mutually exclusive — for example, overloads that lead to the same next step — list them
+as alternatives inside **one** optional group: '`[ `**`a`**` | `**`b`**` | `**`c`**` ]`'. Do not model them as
+several separate '`[ ... ]`' groups: each reads as an independent step, so the grammar would permit chains
+the receiver types do not allow — the receiver after a step is that step's result type, and every chain a
+grammar permits must compile.
+
 Note that the grammar is not always 100% accurate to keep the readability acceptable.
 Always use your common sense reading it, and if you're unsure, try out the function yourself or check
 the source code :).
