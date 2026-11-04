@@ -212,6 +212,16 @@
 <resource src="mapToColumn.html"></resource>
 <resource src="mapToFramesOnGroupBy.html"></resource>
 <resource src="mapToRowsOnGroupBy.html"></resource>
+<resource src="merge.html"></resource>
+<resource src="mergeAsStrings.html"></resource>
+<resource src="mergeColumnNames.html"></resource>
+<resource src="mergeDefault.html"></resource>
+<resource src="mergeDf.html"></resource>
+<resource src="mergeDifferentWith.html"></resource>
+<resource src="mergeIntoPath.html"></resource>
+<resource src="mergeNotNull.html"></resource>
+<resource src="mergeSameWith.html"></resource>
+<resource src="mergeSplitRoundTrip.html"></resource>
 <resource src="noneDf.html"></resource>
 <resource src="dfParse.html"></resource>
 <resource src="dfParseWithOptions.html"></resource>
