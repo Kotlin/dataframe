@@ -282,6 +282,9 @@ public interface DocumentationUrls {
     /** [See `emptyDataFrame` on the documentation website.]({@include [Url]}/createdataframe.html#emptydataframe) */
     public typealias EmptyDataFrame = Nothing
 
+    /** [See `pathOf` on the documentation website.]({@include [Url]}/columnselectors.html#column-resolvers) */
+    public typealias PathOf = Nothing
+
     /** [See `gather` on the documentation website.]({@include [Url]}/gather.html) */
     public typealias Gather = Nothing
 

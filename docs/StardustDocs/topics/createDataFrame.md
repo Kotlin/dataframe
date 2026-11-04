@@ -78,6 +78,27 @@ val df = dataFrameOf("name", "age")(
 
 <!---END-->
 
+The values are distributed to the columns row by row: in the example above,
+the `name` column holds `["Alice", "Bob", "Charlie"]` and the `age` column holds `[15, 20, 100]`.
+The number of values must be divisible by the number of columns,
+otherwise the call throws an `IllegalArgumentException`.
+
+The `DataFrameBuilder` returned by `dataFrameOf` can also fill the columns directly:
+`fill` sets every cell to the same value, and `nulls` creates nullable columns filled with `null`.
+The `randomInt`, `randomDouble` and other `random*` functions fill the columns with random values —
+convenient for tests and demos.
+
+<!---FUN createDataFrameBuilderFill-->
+
+```kotlin
+// Every column: 3 rows filled with 0
+val filled = dataFrameOf("a", "b").fill(3, 0)
+// Every column: 3 rows of null values of type Int?
+val empty = dataFrameOf("a", "b").nulls<Int>(3)
+```
+
+<!---END-->
+
 ### toDataFrame
 
 #### `DataFrame` from `Map<String, List<*>>`:
