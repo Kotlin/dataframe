@@ -54,7 +54,7 @@ public inline fun <reified T : DataRowSchema> dataFrameOf(vararg rows: T): DataF
  * In the example below, `Person` is a class annotated with [DataSchema] and has `name` and `age` properties.
  * `df` has the type `DataFrame<Person>`.
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Append.appendDataSchema]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.AppendSamples.appendDataSchema]
  *
  * @param [T] The schema type of this dataframe and the objects representing the appended rows.
  * @param [rows] Objects representing complete rows to append, in order.

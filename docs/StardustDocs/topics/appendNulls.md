@@ -1,27 +1,39 @@
 [//]: # (title: appendNulls)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Append-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.AppendNullsSamples-->
 
-Returns a new [`DataFrame`](DataFrame.md) containing the existing rows followed by the requested number of rows
-filled with `null` values.
+<web-summary>
+Discover the `appendNulls` operation for Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Discover the `appendNulls` operation for Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Discover the `appendNulls` operation for Kotlin DataFrame.
+</link-summary>
+
+Adds one or more rows filled with `null` values to a [`DataFrame`](DataFrame.md).
+Returns a new `DataFrame` containing the existing rows followed by the requested number of rows filled with `null`
+values. 
+
+`appendNulls` does not modify the original `DataFrame`. Calling `appendNulls(0)` returns the original
+`DataFrame` instance.
+
+**API reference**: [`appendNulls`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/append-nulls.html)
 
 ```text
-appendNulls(numberOfRows: Int = 1): DataFrame
+df.appendNulls(numberOfRows: Int = 1): DataFrame
 ```
 
-**Parameters:**
-
-`numberOfRows` defaults to `1` and must not be negative.
-`appendNulls(0)` returns the original [`DataFrame`](DataFrame.md) instance.
 Passing a negative `numberOfRows` results in an `IllegalArgumentException`.
-
-`appendNulls` does not modify the original [`DataFrame`](DataFrame.md).
 
 <warning>
 
 Appending `null` widens the runtime type of each affected value column to nullable, while the compile-time schema
-of the returned [`DataFrame`](DataFrame.md) is not refined. Use [`cast`](cast.md) or [`convertTo`](convertTo.md)
-with a nullable schema before accessing these values through typed accessors.
+of the returned `DataFrame` is not refined. Use [`cast`](cast.md) or [`convertTo`](convertTo.md) with a nullable
+schema before accessing these values through typed accessors.
 
 </warning>
 
@@ -33,72 +45,82 @@ Prefer building a dataframe at once or appending/concatenating rows in batches.
 
 </tip>
 
-**Related operations**
-* [`append`](append.md) — appends rows containing specified values;
-* [`concat`](concat.md) — vertically combines dataframes or rows;
-* [`fillNulls`](fill.md#fillnulls) — replaces `null` values in existing rows;
+See also:
+
+* [`append`](append.md) — appends rows containing specified values.
+* [`concat`](concat.md) — vertically combines dataframes or rows.
+* [`fillNulls`](fill.md#fillnulls) — replaces `null` values in existing rows.
 * [`duplicateRows`](duplicate.md) — repeats existing rows.
 
-## Basic usage
+### Parameters
 
-The examples in this section use the following dataframe:
+* `numberOfRows: Int = 1` — the number of null-filled rows to append. It must not be negative. The default is `1`.
 
-<!---FUN appendDf-->
+### Examples
+
+The examples in this section use the following dataframe. Appended rows are highlighted in the outputs:
+
+<!---FUN appendNullsDf-->
 
 ```kotlin
 df
 ```
 
+<inline-frame src="./resources/appendNullsDf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/appendDf.html" width="100%" height="500px"></inline-frame>
 
 Omit `numberOfRows` to append one row containing a null value in every column:
 
-<!---FUN appendOneNullRow-->
+<!---FUN appendNullsOneRow-->
 
 ```kotlin
 df.appendNulls()
 ```
 
+<inline-frame src="./resources/appendNullsOneRow.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/appendOneNullRow.html" width="100%" height="500px"></inline-frame>
 
 Set `numberOfRows` to append several null-filled rows at once:
 
-<!---FUN appendSeveralNullRows-->
+<!---FUN appendNullsSeveralRows-->
 
 ```kotlin
 df.appendNulls(numberOfRows = 3)
 ```
 
+<inline-frame src="./resources/appendNullsSeveralRows.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/appendSeveralNullRows.html" width="100%" height="500px"></inline-frame>
 
-Passing `0` returns the original dataframe instance:
+Pass `0` to append no rows:
 
-<!---FUN appendZeroNullRows-->
+<!---FUN appendNullsZeroRows-->
 
 ```kotlin
 df.appendNulls(numberOfRows = 0)
 ```
 
+<inline-frame src="./resources/appendNullsZeroRows.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/appendZeroNullRows.html" width="100%" height="500px"></inline-frame>
 
-## `appendNulls` with a [`ColumnGroup`](DataColumn.md#columngroup)
+### `appendNulls` with a [`ColumnGroup`](DataColumn.md#columngroup)
 
-For a [`ColumnGroup`](DataColumn.md#columngroup), the appended `null` is passed to its nested columns.
+For a `ColumnGroup`, the appended `null` is passed to its nested columns.
 
-Consider the following example:
+The following dataframe contains a `name` column group with `firstName` and `lastName` columns:
 
-<!---FUN appendColumnGroupDf-->
+<!---FUN appendNullsColumnGroupDf-->
 
 ```kotlin
 columnGroupDf
 ```
 
+<inline-frame src="./resources/appendNullsColumnGroupDf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/appendColumnGroupDf.html" width="100%" height="500px"></inline-frame>
 
 `appendNulls()` adds a row in which nested and top-level values are `null`:
 
@@ -108,28 +130,28 @@ columnGroupDf
 columnGroupDf.appendNulls()
 ```
 
-<!---END-->
 <inline-frame src="./resources/appendNullsColumnGroup.html" width="100%" height="500px"></inline-frame>
 
-## `appendNulls` with a [`FrameColumn`](DataColumn.md#framecolumn)
+<!---END-->
 
-For a [`FrameColumn`](DataColumn.md#framecolumn), an appended `null` is represented
-by an empty [`DataFrame`](DataFrame.md) created using the schema available
-from that [`FrameColumn`](DataColumn.md#framecolumn) at the time of the call.
+### `appendNulls` with a [`FrameColumn`](DataColumn.md#framecolumn)
 
-Consider the following example:
+For a `FrameColumn`, an appended `null` is represented by an empty `DataFrame` created using the schema available
+from that `FrameColumn` at the time of the call.
 
-<!---FUN appendFrameColumnDf-->
+The following dataframe contains a `people` `FrameColumn`. Each nested dataframe contains one person:
+
+<!---FUN appendNullsFrameColumnDf-->
 
 ```kotlin
 frameColumnDf
 ```
 
-<!---END-->
-<inline-frame src="./resources/appendFrameColumnDf.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/appendNullsFrameColumnDf.html" width="100%" height="500px"></inline-frame>
 
-The new [`FrameColumn`](DataColumn.md#framecolumn) cell contains an empty [`DataFrame`](DataFrame.md) with the schema
-taken from the [`FrameColumn`](DataColumn.md#framecolumn):
+<!---END-->
+
+The new `FrameColumn` cell contains an empty `DataFrame` with the schema available from the `FrameColumn`:
 
 <!---FUN appendNullsFrameColumn-->
 
@@ -137,5 +159,6 @@ taken from the [`FrameColumn`](DataColumn.md#framecolumn):
 frameColumnDf.appendNulls()
 ```
 
-<!---END-->
 <inline-frame src="./resources/appendNullsFrameColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
