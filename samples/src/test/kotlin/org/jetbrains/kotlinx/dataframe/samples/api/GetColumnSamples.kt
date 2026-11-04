@@ -69,15 +69,15 @@ class GetColumnSamples : DataFrameSampleHelper("getColumn", "api") {
     @Test
     fun getFrameColumn() {
         // SampleStart
-        val grouped = df.groupBy { city }.toDataFrame() // has the FrameColumn "group"
-        grouped.getFrameColumn("group") // FrameColumn<*>
-        grouped.getFrameColumn(pathOf("group")) // FrameColumn<*>
+        val grouped = df.groupBy { city }.toDataFrame("frame") // has the FrameColumn "frame"
+        grouped.getFrameColumn("frame") // FrameColumn<*>
+        grouped.getFrameColumn(pathOf("frame")) // FrameColumn<*>
         // SampleEnd
-        grouped.getFrameColumn("group").name() shouldBe "group"
-        grouped.getFrameColumn(pathOf("group")).name() shouldBe "group"
+        grouped.getFrameColumn("frame").name() shouldBe "frame"
+        grouped.getFrameColumn(pathOf("frame")).name() shouldBe "frame"
 
-        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn("groups") }
-        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(pathOf("group", "age")) }
+        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn("group") }
+        shouldThrow<IllegalArgumentException> { grouped.getFrameColumn(pathOf("frame", "age")) }
         shouldThrow<ClassCastException> { grouped.getFrameColumn("city") } // not a frame column
     }
 
