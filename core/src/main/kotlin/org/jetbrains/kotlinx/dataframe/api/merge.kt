@@ -44,7 +44,7 @@ import kotlin.reflect.typeOf
  *
  * Finally, produce the result using one of the following methods:
  * - [into][Merge.into] — stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList][Merge.intoList] — returns the merged values as a [List] without changing the [DataFrame].
+ * - [intoList][Merge.intoList] — returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
  *
  * This operation is the reverse of [split].
  *
@@ -68,10 +68,8 @@ internal interface MergeDocs {
      * `\[ `__`.`__[**`notNull`**][Merge.notNull]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`by`**][Merge.by]**`(...) `**`| `__`.`__[**`by`**][Merge.by]**`  {  `**`transform: ... `**`} `**`]`
-     *
-     * {@include [Indent]}
-     * `\[ `__`.`__[**`asStrings`**][Merge.asStrings]**`() `**`]`
+     * `\[ `__`.`__[**`by`**][Merge.by]**`(...) `**`| `__`.`__[**`by`**][Merge.by]**`  {  `**`transform: ... `**`} `**
+     * `| `__`.`__[**`asStrings`**][Merge.asStrings]**`() `**`]`
      *
      * {@include [Indent]}
      * __`.`__[**`into`**][Merge.into]**`(`**`columnName: `[`String`][String]**`)`**
@@ -135,7 +133,7 @@ public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>
  * and serves as a transitional step before the merged values are computed.
  * It must be followed by one of the final methods to produce the result:
  * - [into] – stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList] – returns the merged values as a [List] without changing the [DataFrame].
+ * - [intoList] – returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
  *
  * You can also configure the merge using:
  * - [notNull] – to exclude `null` and empty row values;
@@ -169,7 +167,7 @@ public data class Merge<T, C, R>(
  * It stores the transform applied to the collected values and must be followed
  * by one of the final methods to produce the result:
  * - [into] – stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList] – returns the merged values as a [List] without changing the [DataFrame].
+ * - [intoList] – returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
  *
  * For more information: {@include [DocumentationUrls.Merge]}
  *

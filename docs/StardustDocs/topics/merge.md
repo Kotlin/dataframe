@@ -26,8 +26,8 @@ The merged column takes the position of the first selected column; all other col
 by one of the final steps — `into` or `intoList`.
 
 Returns a new [`DataFrame`](DataFrame.md) with the merged column (`into`), or the merged values as a
-[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) without changing
-the [`DataFrame`](DataFrame.md) (`intoList`).
+[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), one per row (`intoList`);
+in the latter case, the [`DataFrame`](DataFrame.md) itself is not changed: the selected columns stay in place.
 
 **API reference**: [`merge`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/merge.html)
 
@@ -59,7 +59,7 @@ Notes:
   columns — and replaced by the merged column. If the parent [column groups](DataColumn.md#columngroup) of `path`
   do not exist, they are created.
 * `intoList()` returns the merged values as a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/),
-  one merged value per row, without changing the [`DataFrame`](DataFrame.md): the selected columns stay in place.
+  one merged value per row — the [`DataFrame`](DataFrame.md) itself is not changed: the selected columns stay in place.
 
 `merge` is the reverse of [`split`](split.md).
 
@@ -213,7 +213,7 @@ peopleDf.merge { name.firstName and weight }.notNull().by(" ").into("info")
 
 <!---END-->
 
-`intoList()` returns the merged values without changing the `DataFrame`:
+`intoList()` returns the merged values; the `DataFrame` itself is not changed — the selected columns stay in place:
 
 <!---FUN mergeIntoList-->
 
