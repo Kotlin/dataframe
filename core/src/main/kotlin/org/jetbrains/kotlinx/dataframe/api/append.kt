@@ -50,11 +50,11 @@ import org.jetbrains.kotlinx.dataframe.nrow
  *
  * Append one row:
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Append.appendOneRow]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.AppendSamples.appendOneRow]
  *
  * Append several rows:
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Append.appendSeveralRows]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.AppendSamples.appendSeveralRows]
  *
  * @param [values] A flat sequence of values for the appended rows. Each consecutive group containing one value for
  * every column, in the dataframe's column order, forms one row.
@@ -106,11 +106,11 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
  *
  * Append one row using the default value of [numberOfRows]:
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Append.appendOneNullRow]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.AppendNullsSamples.appendNullsOneRow]
  *
  * Append a specified number of rows:
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Append.appendSeveralNullRows]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.AppendNullsSamples.appendNullsSeveralRows]
  *
  * @param [numberOfRows] The number of rows to append. Must not be negative. The default is `1`.
  * @return A new [DataFrame] containing the existing rows followed by [numberOfRows] new rows filled with `null`,

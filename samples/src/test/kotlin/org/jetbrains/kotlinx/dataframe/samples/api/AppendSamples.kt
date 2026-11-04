@@ -4,17 +4,20 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
+import org.jetbrains.kotlinx.dataframe.api.RgbColor
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
-class Append : DataFrameSampleHelper("append", "api") {
+class AppendSamples : DataFrameSampleHelper("append", "api") {
 
     @DataSchema
     data class Person(val name: String, val age: Int)
@@ -34,6 +37,16 @@ class Append : DataFrameSampleHelper("append", "api") {
 
     private val emptyPersonDf: DataFrame<*> = DataFrame.empty(df.schema())
     private val frameColumnDf: DataFrame<*> = dataFrameOf(columnOf(df) named "people")
+    private val appendedRowColor = RgbColor(189, 206, 233)
+
+    private fun DataFrame<*>.highlightAppendedRows(firstAppendedRow: Int) =
+        format().perRowCol { row, _ ->
+            if (row.index() >= firstAppendedRow) {
+                background(appendedRowColor) and textColor(black)
+            } else {
+                null
+            }
+        }
 
     @Test
     fun appendDf() {
@@ -49,6 +62,7 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.append("Bob", 30)
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
+            .highlightAppendedRows(df.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -56,13 +70,16 @@ class Append : DataFrameSampleHelper("append", "api") {
     fun appendSeveralRows() {
         // SampleStart
         df.append(
-            "Bob", // name in the first new row
-            30, // age in the first new row
-            "Charlie", // name in the second new row
-            25, // age in the second new row
+            // the first new row
+            "Bob",
+            30,
+            // the second new row
+            "Charlie",
+            25,
         )
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30, "Charlie", 25) }
+            .highlightAppendedRows(df.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -72,6 +89,7 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.append("Bob", null)
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", null) }
+            .highlightAppendedRows(df.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -94,6 +112,7 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.append(Person("Bob", 30))
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
+            .highlightAppendedRows(df.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -107,6 +126,8 @@ class Append : DataFrameSampleHelper("append", "api") {
         df.append(Person("Bob", 30))
             // SampleEnd
             .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, "Bob", 30) }
+            .highlightAppendedRows(df.rowsCount())
+            .saveDfHtmlSample()
     }
 
     @Test
@@ -131,6 +152,7 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
+            .highlightAppendedRows(columnGroupDf.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -149,6 +171,7 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
+            .highlightAppendedRows(columnGroupDf.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -167,6 +190,7 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
+            .highlightAppendedRows(columnGroupDf.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -184,6 +208,7 @@ class Append : DataFrameSampleHelper("append", "api") {
                     "age" to columnOf(20, 30),
                 )
             }
+            .highlightAppendedRows(columnGroupDf.rowsCount())
             .saveDfHtmlSample()
     }
 
@@ -216,64 +241,6 @@ class Append : DataFrameSampleHelper("append", "api") {
     fun appendNullToFrameColumn() {
         // SampleStart
         frameColumnDf.append(null)
-            // SampleEnd
-            .also {
-                it shouldBe dataFrameOf(columnOf(df, emptyPersonDf) named "people")
-            }
-            .toHtmlWithOpenedNestedDfs()
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendOneNullRow() {
-        // SampleStart
-        df.appendNulls()
-            // SampleEnd
-            .also { it shouldBe dataFrameOf("name", "age")("Alice", 20, null, null) }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendSeveralNullRows() {
-        // SampleStart
-        df.appendNulls(numberOfRows = 3)
-            // SampleEnd
-            .also {
-                it shouldBe dataFrameOf("name", "age")("Alice", 20, null, null, null, null, null, null)
-            }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendZeroNullRows() {
-        // SampleStart
-        df.appendNulls(numberOfRows = 0)
-            // SampleEnd
-            .also { (it === df) shouldBe true }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendNullsColumnGroup() {
-        // SampleStart
-        columnGroupDf.appendNulls()
-            // SampleEnd
-            .also {
-                it shouldBe dataFrameOf(
-                    "name" to columnOf(
-                        "firstName" to columnOf("Alice", null),
-                        "lastName" to columnOf("Cooper", null),
-                    ),
-                    "age" to columnOf(20, null),
-                )
-            }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun appendNullsFrameColumn() {
-        // SampleStart
-        frameColumnDf.appendNulls()
             // SampleEnd
             .also {
                 it shouldBe dataFrameOf(columnOf(df, emptyPersonDf) named "people")
