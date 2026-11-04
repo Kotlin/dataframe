@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
 
 /**
  * The name is looked up among the top-level columns only.
- * To get a nested column, use a [ColumnPath] or a column selector instead.
+ * To get a nested column, use a [ColumnPath] or a [column selector][ColumnSelector] instead.
  */
 @ExcludeFromSources
 private typealias ByTopLevelNameSnippet = Nothing
@@ -44,9 +44,7 @@ private typealias ByTopLevelNameSnippet = Nothing
 @ExcludeFromSources
 private typealias ByPathSnippet = Nothing
 
-/**
- * The index is the zero-based position of the column among the top-level columns.
- */
+/** The index is the zero-based position of the column among the top-level columns. */
 @ExcludeFromSources
 private typealias ByIndexSnippet = Nothing
 
@@ -629,7 +627,7 @@ public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean 
 // region rows
 
 /**
- * Returns a lazy [Iterable] over the [rows][DataRow] of this [DataFrame], from the first row to the last one.
+ * Returns an [Iterable] over the [rows][DataRow] of this [DataFrame], from the first row to the last one.
  *
  * @include [RowsDocs]
  *
@@ -652,7 +650,7 @@ public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
     }
 
 /**
- * Returns a lazy [Iterable] over the [rows][DataRow] of this [DataFrame] in the reverse order,
+ * Returns an [Iterable] over the [rows][DataRow] of this [DataFrame] in the reverse order,
  * from the last row to the first one.
  *
  * Unlike [reverse], it doesn't create a new [DataFrame].
