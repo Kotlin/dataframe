@@ -215,7 +215,7 @@ public interface GlobalParserOptions {
      */
     public fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType)
 
-    /* Either 'formatType' (default) or 'T' */
+    // Either 'formatType' (default) or 'T'
     @ExcludeFromSources
     private typealias FORMAT_TYPE = Nothing
 
