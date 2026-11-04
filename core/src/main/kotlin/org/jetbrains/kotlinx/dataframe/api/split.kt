@@ -57,8 +57,6 @@ import kotlin.reflect.typeOf
  *
  * @include [SplitDocs.SplitStepsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
  *
- * Each of these methods returns a new [DataFrame].
- *
  * Reverse operations: [merge] for [into][SplitWithTransform.into] and [inward][SplitWithTransform.inward],
  * [implode] for [intoRows][SplitWithTransform.intoRows].
  *
@@ -116,15 +114,18 @@ internal interface SplitDocs {
     typealias Grammar = Nothing
 
     /**
-     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
-     * - [cast][Split.cast] — changes the type of the values in the columns selected by [split] for the following steps,
-     *   without checking or converting the values themselves.
+     * This step is usually only
+     * needed when using the {@include [org.jetbrains.kotlinx.dataframe.documentation.AccessApis.StringApiLink]}.
+     * - [cast][Split.cast] — changes the type of the values in the columns selected by [split]
+     *   for the following steps, without checking or converting the values themselves.
      */
     @ExcludeFromSources
-    typealias ConfigurationMethodsSnippet = Nothing
+    typealias CastMethodsSnippet = Nothing
 
     /**
-     * This step defines how each cell value is split. It can be skipped if the column values already contain
+     * This step defines how each cell value is split.
+     *
+     * It can be skipped if the column values already contain
      * [Iterable] or [DataFrame]s.
      * - [by][Split.by] — splits each value by [Char] or [String] delimiters, by a [Regex],
      *   or with a custom splitter function.
@@ -132,6 +133,12 @@ internal interface SplitDocs {
      */
     @ExcludeFromSources
     typealias TransformationMethodsSnippet = Nothing
+
+    /**
+     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
+     */
+    @ExcludeFromSources
+    typealias ConfigurationMethodsSnippet = Nothing
 
     /**
      * - [inplace][$[INTERMEDIATE_CLASS].inplace] — stores the parts as a [List] in the original column.
@@ -174,16 +181,21 @@ internal interface SplitDocs {
      *
      * #### Split vertically
      * @include [VerticalMethodsSnippet]
+     *
+     * Each terminal method returns a new [DataFrame].
      */
     @ExcludeFromSources
     typealias TerminalMethodsSnippet = Nothing
 
     /**
-     * ### Configuration (optional)
-     * @include [ConfigurationMethodsSnippet]
+     * ### Casting (optional)
+     * @include [CastMethodsSnippet]
      *
      * ### Transformation
      * @include [TransformationMethodsSnippet]
+     *
+     * ### Configuration (optional)
+     * @include [ConfigurationMethodsSnippet]
      *
      * ### Terminal method
      * @include [TerminalMethodsSnippet]
@@ -372,8 +384,6 @@ public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C>
  *
  * @include [SplitDocs.SplitStepsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] Split}
  *
- * Each of these methods returns a new [DataFrame].
- *
  * For more information: {@include [DocumentationUrls.Split]}
  *
  * See [Grammar][SplitDocs.Grammar].
@@ -435,7 +445,7 @@ public class Split<T, C>(
  * #### Split vertically
  * @include [SplitDocs.VerticalMethodsSnippet] {@set [SplitDocs.INTERMEDIATE_CLASS] SplitWithTransform}
  *
- * Each of these methods returns a new [DataFrame].
+ * Each terminal method returns a new [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Split]}
  *
@@ -595,6 +605,7 @@ public fun <T, C> Split<T, C>.by(
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
  * @param [regex] The regular expression to split the values around.
+ *   If invalid, a [java.util.regex.PatternSyntaxException] is thrown.
  * @param [trim] Whether to remove leading and trailing whitespace from each part. `true` by default.
  * @param [limit] The maximum number of parts; the last part contains the rest of the value.
  *   `0` (no limit) by default.
@@ -661,7 +672,8 @@ private interface SplitByDelimitersDocs {
      * @param [ignoreCase\] Whether to ignore the character case when matching the [delimiters\].
      *   `false` by default.
      * @param [limit\] The maximum number of parts; the last part contains the rest of the value.
-     *   `0` (no limit) by default.
+     *   `0` (no limit) by default. Providing a negative value will result in an [IllegalArgumentException] when
+     *   a terminal split method is called.
      * @return A [SplitWithTransform] that splits the values by the [delimiters\].
      */
     typealias ParamsSnippet = Nothing
@@ -702,6 +714,7 @@ private typealias CommonMatchDocs = Nothing
 /**
  * @include [CommonMatchDocs]
  * @param [regex] The regular expression pattern to compile with [String.toRegex].
+ *   If invalid, a [java.util.regex.PatternSyntaxException] is thrown.
  * @return A [SplitWithTransform] that splits the values into the capturing groups of [regex].
  */
 @Interpretable("MatchStringRegex")
@@ -712,6 +725,7 @@ public fun <T, C : String?> Split<T, C>.match(
 /**
  * @include [CommonMatchDocs]
  * @param [regex] The regular expression whose capturing groups define the parts.
+ *   If invalid, a [java.util.regex.PatternSyntaxException] is thrown.
  * @return A [SplitWithTransform] that splits the values into the capturing groups of [regex].
  */
 @Interpretable("MatchRegex")
