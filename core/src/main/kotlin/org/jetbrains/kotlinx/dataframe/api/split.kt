@@ -241,6 +241,8 @@ public fun <T, C : Iterable<*>> Split<T, C>.into(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = by { it }.into(names.toList(), extraNamesGenerator)
 
+@Refine
+@Interpretable("SplitDataFrameInto")
 @JvmName("splitDataFrameInto")
 public fun <T, C> Split<T, DataFrame<C>>.into(
     vararg names: String,
