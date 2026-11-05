@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -28,6 +30,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 import java.util.Locale
+import kotlin.reflect.typeOf
 
 class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
 
@@ -35,6 +38,16 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         dataFrameOf(
             "date" to columnOf("2025-11-22", "2025-11-23", "2025-11-24"),
             "value" to columnOf("1.0", "200,000.0", "1.123"),
+            "code" to columnOf('1', '2', '3'),
+            "info" to columnOf(
+                "city" to columnOf("Moscow", "Berlin", "Paris"),
+                "age" to columnOf("30", "25", "41"),
+            ),
+            "history" to columnOf(
+                dataFrameOf("visit")("2024-05-01"),
+                dataFrameOf("visit")("2024-06-15"),
+                dataFrameOf("visit")("2024-07-30"),
+            ),
         )
 
     private fun AnyFrame.withTypes() =
@@ -65,6 +78,36 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
         df.parse { date and value }
             // SampleEnd
             .withTypes()
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun parseSomeByName() {
+        val df = getDf()
+        // SampleStart
+        df.parse("date", "value")
+            // SampleEnd
+            .also {
+                it["date"].type() shouldBe typeOf<LocalDate>()
+                it["value"].type() shouldBe typeOf<Double>()
+            }
+    }
+
+    @Test
+    fun parseFrameColumn() {
+        val frames = DataColumn.createValueColumn(
+            "frames",
+            listOf(dataFrameOf("value")("1.0"), null, dataFrameOf("value")("2.0")),
+        )
+        // SampleStart
+        frames.parse()
+            // SampleEnd
+            .also {
+                (it[0] as DataFrame<*>)["value"].type() shouldBe typeOf<Double>()
+                (it[0] as DataFrame<*>)["value"].toList() shouldBe listOf(1.0)
+                it[1] shouldBe null
+                (it[2] as DataFrame<*>)["value"].toList() shouldBe listOf(2.0)
+            }
             .saveDfHtmlSample()
     }
 

@@ -5,6 +5,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -19,11 +20,16 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.plus
 import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toStdlibInstant
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.net.URL
 import java.util.Locale
 import kotlin.random.Random
 import kotlin.reflect.typeOf
@@ -913,6 +919,227 @@ class ParseTests {
 
         parsed.type() shouldNotBe typeOf<Uuid>()
         parsed.type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `parse without arguments parses all string and char columns at the top level and inside column groups`() {
+        val top by columnOf("5", "6")
+        val chars by columnOf('5', '6')
+        val grouped = dataFrameOf("a", "b")("1", "3", "2", "4").group("a", "b").into("g")
+        val df = dataFrameOf(top, chars, grouped["g"])
+
+        val parsed = df.parse()
+
+        parsed["top"].type() shouldBe typeOf<Int>()
+        parsed["top"].toList() shouldBe listOf(5, 6)
+        parsed["chars"].type() shouldBe typeOf<Int>()
+        parsed["chars"].toList() shouldBe listOf(5, 6)
+        val ungrouped = parsed.ungroup("g")
+        ungrouped["a"].type() shouldBe typeOf<Int>()
+        ungrouped["a"].toList() shouldBe listOf(1, 2)
+        ungrouped["b"].type() shouldBe typeOf<Int>()
+        ungrouped["b"].toList() shouldBe listOf(3, 4)
+    }
+
+    @Test
+    fun `parse without arguments parses string columns inside frame columns`() {
+        val inner1 = dataFrameOf("c")("3")
+        val inner2 = dataFrameOf("c")("4")
+        val top by columnOf("5", "6")
+        val frames by columnOf(inner1, inner2)
+        val df = dataFrameOf(top, frames)
+
+        val parsed = df.parse()
+
+        parsed["top"].type() shouldBe typeOf<Int>()
+        parsed["top"].toList() shouldBe listOf(5, 6)
+        val framesCol = parsed["frames"] as DataColumn<*>
+        framesCol.kind() shouldBe ColumnKind.Frame
+        (framesCol[0] as DataFrame<*>)["c"].type() shouldBe typeOf<Int>()
+        (framesCol[0] as DataFrame<*>)["c"].toList() shouldBe listOf(3)
+        (framesCol[1] as DataFrame<*>)["c"].toList() shouldBe listOf(4)
+    }
+
+    @Test
+    fun `parse with column names parses only the selected columns`() {
+        val df = dataFrameOf("a", "b", "c")("1", "true", "7")
+
+        val parsed = df.parse("a", "b")
+
+        parsed["a"].type() shouldBe typeOf<Int>()
+        parsed["a"].toList() shouldBe listOf(1)
+        parsed["b"].type() shouldBe typeOf<Boolean>()
+        parsed["b"].toList() shouldBe listOf(true)
+        // "7" would parse to Int if it were selected — staying String proves the isolation
+        parsed["c"].type() shouldBe typeOf<String>()
+        parsed["c"].toList() shouldBe listOf("7")
+    }
+
+    @Test
+    fun `parse with a column selector parses only the selected column`() {
+        val a by columnOf("1")
+        val b by columnOf("2")
+        val df = dataFrameOf(a, b)
+
+        val parsed = df.parse { b }
+
+        parsed[a.name()].type() shouldBe typeOf<String>()
+        parsed[b.name()].type() shouldBe typeOf<Int>()
+        parsed[b.name()].toList() shouldBe listOf(2)
+    }
+
+    @Test
+    fun `parse with a selector parses selected columns inside a column group`() {
+        val df = dataFrameOf("a", "b")("1", "2").group("a", "b").into("g")
+
+        val parsed = df.parse { colsAtAnyDepth().filter { it.name() == "b" } }
+
+        val ungrouped = parsed.ungroup("g")
+        ungrouped["a"].type() shouldBe typeOf<String>()
+        ungrouped["b"].type() shouldBe typeOf<Int>()
+        ungrouped["b"].toList() shouldBe listOf(2)
+    }
+
+    @Test
+    fun `parse converts boolean strings with any capitalization`() {
+        val col by columnOf("true", "FALSE", "t", "f", "yes", "NO")
+
+        val parsed = col.parse()
+
+        parsed.type() shouldBe typeOf<Boolean>()
+        parsed.toList() shouldBe listOf(true, false, true, false, true, false)
+    }
+
+    @Test
+    fun `parse skips types excluded via skipTypes and falls back to the next parser`() {
+        val col by columnOf("1", "2")
+
+        // "1" and "2" would parse to Int; with Int excluded, Long is the next suitable type
+        val parsed = col.parse(ParserOptions(skipTypes = setOf(typeOf<Int>())))
+
+        parsed.type() shouldBe typeOf<Long>()
+        parsed.toList() shouldBe listOf(1L, 2L)
+    }
+
+    @Test
+    fun `parse on a column of frames recursively parses the nested dataframes`() {
+        val col: DataColumn<DataFrame<*>?> = DataColumn.createFrameColumn(
+            "col",
+            listOf(dataFrameOf("c")("3"), dataFrameOf("c")("4")),
+        )
+
+        val parsed = col.parse()
+
+        parsed.kind() shouldBe ColumnKind.Frame
+        (parsed[0] as DataFrame<*>)["c"].type() shouldBe typeOf<Int>()
+        (parsed[0] as DataFrame<*>)["c"].toList() shouldBe listOf(3)
+        (parsed[1] as DataFrame<*>)["c"].toList() shouldBe listOf(4)
+    }
+
+    @Test
+    fun `parse on a nullable column of frames keeps null cells and parses the frames`() {
+        val inner = dataFrameOf("c")("3")
+        val col: DataColumn<DataFrame<*>?> = DataColumn.createValueColumn(
+            "col",
+            listOf(inner, null),
+        )
+
+        val parsed = col.parse()
+
+        (parsed[0] as DataFrame<*>)["c"].type() shouldBe typeOf<Int>()
+        (parsed[0] as DataFrame<*>)["c"].toList() shouldBe listOf(3)
+        parsed[1] shouldBe null
+    }
+
+    @Test
+    fun `parse converts URL strings to a URL column`() {
+        val col by columnOf("https://kotlin.github.io", "https://jetbrains.com")
+
+        val parsed = col.parse()
+
+        parsed.type() shouldBe typeOf<URL>()
+        parsed.toList() shouldBe listOf(URL("https://kotlin.github.io"), URL("https://jetbrains.com"))
+    }
+
+    @Test
+    fun `parse converts huge numbers to BigInteger and BigDecimal when Double parsing is skipped`() {
+        val bigInt by columnOf("123456789012345678901234567890")
+        val bigDec by columnOf("3.14159265358979323846264338327950288")
+
+        // Double comes before BigInteger/BigDecimal in the parsing order and takes these values first;
+        // excluding it makes the BigInteger/BigDecimal parsers run
+        val noDouble = ParserOptions(skipTypes = setOf(typeOf<Double>()))
+
+        val parsedInt = bigInt.parse(noDouble)
+        parsedInt.type() shouldBe typeOf<BigInteger>()
+        parsedInt.toList() shouldBe listOf(BigInteger("123456789012345678901234567890"))
+
+        val parsedDec = bigDec.parse(noDouble)
+        parsedDec.type() shouldBe typeOf<BigDecimal>()
+        parsedDec.toList() shouldBe listOf(BigDecimal("3.14159265358979323846264338327950288"))
+    }
+
+    @Test
+    fun `parse converts month and day names to kotlinx datetime enums with any capitalization`() {
+        val months by columnOf("january", "February", "MARCH")
+        val days by columnOf("monday", "Tuesday", "WEDNESDAY")
+
+        val parsedMonths = months.parse()
+        val parsedDays = days.parse()
+
+        parsedMonths.type() shouldBe typeOf<Month>()
+        parsedMonths.toList() shouldBe listOf(Month.JANUARY, Month.FEBRUARY, Month.MARCH)
+        parsedDays.type() shouldBe typeOf<DayOfWeek>()
+        parsedDays.toList() shouldBe listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY)
+    }
+
+    @Test
+    fun `convertTo converts month names through the same shared parser`() {
+        val col by columnOf("january", "February")
+
+        val converted = col.convertTo(typeOf<Month>())
+
+        converted.type() shouldBe typeOf<Month>()
+        converted.toList() shouldBe listOf(Month.JANUARY, Month.FEBRUARY)
+    }
+
+    @Test
+    fun `parse leaves month names as strings when Kotlin date-time parsing is disabled`() {
+        val col by columnOf("january", "February")
+
+        try {
+            DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA
+
+            val parsed = col.tryParse()
+
+            parsed.type() shouldBe typeOf<String>()
+            parsed.toList() shouldBe listOf("january", "February")
+        } finally {
+            DataFrame.parser.resetToDefault()
+        }
+    }
+
+    @Test
+    fun `parse treats the global default null strings as null`() {
+        val col by columnOf("1", "null", "2", "NULL", "NA", "N/A")
+
+        val parsed = col.parse()
+
+        parsed.type() shouldBe typeOf<Int?>()
+        parsed.toList() shouldBe listOf(1, null, 2, null, null, null)
+    }
+
+    @Test
+    fun `parse on an empty column of frames returns an empty FrameColumn`() {
+        val col: DataColumn<DataFrame<*>?> = DataColumn.createValueColumn(
+            "col",
+            listOf<DataFrame<*>?>(),
+        )
+
+        val parsed = col.parse()
+
+        parsed.kind() shouldBe ColumnKind.Frame
+        parsed.size() shouldBe 0
     }
 
     /**
