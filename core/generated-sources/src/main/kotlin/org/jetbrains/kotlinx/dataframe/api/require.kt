@@ -13,16 +13,28 @@ import kotlin.reflect.typeOf
  * Throws if the column can't be resolved or if its type doesn't match.
  *
  * From the compiler plugin perspective, a new column will appear in the compile-time schema as a result of this operation.
+ * Will work in the compiler plugin starting from IntelliJ IDEA 2026.2 and Kotlin 2.4.0.
  *
  * The aim here is to help incrementally migrate workflows to extension properties API.
  *
- * We recommend considering declaring a [<code>DataSchema</code>][DataSchema] and use [<code>cast</code>][cast] or [<code>convertTo</code>][convertTo] if you end up with more than a few `requireColumn` calls.
+ * We recommend considering declaring a [<code>DataSchema</code>][DataSchema] and using [<code>cast</code>][cast] or [<code>convertTo</code>][convertTo] if you end up with more than a few `requireColumn` calls.
  *
- * String API Example:
+ * For more information: [See `requireColumn` on the documentation website.](https://kotlin.github.io/dataframe/require.html)
  *
+ * ### Examples
+ *
+ * Require a nested column with a runtime check and use the extension property afterwards:
  * ```kotlin
- * val repos = DataFrame
- *     .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+ * val df = DataFrame.readJson(file)
+ * // Without `requireColumn` the extension property will not resolve:
+ * // df.select { name.firstName }
+ * val typed = df.requireColumn { "name"["firstName"]<String>() }
+ * val v: String = typed.name.firstName[0]
+ * ```
+ *
+ * A pipeline that uses only String Column Accessors and String API overloads repeats the `stargazers_count` string three times:
+ * ```kotlin
+ * val repos = DataFrame.readCsv(file)
  *
  * repos
  *     .filter { "stargazers_count"<Int>() > 100 }
@@ -30,13 +42,9 @@ import kotlin.reflect.typeOf
  *     .select("full_name", "stargazers_count")
  * ```
  *
- * Notice how `stargazers_count` String is repeated three times. We can use `requireColumn` to add information about this column to the compile-time schema.
- *
- * Refactored example:
- *
- * ```
- * val repos = DataFrame
- *     .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+ * `requireColumn` adds the column to the compile-time schema, so the same pipeline can use the extension property instead:
+ * ```kotlin
+ * val repos = DataFrame.readCsv(file)
  *     .requireColumn { "stargazers_count"<Int>() }
  *
  * repos
@@ -47,30 +55,32 @@ import kotlin.reflect.typeOf
  *
  * This way code becomes a bit more robust.
  * For example, after `.rename { stargazers_count }.into("stars")`
- * usages of the `stargazers_count` property become compile time errors
- * that are easy to spot and update to `stars`.
- *
+ * usages of the `stargazers_count` property become compile-time errors
+ * that are easy to spot and update to `stars`:
  * ```kotlin
- * val repos = DataFrame
- *     .readCsv("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+ * val repos = DataFrame.readCsv(file)
  *     .requireColumn { "stargazers_count"<Int>() }
  *     .rename { stargazers_count }.into("stars")
  *
- * repos
- *     .filter { stars > 100 }
- *     .sortByDesc { stars }
- *     .select { "full_name" and stars }
+ * // usages of the `stargazers_count` property no longer resolve:
+ * // repos.filter { stargazers_count > 100 }
+ * repos.filter { stars > 100 }
  * ```
  *
- * `requireColumn` can be used to change the type of a known column:
- *
+ * `requireColumn` can also change the compile-time type of a column that is already in the schema:
+ * the runtime type of the column must be a subtype of [<code>C</code>][C].
  * ```kotlin
  * val df = dataFrameOf("name" to columnOf<Any>("Joe"))
  * val typed = df.requireColumn { name.cast<String>() }
- * typed.filter { name.length > 2 }
+ * val filtered = typed.filter { name.length > 2 }
  * ```
  *
- * For more information: [See `requireColumn` on the documentation website.](https://kotlin.github.io/dataframe/require.html)
+ * @param [T] The schema marker type of this [<code>DataFrame</code>][DataFrame].
+ * @param [C] The type the column is required to have.
+ * @param [column] The [<code>ColumnSelector</code>][ColumnSelector] for the column to require.
+ * @throws [IllegalArgumentException] if the runtime type of the resolved column is not a subtype of [<code>C</code>][C].
+ * @throws [IllegalStateException] if [<code>column</code>][column] can't be resolved in this [<code>DataFrame</code>][DataFrame].
+ * @return This [<code>DataFrame</code>][DataFrame] with [<code>column</code>][column] added to the compile-time schema.
  */
 @Refine
 @Interpretable("Require0")
