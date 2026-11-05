@@ -145,7 +145,10 @@ To add one:
   `src` builds fine and silently renders an empty frame.
 - **Nothing validates links.** Writerside resolves topic links by file name (`DataFrame.md`, not a relative
   path); anchors are the lowercased heading with punctuation dropped and spaces → `-` (or an explicit
-  `{id="..."}`). When you add, rename, move or split a topic or section, also fix the KDoc → website URLs in
+  `{id="..."}`). Punctuation drops **without** a dash: "Specialized date/time conversions" anchors as
+  `specialized-datetime-conversions`, not `specialized-date-time-conversions` — give such headings an explicit
+  `{id="..."}` (precedent: `filter.md`). When you add, rename, move or split a topic or section, also fix the
+  KDoc → website URLs in
   `core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt`
   (page = topic file name lowercased + `.html`) — a stale one silently points at a missing page.
 - **Link to the Dokka API reference with absolute URLs.** Dokka's HTML is not part of this project; CI

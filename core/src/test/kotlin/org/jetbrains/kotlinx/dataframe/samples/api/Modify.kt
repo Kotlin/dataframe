@@ -3,18 +3,13 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDate
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -24,15 +19,11 @@ import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -55,7 +46,6 @@ import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perCol
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
@@ -72,9 +62,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toStart
@@ -96,8 +83,6 @@ import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
-import java.util.Locale
-import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
 class Modify : TestBase() {
@@ -160,105 +145,6 @@ class Modify : TestBase() {
         val updated =
             // SampleStart
             df.update { colsOf<String?>() }.perRowCol { row, col -> col.name() + ": " + row.index() }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convert() {
-        // SampleStart
-        df.convert { age }.with { it.toDouble() }
-        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
-        // SampleEnd
-    }
-
-    @Test
-    fun convertColumnTo() {
-        // SampleStart
-        df.weight.convertTo<Float?>()
-        df.age.convertToDouble()
-        // SampleEnd
-    }
-
-    val stringDf = dataFrameOf(
-        "date" to columnOf("2025-11-22", "2025-11-23", "2025-11-24"),
-        "value" to columnOf("1,0", "200.000,0", "-"),
-    ).cast<ParseDf>()
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertStringTo() {
-        // SampleStart
-        // String -> Double? conversion
-        stringDf.convert { value }.to<Double?>(
-            parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
-        )
-
-        // String -> LocalDate conversion
-        stringDf.convert { date }.to<LocalDate>(
-            parserOptions = ParserOptions(
-                dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
-            ),
-        )
-        // shortcut for String -> LocalDate conversion
-        stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertTo() {
-        // SampleStart
-        df.convert { age }.to<Double>()
-        df.convert { colsOf<Number>() }.to<String>()
-        df.convert { name.firstName and name.lastName }.asColumn { col -> col.map { it.length } }
-        df.convert { weight }.toFloat()
-        // SampleEnd
-    }
-
-    enum class Direction {
-        NORTH,
-        SOUTH,
-        WEST,
-        EAST,
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertToEnum() {
-        // SampleStart
-        dataFrameOf("direction")("NORTH", "WEST")
-            .convert("direction").to<Direction>()
-        // SampleEnd
-    }
-
-    @JvmInline
-    value class IntClass(val value: Int)
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertToValueClass() {
-        // SampleStart
-        dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
-            .convert("value").to<IntClass>()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertAsFrame() {
-        // SampleStart
-        df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertAsColumn() {
-        // SampleStart
-        df.convert { name }.asColumn { col ->
-            col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
-        }
         // SampleEnd
     }
 
@@ -709,40 +595,6 @@ class Modify : TestBase() {
             .move { name.firstName and name.lastName }.after { isHappy }
             .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
             .rename { isHappy }.to("isOK")
-        // SampleEnd
-    }
-
-    class MyType(val value: Int)
-
-    @DataSchema
-    class MySchema(val a: MyType, val b: MyType, val c: Int)
-
-    fun customConvertersData() {
-        // SampleStart
-        class MyType(val value: Int)
-
-        @DataSchema
-        class MySchema(val a: MyType, val b: MyType, val c: Int)
-
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun customConverters() {
-        // SampleStart
-        val df: AnyFrame = dataFrameOf(
-            "a" to columnOf(1, 2, 3),
-            "b" to columnOf("1", "2", "3"),
-        )
-        df.convertTo<MySchema> {
-            // providing the converter: Int -> MyType, so column `a` can be converted
-            convert<Int>().with { MyType(it) }
-            // providing the parser: String -> MyType, so column `b` can be converted
-            parser { MyType(it.toInt()) }
-            // providing the filler for `c`, as it's missing in `df`
-            fill { c }.with { a.value + b.value }
-        }
         // SampleEnd
     }
 

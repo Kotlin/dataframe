@@ -29,7 +29,9 @@ rewrite its `:core` samples here with Sample Helper outputs.
 `core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Access.kt`). Nothing reports a `:core` sample
 that no page imports any more, so the orphan stays, and the next person who edits it sees no change on the
 page. Before the PR, check that every function the page imported from `:core` is either deleted or still used by
-another page.
+another page. After deleting, grep the removed samples' identifiers across `core/src`: imports used only by them
+die silently (hidden by `@file:Suppress("ktlint")` in files like `Modify.kt`), and a `@DataSchema` whose last
+user is gone orphans its pair in `generated-dataschema-accessors`, which nothing reports either.
 
 A test that asserts what a page prints belongs here too, not in `:core`: the dependency runs
 `:samples` → `:core` (`build.gradle.kts` takes `:core` through its jars; `core/build.gradle.kts` has no
@@ -57,6 +59,9 @@ dependency on `:samples`), so a `:core` test cannot reach `TestBase.peopleDf` an
 - **`groupSamples` tab convention:** function-name suffixes map to doc tabs — `_properties` → "Properties",
   `_strings` → "Strings", `_kotlin` → "Kotlin", `_java` → "Java". Korro wraps the variants into `<tabs>`/`<tab>`
   itself: in the topic write a single `<!---FUN x-->` with the **base** name (no suffix) and no tab markup.
+  Both functions of a pair carry the suffix (`x_properties` + `x_strings`); a base-named `x` next to an
+  `x_strings` does **not** group — korro renders `x` alone and the `_strings` twin silently disappears from
+  the page.
   `SampleHelper` cuts the `_properties`/`_strings` suffix off output file names too (`namePartsToRemove`), so both
   variants write `./resources/x.html` — save the output in one of them only (usually `_properties`).
 - **Iframes / plots:** `DataFrameSampleHelper` (`SampleHelper`) saves DataFrames as HTML iframes into
@@ -97,6 +102,8 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   subpackage matching its topic, and make sure both the test and the topic file are covered by the `korro.docs` /
   `korro.samples` includes.
 - Mark snippets with `// SampleStart` / `// SampleEnd`; show the input dataframe first, in its own sample.
+  The code inside `// SampleStart` runs in the test: a call that intentionally throws must be wrapped in
+  `shouldThrow` **inside** the shown block, or the test fails on the throw it was meant to demonstrate.
 - If the operation selects columns or uses row values, the basic example is a `x_properties` / `x_strings` pair
   (Extension Properties API / String API). If the operation can't take plain `String` names, write `_strings` with
   `String` column accessors (`col<Int>("age")`, `getValue<Int>("age")`, …) — never the outdated "Invoked String API"
@@ -107,8 +114,14 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
-  etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ConcatSamples.kt`).
+  etc. is the default; otherwise declare a `@DataSchema` class/interface in the sample class (class level only)
+  + `dataFrameOf(...)` (see `ConcatSamples.kt`). The compiler plugin rejects `@DataSchema`/enum/value class
+  declarations inside function bodies ("@DataSchema declarations cannot be local", "Value class cannot be local
+  or inner") — show such declarations in the topic as `text`-fenced signatures instead of samples.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
+- Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the
+  result's compile-time marker type, so the source schema's accessors no longer apply to it — read converted
+  columns by name (`it["date"]`) in assertions.
 - Write each sample as a runnable test with optional assertions; it must pass and must not be `@Ignore`d (except
   complex integration tests, e.g. reading from DBs).
