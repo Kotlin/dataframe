@@ -607,6 +607,9 @@ public interface DocumentationUrls {
     /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
     public typealias ParsingDoubles = Nothing
 
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
+
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing
 
