@@ -90,8 +90,8 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = {
  * df.explode { colsOf<List<Double>>() }
  * ```
  *
- * @param [dropEmpty] If `true`, removes rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
  * @param selector The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns to explode.
  * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
@@ -149,8 +149,8 @@ public fun <T> DataFrame<T>.explode(
  * val exploded = df.explode("tags", "scores")
  * ```
  *
- * @param [dropEmpty] If `true`, removes rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
  * @param columns The [<code>column names</code>][String] used to select columns to explode.
  * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns.
@@ -226,8 +226,8 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
  * row.explode { hobbies and scores }
  * ```
  *
- * @param [dropEmpty] If `true`, removes rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
  * @param columns The [<code>ColumnsSelector</code>][ColumnsSelector] used to select columns to explode.
  * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns from this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
@@ -277,8 +277,8 @@ public fun <T> DataRow<T>.explode(
  * row.explode("hobbies", "scores")
  * ```
  *
- * @param [dropEmpty] If `true`, removes rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s.
- *                  If `false`, such rows will be exploded into `null` values.
+ * @param [dropEmpty] If `true`, rows with empty [<code>List</code>][List]s or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s are removed.
+ * If `false`, such rows will be exploded into `null` values.
  * @param columns The [<code>column names</code>][String] used to select columns to explode.
  * If not specified, all applicable columns (i.e., of type [<code>List</code>][List] or [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]) will be exploded.
  * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with exploded columns from this [<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow].
