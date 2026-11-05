@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.api.requireImpl
 import kotlin.reflect.typeOf
 
@@ -41,13 +42,15 @@ import kotlin.reflect.typeOf
  *
  * `requireColumn` can also change the compile-time type of a column that is already in the schema:
  * the runtime type of the column must be a subtype of [C].
+ * (`columnOf` infers the runtime type from the values, so in the sample below it is `String`, not `Any`.)
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnCast]
  *
  * @param [T] The schema marker type of this [DataFrame].
  * @param [C] The type the column is required to have.
  * @param [column] The [ColumnSelector] for the column to require.
+ * @throws [ColumnNotFoundException] if [column] can't be resolved in this [DataFrame].
+ * The exception implements [DataFrameError], so the compiler plugin reports it as a warning.
  * @throws [IllegalArgumentException] if the runtime type of the resolved column is not a subtype of [C].
- * @throws [IllegalStateException] if [column] can't be resolved in this [DataFrame].
  * @return This [DataFrame] with [column] added to the compile-time schema.
  */
 @Refine

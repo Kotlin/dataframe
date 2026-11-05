@@ -310,6 +310,7 @@
 <resource src="reorderInDifferentGroups.html"></resource>
 <resource src="reorderInGroup.html"></resource>
 <resource src="reorderSome.html"></resource>
+<resource src="requireColumnCast.html"></resource>
 <resource src="requireColumnNested.html"></resource>
 <resource src="requireColumnRename.html"></resource>
 <resource src="requireColumnStringApi.html"></resource>

@@ -1,8 +1,9 @@
 [//]: # (title: requireColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples-->
 
-Resolves the column in this [`DataFrame`](DataFrame.md) and checks that its runtime type is a subtype of `C`.
-Throws an exception if the column can't be resolved or if its type doesn't match.
+Resolves the column in this [`DataFrame`](DataFrame.md) and checks that its runtime type is a subtype of `C`, the required column type.
+Throws a [ColumnNotFoundException](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.exceptions/-column-not-found-exception.html) if the column can't be resolved,
+or an `IllegalArgumentException` if its type doesn't match.
 From the compiler plugin perspective, a new column will appear in the compile-time schema as a result of this operation.
 The aim here is to help incrementally migrate workflows to [extension properties API](extensionPropertiesApi.md).
 We recommend considering declaring a [DataSchema](dataSchema.md) and using [](cast.md) or [](convertTo.md) if you end up with more than a few `requireColumn` calls.
@@ -34,7 +35,7 @@ val v: String = typed.name.firstName[0]
 
 ### Advanced example
 
-Let's start with a pipeline that uses only String Column Accessors and String API overloads:
+Let's start with a pipeline that uses only [String Column Accessors](concepts/StringApi.md#string-column-accessors) and String API overloads:
 
 <!---FUN requireColumnStringApi-->
 
@@ -90,3 +91,16 @@ repos.filter { stars > 100 }
 
 `requireColumn` can also change the compile-time type of a column that is already in the schema: pass a [cast](cast.md) selector,
 and the runtime type of the column must be a subtype of the new type.
+(`columnOf` infers the runtime type from the values, so in the sample below it is `String`, not `Any`.)
+
+<!---FUN requireColumnCast-->
+
+```kotlin
+val df = dataFrameOf("name" to columnOf<Any>("Joe"))
+val typed = df.requireColumn { name.cast<String>() }
+val filtered = typed.filter { name.length > 2 }
+```
+
+<inline-frame src="./resources/requireColumnCast.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->

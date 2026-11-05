@@ -81,7 +81,6 @@ class RequireSamples : DataFrameSampleHelper("require", "api") {
             .saveDfHtmlSample()
     }
 
-    // KDoc-only sample for the requireColumn KDoc; not shown on the website page.
     @Test
     fun requireColumnCast() {
         // SampleStart
@@ -89,6 +88,6 @@ class RequireSamples : DataFrameSampleHelper("require", "api") {
         val typed = df.requireColumn { name.cast<String>() }
         val filtered = typed.filter { name.length > 2 }
         // SampleEnd
-        filtered.rowsCount() shouldBe 1
+        filtered.also { it.rowsCount() shouldBe 1 }.saveDfHtmlSample()
     }
 }
