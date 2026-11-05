@@ -65,6 +65,19 @@ Read Parquet files to import data and ML models exported from Apache Spark.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
 
+### [IMDb SQL database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples)
+
+Convert SQL tables and query results into Kotlin DataFrames.
+
+[Download this example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/archive/refs/heads/master.zip)
+
+### Examples of manual integrations with other libraries
+DataFrame provides modules that wrap other libraries, for example, to support reading Excel files, or JDBC ResultSets, etc. But capacity of working with other libraries is not limited only by that.
+
+Following examples showcase of how to use DataFrame with (momentarily) unsupported data libraries such as
+  [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
+  They show how to convert to and from Kotlin DataFrame and their respective tables.
+
 ### [JetBrains Exposed](projects/exposed)
 
 Convert between Kotlin DataFrame and [Exposed](https://github.com/JetBrains/Exposed) tables.
@@ -89,12 +102,6 @@ including examples using the [Kotlin Spark API](https://github.com/JetBrains/kot
 Use Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/multik.zip)
-
-### [IMDb SQL database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples)
-
-Convert SQL tables and query results into Kotlin DataFrames.
-
-[Download this example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/archive/refs/heads/master.zip)
 
 ### Building and maintaining the examples
 
