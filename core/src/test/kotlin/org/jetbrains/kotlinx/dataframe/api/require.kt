@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class RequireTests : ColumnsSelectionDslTests() {
 
@@ -47,5 +49,38 @@ class RequireTests : ColumnsSelectionDslTests() {
         }
         exception.message shouldBe
             "Column 'name/unknownGroup' not found among columns of 'name': [firstName, lastName]."
+    }
+
+    @Test
+    fun `cast selector does not bypass the runtime type check`() {
+        val df = dataFrameOf("age" to columnOf(1, 2, 3))
+        val throwable = shouldThrow<IllegalArgumentException> {
+            df.requireColumn { "age"<Int>().cast<String>() }
+        }
+        throwable.message shouldBe
+            "Column 'age' has type 'kotlin.Int', which is not subtype of required 'kotlin.String' type."
+    }
+
+    @Test
+    fun `cast selector passes when the runtime column type already fits the new type`() {
+        val df = dataFrameOf("name" to columnOf<Any>("Joe"))
+        val checked = df.requireColumn { "name"<Any>().cast<String>() }
+        checked["name"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `require throws IllegalStateException when column cannot be resolved`() {
+        shouldThrow<IllegalStateException> { df.requireColumn { "name2"["unknown"]<String>() } }
+    }
+
+    @Test
+    fun `require rejects nullable column for non-null required type`() {
+        val df = dataFrameOf("age" to columnOf(1, null))
+        val throwable = shouldThrow<IllegalArgumentException> {
+            df.requireColumn { "age"<Int>() }
+        }
+        throwable.message shouldBe
+            "Column 'age' has type 'kotlin.Int?', which is not subtype of required 'kotlin.Int' type."
+        shouldNotThrowAny { df.requireColumn { "age"<Int?>() } }
     }
 }
