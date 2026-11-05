@@ -79,9 +79,10 @@ private typealias SingleColumnSelectorThrowsSnippet = Nothing
  *
  * For more information: {@include [DocumentationUrls.GetColumn]}
  *
- * See also [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing,
- * [getColumnGroup] and [getFrameColumn], that return the column as a [ColumnGroup] or a [FrameColumn],
- * and [getColumns], that returns several columns.
+ * See also:
+ * - [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing;
+ * - [getColumnGroup] and [getFrameColumn], that return the column as a [ColumnGroup] or a [FrameColumn];
+ * - [getColumns], that returns several columns.
  *
  * ### Examples
  *
@@ -100,9 +101,10 @@ private typealias GetColumnDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.GetColumn.GetColumnGroup]}
  *
- * See also [getColumnGroupOrNull], that returns `null` instead of throwing if there is no such column,
- * [getColumn], that returns a column of any kind,
- * and [getFrameColumn], that returns the column as a [FrameColumn].
+ * See also:
+ * - [getColumnGroupOrNull], that returns `null` instead of throwing if there is no such column;
+ * - [getColumn], that returns a column of any kind;
+ * - [getFrameColumn], that returns the column as a [FrameColumn].
  *
  * ### Examples
  *
@@ -118,9 +120,10 @@ private typealias GetColumnGroupDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.GetColumn]}
  *
- * See also [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing,
- * [getColumn], that returns a column of any kind,
- * and [getColumnGroup], that returns the column as a [ColumnGroup].
+ * See also:
+ * - [getColumnOrNull][ColumnsContainer.getColumnOrNull], that returns `null` instead of throwing;
+ * - [getColumn], that returns a column of any kind;
+ * - [getColumnGroup], that returns the column as a [ColumnGroup].
  *
  * ### Examples
  *
@@ -132,9 +135,10 @@ private typealias GetFrameColumnDocs = Nothing
 /**
  * For more information: {@include [DocumentationUrls.GetColumn.GetColumns]}
  *
- * See also [getColumn], that returns a single column,
- * [getColumnsWithPaths], that also returns the [path][ColumnPath] of each column,
- * and [select], that returns the selected columns as a new [DataFrame].
+ * See also:
+ * - [getColumn], that returns a single column;
+ * - [getColumnsWithPaths], that also returns the [path][ColumnPath] of each column;
+ * - [select], that returns the selected columns as a new [DataFrame].
  *
  * ### Examples
  *
@@ -149,9 +153,10 @@ private typealias GetColumnsDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.ColumnSelectors]}
  *
- * See also [getColumnPath] and [getColumnPaths], that return only the paths,
- * [getColumnWithPath] and [getColumnsWithPaths], that return the columns together with their paths,
- * and [getColumns], that returns only the columns.
+ * See also:
+ * - [getColumnPath] and [getColumnPaths] that return only the paths;
+ * - [getColumnWithPath] and [getColumnsWithPaths], that return the columns together with their paths;
+ * - [getColumns], that returns only the columns.
  *
  * ### Examples
  *
@@ -163,9 +168,10 @@ private typealias GetColumnPathsDocs = Nothing
 /**
  * For more information: {@include [DocumentationUrls.GetRow]}
  *
- * See also [getOrNull], that returns a single row or `null`,
- * [get][DataFrame.get], that returns a single row or several rows by their indices,
- * and [filter], that returns the rows matching a condition.
+ * See also:
+ * - [getOrNull], that returns a single row or `null`;
+ * - [get][DataFrame.get], that returns a single row or several rows by their indices;
+ * - [filter], that returns the rows matching a condition.
  *
  * ### Examples
  *
@@ -181,9 +187,10 @@ private typealias GetRowsDocs = Nothing
  *
  * For more information: {@include [DocumentationUrls.Rows]}
  *
- * See also [rows] and [rowsReversed], that iterate in the forward and the reverse order,
- * [forEach], that runs an action for each row,
- * and [asSequence], that returns the rows as a [Sequence].
+ * See also:
+ * - [rows] and [rowsReversed], that iterate in the forward and the reverse order;
+ * - [forEach], that runs an action for each row;
+ * - [asSequence], that returns the rows as a [Sequence].
  *
  * ### Examples
  *
