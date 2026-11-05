@@ -127,25 +127,23 @@ internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, in
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")
         when (columnSchema) {
-            is ColumnSchema.Group -> {
+            is ColumnSchema.Group -> if (columnSchema.schema.columns.isNotEmpty()) {
                 sb.appendLine()
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
             }
 
             is ColumnSchema.Frame -> {
-                sb.appendLine(" *")
-                columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
-            }
-
-            is ColumnSchema.Value -> {
-                sb.append(" ${renderType(columnSchema.type)}")
-                if (i != size - 1) {
+                sb.append(" *")
+                if (columnSchema.schema.columns.isNotEmpty()) {
                     sb.appendLine()
+                    columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
                 }
             }
+
+            is ColumnSchema.Value -> sb.append(" ${renderType(columnSchema.type)}")
         }
+        // the newline goes between entries; the last entry of a map never ends with one
+        if (i != size - 1) sb.appendLine()
     }
     return sb.toString()
 }
