@@ -87,6 +87,9 @@ internal interface GroupByDocs {
      * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
      *
      * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByCountDesc`**][GroupBy.sortByCountDesc]**`() `**`]`
+     *
+     * {@include [Indent]}
      * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
@@ -253,8 +256,9 @@ internal interface GroupByDocs {
      * A [GroupBy] can be transformed into a new [GroupBy] using one of the following methods:
      * * [sortByGroup][GroupBy.sortByGroup] / [sortByGroupDesc][GroupBy.sortByGroupDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by values computed with a [DataFrameExpression] applied to each group;
-     * * [sortByCount][GroupBy.sortByCount] / [sortByCountAsc][GroupBy.sortByCountAsc] — sorts the **order
-     *   of groups** (and their corresponding keys) by the number of rows they contain;
+     * * [sortByCount][GroupBy.sortByCount] / [sortByCountDesc][GroupBy.sortByCountDesc] / [sortByCountAsc][GroupBy.sortByCountAsc] — sorts the **order
+     *   of groups** (and their corresponding keys) by the number of rows they contain; [sortByCount] and [sortByCountDesc] — in descending order,
+     *   [sortByCountAsc] — in ascending order;
      * * [sortByKey][GroupBy.sortByKey] / [sortByKeyDesc][GroupBy.sortByKeyDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by the grouping key values;
      * * [sortBy][GroupBy.sortBy] / [sortByDesc][GroupBy.sortByDesc] — sorts the **order of rows within each group**
