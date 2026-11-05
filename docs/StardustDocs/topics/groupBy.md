@@ -17,7 +17,7 @@ groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCount() | .sortByCountDesc() | .sortByCountAsc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCountDesc() | .sortByCountAsc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
                   [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
@@ -187,7 +187,7 @@ Returns `GroupBy` object.
 A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
-* `sortByCount` / `sortByCountDesc` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCount` and `sortByCountDesc` sort in descending order, `sortByCountAsc` — in ascending order;
+* `sortByCountDesc` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCountDesc` sorts in descending order, `sortByCountAsc` — in ascending order;
 * `sortByKey` / `sortByKeyDesc` — sorts the **order of groups**
   (and their corresponding keys) by the grouping key values;
 * [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;
@@ -248,27 +248,6 @@ df.groupBy("isHappy").sortByGroup { mean("age") }
 
 <!---END-->
 
-#### sortByCount {collapsible="true"}
-<!---FUN sortByCountOnGroupBy-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-df.groupBy { age }.sortByCount()
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.groupBy("age").sortByCount()
-```
-
-</tab></tabs>
-<inline-frame src="./resources/sortByCountOnGroupBy.html" width="100%" height="500px"></inline-frame>
-
-<!---END-->
-
 #### sortByCountDesc {collapsible="true"}
 <!---FUN sortByCountDescOnGroupBy-->
 <tabs>
@@ -290,7 +269,7 @@ df.groupBy("age").sortByCountDesc()
 
 <!---END-->
 
-Same order as [`sortByCount`](groupBy.md#sortbycount) — both sort groups by size in descending order; `sortByCountAsc()` sorts in ascending order.
+Sorts groups by size in descending order; for ascending order, use `sortByCountAsc()`.
 
 #### sortByKey {collapsible="true"}
 <!---FUN sortByKeyOnGroupBy-->

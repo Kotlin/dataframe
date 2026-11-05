@@ -45,7 +45,6 @@ import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.sortByCountDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByGroup
@@ -273,23 +272,6 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
     fun sortByGroupOnGroupBy_strings() {
         // SampleStart
         df.groupBy("isHappy").sortByGroup { mean("age") }
-        // SampleEnd
-    }
-
-    @Test
-    fun sortByCountOnGroupBy_properties() {
-        // SampleStart
-        df.groupBy { age }.sortByCount()
-            // SampleEnd
-            .toDataFrame()
-            .defaultHeaderFormatting { group }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun sortByCountOnGroupBy_strings() {
-        // SampleStart
-        df.groupBy("age").sortByCount()
         // SampleEnd
     }
 
