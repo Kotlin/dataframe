@@ -117,9 +117,9 @@ df.split { "name"["lastName"]<String>() }
 <!---FUN splitRegex1-->
 
 ```kotlin
-merged.split { "name"<String>() }
+merged.split { name }
     .match("""(.*) \((.*)\)""")
-    .inward("firstName", "lastName")
+    .inward("lastName", "firstName")
 ```
 
 <inline-frame src="./resources/splitRegex1.html" width="100%" height="500px"></inline-frame>
