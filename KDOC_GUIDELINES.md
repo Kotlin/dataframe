@@ -229,6 +229,11 @@ and include things like:
    topic to be linked to from each DSL grammar by the link typealias
 - [various snippets and topics](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/snippets.kt)
   with common mechanisms description.
+- [Shared enum parameter snippets](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/typeConversions.kt)
+  — an enum with non-obvious member semantics can carry a reusable `@param` snippet:
+  `Infer.ParamDoc` documents the `infer` parameter. Include it —
+  `@include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].` — instead of writing the parameter
+  semantics by hand.
 - And many others; Check the folder to see if there are more and feel free to add them if needed :)
 
 #### URLs

@@ -108,6 +108,9 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
   etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ConcatSamples.kt`).
+- A DSL function used inside a lambda body needs its import even when it reads like a member:
+  `preserve<Name>()` inside `properties { }` is an extension on `TraversePropertiesDsl`, so the sample
+  needs `import org.jetbrains.kotlinx.dataframe.api.preserve` — there are no wildcard imports here.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Write each sample as a runnable test with optional assertions; it must pass and must not be `@Ignore`d (except
