@@ -135,7 +135,7 @@ internal interface SplitDocs {
     typealias TransformationMethodsSnippet = Nothing
 
     /**
-     * - [default][Split.default] — sets the value for the parts that are missing in some rows.
+     * - [default][SplitWithTransform.default] — sets the value for the parts that are missing in some rows.
      */
     @ExcludeFromSources
     typealias ConfigurationMethodsSnippet = Nothing
@@ -605,7 +605,6 @@ public fun <T, C> Split<T, C>.by(
  * @include [SplitDocs.TypeParamTSnippet]
  * @include [SplitDocs.TypeParamCSnippet]
  * @param [regex] The regular expression to split the values around.
- *   If invalid, a [java.util.regex.PatternSyntaxException] is thrown.
  * @param [trim] Whether to remove leading and trailing whitespace from each part. `true` by default.
  * @param [limit] The maximum number of parts; the last part contains the rest of the value.
  *   `0` (no limit) by default.
@@ -725,7 +724,6 @@ public fun <T, C : String?> Split<T, C>.match(
 /**
  * @include [CommonMatchDocs]
  * @param [regex] The regular expression whose capturing groups define the parts.
- *   If invalid, a [java.util.regex.PatternSyntaxException] is thrown.
  * @return A [SplitWithTransform] that splits the values into the capturing groups of [regex].
  */
 @Interpretable("MatchRegex")
