@@ -119,6 +119,8 @@ korro {
                 include("readSqlDatabases.md")
                 include("info/*.md")
                 include("columnArithmetics.md")
+                include("convert.md")
+                include("convertTo.md")
                 include("ColumnSelectors.md")
                 include("concat.md")
                 include("concatDf.md")
