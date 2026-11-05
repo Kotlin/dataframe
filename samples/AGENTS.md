@@ -108,6 +108,8 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
   etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ConcatSamples.kt`).
+  Numbers that read as real-world facts (star counts, prices, view counts) are either copied from a tracked
+  dataset (e.g. `data/*.csv`) or clearly synthetic — the rendered iframe presents them to the reader as real.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Write each sample as a runnable test with optional assertions; it must pass and must not be `@Ignore`d (except
