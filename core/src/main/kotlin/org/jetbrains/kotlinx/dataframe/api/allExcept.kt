@@ -89,15 +89,19 @@ public interface AllExceptColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** [**`except`**][ColumnsSelectionDsl.except] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
 
         /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
+        @ExcludeFromSources
         public typealias ColumnGroupExceptName = Nothing
     }
 

@@ -1,5 +1,3 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -18,9 +16,11 @@ internal interface ExpressionsGivenColumn {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     typealias OPERATION = Nothing
 
     /** {@set [OPERATION] operation} */
+    @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
 
     /** Provide a new value for every selected cell given its column using a [column expression][DfColumnExpression]. */
@@ -40,5 +40,6 @@ internal interface ExpressionsGivenColumn {
     }
 
     /** [Column Expression][ColumnExpression] */
+    @ExcludeFromSources
     typealias ColumnExpressionLink = Nothing
 }

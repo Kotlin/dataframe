@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.simplify
@@ -38,6 +39,7 @@ public interface SimplifyColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`simplify`**][ColumnsSelectionDsl.simplify] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
     }
 
