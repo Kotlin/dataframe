@@ -412,6 +412,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsAfter(column)
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllAfterColumnPath")
     public fun ColumnsSelectionDsl<*>.allAfter(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsAfter(column)
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] ("myColumn")} */
@@ -651,9 +652,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllFromColumnPath")
     public fun ColumnsSelectionDsl<*>.allFrom(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] ("myColumn")} */
+    @Interpretable("AllFromDslString")
     public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (myColumn)} */
@@ -888,6 +891,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsBefore(column)
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllBeforeColumnPath")
     public fun ColumnsSelectionDsl<*>.allBefore(column: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsBefore(column)
 
@@ -1125,6 +1129,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
         asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("pathTo"["myColumn"])} */
+    @Interpretable("AllUpToColumnPath")
     public fun ColumnsSelectionDsl<*>.allUpTo(column: ColumnPath): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] ("myColumn")} */
