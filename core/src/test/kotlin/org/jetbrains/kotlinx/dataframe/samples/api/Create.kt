@@ -11,22 +11,29 @@ import org.jetbrains.kotlinx.dataframe.api.DynamicDataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.and
 import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.preserve
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
+import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import java.io.File
 import kotlin.random.nextInt
+import kotlin.reflect.typeOf
 import kotlin.random.Random as KotlinRandom
 
 class Create : TestBase() {
@@ -76,6 +83,74 @@ class Create : TestBase() {
         // SampleStart
         val column = columnOf("Alice", "Bob") named "student"
         // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createColumnOfMixedValues() {
+        // SampleStart
+        // Mixed values need an explicit type argument
+        val weights = columnOf<Number>(1, 2.5)
+        // SampleEnd
+        weights.type shouldBe typeOf<Number>()
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createColumnOfLists() {
+        // SampleStart
+        // Lists are stored as cell values: a ValueColumn of List<Int>, not a ColumnGroup
+        val numbers by columnOf(listOf(1, 2), listOf(3, 4))
+        // SampleEnd
+        numbers.type shouldBe typeOf<List<Int>>()
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createColumnAccessor() {
+        // SampleStart
+        val df = dataFrameOf("age", "city")(20, "London", 15, "Milan")
+
+        // Reference to the column named "age"
+        val age = column<Int>("age")
+        // The name is taken from the property
+        val city by column<String>()
+
+        val selected = df.select { age and city }
+        // SampleEnd
+        selected.columnNames() shouldBe listOf("age", "city")
+        selected["age"].values shouldBe listOf(20, 15)
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createNestedColumnAccessor() {
+        // SampleStart
+        val personal = columnGroup("personal")
+        // Reference to the nested column "personal"/"age"
+        val age by personal.column<Int>()
+        // SampleEnd
+        age.path() shouldBe pathOf("personal", "age")
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createComputedColumnReference_properties() {
+        // SampleStart
+        val isAdult = column(df, "isAdult") { age > 18 }
+        val withColumn = df.add { add(isAdult) }
+        // SampleEnd
+        withColumn["isAdult"].values shouldBe listOf(false, true, true, true, true, true, true)
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createComputedColumnReference_strings() {
+        // SampleStart
+        val isAdult = column<Boolean>("isAdult") { "age"<Int>() > 18 }
+        val withColumn = dataFrameOf("age")(20, 15).add { add(isAdult) }
+        // SampleEnd
+        withColumn["isAdult"].values shouldBe listOf(true, false)
     }
 
     @Test
@@ -230,6 +305,19 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun createDataFrameBuilderFill() {
+        // SampleStart
+        // Every column: 3 rows filled with 0
+        val filled = dataFrameOf("a", "b").fill(3, 0)
+        // Every column: 3 rows of null values of type Int?
+        val empty = dataFrameOf("a", "b").nulls<Int>(3)
+        // SampleEnd
+        filled["a"].values shouldBe listOf(0, 0, 0)
+        empty["a"].type shouldBe typeOf<Int?>()
     }
 
     @Test

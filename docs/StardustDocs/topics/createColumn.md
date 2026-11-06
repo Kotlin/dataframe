@@ -3,7 +3,7 @@
 
 This section describes ways to create a [`DataColumn`](DataColumn.md).
 
-**API reference**: [`columnOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column-of.html), [`toColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-column.html)
+**API reference**: [`columnOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column-of.html), [`column`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/column.html), [`toColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-column.html)
 
 ### columnOf
 
@@ -57,6 +57,91 @@ val frames by columnOf(df1, df2)
 ```
 
 <!---END-->
+
+When the elements mix different numeric types, pass the column type explicitly —
+without an explicit type argument such a call does not compile:
+
+<!---FUN createColumnOfMixedValues-->
+
+```kotlin
+// Mixed values need an explicit type argument
+val weights = columnOf<Number>(1, 2.5)
+```
+
+<!---END-->
+
+Lists are stored as cell values, so a column of lists is a [`ValueColumn`](DataColumn.md#valuecolumn),
+not a [`ColumnGroup`](DataColumn.md#columngroup):
+
+<!---FUN createColumnOfLists-->
+
+```kotlin
+// Lists are stored as cell values: a ValueColumn of List<Int>, not a ColumnGroup
+val numbers by columnOf(listOf(1, 2), listOf(3, 4))
+```
+
+<!---END-->
+
+### column
+
+Returns a `ColumnAccessor` — a reference to a column that doesn't have to exist in a
+[`DataFrame`](DataFrame.md) yet. Use the reference later to select, add or update the column.
+
+<!---FUN createColumnAccessor-->
+
+```kotlin
+val df = dataFrameOf("age", "city")(20, "London", 15, "Milan")
+
+// Reference to the column named "age"
+val age = column<Int>("age")
+// The name is taken from the property
+val city by column<String>()
+
+val selected = df.select { age and city }
+```
+
+<!---END-->
+
+`valueColumn`, `columnGroup` and `frameColumn` create the same kind of reference for a value column,
+a column group and a frame column.
+
+To reference a column nested inside a group, create the reference on the group reference —
+the property name is appended to the group's path:
+
+<!---FUN createNestedColumnAccessor-->
+
+```kotlin
+val personal = columnGroup("personal")
+// Reference to the nested column "personal"/"age"
+val age by personal.column<Int>()
+```
+
+<!---END-->
+
+`column` with an expression creates a reference to a column computed from a row:
+
+<!---FUN createComputedColumnReference-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+val isAdult = column(df, "isAdult") { age > 18 }
+val withColumn = df.add { add(isAdult) }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+val isAdult = column<Boolean>("isAdult") { "age"<Int>() > 18 }
+val withColumn = dataFrameOf("age")(20, 15).add { add(isAdult) }
+```
+
+</tab></tabs>
+<!---END-->
+
+For the full story on column references and paths,
+see [`Column Selectors`](ColumnSelectors.md#column-resolvers).
 
 ### toColumn
 
