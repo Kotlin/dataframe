@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Ignore
@@ -823,5 +824,230 @@ class CreateDataFrameTests {
         df.columnNames() shouldBe header
         df.columnTypes() shouldBe List(4) { typeOf<String>() }
         df["col 0"].values() shouldBe listOf("data0 0", "data0 1", "data0 2", "data0 3", "data0 4")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs groups columns by path and makes duplicate top-level names unique`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val c2 = DataColumn.createValueColumn("ignored2", listOf(3, 4), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            ColumnPath("a") to c1,
+            ColumnPath("a") to c2,
+            pathOf("b", "x") to c1,
+            pathOf("b", "y") to c2,
+            ColumnPath("b") to c1,
+            pathOf("c", "d", "x") to c2,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("a", "a1", "b", "b1", "c")
+        df["a"].kind shouldBe ColumnKind.Value
+        df["a1"].kind shouldBe ColumnKind.Value
+        df["b"].kind shouldBe ColumnKind.Group
+        df["b1"].kind shouldBe ColumnKind.Value
+        df["c"].kind shouldBe ColumnKind.Group
+
+        df["a"].toList() shouldBe listOf(1, 2)
+        df["a1"].toList() shouldBe listOf(3, 4)
+        df["b1"].toList() shouldBe listOf(1, 2)
+
+        val group = df["b"].asColumnGroup()
+        group.columnNames() shouldBe listOf("x", "y")
+        group["x"].toList() shouldBe listOf(1, 2)
+        group["y"].toList() shouldBe listOf(3, 4)
+
+        // a three-segment path nests one group per segment except the last, which names the column
+        val d = df["c"].asColumnGroup()["d"]
+        d.kind shouldBe ColumnKind.Group
+        d.asColumnGroup()["x"].toList() shouldBe listOf(3, 4)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs renames a group that comes after a column with the same name`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val c2 = DataColumn.createValueColumn("ignored2", listOf(3, 4), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            ColumnPath("b") to c1,
+            pathOf("b", "x") to c2,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("b", "b1")
+        df["b"].kind shouldBe ColumnKind.Value
+        df["b"].toList() shouldBe listOf(1, 2)
+        df["b1"].kind shouldBe ColumnKind.Group
+        df["b1"].asColumnGroup()["x"].toList() shouldBe listOf(3, 4)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs makes duplicate names unique inside groups too`() {
+        val c1 = DataColumn.createValueColumn("ignored1", listOf(1, 2), typeOf<Int>())
+        val pairs: List<Pair<ColumnPath, DataColumn<Int>>> = listOf(
+            pathOf("g", "x") to c1,
+            pathOf("g", "x") to c1,
+        )
+        val df = pairs.toDataFrameFromPairs<Unit>()
+
+        df.columnNames() shouldBe listOf("g")
+        val g = df["g"].asColumnGroup()
+        g.columnNames() shouldBe listOf("x", "x1")
+        g["x"].toList() shouldBe listOf(1, 2)
+        g["x1"].toList() shouldBe listOf(1, 2)
+    }
+
+    @Test
+    fun `toDataFrameFromPairs from String to Iterable infers value column types`() {
+        val pairs = listOf(
+            "a" to listOf(1, 2),
+            "b" to listOf("x", "y"),
+        )
+        val df = pairs.toDataFrameFromPairs()
+
+        df.columnNames() shouldBe listOf("a", "b")
+        df["a"].type() shouldBe typeOf<Int>()
+        df["b"].type() shouldBe typeOf<String>()
+        df["a"].toList() shouldBe listOf(1, 2)
+        df["b"].toList() shouldBe listOf("x", "y")
+    }
+
+    @Test
+    fun `toDataFrameFromPairs from ColumnPath to Iterable nests column groups`() {
+        val pairs = listOf(
+            pathOf("g", "x") to listOf(1, 2),
+            ColumnPath("top") to listOf("a", "b"),
+        )
+        val df = pairs.toDataFrameFromPairs()
+
+        df.columnNames() shouldBe listOf("g", "top")
+        df["g"].kind shouldBe ColumnKind.Group
+        df["top"].kind shouldBe ColumnKind.Value
+        df["g"].asColumnGroup()["x"].toList() shouldBe listOf(1, 2)
+        df["top"].toList() shouldBe listOf("a", "b")
+    }
+
+    data class Level3(val z: Int)
+
+    data class Level2(val y: Int, val level3: Level3)
+
+    data class Level1(val x: Int, val level2: Level2)
+
+    @Test
+    fun `maxDepth limits how deep object properties are expanded`() {
+        val list = listOf(Level1(1, Level2(2, Level3(3))))
+
+        val df0 = list.toDataFrame(maxDepth = 0)
+        df0["level2"].kind shouldBe ColumnKind.Value
+
+        val df1 = list.toDataFrame(maxDepth = 1)
+        df1["level2"].kind shouldBe ColumnKind.Group
+        val level2 = df1["level2"].asColumnGroup()
+        level2.columnNames() shouldBe listOf("y", "level3")
+        level2["level3"].kind shouldBe ColumnKind.Value
+
+        val df2 = list.toDataFrame(maxDepth = 2)
+        val level3 = df2["level2"].asColumnGroup()["level3"]
+        level3.kind shouldBe ColumnKind.Group
+        level3.asColumnGroup()["z"].toList() shouldBe listOf(3)
+    }
+
+    data class ListItem(val z: Int)
+
+    data class ListHolder(val items: List<ListItem>)
+
+    @Test
+    fun `lists of objects become frame columns only when maxDepth reaches them`() {
+        val list = listOf(ListHolder(listOf(ListItem(1), ListItem(2))))
+
+        val df0 = list.toDataFrame(maxDepth = 0)
+        df0["items"].kind shouldBe ColumnKind.Value
+        df0["items"].type() shouldBe typeOf<List<ListItem>>()
+
+        val df1 = list.toDataFrame(maxDepth = 1)
+        df1["items"].kind shouldBe ColumnKind.Frame
+        val frame = df1["items"][0] as DataFrame<*>
+        frame.columnNames() shouldBe listOf("z")
+        frame["z"].toList() shouldBe listOf(1, 2)
+    }
+
+    @Test
+    fun `rows of the same DataFrame keep their new order when converted back to a DataFrame`() {
+        val df = dataFrameOf("a")(1, 2)
+        val rows: List<DataRow<*>> = listOf(df[1], df[0])
+        val restored = rows.toDataFrame()
+        restored["a"].toList() shouldBe listOf(2, 1)
+    }
+
+    @Test
+    fun `rows from different DataFrames are stacked in list order`() {
+        val df1 = dataFrameOf("a")(1, 2)
+        val df2 = dataFrameOf("a")(3)
+        val rows: List<DataRow<*>> = listOf(df1[0], df2[0])
+        val res = rows.toDataFrame()
+        res["a"].toList() shouldBe listOf(1, 3)
+    }
+
+    @Test
+    fun `rows from DataFrames with different columns union the columns and fill gaps with nulls`() {
+        val df1 = dataFrameOf("a")(1)
+        val df2 = dataFrameOf("b")(5)
+        val rows: List<DataRow<*>> = listOf(df1[0], df2[0])
+        val res = rows.toDataFrame()
+        res.columnNames() shouldBe listOf("a", "b")
+        res["a"].toList() shouldBe listOf(1, null)
+        res["b"].toList() shouldBe listOf(null, 5)
+    }
+
+    @Test
+    fun `map of column names to values produces one column per entry`() {
+        val map: Map<String, Iterable<Any?>> = mapOf(
+            "name" to listOf("Alice", "Bob"),
+            "age" to listOf(15, 20),
+        )
+        val df = map.toDataFrame()
+        df.columnNames() shouldBe listOf("name", "age")
+        df["name"].toList() shouldBe listOf("Alice", "Bob")
+        df["age"].toList() shouldBe listOf(15, 20)
+    }
+
+    @Test
+    fun `map of ColumnPath to values nests column groups for paths longer than one`() {
+        val map: Map<ColumnPath, Iterable<Any?>> = mapOf(
+            pathOf("g", "x") to listOf(1, 2),
+            ColumnPath("top") to listOf("a", "b"),
+        )
+        val df = map.toDataFrame()
+        df.columnNames() shouldBe listOf("g", "top")
+        df["g"].kind shouldBe ColumnKind.Group
+        df["g"].asColumnGroup()["x"].toList() shouldBe listOf(1, 2)
+        df["top"].toList() shouldBe listOf("a", "b")
+    }
+
+    @Test
+    fun `iterable of maps with different keys unions the keys and fills missing values with nulls`() {
+        val maps: List<Map<String, Any?>> = listOf(
+            mapOf("a" to 1, "shared" to "x"),
+            mapOf("b" to 2, "shared" to "y"),
+        )
+        val df = maps.toDataFrame()
+        df.columnNames() shouldBe listOf("a", "shared", "b")
+        df["a"].toList() shouldBe listOf(1, null)
+        df["b"].toList() shouldBe listOf(null, 2)
+        df["shared"].toList() shouldBe listOf("x", "y")
+    }
+
+    @Test
+    fun `should convert iterables of object arrays to DataFrame with value column`() {
+        val arrays: List<Array<Int>> = listOf(arrayOf(1, 2), arrayOf(3, 4))
+        val df = arrays.toDataFrame()
+        df.columnNames() shouldBe listOf("value")
+        df["value"].type() shouldBe typeOf<Array<Int>>()
+        df["value"].toList() shouldBe arrays
+    }
+
+    @Test
+    fun `empty iterable of maps converts to an empty DataFrame`() {
+        val df = emptyList<Map<String, Any?>>().toDataFrame()
+        df.columnsCount() shouldBe 0
+        df.rowsCount() shouldBe 0
     }
 }
