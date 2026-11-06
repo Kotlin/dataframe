@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
@@ -99,14 +100,7 @@ public interface AndColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**`and`**</code>][ColumnsSelectionDsl.and] */
-        public typealias InfixName = Nothing
-
-        /** __`.`__[<code>**`and`**</code>][ColumnsSelectionDsl.and] */
-        public typealias Name = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## And Operator
