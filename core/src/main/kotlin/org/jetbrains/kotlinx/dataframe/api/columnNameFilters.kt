@@ -63,21 +63,27 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
+        @ExcludeFromSources
         public typealias PlainDslNameContains = Nothing
 
         /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        @ExcludeFromSources
         public typealias PlainDslNameStartsEndsWith = Nothing
 
         /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
+        @ExcludeFromSources
         public typealias ColumnSetNameContains = Nothing
 
         /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        @ExcludeFromSources
         public typealias ColumnSetNameStartsEndsWith = Nothing
 
         /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
+        @ExcludeFromSources
         public typealias ColumnGroupNameContains = Nothing
 
         /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
+        @ExcludeFromSources
         public typealias ColumnGroupNameStartsWith = Nothing
     }
 
@@ -118,7 +124,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [EXTRA_PARAMS]}
      */
-    @Suppress("ClassName")
     @ExcludeFromSources
     private interface CommonNameContainsDocs {
 
@@ -209,6 +214,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * @include [CommonNameContainsDocs]
      * @set [CommonNameContainsDocs.ARGUMENT] [regex\] */
+    @ExcludeFromSources
     private typealias NameContainsRegexDocs = Nothing
 
     /**

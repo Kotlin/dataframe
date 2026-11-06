@@ -347,7 +347,6 @@ private typealias DropColumnAccessorsParam = Nothing
  *
  * See also [fillNulls], which replaces `null` values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNulls {
 
     /**
@@ -355,6 +354,7 @@ internal interface DropNulls {
      *   If `true`, rows are dropped if all selected cells are `null`.
      *   If `false`, rows are dropped if any of the selected cells is `null`.
      */
+    @ExcludeFromSources
     typealias WhereAllNullParam = Nothing
 
     /**
@@ -474,7 +474,6 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * See also [fillNA], which replaces [`NA`][NA] values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNA {
 
     /**
@@ -482,6 +481,7 @@ internal interface DropNA {
      *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
      *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
+    @ExcludeFromSources
     typealias WhereAllNAParam = Nothing
 
     /**
@@ -595,7 +595,6 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * See also [fillNaNs], which replaces [`NaN`][NaN] values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNaNs {
 
     /**
@@ -603,6 +602,7 @@ internal interface DropNaNs {
      *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
      *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
      */
+    @ExcludeFromSources
     typealias WhereAllNaNParam = Nothing
 
     /**
