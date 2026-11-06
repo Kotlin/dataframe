@@ -23,21 +23,6 @@ import kotlin.reflect.KProperty
 /**
  * ## The Remove Operation
  *
- * Removes the specified [<code>columns</code>][columns] from the original [<code>DataFrame</code>][DataFrame] and returns a new [<code>DataFrame</code>][DataFrame] without them.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][Select.SelectSelectingOptions].
- *
- * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
- */
-internal typealias Remove = Nothing
-
-/**
- * ## The Remove Operation
- *
  * Removes the specified [<code>columns</code>][org.jetbrains.kotlinx.dataframe.columns] from the original [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
  *
