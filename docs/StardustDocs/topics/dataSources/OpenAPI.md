@@ -393,7 +393,7 @@ To enable it in Kotlin Notebook, use:
 ```
 
 See [](schemasImportOpenApiJupyter.md) for details on how to work with OpenAPI-based data in notebooks, as well as
-[the OpenAPI guide notebook](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
+[the OpenAPI guide notebook](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb).
 
 ### Some Background around OpenAPI Support in DataFrame
 

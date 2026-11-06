@@ -10,7 +10,7 @@ to each cell in a column, multiplying a column by a value, and comparing element
 
 ## When useful
 
-In most transformations, these column operations are usually not the preferred approach in Kotlin DataFrame, 
+In most transformations, these column operations are not the preferred approach in Kotlin DataFrame,
 because the library provides row-based APIs such as [`add`](add.md), [`update`](update.md), and [`map`](map.md), 
 which are usually recommended.
 
