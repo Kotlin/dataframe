@@ -226,67 +226,7 @@ internal interface FormatDocs {
      *
      * `| `[<code>**`linear`**</code>][org.jetbrains.kotlinx.dataframe.api.FormattingDsl.linear]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]`>`**`)`**
      */
-    interface Grammar {
-
-        /**
-         * ## Formatting DSL Grammar
-         *
-         * ### Definitions:
-         * `cellAttributes: `[<code>CellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.CellAttributes]
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;
-         *
-         * `color: `[<code>RgbColor</code>][org.jetbrains.kotlinx.dataframe.api.RgbColor]
-         *
-         * ### Notation:
-         * _- Returning [<code>CellAttributes</code>][CellAttributes]_:
-         *
-         * [<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]` `[<code>**`and`**</code>][CellAttributes.and]` `[<code>cellAttributes</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.CellAttributesDef]
-         *
-         * `| `[<code>**`italic`**</code>][FormattingDsl.italic]`  |  `[<code>**`bold`**</code>][FormattingDsl.bold]`  |  `[<code>**`underline`**</code>][FormattingDsl.underline]
-         *
-         * `| `[<code>**`background`**</code>][FormattingDsl.background]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
-         *
-         * `| `[<code>**`background`**</code>][FormattingDsl.background]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
-         *
-         * `| `[<code>**`linearBg`**</code>][FormattingDsl.linearBg]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`)`**
-         *
-         * `| `[<code>**`textColor`**</code>][FormattingDsl.textColor]**`(`**[<code>color</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.RgbColorDef]**`)`**
-         *
-         * `| `[<code>**`textColor`**</code>][FormattingDsl.textColor]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
-         *
-         * `| `[<code>**`attr`**</code>][attr]**`(`**`name: `[<code>String</code>][String]**`,`**` value: `[<code>String</code>][String]**`)`**
-         *
-         * _- Returning [<code>RgbColor</code>][RgbColor]:_
-         *
-         * [<code>**`black`**</code>][FormattingDsl.black]`  |  `[<code>**`white`**</code>][FormattingDsl.white]`  |  `[<code>**`green`**</code>][FormattingDsl.green]`  |  `[<code>**`red`**</code>][FormattingDsl.red]`  |  `[<code>**`blue`**</code>][FormattingDsl.blue]`  |  `[<code>**`gray`**</code>][FormattingDsl.gray]`  |  `[<code>**`darkGray`**</code>][FormattingDsl.darkGray]`  |  `[<code>**`lightGray`**</code>][FormattingDsl.lightGray]
-         *
-         * `| `[<code>**`rgb`**</code>][FormattingDsl.rgb]**`(`**`r: `[<code>Short</code>][Short]**`,`**` g: `[<code>Short</code>][Short]**`,`**` b: `[<code>Short</code>][Short]**`)`**
-         *
-         * `| `[<code>**`linear`**</code>][FormattingDsl.linear]**`(`**`value: `[<code>Number</code>][Number]**`,`**` from: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`,`**` to: `[<code>Pair</code>][Pair]`<`[<code>Number</code>][Number]`, `[<code>RgbColor</code>][RgbColor]`>`**`)`**
-         */
-        typealias FormattingDslGrammarDef = Nothing
-
-        /**
-         * `cellFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(cell: C) -> `[<code>CellAttributes</code>][CellAttributes]`?`
-         */
-        typealias CellFormatterDef = Nothing
-
-        /**
-         * `rowColFormatter: `[<code>FormattingDsl</code>][org.jetbrains.kotlinx.dataframe.api.FormatDocs.Grammar.FormattingDslGrammarDef]`.(row: `[<code>DataRow</code>][DataRow]`<T>, col: `[<code>ColumnWithPath</code>][ColumnWithPath]`<C>) -> `[<code>CellAttributes</code>][CellAttributes]`?`
-         */
-        typealias RowColFormatterDef = Nothing
-
-        /**
-         * `cellAttributes: `[<code>CellAttributes</code>][CellAttributes]
-         */
-        typealias CellAttributesDef = Nothing
-
-        /**
-         * `color: `[<code>RgbColor</code>][RgbColor]
-         */
-        typealias RgbColorDef = Nothing
-    }
+    interface Grammar
 }
 
 // endregion
