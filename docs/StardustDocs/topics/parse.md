@@ -1,7 +1,7 @@
 [//]: # (title: parse)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Parse-->
 
-Returns a [`DataFrame`](DataFrame.md) in which the given `String` and `Char` columns are parsed into other types.
+Returns a [`DataFrame`](DataFrame.md) in which `String` and `Char` columns are parsed into other types.
 
 **API reference**: [`parse`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/parse.html)
 
@@ -87,6 +87,20 @@ You can get this list by accessing `availableParserTypes` on the [](#global-pars
 When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Char`, `parse()` attempts to convert the column
 to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type
 (i.e., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
+
+When `.parse()` is called on a [`DataColumn`](DataColumn.md) of [`DataFrame`s](DataFrame.md)
+(a [frame column](DataColumn.md#framecolumn)), every frame is parsed recursively,
+as if `parse()` was called on each frame with no columns selected. `null` cells stay `null`.
+
+<!---FUN parseFrameColumn-->
+
+```kotlin
+frames.parse()
+```
+
+<inline-frame src="./resources/parseFrameColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Parser Options
 

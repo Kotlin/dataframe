@@ -399,6 +399,11 @@ For example, from `group` KDoc:
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
 
+Before linking an operation whose page already exists, check whether `DocumentationUrls` has a
+constant for the page itself, not only for its section anchors — with anchors alone the KDoc ends up
+pointing at a section instead of the operation's overview. If the page-level constant is missing,
+add it next to the anchors.
+
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
 and then add it using `@include`:
