@@ -143,6 +143,11 @@ To add one:
   source file is still referenced as `./resources/<file>.html`: `sliceRows.md:13` says
   `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
   `src` builds fine and silently renders an empty frame.
+- **`_shadow_resources.md` is generator-positioned, not append-friendly.** `updateShadowResources`
+  sorts entries by full path, so a new `<resource>` line belongs at that sorted position — not
+  next to its neighbour by name. The file's line order also swaps between runs beyond the sort.
+  Never carry a fully regenerated file in a PR: revert it and re-add only the lines of the
+  change's own resources, at the generator-sorted position.
 - **Nothing validates links.** Writerside resolves topic links by file name (`DataFrame.md`, not a relative
   path); anchors are the lowercased heading with punctuation dropped and spaces → `-` (or an explicit
   `{id="..."}`). When you add, rename, move or split a topic or section, also fix the KDoc → website URLs in

@@ -318,7 +318,7 @@ class Modify : TestBase() {
     fun sortBy_properties() {
         // SampleStart
         df.sortBy { age }
-        df.sortBy { age and name.firstName.desc() }
+        df.sortBy { age and name.firstName.reversed() }
         df.sortBy { weight.nullsLast() }
         // SampleEnd
     }
@@ -328,7 +328,7 @@ class Modify : TestBase() {
     fun sortBy_strings() {
         // SampleStart
         df.sortBy("age")
-        df.sortBy { "age" and "name"["firstName"].desc() }
+        df.sortBy { "age" and "name"["firstName"].reversed() }
         df.sortBy { "weight".nullsLast() }
         // SampleEnd
     }
