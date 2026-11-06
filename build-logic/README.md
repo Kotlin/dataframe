@@ -65,12 +65,12 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
         - `sync<NameOfFolder(Dev)>`: Syncs and overwrites build settings and versions.
           Copies and overwrites versions from the main `libs.versions.toml`, `gradle.properties`, etc.
         - `syncAllExampleFolders`: Syncs all example projects. Automatically called on `assemble`.
-        - `promoteDevExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/project`.
+        - `promoteDevExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/projects`.
           To be called after a release. Automatically calls `syncAllExampleFolders` afterward.
-        - `generate<NameOfFolder(Dev)>Test`: Generates a Junit test class for the given folder in
+        - `generate<NameOfFolder(Dev)>Test`: Generates a JUnit test class for the given folder in
           `/build/generated/testBuildingExamples/src/test/kotlin`.
-        - `generateAllExampleFoldersTests`: Cleans and generates Junit test classes for all example folders.
-        - `runBuild<NameOfFolder(Dev)>`: Executes the generated Junit test class for the given folder and
+        - `generateAllExampleFoldersTests`: Cleans and generates JUnit test classes for all example folders.
+        - `runBuild<NameOfFolder(Dev)>`: Executes the generated JUnit test class for the given folder and
           runs the build. This automatically syncs and generates the test classes beforehand.
             - `publishLocal` is called automatically when dealing with a dev Maven/Kotlin Toolchain test.
             - Android tests (folders with "android" in their name) require the `android.sdk.dir` gradle property to be set.
