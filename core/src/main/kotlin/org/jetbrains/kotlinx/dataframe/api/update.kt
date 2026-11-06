@@ -124,15 +124,19 @@ public class Update<T, C>(
     public typealias UpdateSelectingOptions = Nothing
 
     /** @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    @ExcludeFromSources
     internal typealias DslParam = Nothing
 
     /** @param [columns\] The [Column References][ColumnReference] of this [DataFrame] to update. */
+    @ExcludeFromSources
     internal typealias ColumnAccessorsParam = Nothing
 
     /** @param [columns\] The [KProperties][KProperty] corresponding to columns of this [DataFrame] to update. */
+    @ExcludeFromSources
     internal typealias KPropertiesParam = Nothing
 
     /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
+    @ExcludeFromSources
     internal typealias ColumnNamesParam = Nothing
     // endregion
 }
@@ -228,7 +232,6 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  *
  * ### This At Overload
  */
-@ExcludeFromSources
 private interface CommonUpdateAtFunctionDoc {
 
     /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */

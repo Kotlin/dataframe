@@ -181,26 +181,31 @@ internal interface FormatDocs {
          *
          * `| `[**`linear`**][FormattingDsl.linear]**`(`**`value: `[Number][Number]**`,`**` from: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`,`**` to: `[Pair][Pair]`<`[Number][Number]`, `[RgbColor][RgbColor]`>`**`)`**
          */
+        @ExcludeFromSources
         typealias FormattingDslGrammarDef = Nothing
 
         /**
          * `cellFormatter: `{@include [FormattingDslGrammarRef]}`.(cell: C) -> `[CellAttributes][CellAttributes]`?`
          */
+        @ExcludeFromSources
         typealias CellFormatterDef = Nothing
 
         /**
          * `rowColFormatter: `{@include [FormattingDslGrammarRef]}`.(row: `[DataRow][DataRow]`<T>, col: `[ColumnWithPath][ColumnWithPath]`<C>) -> `[CellAttributes][CellAttributes]`?`
          */
+        @ExcludeFromSources
         typealias RowColFormatterDef = Nothing
 
         /**
          * `cellAttributes: `[CellAttributes][CellAttributes]
          */
+        @ExcludeFromSources
         typealias CellAttributesDef = Nothing
 
         /**
          * `color: `[RgbColor][RgbColor]
          */
+        @ExcludeFromSources
         typealias RgbColorDef = Nothing
 
         /** [cellFormatter][CellFormatterDef] */

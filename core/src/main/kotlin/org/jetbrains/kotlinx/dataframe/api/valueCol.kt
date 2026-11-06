@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,12 +66,15 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -119,6 +123,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCol\]
      * @see [ColumnsSelectionDsl.col\]
      */
+    @ExcludeFromSources
     private interface CommonValueColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -155,9 +160,10 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonValueColDocs]
      * {@set [CommonValueColDocs.ARG] valueColumnA}
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the value column.
+     * @param [valueCol\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ValueColReferenceDocs = Nothing
 
     /**
@@ -216,6 +222,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
+    @ExcludeFromSources
     private typealias ValueColNameDocs = Nothing
 
     /**
@@ -320,6 +327,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
+    @ExcludeFromSources
     private typealias ValueColPathDocs = Nothing
 
     /**
@@ -425,6 +433,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ValueColKPropertyDocs = Nothing
 
     /**
@@ -485,6 +494,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ValueColIndexDocs = Nothing
 
     /**
