@@ -117,7 +117,7 @@ internal inline fun <C, reified R> ColumnReference<C>.map(
  *
  * For more information: [See `map` on a `DataColumn` on the documentation website.](https://kotlin.github.io/dataframe/map.html#map-on-datacolumn)
  *
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column from a value of this column.
  * @return A new [<code>DataColumn</code>][DataColumn] with the computed values.
@@ -178,7 +178,7 @@ public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, t
  * Note that [type] and the type argument `R` are independent: the result is a `DataColumn<R>` for the
  * compiler, while its [<code>type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] at runtime is [type].
  * Keep the two in agreement unless that difference is exactly what you are after.
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column from a value of this column.
  * @return A new [<code>DataColumn</code>][DataColumn] with the computed values.
@@ -238,7 +238,7 @@ public inline fun <T, R> DataColumn<T>.map(
  *
  * For more information: [See `map` on a `DataColumn` on the documentation website.](https://kotlin.github.io/dataframe/map.html#map-on-datacolumn)
  *
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column
  * from the position of a value of this column and that value.
@@ -305,7 +305,7 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
  * Note that [type] and the type argument `R` are independent: the result is a `DataColumn<R>` for the
  * compiler, while its [<code>type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] at runtime is [type].
  * Keep the two in agreement unless that difference is exactly what you are after.
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [transform] A function that computes a value of the new column
  * from the position of a value of this column and that value.
@@ -393,7 +393,7 @@ public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<
  * For more information: [See `mapToColumn` on the documentation website.](https://kotlin.github.io/dataframe/map.html#maptocolumn)
  *
  * @param [name] The name to give to the new column.
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [body] An [<code>AddExpression</code>][AddExpression] that computes a value of the new column from a row of this [<code>DataFrame</code>][DataFrame].
  * @return A new [<code>DataColumn</code>][DataColumn] with the computed values.
