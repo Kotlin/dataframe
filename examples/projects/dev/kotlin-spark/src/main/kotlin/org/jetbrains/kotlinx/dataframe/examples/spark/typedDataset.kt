@@ -90,13 +90,11 @@ fun main() {
 /** Creates a [bean encoder][Encoders.bean] for the given [T] instance. */
 inline fun <reified T : Serializable> beanEncoderOf(): Encoder<T> = Encoders.bean(T::class.java)
 
-@DataSchema
 data class Name
     @JvmOverloads
     constructor(var firstName: String = "", var lastName: String = "") : Serializable
 
-// The @DataSchema annotation is optional for this specific example, but is generally recommended
-@DataSchema
+// The @DataSchema annotation is optional
 data class Person
     @JvmOverloads
     constructor(
