@@ -87,8 +87,8 @@ public interface GlobalParserOptions {
      *
      * @param [formatter] the Java date-time formatter to add.
      * @param [$[FORMAT_TYPE]=formatType] the expected java date-time type of the [formatter].
-     *   If `null`, the formatter will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
-     *   and [JavaInstant].
+     * @get [HIDE_FORMAT_TYPE_NULL_MESSAGE] If `null`, the formatter will be attempted for [JavaLocalDateTime],
+     *   [JavaLocalDate], [JavaLocalTime], and [JavaInstant].
      * @see [addJavaDateTimePattern]
      */
     public fun addJavaDateTimeFormatter(formatter: DateTimeFormatter, formatType: KType? = null)
@@ -113,8 +113,8 @@ public interface GlobalParserOptions {
      *
      * @param [pattern] the date-time pattern to add.
      * @param [$[FORMAT_TYPE]=formatType] the expected java date-time type of the [pattern].
-     *   If `null`, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
-     *   and [JavaInstant].
+     * @get [HIDE_FORMAT_TYPE_NULL_MESSAGE] If `null`, the pattern will be attempted for [JavaLocalDateTime],
+     *   [JavaLocalDate], [JavaLocalTime], and [JavaInstant].
      * @see [addJavaDateTimeFormatter]
      */
     public fun addJavaDateTimePattern(pattern: String, formatType: KType? = null)
@@ -218,7 +218,18 @@ public interface GlobalParserOptions {
     // Either 'formatType' (default) or 'T'
     @ExcludeFromSources
     private typealias FORMAT_TYPE = Nothing
+    
+    // Can be set to empty to remove it from the KDoc
+    @ExcludeFromSources
+    private typealias HIDE_FORMAT_TYPE_NULL_MESSAGE = Nothing
 
+    /**
+     * {@comment Snippet that can be included in functions that import KDocs from functions that use [FORMAT_TYPE].
+     *   Including it will set the [FORMAT_TYPE] to [T] and remove the 'If null' message from the KDoc.}
+     * {@set [FORMAT_TYPE] T}{@set [HIDE_FORMAT_TYPE_NULL_MESSAGE]} */
+    @ExcludeFromSources
+    private typealias SetFormatTypeReified = Nothing
+    
     /**
      * Adds [str] to the [collection of Strings][nulls]
      * that will be parsed to `null`.
@@ -362,23 +373,23 @@ public enum class ParseDateTimeLibrary {
     JAVA,
 }
 
-/** @include [GlobalParserOptions.addDateTimeFormat] {@set [FORMAT_TYPE] T} */
+/** @include [GlobalParserOptions.addDateTimeFormat] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format: DateTimeFormat<out T>) {
     addDateTimeFormat(format = format, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addDateTimeUnicodePattern] {@set [FORMAT_TYPE] T} */
+/** @include [GlobalParserOptions.addDateTimeUnicodePattern] {@include [SetFormatTypeReified]} */
 @FormatStringsInDatetimeFormats
 public inline fun <reified T : Any> GlobalParserOptions.addDateTimeUnicodePattern(pattern: String) {
     addDateTimeUnicodePattern(pattern = pattern, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addJavaDateTimeFormatter] {@set [FORMAT_TYPE] T} */
+/** @include [GlobalParserOptions.addJavaDateTimeFormatter] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimeFormatter(formatter: DateTimeFormatter) {
     addJavaDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addJavaDateTimePattern] {@set [FORMAT_TYPE] T} */
+/** @include [GlobalParserOptions.addJavaDateTimePattern] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePattern(pattern: String) {
     addJavaDateTimePattern(pattern = pattern, formatType = typeOf<T>())
 }
