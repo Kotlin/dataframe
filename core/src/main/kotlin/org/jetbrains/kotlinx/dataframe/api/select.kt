@@ -129,6 +129,7 @@ public interface SelectColumnsSelectionDsl {
     public interface Grammar {
 
         /** __`.`__[**`select`**][ColumnsSelectionDsl.select] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

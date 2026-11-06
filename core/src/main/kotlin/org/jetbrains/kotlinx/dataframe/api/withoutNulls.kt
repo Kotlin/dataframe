@@ -51,12 +51,15 @@ public interface WithoutNullsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsWithoutNulls`**][ColumnsSelectionDsl.colsWithoutNulls] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

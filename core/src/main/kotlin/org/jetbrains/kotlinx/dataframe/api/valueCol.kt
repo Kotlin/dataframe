@@ -66,12 +66,15 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

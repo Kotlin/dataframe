@@ -57,12 +57,15 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
