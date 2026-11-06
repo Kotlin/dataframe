@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -201,12 +202,15 @@ public interface SingleColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`single`**][ColumnsSelectionDsl.single] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`single`**][ColumnsSelectionDsl.single] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`singleCol`**][ColumnsSelectionDsl.singleCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -238,6 +242,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException\] if there are no columns in [this\].
      * @throws [IllegalArgumentException\] if there is more than one column in [this\].
      */
+    @ExcludeFromSources
     private interface CommonSingleDocs {
 
         /** Examples key */

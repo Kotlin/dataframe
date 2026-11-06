@@ -60,7 +60,7 @@ import java.time.LocalTime as JavaLocalTime
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [DateTimeParserOptions][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For more information: {@include [DocumentationUrls.GlobalParserOptions]}
@@ -86,9 +86,9 @@ public interface GlobalParserOptions {
      * For more information: {@include [DocumentationUrls.ParsingDateTimeStrings]}
      *
      * @param [formatter] the Java date-time formatter to add.
-     * @param [formatType] the expected java date-time type of the [formatter].
-     *   If `null`, the formatter will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
-     *   and [JavaInstant].
+     * @param [$[FORMAT_TYPE]=formatType] the expected java date-time type of the [formatter].
+     * @get [HIDE_FORMAT_TYPE_NULL_MESSAGE] If `null`, the formatter will be attempted for [JavaLocalDateTime],
+     *   [JavaLocalDate], [JavaLocalTime], and [JavaInstant].
      * @see [addJavaDateTimePattern]
      */
     public fun addJavaDateTimeFormatter(formatter: DateTimeFormatter, formatType: KType? = null)
@@ -112,9 +112,9 @@ public interface GlobalParserOptions {
      * For more information: {@include [DocumentationUrls.ParsingDateTimeStrings]}
      *
      * @param [pattern] the date-time pattern to add.
-     * @param [formatType] the expected java date-time type of the [pattern].
-     *   If `null`, the pattern will be attempted for [JavaLocalDateTime], [JavaLocalDate], [JavaLocalTime],
-     *   and [JavaInstant].
+     * @param [$[FORMAT_TYPE]=formatType] the expected java date-time type of the [pattern].
+     * @get [HIDE_FORMAT_TYPE_NULL_MESSAGE] If `null`, the pattern will be attempted for [JavaLocalDateTime],
+     *   [JavaLocalDate], [JavaLocalTime], and [JavaInstant].
      * @see [addJavaDateTimeFormatter]
      */
     public fun addJavaDateTimePattern(pattern: String, formatType: KType? = null)
@@ -179,7 +179,7 @@ public interface GlobalParserOptions {
      * See also: {@include [DateTimeComponentsFallbackLink]}
      *
      * @param [pattern] the date-time pattern to add.
-     * @param [formatType] the expected date-time type of the [pattern].
+     * @param [$[FORMAT_TYPE]=formatType] the expected date-time type of the [pattern].
      *
      * @see [addDateTimeFormat]
      * @see [DateTimeFormatBuilder.byUnicodePattern]
@@ -210,10 +210,25 @@ public interface GlobalParserOptions {
      * See also: {@include [DateTimeComponentsFallbackLink]}
      *
      * @param [format] the date-time format to add.
-     * @param [formatType] the expected date-time type of the [format].
+     * @param [$[FORMAT_TYPE]=formatType] the expected date-time type of the [format].
      * @see [addDateTimeUnicodePattern]
      */
     public fun addDateTimeFormat(format: DateTimeFormat<out Any>, formatType: KType)
+
+    // Either 'formatType' (default) or 'T'
+    @ExcludeFromSources
+    private typealias FORMAT_TYPE = Nothing
+
+    // Can be set to empty to remove it from the KDoc
+    @ExcludeFromSources
+    private typealias HIDE_FORMAT_TYPE_NULL_MESSAGE = Nothing
+
+    /**
+     * {@comment Snippet that can be included in functions that import KDocs from functions that use [FORMAT_TYPE].
+     *   Including it will set the [FORMAT_TYPE] to [T] and remove the 'If null' message from the KDoc.}
+     * {@set [FORMAT_TYPE] T}{@set [HIDE_FORMAT_TYPE_NULL_MESSAGE]} */
+    @ExcludeFromSources
+    private typealias SetFormatTypeReified = Nothing
 
     /**
      * Adds [str] to the [collection of Strings][nulls]
@@ -358,23 +373,23 @@ public enum class ParseDateTimeLibrary {
     JAVA,
 }
 
-/** @include [GlobalParserOptions.addDateTimeFormat] */
+/** @include [GlobalParserOptions.addDateTimeFormat] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Any> GlobalParserOptions.addDateTimeFormat(format: DateTimeFormat<out T>) {
     addDateTimeFormat(format = format, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addDateTimeUnicodePattern] */
+/** @include [GlobalParserOptions.addDateTimeUnicodePattern] {@include [SetFormatTypeReified]} */
 @FormatStringsInDatetimeFormats
 public inline fun <reified T : Any> GlobalParserOptions.addDateTimeUnicodePattern(pattern: String) {
     addDateTimeUnicodePattern(pattern = pattern, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addJavaDateTimeFormatter] */
+/** @include [GlobalParserOptions.addJavaDateTimeFormatter] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimeFormatter(formatter: DateTimeFormatter) {
     addJavaDateTimeFormatter(formatter = formatter, formatType = typeOf<T>())
 }
 
-/** @include [GlobalParserOptions.addJavaDateTimePattern] */
+/** @include [GlobalParserOptions.addJavaDateTimePattern] {@include [SetFormatTypeReified]} */
 public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePattern(pattern: String) {
     addJavaDateTimePattern(pattern = pattern, formatType = typeOf<T>())
 }
@@ -597,7 +612,7 @@ public class ParserOptions(
  * Concretely, `ParserOptions(dateTime = DateTimeParserOptions.Java)` is equivalent to having
  * `DataFrame.parser.dateTimeLibrary = ParseDateTimeLibrary.JAVA` for that particular function call.
  *
- * In addition, if that [DateTimeParserOptions] has any custom formats or patterns, the custom- and default
+ * In addition, if that [DateTimeParserOptions][org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions] has any custom formats or patterns, the custom- and default
  * global formats will be ignored, allowing you to essentially override them.
  *
  * For example:

@@ -277,7 +277,7 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
  * - `enum:` creating an enum of any type.
  * - `type: object`
  *     - `properties:` (`additionalProperties` are ignored) creating an [OpenApiMarker.Interface] using the fields in the properties.
- *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertiesInterface] using the additionalProperties schema as type of `value`.
+ *     - `additionalProperties:` (if `properties` is not present) creating an [OpenApiMarker.AdditionalPropertyInterface] using the additionalProperties schema as type of `value`.
  * - `type:` if type is something else, generating a type alias for it. This can be an [OpenApiMarker.TypeAlias] or an [OpenApiMarker.MarkerAlias].
  *
  * @param typeName The name of the schema / type to convert.
