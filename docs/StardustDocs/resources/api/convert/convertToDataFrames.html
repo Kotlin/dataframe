@@ -177,68 +177,9 @@ summary {
 </style>
 </head>
 <body>
-                                <details>
-                                <summary>stringDf.convert { value }.to&lt;Double?&gt;(
-            parserOptions = Pa...</summary>
-                                                                <details>
-                                <summary>Input DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_0"></table>
+<table class="dataframe" id="df_0"></table>
 
 <p class="dataframe_description"></p>
-                                </details>
-<details>
-<summary>Step 1: Convert</summary>
- <p>class org.jetbrains.kotlinx.dataframe.api.Convert</p>
-</details>
-                                <details>
-                                <summary>Output DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_1"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
-                                </details>
-                                <br>
-                                <details>
-                                <summary>stringDf.convert { date }.to&lt;LocalDate&gt;(
-            parserOptions = P...</summary>
-                                                                <details>
-                                <summary>Input DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_2"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
-<details>
-<summary>Step 1: Convert</summary>
- <p>class org.jetbrains.kotlinx.dataframe.api.Convert</p>
-</details>
-                                <details>
-                                <summary>Output DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_3"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
-                                </details>
-                                <br>
-                                <details>
-                                <summary>stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)</summary>
-                                                                <details>
-                                <summary>Input DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_4"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
-<details>
-<summary>Step 1: Convert</summary>
- <p>class org.jetbrains.kotlinx.dataframe.api.Convert</p>
-</details>
-                                <details>
-                                <summary>Output DataFrame: rowsCount = 3, columnsCount = 2</summary>
-                                 <table class="dataframe" id="df_5"></table>
-
-<p class="dataframe_description"></p>
-                                </details>
-                                </details>
-                                <br>
 </body>
 <script>
 (function () {
@@ -515,157 +456,61 @@ summary {
     }
 })()
 
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"userData: DataFrame<*>\">userData</span>", children: [], rightAlign: false, values: [{ frameId: 1, value: "<b>DataFrame 2 x 2</b>" }] }, 
+], id: 0, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["Alice","Bob"] }, 
+{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>"] }, 
+], id: 1, rootId: 0, totalRows: 2 } ) });
+/*-->*/
+
+call_DataFrame(function() { DataFrame.renderTable(0) });
+
 function sendHeight() {
-    let totalHeight = 0;
+    const table = document.querySelector('table.dataframe');
+    if (!table) return;
 
-    document.querySelectorAll('body > details, body > br, body > table').forEach(element => {
-        if (element.tagName === 'DETAILS') {
-            totalHeight += getElementHeight(element.querySelector(':scope > summary'));
-
-            if (element.open) {
-                totalHeight += getVisibleContentHeight(element);
-            }
-        } else if (element.tagName === 'BR') {
-            totalHeight += getElementHeight(element);
-        } else if (element.tagName === 'TABLE') {
-            totalHeight += getElementHeight(element);
-        }
-    });
-
-    totalHeight += 10;
-
-    window.parent.postMessage({type: 'iframeHeight', height: Math.ceil(totalHeight)}, '*');
-}
-
-function getVisibleContentHeight(detailsElement) {
     let height = 0;
-
-    detailsElement.querySelectorAll(':scope > details, :scope > table, :scope > p').forEach(child => {
-        if (child.tagName === 'DETAILS') {
-            const summary = child.querySelector(':scope > summary');
-            height += getElementHeight(summary);
-
-            if (child.open) {
-                height += getDirectVisibleContentHeight(child);
-            }
-        } else if (isElementVisible(child)) {
-            height += getElementHeight(child);
-        }
-    });
-
-    return height;
-}
-
-function getDirectVisibleContentHeight(element) {
-    let height = 0;
-    element.querySelectorAll(':scope > table, :scope > p, :scope > summary').forEach(child => {
-        if (isElementVisible(child)) {
-            height += getElementHeight(child);
-        }
-    });
-    return height;
-}
-
-function getElementHeight(el) {
-    const styles = getComputedStyle(el);
-    const margin = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
     
-    // More reliable cross-browser calculation
-    const rect = el.getBoundingClientRect();
-    return rect.height + margin;
-}
-
-function isElementVisible(el) {
-    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
-}
-
-function sendInitialHeight() {
-    let initialHeight = 0;
-
-    document.querySelectorAll('body > details, body > br, body > table').forEach(element => {
-        if (element.tagName === 'DETAILS') {
-            initialHeight += getElementHeight(element.querySelector(':scope > summary'));
-        } else if (element.tagName === 'BR') {
-            initialHeight += getElementHeight(element);
-        } else if (element.tagName === `TABLE`) {
-            initialHeight += getElementHeight(element);
-        }
+    const thead = table.querySelector('thead');
+    if (thead) height += thead.offsetHeight;
+    
+    const rows = table.querySelectorAll(':scope > tbody > tr');
+    rows.forEach(row => {
+        height += row.offsetHeight;
     });
+    
+    height += getVerticalMargins(table) + 10;
 
-    initialHeight += 10;
+    window.parent.postMessage({ type: 'iframeHeight', height: Math.ceil(height) }, '*');
+}
 
-    window.parent.postMessage({type: 'iframeHeight', height: Math.ceil(initialHeight)}, '*');
+function getVerticalMargins(element) {
+    const style = getComputedStyle(element);
+    return parseFloat(style.marginTop) + parseFloat(style.marginBottom);
 }
 
 function repeatHeightCalculation(maxRetries = 10, interval = 100) {
     let retries = 0;
     const intervalId = setInterval(() => {
-        sendInitialHeight();
+        sendHeight();
         retries++;
         if (retries >= maxRetries) clearInterval(intervalId);
     }, interval);
 }
 
-window.addEventListener('load', () => {
-    repeatHeightCalculation();
+window.addEventListener('load', repeatHeightCalculation);
 
-
-    document.querySelectorAll('details').forEach(detail => {
-        detail.addEventListener('toggle', () => {
-            setTimeout(sendHeight, 50);
-        });
-    });
-
-    const observer = new MutationObserver(() => setTimeout(sendHeight, 50));
-    observer.observe(document.body, {childList: true, subtree: true, characterData: true});
+const observer = new MutationObserver(() => repeatHeightCalculation(5, 50));
+observer.observe(document.querySelector('.dataframe'), {
+    childList: true,
+    subtree: true,
+    characterData: true,
 });
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: String\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: String\">value</span>", children: [], rightAlign: false, values: ["1,0","200.000,0","-"] }, 
-], id: 0, rootId: 0, totalRows: 3 } ) });
-/*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(0) });
-
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: String\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: Double?\">value</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">1.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">200000.0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
-], id: 1, rootId: 1, totalRows: 3 } ) });
-/*-->*/
-
-call_DataFrame(function() { DataFrame.renderTable(1) });
-
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: String\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: String\">value</span>", children: [], rightAlign: false, values: ["1,0","200.000,0","-"] }, 
-], id: 2, rootId: 2, totalRows: 3 } ) });
-/*-->*/
-
-call_DataFrame(function() { DataFrame.renderTable(2) });
-
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: kotlinx.datetime.LocalDate\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: String\">value</span>", children: [], rightAlign: false, values: ["1,0","200.000,0","-"] }, 
-], id: 3, rootId: 3, totalRows: 3 } ) });
-/*-->*/
-
-call_DataFrame(function() { DataFrame.renderTable(3) });
-
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: String\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: String\">value</span>", children: [], rightAlign: false, values: ["1,0","200.000,0","-"] }, 
-], id: 4, rootId: 4, totalRows: 3 } ) });
-/*-->*/
-
-call_DataFrame(function() { DataFrame.renderTable(4) });
-
-/*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: kotlinx.datetime.LocalDate\">date</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
-{ name: "<span title=\"value: String\">value</span>", children: [], rightAlign: false, values: ["1,0","200.000,0","-"] }, 
-], id: 5, rootId: 5, totalRows: 3 } ) });
-/*-->*/
-
-call_DataFrame(function() { DataFrame.renderTable(5) });
 
 </script>
 </html>
