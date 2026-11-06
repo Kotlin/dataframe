@@ -412,4 +412,21 @@ class ConvertToTests {
         converted["a"].type() shouldBe typeOf<SimpleEnum?>()
         converted shouldBe dataFrameOf("a")(SimpleEnum.A, SimpleEnum.B, null)
     }
+
+    @DataSchema
+    interface SchemaWithRequiredColumns {
+        val name: String
+        val age: Int
+    }
+
+    @Test
+    fun `convertTo throws IllegalArgumentException when a required column is missing`() {
+        val df = dataFrameOf("name")("Alice")
+        val throwable = shouldThrow<IllegalArgumentException> {
+            df.convertTo<SchemaWithRequiredColumns>()
+        }
+        throwable.message shouldBe
+            "The following columns were not found in DataFrame: [age], and their type was not nullable. " +
+            "Use `fill` to initialize these columns"
+    }
 }

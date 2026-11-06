@@ -9,7 +9,7 @@
 convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 ```
 
-**Related operations**: [](adjustSchema.md), [](convert.md)
+**Related operations**: [](adjustSchema.md), [](convert.md), [](require.md)
 
 > This page is for the `DataFrame<*>.convertTo<Schema>()` operation.
 >
