@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -871,35 +870,6 @@ class Modify : TestBase() {
                | 0 dataframe /dataframe           111
                | 1    kotlin    /kotlin           180
             """.trimMargin()
-    }
-
-    @DataSchema
-    interface ImplicitSchema {
-        val perf: Double
-    }
-
-    @Test
-    @Ignore
-    @Suppress("UNUSED_VARIABLE")
-    fun castToGenerateSchema() {
-        // SampleStart
-        val sample = DataFrame.readJson("sample.json")
-        // SampleEnd
-    }
-
-    @Test
-    @Suppress("KotlinConstantConditions")
-    fun castTo() {
-        val sample = dataFrameOf("perf")(10.0, 20.0, 12.0).cast<ImplicitSchema>()
-        val files = listOf<String>() // not intended to run
-        // SampleStart
-        for (file in files) {
-            // df here is expected to have the same structure as sample
-            val df = DataFrame.readJson(file).castTo(sample)
-            val count = df.count { perf > 10.0 }
-            println("$file: $count")
-        }
-        // SampleEnd
     }
 
     @Test
