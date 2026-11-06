@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.asColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.getTrueIndices
@@ -161,11 +162,7 @@ public interface FilterColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** __`.`__[<code>**`filter`**</code>][ColumnsSelectionDsl.filter] */
-        public typealias ColumnSetName = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## Filter [<code>ColumnSet</code>][ColumnSet]
