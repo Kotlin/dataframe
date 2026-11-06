@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
@@ -59,9 +60,11 @@ public interface AndColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`and`**][ColumnsSelectionDsl.and] */
+        @ExcludeFromSources
         public typealias InfixName = Nothing
 
         /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
+        @ExcludeFromSources
         public typealias Name = Nothing
     }
 

@@ -210,6 +210,7 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T,
  *
  * For more information, see: {@include [DocumentationUrls.Corr]}
  */
+@ExcludeFromSources
 internal typealias CorrWithDocs = Nothing
 
 /**
