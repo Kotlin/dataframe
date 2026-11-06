@@ -1048,6 +1048,8 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
  * @include [SplitDocs.NamesParamsSnippet]
  * @return A new [DataFrame] with the selected columns replaced by column groups with the new column groups.
  */
+@Refine
+@Interpretable("SplitDataFrameInward")
 @JvmName("splitDataFrameInward")
 public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     vararg names: String,
