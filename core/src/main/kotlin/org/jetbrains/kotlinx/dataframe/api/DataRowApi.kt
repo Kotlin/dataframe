@@ -126,6 +126,7 @@ internal typealias DiffDocs = Nothing
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
+@ExcludeFromSources
 internal typealias DiffOrNullDocs = Nothing
 
 /**

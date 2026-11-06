@@ -118,7 +118,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [EXTRA_PARAMS]}
      */
-    @Suppress("ClassName")
     @ExcludeFromSources
     private interface CommonNameContainsDocs {
 

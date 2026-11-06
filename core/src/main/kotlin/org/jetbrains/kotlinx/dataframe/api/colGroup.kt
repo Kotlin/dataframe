@@ -120,6 +120,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col\]
      * {@set [CommonColGroupDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColGroupDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}

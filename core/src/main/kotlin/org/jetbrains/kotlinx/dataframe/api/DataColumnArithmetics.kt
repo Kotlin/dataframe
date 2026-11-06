@@ -448,6 +448,7 @@ public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<Str
  * @return A {@get [COLUMN_MINUS_NUMBER_COLUMN_TYPE] [DataColumn]} containing the results of subtracting [\value]
  * from each element of this {@get [COLUMN_MINUS_NUMBER_COLUMN_TYPE] [DataColumn]}.
  */
+@ExcludeFromSources
 private interface ColumnMinusNumberDocs {
     // the type of the column accepted and returned by the function
     typealias COLUMN_MINUS_NUMBER_COLUMN_TYPE = Nothing

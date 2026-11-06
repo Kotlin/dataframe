@@ -119,6 +119,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.valueCol\]
      * {@set [CommonColDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
