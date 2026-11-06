@@ -40,6 +40,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @include [CommonColumnReferenceInvokeDocs]
      * @return The [ColumnGroup] this [Column Reference][ColumnReference] or [-Accessor][ColumnAccessor] points to.
      */
+    @Interpretable("ColumnReferenceInvokeGroup")
     public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
 
     /**
