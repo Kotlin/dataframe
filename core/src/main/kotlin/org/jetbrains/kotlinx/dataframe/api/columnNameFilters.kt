@@ -118,7 +118,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [EXTRA_PARAMS]}
      */
-    @Suppress("ClassName")
     @ExcludeFromSources
     private interface CommonNameContainsDocs {
 
@@ -209,6 +208,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     /**
      * @include [CommonNameContainsDocs]
      * @set [CommonNameContainsDocs.ARGUMENT] [regex\] */
+    @ExcludeFromSources
     private typealias NameContainsRegexDocs = Nothing
 
     /**
