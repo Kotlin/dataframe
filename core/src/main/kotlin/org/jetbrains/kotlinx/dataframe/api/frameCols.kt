@@ -58,12 +58,15 @@ public interface FrameColsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`frameCols`**][ColumnsSelectionDsl.frameCols] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

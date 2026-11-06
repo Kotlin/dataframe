@@ -164,21 +164,27 @@ public interface TakeColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnsSelectionDsl.takeLast]`)` */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnSet.takeLast]`)` */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeCols]`(`[**`Last`**][ColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.takeCols] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
 
         /** [**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
+        @ExcludeFromSources
         public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
+        @ExcludeFromSources
         public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`take`**][ColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.takeColsWhile] */
+        @ExcludeFromSources
         public typealias ColumnGroupWhileName = Nothing
     }
 

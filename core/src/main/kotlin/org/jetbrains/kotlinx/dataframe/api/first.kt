@@ -465,12 +465,15 @@ public interface FirstColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`first`**][ColumnsSelectionDsl.first] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

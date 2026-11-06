@@ -81,12 +81,15 @@ public interface ColsOfColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colsOf`**][ColumnsSelectionDsl.colsOf] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

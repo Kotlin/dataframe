@@ -54,12 +54,15 @@ public interface ColGroupsColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`colGroups`**][ColumnsSelectionDsl.colGroups] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroups`**][ColumnsSelectionDsl.colGroups] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 

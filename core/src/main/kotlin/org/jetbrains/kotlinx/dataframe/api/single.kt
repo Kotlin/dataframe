@@ -202,12 +202,15 @@ public interface SingleColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`single`**][ColumnsSelectionDsl.single] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`single`**][ColumnsSelectionDsl.single] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`singleCol`**][ColumnsSelectionDsl.singleCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
