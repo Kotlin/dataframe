@@ -44,7 +44,7 @@ postgresql = "42.7.14"
 sqlite = "3.54.1.0"
 kotlinDatetime = "0.8.0-0.6.x-compat"
 openapi = "2.1.48"
-kotlinLogging = "8.0.4"
+kotlinLogging = "8.0.6"
 sl4j = "2.0.20"
 log4j = "2.26.1"
 
@@ -58,7 +58,7 @@ junit-platform = "1.11.3" # Issue #426
 konsist = "0.17.3" # Would require `:samples` to be bumped to Java 17
 kotestAsserions = "6.2.6"
 
-jsoup = "1.23.2"
+jsoup = "1.24.1"
 arrow = "19.0.0"
 kodex = "0.7.1"
 caupain = "1.10.1"
