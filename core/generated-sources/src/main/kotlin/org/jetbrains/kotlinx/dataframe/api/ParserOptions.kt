@@ -519,7 +519,7 @@ public inline fun <reified T : Temporal> GlobalParserOptions.addJavaDateTimePatt
  * the [<code>DateTimeComponents</code>][DateTimeComponents] fallback-mechanism kicks in.
  *
  * Oftentimes it may namely be possible to parse the date-time string to the more flexible [<code>DateTimeComponents</code>][DateTimeComponents]
- * first and then convert that to [<code>LocalDate</code>][LocalDate] with a potential little loss of information.
+ * first and then convert that to [<code>LocalDate</code>][LocalDate] with a potentially small loss of information.
  *
  * This means we can successfully call:
  * ```kt
