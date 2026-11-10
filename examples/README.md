@@ -1,38 +1,115 @@
 # Examples of Kotlin DataFrame
 
-### IDEA project examples
-* [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example) IDEA project with a
-  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
-* [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example) IDEA project with a
-  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example. 
-* [Kotlin Toolchain example](projects/kotlin-dataframe-plugin-kotlin-toolchain-example) IDEA project with a
-  [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) example.
-* [android example](projects/android-example) A minimal Android project showcasing integration with Kotlin DataFrame.
-Also includes [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
-* [movies](projects/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
-* [titanic](projects/titanic)
-* [youtube](projects/youtube)
-* [json](projects/json-openapi) Using OpenAPI support in DataFrame's Gradle and KSP plugins to access data from [API guru](https://apis.guru/) in a type-safe manner
-* [imdb sql database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples) This project prominently showcases how to convert data from an SQL table to a Kotlin DataFrame 
-and how to transform the result of an SQL query into a DataFrame.
-* [spark-parquet-dataframe](projects/spark-parquet-dataframe) This project showcases how to export data and ML models from Apache Spark via reading from Parquet files.
-* Showcases of how to use DataFrame with (momentarily) unsupported data libraries such as
-[Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
-They show how to convert to and from Kotlin DataFrame and their respective tables.
-  * **JetBrains Exposed**: See the [exposed folder](./projects/exposed)
-    for an example of using Kotlin DataFrame with [Exposed](https://github.com/JetBrains/Exposed).
-  * **Hibernate**: See the [hibernate folder](./projects/hibernate)
-    for an example of using Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
-  * **Apache Spark**: See the [spark folder](./projects/kotlin-spark)
-    for an example of using Kotlin DataFrame with [Spark](https://spark.apache.org/) and with the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
-  * **Multik**: See the [multik folder](./projects/multik)
-    for an example of using Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
+## IntelliJ IDEA project examples
+
+You don't need to clone the repository to build and explore these projects.
+Download an individual project using the links below or the **Download this Example** link in its README.
+
+### [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example)
+
+An IntelliJ IDEA project showing how to use the
+[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Gradle.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
+
+### [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example)
+
+An IntelliJ IDEA project showing how to use the
+[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Maven.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
+
+### [Kotlin Toolchain example](projects/kotlin-dataframe-plugin-kotlin-toolchain-example)
+
+An IntelliJ IDEA project showing how to use the
+[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Kotlin Toolchain.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-kotlin-toolchain-example.zip)
+
+### [Android example](projects/android-example)
+
+A minimal Android project showcasing Kotlin DataFrame integration, including the
+[Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
+
+### [Movies](projects/movies)
+
+Explore basic DataFrame operations and type-safe column access using data from [MovieLens](https://movielens.org/).
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/movies.zip)
+
+### [Titanic](projects/titanic)
+
+Combine Kotlin DataFrame with [KotlinDL](https://github.com/Kotlin/kotlindl)
+to explore deep-learning techniques using the Titanic dataset.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/titanic.zip)
+
+### [YouTube](projects/youtube)
+
+Work with YouTube data using the [YouTube Data API](https://developers.google.com/youtube/v3) and Kotlin DataFrame.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/youtube.zip)
+
+### [JSON and OpenAPI](projects/json-openapi)
+
+Generate data schemas for JSON data from [APIs.guru](https://apis.guru/) and read JSON
+using types defined in an OpenAPI specification.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/json-openapi.zip)
+
+### [Spark and Parquet](projects/spark-parquet-dataframe)
+
+Read Parquet files to import data and ML models exported from Apache Spark.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
+
+### [IMDb SQL database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples)
+
+Convert SQL tables and query results into Kotlin DataFrames.
+
+[Download this example](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/archive/refs/heads/master.zip)
+
+## IntelliJ IDEA project examples of manual integrations with other libraries
+DataFrame provides modules that wrap other libraries, for example, to support reading Excel files, or JDBC ResultSets, etc. But capacity of working with other libraries is not limited only by that.
+
+Following examples showcase of how to use DataFrame with (momentarily) unsupported data libraries such as
+  [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
+  They show how to convert to and from Kotlin DataFrame and their respective tables.
+
+### [JetBrains Exposed](projects/exposed)
+
+Convert between Kotlin DataFrame and [Exposed](https://github.com/JetBrains/Exposed) tables.
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/exposed.zip)
+
+### [Hibernate](projects/hibernate)
+
+Use Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/hibernate.zip)
+
+### [Apache Spark](projects/kotlin-spark)
+
+Convert between Kotlin DataFrame and [Apache Spark](https://spark.apache.org/) DataFrames,
+including examples using the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-spark.zip)
+
+### [Multik](projects/multik)
+
+Use Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
+
+[Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/multik.zip)
+
+## Building and maintaining the examples
 
 The example projects in [examples/projects](projects) always target the latest stable version of the library.
 Projects compatible with the latest dev/master version are located in the [examples/projects/dev](projects/dev) folder.
 
 All examples are tested by the main project in debug mode when `gradlew test` is run
-(or manually by`gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
+(or manually by `gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
 Android example projects require the `android.sdk.dir=` property to be set.
 
 Versions inside the example projects are overwritten automatically upon `gradlew assemble`
@@ -40,37 +117,34 @@ Versions inside the example projects are overwritten automatically upon `gradlew
 
 See the [convention plugins README](../build-logic/README.md) for more information.
 
-### Notebook examples
+## Notebook examples
 
-* people ([Datalore](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)) &ndash;
-Small artificial dataset used in [DataFrame API examples](https://kotlin.github.io/dataframe/operations.html) 
-___
-* puzzles ([notebook](notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
+* puzzles [notebook](notebooks/puzzles/40%20puzzles.ipynb) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
 complex problems where you need to think. This notebook will show you how to solve these tasks with Kotlin 
 DataFrame in a laconic, beautiful style.
 ___
-* movies ([notebook](notebooks/movies/movies.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/89IMYb1zbHZxHfwAta6eKP)) &ndash;
+* movies [notebook](notebooks/movies/movies.ipynb) &ndash;
 In this notebook you can see the basic operations of the Kotlin DataFrame on data from [movielens](https://movielens.org/).
 You can take the data from the [link](https://grouplens.org/datasets/movielens/latest/).
 ___
-* netflix ([notebook](notebooks/netflix/netflix.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/xSJ4rx49hcH71pPnFgZBCq)) &ndash;
+* netflix [notebook](notebooks/netflix/netflix.ipynb) &ndash;
 Explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
-* github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/P9n6jYL4mmY1gx3phz5TsX)) &ndash;
+* github [notebook](notebooks/github/github.ipynb) &ndash;
 This notebook shows what hierarchical dataframes look like and how to work with them.
 ___
-* titanic ([notebook](notebooks/titanic/Titanic.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/B5YeMMONSAR78FgKQ9yJyW)) &ndash;
+* titanic [notebook](notebooks/titanic/Titanic.ipynb) &ndash;
 Let's see how the new library will show itself on the famous Titanic dataset.
 ___
-* Financial Analysis of the top-12 German companies ([notebook](notebooks/top_12_german_companies)/[Datalore](https://datalore.jetbrains.com/report/static/KQKedA4jDrKu63O53gEN0z/MDg5pHcGvRdDVQnPLmwjuc)) &ndash;
+* Financial Analysis of the top-12 German companies [notebook](notebooks/top_12_german_companies) &ndash;
   Analyze key financial metrics for several major German companies.
 ___
-* wine ([notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/aK9vYHH8pCA8H1KbKB5WsI)) &ndash;
+* wine [notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb) &ndash;
   Wine. Kotlin DataFrame. KotlinDL. What came out of this can be seen in this notebook.
 ___
-* youtube ([notebook](notebooks/youtube/Youtube.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/uXH0VfIM6qrrmwPJnLBi0j)) &ndash;
+* youtube [notebook](notebooks/youtube/Youtube.ipynb) &ndash;
 Explore YouTube videos with YouTube REST API and Kotlin DataFrame 
 
 ___

@@ -19,9 +19,24 @@ A data transformation pipeline usually consists of several modification operatio
 The Kotlin DataFrame API is designed in a functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
-For full signature details and KDocs of all operations, see the
-[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
+Sample dataset used in many operations pages:
+<!---FUN peopleDf-->
 
+```kotlin
+val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+    "Alice", "Cooper", 102, "Paris", 54, true,
+    "Bob", "Dylan", 45, "Dubai", 87, true,
+    "Charlie", "Daniels", 20, "Moscow", null, false,
+    "Charlie", "Chaplin", 110, "Milan", null, true,
+    "Bob", "Marley", 30, "Tokyo", 68, true,
+    "Alice", "Wolf", 20, null, 55, false,
+    "Charlie", "Byrd", 105, "Moscow", 90, true
+).group { firstName and lastName }.into("name")
+```
+
+<!---END-->
+
+Typical data transformation pipeline: 
 <!---FUN multiCallOperations-->
 
 ```kotlin
@@ -33,12 +48,6 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 ```
 
 <!---END-->
-
-<tip>
-
-You can play with the "people" dataset that is used in this guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
-
-</tip>
 
 ## Multiplex operations
 
@@ -52,6 +61,12 @@ Every multiplex operation configuration consists of:
 Most multiplex operations end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
+
+
+## Full API reference
+
+For full signature details and KDocs of all operations, see the
+[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
 
 ## List of DataRow operations
 
