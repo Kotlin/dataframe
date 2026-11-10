@@ -23,7 +23,7 @@ public interface IsolatedMarker {
     public val visibility: MarkerVisibility
 
     /**
-     * Type parameters for in front of the function or getter/setter.
+     * Type parameters in front of the function or getter/setter.
      * Like `<T : Int>` in `val <T : Int> MyType<T>.something get() = ...`.
      */
     public val typeParameters: String

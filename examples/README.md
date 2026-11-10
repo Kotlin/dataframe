@@ -32,7 +32,7 @@ The example projects in [examples/projects](projects) always target the latest s
 Projects compatible with the latest dev/master version are located in the [examples/projects/dev](projects/dev) folder.
 
 All examples are tested by the main project in debug mode when `gradlew test` is run
-(or manually by`gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
+(or manually by `gradlew runBuildAllExampleFolders -Pkotlin.dataframe.debug=true`).
 Android example projects require the `android.sdk.dir=` property to be set.
 
 Versions inside the example projects are overwritten automatically upon `gradlew assemble`
@@ -78,7 +78,7 @@ ___
 
 ---
 * Feature Overviews [notebook folder](notebooks/feature_overviews)
-  Overview of new features available a given version
+  Overview of new features available in a given version
 
 The example notebooks always target the latest stable version of the library.
 Notebooks compatible with the latest dev/master version are located in the [dev](notebooks/dev) folder.

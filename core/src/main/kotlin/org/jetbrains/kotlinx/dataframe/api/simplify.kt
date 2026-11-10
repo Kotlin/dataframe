@@ -47,7 +47,7 @@ public interface SimplifyColumnsSelectionDsl {
      * ## Simplify [ColumnSet]
      *
      * Given a [this] [ColumnSet], [simplify] simplifies the structure by removing columns that are already present in
-     * column groups, returning only these groups plus columns not belonging in any of the groups.
+     * column groups, returning only these groups plus columns not belonging to any of the groups.
      *
      * In other words, this means that if a column in [this] is inside another column group in [this],
      * it will not be included in the result.
