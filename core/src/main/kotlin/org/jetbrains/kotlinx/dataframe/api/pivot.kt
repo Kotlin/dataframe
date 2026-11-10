@@ -173,6 +173,34 @@ internal interface PivotDocs {
     typealias Reducing = Nothing
 
     /**
+     * {@comment Note about the [ReducedPivot] methods being the final step of [Reducing]. KDoc-snippet.}
+     *
+     * This is the final step of [Pivot reducing][Reducing].
+     * A [ReducedPivot] is created by a reducing method, like [first][Pivot.first], [last][Pivot.last],
+     * [minBy][Pivot.minBy], [maxBy][Pivot.maxBy], [medianBy][Pivot.medianBy], or
+     * [percentileBy][Pivot.percentileBy], which selects at most one row in each [pivot] group.
+     *
+     * If no row is selected in a group (for example, if no row of the group satisfies
+     * the predicate of [first][Pivot.first]), the [pivot] key of this group is still present
+     * in the resulting [DataRow], but all the values under it are `null`.
+     *
+     * Check out [`Pivot grammar`][PivotDocs.Grammar].
+     */
+    @ExcludeFromSources
+    typealias ReducedPivotFinalStepSnippet = Nothing
+
+    /**
+     * {@comment Note about the structure of the [ReducedPivot.values] result. KDoc-snippet.}
+     *
+     * If a single column is taken, its value is stored directly under the [pivot] key.
+     * If several columns are taken and `separate` is `false` (the default), the value of each [pivot] key
+     * is a row with the values of these columns; if `separate` is `true`, the results are grouped
+     * by the names of these columns first, and by the [pivot] keys second.
+     */
+    @ExcludeFromSources
+    typealias ReducedPivotValuesStructureSnippet = Nothing
+
+    /**
      * ### [Pivot] aggregation
      *
      * Each [Pivot] group can be aggregated — that is, transformed into a new value, [DataRow], or [DataFrame] —
