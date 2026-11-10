@@ -66,7 +66,7 @@ if the data sample used for generation is not representative or if there's a bug
 Sometimes a column is created internally with an incorrect `KType` that doesn't represent actual runtime values.
 As a result, [`schema().print()`](schema.md), 
 [`generateInterfaces`](DataSchemaGenerationMethods.md#generateinterfaces), 
-`print(columnTypes = true)` show misleading type.
+and `print(columnTypes = true)` show misleading types.
 
 This can happen when reading a dataframe from files or databases.
 
@@ -93,7 +93,7 @@ Possible workarounds (for [`ValueColumn`s](DataColumn.md#valuecolumn)):
     > using it once to figure out the actual type and change it to `changeType()` for production code.
     {style="warning"}
 
-2) Change the compiler-time schema of a dataframe
+2) Change the compile-time schema of a dataframe
 
 You need to edit (you can view the correct one with [`.schema().print()`](schema.md)) or regenerate 
 the correct data schema (with [generate..()](DataSchemaGenerationMethods.md) methods)

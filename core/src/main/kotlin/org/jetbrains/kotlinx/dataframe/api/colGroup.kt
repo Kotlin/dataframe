@@ -667,7 +667,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ColumnGroup] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [ColumnGroup] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 @PublishedApi
