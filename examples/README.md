@@ -5,67 +5,67 @@
 You don't need to clone the repository to build and explore these projects.
 Download an individual project using the links below or the **Download this Example** link in its README.
 
-### [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example)
+#### [Gradle plugin example](projects/kotlin-dataframe-plugin-gradle-example)
 
 An IntelliJ IDEA project showing how to use the
 [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Gradle.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-gradle-example.zip)
 
-### [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example)
+#### [Maven plugin example](projects/kotlin-dataframe-plugin-maven-example)
 
 An IntelliJ IDEA project showing how to use the
 [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Maven.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-maven-example.zip)
 
-### [Kotlin Toolchain example](projects/kotlin-dataframe-plugin-kotlin-toolchain-example)
+#### [Kotlin Toolchain example](projects/kotlin-dataframe-plugin-kotlin-toolchain-example)
 
 An IntelliJ IDEA project showing how to use the
 [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html) with Kotlin Toolchain.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-dataframe-plugin-kotlin-toolchain-example.zip)
 
-### [Android example](projects/android-example)
+#### [Android example](projects/android-example)
 
 A minimal Android project showcasing Kotlin DataFrame integration, including the
 [Kotlin DataFrame Compiler Plugin](https://kotlin.github.io/dataframe/compiler-plugin.html).
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/android-example.zip)
 
-### [Movies](projects/movies)
+#### [Movies](projects/movies)
 
 Explore basic DataFrame operations and type-safe column access using data from [MovieLens](https://movielens.org/).
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/movies.zip)
 
-### [Titanic](projects/titanic)
+#### [Titanic](projects/titanic)
 
 Combine Kotlin DataFrame with [KotlinDL](https://github.com/Kotlin/kotlindl)
 to explore deep-learning techniques using the Titanic dataset.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/titanic.zip)
 
-### [YouTube](projects/youtube)
+#### [YouTube](projects/youtube)
 
 Work with YouTube data using the [YouTube Data API](https://developers.google.com/youtube/v3) and Kotlin DataFrame.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/youtube.zip)
 
-### [JSON and OpenAPI](projects/json-openapi)
+#### [JSON and OpenAPI](projects/json-openapi)
 
 Generate data schemas for JSON data from [APIs.guru](https://apis.guru/) and read JSON
 using types defined in an OpenAPI specification.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/json-openapi.zip)
 
-### [Spark and Parquet](projects/spark-parquet-dataframe)
+#### [Spark and Parquet](projects/spark-parquet-dataframe)
 
 Read Parquet files to import data and ML models exported from Apache Spark.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/spark-parquet-dataframe.zip)
 
-### [IMDb SQL database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples)
+#### [IMDb SQL database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples)
 
 Convert SQL tables and query results into Kotlin DataFrames.
 
@@ -78,26 +78,26 @@ Following examples showcase of how to use DataFrame with (momentarily) unsupport
   [Spark](https://spark.apache.org/) and [Exposed](https://github.com/JetBrains/Exposed).
   They show how to convert to and from Kotlin DataFrame and their respective tables.
 
-### [JetBrains Exposed](projects/exposed)
+#### [JetBrains Exposed](projects/exposed)
 
 Convert between Kotlin DataFrame and [Exposed](https://github.com/JetBrains/Exposed) tables.
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/exposed.zip)
 
-### [Hibernate](projects/hibernate)
+#### [Hibernate](projects/hibernate)
 
 Use Kotlin DataFrame with [Hibernate](https://hibernate.org/orm/).
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/hibernate.zip)
 
-### [Apache Spark](projects/kotlin-spark)
+#### [Apache Spark](projects/kotlin-spark)
 
 Convert between Kotlin DataFrame and [Apache Spark](https://spark.apache.org/) DataFrames,
 including examples using the [Kotlin Spark API](https://github.com/JetBrains/kotlin-spark-api).
 
 [Download this example](https://github.com/Kotlin/dataframe/raw/example-projects-archives/kotlin-spark.zip)
 
-### [Multik](projects/multik)
+#### [Multik](projects/multik)
 
 Use Kotlin DataFrame with [Multik](https://github.com/Kotlin/multik).
 
