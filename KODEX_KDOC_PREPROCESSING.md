@@ -215,6 +215,11 @@ the same imports as the source file. The original name will be left in place as 
 `[reference][path.to.reference]`.
 This is also done for references used as key in `@set` and `@get` / `$` tags.
 
+Everything in the included KDoc renders in the host — `@param` lines included. A rendered `@param`
+line can therefore be owned by another file (for example, an `impl/` KDoc that is `@include`d into a
+public function), so a style fix must target the owning declaration. The place to *locate* such a line
+is the processed file under `generated-sources/`, not the file the API declaration lives in.
+
 ### `@includeFile`: Including all content from a relative file
 
 This tag is not used in the DataFrame project at the moment. It's used like:
