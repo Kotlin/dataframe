@@ -72,7 +72,7 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
     }
 
     @Test
-    fun parseSome() {
+    fun parseSome_properties() {
         val df = getDf()
         // SampleStart
         df.parse { date and value }
@@ -82,7 +82,7 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
     }
 
     @Test
-    fun parseSomeByName() {
+    fun parseSome_strings() {
         val df = getDf()
         // SampleStart
         df.parse("date", "value")
@@ -95,11 +95,11 @@ class Parse : DataFrameSampleHelper(subFolder = "api", sampleName = "parse") {
 
     @Test
     fun parseFrameColumn() {
+        // SampleStart
         val frames = DataColumn.createValueColumn(
             "frames",
             listOf(dataFrameOf("value")("1.0"), null, dataFrameOf("value")("2.0")),
         )
-        // SampleStart
         frames.parse()
             // SampleEnd
             .also {

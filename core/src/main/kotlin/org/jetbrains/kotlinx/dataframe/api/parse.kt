@@ -28,7 +28,8 @@ import kotlin.reflect.KProperty
  * every selected column is tried against the supported parsers, in the parsing order
  * documented on the website page, until one of them parses all of its values.
  * Columns that cannot be parsed into a more specific type are left unchanged,
- * and so are the columns of other types.
+ * apart from the configured [null strings][ParserOptions.nullStrings], which are converted to `null`;
+ * columns of other types are not touched.
  *
  * Parsing can be customized with [ParserOptions]: for every option you don't supply (or supply `null`),
  * its value is taken from [DataFrame.parser][DataFrame.Companion.parser].
@@ -84,7 +85,7 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> 
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSome]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSome_properties]
  *
  * @param [options] options for parsing, like providing a locale or a custom date-time formatter.
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to parse.
@@ -105,7 +106,7 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: Colum
  *
  * ### Examples
  *
- * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSomeByName]
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.Parse.parseSome_strings]
  *
  * @param [columns\] The [Column Names][String] used to select the columns of this [DataFrame] to parse.
  * @param [options] options for parsing, like providing a locale or a custom date-time formatter.

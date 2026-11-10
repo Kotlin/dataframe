@@ -1058,7 +1058,8 @@ class ParseTests {
         val parsed = col.parse()
 
         parsed.type() shouldBe typeOf<URL>()
-        parsed.toList() shouldBe listOf(URL("https://kotlin.github.io"), URL("https://jetbrains.com"))
+        // URL.equals resolves hosts through DNS, so the values are compared by their string forms
+        parsed.toList().map { it.toString() } shouldBe listOf("https://kotlin.github.io", "https://jetbrains.com")
     }
 
     @Test
@@ -1120,6 +1121,17 @@ class ParseTests {
     }
 
     @Test
+    fun `parse leaves short month names as strings`() {
+        val col by columnOf("jan", "feb")
+
+        // only the full enum name is recognized by the Month parser
+        val parsed = col.tryParse()
+
+        parsed.type() shouldBe typeOf<String>()
+        parsed.toList() shouldBe listOf("jan", "feb")
+    }
+
+    @Test
     fun `parse treats the global default null strings as null`() {
         val col by columnOf("1", "null", "2", "NULL", "NA", "N/A")
 
@@ -1127,6 +1139,24 @@ class ParseTests {
 
         parsed.type() shouldBe typeOf<Int?>()
         parsed.toList() shouldBe listOf(1, null, 2, null, null, null)
+    }
+
+    @Test
+    fun `parse leaves an unparseable column as strings apart from the null strings`() {
+        val col by columnOf("text", "NA")
+
+        val parsed = col.tryParse()
+
+        parsed.type() shouldBe typeOf<String?>()
+        parsed.toList() shouldBe listOf("text", null)
+    }
+
+    @Test
+    fun `parse on a string column throws when it cannot be parsed further`() {
+        val col by columnOf("text", "hello")
+
+        shouldThrow<IllegalStateException> { col.parse() }
+        col.tryParse() shouldBe col
     }
 
     @Test
