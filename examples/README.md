@@ -119,35 +119,32 @@ See the [convention plugins README](../build-logic/README.md) for more informati
 
 ## Notebook examples
 
-* people ([Datalore](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)) &ndash;
-Small artificial dataset used in [DataFrame API examples](https://kotlin.github.io/dataframe/operations.html) 
-___
-* puzzles ([notebook](notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
+* puzzles [notebook](notebooks/puzzles/40%20puzzles.ipynb) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
 complex problems where you need to think. This notebook will show you how to solve these tasks with Kotlin 
 DataFrame in a laconic, beautiful style.
 ___
-* movies ([notebook](notebooks/movies/movies.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/89IMYb1zbHZxHfwAta6eKP)) &ndash;
+* movies [notebook](notebooks/movies/movies.ipynb) &ndash;
 In this notebook you can see the basic operations of the Kotlin DataFrame on data from [movielens](https://movielens.org/).
 You can take the data from the [link](https://grouplens.org/datasets/movielens/latest/).
 ___
-* netflix ([notebook](notebooks/netflix/netflix.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/xSJ4rx49hcH71pPnFgZBCq)) &ndash;
+* netflix [notebook](notebooks/netflix/netflix.ipynb) &ndash;
 Explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
-* github ([notebook](notebooks/github/github.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/P9n6jYL4mmY1gx3phz5TsX)) &ndash;
+* github [notebook](notebooks/github/github.ipynb) &ndash;
 This notebook shows what hierarchical dataframes look like and how to work with them.
 ___
-* titanic ([notebook](notebooks/titanic/Titanic.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/B5YeMMONSAR78FgKQ9yJyW)) &ndash;
+* titanic [notebook](notebooks/titanic/Titanic.ipynb) &ndash;
 Let's see how the new library will show itself on the famous Titanic dataset.
 ___
-* Financial Analysis of the top-12 German companies ([notebook](notebooks/top_12_german_companies)/[Datalore](https://datalore.jetbrains.com/report/static/KQKedA4jDrKu63O53gEN0z/MDg5pHcGvRdDVQnPLmwjuc)) &ndash;
+* Financial Analysis of the top-12 German companies [notebook](notebooks/top_12_german_companies) &ndash;
   Analyze key financial metrics for several major German companies.
 ___
-* wine ([notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/aK9vYHH8pCA8H1KbKB5WsI)) &ndash;
+* wine [notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb) &ndash;
   Wine. Kotlin DataFrame. KotlinDL. What came out of this can be seen in this notebook.
 ___
-* youtube ([notebook](notebooks/youtube/Youtube.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/uXH0VfIM6qrrmwPJnLBi0j)) &ndash;
+* youtube [notebook](notebooks/youtube/Youtube.ipynb) &ndash;
 Explore YouTube videos with YouTube REST API and Kotlin DataFrame 
 
 ___
