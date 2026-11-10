@@ -16,6 +16,8 @@ Kotlin DataFrame provides full support for reading and writing Apache Arrow file
 
 Kotlin DataFrame supports reading from and writing to Apache Arrow files.
 
+**API reference**: [`readArrow`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/read-arrow.html), [`readArrowFeather`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/read-arrow-feather.html), [dataframe-arrow module](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/index.html)
+
 Requires the [`dataframe-arrow` module](Modules.md#dataframe-arrow), which is included by 
 default in the general [`dataframe`](Modules.md#dataframe-general) artifact 
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

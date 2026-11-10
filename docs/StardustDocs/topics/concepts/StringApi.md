@@ -132,7 +132,7 @@ df.mean { colGroup("info").col<Int>("age") }
 
 <!---END-->
 
-Combine Extensions Properties and String Column Accessors.
+Combine Extension Properties and String Column Accessors.
 [Select](select.md) "height" and "name" columns, assuming we have extension properties
 for "info" and "name" columns but not for the ("info"/"height") column
 
@@ -257,5 +257,5 @@ For production code we strongly recommend using the
 It is more concise, fully type-safe, and provides better IDE support.
 
 However, note that sometimes the usage of Extension Properties API is not possible
-or may require too many excess actions. 
+or may require too many extra steps.
 In such cases, use [](#string-column-accessors).

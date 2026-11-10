@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -42,7 +42,7 @@ internal const val GROUP_BY_VALUES_EXCEPTION_MESSAGE =
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Grouped<T>.values(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     dropNA: Boolean = false,
     distinct: Boolean = false,
 ): DataFrame<T> = values(dropNA, distinct) { columns.toColumnSet() }
@@ -100,7 +100,7 @@ public fun <T, G> ReducedGroupBy<T, G>.values(): DataFrame<G> = values(groupBy.r
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: AnyColumnReference): DataFrame<G> =
+public fun <T, G> ReducedGroupBy<T, G>.values(vararg columns: ColumnReference<*>): DataFrame<G> =
     values { columns.toColumnSet() }
 
 /**
@@ -190,7 +190,7 @@ public fun <T> Pivot<T>.values(
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> Pivot<T>.values(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
@@ -253,7 +253,7 @@ public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivot<T>.values(vararg columns: AnyColumnReference, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separate: Boolean = false): DataRow<T> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -340,7 +340,7 @@ public fun <T> PivotGroupBy<T>.values(
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> PivotGroupBy<T>.values(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
@@ -384,7 +384,7 @@ public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFra
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> ReducedPivotGroupBy<T>.values(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     separate: Boolean = false,
 ): DataFrame<T> = values(separate) { columns.toColumnSet() }
 

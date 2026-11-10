@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -14,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,12 +65,15 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -120,6 +123,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col\]
      * {@set [CommonColGroupDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColGroupDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -156,9 +160,10 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs]
      * {@set [CommonColGroupDocs.ARG] columnGroupA}
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the column group.
+     * @param [colGroup\] The [ColumnAccessor] pointing to the column group.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupReferenceDocs = Nothing
 
     /**
@@ -189,8 +194,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
-        this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(
+        colGroup: ColumnAccessor<DataRow<C>>,
+    ): ColumnAccessor<DataRow<C>> = this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
@@ -226,6 +232,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
+    @ExcludeFromSources
     private typealias ColGroupNameDocs = Nothing
 
     /**
@@ -265,13 +272,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
@@ -330,6 +337,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
+    @ExcludeFromSources
     private typealias ColGroupPathDocs = Nothing
 
     /**
@@ -370,13 +378,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
@@ -436,6 +444,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColGroupKPropertyDocs = Nothing
 
     /**
@@ -481,7 +490,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     @JvmName("colGroupDataRowKProperty")
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
@@ -489,7 +498,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
+    public fun <C> ColumnAccessor<DataRow<*>>.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
@@ -557,6 +566,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ColGroupIndexDocs = Nothing
 
     /**

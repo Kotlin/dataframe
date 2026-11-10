@@ -4,10 +4,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.simplify
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 
@@ -59,11 +57,7 @@ public interface SimplifyColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** __`.`__[<code>**`simplify`**</code>][ColumnsSelectionDsl.simplify] */
-        public typealias ColumnSetName = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## Simplify [<code>ColumnSet</code>][ColumnSet]

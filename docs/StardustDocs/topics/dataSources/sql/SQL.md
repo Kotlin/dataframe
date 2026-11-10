@@ -14,6 +14,8 @@ Load data from SQL databases into Kotlin DataFrame using JDBC and built-in readi
 
 Kotlin DataFrame supports reading from SQL databases using JDBC.
 
+**API reference**: [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html), [`readSqlQuery`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-query.html), [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html), [dataframe-jdbc module](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/index.html)
+
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

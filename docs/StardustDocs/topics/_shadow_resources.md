@@ -124,6 +124,10 @@
 <resource src="fillNA.html"></resource>
 <resource src="fillNaNs.html"></resource>
 <resource src="fillNulls.html"></resource>
+<resource src="filter.html"></resource>
+<resource src="filterColumn.html"></resource>
+<resource src="filterDf.html"></resource>
+<resource src="filterWithRowLambda.html"></resource>
 <resource src="firstOnColumnDf.html"></resource>
 <resource src="formatHeader.html"></resource>
 <resource src="notebook_test_generate_docs_1.html"></resource>
@@ -172,6 +176,8 @@
 <resource src="sortByGroupOnGroupBy.html"></resource>
 <resource src="sortByKeyOnGroupBy.html"></resource>
 <resource src="sortByOnGroupBy.html"></resource>
+<resource src="sortBySelectedKeysDescOnGroupBy.html"></resource>
+<resource src="sortBySelectedKeysOnGroupBy.html"></resource>
 <resource src="stdOnGroupBy.html"></resource>
 <resource src="sumOnGroupBy.html"></resource>
 <resource src="toDfOnGroupBy.html"></resource>
@@ -214,6 +220,7 @@
 <resource src="globalParserOptionsAddPatternJava.html"></resource>
 <resource src="globalParserOptionsAddPatternKotlin.html"></resource>
 <resource src="parseAll.html"></resource>
+<resource src="parseFrameColumn.html"></resource>
 <resource src="parseSome.html"></resource>
 <resource src="parseWithOptions.html"></resource>
 <resource src="parserOptionsWithDateTimeFormatJava.html"></resource>
@@ -325,6 +332,12 @@
 <resource src="takeLast.html"></resource>
 <resource src="takeLastDataColumn.html"></resource>
 <resource src="takeWhile.html"></resource>
+<resource src="split.html"></resource>
+<resource src="split1.html"></resource>
+<resource src="splitFrameColumn.html"></resource>
+<resource src="splitInplace.html"></resource>
+<resource src="splitIntoRows.html"></resource>
+<resource src="splitRegex1.html"></resource>
 <resource src="notebook_test_tail_1.html"></resource>
 <resource src="notebook_test_tail_2.html"></resource>
 <resource src="notebook_test_tail_3.html"></resource>
@@ -356,8 +369,6 @@
 <resource src="notebook_test_quickstart_7.html"></resource>
 <resource src="notebook_test_quickstart_8.html"></resource>
 <resource src="usingResult.html"></resource>
-<resource src="filter.html"></resource>
-<resource src="filterColumn.html"></resource>
 <resource src="formatExample.html"></resource>
 <resource src="formatExampleNumbers.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"></resource>
@@ -441,11 +452,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitInplace.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitIntoRows.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex1.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.ungroup.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.update.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.updateAsFrame.html"></resource>

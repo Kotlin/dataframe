@@ -21,6 +21,8 @@ Learn how to use OpenAPI 3.0 JSON schemas with Kotlin DataFrame to load and mani
 > Follow https://github.com/Kotlin/dataframe/issues/897 for updates and please leave your feedback.
 > {style="warning"}
 
+**API reference**: [`readOpenApi`](https://kotlin.github.io/dataframe/api-docs/dataframe-openapi-generator/org.jetbrains.kotlinx.dataframe.io/read-open-api.html), [dataframe-openapi module](https://kotlin.github.io/dataframe/api-docs/dataframe-openapi/index.html)
+
 Kotlin DataFrame provides support for reading and writing JSON data
 that conforms to [OpenAPI 3.0 specifications](https://www.openapis.org).
 This feature is useful when working with APIs that expose structured data defined via OpenAPI schemas.
@@ -391,7 +393,7 @@ To enable it in Kotlin Notebook, use:
 ```
 
 See [](schemasImportOpenApiJupyter.md) for details on how to work with OpenAPI-based data in notebooks, as well as
-[the OpenAPI guide notebook](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
+[the OpenAPI guide notebook](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb).
 
 ### Some Background around OpenAPI Support in DataFrame
 

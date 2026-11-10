@@ -18,6 +18,8 @@ The `associate` function builds a `Map` from key–value `Pair`s produced by app
 of this [`DataFrame`](DataFrame.md)
 using a [row expression](DataRow.md#row-expressions).
 
+**API reference**: [`associate`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/associate.html)
+
 If multiple rows produce the same key, only the last value for that key is kept. This matches the behavior of Kotlin’s standard [`kotlin.collections.associate`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/associate.html) function.
 
 The keys are in the same order as the rows. A key that occurs in several rows appears

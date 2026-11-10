@@ -11,11 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.CorrDocs.SelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -322,26 +318,6 @@ public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr { columns.toColumnSet() }
-
-/**
- * Calculates the correlation of specified [<code>columns</code>][otherColumns]
- * with values in the columns previously selected with [<code>corr</code>][corr].
- *
- * Returns a correlation matrix represented by a [<code>DataFrame</code>][DataFrame],
- * where rows and columns correspond to the selected column sets,
- * and each cell contains the Pearson correlation coefficient between the corresponding pair of columns.
- *
- * Check out [<code>Grammar</code>][Grammar].
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See also: [<code>Selecting Columns</code>][SelectingOptions].
- *
- * For more information, see: [See `corr` on the documentation website.](https://kotlin.github.io/dataframe/corr.html)
- */
-internal typealias CorrWithDocs = Nothing
 
 /**
  * Calculates the correlation of specified [<code>columns</code>][otherColumns]

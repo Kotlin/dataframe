@@ -16,6 +16,8 @@ Kotlin DataFrame support for reading and writing CSV and TSV files with simple, 
 
 Kotlin DataFrame supports reading from and writing to CSV and TSV files.
 
+**API reference**: [`readCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/read-csv.html), [`readTsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/read-tsv.html), [`readDelim`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/read-delim.html), [`writeCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/write-csv.html), [dataframe-csv module](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/index.html)
+
 Requires the [`dataframe-csv` module](Modules.md#dataframe-csv), 
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
 artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

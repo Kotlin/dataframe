@@ -17,6 +17,8 @@ Discover `asSequence` operation in Kotlin DataFrame.
 Returns values of this [`DataColumn`](DataColumn.md) as
 [Sequence](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/-sequence/).
 
+**API reference**: [`asSequence`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/as-sequence.html)
+
 ```kotlin
 col.asSequence()
 ```

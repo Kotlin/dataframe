@@ -1,7 +1,9 @@
 [//]: # (title: parse)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Parse-->
 
-Returns a [`DataFrame`](DataFrame.md) in which the given `String` and `Char` columns are parsed into other types.
+Returns a [`DataFrame`](DataFrame.md) in which `String` and `Char` columns are parsed into other types.
+
+**API reference**: [`parse`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/parse.html)
 
 This is a special case of the [](convert.md) operation.
 
@@ -30,11 +32,21 @@ even those inside [column groups](DataColumn.md#columngroup) and inside [frame c
 To parse only particular columns, use a [column selector](ColumnSelectors.md):
 
 <!---FUN parseSome-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df.parse { date and value }
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.parse("date", "value")
+```
+
+</tab></tabs>
 <inline-frame src="./resources/parseSome.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
@@ -57,8 +69,8 @@ df.parse { date and value }
 | Default Java date-time ISO types (`java.time`):<br/>`LocalDateTime`, `LocalDate`, `LocalTime`, `Instant`                                                 | (**J**, **P**)                                                                                                                                |
 | `Duration` (`kotlin.time`)                                                                                                                               | (**K**)                                                                                                                                       |
 | `Duration` (`java.time`)                                                                                                                                 | (**J**)                                                                                                                                       |
-| `Month` (`kotlinx.datetime`)                                                                                                                             | (**K**)                                                                                                                                       |
-| `DayOfWeek` (`kotlinx.datetime`)                                                                                                                         | (**K**)                                                                                                                                       |
+| `Month` (`kotlinx.datetime`)                                                                                                                             | (**K**) - Full enum name, any capitalization.                                                                                                |
+| `DayOfWeek` (`kotlinx.datetime`)                                                                                                                         | (**K**) - Full enum name, any capitalization.                                                                                                |
 | `URL` (`java.net`)                                                                                                                                       |                                                                                                                                               |
 | [`Double` (with optional locale settings)](#parsing-doubles)                                                                                             |                                                                                                                                               |
 | `Double`                                                                                                                                                 | with "C.UTF-8" locale, used as fallback for `Double` parsing.                                                                                 |
@@ -86,6 +98,25 @@ When `.parse()` is called on a [`DataColumn`](DataColumn.md) of `String` or `Cha
 to one of the supported types mentioned above. If the input (`String`/`Char`) type is the same as the output type
 (i.e., it cannot be parsed further), an `IllegalStateException` is thrown. To avoid this, use `col.tryParse()` instead.
 
+When `.parse()` is called on a [`DataColumn`](DataColumn.md) of [`DataFrame`s](DataFrame.md)
+(either a [frame column](DataColumn.md#framecolumn) or a value column of frames — only the latter can
+contain `null` cells), every frame is parsed recursively,
+as if `parse()` was called on each frame with no columns selected. `null` cells stay `null`.
+
+<!---FUN parseFrameColumn-->
+
+```kotlin
+val frames = DataColumn.createValueColumn(
+    "frames",
+    listOf(dataFrameOf("value")("1.0"), null, dataFrameOf("value")("2.0")),
+)
+frames.parse()
+```
+
+<inline-frame src="./resources/parseFrameColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
 ### Parser Options
 
 DataFrame supports multiple parser options that can be used to customize the parsing behavior.
@@ -99,11 +130,11 @@ Available parser options:
 
 * `locale: Locale` is used to [parse doubles](#parsing-doubles) (and Java date-time types)
     * Global default locale is `Locale.getDefault()`
-* `dateTime: DateTimeParserOptions` can be used to force parsing to Kotlin-, or Java date-time classes, and override
+* `dateTime: DateTimeParserOptions` can be used to force parsing to Kotlin or Java date-time classes and override
   default and custom global date-time formats. By default, it's `null`, meaning we try Kotlin types first,
   and if that fails, we try Java types. See [](#parsing-date-time-strings).
   This argument was added in DataFrame 1.0.0-Beta5.
-* `nullStrings: List<String>` is used to treat particular strings as `null` value
+* `nullStrings: List<String>` is used to treat particular strings as `null` values
     * Global default null strings are `["null", "NULL", "NA", "N/A"]`.
     * When [reading from CSV](read.md), these are expanded to
       `["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]`.
@@ -243,8 +274,8 @@ Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encou
 
 By default, DataFrame tries parsing date-time strings using
 
-- Custom [global](#global-parser-options) Kotlin-, and Java date-time formats, if provided;
-- Default Kotlin-, and Java ISO date-time formats.
+- Custom [global](#global-parser-options) Kotlin and Java date-time formats, if provided;
+- Default Kotlin and Java ISO date-time formats.
 
 You can customize this behavior from the [](#global-parser-options) by:
 
@@ -509,11 +540,10 @@ and finally to the default system locale.
 
 **Kotlin `DateTimeComponents` fallback mechanism:**
 
-When using [`DataFrame.convert` or `DataColumn.convertTo`](convert.md) to
-convert from `String` to a kotlinx-datetime type, like `LocalDate`, fails to parse,
-the `DateTimeComponents` fallback-mechanism kicks in.
-Oftentimes it may namely be possible to parse the date-time string to the more flexible `DateTimeComponents`
-first and then convert that to `LocalDate` with a potential little loss of information.
+When [`DataFrame.convert` or `DataColumn.convertTo`](convert.md) cannot convert a `String` to a kotlinx-datetime
+type, such as `LocalDate`, the `DateTimeComponents` fallback mechanism kicks in.
+Often, it is possible to parse the date-time string into the more flexible `DateTimeComponents` type and then convert
+it to `LocalDate`, potentially losing a little information.
 This means we can successfully call:
 
 ```kotlin

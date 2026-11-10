@@ -4,6 +4,8 @@
 
 Computes the [mean (average)](https://en.wikipedia.org/wiki/Arithmetic_mean) of values.
 
+**API reference**: [`mean`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/mean.html)
+
 `null` values are ignored.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`.

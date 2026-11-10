@@ -7,6 +7,8 @@ into a [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/
 a [`DataFrame`](DataFrame.md), a [`DataColumn`](DataColumn.md),
 or a [`FrameColumn`](DataColumn.md#framecolumn).
 
+**API reference**: [`map`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/map.html)
+
 **Related operations**: [](addRemove.md)
 
 All `map` operations share the name but differ in what they go over and what they give back:
@@ -53,7 +55,7 @@ df.map { 2021 - it.age }
 
 <!---END-->
 
-See [row expressions](DataRow.md#row-expressions)
+See [row expressions](DataRow.md#row-expressions).
 
 A [`ColumnGroup`](DataColumn.md#columngroup) is also a [`DataFrame`](DataFrame.md), so `map` on a column group is
 this operation: it goes over the rows of the group and returns a `List`.
@@ -90,7 +92,7 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 
 <!---END-->
 
-See [row expressions](DataRow.md#row-expressions)
+See [row expressions](DataRow.md#row-expressions).
 
 The new column is standalone: the original [`DataFrame`](DataFrame.md) is not changed and does not contain it.
 Use [`add`](add.md) to get a [`DataFrame`](DataFrame.md) with the new column in it.

@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -416,7 +416,7 @@ private interface ReorderColumnsByDocs {
 public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
-    expression: Selector<AnyCol, V>,
+    expression: Selector<DataColumn<*>, V>,
 ): DataFrame<T> = reorderColumnsBy(atAnyDepth, desc, inFrameColumns = false, expression)
 
 /**
@@ -428,7 +428,7 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
     inFrameColumns: Boolean,
-    expression: Selector<AnyCol, V>,
+    expression: Selector<DataColumn<*>, V>,
 ): DataFrame<T> =
     Reorder(
         df = this,

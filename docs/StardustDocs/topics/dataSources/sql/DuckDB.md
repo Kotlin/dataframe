@@ -16,6 +16,8 @@ Read DuckDB data into Kotlin DataFrame with JDBC support.
 
 Kotlin DataFrame supports reading from [DuckDB](https://duckdb.org/) databases using JDBC.
 
+**API reference**: [`DuckDb`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-duck-db/index.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 This requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

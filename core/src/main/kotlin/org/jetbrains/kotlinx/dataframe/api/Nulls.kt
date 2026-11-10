@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -348,7 +347,6 @@ private typealias DropColumnAccessorsParam = Nothing
  *
  * See also [fillNulls], which replaces `null` values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNulls {
 
     /**
@@ -356,6 +354,7 @@ internal interface DropNulls {
      *   If `true`, rows are dropped if all selected cells are `null`.
      *   If `false`, rows are dropped if any of the selected cells is `null`.
      */
+    @ExcludeFromSources
     typealias WhereAllNullParam = Nothing
 
     /**
@@ -445,7 +444,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNulls(vararg columns: ColumnReference<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
 /**
@@ -475,7 +474,6 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * See also [fillNA], which replaces [`NA`][NA] values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNA {
 
     /**
@@ -483,6 +481,7 @@ internal interface DropNA {
      *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
      *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
      */
+    @ExcludeFromSources
     typealias WhereAllNAParam = Nothing
 
     /**
@@ -554,7 +553,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNA(vararg columns: ColumnReference<*>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
 /**
@@ -596,7 +595,6 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * See also [fillNaNs], which replaces [`NaN`][NaN] values instead of removing rows.
  */
-@ExcludeFromSources
 internal interface DropNaNs {
 
     /**
@@ -604,6 +602,7 @@ internal interface DropNaNs {
      *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
      *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
      */
+    @ExcludeFromSources
     typealias WhereAllNaNParam = Nothing
 
     /**
@@ -671,7 +670,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: ColumnReference<*>, whereAllNaN: Boolean = false): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
 /**

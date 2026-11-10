@@ -16,6 +16,8 @@ Read data from MariaDB into Kotlin DataFrame using standard JDBC configurations.
 
 Kotlin DataFrame supports reading from a [MariaDB](https://mariadb.org) database using JDBC.
 
+**API reference**: [`MariaDb`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-maria-db/index.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

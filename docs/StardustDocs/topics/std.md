@@ -4,6 +4,8 @@
 
 Computes the [standard deviation (std, σ)](https://en.wikipedia.org/wiki/Standard_deviation) of values.
 
+**API reference**: [`std`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/std.html)
+
 `null` values are ignored.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`.

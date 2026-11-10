@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,17 +16,13 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.CSDslLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
@@ -544,7 +539,7 @@ public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = nul
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivot(vararg columns: AnyColumnReference, inward: Boolean? = null): Pivot<T> =
+public fun <T> DataFrame<T>.pivot(vararg columns: ColumnReference<*>, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -692,7 +687,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -703,39 +698,6 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: B
 // endregion
 
 // region pivotCounts
-
-/**
- * Computes a **count matrix** (similar to frequency encoding) for the values in the
- * specified [<code>columns</code>][columns] of this [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame], returning a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the remaining columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
- *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * This function combines [<code>pivot</code>][DataFrame.pivot], [<code>groupByOther</code>][Pivot.groupByOther],
- * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
- *
- * See also: [<code>pivotMatches</code>][pivotMatches], which performs a similar operation
- * but checks if there is any matching row instead of counting them
- * to produce a [<code>Boolean</code>][Boolean] matrix.
- *
- * ### This `pivotCounts` Overload
- */
-internal typealias DataFramePivotCountsCommonDocs = Nothing
 
 /**
  * Computes a **count matrix** (similar to frequency encoding) for the values in the
@@ -872,7 +834,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -962,7 +924,7 @@ public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumns
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: Boolean = true): PivotGroupBy<G> =
+public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
 /**
@@ -1045,40 +1007,6 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 // endregion
 
 // region pivotMatches
-
-/**
- * Computes a **presence matrix**
- * (similar to [one-hot encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics))
- * for the values in the
- * specified [<code>columns</code>][columns] within each group of this [<code>GroupBy</code>][GroupBy], returning a new [<code>DataFrame</code>][DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the grouping columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain a [<code>Boolean</code>][Boolean] value indicating whether a row with the corresponding
- *   combination of values (horizontal and vertical) exists in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * This function combines [<code>pivot</code>][GroupBy.pivot]
- * and [<code>matches</code>][PivotGroupBy.matches] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotMatches` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotmatches)
- *
- * See also: [<code>pivotCounts</code>][GroupBy.pivotCounts], which performs a similar operation
- * but counts the number of matching rows instead of checking for their presence.
- *
- * ### This `pivotMatches` Overload
- */
-internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
  * Computes a **presence matrix**
@@ -1211,7 +1139,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolea
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1222,38 +1150,6 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
 // endregion
 
 // region pivotCounts
-
-/**
- * Computes a **count matrix** (similar to frequency encoding) for the values in the
- * specified [<code>columns</code>][columns] within each group of this [<code>GroupBy</code>][GroupBy], returning a new [<code>DataFrame</code>][DataFrame] where:
- * * **Columns** represent all unique values from the selected [<code>columns</code>][columns]
- *   (they become [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
- *   corresponding to value combinations when using [<code>then</code>][org.jetbrains.kotlinx.dataframe.api.PivotDsl.then],
- *   similar to [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot]);
- * * **Rows** correspond to all unique combinations of values from the grouping columns;
- *   each combination is represented in dedicated key columns that store
- *   a distinct set of values for each row
- *   (similar to [<code>keys</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.keys] in [<code>GroupBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy]).
- * * **Cells** contain an [<code>Int</code>][Int] value indicating how many rows with the corresponding
- *   combination of values (horizontal and vertical) exist in the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
- *
- * This function combines [<code>pivot</code>][GroupBy.pivot]
- * and [<code>count</code>][PivotGroupBy.count] operations into a single call.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][SelectSelectingOptions].
- *
- * For more information: [See `pivotCounts` on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivotcounts)
- *
- * See also: [<code>pivotMatches</code>][GroupBy.pivotMatches], which performs a similar operation
- * but checks if there is any matching row instead of counting them.
- *
- * ### This `pivotCounts` Overload
- */
-internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**
  * Computes a **count matrix** (similar to frequency encoding) for the values in the
@@ -1382,7 +1278,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -1525,7 +1421,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Bool
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivot(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): PivotGroupBy<T> = pivot(inward) { columns.toColumnSet() }
 
@@ -1652,7 +1548,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inwar
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotMatches(inward) { columns.toColumnSet() }
 
@@ -1779,7 +1675,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotCounts(inward) { columns.toColumnSet() }
 

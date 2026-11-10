@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.documentationCsv.CommonReadDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentationCsv.DelimParams.COL_TYPES
@@ -108,7 +107,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   Can configure locale, date format, double parsing, skipping types, etc.
  *
  *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
- *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) will be queried.
+ *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.api.parser]) will be queried.
  *
  *   The only exceptions are:
  *   - [<code>nullStrings</code>][org.jetbrains.kotlinx.dataframe.api.ParserOptions.nullStrings], which, if `null`,

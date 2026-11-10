@@ -3,6 +3,8 @@
 
 Replaces one or several columns with new columns.
 
+**API reference**: [`replace`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/replace.html)
+
 ```kotlin
 replace { columns }
     .with(newColumns) | .with { columnExpression }

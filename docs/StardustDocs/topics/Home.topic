@@ -22,6 +22,7 @@
             <a href="SetupGradle.md"/>
             <a href="concepts.md"/>
             <a href="operations.md"/>
+            <a href="ApiReference.md"/>
             <a href="read.md">Reading from files: CSV, JSON, Excel and Apache Arrow</a>
         </primary>
 

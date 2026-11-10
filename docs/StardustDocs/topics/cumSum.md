@@ -4,6 +4,8 @@
 
 Computes the cumulative sum of values in the selected columns.
 
+**API reference**: [`cumSum`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cum-sum.html)
+
 ```text
 cumSum(skipNA = true) [ { columns } ]
 ```
@@ -14,7 +16,7 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 
 **Parameters:**
 * `skipNA` — when `true`, ignores [`NA` values](nanAndNa.md#na) (`null` or `NaN`). 
-  When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
+  When `false`, all values after the first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)

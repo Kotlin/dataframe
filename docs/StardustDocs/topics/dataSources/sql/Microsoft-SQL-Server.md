@@ -17,6 +17,8 @@ Fetch data from Microsoft SQL Server into Kotlin DataFrame using JDBC configurat
 Kotlin DataFrame supports reading from a [Microsoft SQL Server (MS SQL)](https://www.microsoft.com/en-us/sql-server) 
 database using JDBC.
 
+**API reference**: [`MsSql`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-ms-sql/index.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 Requires the [`dataframe-jdbc` module](Modules.md#dataframe-jdbc),
 which is included by default in the general [`dataframe` artifact](Modules.md#dataframe-general)
 and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) for Kotlin Notebook.

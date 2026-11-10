@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Selecting.R
  *    Some snippets mention the statistic by name, using the [STATISTIC] key.
  *    `MedianDocs` and `PercentileDocs` wrap those with their own `Set...StatisticArgs`.
  *
- *    NOTE: this cannot be @ExcludedFromSources because `MedianDocs` and `PercentileDocs` use it as supertype.
+ *    NOTE: this cannot be @ExcludeFromSources because `MedianDocs` and `PercentileDocs` use it as supertype.
  * }
  */
 internal interface CommonMedianPercentileDocs : CommonStatisticsDocs {

@@ -130,7 +130,7 @@ generation now goes through dedicated runtime methods and the compiler plugin �
 **`plugins/kotlin-dataframe`** — the Kotlin 2.x compiler plugin, which is the **recommended** way to get
 compile-time extension properties. It is not deprecated: development simply moved to the Kotlin repository
 (`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`), and the copy here is an out-of-date
-snapshot with its tests turned off (issue #1290). See `docs/StardustDocs/topics/compiler-plugin.md`.
+snapshot with its tests turned off (issue #1290). See `docs/StardustDocs/topics/Compiler-Plugin.md`.
 
 **`plugins/keywords-generator`** — not in the repository at all (`git ls-files` returns nothing); it is now the
 `dfbuild.keywordsGenerator` convention plugin in `build-logic`. An untracked `build/` directory may still sit in

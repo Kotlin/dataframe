@@ -1,14 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -33,7 +35,7 @@ import kotlin.reflect.KProperty
  * which serves as an intermediate step.
  * The [GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [into][GroupClause.into] and,
+ * as [into][GroupClause.into],
  * that return a new [DataFrame] with grouped columns.
  * Check out [Grammar].
  *
@@ -118,7 +120,7 @@ public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.group(vararg columns: AnyColumnReference): GroupClause<T, Any?> =
+public fun <T> DataFrame<T>.group(vararg columns: ColumnReference<*>): GroupClause<T, Any?> =
     group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -212,7 +214,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  */
 @JvmName("intoColumn")
 public fun <T, C> GroupClause<T, C>.into(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> = df.move(columns).under(column)
 
 /**
@@ -242,7 +244,8 @@ public fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(co
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> GroupClause<T, C>.into(column: AnyColumnGroupAccessor): DataFrame<T> = df.move(columns).under(column)
+public fun <T, C> GroupClause<T, C>.into(column: ColumnAccessor<DataRow<*>>): DataFrame<T> =
+    df.move(columns).under(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

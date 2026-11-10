@@ -30,7 +30,7 @@ import kotlin.io.path.outputStream
  *
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187);
+ * > the deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187).
  *
  * @param [path] a [<code>String</code>][String] path to GeoJSON file
  */
@@ -50,7 +50,7 @@ public fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(
  *
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187);
+ * > the deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187).
  *
  * @param [path] a [<code>Path</code>][Path] to GeoJSON file
  */
@@ -75,7 +75,7 @@ public fun GeoDataFrame<*>.writeGeoJson(path: Path) {
  *
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187);
+ * > the deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187).
  *
  * @param [file] a GeoJSON file
  */

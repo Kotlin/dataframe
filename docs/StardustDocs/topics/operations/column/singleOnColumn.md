@@ -20,6 +20,8 @@ if the [`DataColumn`](DataColumn.md) is empty, and
 [`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
 if it contains more than one value.
 
+**API reference**: [`single`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/single.html)
+
 <!---FUN singleOnColumnDf-->
 
 ```kotlin

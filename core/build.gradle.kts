@@ -1,8 +1,10 @@
+import dfbuild.kodex.kodexAwareComponentToPublish
 import io.github.devcrocod.korro.KorroGenerateTask
 import io.github.devcrocod.korro.KorroTask
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.named
 import org.intellij.lang.annotations.Language
+import org.jetbrains.dokka.gradle.tasks.DokkaBaseTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -12,6 +14,7 @@ plugins {
         alias(buildConfig)
         alias(kodex)
         alias(keywordsGenerator)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -320,7 +323,7 @@ tasks.runKtlintFormatOverMainSourceSet {
 tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
-tasks.runKtlintFormatOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintFormatOverMainKodexSourceSet" }.configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -332,7 +335,11 @@ tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.runKtlintCheckOverGeneratedMainSourcesSourceSet {
+tasks.named { it == "runKtlintCheckOverMainKodexSourceSet" }.configureEach {
+    dependsOn(tasks.generateKeywordsSrc)
+}
+
+tasks.withType<DokkaBaseTask>().configureEach {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
@@ -372,5 +379,7 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Kotlin DataFrame: core API"
         packageName = artifactId
+        // publishes the KoDEx-processed jars, see `dfbuild.kodex`
+        composeOf { from(kodexAwareComponentToPublish()) }
     }
 }

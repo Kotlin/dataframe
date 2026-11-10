@@ -12,3 +12,5 @@ General information about [`DataFrame`](DataFrame.md):
 * [`head(n)`](head.md) — first n rows (default 5)
 * [`schema()`](schema.md) — schema of columns
 * [`describe()`](describe.md) — general statistics for every column
+
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)

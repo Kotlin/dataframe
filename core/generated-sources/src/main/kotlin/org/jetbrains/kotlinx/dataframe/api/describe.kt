@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
@@ -246,7 +245,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  *
  *
  *
- * @param [columns] The [<code>Column Names</code>][String] that specifies which
+ * @param [columns] The [<code>Column Names</code>][String] that specify which
  * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> =
@@ -290,7 +289,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  *
  * ### This Describe Overload
  *
- * @param [columns] The [<code>Column Accessors</code>][ColumnReference] that specifies which
+ * @param [columns] The [<code>Column Accessors</code>][ColumnReference] that specify which
  * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -336,7 +335,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  *
  * ### This Describe Overload
  *
- * @param [columns] The [<code>KProperties</code>][KProperty] that specifies which
+ * @param [columns] The [<code>KProperties</code>][KProperty] that specify which
  * columns of this [<code>DataFrame</code>][DataFrame] should be described.
  */
 @Deprecated(DEPRECATED_ACCESS_API)

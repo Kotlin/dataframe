@@ -12,8 +12,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -210,7 +208,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * `| `[<code>**`all`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     * `| `**`all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**` | `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     * `| `**`all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**` | `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
      * `| `[<code>**`allExcept`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`  {  `**[<code>`colsSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
@@ -222,7 +220,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * `| (`[<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `[<code>**`valueCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `[<code>**`frameCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `[<code>**`colGroup`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
-     * `| (`[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| (`[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]`| `[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * `| `[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[<code>`indexRange`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
@@ -232,7 +230,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * `| `[<code>**colsOf**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     * `| `[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| `[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * `| `[<code>**`drop`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[<code>**`Last`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast]`)`**`(`**[<code>`number`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
@@ -280,13 +278,13 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`all`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`and`**</code>][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[<code>`columnOrSet`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[<code>**`valueCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[<code>**`frameCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[<code>**`colGroup`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)`**`(`**[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]`| `__`.`__[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[<code>`indexRange`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
@@ -296,7 +294,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsOf`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[<code>`kType`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`distinct`**</code>][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
@@ -348,7 +346,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`allCols`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[<code>**`Before`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[<code>**`After`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsAfter]`|`[<code>**`From`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[<code>**`UpTo`**</code>][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[<code>`colSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`allColsExcept`**</code>][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`  {  `**[<code>`colsSelector`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
      *
@@ -358,7 +356,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`col`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[<code>**`valueCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[<code>**`frameCol`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[<code>**`colGroup`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[<code>**`valueCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[<code>**`frameCols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCols]`| `__`.`__[<code>**`colGroups`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`cols`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[<code>`T`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[<code>`column`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[<code>`index`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[<code>`indexRange`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
@@ -370,7 +368,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsNameContains`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameContains]**`(`**[<code>`text`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[<code>`ignoreCase`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[<code>`regex`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsOfKind`**</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOfKind]**`(`**[<code>`kind`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[<code>`condition`</code>][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[<code>**`colsWithoutNulls`**</code>][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
      *
@@ -463,7 +461,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
@@ -510,7 +508,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -559,7 +557,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
@@ -609,7 +607,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 

@@ -15,15 +15,11 @@ import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
@@ -171,17 +167,6 @@ public class Update<T, C>(
      */
     public typealias UpdateSelectingOptions = Nothing
 
-    /** @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias DslParam = Nothing
-
-    /** @param [columns] The [<code>Column References</code>][ColumnReference] of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnAccessorsParam = Nothing
-
-    /** @param [columns] The [<code>KProperties</code>][KProperty] corresponding to columns of this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias KPropertiesParam = Nothing
-
-    /** @param [columns] The [<code>Strings</code>][String] corresponding to the names of columns belonging to this [<code>DataFrame</code>][DataFrame] to update. */
-    internal typealias ColumnNamesParam = Nothing
     // endregion
 }
 
@@ -335,7 +320,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  *
  * `df.`[<code>update</code>][update]` { length }.`[<code>where</code>][where]` { it > 10.0 }`
  *
- * `df.`[<code>update</code>][update]` { `[<code>cols</code>][ColumnsSelectionDsl.cols]`(1..5) }.`[<code>where</code>][where]` { `[<code>index</code>][org.jetbrains.kotlinx.dataframe.index]`() > 4 && city != "Paris" }`
+ * `df.`[<code>update</code>][update]` { `[<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`[<code>where</code>][where]` { `[<code>index</code>][org.jetbrains.kotlinx.dataframe.index]`() > 4 && city != "Paris" }`
  *
  *
  *
@@ -347,6 +332,27 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 @Interpretable("UpdateWhere")
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     Update(df = df, filter = filter and predicate, columns = columns)
+
+/** ## At
+ * Only update the columns at certain given [<code>row indices</code>][CommonUpdateAtFunctionDoc.RowIndicesParam]:
+ *
+ * Either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg` indices.
+ *
+ * For example:
+ *
+ * `df.`[<code>update</code>][update]` { city }.`[<code>at</code>][at]`(5..10).`[<code>with</code>][with]` { "Paris" }`
+ *
+ * `df.`[<code>update</code>][update]` { name }.`[<code>at</code>][at]`(1, 2, 3, 4).`[<code>with</code>][with]` { "Empty" }`
+ *
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
+ *
+ * ### This At Overload
+ */
+private interface CommonUpdateAtFunctionDoc {
+
+    /** The indices of the rows to update. Either a [<code>Collection</code>][Collection]<[<code>Int</code>][Int]>, an [<code>IntRange</code>][IntRange], or just `vararg` indices. */
+    typealias RowIndicesParam = Nothing
+}
 
 /**
  * ## At

@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
@@ -179,7 +180,7 @@ public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): Lis
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
+public operator fun <T> DataFrame<T>.get(first: ColumnReference<*>, vararg other: ColumnReference<*>): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }
 
 @Refine

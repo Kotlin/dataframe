@@ -14,10 +14,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -1933,7 +1929,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.meanOf(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -2007,7 +2003,7 @@ public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNaN: Boolean 
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
  * Columns Selection DSL which lets you rename the result of a column with
  * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
@@ -2093,7 +2089,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -2205,7 +2201,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2294,7 +2290,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -2393,7 +2389,7 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *

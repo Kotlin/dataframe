@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -11,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -95,13 +95,13 @@ public fun DataRow<*>.containsKey(columnName: String): Boolean = owner.containsC
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun DataRow<*>.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
+public fun DataRow<*>.containsKey(column: ColumnReference<*>): Boolean = owner.containsColumn(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun DataRow<*>.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun DataRow<*>.contains(column: AnyColumnReference): Boolean = containsKey(column)
+public operator fun DataRow<*>.contains(column: ColumnReference<*>): Boolean = containsKey(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -114,8 +114,9 @@ public operator fun DataRow<*>.contains(column: KProperty<*>): Boolean = contain
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ * @return [firstRowResult\] for the first row; difference between expression computed for current and previous row for the following rows
  */
+@ExcludeFromSources
 internal typealias DiffDocs = Nothing
 
 /**
@@ -125,6 +126,7 @@ internal typealias DiffDocs = Nothing
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
+@ExcludeFromSources
 internal typealias DiffOrNullDocs = Nothing
 
 /**
@@ -228,7 +230,7 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
  *
  * For more information: {@include [DocumentationUrls.DataRow.RowFunctions]}
  *
- * @return The previous [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
+ * @return The next [DataRow] if it exists, or `null` if the current row is the last in the [DataFrame].
  */
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()

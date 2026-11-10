@@ -7,6 +7,8 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 Although [`DataFrame`](DataFrame.md)
 doesn't implement the [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection)
 or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/)
@@ -96,7 +98,7 @@ val result = df2.toListOf<Output>()
 
 <!---END-->
 
-`toListOf` works whatever the type argument of the [`DataFrame`](DataFrame.md) is, so use it in most cases.
+`toListOf` works no matter what the type argument of the [`DataFrame`](DataFrame.md) is, so use it in most cases.
 [toList](toList.md#tolist) creates instances of the type argument itself,
 so use it only when this type argument is known to be a data class.
 With the [compiler plugin](Compiler-Plugin.md), this is not the case here:

@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with changed values in some cells. Column types cannot be changed.
 
+**API reference**: [`update`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/update.html)
+
 ```text
 update { columns }
     [.where { rowCondition } ]

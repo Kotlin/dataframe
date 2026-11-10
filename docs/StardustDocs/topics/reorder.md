@@ -5,6 +5,8 @@
 Changes the order of the selected columns.
 `reorder` selects the columns; finish it with `by`, `byDesc` or `byName` to get a new [`DataFrame`](DataFrame.md).
 
+**API reference**: [`reorder`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/reorder.html)
+
 ```text
 reorder { columns }
   [.cast<ColumnType>() ]

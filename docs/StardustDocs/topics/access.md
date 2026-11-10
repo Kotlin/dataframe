@@ -5,6 +5,8 @@
 
 Get [rows](DataRow.md) or [columns](DataColumn.md):
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 <!---FUN getRowsColumns-->
 
 ```kotlin

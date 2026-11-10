@@ -2,6 +2,8 @@
 
 This document outlines the guidelines for writing KDocs in the Kotlin DataFrame project.
 
+For website documentation guidelines, see [DOCUMENTATION_GUIDELINES.md](DOCUMENTATION_GUIDELINES.md).
+
 <!-- TOC -->
 * [KDocs Guidelines](#kdocs-guidelines)
   * [The most important advice](#the-most-important-advice)
@@ -135,8 +137,8 @@ More about `@set` and `@get` conventions [here](#setget-references).
 internal interface ~SnippetDescription~Snippet {
     /*
      * The key for a @set that will define the operation name for the snippet example.
+     * Not annotated: everything nested in an `@ExcludeFromSources` interface is excluded with it.
      */
-    @ExcludeFromSources
     typealias OPERATION = Nothing
 }
 
@@ -198,7 +200,7 @@ In the future, we want to have nice topic names with backticks
 
 All KDoc-helpers must be `internal` or `private`!
 
-Some of KDoc-helpers can be used both as -snippets and -topics.
+Some KDoc-helpers can be used both as snippets and as topics.
 
 ### Common KDoc-helpers
 
@@ -330,13 +332,13 @@ and it should be continued with other methods. Also add a note about the [operat
 For example (from the `insert` KDoc):
 
 ```
- * This function does not immediately insert the new column but instead specify a column to insert and
+ * This function does not immediately insert the new column but instead specifies a column to insert and
  * returns an [InsertClause],
  * which serves as an intermediate step.
  * The [InsertClause] object provides methods to insert a new column using:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [at][InsertClause.at] - inserts a new column at the specified position.
  *
  * Each method returns a new [DataFrame] with the inserted column.
  * 
@@ -396,6 +398,11 @@ For example, from `group` KDoc:
 
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
+
+Before linking an operation whose page already exists, check whether `DocumentationUrls` has a
+constant for the page itself, not only for its section anchors — with anchors alone the KDoc ends up
+pointing at a section instead of the operation's overview. If the page-level constant is missing,
+add it next to the anchors.
 
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
@@ -733,6 +740,9 @@ But keep these things in mind:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
+- Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
+  `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a
+  `NullPointerException` in `DocTagToContentConverter`. Write it out instead: ``if [skipNaN] is `false` ``.
 
 
 ### Advanced DSL Grammar Templating (Columns Selection DSL)

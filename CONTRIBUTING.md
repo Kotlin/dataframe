@@ -48,7 +48,8 @@ so do familiarize yourself with the following guidelines.
 * If you fix documentation:
     * If you plan extensive rewrites/additions to the docs, then please [contact the maintainers](#contacting-maintainers)
       to coordinate the work in advance.
-    * Also, we have a special simple [guide](https://github.com/Kotlin/dataframe/blob/master/docs/contributions.md) on how to contribute to the documentation.
+    * Follow the [Documentation Guidelines](DOCUMENTATION_GUIDELINES.md) for the website documentation
+      (topics and code samples) and the [KDoc Guidelines](KDOC_GUIDELINES.md) for KDocs.
 
 ## PR workflow
 

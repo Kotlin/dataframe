@@ -3,6 +3,8 @@
 
 This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 
+**API reference**: [`dataFrameOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/data-frame-of.html), [`toDataFrame`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-data-frame.html)
+
 ### emptyDataFrame
 
 Returns a [`DataFrame`](DataFrame.md) with empty columns according to schema `T`.

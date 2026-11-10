@@ -1,18 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COLUMNS_PARAM
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COLUMN_SELECTION_DSL
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.COMPARISON_OBJECT
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.CountDistinctOnGroupByDocs.SCOPE
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
@@ -122,7 +116,7 @@ public fun <T, C> DataFrame<T>.countDistinct(vararg columns: KProperty<C>): Int 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.countDistinct(vararg columns: AnyColumnReference): Int =
+public fun <T> DataFrame<T>.countDistinct(vararg columns: ColumnReference<*>): Int =
     countDistinct { columns.toColumnSet() }
 
 // endregion

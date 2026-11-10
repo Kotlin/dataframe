@@ -13,12 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
-import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs.InputValuesSnippet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -3057,7 +3052,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -3127,7 +3122,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3214,7 +3209,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3312,7 +3307,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3389,7 +3384,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3489,7 +3484,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Don't confuse [<code>maxOf</code>][maxOf] with [<code>maxBy</code>][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.

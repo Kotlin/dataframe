@@ -3,6 +3,8 @@
 `DataSchema` can be used as an argument for [cast](cast.md) and [convertTo](convertTo.md) functions. 
 It provides typed data access for raw dataframes you read from I/O sources and serves as a starting point for the compiler plugin to derive schema changes.
 
+**API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html)
+
 Example 1:
 ```kotlin
 @DataSchema

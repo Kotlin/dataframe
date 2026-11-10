@@ -17,6 +17,9 @@ If your SQL database is not officially supported, you can either
 [create an issue](https://github.com/Kotlin/dataframe/issues)
 or define a simple, configurable custom SQL source.
 
+**API reference**: [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html),
+[`AdvancedDbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-advanced-db-type/index.html)
+
 See the [How to Extend DataFrame Library for Custom SQL Database Support guide](readSqlFromCustomDatabase.md)
 for detailed instructions and an example with HSQLDB.
 

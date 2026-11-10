@@ -2,6 +2,8 @@
 
 Returns `true` if [`DataFrame`](DataFrame.md) has no rows or no columns.
 
+**API reference**: [`isEmpty`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/is-empty.html)
+
 ```kotlin
 isEmpty()
 ```

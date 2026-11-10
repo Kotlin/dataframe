@@ -12,7 +12,6 @@ import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.toStdlibInstant
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -32,13 +31,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
@@ -776,7 +771,7 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  * @param [C] The target type to convert values to.
  * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to type [<code>C</code>][C].
  */
-public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
+public inline fun <reified C> DataColumn<*>.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 /**
  * Converts values in this column to the specified [<code>type</code>][newType].
@@ -789,7 +784,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
  * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>type</code>][type].
  */
 @Suppress("UNCHECKED_CAST")
-public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType, null)
+public fun DataColumn<*>.convertTo(newType: KType): DataColumn<*> = convertToTypeImpl(newType, null)
 
 /**
  * Converts values in this `String` column to the specified type [<code>C</code>][C].
@@ -822,7 +817,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  * @param [parserOptions] Optional [<code>ParserOptions</code>][ParserOptions] to customize parsing behavior (e.g., locale, null strings).
  * @return A new [<code>DataColumn</code>][DataColumn] with the values converted to [<code>type</code>][type].
  */
-public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
+public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): DataColumn<*> =
     convertToTypeImpl(newType, parserOptions)
 
 /**

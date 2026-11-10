@@ -41,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.LazyMap
@@ -904,7 +903,7 @@ internal object Parsers : GlobalParserOptions {
         stringParserWithOptions<Month> { options, isConverter ->
             if (canUseKotlinDateTime(options, isConverter)) {
                 parseBy {
-                    Month.entries.firstOrNull { month -> month.name == it.lowercase() }
+                    Month.entries.firstOrNull { month -> month.name.equals(it, ignoreCase = true) }
                 }
             } else {
                 SKIP_PARSER
@@ -914,7 +913,7 @@ internal object Parsers : GlobalParserOptions {
         stringParserWithOptions<DayOfWeek> { options, isConverter ->
             if (canUseKotlinDateTime(options, isConverter)) {
                 parseBy {
-                    DayOfWeek.entries.firstOrNull { day -> day.name == it.lowercase() }
+                    DayOfWeek.entries.firstOrNull { day -> day.name.equals(it, ignoreCase = true) }
                 }
             } else {
                 SKIP_PARSER
@@ -1089,7 +1088,7 @@ internal fun DateTimeFormat.Companion.fromPattern(pattern: String, formatType: K
  *
  * For more information: [See `parse` on a DataColumn on the documentation website.](https://kotlin.github.io/dataframe/parse.html#on-a-datacolumn)
  *
- * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @param [options] options for parsing, like providing a locale or a custom date-time formatter
  * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
  * @return a new column with parsed values
  */

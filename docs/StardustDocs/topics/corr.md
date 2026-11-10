@@ -2,6 +2,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with the pairwise correlation between two sets of columns.
 
+**API reference**: [`corr`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/corr.html)
+
 It computes the [Pearson correlation coefficient](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient).
 
 ```kotlin

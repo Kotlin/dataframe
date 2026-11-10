@@ -4,6 +4,8 @@
 
 Computes the [sum](https://en.wikipedia.org/wiki/Summation) of values.
 
+**API reference**: [`sum`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/sum.html)
+
 `null` values are ignored.
 
 All primitive numeric types are supported: `Byte`, `Short`, `Int`, `Long`, `Float`, and `Double`.

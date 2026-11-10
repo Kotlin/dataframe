@@ -910,7 +910,6 @@ internal class ArrowKtTest {
                 details:
                     price: Double
                     currency: String
-            
             note: String?
             """.trimIndent()
     }
@@ -963,7 +962,6 @@ internal class ArrowKtTest {
                 details:
                     price: Double?
                     currency: String?
-            
             note: String?
             """.trimIndent()
     }

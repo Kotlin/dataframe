@@ -3,10 +3,12 @@
 
 [`DataFrame`](DataFrame.md) instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
 
+**API reference**: [`writeCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/write-csv.html), [`writeJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/write-json.html), [`writeExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/write-excel.html), [`writeArrowFeather`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/write-arrow-feather.html)
+
 ### Writing to CSV
 
-You can write [`DataFrame`](DataFrame.md) in CSV format to file, to `String` or to `Appendable`
-(i.e. to `Writer`).
+You can write a [`DataFrame`](DataFrame.md) in CSV format to a file, a `String`, or an `Appendable`
+(i.e., a `Writer`).
 
 Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
@@ -30,8 +32,8 @@ val csvStr = df.toCsvStr(delimiter = ';', recordSeparator = System.lineSeparator
 
 ### Writing to JSON
 
-You can write your [`DataFrame`](DataFrame.md) in JSON format to file, to string or to `Appendable`
-(i.e. to `Writer`).
+You can write your [`DataFrame`](DataFrame.md) in JSON format to a file, a `String`, or an `Appendable`
+(i.e., a `Writer`).
 
 <!---FUN writeJson-->
 
@@ -108,7 +110,8 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
 ```
 
-You can write your [`DataFrame`](DataFrame.md) in XLS, XLSX format to a file, `OutputStream` or Workbook object.
+You can write your [`DataFrame`](DataFrame.md) in XLS or XLSX format to a file, an `OutputStream`,
+or a `Workbook` object.
 
 <!---FUN writeXls-->
 
@@ -195,17 +198,18 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
 ```
 
-> Make sure to follow an
-> [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) 
-> guide when using Java 9+
+> Make sure to follow the
+> [Apache Arrow Java compatibility guide](https://arrow.apache.org/docs/java/install.html#java-compatibility)
+> when using Java 9+
 > {style = "warning"}
 
 [`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/java/current/ipc.html#writing-and-reading-random-access-files)
 to raw WritableByteChannel, OutputStream, File or ByteArray.
 
-Data may be saved "as is" (like exporting to new Excel file) or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
-if you have it (like inserting into existing SQL table).
+Data may be saved "as is" (like exporting to a new Excel file) or converted to match some target
+[Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
+if you have it (like inserting into an existing SQL table).
 
 The first approach is quite easy:
 <!---FUN writeArrowFile-->
@@ -217,7 +221,7 @@ df.writeArrowFeather(file)
 ```
 
 <!---END-->
-(writing to file, opened stream or channel),
+(writing to a file, an opened stream, or a channel),
 <!---FUN writeArrowByteArray-->
 
 ```kotlin
@@ -227,10 +231,10 @@ val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
 ```
 
 <!---END-->
-(creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
+(creating a byte array). Nested frames and columns with mixed or unsupported types will be saved as a `String`.
 
 The second approach is a bit more tricky. You have to specify the schema itself and the casting behavior mode as `ArrowWriter` parameters.
-Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
+Behavior `Mode` has four independent switches: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
 You can use `Mode.STRICT` (this is the default), `Mode.LOYAL` or any combination you want.
 The `ArrowWriter` object should be closed after use because Arrow uses random access buffers not managed by Java GC.
 Finally, you can specify a callback to be invoked if some data is lost or cannot be saved according to your schema.
@@ -267,7 +271,7 @@ df.arrowWriter(
 ```
 
 <!---END-->
-On executing you should get two warnings:
+When you run this example, you should get two warnings:
 >Column "city" contains nulls but expected not nullable
 
 and

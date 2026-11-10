@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.SliceRowsSamples-->
 
+**API reference**: [`take`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/take.html), [`drop`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/drop.html)
+
 Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
 <!---FUN sliceRowsDf-->
@@ -48,7 +50,7 @@ df[0..2, 4..5]
 
 ## take
 
-Returns a [`DataFrame`](DataFrame.md) containing first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing the first `n` rows.
 
 <!---FUN take-->
 
@@ -74,7 +76,7 @@ df.age.take(5)
 
 ## takeLast
 
-Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing the last `n` rows.
 
 <!---FUN takeLast-->
 
@@ -100,7 +102,7 @@ df.age.takeLast(5)
 
 ## takeWhile
 
-Returns a [`DataFrame`](DataFrame.md) containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing the first rows that satisfy the given [condition](DataRow.md#row-conditions).
 
 <!---FUN takeWhile-->
 
@@ -114,7 +116,7 @@ df.takeWhile { isHappy }
 
 ## drop
 
-Returns a [`DataFrame`](DataFrame.md) containing all rows except first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except the first `n` rows.
 
 <!---FUN drop-->
 
@@ -141,7 +143,7 @@ df.age.drop(5)
 
 ## dropLast
 
-Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except the last `n` rows.
 
 <!---FUN dropLast1-->
 
@@ -178,7 +180,7 @@ df.age.dropLast(5)
 
 ## dropWhile
 
-Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing all rows except the first rows that satisfy the given [condition](DataRow.md#row-conditions).
 
 <!---FUN dropWhile-->
 

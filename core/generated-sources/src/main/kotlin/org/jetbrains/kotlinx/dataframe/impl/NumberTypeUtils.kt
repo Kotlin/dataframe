@@ -148,8 +148,8 @@ internal fun getUnifiedNumberClassGraph(
  * but unless two unsigned types are provided in the input, it will never be returned.
  * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
- * @param first The first numeric type to compare. Can be null, in which case the second to is returned.
- * @param second The second numeric to compare. Cannot be null.
+ * @param first The first numeric type to compare. Can be null, in which case the second type is returned.
+ * @param second The second numeric type to compare. Cannot be null.
  * @param options See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the two input classes.
  *   If no common class is found, [<code>IllegalStateException</code>][IllegalStateException] is thrown.
@@ -185,8 +185,8 @@ internal fun getUnifiedNumberTypeOrNull(
  * but unless two unsigned types are provided in the input, it will never be returned.
  * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
- * @param first The first numeric type to compare. Can be null, in which case the second to is returned.
- * @param second The second numeric to compare. Cannot be null.
+ * @param first The first numeric type to compare. Can be null, in which case the second type is returned.
+ * @param second The second numeric type to compare. Cannot be null.
  * @param options See [<code>UnifiedNumberTypeOptions</code>][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the two input classes.
  *   If no common class is found, [<code>IllegalStateException</code>][IllegalStateException] is thrown.

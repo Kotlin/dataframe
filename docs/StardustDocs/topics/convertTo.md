@@ -3,6 +3,8 @@
 
 [Converts](convert.md) all columns in the [`DataFrame`](DataFrame.md) to match a given schema [`Schema`](schema.md).
 
+**API reference**: [`convertTo`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/convert-to.html)
+
 ```kotlin
 convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 ```

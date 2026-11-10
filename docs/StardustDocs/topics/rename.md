@@ -4,6 +4,8 @@
 
 Renames one or several columns without changing their location in [`DataFrame`](DataFrame.md).
 
+**API reference**: [`rename`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/rename.html)
+
 ```kotlin
 df.rename { columns }.to(name)
 df.rename { columns }.to { nameExpression }

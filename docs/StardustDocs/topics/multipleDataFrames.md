@@ -3,6 +3,8 @@
 
 Operations that combine several [`DataFrame`](DataFrame.md) objects into one.
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 * [`addAll`](add.md#add-all-columns-from-another-dataframe) — union of columns from several [`DataFrame`](DataFrame.md) objects
 * [`concat`](concat.md) — union of rows from several [`DataFrame`](DataFrame.md) objects
 * [`join`](join.md) — sql-like join of two [`DataFrame`](DataFrame.md) objects by key columns

@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with rows sorted by one or several columns.
 
+**API reference**: [`sortBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/sort-by.html)
+
 By default, columns are sorted in ascending order with `null` values going first. Available modifiers:
 * `.desc` — changes column sort order from ascending to descending
 * `.nullsLast` — forces `null` values to be placed at the end of the order
@@ -63,6 +65,8 @@ df.sortByDesc("age", "weight")
 ## Sorting within groups
 
 On a [`GroupBy`](groupBy.md), `sortBy` and `sortByDesc` sort rows only within each group.
+
+If a referenced column cannot be found in a group, both functions throw an exception.
 
 To sort the groups themselves by their keys, use `sortByKey()` or `sortByKeyDesc()` instead.
 See [GroupBy transformations](groupBy.md#transformation) for other operations that reorder groups.

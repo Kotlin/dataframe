@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException

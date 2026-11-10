@@ -4,6 +4,8 @@
 
 Return [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values from one or several columns of [`DataFrame`](DataFrame.md).
 
+**API reference**: [`values`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/values.html)
+
 ```
 values(byRows: Boolean = false) 
     [ { columns } ]: Sequence<C>

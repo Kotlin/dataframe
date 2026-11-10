@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) without selected columns.
 
+**API reference**: [`remove`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/remove.html)
+
 ```text
 remove { columns }
 ```

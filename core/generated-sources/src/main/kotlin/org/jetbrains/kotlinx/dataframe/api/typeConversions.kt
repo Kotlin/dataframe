@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -107,7 +108,7 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
-public fun AnyCol.setNullable(nullable: Boolean): AnyCol =
+public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
     if (nullable) {
         this.castToNullable()
     } else {
@@ -132,13 +133,13 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
-public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+public fun DataColumn<*>.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
 
 @JvmName("asColumnGroupUntyped")
-public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+public fun DataColumn<*>.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asFrameColumnUntyped")
-public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+public fun DataColumn<*>.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()
@@ -159,27 +160,6 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 // endregion
 
 // region SingleColumn
-
-/**
- * ## As ColumnGroup
- *
- * Creates a [<code>ColumnAccessor</code>][ColumnAccessor]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
- * This is especially useful when you want to use [<code>ColumnGroup</code>][ColumnGroup] functions in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] but your column
- * type is not recognized as a [<code>ColumnGroup</code>][ColumnGroup].
- * If you're not sure whether a column is recognized as [<code>ColumnGroup</code>][ColumnGroup] or not, you can always call [<code>asColumnGroup</code>][asColumnGroup]
- * and it will return the same type if it is already a [<code>ColumnGroup</code>][ColumnGroup].
- *
- * NOTE: This does not check whether the column is actually a [<code>ColumnGroup</code>][ColumnGroup] or not. It just casts it.
- *
- * #### For example:
- *
- * `df.`[<code>select</code>][DataFrame.select]` { `[<code>first</code>][ColumnsSelectionDsl.first]`().`[<code>asColumnGroup</code>][SingleColumn.asColumnGroup]`().`[<code>firstCol</code>][ColumnsSelectionDsl.firstCol]`() }`
- *
- * @receiver The column reference to cast to a [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
- * @param [C] The type of the (group) column.
- * @return A [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
- */
-private typealias SingleColumnAsColumnGroupDocs = Nothing
 
 /** ## As ColumnGroup
  *
@@ -299,14 +279,6 @@ public enum class Infer {
      * In many cases, letting the library infer by `reified` types is enough and more efficient.
      */
     Type,
-
-    ;
-
-    /**
-     * @param [infer] [<code>An enum</code>][Infer] that indicates how [<code>DataColumn.type</code>][DataColumn.type] should be calculated.
-     * Either [<code>None</code>][None], [<code>Nulls</code>][Nulls], or [<code>Type</code>][Type].
-     */
-    internal typealias ParamDoc = Nothing
 }
 
 /**
@@ -315,18 +287,20 @@ public enum class Infer {
  */
 public enum class NullabilityOptions {
     /**
-     * Use only actual data, set [DataColumn.hasNulls] to true if and only if there are null values in the column.
-     * On empty dataset use False.
+     * Use only actual data, set [DataColumn.hasNulls] to `true` if and only if there are null values in the column.
+     * On an empty dataset, use `false`.
      */
     Infer,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value. Throw exception if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value.
+     * Throws an exception if the column should be not nullable but there are null values.
      */
     Checking,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value by default. Change False to True if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value by default.
+     * Change `false` to `true` if the column should be not nullable but there are null values.
      */
     Widening,
 }
@@ -334,7 +308,8 @@ public enum class NullabilityOptions {
 public class NullabilityException : Exception()
 
 /**
- * @return if column should be marked nullable for current [<code>NullabilityOptions</code>][NullabilityOptions] value with actual [<code>data</code>][data] and [<code>expectedNulls</code>][expectedNulls] per some schema/signature.
+ * @return whether the column should be marked nullable for the current [<code>NullabilityOptions</code>][NullabilityOptions] value
+ * with actual [<code>data</code>][data] and [<code>expectedNulls</code>][expectedNulls] per some schema/signature.
  * @throws [NullabilityException] for [<code>NullabilityOptions.Checking</code>][NullabilityOptions.Checking] if [<code>expectedNulls</code>][expectedNulls] is false and [<code>data</code>][data] contains nulls.
  */
 public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {

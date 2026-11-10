@@ -17,6 +17,8 @@ Discover `asIterable` operation in Kotlin DataFrame.
 Returns values of this [`DataColumn`](DataColumn.md) as
 [Iterable](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-iterable/).
 
+**API reference**: [`asIterable`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/as-iterable.html)
+
 ```kotlin
 col.asIterable()
 ```

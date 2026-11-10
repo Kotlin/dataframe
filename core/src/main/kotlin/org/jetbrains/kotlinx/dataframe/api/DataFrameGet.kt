@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
@@ -41,9 +39,12 @@ public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>)
 
 public fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 
-public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<AnyCol> = getColumns { columns.toColumnSet() }
+public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<DataColumn<*>> =
+    getColumns {
+        columns.toColumnSet()
+    }
 
-public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
+public fun <T> DataFrame<T>.getColumnIndex(col: DataColumn<*>): Int = getColumnIndex(col.name())
 
 public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = get(range)
 
@@ -84,7 +85,7 @@ public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
 
 // region getColumn
 
-public fun <T> ColumnsContainer<T>.getColumn(name: String): AnyCol =
+public fun <T> ColumnsContainer<T>.getColumn(name: String): DataColumn<*> =
     getColumnOrNull(name) ?: throw IllegalArgumentException("Column not found: '$name'")
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -102,10 +103,10 @@ public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataRow<
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): DataColumn<R> =
     getColumnOrNull(column) ?: throw IllegalArgumentException("Column not found: '$column'")
 
-public fun <T> ColumnsContainer<T>.getColumn(path: ColumnPath): AnyCol =
+public fun <T> ColumnsContainer<T>.getColumn(path: ColumnPath): DataColumn<*> =
     getColumnOrNull(path) ?: throw IllegalArgumentException("Column not found: '$path'")
 
-public fun <T> ColumnsContainer<T>.getColumn(index: Int): AnyCol =
+public fun <T> ColumnsContainer<T>.getColumn(index: Int): DataColumn<*> =
     getColumnOrNull(index)
         ?: throw IllegalArgumentException("Column index is out of bounds: $index. Columns count = $ncol")
 
@@ -158,7 +159,7 @@ public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = c
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public operator fun ColumnsContainer<*>.contains(column: AnyColumnReference): Boolean = containsColumn(column)
+public operator fun ColumnsContainer<*>.contains(column: ColumnReference<*>): Boolean = containsColumn(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

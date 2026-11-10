@@ -1,23 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
@@ -411,7 +407,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String):
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: ColumnReference<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -691,12 +687,12 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = 
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToStart(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToStart(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
@@ -925,12 +921,12 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = mo
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToRight(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToEnd(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToEnd(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
@@ -993,7 +989,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.into(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> =
     moveImpl(
         under = false,
@@ -1062,7 +1058,7 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.intoIndexed(
-    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference,
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> ColumnReference<*>,
 ): DataFrame<T> {
     var counter = 0
     return into { col ->
@@ -1103,7 +1099,7 @@ public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = under {
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = under { column.path() }
+public fun <T, C> MoveClause<T, C>.under(column: ColumnAccessor<DataRow<*>>): DataFrame<T> = under { column.path() }
 
 /**
  * Moves columns, previously selected with [<code>move</code>][move] under a new or
@@ -1152,7 +1148,7 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
 @Refine
 @Interpretable("MoveUnder1")
 public fun <T, C> MoveClause<T, C>.under(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> =
     moveImpl(
         under = true,
@@ -1309,7 +1305,7 @@ public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after {
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.after(column: AnyColumnReference): DataFrame<T> = after { column }
+public fun <T, C> MoveClause<T, C>.after(column: ColumnReference<*>): DataFrame<T> = after { column }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

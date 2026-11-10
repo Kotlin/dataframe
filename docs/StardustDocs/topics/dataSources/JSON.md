@@ -16,6 +16,8 @@ Kotlin DataFrame support for reading and writing JSON files in a structured and 
 
 Kotlin DataFrame supports reading from and writing to JSON files.
 
+**API reference**: [`readJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/read-json.html), [`writeJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/write-json.html), [dataframe-json module](https://kotlin.github.io/dataframe/api-docs/dataframe-json/index.html)
+
 Requires the [`dataframe-json` module](Modules.md#dataframe-json), 
 which is included by default in the general [`dataframe`](Modules.md#dataframe-general) 
 artifact and in [`%use dataframe`](SetupKotlinNotebook.md#integrate-kotlin-dataframe) 

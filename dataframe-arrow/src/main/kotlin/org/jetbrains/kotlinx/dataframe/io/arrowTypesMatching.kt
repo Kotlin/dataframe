@@ -10,7 +10,7 @@ import org.apache.arrow.vector.types.pojo.ArrowType
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
-import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -28,7 +28,7 @@ import kotlinx.datetime.Instant as DeprecatedInstant
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
  * name, type and nullability as [this]
  */
-public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
+public fun DataColumn<*>.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
     return when (column) {
@@ -74,8 +74,9 @@ internal const val NANOS_PER_SECOND: Long = 1_000_000_000L
  *
  * Every Arrow timestamp vector stores a `Long` counting this many parts of a second since the epoch, so this is the
  * divisor that splits such a value into whole seconds plus a sub-second remainder — and the multiplier that puts it
- * back together. Shared by the reader ([DataFrame.readArrowFeather]) and the writer ([AnyFrame.arrowWriter]) so the
- * two can never disagree about a unit.
+ * back together. Shared by the reader
+ * ([DataFrame.readArrowFeather][org.jetbrains.kotlinx.dataframe.io.readArrowFeather]) and the writer
+ * ([AnyFrame.arrowWriter][org.jetbrains.kotlinx.dataframe.io.arrowWriter]) so the two can never disagree about a unit.
  */
 internal val TimeUnit.perSecond: Long
     get() = when (this) {
@@ -163,7 +164,7 @@ internal fun KType.toArrowField(name: String, mismatchSubscriber: (ConvertingMis
  * and Parquet mark values already normalized to UTC. Sub-microsecond instants lose their last three digits at that
  * precision, reported as [ConvertingMismatch.PrecisionReduced]; see [DEFAULT_INSTANT_UNIT] for why.
  */
-public fun List<AnyCol>.toArrowSchema(
+public fun List<DataColumn<*>>.toArrowSchema(
     mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
 ): Schema {
     val fields = this.map { it.toArrowField(mismatchSubscriber) }

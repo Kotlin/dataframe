@@ -18,6 +18,8 @@ The `associateBy` function builds a `Map` from a [`DataFrame`](DataFrame.md)
 by selecting a key for each row using a [row expression](DataRow.md#row-expressions).  
 The rows themselves (or values derived from them) become the map values.
 
+**API reference**: [`associateBy`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/associate-by.html)
+
 If multiple rows produce the same key, only the last row for that key is kept. 
 This matches the behavior of Kotlin’s standard 
 [`kotlin.collections.associateBy`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.sequences/associate-by.html) 

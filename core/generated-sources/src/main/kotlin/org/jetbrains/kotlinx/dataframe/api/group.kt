@@ -1,21 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -33,7 +31,7 @@ import kotlin.reflect.KProperty
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][GroupClause.into] and,
+ * as [<code>into</code>][GroupClause.into],
  * that return a new [<code>DataFrame</code>][DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][Grammar].
  *
@@ -146,7 +144,7 @@ internal interface GroupDocs {
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into],
  * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
@@ -202,7 +200,7 @@ public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClaus
  * which serves as an intermediate step.
  * The [<code>GroupClause</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause] allows specifying the final
  * destination of the selected columns using methods such
- * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into] and,
+ * as [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.GroupClause.into],
  * that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with grouped columns.
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.GroupDocs.Grammar].
  *
@@ -237,7 +235,7 @@ public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.group(vararg columns: AnyColumnReference): GroupClause<T, Any?> =
+public fun <T> DataFrame<T>.group(vararg columns: ColumnReference<*>): GroupClause<T, Any?> =
     group { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -354,7 +352,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  */
 @JvmName("intoColumn")
 public fun <T, C> GroupClause<T, C>.into(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> = df.move(columns).under(column)
 
 /**
@@ -387,7 +385,8 @@ public fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(co
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> GroupClause<T, C>.into(column: AnyColumnGroupAccessor): DataFrame<T> = df.move(columns).under(column)
+public fun <T, C> GroupClause<T, C>.into(column: ColumnAccessor<DataRow<*>>): DataFrame<T> =
+    df.move(columns).under(column)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

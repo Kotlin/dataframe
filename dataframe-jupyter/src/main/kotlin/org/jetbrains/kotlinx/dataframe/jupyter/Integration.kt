@@ -259,8 +259,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
             render<FormatClause<*, *>>({ "Format" })
 
             render<DataFrameHtmlData> {
-                // Our integration declares script and css definition. But in Kotlin Notebook outputs are isolated in IFrames
-                // That's why we include them directly in the output
+                // Our integration declares script and CSS definitions.
+                // But in Kotlin Notebook outputs are isolated in IFrames,
+                // that's why we include them directly in the output
                 if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
                     it.withTableDefinitions().toJupyterHtmlData().toIFrame(notebook.currentColorScheme)
                 } else {
@@ -368,7 +369,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         markVariableInternal { property ->
             // TODO: add more conditions to include all generated properties and other internal stuff
-            //  that should not be shown to user in Jupyter variables view
+            //  that should not be shown to the user in the Jupyter variables view
             internalTypes.any { property.returnType.isSubtypeOf(it) }
         }
 

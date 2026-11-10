@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
@@ -237,7 +237,7 @@ public fun <T> DataFrame<T>.valueCounts(
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.valueCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,

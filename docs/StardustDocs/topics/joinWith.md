@@ -4,6 +4,8 @@
 
 Joins two [`DataFrame`](DataFrame.md) objects by a join expression. 
 
+**API reference**: [`joinWith`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/join-with.html)
+
 ```kotlin
 joinWith(otherDf, type = JoinType.Inner) { joinExpression }
 
@@ -231,9 +233,9 @@ df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["ag
 <!---END-->
 
 Here columns from both [`DataFrame`](DataFrame.md) objects are presented as is.
-So [join](join.md) is better suited for `equals` relation, and joinWith is for everything else.
+So [join](join.md) is better suited for the `equals` relation, and `joinWith` is for everything else.
 Below are two more examples with join types that allow mismatches.
-Note the difference in `null` values
+Note the difference in `null` values:
 
 <!---FUN compareLeft-->
 

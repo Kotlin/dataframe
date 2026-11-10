@@ -1,0 +1,11 @@
+/*
+ * Overrides Dokka's default `logo-styles.css` to show the Kotlin DataFrame logo in the header,
+ * the same logo as used on the Writerside website (`header-logo` in `docs/StardustDocs/cfg/buildprofiles.xml`).
+ * The logo itself is added to Dokka's `images` folder using `customAssets`, see `dfbuild.dokka.gradle.kts`.
+ */
+
+:root {
+    --dokka-logo-image-url: url('../images/kotlin-dataframe-logo.svg');
+    --dokka-logo-height: 32px;
+    --dokka-logo-width: 32px;
+}

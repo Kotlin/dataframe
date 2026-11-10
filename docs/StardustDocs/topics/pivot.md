@@ -4,6 +4,8 @@
 
 Splits the rows of a [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of the original [`DataFrame`](DataFrame.md).
 
+**API reference**: [`pivot`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/pivot.html), [`Pivot`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-pivot/index.html)
+
 ```text
 pivot (inward = true) { pivotColumns }
   [ .groupBy { indexColumns } | .groupByOther() ]

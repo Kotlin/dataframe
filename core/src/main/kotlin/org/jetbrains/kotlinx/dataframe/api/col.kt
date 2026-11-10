@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -14,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -66,12 +66,15 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -119,6 +122,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.valueCol\]
      * {@set [CommonColDocs.NOTE]}
      */
+    @ExcludeFromSources
     private interface CommonColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -158,6 +162,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [col\] The [ColumnAccessor] pointing to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColReferenceDocs = Nothing
 
     /**
@@ -185,7 +190,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().column(col.path())
 
     /**
@@ -222,6 +227,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [name\] The name of the column.
      */
+    @ExcludeFromSources
     private typealias ColNameDocs = Nothing
 
     /**
@@ -264,13 +270,14 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(name: String): ColumnAccessor<*> = col<Any?>(name)
+    public fun ColumnAccessor<DataRow<*>>.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * @include [ColNameDocs] {@set [CommonColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> = this.ensureIsColumnGroup().column(name)
+    public fun <C> ColumnAccessor<DataRow<*>>.col(name: String): ColumnAccessor<C> =
+        this.ensureIsColumnGroup().column(name)
 
     /**
      * @include [ColNameDocs] {@set [CommonColDocs.RECEIVER] "myColumnGroup".}
@@ -334,6 +341,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColDocs.EXAMPLE] {@include [CommonColDocs.DoubleExample]}}
      * @param [path\] The path to the column.
      */
+    @ExcludeFromSources
     private typealias ColPathDocs = Nothing
 
     /**
@@ -372,13 +380,13 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
+    public fun ColumnAccessor<DataRow<*>>.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * @include [ColPathDocs] {@set [CommonColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColDocs.ColumnTypeParam]
      */
-    public fun <C> AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.col(path: ColumnPath): ColumnAccessor<C> =
         this.ensureIsColumnGroup().column(path)
 
     /**
@@ -438,6 +446,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property\] The [KProperty] reference to the column.
      * @include [CommonColDocs.ColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias ColKPropertyDocs = Nothing
 
     /**
@@ -459,7 +468,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun <C> AnyColumnGroupAccessor.col(property: KProperty<C>): ColumnAccessor<C> =
+    public fun <C> ColumnAccessor<DataRow<*>>.col(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().column(property)
 
     /**
@@ -497,6 +506,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [index\] The index of the column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias ColIndexDocs = Nothing
 
     /**

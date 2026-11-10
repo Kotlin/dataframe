@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.nrow

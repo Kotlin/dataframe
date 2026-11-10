@@ -133,7 +133,7 @@ Useful when you want to:
 
 - Work with the data as regular Kotlin data classes.
 - Convert a dataframe to instantiated data classes with `df.toListOf<DataClassType>()`.
-- Work with data classes serialization.
+- Serialize data classes.
 - Extract structured types for further use in your application.
 
 ### Arguments {id="generateDataClasses-arguments"}

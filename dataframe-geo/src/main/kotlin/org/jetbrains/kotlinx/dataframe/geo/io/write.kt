@@ -30,7 +30,7 @@ import kotlin.io.path.outputStream
  *
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187);
+ * > the deprecated "crs" field [is written for now](https://github.com/Kotlin/dataframe/issues/1187).
  */
 @ExcludeFromSources
 internal typealias WriteGeoJsonSnippet = Nothing

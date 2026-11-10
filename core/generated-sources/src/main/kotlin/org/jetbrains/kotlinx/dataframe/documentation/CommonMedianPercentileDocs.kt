@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
 import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Interpolating.R7
 import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Interpolating.R8
 import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.Selecting.R3

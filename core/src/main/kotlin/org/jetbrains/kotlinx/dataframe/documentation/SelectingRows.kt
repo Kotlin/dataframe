@@ -53,7 +53,7 @@ internal interface SelectingRows {
      * }
      *
      * The [predicate\] is a [RowValueFilter] — a lambda that receives each [DataRow] as `this` and
-     * given value as `it`
+     * the given value as `it`
      * and is expected to return a [Boolean] value.
      *
      * It allows you to define conditions using the row's values directly,
@@ -119,7 +119,7 @@ internal interface SelectingRows {
          *
          * `df.`{@get [FIRST_OPERATION]}` { length }.`{@get [SECOND_OPERATION]}` { it > 10.0 }`
          *
-         * `df.`{@get [FIRST_OPERATION]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
          * @include [SetDefaultOperationArg]
          */
         typealias WithExample = Nothing

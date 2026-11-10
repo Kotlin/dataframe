@@ -4,6 +4,7 @@ plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm11)
         alias(buildConfig)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)

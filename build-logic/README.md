@@ -25,12 +25,27 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
 
 - `dfbuild.kodex`: Sets up [KoDEx](https://github.com/Jolanrensen/KoDEx) KDoc preprocessing.
     Requires `dfbuild.kotlinJvm8` or `dfbuild.kotlinJvm11`.
-    - This plugin modifies the `Jar` tasks such that its sources contain KoDEx-preprocessed sources.
+    - This plugin creates a `mainKodex` source set and compilation from the KoDEx-preprocessed sources,
+      with the jar tasks `kodexMainKodexJar` and `kodexMainKodexSourcesJar`.
+    - If `libs.publisher` is applied too, a `kodexJava` component is created: the `java` component, but with
+      these jars instead of the normal jar and sources jar (so `@ExcludeFromSources` declarations are absent from both).
+      The publication must select it with `composeOf { from(kodexAwareComponentToPublish()) }` in `kotlinPublications {}`,
+      otherwise publishing fails.
+    - If the binary compatibility validator is applied too, it will read the public API from the KoDEx-processed
+      jars instead of unprocessed ones.
+    - If Dokka is applied too, it will use the KoDEx-processed sources instead of unprocessed ones.
     - Available tasks: `processKDocsMain` and `kodex` (alias, does the same thing).
-    - All tasks and modifications will be skipped if the Gradle property `skipKodex` exists.
-    - The plugin can be configured via the `kodexConvention` extension for your needs.
-    - Modules the project depends on are included in the context of KoDEx.
+    - If the Gradle property `skipKodex` exists, the normal, unprocessed, jars are published instead.
+      The binary compatibility validator will also be skipped, since `apiCheck` would fail if run without KoDEx.
+    - Modules the project depends on are included in the context of KoDEx,
+      as well as the `:samples` test sources (for `@sample`/`@includeFile`).
     - See also: https://github.com/Kotlin/dataframe/blob/master/KODEX_KDOC_PREPROCESSING.md
+
+- `dfbuild.dokka`: Sets up Dokka for the project.
+    - This plugin is meant for all published modules.
+    - `dokkaGeneratePublicationHtml` can be run to build all docs project-wide.
+    - GitHub actions make sure the docs are built and published to the website.
+    - The `Build Dokka API Docs`/`Run Docs Website Locally` configurations can be used to preview the results on the website.
 
 - `dfbuild.buildConfig`: Generates build config compile-time constants,
    like `BuildConfig.VERSION` and `BuildConfig.DEBUG`.
@@ -50,12 +65,12 @@ acting as [Convention Plugins](https://docs.gradle.org/current/userguide/impleme
         - `sync<NameOfFolder(Dev)>`: Syncs and overwrites build settings and versions.
           Copies and overwrites versions from the main `libs.versions.toml`, `gradle.properties`, etc.
         - `syncAllExampleFolders`: Syncs all example projects. Automatically called on `assemble`.
-        - `promoteDevExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/project`.
+        - `promoteDevExamples`: Promotes the `/examples/projects/dev` example projects to `/examples/projects`.
           To be called after a release. Automatically calls `syncAllExampleFolders` afterward.
-        - `generate<NameOfFolder(Dev)>Test`: Generates a Junit test class for the given folder in
+        - `generate<NameOfFolder(Dev)>Test`: Generates a JUnit test class for the given folder in
           `/build/generated/testBuildingExamples/src/test/kotlin`.
-        - `generateAllExampleFoldersTests`: Cleans and generates Junit test classes for all example folders.
-        - `runBuild<NameOfFolder(Dev)>`: Executes the generated Junit test class for the given folder and
+        - `generateAllExampleFoldersTests`: Cleans and generates JUnit test classes for all example folders.
+        - `runBuild<NameOfFolder(Dev)>`: Executes the generated JUnit test class for the given folder and
           runs the build. This automatically syncs and generates the test classes beforehand.
             - `publishLocal` is called automatically when dealing with a dev Maven/Kotlin Toolchain test.
             - Android tests (folders with "android" in their name) require the `android.sdk.dir` gradle property to be set.

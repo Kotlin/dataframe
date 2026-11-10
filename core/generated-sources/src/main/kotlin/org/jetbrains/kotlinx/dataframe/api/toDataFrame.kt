@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList

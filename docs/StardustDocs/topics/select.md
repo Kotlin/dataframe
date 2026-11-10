@@ -4,6 +4,8 @@
 
 Two ways to create [`DataFrame`](DataFrame.md) with a subset of columns:
 
+**API reference**: [`select`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/select.html)
+
 **selecting:**
 
 <!---FUN select-->

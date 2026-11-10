@@ -8,5 +8,5 @@ package org.jetbrains.kotlinx.dataframe
  * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */
 public interface ColumnsScope<out T> {
-    public operator fun get(columnName: String): AnyCol
+    public operator fun get(columnName: String): DataColumn<*>
 }

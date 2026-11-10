@@ -3,6 +3,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows changing column types.
 
+**API reference**: [`convert`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/convert.html)
+
 ```text
 convert { columnsSelector }
     .with { rowExpression } | .asFrame { frameExpression } | .perRowCol { rowColExpression } | to<Type>() | to { colExpression }

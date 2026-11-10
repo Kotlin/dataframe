@@ -20,6 +20,7 @@ import java.util.Date
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 // Probe tables for `assertColumnTypesMatchValues` and `assertColumnTypes`, one per containerized
 // database, each holding a column per SQL type. The embedded databases' tables live next to their test
@@ -118,7 +119,9 @@ internal val POSTGRES_AUDIT_DDL =
       tsvectorCol TSVECTOR, tsqueryCol TSQUERY,
       int4rangeCol INT4RANGE, int8rangeCol INT8RANGE, numrangeCol NUMRANGE,
       tsrangeCol TSRANGE, tstzrangeCol TSTZRANGE, daterangeCol DATERANGE,
-      int4multirangeCol INT4MULTIRANGE,
+      int4multirangeCol INT4MULTIRANGE, int8multirangeCol INT8MULTIRANGE,
+      nummultirangeCol NUMMULTIRANGE, tsmultirangeCol TSMULTIRANGE,
+      tstzmultirangeCol TSTZMULTIRANGE, datemultirangeCol DATEMULTIRANGE,
       intArrayCol INTEGER[], textArrayCol TEXT[]
     )
     """.trimIndent()
@@ -136,6 +139,7 @@ internal val POSTGRES_AUDIT_INSERT =
       lsegCol,boxCol,pathCol,polygonCol,circleCol,cidrCol,inetCol,macaddrCol,macaddr8Col,
       bit1Col,bit3Col,varbitCol,tsvectorCol,tsqueryCol,
       int4rangeCol,int8rangeCol,numrangeCol,tsrangeCol,tstzrangeCol,daterangeCol,int4multirangeCol,
+      int8multirangeCol,nummultirangeCol,tsmultirangeCol,tstzmultirangeCol,datemultirangeCol,
       intArrayCol,textArrayCol)
     VALUES(1,1,1,1.5,1.5,1.5,1.5,1.5,'a','a','a','\x01',true,'2024-01-01','10:00:00',
       '10:00:00+02','2024-01-01T10:00:00','2024-01-01T10:00:00+02','1 day',
@@ -145,6 +149,8 @@ internal val POSTGRES_AUDIT_INSERT =
       B'1',B'101',B'101',to_tsvector('a'),to_tsquery('a'),
       '[1,2)','[1,2)','[1.0,2.0)','[2024-01-01,2024-01-02)','[2024-01-01,2024-01-02)',
       '[2024-01-01,2024-01-02)','{[1,2)}',
+      '{[1,2)}','{[1.0,2.0)}','{[2024-01-01,2024-01-02)}','{[2024-01-01,2024-01-02)}',
+      '{[2024-01-01,2024-01-02)}',
       ARRAY[1,2],ARRAY['a','b'])
     """.trimIndent()
 
@@ -264,10 +270,9 @@ internal val MSSQL_EXPECTED_TYPES: Map<String, KType> = mapOf(
  * See [assertColumnTypes]; PostgreSQL reports unquoted identifiers lower-cased.
  *
  * The geometric types, `money` and `interval` each get a driver `PGobject` subclass, because
- * `PostgreSql` requests those explicitly. Every other `PGobject`-backed type — `json`, `jsonb`,
- * `uuid`, the network and range types, `tsvector`/`tsquery`, `varbit` — is read as an opaque [Any]
- * today. The page says so, and these entries are what keeps it honest rather than an endorsement of
- * the mapping.
+ * `PostgreSql` requests those explicitly. The other `PGobject`-backed types — `json`, `jsonb`, the
+ * network, range and multirange types, `tsvector`/`tsquery`, `varbit` — have no class of their own
+ * and are read as their text form, a [String]; `uuid` is read as a [Uuid], as in H2 and DuckDB (#2103).
  */
 internal val POSTGRES_EXPECTED_TYPES: Map<String, KType> = mapOf(
     "smallintcol" to typeOf<Int>(),
@@ -290,9 +295,9 @@ internal val POSTGRES_EXPECTED_TYPES: Map<String, KType> = mapOf(
     "timestampcol" to typeOf<Instant>(),
     "timestamptzcol" to typeOf<Instant>(),
     "intervalcol" to typeOf<PGInterval>(),
-    "uuidcol" to typeOf<Any>(),
-    "jsoncol" to typeOf<Any>(),
-    "jsonbcol" to typeOf<Any>(),
+    "uuidcol" to typeOf<Uuid>(),
+    "jsoncol" to typeOf<String>(),
+    "jsonbcol" to typeOf<String>(),
     "xmlcol" to typeOf<SQLXML>(),
     "pointcol" to typeOf<PGpoint>(),
     "linecol" to typeOf<PGline>(),
@@ -301,22 +306,27 @@ internal val POSTGRES_EXPECTED_TYPES: Map<String, KType> = mapOf(
     "pathcol" to typeOf<PGpath>(),
     "polygoncol" to typeOf<PGpolygon>(),
     "circlecol" to typeOf<PGcircle>(),
-    "cidrcol" to typeOf<Any>(),
-    "inetcol" to typeOf<Any>(),
-    "macaddrcol" to typeOf<Any>(),
-    "macaddr8col" to typeOf<Any>(),
+    "cidrcol" to typeOf<String>(),
+    "inetcol" to typeOf<String>(),
+    "macaddrcol" to typeOf<String>(),
+    "macaddr8col" to typeOf<String>(),
     "bit1col" to typeOf<Boolean>(),
     "bit3col" to typeOf<String>(),
-    "varbitcol" to typeOf<Any>(),
-    "tsvectorcol" to typeOf<Any>(),
-    "tsquerycol" to typeOf<Any>(),
-    "int4rangecol" to typeOf<Any>(),
-    "int8rangecol" to typeOf<Any>(),
-    "numrangecol" to typeOf<Any>(),
-    "tsrangecol" to typeOf<Any>(),
-    "tstzrangecol" to typeOf<Any>(),
-    "daterangecol" to typeOf<Any>(),
-    "int4multirangecol" to typeOf<Any>(),
+    "varbitcol" to typeOf<String>(),
+    "tsvectorcol" to typeOf<String>(),
+    "tsquerycol" to typeOf<String>(),
+    "int4rangecol" to typeOf<String>(),
+    "int8rangecol" to typeOf<String>(),
+    "numrangecol" to typeOf<String>(),
+    "tsrangecol" to typeOf<String>(),
+    "tstzrangecol" to typeOf<String>(),
+    "daterangecol" to typeOf<String>(),
+    "int4multirangecol" to typeOf<String>(),
+    "int8multirangecol" to typeOf<String>(),
+    "nummultirangecol" to typeOf<String>(),
+    "tsmultirangecol" to typeOf<String>(),
+    "tstzmultirangecol" to typeOf<String>(),
+    "datemultirangecol" to typeOf<String>(),
     "intarraycol" to typeOf<Array<*>>(),
     "textarraycol" to typeOf<Array<*>>(),
 )

@@ -47,7 +47,7 @@ public interface DataRow<out T> {
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> =
+    public operator fun get(first: ColumnReference<*>, vararg other: ColumnReference<*>): DataRow<T> =
         owner.get(first, *other)[index]
 
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]

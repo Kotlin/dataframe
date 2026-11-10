@@ -13,7 +13,7 @@ import kotlin.reflect.typeOf
  * Returns the median of the comparable input:
  * - `null` if empty
  * - `Double` if primitive number
- * - `Double.NaN` if ![<code>skipNaN</code>][skipNaN] and contains NaN
+ * - `Double.NaN` if [<code>skipNaN</code>][skipNaN] is `false` and contains NaN
  * - (lower) middle else
  *
  * Based on quantile implementation;
@@ -79,7 +79,7 @@ internal val medianConversion: CalculateReturnType = { type, isEmpty ->
 /**
  * Returns the index of the median in the comparable input:
  * - `-1` if empty or all `null`
- * - index of first NaN if ![<code>skipNaN</code>][skipNaN] and contains NaN
+ * - index of first NaN if [<code>skipNaN</code>][skipNaN] is `false` and contains NaN
  * - index (lower) middle else
  * NOTE: For primitive numbers the `seq.elementAt(seq.indexOfMedian())` might be different from `seq.medianOrNull()`
  *

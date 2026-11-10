@@ -135,7 +135,7 @@ and [Apache Arrow](read.md#read-apache-arrow-formats),
 as well as [reading from various databases](readSqlDatabases.md). 
 
 Read a CSV with the "JetBrains Repositories" dataset into the `df` variable
-using [`DataFrame.readCsv()`](read.md#read-from-csv) method:
+using the [`DataFrame.readCsv()`](read.md#read-from-csv) method:
 
 <!---FUN notebook_test_quickstart_2-->
 
@@ -555,7 +555,7 @@ val dfTop10 = dfWithIsIntellij
 Kandy is a Kotlin plotting library designed to bring Kotlin DataFrame features into chart creation, providing a
 convenient and typesafe way to build data visualizations.
 
-Add kandy to your project:
+Add Kandy to your project:
 
 <tabs>
 <tab title="Gradle (Kotlin DSL)">
@@ -592,7 +592,7 @@ dependencies {
 </tabs>
 
 Build a simple bar chart with the `.plot { }` extension for `DataFrame`, 
-that allows using DataFrame [extension properties](extensionPropertiesApi.md) inside the Kandy
+which allows using DataFrame [extension properties](extensionPropertiesApi.md) inside the Kandy
 plotting DSL:
 
 <!---FUN notebook_test_quickstart_16-->

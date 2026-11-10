@@ -2,60 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_INT_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnDivNumberDocs.COLUMN_DIV_NUMBER_ZERO_ERROR
-import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnMinusNumberDocs.COLUMN_MINUS_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusNumberDocs.COLUMN_PLUS_NUMBER_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusStringDocs.COLUMN_PLUS_STRING_RECEIVER
-import org.jetbrains.kotlinx.dataframe.api.ColumnPlusStringDocs.COLUMN_PLUS_STRING_RETURN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_DESCRIPTION
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_OPERATION
-import org.jetbrains.kotlinx.dataframe.api.CompareDocs.COMPARE_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_DESCRIPTION
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NotDocs.NOT_RETURN
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_DIVIDEND_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_INT_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NumberDivColumnDocs.NUMBER_DIV_COLUMN_ZERO_ERROR
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_NUMBER_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberMinusColumnDocs.NUMBER_MINUS_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_NUMBER_TYPE
-import org.jetbrains.kotlinx.dataframe.api.NumberPlusColumnDocs.NUMBER_PLUS_COLUMN_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_EXAMPLE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_EXAMPLE_NUMBER
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_NULL_NOTE
-import org.jetbrains.kotlinx.dataframe.api.TimesDocs.TIMES_SEE_ALSO
-import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_COLUMN_TYPE
-import org.jetbrains.kotlinx.dataframe.api.UnaryMinusDocs.UNARY_MINUS_NULL_NOTE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -658,7 +605,7 @@ public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<
  * @return A [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] of [<code>String</code>][String] values where each element is the result
  * of concatenating the corresponding element of this [<code>AnyCol</code>][org.jetbrains.kotlinx.dataframe.AnyCol] with [<code>str</code>][str].
  */
-public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toString() + str }
+public operator fun DataColumn<*>.plus(str: String): DataColumn<String> = map { it.toString() + str }
 
 /**
  * Returns a [<code>ColumnReference</code>][ColumnReference] of [<code>String</code>][String] values
@@ -689,45 +636,6 @@ public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<Str
 // endregion
 
 // region ColumnMinusNumber
-
-/**
- * Returns a [<code>DataColumn</code>][DataColumn] where each element is the result of subtracting [<code>value</code>][value]
- * from the corresponding element of this [<code>DataColumn</code>][DataColumn].
- *
- * That is, [<code>value</code>][value] is subtracted from each element of the [<code>DataColumn</code>][DataColumn].
- *
- *
- *
- * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
- *
- * See also [<code>plus</code>][DataColumn.plus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
- *
- * ### Example
- * ```kotlin
- * // In a DataFrame of financial transactions,
- * // subtract a fixed fee from each transaction amount
- * df.amount - 10
- * ```
- *
- * @return A [<code>DataColumn</code>][DataColumn] containing the results of subtracting [<code>value</code>][value]
- * from each element of this [<code>DataColumn</code>][DataColumn].
- */
-private interface ColumnMinusNumberDocs {
-    // the type of the column accepted and returned by the function
-    typealias COLUMN_MINUS_NUMBER_COLUMN_TYPE = Nothing
-
-    // the example used in the documentation
-    typealias COLUMN_MINUS_NUMBER_EXAMPLE = Nothing
-
-    // adjustment of the example to use different types of numbers
-    typealias COLUMN_MINUS_NUMBER_EXAMPLE_NUMBER = Nothing
-
-    // `See also` section in the documentation
-    typealias COLUMN_MINUS_NUMBER_SEE_ALSO = Nothing
-
-    // info about handling `null` values
-    typealias COLUMN_MINUS_NUMBER_NULL_NOTE = Nothing
-}
 
 /**
  * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting [<code>value</code>][value]
@@ -952,49 +860,6 @@ public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<
 // endregion
 
 // region NumberMinusColumn
-
-/**
- * Returns a [<code>DataColumn</code>][DataColumn] where each element is the result of subtracting
- * the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
- *
- *
- *
- * For more information: [See `minus` on the documentation website.](https://kotlin.github.io/dataframe/columnarithmetics.html#minus)
- *
- * See also [<code>plus</code>][DataColumn.plus], [<code>times</code>][DataColumn.times], [<code>div</code>][DataColumn.div].
- *
- * ### Example
- * ```kotlin
- * // Given a budget of 1000 euros per employee,
- * // compute the remaining budget for each employee after expenses
- * val remainingBudget = 1000 - df.expenses
- * ```
- *
- * @param [column] A [<code>DataColumn</code>][DataColumn] containing the elements to subtract
- * from this [<code>Int</code>][Int].
- *
- * @return A [<code>DataColumn</code>][DataColumn] containing the results
- * of subtracting the corresponding element of [<code>column</code>][column] from this [<code>Int</code>][Int].
- */
-private interface NumberMinusColumnDocs {
-    // the type of the column passed to the function and returned by the function
-    typealias NUMBER_MINUS_COLUMN_COLUMN_TYPE = Nothing
-
-    // the type of the number on which the function is applied
-    typealias NUMBER_MINUS_COLUMN_NUMBER_TYPE = Nothing
-
-    // the example used in the documentation
-    typealias NUMBER_MINUS_COLUMN_EXAMPLE = Nothing
-
-    // adjustment of the example to use different types of numbers
-    typealias NUMBER_MINUS_COLUMN_EXAMPLE_NUMBER = Nothing
-
-    // `See also` section in the documentation
-    typealias NUMBER_MINUS_COLUMN_SEE_ALSO = Nothing
-
-    // info about handling `null` values
-    typealias NUMBER_MINUS_COLUMN_NULL_NOTE = Nothing
-}
 
 /**
  * Returns a [<code>DataColumn</code>][org.jetbrains.kotlinx.dataframe.DataColumn] where each element is the result of subtracting

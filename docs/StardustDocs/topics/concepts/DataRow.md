@@ -1,7 +1,7 @@
 [//]: # (title: DataRow)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.DataRowApiSamples-->
 
-`DataRow` represents a single record, one piece of data within a [`DataFrame`](DataFrame.md)
+[`DataRow`](DataRow.md) represents a single record, one piece of data within a [`DataFrame`](DataFrame.md). See also the [`DataRow` Dokka API](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-row/index.html).
 
 ## Row functions
 
@@ -175,7 +175,7 @@ df.convert("city").notNull { (it as String).uppercase() }
 <!---END-->
 
 ## Row conditions
-Row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
+A row condition is a special case of [row expression](#row-expressions) that returns `Boolean`.
 There are two types of row conditions:
 
 ### `RowFilter`

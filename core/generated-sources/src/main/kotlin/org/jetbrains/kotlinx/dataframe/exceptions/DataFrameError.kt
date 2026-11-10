@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.exceptions
 
 /**
- * If DataFrame function used by compiler plugin as implementation detail throws exception
- * that implements this interface, [<code>message</code>][message] will be reported as warning
+ * If a DataFrame function used by the compiler plugin as an implementation detail throws an exception
+ * that implements this interface, [<code>message</code>][message] will be reported as a warning
  */
 public interface DataFrameError {
     public val message: String

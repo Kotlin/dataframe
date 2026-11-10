@@ -312,6 +312,9 @@ public interface DocumentationUrls {
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
+    /** [See `implode` on the documentation website.]({@include [Url]}/implode.html) */
+    public typealias Implode = Nothing
+
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
 
@@ -604,6 +607,9 @@ public interface DocumentationUrls {
     /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
     public typealias ParsingDoubles = Nothing
 
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
+
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing
 
@@ -630,4 +636,7 @@ public interface DocumentationUrls {
 
     /** [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) */
     public typealias ApacheCsv = Nothing
+
+    /** [See PostgreSQL type mapping on the documentation website.]({@include [Url]}/readsqltypemapping-postgresql.html) */
+    public typealias ReadSqlTypeMappingPostgreSql = Nothing
 }

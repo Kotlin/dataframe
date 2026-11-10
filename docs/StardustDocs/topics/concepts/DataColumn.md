@@ -5,7 +5,7 @@
 It can store objects of primitive or reference types, 
 or other [`DataFrame`](DataFrame.md) objects.
 
-See [how to create columns](createColumn.md)
+See [how to create columns](createColumn.md) or explore the [`DataColumn` Dokka API](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-column/index.html).
 
 ### Properties
 * `name: String` — name of the column; should be unique within the containing dataframe

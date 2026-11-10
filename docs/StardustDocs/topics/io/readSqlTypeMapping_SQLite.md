@@ -16,6 +16,8 @@ Full mapping of SQLite declared types to Kotlin types via affinity, plus DataFra
 overrides.
 </link-summary>
 
+**API reference**: [`SQLite`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-sqlite/index.html)
+
 SQLite differs meaningfully from the other JDBC databases: it uses **dynamic typing** and
 has only **5 storage classes** (`NULL`, `INTEGER`, `REAL`, `TEXT`, `BLOB`). The declared
 column type is used only as a hint via

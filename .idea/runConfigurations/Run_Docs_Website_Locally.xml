@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Docs Website Locally" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="unzip -o webHelpD2-all.zip -d webHelpD2-all &amp;&amp; cd webHelpD2-all &amp;&amp; python3 -m http.server 8000" />
+    <option name="SCRIPT_TEXT" value="unzip -o webHelpD2-all.zip -d webHelpD2-all &amp;&amp; rm -rf webHelpD2-all/api-docs &amp;&amp; if [ -d ../dokka/html ]; then cp -r ../dokka/html webHelpD2-all/api-docs &amp;&amp; perl -pi -e 's#https://kotlin.github.io/dataframe/api-docs/#api-docs/#g' webHelpD2-all/*.html; else echo 'No Dokka output in build/dokka/html, run Build Dokka API Docs first to include the API reference.'; fi &amp;&amp; cd webHelpD2-all &amp;&amp; python3 -m http.server 8000" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="bash" />
-    <option name="SCRIPT_OPTIONS" value="-c &quot;unzip -o webHelpD2-all.zip -d temp &amp;&amp; cd temp/webHelpD2-all &amp;&amp; python3 -m http.server 8000&quot;" />
+    <option name="SCRIPT_OPTIONS" value="-c &quot;unzip -o webHelpD2-all.zip -d webHelpD2-all &amp;&amp; rm -rf webHelpD2-all/api-docs &amp;&amp; if [ -d ../dokka/html ]; then cp -r ../dokka/html webHelpD2-all/api-docs &amp;&amp; perl -pi -e 's#https://kotlin.github.io/dataframe/api-docs/#api-docs/#g' webHelpD2-all/*.html; else echo 'No Dokka output in build/dokka/html, run Build Dokka API Docs first to include the API reference.'; fi &amp;&amp; cd webHelpD2-all &amp;&amp; python3 -m http.server 8000&quot;" />
     <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
     <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/build/ws" />
     <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />

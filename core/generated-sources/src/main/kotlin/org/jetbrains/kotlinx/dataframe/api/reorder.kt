@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -13,11 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -506,7 +502,7 @@ public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: ColumnExpr
 public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
-    expression: Selector<AnyCol, V>,
+    expression: Selector<DataColumn<*>, V>,
 ): DataFrame<T> = reorderColumnsBy(atAnyDepth, desc, inFrameColumns = false, expression)
 
 /**
@@ -558,7 +554,7 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
     inFrameColumns: Boolean,
-    expression: Selector<AnyCol, V>,
+    expression: Selector<DataColumn<*>, V>,
 ): DataFrame<T> =
     Reorder(
         df = this,

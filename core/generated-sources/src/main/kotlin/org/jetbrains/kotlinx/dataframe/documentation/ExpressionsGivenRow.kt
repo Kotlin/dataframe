@@ -35,11 +35,21 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * [<code>RowExpression</code>][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
  * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
  *
- * A [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but that expects a [<code>Boolean</code>][Boolean] as result.
+ * A [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpression.WithExample] is similar to a [<code>Row Condition</code>][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows] but expects a [<code>Boolean</code>][Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 
     // Using <code>` notation to not create double `` when including
+
+    /**
+     * [<code>update with</code>][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
+     * [<code>convert with</code>][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
+     * and [<code>add</code>][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [<code>AddDataRow</code>][AddDataRow] instead of [<code>DataRow</code>][DataRow] as the DSL's receiver type.
+     * This is an extension to [<code>RowValueExpression</code>][DfRowValueExpression] and
+     * [<code>RowExpression</code>][DfRowExpression] that provides access to
+     * the modified/generated value of the preceding row ([<code>AddDataRow.newValue</code>][AddDataRow.newValue]).
+     */
+    typealias AddDataRowNote = Nothing
 
     /**
      * Provide a new value for every selected cell given its row using a [<code>row expression</code>][DfRowExpression].

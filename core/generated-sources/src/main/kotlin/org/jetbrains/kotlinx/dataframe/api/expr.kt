@@ -4,9 +4,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import kotlin.reflect.typeOf
 
 // region ColumnsSelectionDsl
@@ -62,11 +61,7 @@ public interface ExprColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**`expr`**</code>][ColumnsSelectionDsl.expr] */
-        public typealias PlainDslName = Nothing
-    }
+    public interface Grammar
 }
 
 /**
@@ -85,7 +80,7 @@ public interface ExprColumnsSelectionDsl {
  * `df.`[<code>sortBy</code>][DataFrame.sortBy]`  {  `[<code>`expr`</code>][ColumnsSelectionDsl.expr]` { name.`[<code>`length`</code>][String.length]` }.`[<code>`desc`</code>][SortDsl.desc]`() }`
  *
  * @param [name] The name of the temporary column. Is empty by default ("untitled" in the DataFrame).
- * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
+ * @param [infer] [<code>An enum</code>][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [<code>DataColumn.type</code>][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.
  * Either [<code>None</code>][org.jetbrains.kotlinx.dataframe.api.Infer.None], [<code>Nulls</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Nulls], or [<code>Type</code>][org.jetbrains.kotlinx.dataframe.api.Infer.Type]. By default: [<code>Nulls</code>][Infer.Nulls].
  * @param [expression] An [<code>AddExpression</code>][AddExpression] to define what each new row of the temporary column should contain.
  */

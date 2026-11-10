@@ -7,6 +7,8 @@
 It returns `Unit`, so it is only useful for its side effects, such as printing values or collecting them.
 To get a result instead, use [`map`](map.md).
 
+**API reference**: [`rows`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/rows.html), [`values`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/values.html)
+
 | Operation | Goes over | The function gets |
 |-----------|-----------|-------------------|
 | [`forEach`](#iterate-over-rows) | rows of a [`DataFrame`](DataFrame.md) | the row, as the receiver and as the argument |

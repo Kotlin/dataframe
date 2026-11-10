@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)

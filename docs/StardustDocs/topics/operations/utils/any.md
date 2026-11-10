@@ -17,6 +17,8 @@ Discover `any` operation in Kotlin DataFrame.
 
 Checks if there is at least one row in the [](DataFrame.md) that satisfies the predicate.
 
+**API reference**: [`any`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/any.html)
+
 Returns `Boolean` — `true` if there is at least one row that satisfies the predicate, `false` otherwise.
 
 ```kotlin

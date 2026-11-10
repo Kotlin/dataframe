@@ -75,7 +75,8 @@ public object KotlinNotebookPluginUtils {
      * If a column type is not comparable, sorting by string representation is applied instead.
      * Sorts DataFrames by their size because looking at the smallest / biggest groups after groupBy is very popular.
      *
-     * Returns "lazily materialized" dataframe, which means get, getRows, take operation must be applied to turn it to a valid sorted dataframe.
+     * Returns a "lazily materialized" dataframe, which means a get, getRows, or take operation must be applied
+     * to turn it into a valid sorted dataframe.
      * "lazily materialized" - after sorting 1 million rows and given the page size = 100, a dataframe with only 100 rows is created.
      *
      * @param dataFrameLike The dataframe-like object to sort.

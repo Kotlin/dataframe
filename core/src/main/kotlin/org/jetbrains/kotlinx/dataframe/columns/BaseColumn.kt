@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
@@ -16,7 +16,7 @@ import kotlin.reflect.KType
 /**
  * Column with [type], [name]/[path] and [values]
  * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn].
- * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
+ * Column operations that don't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
  *
  * @param T type of values contained in column.
  * @see [org.jetbrains.kotlinx.dataframe.api.columnOf]
@@ -75,7 +75,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
      */
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
-    public operator fun get(columnName: String): AnyCol
+    public operator fun get(columnName: String): DataColumn<*>
 
     // endregion
 

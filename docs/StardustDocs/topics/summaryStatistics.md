@@ -6,6 +6,8 @@ Basic summary statistics:
 * [count](count.md)
 * [valueCounts](valueCounts.md)
 
+**API reference**: [`api` package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)
+
 Aggregating summary statistics:
 * [sum](sum.md)
 * [min/max](minmax.md)

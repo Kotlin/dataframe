@@ -36,15 +36,50 @@ to share documentation along with their `sources.jar` file which users can attac
 DataFrame thus uses KoDEx in Gradle to copy and modify the source code, processing the KDoc notations,
 and publishing the modified files as the `sources.jar` file.
 
-This can be seen in action in the `core:processKDocsMain` and `core:changeJarTask` Gradle tasks in the
-[core/build.gradle.kts file](core/build.gradle.kts). When you run any `publish` task in the `core` module, the
-`processKDocsMain` task is executed first, which processes the KDocs in the source files and writes them to the
-`generated-sources` folder. The `changeJarTask` task then makes sure that any `Jar` task in the `core` module uses the
-`generated-sources` folder as the source directory instead of the normal `src` folder.
+This is set up by the `dfbuild.kodex` convention plugin in [build-logic](build-logic/src/main/kotlin/dfbuild.kodex.gradle.kts)
+using the `kodex {}` DSL of the KoDEx Gradle plugin. For each module applying it, like `core`, this creates:
+- The `processKDocsMain` task, which processes the KDocs in the source files and writes them to the
+  `generated-sources` folder.
+- A `mainKodex` source set and compilation, which compiles the processed sources from `generated-sources`
+  with the same dependencies and compiler settings as the normal `main` sources. Because of this,
+  anything annotated with `@ExcludeFromSources` is not only removed from the sources, but also from the compiled classes.
+- The `kodexMainKodexJar` and `kodexMainKodexSourcesJar` tasks, which create a library- and sources jar
+  from the `mainKodex` compilation and the processed sources, respectively.
+
+If the module also applies `libs.publisher`, a `kodexJava` software component is created as well.
+It's a copy of the normal `java` component (same dependencies, attributes, and javadoc jar), 
+but with these KoDEx jars as library- and sources jar.
+The publication of the module selects it explicitly:
+```kotlin
+kotlinPublications {
+    publication {
+        // ...
+        composeOf { from(kodexAwareComponentToPublish()) }
+    }
+}
+```
+This way, when you run any `publish` task, these KoDEx jars are published instead of the normal ones.
+If a module forgets this, publishing fails, so the unprocessed jars are never published by accident.
+The normal jar is still used within the build itself, for instance, by other modules depending on `core`.
 It's possible to optionally skip this step, for example, when you publish the library locally during development, 
-by providing the `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`
+by providing the `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`.
+The normal, unprocessed, jars are published then.
+
+The same goes for the [Dokka API reference](https://kotlin.github.io/dataframe/api-docs/index.html).
+Dokka creates a Dokka source set for every Kotlin source set, so also for `mainKodex`.
+`dfbuild.kodex` suppresses the `main` one and documents `mainKodex` instead
+(with the same display name, like "jvm"), so the API reference shows the processed KDocs
+and respects `@ExcludeFromSources`. Running any Dokka task, like `./gradlew dokkaGeneratePublicationHtml`,
+runs `processKDocsMain` (and the ktlint formatting of its output) first.
+With `-PskipKodex`, Dokka documents the normal, unprocessed, `main` sources instead.
 
 `core:processKDocsMain` can also be run separately if you just want to see the result of the KDoc processing by KoDEx.
+
+> [!NOTE]
+> `processKDocsMain` only checks whether `generated-sources` is non-empty to decide whether it's up to date;
+> it doesn't track the generated files themselves.
+> So if you revert or edit files in `generated-sources`, run `./gradlew processKDocsMain --rerun`
+> before building the jars or Dokka, otherwise the stale files are used.
 
 To make sure the generated sources can be seen and reviewed on GitHub,
 since [PR #731](https://github.com/Kotlin/dataframe/pull/731),
@@ -179,6 +214,11 @@ with its fully qualified path. This is important because we cannot assume that t
 the same imports as the source file. The original name will be left in place as alias, like
 `[reference][path.to.reference]`.
 This is also done for references used as key in `@set` and `@get` / `$` tags.
+
+Everything in the included KDoc renders in the host — `@param` lines included. A rendered `@param`
+line can therefore be owned by another file (for example, an `impl/` KDoc that is `@include`d into a
+public function), so a style fix must target the owning declaration. The place to *locate* such a line
+is the processed file under `generated-sources/`, not the file the API declaration lives in.
 
 ### `@includeFile`: Including all content from a relative file
 
@@ -363,6 +403,10 @@ The `@ExcludeFromSources` annotation is used to exclude a class, function, or pr
 This is useful to clean up the sources and delete interfaces or classes that are only used as KDoc 'source'.
 
 The annotation is not a KDoc tag but a normal Kotlin annotation detected by KoDEx.
+
+Excluding a declaration also excludes everything nested inside it, so don't repeat the annotation
+on the members of an excluded interface or class: a typealias nested in an `@ExcludeFromSources`
+interface is already excluded.
 
 Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's also possible to
 exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
