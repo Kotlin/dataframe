@@ -30,7 +30,7 @@ val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy"
     "Charlie", "Chaplin", 110, "Milan", null, true,
     "Bob", "Marley", 30, "Tokyo", 68, true,
     "Alice", "Wolf", 20, null, 55, false,
-    "Charlie", "Byrd", 105, "Moscow", 90, true
+    "Charlie", "Byrd", 105, "Moscow", 90, true,
 ).group { firstName and lastName }.into("name")
 ```
 
