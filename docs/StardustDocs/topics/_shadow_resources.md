@@ -220,6 +220,7 @@
 <resource src="globalParserOptionsAddPatternJava.html"></resource>
 <resource src="globalParserOptionsAddPatternKotlin.html"></resource>
 <resource src="parseAll.html"></resource>
+<resource src="parseFrameColumn.html"></resource>
 <resource src="parseSome.html"></resource>
 <resource src="parseWithOptions.html"></resource>
 <resource src="parserOptionsWithDateTimeFormatJava.html"></resource>
