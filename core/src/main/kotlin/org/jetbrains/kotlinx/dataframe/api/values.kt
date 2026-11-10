@@ -232,6 +232,8 @@ public fun <T> Pivot<T>.values(
  *
  * @include [PivotDocs.ReducedPivotFinalStepSnippet]
  *
+ * @include [PivotDocs.ReducedPivotValuesStructureSnippet]
+ *
  * For more information: {@include [DocumentationUrls.PivotReducing]}
  *
  * Don't confuse this with [values][Pivot.values] on a [Pivot], which takes the values of all rows
@@ -261,10 +263,9 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
  * containing the values of the reduced row of the corresponding group
  * in the [columns] with the given names.
  *
- * If several columns are taken, the value of each [pivot] key is a row with their values;
- * if a single column is taken, its value is stored directly under the [pivot] key.
- *
  * @include [PivotDocs.ReducedPivotFinalStepSnippet]
+ *
+ * @include [PivotDocs.ReducedPivotValuesStructureSnippet]
  *
  * For more information: {@include [DocumentationUrls.PivotReducing]}
  *
@@ -296,10 +297,9 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
  * containing the values of the reduced row of the corresponding group
  * in the selected [columns].
  *
- * If several columns are taken, the value of each [pivot] key is a row with their values;
- * if a single column is taken, its value is stored directly under the [pivot] key.
- *
  * @include [PivotDocs.ReducedPivotFinalStepSnippet]
+ *
+ * @include [PivotDocs.ReducedPivotValuesStructureSnippet]
  *
  * @include [CommonStatisticsDocs.AggregateColumnsSelectorSnippet]
  *

@@ -324,8 +324,10 @@ internal interface GroupByDocs {
      * {@comment Note about the groups without a selected row in the [ReducedGroupBy] methods. KDoc-snippet.}
      *
      * If no row is selected in a group (for example, if no row of the group satisfies
-     * the predicate of [first][GroupBy.first]), the result still contains a row for this group,
-     * with `null` values instead of the reduced values.
+     * the predicate of [first][GroupBy.first]), the result still contains a row for this group.
+     * This row is treated as missing every value, so its value columns contain `null` and become nullable.
+     *
+     * @include [ConcatDocs.MissingColumnValues]
      */
     @ExcludeFromSources
     typealias ReducedGroupByNoSelectedRowSnippet = Nothing
