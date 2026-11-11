@@ -2,12 +2,12 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In order to reduce amount of generated code, previously generated [`DataSchema`](schema.md) interfaces are reused and only new
+In order to reduce the amount of generated code, previously generated [`DataSchema`](schema.md) interfaces are reused and only new
 properties are introduced
 
 **API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html)
 
-Let's filter out all `null` values from `age` column and add one more column of type `Boolean`:
+Let's filter out all `null` values from the `age` column and add one more column of type `Boolean`:
 
 ```kotlin
 val filtered = df.filter { age != null }.add("isAdult") { age!! > 18 }

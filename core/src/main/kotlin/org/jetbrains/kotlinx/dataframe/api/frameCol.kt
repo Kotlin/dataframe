@@ -663,7 +663,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [FrameColumn] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [FrameColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<DataFrame<C>> =

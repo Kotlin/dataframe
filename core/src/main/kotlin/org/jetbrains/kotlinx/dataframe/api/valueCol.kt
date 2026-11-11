@@ -583,7 +583,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [ValueColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =

@@ -63,7 +63,7 @@ fun main() {
 
     println(df.size())
 
-    // now we have a DataFrame, we can perform DataFrame operations,
+    // now that we have a DataFrame, we can perform DataFrame operations,
     // like doing the same operation as we did in Exposed above
     df.groupBy { country }.count()
         .sortByDesc { count }

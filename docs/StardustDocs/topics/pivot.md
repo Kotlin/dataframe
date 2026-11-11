@@ -79,7 +79,7 @@ df.pivot("isHappy", inward = true)
 <!---END-->
 
 
-To pivot several columns at once, you can combine them using `and` or `then` infix function:
+To pivot several columns at once, you can combine them using `and` or `then` infix functions:
 * `and` will pivot columns independently
 * `then` will create column hierarchy from combinations of values from pivoted columns
 
