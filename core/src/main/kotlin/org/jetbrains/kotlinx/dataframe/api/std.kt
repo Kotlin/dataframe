@@ -1340,6 +1340,8 @@ public inline fun <T, reified R : Number?> Pivot<T>.stdOf(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with the standard deviation of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupByStd0")
 public fun <T> PivotGroupBy<T>.std(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -1360,6 +1362,8 @@ public fun <T> PivotGroupBy<T>.std(
  * @include [StdDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the standard deviation of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupByStd1")
 public fun <T, R : Number?> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -1380,6 +1384,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.stdFor(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with the standard deviation of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByStd1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.stdFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -1417,6 +1423,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
  * @include [StdDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByStd2")
 public fun <T, C : Number?> PivotGroupBy<T>.std(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
@@ -1443,6 +1451,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByStd2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.std(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
@@ -1492,6 +1502,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  * @include [StdDocs.ExpressionParam]
  * @return A [DataFrame] with, per group, the standard deviation of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByStdOf")
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,

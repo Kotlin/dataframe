@@ -1830,6 +1830,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with the maximum of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMax0")
 public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     maxFor(separate, skipNaN, intraComparableColumns())
 
@@ -1873,6 +1875,8 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  * @include [MaxDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the maximum of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMax1")
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -1917,6 +1921,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * @include [MaxDocs.SkipNanParam]
  * @return A [DataFrame] with the maximum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMax1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.maxFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -1977,6 +1983,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByMax2")
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
@@ -2020,6 +2028,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * @return A [DataFrame] with, per group, the largest value among all the values
  *   in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMax2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     max(skipNaN) { columns.toComparableColumns() }
 
@@ -2077,6 +2087,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the maximum of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByMaxOf")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -2120,6 +2132,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the maximum result.
  */
+@Interpretable("PivotGroupByMaxBy")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
