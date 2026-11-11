@@ -451,8 +451,17 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
 // region ReducedGroupBy
 
 /**
- * Applies the stored reducer to every group and returns a [<code>DataFrame</code>][DataFrame] containing one resulting row per group, in
+ * Returns a [<code>DataFrame</code>][DataFrame] containing the reduced row of every group of this [<code>ReducedGroupBy</code>][ReducedGroupBy], in
  * the order in which the groups appear in the underlying [<code>GroupBy</code>][GroupBy].
+ *
+ *
+ *
+ * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
+ * A [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] is created by a reducing method, like [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first], [<code>last</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.last],
+ * [<code>minBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.minBy], [<code>maxBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.maxBy], [<code>medianBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.medianBy], or
+ * [<code>percentileBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.percentileBy], which selects at most one row in each group.
+ *
+ * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
  *
  * If the reduced rows have different schemas, the result contains the union of their schemas. Columns are ordered by
  * their first appearance in the reduced rows. A value column missing from a reduced row is filled with `null`.
@@ -461,17 +470,14 @@ public fun <T, G> GroupBy<T, G>.concatWithKeys(): DataFrame<G> =
  * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s; these columns do not become nullable. A missing [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] remains a column group, and its
  * nested columns are filled according to these same rules recursively.
  *
- * If the reducer returns `null` for a group, the result still contains one row for that group. This row is treated as
- * missing every result column, so its values are filled according to the same rules.
+ * If no row is selected in a group (for example, if no row of the group satisfies
+ * the predicate of [<code>first</code>][GroupBy.first]), the result still contains one row for that group.
+ * This row is treated as missing every result column, so its values are filled according to the same rules.
  *
- * For more information:
- *
- * [See `groupBy` on the documentation website.](https://kotlin.github.io/dataframe/groupby.html)
- *
- * [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
+ * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing) [See `concat` on the documentation website.](https://kotlin.github.io/dataframe/concat.html)
  *
  * See also:
- * - [<code>GroupBy.concat</code>][GroupBy.concat] — concatenates the group rows without applying a reducer.
+ * - [<code>GroupBy.concat</code>][GroupBy.concat] — concatenates all rows of all groups, without reducing them.
  * - [<code>GroupBy.concatWithKeys</code>][GroupBy.concatWithKeys] — also adds grouping keys that are missing from the groups.
  *
  * ### Examples
