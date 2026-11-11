@@ -50,7 +50,7 @@ private typealias PivotWithReducedResultSnippet = Nothing
  * @param [expression] The expression evaluated for each row within each pivot group.
  * @return A new [DataRow] with pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
+public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<*> =
     delegate {
         with(expression)
     }
@@ -89,7 +89,7 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
  * @param [expression] The [RowExpression] computing the value from the reduced row.
  * @return A new [DataRow] with the computed values under their [pivot] keys.
  */
-public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
+public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<*> =
     pivot.delegate {
         reduce(reducer).with(expression)
     }
@@ -115,7 +115,7 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * @return A new [DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return aggregate { internal().withExpr(type, emptyPath(), expression) }
 }
@@ -141,7 +141,7 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
  * @return A new [DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
-public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return pivot.aggregate {
         val value = reducer(this)?.let {

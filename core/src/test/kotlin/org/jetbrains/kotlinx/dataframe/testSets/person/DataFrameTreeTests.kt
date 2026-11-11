@@ -384,7 +384,7 @@ class DataFrameTreeTests : BaseTest() {
 
         dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 
-        val names = pivoted.name
+        val names = pivoted[name]
         dataCols.forEach { col ->
             val city = col.name()
             pivoted.indices().forEach { row ->

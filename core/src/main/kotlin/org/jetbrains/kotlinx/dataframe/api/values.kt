@@ -185,7 +185,7 @@ public fun <T> Pivot<T>.values(
     distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataRow<T> = delegate { values(dropNA, distinct, separate, columns) }
+): DataRow<*> = delegate { values(dropNA, distinct, separate, columns) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -194,14 +194,14 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 public fun <T> Pivot<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -210,13 +210,13 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataRow<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> =
+): DataRow<*> =
     delegate {
         values(dropNA, distinct, separate)
     }
@@ -250,12 +250,12 @@ public fun <T> Pivot<T>.values(
  * @include [CommonStatisticsDocs.SeparateParam]
  * @return A new [DataRow] with the values of the reduced rows under their [pivot] keys.
  */
-public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<*> =
     pivot.delegate { reduce(reducer).values(separate = separate) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -284,12 +284,12 @@ public fun <T> ReducedPivot<T>.values(vararg columns: ColumnReference<*>, separa
  * @include [CommonStatisticsDocs.SeparateParam]
  * @return A new [DataRow] with the values of the reduced rows in the given columns under their [pivot] keys.
  */
-public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> =
+public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<*> =
     values(separate) { columns.toColumnSet() }
 
 /**
@@ -325,7 +325,7 @@ public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Bo
 public fun <T> ReducedPivot<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataRow<T> = pivot.delegate { reduce(reducer).values(separate = separate, columns = columns) }
+): DataRow<*> = pivot.delegate { reduce(reducer).values(separate = separate, columns = columns) }
 
 // endregion
 
@@ -335,7 +335,7 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate, remainingColumnsSelector())
+): DataFrame<*> = values(dropNA, distinct, separate, remainingColumnsSelector())
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -344,14 +344,14 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -360,14 +360,14 @@ public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumnSet() }
+): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> =
+): DataFrame<*> =
     try {
         aggregate(separate = separate) { internal().columnValues(columns, false, dropNA, distinct) }
     } catch (e: DuplicateColumnPathInsertException) {
@@ -378,7 +378,7 @@ public fun <T> PivotGroupBy<T>.values(
 
 // region ReducedPivotGroupBy
 
-public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<T> =
+public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<*> =
     values(separate, pivot.remainingColumnsSelector())
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -386,20 +386,20 @@ public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFra
 public fun <T> ReducedPivotGroupBy<T>.values(
     vararg columns: ColumnReference<*>,
     separate: Boolean = false,
-): DataFrame<T> = values(separate) { columns.toColumnSet() }
+): DataFrame<*> = values(separate) { columns.toColumnSet() }
 
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> =
+public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> =
+public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,
-): DataFrame<T> =
+): DataFrame<*> =
     try {
         pivot.aggregate(separate = separate) { internal().columnValues(columns, reducer) }
     } catch (e: DuplicateColumnPathInsertException) {
