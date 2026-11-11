@@ -119,6 +119,43 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 
 // region ReducedGroupBy
 
+/**
+ * Returns a [DataFrame] with one row per group of this [ReducedGroupBy]:
+ * the grouping key columns and a new column with the value of [expression]
+ * computed on the reduced row of the group.
+ *
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
+ *
+ * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
+ *
+ * [expression] is a [RowExpression] computed only on the single reduced row of each group;
+ * this row is both the receiver (`this`) and the argument (`it`) of the expression.
+ * See {@include [RowExpressionsLink]}
+ *
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
+ *
+ * Don't confuse this with [into][GroupBy.into] on a [GroupBy], which computes the expression on all rows
+ * of each group and collects the results into lists.
+ *
+ * See also:
+ * - [into][ReducedGroupBy.into]`(columnName)` — puts the whole reduced rows into a new column group.
+ * - [values][ReducedGroupBy.values] — takes the values of the selected columns of the reduced rows.
+ * - [concat][ReducedGroupBy.concat] — returns the reduced rows themselves.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByInto_properties]
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByInto_strings]
+ *
+ * @param [T] The schema marker type of the grouping keys in the underlying [GroupBy].
+ * @param [G] The schema marker type of the groups.
+ * @param [V] The type of the values computed by [expression].
+ * @param [columnName] The name of the new column. If `null` (the default),
+ *   the name of the [groups][GroupBy.groups] column of the underlying [GroupBy] is used.
+ * @param [expression] The [RowExpression] computing the value of the new column from the reduced row.
+ * @return A new [DataFrame] with the grouping key columns and the column with the computed values.
+ */
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     columnName: String? = null,
     noinline expression: RowExpression<G, V>,
@@ -147,6 +184,35 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.columnName, expression)
 
+/**
+ * Returns a [DataFrame] with one row per group of this [ReducedGroupBy]:
+ * the grouping key columns and a new
+ * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] named [columnName]
+ * containing the reduced row of the group.
+ *
+ * @include [GroupByDocs.ReducedGroupByFinalStepSnippet]
+ *
+ * @include [GroupByDocs.ReducedGroupByNoSelectedRowSnippet]
+ *
+ * For more information: {@include [DocumentationUrls.GroupByReducing]}
+ *
+ * Don't confuse this with [into][GroupBy.into] on a [GroupBy], which puts the whole groups
+ * into a [FrameColumn].
+ *
+ * See also:
+ * - [into][ReducedGroupBy.into]` { expression }` — puts a value computed from each reduced row into a new column.
+ * - [values][ReducedGroupBy.values] — takes the values of the selected columns of the reduced rows.
+ * - [concat][ReducedGroupBy.concat] — returns the reduced rows themselves.
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.GroupBySamples.groupByIntoColumnGroup]
+ *
+ * @param [T] The schema marker type of the grouping keys in the underlying [GroupBy].
+ * @param [G] The schema marker type of the groups.
+ * @param [columnName] The name of the new column group.
+ * @return A new [DataFrame] with the grouping key columns and the column group with the reduced rows.
+ */
 @Refine
 @Interpretable("GroupByReduceInto")
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
