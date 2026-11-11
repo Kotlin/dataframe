@@ -1834,7 +1834,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * #### Example
      * ```kotlin
      * df.pivot { city }.groupBy { name.firstName }.aggregate {
-     *   // Сount rows within each firstName" × "city" combination group and store the result
+     *   // Count rows within each "firstName" × "city" combination group and store the result
      *   // into a new "total" column (a new sub-column under each pivot key column)
      *   count() into "total"
      *
