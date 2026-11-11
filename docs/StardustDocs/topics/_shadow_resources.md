@@ -172,7 +172,7 @@
 <resource src="minOnGroupBy.html"></resource>
 <resource src="percentileOnGroupBy.html"></resource>
 <resource src="pivotOnGroupBy.html"></resource>
-<resource src="sortByCountOnGroupBy.html"></resource>
+<resource src="sortByCountDescOnGroupBy.html"></resource>
 <resource src="sortByGroupOnGroupBy.html"></resource>
 <resource src="sortByKeyOnGroupBy.html"></resource>
 <resource src="sortByOnGroupBy.html"></resource>

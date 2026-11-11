@@ -253,6 +253,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
+| `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
 
 ## Parsing and Converting Date-Time
 
