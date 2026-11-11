@@ -279,6 +279,8 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  *
  * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns.
  */
+@Refine
+@Interpretable("PivotGroupByCount0")
 public fun <T> PivotGroupBy<T>.count(): DataFrame<*> = aggregate { count() default 0 }
 
 /**
@@ -316,6 +318,8 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<*> = aggregate { count() defau
  *
  * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns matching the [predicate]..
  */
+@Refine
+@Interpretable("PivotGroupByCount1")
 public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<*> =
     aggregate {
         count(predicate) default 0

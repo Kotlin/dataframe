@@ -1830,6 +1830,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  * @include [MinDocs.SkipNanParam]
  * @return A [DataFrame] with the minimum of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMin0")
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     minFor(separate, skipNaN, intraComparableColumns())
 
@@ -1873,6 +1875,8 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  * @include [MinDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the minimum of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMin1")
 public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -1917,6 +1921,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * @include [MinDocs.SkipNanParam]
  * @return A [DataFrame] with the minimum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMin1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.minFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -1977,6 +1983,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByMin2")
 public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
@@ -2020,6 +2028,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * @return A [DataFrame] with, per group, the smallest value among all the values
  *   in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMin2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     min(skipNaN) { columns.toComparableColumns() }
 
@@ -2077,6 +2087,8 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  * @param [rowExpression] The [RowExpression] to evaluate for each row.
  * @return A [DataFrame] with, per group, the minimum of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByMinOf")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -2120,6 +2132,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the first row where the [rowExpression] produced the minimum result.
  */
+@Interpretable("PivotGroupByMinBy")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,

@@ -5,6 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
@@ -331,6 +334,8 @@ public fun <T> ReducedPivot<T>.values(
 
 // region PivotGroupBy
 
+@Refine
+@Interpretable("PivotGroupByValues0")
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -346,6 +351,8 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByValues1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.values(
     vararg columns: String,
     dropNA: Boolean = false,
@@ -362,6 +369,8 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<*> = values(dropNA, distinct, separate) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("PivotGroupByValues1")
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
@@ -378,6 +387,8 @@ public fun <T> PivotGroupBy<T>.values(
 
 // region ReducedPivotGroupBy
 
+@Refine
+@Interpretable("ReducedPivotGroupByValues0")
 public fun <T> ReducedPivotGroupBy<T>.values(separate: Boolean = false): DataFrame<*> =
     values(separate, pivot.remainingColumnsSelector())
 
@@ -388,6 +399,12 @@ public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<*> = values(separate) { columns.toColumnSet() }
 
+@Refine
+@StringApiInterpretable(
+    interpreter = "ReducedPivotGroupByValues1",
+    stringArgument = "columns",
+    targetArgument = "columns",
+)
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
@@ -396,6 +413,8 @@ public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: B
 public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<*> =
     values(separate) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("ReducedPivotGroupByValues1")
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>,

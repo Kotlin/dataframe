@@ -1247,6 +1247,8 @@ public inline fun <T, reified R : Number?> Pivot<T>.meanOf(
  * @include [MeanDocs.SkipNanParam]
  * @return A [DataFrame] with the mean of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMean0")
 public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     meanFor(skipNaN, separate, primitiveOrMixedNumberColumns())
 
@@ -1263,6 +1265,8 @@ public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNaN: Boolean 
  * @include [MeanDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the mean of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupByMean1")
 public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
     separate: Boolean = false,
@@ -1281,6 +1285,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  * @include [MeanDocs.SkipNanParam]
  * @return A [DataFrame] with the mean of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMean1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.meanFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -1314,6 +1320,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.meanFor(
  * @include [MeanDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, a single mean of means of the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByMean2")
 public fun <T, R : Number?> PivotGroupBy<T>.mean(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, R>,
@@ -1330,6 +1338,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  * @include [MeanDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, a single mean of means of the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMean2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     mean(skipNaN) { columns.toColumnsSetOf() }
 
@@ -1356,7 +1366,6 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  *
  * @include [MeanDocs.RowExpressionSnippet]
  *
- * @include [MeanDocs.ExpressionResultIsInputSnippet]
  * @include [MeanDocs.SupportedTypesSnippet]
  * @include [MeanDocs.NanCellOnEmptyPivotGroupBySnippet]
  *
@@ -1381,6 +1390,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.mean(
  * @include [MeanDocs.ExpressionParam]
  * @return A [DataFrame] with, per group, the mean of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByMeanOf")
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.meanOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
