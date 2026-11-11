@@ -34,7 +34,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
  *
  * @return A single [DataRow] with one [FrameColumn] per pivot group, holding each group as a [DataFrame].
  */
-public fun <T> Pivot<T>.frames(): DataRow<T> = aggregate { this }
+public fun <T> Pivot<T>.frames(): DataRow<*> = aggregate { this }
 
 // endregion
 
@@ -66,6 +66,6 @@ public fun <T> Pivot<T>.frames(): DataRow<T> = aggregate { this }
  * @return A [DataFrame] with one row per combination of grouping values, with the pivot groups as
  * [DataFrame] values inside [FrameColumn]s.
  */
-public fun <T> PivotGroupBy<T>.frames(): DataFrame<T> = aggregate { this }
+public fun <T> PivotGroupBy<T>.frames(): DataFrame<*> = aggregate { this }
 
 // endregion

@@ -2329,7 +2329,7 @@ public fun <T> Pivot<T>.percentile(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
+): DataRow<*> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
 /**
  * @include [PercentileDocs.PivotPercentileForSnippet]
@@ -2352,7 +2352,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = delegate { percentileFor(percentile, separate, skipNaN, columns) }
+): DataRow<*> = delegate { percentileFor(percentile, separate, skipNaN, columns) }
 
 /**
  * @include [PercentileDocs.PivotPercentileForSnippet]
@@ -2372,7 +2372,7 @@ public fun <T> Pivot<T>.percentileFor(
     vararg columns: String,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
+): DataRow<*> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2381,7 +2381,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2390,7 +2390,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.percentileFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
 /**
  * @include [PercentileDocs.PivotPercentileSnippet]
@@ -2409,7 +2409,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataRow<T> = delegate { percentile(percentile, skipNaN, columns) }
+): DataRow<*> = delegate { percentile(percentile, skipNaN, columns) }
 
 /**
  * @include [PercentileDocs.PivotPercentileSnippet]
@@ -2428,7 +2428,7 @@ public fun <T> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
+): DataRow<*> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2436,7 +2436,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2444,7 +2444,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
 /**
  * Aggregates this [Pivot] by computing the given [percentile] of the values that the given [expression]
@@ -2491,7 +2491,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataRow<T> = delegate { percentileOf(percentile, skipNaN, expression) }
+): DataRow<*> = delegate { percentileOf(percentile, skipNaN, expression) }
 
 /**
  * [Reduces][PivotDocs.Reducing] this [Pivot] by taking from each group the [row][DataRow]
@@ -2641,7 +2641,7 @@ public fun <T> PivotGroupBy<T>.percentile(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
+): DataFrame<*> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
 /**
  * @include [PercentileDocs.PivotGroupByPercentileForSnippet]
@@ -2662,7 +2662,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.percentile.invoke(percentile, skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<*> = Aggregators.percentile.invoke(percentile, skipNaN).aggregateFor(this, separate, columns)
 
 /**
  * @include [PercentileDocs.PivotGroupByPercentileForSnippet]
@@ -2682,7 +2682,7 @@ public fun <T> PivotGroupBy<T>.percentileFor(
     vararg columns: String,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
+): DataFrame<*> = percentileFor(percentile, separate, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2691,7 +2691,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2700,7 +2700,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
 /**
  * @include [PercentileDocs.PivotGroupByPercentileSnippet]
@@ -2719,7 +2719,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateAll(this, columns)
+): DataFrame<*> = Aggregators.percentileCommon<C>(percentile, skipNaN).aggregateAll(this, columns)
 
 /**
  * @include [PercentileDocs.PivotGroupByPercentileSnippet]
@@ -2738,7 +2738,7 @@ public fun <T> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
+): DataFrame<*> = percentile(percentile, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2746,7 +2746,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -2754,7 +2754,7 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
 /**
  * Aggregates this [PivotGroupBy] by computing the given [percentile] of the values that the given [expression]
@@ -2766,7 +2766,6 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  * @include [PercentileDocs.RowExpressionSnippet]
  *
  * @include [PercentileDocs.ExpressionResultIsInputSnippet]
- *
  * @include [PercentileDocs.InputValuesSnippet]
  *
  * @include [PercentileDocs.ResultTypeSnippet]
@@ -2802,7 +2801,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, expression)
+): DataFrame<*> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, expression)
 
 /**
  * [Reduces][PivotGroupByDocs.Reducing] this [PivotGroupBy] by taking from each group

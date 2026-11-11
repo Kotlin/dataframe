@@ -201,7 +201,7 @@ public inline fun <T> Grouped<T>.count(
  *
  * @return A single [DataRow] with one column per group and the corresponding group size as its value.
  */
-public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
+public fun <T> Pivot<T>.count(): DataRow<*> = delegate { count() }
 
 /**
  * Aggregates this [Pivot] by counting the number of rows in each group
@@ -239,7 +239,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  *
  * @return A single [DataRow] with original [Pivot] columns and filtered row counts per group.
  */
-public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataRow<T> = delegate { count(predicate) }
+public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataRow<*> = delegate { count(predicate) }
 
 // endregion
 
@@ -279,7 +279,7 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  *
  * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns.
  */
-public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() default 0 }
+public fun <T> PivotGroupBy<T>.count(): DataFrame<*> = aggregate { count() default 0 }
 
 /**
  * Aggregates this [PivotGroupBy] by counting the number of rows in each
@@ -316,7 +316,7 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  *
  * @return A [DataFrame] with [groupBy] rows and pivoted counts as columns matching the [predicate]..
  */
-public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<T> =
+public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<*> =
     aggregate {
         count(predicate) default 0
     }
