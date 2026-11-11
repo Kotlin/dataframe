@@ -669,7 +669,7 @@ public fun <T, C> Split<T, C>.by(
  *
  * ```kotlin
  * // Split each address around commas and any surrounding whitespace
- * df.split { address }.by("""s*,s*""".toRegex()).into("city", "street", "house")
+ * df.split { address }.by("""\s*,\s*""".toRegex()).into("city", "street", "house")
  * ```
  *
  * @param [T] The schema marker type of the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -774,7 +774,7 @@ internal inline fun <T, C, R> Split<T, C>.by(
  *
  * ```kotlin
  * merged.split { name }
- *     .match("""(.*) ((.*))""")
+ *     .match("""(.*) \((.*)\)""")
  *     .inward("lastName", "firstName")
  * ```
  *
@@ -808,7 +808,7 @@ public fun <T, C : String?> Split<T, C>.match(
  *
  * ```kotlin
  * merged.split { name }
- *     .match("""(.*) ((.*))""")
+ *     .match("""(.*) \((.*)\)""")
  *     .inward("lastName", "firstName")
  * ```
  *
