@@ -332,6 +332,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
     /**
      * @include [ThenDocs]
      */
+    @Interpretable("PivotThenColumnsResolver")
     public infix fun <C> ColumnsResolver<C>.then(other: ColumnsResolver<C>): ColumnSet<C> =
         PivotChainColumnSet(this, other)
 
