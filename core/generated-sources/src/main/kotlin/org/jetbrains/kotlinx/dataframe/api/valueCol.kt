@@ -2791,7 +2791,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [<code>SingleColumn</code>][SingleColumn],
- * by adding a check to see it's a [<code>ValueColumn</code>][ValueColumn] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>ValueColumn</code>][ValueColumn] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
@@ -2802,7 +2802,7 @@ internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
     }
 
 /** Checks the validity of this [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
- * by adding a check to see it's a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>ValueColumn</code>][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
     onResolve { col: ColumnWithPath<*>? ->

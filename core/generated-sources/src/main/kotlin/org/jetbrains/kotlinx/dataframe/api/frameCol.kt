@@ -3207,7 +3207,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [<code>SingleColumn</code>][SingleColumn],
- * by adding a check to see it's a [<code>FrameColumn</code>][FrameColumn] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>FrameColumn</code>][FrameColumn] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<DataFrame<C>> =
@@ -3218,7 +3218,7 @@ internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<
     }
 
 /** Checks the validity of this [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
- * by adding a check to see it's a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<DataFrame<C>>.ensureIsFrameColumn(): ColumnAccessor<DataFrame<C>> =
     onResolve { col: ColumnWithPath<*>? ->
