@@ -11,7 +11,7 @@ kotlinpoet = "2.4.0"
 # After changing it, run `./gradlew updateDaemonJvm` and commit the regenerated properties file.
 gradle-jdk = "21"
 
-dokka = "2.3.0-Beta"
+dokka = "2.3.0"
 libsPublisher = "2.2.0-rc3-dev-59"
 
 # Latest release version of DataFrame, used in examples
@@ -20,7 +20,7 @@ dataframe = "1.0.0-rc02"
 korro = "0.2.2"
 
 gradlePlugin-gradle-foojayToolchains = "1.0.0"
-typesafe-conventions = "0.12.1" # manually sync with /build-logic/settings.gradle.kts!
+typesafe-conventions = "0.12.2" # manually sync with /build-logic/settings.gradle.kts!
 maven-invoker = "3.3.0"
 maven-wrapper = "3.3.4"
 maven = "3.9.11"
@@ -44,7 +44,7 @@ postgresql = "42.7.14"
 sqlite = "3.54.1.0"
 kotlinDatetime = "0.8.0-0.6.x-compat"
 openapi = "2.1.48"
-kotlinLogging = "8.0.4"
+kotlinLogging = "8.0.6"
 sl4j = "2.0.20"
 log4j = "2.26.1"
 
@@ -58,7 +58,7 @@ junit-platform = "1.11.3" # Issue #426
 konsist = "0.17.3" # Would require `:samples` to be bumped to Java 17
 kotestAsserions = "6.2.6"
 
-jsoup = "1.23.2"
+jsoup = "1.24.1"
 arrow = "19.0.0"
 kodex = "0.7.1"
 caupain = "1.10.1"
@@ -89,8 +89,8 @@ jts = "1.20.0"
 kandy = "0.8.6"
 kotlin-dl = "0.5.2"
 
-exposed = "1.6.0"
-hibernate = "7.4.14.Final"
+exposed = "1.6.1"
+hibernate = "7.4.15.Final"
 
 # check the versions down in the [libraries] section too!
 kotlin-spark = "1.2.4"
