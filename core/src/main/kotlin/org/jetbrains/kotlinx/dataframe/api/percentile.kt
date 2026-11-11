@@ -2637,6 +2637,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
  * @include [PercentileDocs.SkipNanParam]
  * @return A [DataFrame] with the given percentile of each suitable column per [pivot] and [groupBy] group.
  */
+@Refine
+@Interpretable("PivotGroupByPercentile0")
 public fun <T> PivotGroupBy<T>.percentile(
     percentile: Double,
     separate: Boolean = false,
@@ -2657,6 +2659,8 @@ public fun <T> PivotGroupBy<T>.percentile(
  * @include [PercentileDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the given percentile of each selected column per [pivot] and [groupBy] group.
  */
+@Refine
+@Interpretable("PivotGroupByPercentile1")
 public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
@@ -2677,6 +2681,8 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
  * @include [PercentileDocs.SkipNanParam]
  * @return A [DataFrame] with the given percentile of each selected column per [pivot] and [groupBy] group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByPercentile1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     vararg columns: String,
@@ -2715,6 +2721,8 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.percentileFor(
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single given percentile of all the values
  *   in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByPercentile2")
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
@@ -2734,6 +2742,8 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single given percentile of all the values
  *   in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByPercentile2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: String,
@@ -2797,6 +2807,8 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
  * @include [PercentileDocs.ExpressionParam]
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, the given percentile of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByPercentileOf")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
@@ -2845,6 +2857,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the row at the given percentile of the values [rowExpression] returns.
  */
+@Interpretable("PivotGroupByPercentileBy")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,

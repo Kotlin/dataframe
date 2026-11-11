@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.RowExpressionsLink
@@ -115,6 +117,8 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * @return A new [DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
+@Refine
+@Interpretable("PivotGroupByWith")
 public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return aggregate { internal().withExpr(type, emptyPath(), expression) }
@@ -141,6 +145,8 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
  * @return A new [DataFrame] with the grouping key columns, one row per grouping key combination,
  * and pivot keys as columns or column groups containing the computed results.
  */
+@Refine
+@Interpretable("ReducedPivotGroupByWith")
 public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<*> {
     val type = typeOf<V>()
     return pivot.aggregate {
