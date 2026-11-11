@@ -64,9 +64,9 @@ fun main() {
         // one hot encoding
         .pivotMatches { pclass and sex }
         // feature extraction
-        .select { survived and pclass and sibsp and parch and age and fare and sex }
+        .select { "survived" and "pclass" and "sibsp" and "parch" and "age" and "fare" and "sex" }
         .shuffle()
-        .toTrainTest(0.7) { survived }
+        .toTrainTest(0.7) { "survived"<Int>() }
 
     model.use {
         it.compile(
