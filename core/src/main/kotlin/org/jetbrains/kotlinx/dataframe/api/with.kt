@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.RowExpressionsLink
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
@@ -27,13 +28,6 @@ private typealias PivotWithOneOrManyResultSnippet = Nothing
 @ExcludeFromSources
 private typealias PivotWithReducedResultSnippet = Nothing
 
-/**
- * If [expression\] returns a column reference, it is resolved to that column's value in the row
- * the expression was evaluated on.
- */
-@ExcludeFromSources
-private typealias PivotWithColumnReferenceSnippet = Nothing
-
 // endregion
 
 // region Pivot
@@ -42,8 +36,6 @@ private typealias PivotWithColumnReferenceSnippet = Nothing
  * Aggregates this [Pivot] by evaluating the given [row expression][expression] on every row of each pivot group.
  *
  * @include [PivotWithOneOrManyResultSnippet]
- *
- * @include [PivotWithColumnReferenceSnippet]
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
@@ -68,23 +60,34 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
 // region ReducedPivot
 
 /**
- * Aggregates this [ReducedPivot] by evaluating the given [row expression][expression] on the single row
- * selected by the reducer in each pivot group.
+ * Returns a [DataRow] with the [pivot] keys of this [ReducedPivot] as columns,
+ * containing the value of [expression] computed on the reduced row
+ * of the corresponding group.
  *
- * @include [PivotWithReducedResultSnippet]
+ * @include [PivotDocs.ReducedPivotFinalStepSnippet]
  *
- * @include [PivotWithColumnReferenceSnippet]
+ * [expression] is a [RowExpression] computed only on the single reduced row of each group;
+ * this row is both the receiver and the argument (`it`) of the expression.
+ * See {@include [RowExpressionsLink]}
  *
- * For more information: {@include [DocumentationUrls.Pivot]}
+ * For more information: {@include [DocumentationUrls.PivotReducing]}
+ *
+ * Don't confuse this with [with][Pivot.with] on a [Pivot], which computes the expression on all rows
+ * of each group.
+ *
+ * See also:
+ * - [values][ReducedPivot.values] — takes the values of the selected columns of the reduced rows.
  *
  * ### Examples
  *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotWith_properties]
+ *
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.PivotSamples.pivotWith_strings]
  *
- * @param [V] The result type of [expression], captured at runtime for constructing the result columns.
- * @param [expression] The expression evaluated on each selected row.
- * @return A new [DataRow] with pivot keys as columns or column groups containing the computed results.
+ * @param [T] The schema marker type of the pivoted [DataFrame].
+ * @param [V] The type of the values computed by [expression].
+ * @param [expression] The [RowExpression] computing the value from the reduced row.
+ * @return A new [DataRow] with the computed values under their [pivot] keys.
  */
 public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
     pivot.delegate {
@@ -100,8 +103,6 @@ public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowEx
  * in each group defined by the grouping and pivot keys.
  *
  * @include [PivotWithOneOrManyResultSnippet]
- *
- * @include [PivotWithColumnReferenceSnippet]
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
@@ -128,8 +129,6 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
  * selected by the reducer in each group defined by the grouping and pivot keys.
  *
  * @include [PivotWithReducedResultSnippet]
- *
- * @include [PivotWithColumnReferenceSnippet]
  *
  * For more information: {@include [DocumentationUrls.Pivot]}
  *
