@@ -381,6 +381,7 @@ public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce
  * the first [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
  * or a [row][DataRow] with `null` values (except the grouping key) if this [DataFrame] is empty.
  */
+@Interpretable("PivotGroupByFirst0")
 public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
 
 /**
@@ -424,6 +425,7 @@ public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstO
  * the first matching the [predicate] [row][DataRow] of the corresponding [DataFrame] formed by this pivot–group pair,
  * or a [row][DataRow] with `null` values if this [DataFrame] does not contain any rows matching the [predicate].
  */
+@Interpretable("PivotGroupByFirst1")
 public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> =
     reduce { firstOrNull(predicate) }
 

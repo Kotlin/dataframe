@@ -1594,6 +1594,8 @@ public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
  * @include [SumDocs.SkipNanParam]
  * @return A [DataFrame] with the sum of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupBySum0")
 public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     sumFor(separate, skipNaN, primitiveOrMixedNumberColumns())
 
@@ -1610,6 +1612,8 @@ public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false, skipNaN: Boolean =
  * @include [SumDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the sum of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupBySum1")
 public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -1628,6 +1632,8 @@ public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
  * @include [SumDocs.SkipNanParam]
  * @return A [DataFrame] with the sum of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupBySum1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.sumFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -1661,6 +1667,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
  * @include [SumDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, the sum of all the values in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupBySum2")
 public fun <T, C : Number?> PivotGroupBy<T>.sum(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -1677,6 +1685,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * @include [SumDocs.SkipNanParam]
  * @return A [DataFrame] with, per group, the sum of all the values in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupBySum2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     sum(skipNaN) { columns.toNumberColumns() }
 
@@ -1728,6 +1738,8 @@ public fun <T, C : Number?> PivotGroupBy<T>.sum(
  * @include [SumDocs.ExpressionParam]
  * @return A [DataFrame] with, per group, the sum of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupBySumOf")
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,

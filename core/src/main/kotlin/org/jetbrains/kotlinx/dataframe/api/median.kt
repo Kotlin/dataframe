@@ -2462,6 +2462,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
  * @include [MedianDocs.SkipNanParam]
  * @return A [DataFrame] with the median of each suitable column per [pivot] and [groupBy] group.
  */
+@Refine
+@Interpretable("PivotGroupByMedian0")
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
@@ -2478,6 +2480,8 @@ public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolea
  * @include [MedianDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the median of each selected column per [pivot] and [groupBy] group.
  */
+@Refine
+@Interpretable("PivotGroupByMedian1")
 public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -2496,6 +2500,8 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  * @include [MedianDocs.SkipNanParam]
  * @return A [DataFrame] with the median of each selected column per [pivot] and [groupBy] group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMedian1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.medianFor(
     vararg columns: String,
     separate: Boolean = false,
@@ -2530,6 +2536,8 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single median of all the values
  *   in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByMedian2")
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -2547,6 +2555,8 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, a single median of all the values
  *   in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMedian2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     median(skipNaN) { columns.toComparableColumns() }
 
@@ -2605,6 +2615,8 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  * @include [MedianDocs.ExpressionParam]
  * @return A [DataFrame] with, per [pivot] and [groupBy] group, the median of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByMedianOf")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
@@ -2651,6 +2663,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf
  * @return A [ReducedPivotGroupBy] holding, per group,
  *   the row at the median of the values [rowExpression] returns.
  */
+@Interpretable("PivotGroupByMedianBy")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
