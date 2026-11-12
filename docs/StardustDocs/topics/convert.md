@@ -123,7 +123,7 @@ df.convert { name }.asFrame { it.asDataFrame().add("fullName") { "$firstName $la
 <tab title="Strings">
 
 ```kotlin
-df.convert { name }.asFrame {
+df.convert { colGroup("name") }.asFrame {
     it.asDataFrame().add("fullName") { getValue<String>("firstName") + " " + getValue<String>("lastName") }
 }
 ```
@@ -136,7 +136,7 @@ df.convert { name }.asFrame {
 ## asColumn
 
 Converts the selected columns with a column expression that sees the whole column.
-Similar to [replace with](updateConvert.md), this form is compiler-plugin-friendly
+Similar to [replace with](replace.md), this form is compiler-plugin-friendly
 whenever you need to perform an operation on the entire column without changing its name.
 For example, parallel processing:
 
@@ -336,6 +336,8 @@ datesDf
 
 ```kotlin
 // String -> kotlinx.datetime.LocalDate with a pattern
+// the pattern-string overload requires an explicit opt-in
+@OptIn(FormatStringsInDatetimeFormats::class)
 datesDf.convert { date }.toLocalDate("dd.MM.yyyy")
 
 // Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
@@ -358,7 +360,7 @@ val format = LocalDateTime.Format {
     chars("-")
     monthNumber()
     chars("-")
-    dayOfMonth()
+    day()
     chars(" ")
     hour()
     chars(":")
@@ -434,8 +436,6 @@ so a string can be parsed once and converted onwards:
 // String -> DateTimeComponents; date and time fields stay accessible for later conversions
 timestampsDf.convert { timestamp }.toDateTimeComponents()
 ```
-
-<inline-frame src="./resources/convertToDateTimeComponents.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 

@@ -80,13 +80,13 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
             // providing the parser: String -> MyType, so column `b` can be converted
             parser { MyType(it.toInt()) }
             // providing the filler for `c`, as it's missing in `df`
-            fill { c }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
+            fill { col<Int>("c") }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
         }
         // SampleEnd
         val converted = df.convertTo<MySchema> {
             convert<Int>().with { MyType(it) }
             parser { MyType(it.toInt()) }
-            fill { c }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
+            fill { col<Int>("c") }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
         }
         converted.a.values().map { it.value } shouldBe listOf(1, 2, 3)
         converted.b.values().map { it.value } shouldBe listOf(1, 2, 3)
@@ -112,7 +112,7 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
                 LocalDate.parse(
                     it,
                     LocalDate.Format {
-                        dayOfMonth()
+                        day()
                         chars(".")
                         monthNumber()
                         chars(".")
@@ -127,7 +127,7 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
                 LocalDate.parse(
                     it,
                     LocalDate.Format {
-                        dayOfMonth()
+                        day()
                         chars(".")
                         monthNumber()
                         chars(".")

@@ -85,7 +85,6 @@
 <resource src="convertStringTo.html"></resource>
 <resource src="convertTo.html"></resource>
 <resource src="convertToDataFrames.html"></resource>
-<resource src="convertToDateTimeComponents.html"></resource>
 <resource src="convertToDuration.html"></resource>
 <resource src="convertToEnum.html"></resource>
 <resource src="convertToIFrame.html"></resource>

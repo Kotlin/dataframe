@@ -259,11 +259,11 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     @Test
     fun convertAsFrame_strings() {
         // SampleStart
-        df.convert { name }.asFrame {
+        df.convert { colGroup("name") }.asFrame {
             it.asDataFrame().add("fullName") { getValue<String>("firstName") + " " + getValue<String>("lastName") }
         }
         // SampleEnd
-        df.convert { name }.asFrame {
+        df.convert { colGroup("name") }.asFrame {
             it.asDataFrame().add("fullName") { getValue<String>("firstName") + " " + getValue<String>("lastName") }
         }.also { it.getColumnGroup("name")["fullName"].values().first() shouldBe "Alice Cooper" }
     }
@@ -381,16 +381,18 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
             .saveDfHtmlSample()
     }
 
-    @OptIn(FormatStringsInDatetimeFormats::class)
     @Test
     fun convertToLocalDate() {
         // SampleStart
         // String -> kotlinx.datetime.LocalDate with a pattern
+        // the pattern-string overload requires an explicit opt-in
+        @OptIn(FormatStringsInDatetimeFormats::class)
         datesDf.convert { date }.toLocalDate("dd.MM.yyyy")
 
         // Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
         datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
         // SampleEnd
+        @OptIn(FormatStringsInDatetimeFormats::class)
         datesDf.convert { date }.toLocalDate("dd.MM.yyyy")
             .also { it.date.toList() shouldBe listOf(LocalDate(2025, 11, 22), LocalDate(2025, 12, 5)) }
             .saveDfHtmlSample()
@@ -407,7 +409,7 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
             chars("-")
             monthNumber()
             chars("-")
-            dayOfMonth()
+            day()
             chars(" ")
             hour()
             chars(":")
@@ -476,7 +478,6 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
                 it.timestamp[1]?.monthNumber shouldBe 11
                 it.timestamp[2] shouldBe null
             }
-            .saveDfHtmlSample()
     }
 
     @Test

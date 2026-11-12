@@ -97,7 +97,7 @@ df.convertTo<MySchema> {
     // providing the parser: String -> MyType, so column `b` can be converted
     parser { MyType(it.toInt()) }
     // providing the filler for `c`, as it's missing in `df`
-    fill { c }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
+    fill { col<Int>("c") }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
 }
 ```
 
@@ -120,7 +120,7 @@ df.convertTo<Event> {
         LocalDate.parse(
             it,
             LocalDate.Format {
-                dayOfMonth()
+                day()
                 chars(".")
                 monthNumber()
                 chars(".")
