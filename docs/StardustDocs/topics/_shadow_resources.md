@@ -3,6 +3,13 @@
 <resource src="notebook_test_between_1.html"></resource>
 <resource src="notebook_test_between_2.html"></resource>
 <resource src="notebook_test_between_3.html"></resource>
+<resource src="castDf.html"></resource>
+<resource src="castKeepsExtraColumns.html"></resource>
+<resource src="castMissingNullableColumn.html"></resource>
+<resource src="dataColumnCast.html"></resource>
+<resource src="frameColumnCast.html"></resource>
+<resource src="groupByCast.html"></resource>
+<resource src="rowCast.html"></resource>
 <resource src="notebook_test_chunked_1.html"></resource>
 <resource src="notebook_test_chunked_2.html"></resource>
 <resource src="notebook_test_chunked_3.html"></resource>
