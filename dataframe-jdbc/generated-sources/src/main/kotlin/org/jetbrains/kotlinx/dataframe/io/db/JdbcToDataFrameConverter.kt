@@ -30,7 +30,7 @@ public typealias AnyJdbcToDataFrameConverter = JdbcToDataFrameConverter<*, *, *>
  * @property valuePreprocessor an optional function that converts values from [<code>ResultSet.getObject</code>][ResultSet.getObject]
  *   to a cell/row suitable to be put into a [<code>DataColumn</code>][DataColumn].
  * @property columnBuilder an optional function that converts a [<code>List</code>][List] with values of type [<code>D</code>][D]
- *   to a [<code>DataColumn</code>][DataColumn] of with values of type [<code>P</code>][P].
+ *   to a [<code>DataColumn</code>][DataColumn] with values of type [<code>P</code>][P].
  */
 public class JdbcToDataFrameConverter<J, D, P>(
     public val expectedJdbcType: KType,
@@ -221,7 +221,7 @@ public fun DbValuePreprocessor<*, *>.castToAny(): DbValuePreprocessor<Any?, Any?
 public fun interface DbColumnBuilder<in D, out P> {
 
     /**
-     * Converts the given [<code>values</code>][values]: [<code>DataColumn</code>][DataColumn] with values of type [<code>D</code>][D] to a [<code>DataColumn</code>][DataColumn] of with values of type [<code>P</code>][P].
+     * Converts the given [<code>values</code>][values]: [<code>DataColumn</code>][DataColumn] with values of type [<code>D</code>][D] to a [<code>DataColumn</code>][DataColumn] with values of type [<code>P</code>][P].
      */
     public fun buildDataColumn(name: String, values: List<D>, inferNullability: Boolean): DataColumn<P>
 }

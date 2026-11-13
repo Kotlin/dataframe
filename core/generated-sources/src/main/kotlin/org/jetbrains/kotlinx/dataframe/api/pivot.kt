@@ -47,7 +47,7 @@ import kotlin.reflect.KProperty
  *   and then reduced or aggregated into a [<code>DataFrame</code>][DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -410,7 +410,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -485,7 +485,7 @@ public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumns
  *   and then reduced or aggregated into a [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -872,7 +872,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -949,7 +949,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: B
  * For more information: [See "`pivot` + `groupBy`" on the documentation website.](https://kotlin.github.io/dataframe/pivot.html#pivot-groupby)
  *
  * Pivoted columns can also be created inline
- * (i.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
+ * (e.g. by creating a new column using [<code>expr</code>][org.jetbrains.kotlinx.dataframe.api.expr] or simply renaming the old one
  * using [<code>named</code>][org.jetbrains.kotlinx.dataframe.api.named]):
  * ```kotlin
  * // Create a new column "newName" based on existing "oldName" values
@@ -1607,7 +1607,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>,
  * ### Example
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Compute number of for all unique values of "city"
+ *     // Compute number of matching rows for all unique values of "city"
  *     // across all "name.firstName" key values and adds it to the aggregation result
  *     pivotCounts { city }
  * }

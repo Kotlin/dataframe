@@ -512,7 +512,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -568,7 +568,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> frameCol(name: String): ColumnAccessor<DataFrame<C>> = frameColumn<C>(name).ensureIsFrameColumn()
@@ -623,7 +623,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -679,7 +679,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(name: String): SingleColumn<DataFrame<C>> =
@@ -740,7 +740,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -796,7 +796,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
@@ -852,7 +852,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -908,7 +908,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> String.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
@@ -964,7 +964,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1020,7 +1020,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> KProperty<*>.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
@@ -1076,7 +1076,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1132,7 +1132,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnPath.frameCol(name: String): ColumnAccessor<DataFrame<C>> =
@@ -1192,7 +1192,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1248,7 +1248,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> = frameColumn<C>(path).ensureIsFrameColumn()
@@ -1303,7 +1303,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1359,7 +1359,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(path: ColumnPath): SingleColumn<DataFrame<C>> =
@@ -1420,7 +1420,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1477,7 +1477,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
@@ -1533,7 +1533,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1589,7 +1589,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> String.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
@@ -1645,7 +1645,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1701,7 +1701,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> KProperty<*>.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
@@ -1757,7 +1757,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
@@ -1813,7 +1813,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the frame column.
      * @param [C] The type of the frame column.
      */
     public fun <C> ColumnPath.frameCol(path: ColumnPath): ColumnAccessor<DataFrame<C>> =
@@ -1871,7 +1871,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1929,7 +1929,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -1985,7 +1985,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2043,7 +2043,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2099,7 +2099,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2158,7 +2158,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2214,7 +2214,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2272,7 +2272,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2328,7 +2328,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2386,7 +2386,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2442,7 +2442,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2500,7 +2500,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the frame column.
      * @param [C] The type of the frame column.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2560,7 +2560,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      *
@@ -2618,7 +2618,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      *
@@ -2676,7 +2676,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2733,7 +2733,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
@@ -2790,7 +2790,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2847,7 +2847,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
@@ -2909,7 +2909,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2966,7 +2966,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
@@ -3022,7 +3022,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3081,7 +3081,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
@@ -3139,7 +3139,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3196,7 +3196,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the frame column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */

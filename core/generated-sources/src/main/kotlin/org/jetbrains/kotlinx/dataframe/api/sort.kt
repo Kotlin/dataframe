@@ -700,7 +700,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * ```kotlin
  * // Sort group rows by "age" column values descending
  * gb.sortByDesc { age }
- * // Sort group rows by "age" column values ase
+ * // Sort group rows by "age" column values descending
  * // and then by the ("name"/"firstName") column values ascending
  * gb.sortByDesc { age and name.firstName.reversed() }
  * // Sort group rows by "weight" column values descending with nulls first
@@ -821,8 +821,8 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
  * Don't confuse this with [<code>sortBy</code>][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
- *   - [<code>sortByCount</code>][sortByCount] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes descending.
- *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] d on computed values.
+ *   - [<code>sortByCount</code>][sortByCount] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes descending.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
  *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
  *
  * Check out the [<code>`GroupBy grammar`</code>][Grammar].
@@ -843,7 +843,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  *
  * See also
  *   - [<code>sortByCountAsc</code>][sortByCountAsc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the group sizes in ascending order.
- *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sorts the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
+ *   - [<code>sortByGroup</code>][sortByGroup] and [<code>sortByGroupDesc</code>][sortByGroupDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] based on computed values.
  *   - [<code>sortByKey</code>][sortByKey] and [<code>sortByKeyDesc</code>][sortByKeyDesc] that sort the key-group pairs of this [<code>GroupBy</code>][GroupBy] by the key values.
  *
  * Check out the [<code>`GroupBy grammar`</code>][Grammar].

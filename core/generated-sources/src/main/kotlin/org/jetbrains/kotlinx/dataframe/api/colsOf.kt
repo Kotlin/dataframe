@@ -631,7 +631,7 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
 /**
  * If this [<code>ColumnsResolver</code>][ColumnsResolver] is a [<code>SingleColumn</code>][SingleColumn], it
  * returns a new [<code>ColumnSet</code>][ColumnSet] containing the columns inside of this [<code>SingleColumn</code>][SingleColumn] that
- * match the given [<code>filter</code>][filter] and are the given [<code>type</code>][type].
+ * match the given [<code>filter</code>][filter] and are of the given [<code>type</code>][type].
  *
  * Else, it returns a new [<code>ColumnSet</code>][ColumnSet] containing all columns in this [<code>ColumnsResolver</code>][ColumnsResolver] that
  * match the given [<code>filter</code>][filter] and are the given [<code>type</code>][type].
