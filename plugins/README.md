@@ -1,21 +1,16 @@
 ## :plugins
 
-This folder holds all our (mostly deprecated) Gradle- and Kotlin Compiler plugins.
-Plugins we still use are being migrated to convention plugins in [build-logic](../build-logic).
+This folder holds our Kotlin Compiler plugins. These are meant to be used in this repo only.
+These plugins are being migrated to convention plugins in [build-logic](../build-logic).
 
-### [~~:plugins:dataframe-gradle-plugin~~](./dataframe-gradle-plugin)
-The Gradle plugin for DataFrame that can generate data schemas from a data sample using the simple
-task `dataframes {}`. It uses [:plugins:symbol-processor](./symbol-processor) to generate column accessors.
-
-NOTE: This plugin is disabled as KSP1 is no longer compatible with Kotlin 2.3+.
-
-### [~~:plugins:symbol-processor~~](./symbol-processor)
-The KSP plugin that can generate data schemas from a data sample using the `@file:ImportDataSchema` annotation.
-It is also used to generate column accessors for in the form of extension properties for 
-(both manually written- or generated) `@DataSchema` annotated classes/interfaces.
-
-NOTE: This plugin is disabled as KSP1 is no longer compatible with Kotlin 2.3+.
+The deprecated Gradle plugin (`dataframe-gradle-plugin`) and KSP plugin (`symbol-processor`) were removed from
+this repository: KSP1 is no longer compatible with Kotlin 2.3+, their last release is `1.0.0-Beta4`, and schema
+generation now goes through the compiler plugin and runtime methods instead.
 
 ### [:plugins:expressions-converter](./expressions-converter)
 A small Kotlin Compiler plugin that provides intermediate expressions of DataFrame
 operation chains, used internally by [:core](../core) to generate "explainer dataframes" on the documentation website.
+
+### [:plugins:public-api-modifier](./public-api-modifier)
+An exploratory compiler plugin that makes `@AccessApiOverload` annotated functions internal, allowing a full-API
+and a reduced-API artifact to be produced from the same source tree. It is built, but not enabled anywhere.

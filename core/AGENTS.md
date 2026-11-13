@@ -75,11 +75,11 @@ ways they get produced, and picking the wrong one is a common mistake:
   (`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`), not here. The operation annotations in this
   module (`@Refine`, `@Interpretable("…")`, `@RequiredByIntellijPlugin`, `@AccessApiOverload`, from `annotations/`)
   exist specifically to drive it, and it consumes `dataframe-compiler-plugin-core` for its interpreters.
-- **KSP symbol processor + Gradle plugin — the older `@DataSchema` build-time path (now legacy/deprecated).**
+- **KSP symbol processor + Gradle plugin — the older `@DataSchema` build-time path (deprecated and removed
+  from this repository; their last release is `1.0.0-Beta4`, as KSP1 is not compatible with Kotlin 2.3+).**
   `@DataSchema` (`annotations/DataSchema.kt`) marks an interface as a schema (related: `ColumnName`,
-  `ImportDataSchema`, `HasSchema`, … in `annotations/`); `plugins/symbol-processor` + `plugins/dataframe-gradle-plugin`
-  invoke this module's `CodeGenerator` at build time to emit accessors. Note: `plugins/symbol-processor` is now
-  disabled because KSP1 is no longer compatible with Kotlin 2.3+ (`plugins/README.md`).
+  `ImportDataSchema`, `HasSchema`, … in `annotations/`); those plugins invoked this module's `CodeGenerator` at
+  build time to emit accessors.
 - **Runtime `ReplCodeGenerator` — Jupyter/REPL only.** `impl/codeGen/ReplCodeGenerator` emits accessor source as
   strings to be `eval`'d in the next notebook cell (used by the `jupyter/` helpers); it is not a path for ordinary
   compiled projects. The underlying engine `CodeGenerator` (`codeGen/CodeGenerator.kt`, `ExtensionsCodeGenerator.kt`,

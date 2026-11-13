@@ -108,24 +108,17 @@ allow a full-API and a reduced-API artifact from one source tree (PR #959)
 - **Location**: `./plugins/public-api-modifier/`
 - **Note**: built, but **not enabled anywhere** — no module puts it on a compiler-plugin classpath.
 
-### Present in the tree but not built
-None of these is in `settings.gradle.kts`, so nothing here is compiled or tested — but they are *not* all the
-same kind of dead: two are deprecated products, one moved into the build. Each has its own
-`README.md`; read it and `plugins/AGENTS.md` before touching anything.
+### Removed from the tree
 
-**`plugins/dataframe-gradle-plugin`** — the Gradle plugin, published as `org.jetbrains.kotlinx.dataframe` on the
-Gradle Plugin Portal. Generated data schemas from a data sample through the `dataframes {}` task, and pulled in
-the symbol processor automatically to produce column accessors.
-
-**`plugins/symbol-processor`** — the KSP plugin, published as `symbol-processor-all`. Generated schemas from
-`@file:ImportDataSchema`, and the extension properties for `@DataSchema` classes and interfaces.
-
-Both are **deprecated as products**, not merely switched off in this build: their last release is
-`1.0.0-Beta4` and there will be no further ones, because KSP1 is no longer compatible with Kotlin 2.3+. Schema
+**`plugins/dataframe-gradle-plugin` and `plugins/symbol-processor`** — the deprecated Gradle plugin (published
+as `org.jetbrains.kotlinx.dataframe` on the Gradle Plugin Portal) and KSP processor (published as
+`symbol-processor-all`), which generated schemas from a data sample (`dataframes {}` / `@file:ImportDataSchema`)
+and accessors for `@DataSchema` types. **Deprecated as products**, not merely switched off: their last release
+is `1.0.0-Beta4` and there will be no further ones, because KSP1 is no longer compatible with Kotlin 2.3+. Schema
 generation now goes through dedicated runtime methods and the compiler plugin — see
-`docs/StardustDocs/topics/schemas/Migration-From-Plugins.md`,
-`docs/StardustDocs/topics/schemas/DataSchemaGenerationMethods.md` and
-`docs/StardustDocs/topics/schemas/gradle/Gradle-Plugin.md`; the next iteration of the feature is issue #1844.
+`docs/StardustDocs/topics/schemas/Migration-From-Plugins.md` and
+`docs/StardustDocs/topics/schemas/DataSchemaGenerationMethods.md`; the next iteration of the feature is
+issue #1844.
 
 **`plugins/keywords-generator`** — not in the repository at all (`git ls-files` returns nothing); it is now the
 `dfbuild.keywordsGenerator` convention plugin in `build-logic`. An untracked `build/` directory may still sit in
