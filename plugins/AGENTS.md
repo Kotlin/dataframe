@@ -4,14 +4,13 @@ Guidance for this folder. See the root `AGENTS.md` for repo-wide build/style rul
 
 ## Read this before using anything here
 
-**Most of this folder is dead code.** Three of the five modules are disabled, and none of the three is registered
+**Most of this folder is dead code.** Two of the four modules are disabled, and neither of the two is registered
 in `settings.gradle.kts` — so nothing in them is compiled, tested, or published by the normal build. Code in a
 disabled module can be arbitrarily out of date and **nothing will fail to tell you**. Do not cite it as evidence
 of how anything currently behaves, and do not change it expecting an effect.
 
 | Module | State |
 |---|---|
-| `kotlin-dataframe` | **Disabled legacy copy** of the Kotlin DataFrame compiler plugin. The live one is developed in the Kotlin repository: `github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`. See issue #1290. |
 | `symbol-processor` | **Disabled** — KSP1 is not compatible with Kotlin 2.3+. |
 | `dataframe-gradle-plugin` | **Disabled** for the same reason (it drove `symbol-processor` to generate schemas from a data sample). |
 | `expressions-converter` | Active, in `settings.gradle.kts`. |
@@ -23,7 +22,8 @@ already went that way and is no longer here at all; it lives in `build-logic` as
 
 ## If you came here looking for the compiler plugin
 
-Two things in *this* repo actually affect it, and `plugins/kotlin-dataframe` is neither:
+Two things in *this* repo actually affect it, and the plugin itself is neither — it lives in the Kotlin repository
+(`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`):
 
 - **`dataframe-compiler-plugin-core`** — a shaded subset of `:core` (its `api`, `impl/api`, `columns`, `schema`,
   `codeGen`, `annotations`) that the real plugin, and by extension IntelliJ, bundles to run compile-time

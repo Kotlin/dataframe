@@ -110,7 +110,7 @@ allow a full-API and a reduced-API artifact from one source tree (PR #959)
 
 ### Present in the tree but not built
 None of these is in `settings.gradle.kts`, so nothing here is compiled or tested — but they are *not* all the
-same kind of dead: two are deprecated products, one moved upstream, one moved into the build. Each has its own
+same kind of dead: two are deprecated products, one moved into the build. Each has its own
 `README.md`; read it and `plugins/AGENTS.md` before touching anything.
 
 **`plugins/dataframe-gradle-plugin`** — the Gradle plugin, published as `org.jetbrains.kotlinx.dataframe` on the
@@ -126,11 +126,6 @@ generation now goes through dedicated runtime methods and the compiler plugin �
 `docs/StardustDocs/topics/schemas/Migration-From-Plugins.md`,
 `docs/StardustDocs/topics/schemas/DataSchemaGenerationMethods.md` and
 `docs/StardustDocs/topics/schemas/gradle/Gradle-Plugin.md`; the next iteration of the feature is issue #1844.
-
-**`plugins/kotlin-dataframe`** — the Kotlin 2.x compiler plugin, which is the **recommended** way to get
-compile-time extension properties. It is not deprecated: development simply moved to the Kotlin repository
-(`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`), and the copy here is an out-of-date
-snapshot with its tests turned off (issue #1290). See `docs/StardustDocs/topics/Compiler-Plugin.md`.
 
 **`plugins/keywords-generator`** — not in the repository at all (`git ls-files` returns nothing); it is now the
 `dfbuild.keywordsGenerator` convention plugin in `build-logic`. An untracked `build/` directory may still sit in

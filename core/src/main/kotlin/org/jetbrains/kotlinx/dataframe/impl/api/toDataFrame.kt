@@ -85,8 +85,8 @@ internal val KClass<*>.canBeUnfolded: Boolean
 
 /**
  * Checks if `KClass` is a value type (number, datetime, string, etc.)
- * Should be aligned with `ConeKotlinType.isValueType()` in
- * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
+ * Should be aligned with `ConeKotlinType.isValueType()` in the compiler plugin:
+ * https://github.com/JetBrains/kotlin/blob/master/plugins/kotlin-dataframe/kotlin-dataframe.k2/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
  */
 @PublishedApi
 internal val KClass<*>.isValueType: Boolean
