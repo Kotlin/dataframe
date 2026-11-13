@@ -57,7 +57,7 @@ public class Update<T, C>(
     // region KDoc declarations
 
     /*
-     * This argument providing the (clickable) name of the update-like function.
+     * This argument provides the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
     @Suppress("ClassName")

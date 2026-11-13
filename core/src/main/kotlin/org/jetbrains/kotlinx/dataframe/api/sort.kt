@@ -631,7 +631,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * ```kotlin
  * // Sort group rows by "age" column values descending
  * gb.sortByDesc { age }
- * // Sort group rows by "age" column values ase
+ * // Sort group rows by "age" column values descending
  * // and then by the ("name"/"firstName") column values ascending
  * gb.sortByDesc { age and name.firstName.reversed() }
  * // Sort group rows by "weight" column values descending with nulls first
@@ -757,8 +757,8 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
  * Don't confuse this with [sortBy][GroupBy.sortBy] that sorts rows within groups.
  *
  * See also
- *   - [sortByCount] that sort the key-group pairs of this [GroupBy] by the group sizes descending.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] d on computed values.
+ *   - [sortByCount] that sorts the key-group pairs of this [GroupBy] by the group sizes descending.
+ *   - [sortByGroup] and [sortByGroupDesc] that sort the key-group pairs of this [GroupBy] based on computed values.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -779,7 +779,7 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  *
  * See also
  *   - [sortByCountAsc] that sorts the key-group pairs of this [GroupBy] by the group sizes in ascending order.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
+ *   - [sortByGroup] and [sortByGroupDesc] that sort the key-group pairs of this [GroupBy] based on computed values.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].

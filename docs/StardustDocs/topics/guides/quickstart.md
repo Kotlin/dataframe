@@ -651,5 +651,5 @@ Ready to go deeper? Check out what’s next:
 - 💡 **[Learn more about Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md)**  
   for auto-generated column access in your IntelliJ IDEA projects.
 
-- 📊 **Master Kandy** for stunning and expressive DataFrame visualizations learning
+- 📊 **Master Kandy** for stunning and expressive DataFrame visualizations by learning
   [Kandy Documentation](https://kotlin.github.io/kandy).

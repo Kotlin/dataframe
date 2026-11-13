@@ -97,7 +97,7 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
     }
     return if (columns.isEmpty()) {
-        // make sure the number of rows translate correctly if there are no columns
+        // make sure the number of rows translates correctly if there are no columns
         DataFrame.empty(nrow = sizes.sum())
     } else {
         dataFrameOf(columns)
