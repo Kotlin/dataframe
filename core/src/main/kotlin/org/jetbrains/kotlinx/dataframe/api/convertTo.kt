@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
@@ -178,7 +177,7 @@ public class ConvertType<T>(
  * @param [T] class that defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
@@ -216,7 +215,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * @param [schemaFrom] dataframe which type [T] will be used.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
@@ -254,7 +253,7 @@ public inline fun <reified T : Any> DataFrame<*>.convertTo(
  * @param [schemaType] defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @param [body] optional dsl to define custom type converters.
- * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [IllegalArgumentException] if [DataFrame] doesn't contain columns that are required by destination schema.
  * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
