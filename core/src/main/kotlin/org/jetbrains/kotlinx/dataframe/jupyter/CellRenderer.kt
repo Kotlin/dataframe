@@ -63,7 +63,11 @@ public abstract class ChainedCellRenderer(private val parent: CellRenderer) : Ce
 
 public object DefaultCellRenderer : CellRenderer {
     public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent =
-        renderValueForHtml(value, configuration.cellContentLimit, configuration.decimalFormat)
+        renderValueForHtml(
+            value = value,
+            truncate = configuration.cellContentLimit ?: Int.MAX_VALUE,
+            format = configuration.decimalFormat,
+        )
 
     public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String =
         renderValueForHtml(value, tooltipLimit, configuration.decimalFormat).truncatedContent
