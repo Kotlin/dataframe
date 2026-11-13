@@ -3616,7 +3616,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A single [<code>DataRow</code>][DataRow] with the median of each suitable column per [<code>pivot</code>][pivot] group.
  */
-public fun <T> Pivot<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
+public fun <T> Pivot<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<*> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
 /**
@@ -3716,7 +3716,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataRow<T> = delegate { medianFor(separate, skipNaN, columns) }
+): DataRow<*> = delegate { medianFor(separate, skipNaN, columns) }
 
 /**
  *
@@ -3800,7 +3800,7 @@ public fun <T> Pivot<T>.medianFor(
     vararg columns: String,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
+): DataRow<*> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -3808,7 +3808,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -3816,7 +3816,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
+): DataRow<*> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
  *
@@ -3892,7 +3892,7 @@ public fun <T, C : Comparable<*>?> Pivot<T>.medianFor(
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataRow<T> = delegate { median(skipNaN, columns) }
+): DataRow<*> = delegate { median(skipNaN, columns) }
 
 /**
  *
@@ -3966,7 +3966,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>DataRow</code>][DataRow] with, per [<code>pivot</code>][pivot] group, a single median of all the values in the selected columns.
  */
-public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
+public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataRow<*> =
     median(skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -3974,14 +3974,14 @@ public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNa
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = median(skipNaN) { columns.toColumnSet() }
+): DataRow<*> = median(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = median(skipNaN) { columns.toColumnSet() }
+): DataRow<*> = median(skipNaN) { columns.toColumnSet() }
 
 /**
  * Aggregates this [<code>Pivot</code>][Pivot] by computing the median of the values that the given [<code>expression</code>][expression]
@@ -4070,7 +4070,7 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
 public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataRow<T> = delegate { medianOf(skipNaN, expression) }
+): DataRow<*> = delegate { medianOf(skipNaN, expression) }
 
 /**
  * [<code>Reduces</code>][PivotDocs.Reducing] this [<code>Pivot</code>][Pivot] by taking from each group the [<code>row</code>][DataRow]
@@ -4313,7 +4313,9 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>DataFrame</code>][DataFrame] with the median of each suitable column per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group.
  */
-public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
+@Refine
+@Interpretable("PivotGroupByMedian0")
+public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
 /**
@@ -4413,11 +4415,13 @@ public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolea
  *   to compute the median of.
  * @return A [<code>DataFrame</code>][DataFrame] with the median of each selected column per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group.
  */
+@Refine
+@Interpretable("PivotGroupByMedian1")
 public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
-): DataFrame<T> = Aggregators.median.invoke(skipNaN).aggregateFor(this, separate, columns)
+): DataFrame<*> = Aggregators.median.invoke(skipNaN).aggregateFor(this, separate, columns)
 
 /**
  *
@@ -4503,11 +4507,13 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
  * @return A [<code>DataFrame</code>][DataFrame] with the median of each selected column per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMedian1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.medianFor(
     vararg columns: String,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
+): DataFrame<*> = medianFor(separate, skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -4515,7 +4521,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -4523,7 +4529,7 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
 /**
  *
@@ -4603,10 +4609,12 @@ public fun <T, C : Comparable<*>?> PivotGroupBy<T>.medianFor(
  * @return A [<code>DataFrame</code>][DataFrame] with, per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group, a single median of all the values
  *   in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByMedian2")
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateAll(this, columns)
+): DataFrame<*> = Aggregators.medianCommon<C>(skipNaN).aggregateAll(this, columns)
 
 /**
  *
@@ -4687,7 +4695,9 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  * @return A [<code>DataFrame</code>][DataFrame] with, per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group, a single median of all the values
  *   in the selected columns.
  */
-public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByMedian2", stringArgument = "columns", targetArgument = "columns")
+public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): DataFrame<*> =
     median(skipNaN) { columns.toComparableColumns() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -4695,14 +4705,14 @@ public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean =
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = median(skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = median(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataFrame<T> = median(skipNaN) { columns.toColumnSet() }
+): DataFrame<*> = median(skipNaN) { columns.toColumnSet() }
 
 /**
  * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by computing the median of the values that the given [<code>expression</code>][expression]
@@ -4794,10 +4804,12 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
  *   for each row.
  * @return A [<code>DataFrame</code>][DataFrame] with, per [<code>pivot</code>][pivot] and [<code>groupBy</code>][groupBy] group, the median of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByMedianOf")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, expression)
+): DataFrame<*> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, expression)
 
 /**
  * [<code>Reduces</code>][PivotGroupByDocs.Reducing] this [<code>PivotGroupBy</code>][PivotGroupBy] by taking from each group
@@ -4873,6 +4885,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf
  * @return A [<code>ReducedPivotGroupBy</code>][ReducedPivotGroupBy] holding, per group,
  *   the row at the median of the values [<code>rowExpression</code>][rowExpression] returns.
  */
+@Interpretable("PivotGroupByMedianBy")
 public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,

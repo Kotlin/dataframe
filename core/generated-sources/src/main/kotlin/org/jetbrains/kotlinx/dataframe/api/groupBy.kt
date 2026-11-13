@@ -688,6 +688,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: ColumnReference<*>, moveToTop: 
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the provided columns as [<code>groupBy</code>][groupBy] keys.
  */
+@Interpretable("PivotGroupBy")
 public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
@@ -741,6 +742,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupB
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the provided columns as [<code>groupBy</code>][groupBy] keys.
  */
+@StringApiInterpretable(interpreter = "PivotGroupBy", stringArgument = "columns", targetArgument = "columns")
 public fun <T> Pivot<T>.groupBy(vararg columns: String): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -772,6 +774,7 @@ public fun <T> Pivot<T>.groupBy(vararg columns: KProperty<*>): PivotGroupBy<T> =
  * @return A new [<code>PivotGroupBy</code>][PivotGroupBy] that preserves the original [<code>pivot</code>][pivot] key columns
  * and uses the remaining columns as [<code>groupBy</code>][groupBy] keys.
  */
+@Interpretable("PivotGroupByOther")
 public fun <T> Pivot<T>.groupByOther(): PivotGroupBy<T> {
     val impl = this as PivotImpl<T>
     val pivotColumns = df.getPivotColumnPaths(columns).toColumnSet()

@@ -218,7 +218,7 @@ public inline fun <T> Grouped<T>.count(
  *
  * @return A single [<code>DataRow</code>][DataRow] with one column per group and the corresponding group size as its value.
  */
-public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
+public fun <T> Pivot<T>.count(): DataRow<*> = delegate { count() }
 
 /**
  * Aggregates this [<code>Pivot</code>][Pivot] by counting the number of rows in each group
@@ -265,7 +265,7 @@ public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
  *
  * @return A single [<code>DataRow</code>][DataRow] with original [<code>Pivot</code>][Pivot] columns and filtered row counts per group.
  */
-public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataRow<T> = delegate { count(predicate) }
+public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataRow<*> = delegate { count(predicate) }
 
 // endregion
 
@@ -305,7 +305,9 @@ public inline fun <T> Pivot<T>.count(crossinline predicate: RowFilter<T>): DataR
  *
  * @return A [<code>DataFrame</code>][DataFrame] with [<code>groupBy</code>][groupBy] rows and pivoted counts as columns.
  */
-public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() default 0 }
+@Refine
+@Interpretable("PivotGroupByCount0")
+public fun <T> PivotGroupBy<T>.count(): DataFrame<*> = aggregate { count() default 0 }
 
 /**
  * Aggregates this [<code>PivotGroupBy</code>][PivotGroupBy] by counting the number of rows in each
@@ -342,7 +344,9 @@ public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() defau
  *
  * @return A [<code>DataFrame</code>][DataFrame] with [<code>groupBy</code>][groupBy] rows and pivoted counts as columns matching the [<code>predicate</code>][predicate]..
  */
-public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<T> =
+@Refine
+@Interpretable("PivotGroupByCount1")
+public inline fun <T> PivotGroupBy<T>.count(crossinline predicate: RowFilter<T>): DataFrame<*> =
     aggregate {
         count(predicate) default 0
     }
