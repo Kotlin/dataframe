@@ -282,7 +282,7 @@ internal interface PivotDocs {
 
     /**
      * Pivoted columns can also be created inline
-     * (i.g. by creating a new column using [expr] or simply renaming the old one
+     * (e.g. by creating a new column using [expr] or simply renaming the old one
      * using [named]):
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
@@ -1119,7 +1119,7 @@ internal typealias AggregateGroupedDslPivotCountsDocs = Nothing
  * ### Example
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Compute number of for all unique values of "city"
+ *     // Compute number of matching rows for all unique values of "city"
  *     // across all "name.firstName" key values and adds it to the aggregation result
  *     pivotCounts { city }
  * }

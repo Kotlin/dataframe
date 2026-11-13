@@ -232,7 +232,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "frameColumnName"}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [name\] The name of the value column.
+     * @param [name\] The name of the frame column.
      */
     @ExcludeFromSources
     private typealias FrameColNameDocs = Nothing
@@ -333,7 +333,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "pathTo"["frameColumnName"\] }
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [path\] The path to the value column.
+     * @param [path\] The path to the frame column.
      */
     @ExcludeFromSources
     private typealias FrameColPathDocs = Nothing
@@ -435,7 +435,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] Type::frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [property\] The [KProperty] reference to the value column.
+     * @param [property\] The [KProperty] reference to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
     @ExcludeFromSources
@@ -558,7 +558,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] 0}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [index\] The index of the value column.
+     * @param [index\] The index of the frame column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
     @ExcludeFromSources

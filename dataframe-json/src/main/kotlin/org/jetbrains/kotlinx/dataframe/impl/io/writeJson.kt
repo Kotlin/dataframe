@@ -293,7 +293,7 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
         }
 }
 
-// If there is only 1 column, then `isValidValueColumn` always true.
+// If there is only 1 column, then `isValidValueColumn` is always true.
 // But at the same time, we shouldn't treat dataFrameOf("value")(1,2,3) like an unnamed column
 // because it was created by the user.
 internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean

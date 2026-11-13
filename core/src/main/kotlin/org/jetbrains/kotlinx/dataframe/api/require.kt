@@ -17,7 +17,7 @@ import kotlin.reflect.typeOf
  *
  * The aim here is to help incrementally migrate workflows to extension properties API.
  *
- * We recommend considering declaring a [DataSchema] and use [cast] or [convertTo] if you end up with more than a few `requireColumn` calls.
+ * We recommend considering declaring a [DataSchema] and using [cast] or [convertTo] if you end up with more than a few `requireColumn` calls.
  *
  * String API Example:
  *

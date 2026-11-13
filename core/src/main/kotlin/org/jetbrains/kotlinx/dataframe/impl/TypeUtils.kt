@@ -65,7 +65,7 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
 }
 
 /**
- * Changes generic type parameters to its upperbound, like `List<T> -> List<Any?>` and
+ * Changes generic type parameters to their upper bounds, like `List<T> -> List<Any?>` and
  * `Comparable<T> -> Comparable<Nothing>`.
  * Works recursively as well.
  */
