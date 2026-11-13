@@ -12,9 +12,8 @@ It is a **shaded subset of `:core`** — the runtime API and interpreter logic t
 compiler plugin bundles and calls into at compile time to evaluate DataFrame operations (compile-time interpreters
 of operations). It is bundled together with the compiler plugin in Kotlin, and by extension in IntelliJ.
 
-The actual compiler plugin lives in the **Kotlin repository**, not here:
-`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`. (This repo's `plugins/kotlin-dataframe` is a
-disabled legacy copy — see the root `AGENTS.md`.)
+The actual compiler plugin lives in the **Kotlin repository**:
+`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`.
 
 ## Structure
 
