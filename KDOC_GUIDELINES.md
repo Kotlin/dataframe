@@ -119,7 +119,11 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
-Also, you can use 
+An included snippet must stay true in every function it is included into: re-read it against each
+host's signature, not only where it was written. A wording that names one host's behaviour — printing,
+mutating, returning — is false on a host that does something else with the same parameters.
+
+Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.

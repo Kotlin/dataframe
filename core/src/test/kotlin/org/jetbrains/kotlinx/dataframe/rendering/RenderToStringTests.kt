@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.io.StringBorderStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -227,5 +228,50 @@ class RenderToStringTests {
     fun `render values unlimited`() {
         val result = dataFrameOf("a")("abc".repeat(100)).renderToString(valueLimit = null)
         result.lines().maxOf { it.length } shouldBeGreaterThan 300
+    }
+
+    @Test
+    fun `cell values replaced with just ellipsis when valueLimit is less than 4`() {
+        val result = dataFrameOf("a")("abcdefgh").renderToString(valueLimit = 3)
+        val expected = """
+            |          a
+            |     String
+            |       ----
+            |  0     ...
+            |
+        """.trimMargin()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `long cell values cut to valueLimit characters ending in ellipsis`() {
+        val result = dataFrameOf("a")("abcdefgh").renderToString(valueLimit = 5)
+        val expected = """
+            |          a
+            |     String
+            |       ----
+            |  0   ab...
+            |
+        """.trimMargin()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `borders drawn in the given border style`() {
+        val result = dataFrameOf("a")(1, 2).renderToString(
+            borders = true,
+            borderStyle = StringBorderStyle.ContinuousWithRoundedCorners,
+        )
+        val expected = """
+            |╭─────────╮
+            |│   │    a│
+            |│   │  Int│
+            |│───┼─────┼
+            |│  0│    1│
+            |│  1│    2│
+            |╰─────────╯
+            |
+        """.trimMargin()
+        assertEquals(expected, result)
     }
 }
