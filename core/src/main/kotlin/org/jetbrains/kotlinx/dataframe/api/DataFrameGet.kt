@@ -351,8 +351,7 @@ public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = get(range)
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = get(indices)
 
 /**
- * Returns the [row][DataRow] at the zero-based [index], or `null` if [index] is negative
- * or not less than the number of rows.
+ * Returns the [row][DataRow] at the zero-based [index], or `null` if [index] is out of bounds.
  *
  * It is the safe counterpart of [get][DataFrame.get] with an [Int], which throws instead.
  *
@@ -369,7 +368,7 @@ public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = get(
  * @param [index] The index of the row.
  * @return The [DataRow] at [index], or `null` if [index] is out of the bounds of this [DataFrame].
  */
-public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow) null else get(index)
+public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index !in 0..<nrow) null else get(index)
 
 // endregion
 
