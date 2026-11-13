@@ -206,6 +206,26 @@ separately.
 |-------------------------------------------------|---------------------------------------------------------|
 | `df.groupBy { city }.sortBy { city and day }`   | `df.groupBy { city }.sortByKey().sortBy { day }`        |
 
+### `pivot` results no longer keep the original schema type
+
+All terminal operations of [`pivot`](pivot.md) — on `Pivot`, `PivotGroupBy`, `ReducedPivot`, `ReducedPivotGroupBy`,
+and the `pivotCounts`/`pivotMatches` shortcuts — now return `DataFrame<*>` or `DataRow<*>` instead of
+`DataFrame<T>`/`DataRow<T>`, because the previous type was incorrect.
+
+For `Pivot` and `ReducedPivot`, the result has none of the original columns, only the pivoted ones, so `T`
+didn't describe it at all. `PivotGroupBy`, `ReducedPivotGroupBy`, and the `pivotCounts`/`pivotMatches`
+shortcuts keep the grouping key columns, so `T` was partially valid: the extension properties of the keys worked,
+but the extension properties of all other columns of `T` compiled and then failed at runtime. A partially correct
+type is still incorrect, so these operations return `DataFrame<*>` too.
+
+As a result, extension properties of the original schema no longer resolve on pivot results. Access columns
+with the String API, or [`cast`](cast.md) the result to a `@DataSchema` that describes it.
+
+| 0.15                                                                    | 1.0                                                                                 |
+|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `df.pivot { city }.groupBy { name }.count().filter { name == "Alice" }` | `df.pivot { city }.groupBy { name }.count().filter { "name"<String>() == "Alice" }` |
+| `df.groupBy { name }.pivotCounts { city }.sortBy { name }`              | `df.groupBy { name }.pivotCounts { city }.sortBy("name")`                           |
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
