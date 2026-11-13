@@ -1146,7 +1146,7 @@ public fun <T> Pivot<T>.std(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
+): DataRow<*> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 /**
  * @include [StdDocs.PivotStdForSnippet]
@@ -1169,7 +1169,7 @@ public fun <T, R : Number?> Pivot<T>.stdFor(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     columns: ColumnsForAggregateSelector<T, R>,
-): DataRow<T> = delegate { stdFor(separate, skipNaN, ddof, columns) }
+): DataRow<*> = delegate { stdFor(separate, skipNaN, ddof, columns) }
 
 /**
  * @include [StdDocs.PivotStdForSnippet]
@@ -1189,7 +1189,7 @@ public fun <T> Pivot<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
+): DataRow<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1198,7 +1198,7 @@ public fun <T, C : Number?> Pivot<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
+): DataRow<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1207,7 +1207,7 @@ public fun <T, C : Number?> Pivot<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
+): DataRow<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * @include [StdDocs.PivotStdSnippet]
@@ -1226,7 +1226,7 @@ public fun <T, C : Number?> Pivot<T>.std(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     columns: ColumnsSelector<T, C>,
-): DataRow<T> = delegate { std(skipNaN, ddof, columns) }
+): DataRow<*> = delegate { std(skipNaN, ddof, columns) }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1234,7 +1234,7 @@ public fun <T, C : Number?> Pivot<T>.std(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = std(skipNaN, ddof) { columns.toColumnSet() }
+): DataRow<*> = std(skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * @include [StdDocs.PivotStdSnippet]
@@ -1253,7 +1253,7 @@ public fun <T> Pivot<T>.std(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
+): DataRow<*> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1261,7 +1261,7 @@ public fun <T, C : Number?> Pivot<T>.std(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataRow<T> = std(skipNaN, ddof) { columns.toColumnSet() }
+): DataRow<*> = std(skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * Aggregates this [Pivot] by computing the standard deviation of the values that the given [expression]
@@ -1300,7 +1300,7 @@ public inline fun <T, reified R : Number?> Pivot<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     crossinline expression: RowExpression<T, R>,
-): DataRow<T> = delegate { stdOf(skipNaN, ddof, expression) }
+): DataRow<*> = delegate { stdOf(skipNaN, ddof, expression) }
 
 // endregion
 
@@ -1340,11 +1340,13 @@ public inline fun <T, reified R : Number?> Pivot<T>.stdOf(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with the standard deviation of each suitable column per group.
  */
+@Refine
+@Interpretable("PivotGroupByStd0")
 public fun <T> PivotGroupBy<T>.std(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
+): DataFrame<*> = stdFor(separate, skipNaN, ddof, primitiveOrMixedNumberColumns())
 
 /**
  * @include [StdDocs.PivotGroupByStdForSnippet]
@@ -1360,12 +1362,14 @@ public fun <T> PivotGroupBy<T>.std(
  * @include [StdDocs.AggregateColumnsSelectorParam]
  * @return A [DataFrame] with the standard deviation of each selected column per group.
  */
+@Refine
+@Interpretable("PivotGroupByStd1")
 public fun <T, R : Number?> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     columns: ColumnsForAggregateSelector<T, R>,
-): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateFor(this, separate, columns)
+): DataFrame<*> = Aggregators.std(skipNaN, ddof).aggregateFor(this, separate, columns)
 
 /**
  * @include [StdDocs.PivotGroupByStdForSnippet]
@@ -1380,12 +1384,14 @@ public fun <T, R : Number?> PivotGroupBy<T>.stdFor(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with the standard deviation of each selected column per group.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByStd1", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.stdFor(
     vararg columns: String,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
+): DataFrame<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1394,7 +1400,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
+): DataFrame<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1403,7 +1409,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
+): DataFrame<*> = stdFor(separate, skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * @include [StdDocs.PivotGroupByStdSnippet]
@@ -1417,11 +1423,13 @@ public fun <T, C : Number?> PivotGroupBy<T>.stdFor(
  * @include [StdDocs.ColumnsSelectorParam]
  * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
+@Refine
+@Interpretable("PivotGroupByStd2")
 public fun <T, C : Number?> PivotGroupBy<T>.std(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateAll(this, columns)
+): DataFrame<*> = Aggregators.std(skipNaN, ddof).aggregateAll(this, columns)
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1429,7 +1437,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = std(skipNaN, ddof) { columns.toColumnSet() }
+): DataFrame<*> = std(skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * @include [StdDocs.PivotGroupByStdSnippet]
@@ -1443,11 +1451,13 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  * @include [StdDocs.DdofParam]
  * @return A [DataFrame] with, per group, a single standard deviation of all the values in the selected columns.
  */
+@Refine
+@StringApiInterpretable(interpreter = "PivotGroupByStd2", stringArgument = "columns", targetArgument = "columns")
 public fun <T> PivotGroupBy<T>.std(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
+): DataFrame<*> = std(skipNaN, ddof) { columns.toColumnsSetOf() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
@@ -1455,7 +1465,7 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
-): DataFrame<T> = std(skipNaN, ddof) { columns.toColumnSet() }
+): DataFrame<*> = std(skipNaN, ddof) { columns.toColumnSet() }
 
 /**
  * Aggregates this [PivotGroupBy] by computing the standard deviation of the values that the given [expression]
@@ -1492,10 +1502,12 @@ public fun <T, C : Number?> PivotGroupBy<T>.std(
  * @include [StdDocs.ExpressionParam]
  * @return A [DataFrame] with, per group, the standard deviation of the expression's results.
  */
+@Refine
+@Interpretable("PivotGroupByStdOf")
 public inline fun <T, reified R : Number?> PivotGroupBy<T>.stdOf(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,
     crossinline expression: RowExpression<T, R>,
-): DataFrame<T> = Aggregators.std(skipNaN, ddof).aggregateOf(this, expression)
+): DataFrame<*> = Aggregators.std(skipNaN, ddof).aggregateOf(this, expression)
 
 // endregion

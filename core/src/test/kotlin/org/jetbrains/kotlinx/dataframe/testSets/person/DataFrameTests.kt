@@ -1141,7 +1141,7 @@ class DataFrameTests : BaseTest() {
 
         val pairs = (1 until res.ncol).flatMap { i ->
             val col = res.getColumn(i).cast<Boolean>()
-            res.filter { it[col] }.rows().map { it.name to col.name() }
+            res.filter { it[col] }.rows().map { it[name] to col.name() }
         }.toSet()
 
         pairs shouldBe typed.rows().map { it.name to it.city.toString() }.toSet()
@@ -2046,7 +2046,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot max`() {
         val pivoted = typed.pivot(inward = false) { city }.groupBy { name }.max { age }
-        pivoted.single { name == "Charlie" }["Moscow"] shouldBe 30
+        pivoted.single { it[name] == "Charlie" }["Moscow"] shouldBe 30
     }
 
     @Test
