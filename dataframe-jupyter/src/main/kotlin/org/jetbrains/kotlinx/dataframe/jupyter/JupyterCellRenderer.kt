@@ -18,7 +18,11 @@ internal class JupyterCellRenderer(private val notebook: Notebook, private val h
         if (finalVal is MimeTypedResult && "text/html" in finalVal) {
             return RenderedContent.media(finalVal["text/html"] ?: "")
         }
-        return renderValueForHtml(finalVal, configuration.cellContentLimit, configuration.decimalFormat)
+        return renderValueForHtml(
+            value = finalVal,
+            truncate = configuration.cellContentLimit ?: Int.MAX_VALUE,
+            format = configuration.decimalFormat,
+        )
     }
 
     override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? = null
