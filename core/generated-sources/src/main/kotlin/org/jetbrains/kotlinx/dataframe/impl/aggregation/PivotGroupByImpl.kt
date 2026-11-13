@@ -22,10 +22,10 @@ internal data class PivotGroupByImpl<T>(
     val default: Any? = null,
 ) : PivotGroupBy<T>,
     AggregatableInternal<T> {
-    override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> =
+    override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<*> =
         df.aggregate {
             aggregatePivot(this as GroupByReceiverImpl<T>, columns, separate, inward, default, body)
-        }.cast()
+        }
 
     override fun default(value: Any?) = copy(default = value)
 
