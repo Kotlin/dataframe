@@ -240,6 +240,11 @@ When linking to external URLs, it's recommended to use
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
 it easier to update the documentation whenever (a part of) a URL changes.
 
+A KDoc that uses `{@include [DocumentationUrls.X]}` needs
+`import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls` in the same file
+(as `count.kt` does): without it KoDEx fails with `Reference not found` at `processKDocsMain` time,
+and the import is doc-only — it is stripped from the processed sources, so nothing flags it earlier.
+
 For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
 you can just write its number like `#1234` in the KDoc.
 
