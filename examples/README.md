@@ -119,39 +119,39 @@ See the [convention plugins README](../build-logic/README.md) for more informati
 
 ## Notebook examples
 
-* puzzles [notebook](notebooks/puzzles/40%20puzzles.ipynb) &ndash;
+* [puzzles notebook](notebooks/puzzles/40%20puzzles.ipynb) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
 complex problems where you need to think. This notebook will show you how to solve these tasks with Kotlin 
 DataFrame in a laconic, beautiful style.
 ___
-* movies [notebook](notebooks/movies/movies.ipynb) &ndash;
+* [movies notebook](notebooks/movies/movies.ipynb) &ndash;
 In this notebook you can see the basic operations of the Kotlin DataFrame on data from [movielens](https://movielens.org/).
 You can take the data from the [link](https://grouplens.org/datasets/movielens/latest/).
 ___
-* netflix [notebook](notebooks/netflix/netflix.ipynb) &ndash;
+* [netflix notebook](notebooks/netflix/netflix.ipynb) &ndash;
 Explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
 visualizations from [lets-plot](https://github.com/JetBrains/lets-plot-kotlin).
 ___
-* github [notebook](notebooks/github/github.ipynb) &ndash;
+* [github notebook](notebooks/github/github.ipynb) &ndash;
 This notebook shows what hierarchical dataframes look like and how to work with them.
 ___
-* titanic [notebook](notebooks/titanic/Titanic.ipynb) &ndash;
+* [titanic notebook](notebooks/titanic/Titanic.ipynb) &ndash;
 Let's see how the new library will show itself on the famous Titanic dataset.
 ___
-* Financial Analysis of the top-12 German companies [notebook](notebooks/top_12_german_companies) &ndash;
+* [Financial Analysis of the top-12 German companies notebook](notebooks/top_12_german_companies) &ndash;
   Analyze key financial metrics for several major German companies.
 ___
-* wine [notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb) &ndash;
+* [wine notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb) &ndash;
   Wine. Kotlin DataFrame. KotlinDL. What came out of this can be seen in this notebook.
 ___
-* youtube [notebook](notebooks/youtube/Youtube.ipynb) &ndash;
+* [youtube notebook](notebooks/youtube/Youtube.ipynb) &ndash;
 Explore YouTube videos with YouTube REST API and Kotlin DataFrame 
 
 ___
-* imdb sql database ([notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
+* [imdb sql database notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
 
 ---
-* Feature Overviews [notebook folder](notebooks/feature_overviews)
+* [Feature Overviews notebook folder](notebooks/feature_overviews) &ndash;
   Overview of new features available in a given version
 
 The example notebooks always target the latest stable version of the library.
