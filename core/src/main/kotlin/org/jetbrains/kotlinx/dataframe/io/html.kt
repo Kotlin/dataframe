@@ -1086,6 +1086,10 @@ internal class DataFrameFormatter(
 
     private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
         val limit = configuration.cellContentLimit ?: Int.MAX_VALUE
+        require(limit >= 0) {
+            "DisplayConfiguration.cellContentLimit must be non-negative but was $limit. " +
+                "Set it to `null` if you want to disable the limit."
+        }
 
         fun renderList(values: List<*>, prefix: String, postfix: String): RenderedContent {
             val sb = Builder()
@@ -1123,7 +1127,7 @@ internal class DataFrameFormatter(
                     }
 
                     else -> limit - sb.len - ", ...".length - postfix.length
-                }
+                }.coerceAtLeast(0)
 
                 val rendered = render(values[index], renderer, configuration.copy(cellContentLimit = valueLimit))
                 if (rendered == null || (rendered.textLength == 3 && rendered.isTruncated)) {

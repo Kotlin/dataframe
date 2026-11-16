@@ -99,7 +99,7 @@ class Render : DataFrameSampleHelper("toHTML", "api") {
     @Test
     fun configureCellOutput() {
         // SampleStart
-        df.toHtml(DisplayConfiguration(cellContentLimit = -1))
+        df.toHtml(DisplayConfiguration(cellContentLimit = null))
         // SampleEnd
     }
 
