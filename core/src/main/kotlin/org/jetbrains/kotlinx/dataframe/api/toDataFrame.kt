@@ -163,7 +163,7 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
  *     "colA" from { ... }
  *     properties {
  *         preserve<T>()
- *         "colB" from { ... } // ERROR, cannot be called in this context an implicit receiver.
+ *         "colB" from { ... } // ERROR, cannot be called in this context with an implicit receiver.
  *     }
  * }
  * ```
