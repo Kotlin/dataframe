@@ -16,9 +16,10 @@ Discover the `cast` and `castTo` operations for Kotlin DataFrame.
 
 ## `cast`
 
-Changes the schema type argument of a [`DataFrame`](DataFrame.md) to a schema marker `T`.
-Returns a `DataFrame<T>`, optionally checking its columns against the target schema.
-Existing values are not converted, and the input dataframe is not modified.
+Changes the schema type argument of a [`DataFrame`](DataFrame.md) to a schema marker `T`,
+optionally checking its columns against the target schema first.
+Returns the same dataframe as `DataFrame<T>`: no columns are added, removed, or reordered,
+and values are not converted.
 
 **API reference**: [`cast`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast.html)
 
@@ -27,23 +28,13 @@ df.cast<T>(verify: Boolean = true): DataFrame<T>
 df.castUnchecked<T>(): DataFrame<T>
 ```
 
-Calling `cast<T>()` without arguments selects the unchecked overload. It returns the same dataframe with
-only its schema type argument changed. Values and the runtime schema remain unchanged.
+Calling `cast<T>()` without arguments selects the unchecked overload, which performs no checks.
 Passing `verify = false` has the same effect.
 
 To check schema compatibility, explicitly pass `verify = true`. Verification checks column types and nested schemas
-against `T`; column order does not matter. If schema verification fails, an `IllegalArgumentException` is thrown.
+against `T`; column order does not matter.
+If verification fails, an `IllegalArgumentException` is thrown.
 For example, a `String` column containing `"20"` cannot satisfy an `Int` column in the target schema.
-
-Verification can also produce a dataframe with additional or different columns:
-
-* Missing nullable [value columns](DataColumn.md#valuecolumn) are added and filled with `null`.
-* A missing [`ColumnGroup`](DataColumn.md#columngroup) is added if its nested columns can be filled
-  with `null` or empty dataframes.
-* Missing [frame columns](DataColumn.md#framecolumn) are filled with empty dataframes of the target schema.
-* Extra top-level columns are kept for a non-empty input.
-* An input with no rows produces an empty dataframe with exactly the target schema,
-  even if its original columns have different names or types. Extra columns are not kept in this case.
 
 See also:
 
@@ -119,7 +110,7 @@ df.cast<Person>(verify = false)
 
 <!---END-->
 
-Extra top-level columns remain available after a verified cast of a non-empty dataframe:
+The `city` column is not part of `Person`, but it does not cause verification to fail and stays in the result:
 
 <!---FUN castKeepsExtraColumns-->
 
@@ -132,32 +123,6 @@ dataFrameOf(
 ```
 
 <inline-frame src="./resources/castKeepsExtraColumns.html" width="100%" height="500px"></inline-frame>
-
-<!---END-->
-
-`PersonWithCity` has the same properties as `Person` plus `city: String?`.
-The missing nullable column is added with `null` values; the existing `name` and `age` values are preserved:
-
-<!---FUN castMissingNullableColumn-->
-
-```kotlin
-df.cast<PersonWithCity>(verify = true)
-```
-
-<inline-frame src="./resources/castMissingNullableColumn.html" width="100%" height="500px"></inline-frame>
-
-<!---END-->
-
-For an empty input, verification creates the target columns and drops columns outside the target schema:
-
-<!---FUN castEmptyDataFrame-->
-
-```kotlin
-// Input schema: extra: Boolean
-dataFrameOf("extra" to columnOf(values = emptyArray<Boolean>()))
-    .cast<Person>(verify = true)
-    // Result schema: name: String, age: Int
-```
 
 <!---END-->
 
@@ -221,7 +186,7 @@ The function overload infers `T` from the function's return type; the function i
 and can take arguments.
 
 Both overloads follow the verification rules described above for `DataFrame.cast`.
-Passing `verify = false` returns the same dataframe with only its schema type argument changed.
+Passing `verify = false` skips the check.
 
 ### Parameters {id="parameters_castto"}
 
@@ -288,8 +253,8 @@ row.cast<T>(verify: Boolean = true): DataRow<T>
 ```
 
 The no-argument overload returns the same row without checking its schema.
-The overload with `verify = true` checks the containing dataframe using the `DataFrame.cast` rules,
-including how missing columns are filled. Existing values are not converted in either mode.
+The overload with `verify = true` checks the containing dataframe using the `DataFrame.cast` rules.
+Existing values are not converted in either mode.
 
 ### Parameters {id="parameters_row"}
 

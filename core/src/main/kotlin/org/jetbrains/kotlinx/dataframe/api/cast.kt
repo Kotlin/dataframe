@@ -30,18 +30,13 @@ import kotlin.reflect.typeOf
 private typealias UncheckedCastDocs = Nothing
 
 /**
- * With `verify = true` (the default), checks column types and nested schemas against the schema declared by `T`.
- * Column order is ignored. A column type mismatch or a missing required column causes verification to fail.
- * Existing values are not converted.
+ * With `verify = true`, checks column types and nested schemas against the schema declared by `T`.
+ * Column order is ignored.
+ * A column type mismatch or a missing required column causes verification to fail.
  *
- * Missing nullable [value columns][ValueColumn] are added and filled with `null`.
- * Missing [column groups][ColumnGroup] are added if their nested columns can be filled with `null` or empty dataframes.
- * Missing [frame columns][FrameColumn] are filled with empty dataframes of the target schema.
- * Extra top-level columns are kept for a non-empty input.
- * An empty input produces an empty dataframe with the target schema.
- *
- * With `verify = false`, returns the same [DataFrame] with only its schema type argument changed; no schema check
- * is performed.
+ * With `verify = false`, no schema check is performed.
+ * In both modes, returns the same [DataFrame] with only its schema type argument changed:
+ * no columns are added, removed, or reordered, and values are not converted.
  */
 @ExcludeFromSources
 private typealias VerifiedCastDocs = Nothing
@@ -105,20 +100,20 @@ public fun <T> DataFrame<*>.castUnchecked(): DataFrame<T> = this as DataFrame<T>
  *
  * @param [T] The target schema marker type.
  * @param [verify] Whether to check the columns against [T]. Defaults to `true`.
- * @return A [DataFrame] typed as [DataFrame]`<T>`.
+ * @return This [DataFrame] typed as [DataFrame]`<T>`.
  * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
  */
 @Check
-public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> =
+public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFrame<T> {
     if (verify) {
         convertToImpl(
             typeOf<T>(),
             allowConversion = false,
             ExcessiveColumns.Keep,
-        ).castUnchecked()
-    } else {
-        castUnchecked()
+        )
     }
+    return castUnchecked()
+}
 
 /**
  * Returns a [DataFrame] with schema marker [T] inferred from [schemaFrom].
@@ -145,7 +140,7 @@ public inline fun <reified T> DataFrame<*>.cast(verify: Boolean = true): DataFra
  * @param [T] The schema marker type inferred from [schemaFrom].
  * @param [schemaFrom] A typed [DataFrame] that supplies [T].
  * @param [verify] Whether to check this [DataFrame] against [T]. Defaults to `true`.
- * @return A [DataFrame] typed as [DataFrame]`<T>`.
+ * @return This [DataFrame] typed as [DataFrame]`<T>`.
  * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
  */
 public inline fun <reified T> DataFrame<*>.castTo(
@@ -178,7 +173,7 @@ public inline fun <reified T> DataFrame<*>.castTo(
  * @param [T] The schema marker type inferred from the function's return type.
  * @param [schemaFrom] A function whose return type supplies [T].
  * @param [verify] Whether to check this [DataFrame] against [T]. Defaults to `true`.
- * @return A [DataFrame] typed as [DataFrame]`<T>`.
+ * @return This [DataFrame] typed as [DataFrame]`<T>`.
  * @throws [IllegalArgumentException] if verification fails because the dataframe's schema is incompatible with [T].
  */
 public inline fun <reified T> DataFrame<*>.castTo(
