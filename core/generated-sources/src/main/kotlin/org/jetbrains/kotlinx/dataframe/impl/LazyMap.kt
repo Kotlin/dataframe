@@ -24,7 +24,7 @@ internal class LazyMap<K, out V>(private val actualMap: Map<K, Lazy<V>>) : Map<K
 
     override fun containsKey(key: K): Boolean = actualMap.containsKey(key)
 
-    // resolves as little values as possible
+    // resolves as few values as possible
     override fun containsValue(value: @UnsafeVariance V): Boolean {
         if (resolvedMap.isInitialized()) {
             return resolvedMap.value.containsValue(value)

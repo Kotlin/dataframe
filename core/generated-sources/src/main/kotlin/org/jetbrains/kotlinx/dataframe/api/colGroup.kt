@@ -516,7 +516,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -573,7 +573,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name).ensureIsColumnGroup()
@@ -629,7 +629,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -686,7 +686,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<C>> =
@@ -748,7 +748,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -805,7 +805,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -862,7 +862,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -919,7 +919,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> String.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -976,7 +976,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1035,7 +1035,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -1094,7 +1094,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1151,7 +1151,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -1212,7 +1212,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1269,7 +1269,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path).ensureIsColumnGroup()
@@ -1325,7 +1325,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1382,7 +1382,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<C>> =
@@ -1445,7 +1445,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1502,7 +1502,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -1559,7 +1559,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1616,7 +1616,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -1673,7 +1673,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1732,7 +1732,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -1791,7 +1791,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1848,7 +1848,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -1907,7 +1907,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1966,7 +1966,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2023,7 +2023,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2082,7 +2082,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2139,7 +2139,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2198,7 +2198,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2255,7 +2255,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2314,7 +2314,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2371,7 +2371,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2430,7 +2430,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2487,7 +2487,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2546,7 +2546,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2607,7 +2607,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      *
@@ -2666,7 +2666,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      *
@@ -2725,7 +2725,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2783,7 +2783,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -2841,7 +2841,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2899,7 +2899,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -2961,7 +2961,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3019,7 +3019,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3076,7 +3076,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3136,7 +3136,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3195,7 +3195,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3253,7 +3253,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
