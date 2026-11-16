@@ -954,17 +954,17 @@ public data class DisplayConfiguration(
         downsizeBufferedImage: Boolean = this.downsizeBufferedImage,
     ): DisplayConfiguration =
         DisplayConfiguration(
-            rowsLimit,
-            nestedRowsLimit,
-            cellContentLimit,
-            cellFormatter,
-            null,
-            decimalFormat,
-            isolatedOutputs,
-            localTesting,
-            useDarkColorScheme,
-            enableFallbackStaticTables,
-            downsizeBufferedImage,
+            rowsLimit = rowsLimit,
+            nestedRowsLimit = nestedRowsLimit,
+            cellContentLimit = cellContentLimit,
+            cellFormatter = cellFormatter,
+            headerFormatter = null,
+            decimalFormat = decimalFormat,
+            isolatedOutputs = isolatedOutputs,
+            localTesting = localTesting,
+            useDarkColorScheme = useDarkColorScheme,
+            enableFallbackStaticTables = enableFallbackStaticTables,
+            downsizeBufferedImage = downsizeBufferedImage,
         )
 
     /** DSL accessor. */
@@ -1036,7 +1036,7 @@ internal class DataFrameFormatter(
         }
 
     internal fun truncate(str: String, limit: Int): RenderedContent =
-        if (limit in 1 until str.length) {
+        if (limit in 1..<str.length) {
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) {
                 ellipsis
@@ -1055,7 +1055,7 @@ internal class DataFrameFormatter(
 
             result.isFormatted || result.isTruncated -> {
                 val tooltip = result.fullContent?.escapeHTML() ?: ""
-                return "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
+                "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
             }
 
             else -> result.truncatedContent
@@ -1081,7 +1081,13 @@ internal class DataFrameFormatter(
             if (content.isFormatted) isFormatted = true
         }
 
-        fun result() = RenderedContent(sb.toString(), len, if (isTruncated) "" else null, isFormatted)
+        fun result() =
+            RenderedContent(
+                truncatedContent = sb.toString(),
+                textLength = len,
+                fullContent = if (isTruncated) "" else null,
+                isFormatted = isFormatted,
+            )
     }
 
     private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
