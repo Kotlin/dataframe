@@ -254,6 +254,7 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
 | `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
+| `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
 
 ## Parsing and Converting Date-Time
 

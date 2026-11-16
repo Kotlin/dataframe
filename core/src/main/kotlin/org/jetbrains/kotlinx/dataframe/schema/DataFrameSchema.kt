@@ -53,9 +53,9 @@ public interface DataFrameSchema {
  * - For column groups, it contains the [DataFrameSchema] of the nested columns.
  * - For frame columns, it contains the [DataFrameSchema] of the contained dataframes.
  *
- * Use [schema][org.jetbrains.kotlinx.dataframe.DataFrame.schema] to read the schema of a
+ * Use [schema][org.jetbrains.kotlinx.dataframe.api.schema] to read the schema of a
  * [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] from its columns, and
- * [compileTimeSchema][org.jetbrains.kotlinx.dataframe.DataFrame.compileTimeSchema] to get the one
+ * [compileTimeSchema][org.jetbrains.kotlinx.dataframe.api.compileTimeSchema] to get the one
  * that follows from its type.
  *
  * Use [compare][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]

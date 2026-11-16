@@ -565,6 +565,9 @@ public interface DocumentationUrls {
     /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
     public typealias Split = Nothing
 
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
+
     /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
     public typealias WithoutNulls = Nothing
 
@@ -606,6 +609,9 @@ public interface DocumentationUrls {
 
     /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
     public typealias ParsingDoubles = Nothing
+
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
 
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing

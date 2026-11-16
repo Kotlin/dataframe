@@ -114,7 +114,7 @@ public interface DataFrame<out T> :
      * #### Example
      * ```kotlin
      * df.aggregate {
-     *   // Сount rows within each group and store the result
+     *   // Count rows within each group and store the result
      *   // into a new "total" column
      *   count() into "total"
      *

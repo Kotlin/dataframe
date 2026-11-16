@@ -184,6 +184,10 @@ pluginManager.withPlugin(libs.plugins.ktlint.gradle.get().pluginId) {
     tasks.named(processKDocsMainName) {
         finalizedBy(ktlintFormatKodexSourceSet)
     }
+    // Prevent ktlint from reusing cache and run each time KoDEx runs.
+    tasks.named { it == ktlintFormatKodexSourceSet }.configureEach {
+        outputs.cacheIf { false }
+    }
     // The processed sources are only compiled and packaged after they have been formatted
     tasks.named {
         it in listOf(

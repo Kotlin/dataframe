@@ -326,7 +326,7 @@ internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOf
 }
 
 /**
- * Select the k't "smallest" element from list [<code>this</code>][this]
+ * Select the k'th "smallest" element from list [<code>this</code>][this]
  */
 @PublishedApi
 internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {

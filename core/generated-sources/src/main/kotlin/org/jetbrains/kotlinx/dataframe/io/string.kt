@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.getColumns
@@ -9,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -22,6 +24,29 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.util.PRINT
 import java.math.BigDecimal
 
+/**
+ * Renders this [<code>DataFrame</code>][DataFrame] to a [<code>String</code>][String] as a text table.
+ *
+ * Use it when you need the rendered table as a [<code>String</code>][String] instead of printing it.
+ *
+ * See also [<code>print</code>][org.jetbrains.kotlinx.dataframe.api.print] — prints the rendered table to standard output.
+ *
+ * @param [rowsLimit] The maximum number of rows to render (default: `20`). When some rows are skipped,
+ * a `...` line and the total column and row counts are rendered below the table. `null` renders all rows;
+ * a negative value throws [<code>IllegalArgumentException</code>][IllegalArgumentException].
+ * @param [valueLimit] The maximum length of a rendered cell value (default: `40`). Longer values are cut
+ * to `valueLimit` characters ending in `...`, or replaced with just `...` when `valueLimit` is 1 to 3.
+ * `null` does not limit the length; a non-positive value throws [<code>IllegalArgumentException</code>][IllegalArgumentException].
+ * @param [borders] Whether to draw borders around the table (default: `false`).
+ * @param [alignLeft] Whether to align the cell content to the left instead of the right (default: `false`).
+ * @param [columnTypes] Whether to render the column types under the header (default: `true`).
+ * @param [title] Whether to add a `DataFrame [rows x columns]` line above the table (default: `false`).
+ * @param [rowIndex] Whether to include the row index as the first column (default: `true`).
+ * @param [borderStyle] The style of the border characters drawn when [borders] is `true`
+ * (default: [<code>StringBorderStyle.DottedLineWithRounderCorners</code>][org.jetbrains.kotlinx.dataframe.io.StringBorderStyle.DottedLineWithRounderCorners]).
+ *
+ * @return This [<code>DataFrame</code>][DataFrame] rendered as a text table.
+ */
 public fun AnyFrame.renderToString(
     rowsLimit: Int? = 20,
     valueLimit: Int? = 40,
@@ -32,6 +57,8 @@ public fun AnyFrame.renderToString(
     rowIndex: Boolean = true,
     borderStyle: StringBorderStyle = StringBorderStyle.DottedLineWithRounderCorners,
 ): String {
+    require(rowsLimit == null || rowsLimit >= 0) { "Requested rows count $rowsLimit is less than zero." }
+    require(valueLimit == null || valueLimit > 0) { "Requested value limit $valueLimit is not positive." }
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
     val columnWidths = table.values.mapIndexed { col, vals ->

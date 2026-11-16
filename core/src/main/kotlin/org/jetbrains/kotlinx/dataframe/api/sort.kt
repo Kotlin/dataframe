@@ -813,7 +813,7 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByCountDesc()
  * See also
  *   - [sortByKey] that sorts the key-group pairs of this [GroupBy] by the selected key values ascending.
  *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
+ *   - [sortByGroup] and [sortByGroupDesc] that sort the key-group pairs of this [GroupBy] based on computed values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
  *
@@ -847,7 +847,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(
  * See also
  *   - [sortByKeyDesc] that sorts the key-group pairs of this [GroupBy] by the selected key values descending.
  *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
- *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
+ *   - [sortByGroup] and [sortByGroupDesc] that sort the key-group pairs of this [GroupBy] based on computed values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
  *

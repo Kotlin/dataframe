@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -65,12 +66,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     public interface Grammar {
 
         /** [**`frameCol`**][ColumnsSelectionDsl.frameCol] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`frameCol`**][ColumnsSelectionDsl.frameCol] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`frameCol`**][ColumnsSelectionDsl.frameCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -119,6 +123,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.valueCol\]
      * @see [ColumnsSelectionDsl.col\]
      */
+    @ExcludeFromSources
     private interface CommonFrameColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
@@ -155,9 +160,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [col\] The [ColumnAccessor] pointing to the frame column.
+     * @param [frameCol\] The [ColumnAccessor] pointing to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias FrameColReferenceDocs = Nothing
 
     /**
@@ -226,8 +232,9 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "frameColumnName"}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [name\] The name of the value column.
+     * @param [name\] The name of the frame column.
      */
+    @ExcludeFromSources
     private typealias FrameColNameDocs = Nothing
 
     /**
@@ -326,8 +333,9 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] "pathTo"["frameColumnName"\] }
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [path\] The path to the value column.
+     * @param [path\] The path to the frame column.
      */
+    @ExcludeFromSources
     private typealias FrameColPathDocs = Nothing
 
     /**
@@ -427,9 +435,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] Type::frameColumnA}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.SingleExample]}}
-     * @param [property\] The [KProperty] reference to the value column.
+     * @param [property\] The [KProperty] reference to the frame column.
      * @include [CommonFrameColDocs.FrameColumnTypeParam]
      */
+    @ExcludeFromSources
     private typealias FrameColKPropertyDocs = Nothing
 
     /**
@@ -549,9 +558,10 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonFrameColDocs]
      * {@set [CommonFrameColDocs.ARG] 0}
      * {@set [CommonFrameColDocs.EXAMPLE] {@include [CommonFrameColDocs.DoubleExample]}}
-     * @param [index\] The index of the value column.
+     * @param [index\] The index of the frame column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
+    @ExcludeFromSources
     private typealias FrameColIndexDocs = Nothing
 
     /**
@@ -653,7 +663,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [SingleColumn],
- * by adding a check to see it's a [FrameColumn] (so, a [SingleColumn]<*>)
+ * by adding a check to see if it's a [FrameColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
 internal fun <C> SingleColumn<DataFrame<C>>.ensureIsFrameColumn(): SingleColumn<DataFrame<C>> =

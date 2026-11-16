@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -460,12 +461,15 @@ public interface LastColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`last`**][ColumnsSelectionDsl.last] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`last`**][ColumnsSelectionDsl.last] */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`lastCol`**][ColumnsSelectionDsl.lastCol] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
     }
 
@@ -498,6 +502,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
      * @see [ColumnsSelectionDsl.first\]
      */
+    @ExcludeFromSources
     private interface CommonLastDocs {
 
         /** Examples key */

@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -160,27 +161,6 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 
 // region SingleColumn
 
-/**
- * ## As ColumnGroup
- *
- * Creates a [<code>ColumnAccessor</code>][ColumnAccessor]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
- * This is especially useful when you want to use [<code>ColumnGroup</code>][ColumnGroup] functions in the [<code>ColumnsSelectionDsl</code>][ColumnsSelectionDsl] but your column
- * type is not recognized as a [<code>ColumnGroup</code>][ColumnGroup].
- * If you're not sure whether a column is recognized as [<code>ColumnGroup</code>][ColumnGroup] or not, you can always call [<code>asColumnGroup</code>][asColumnGroup]
- * and it will return the same type if it is already a [<code>ColumnGroup</code>][ColumnGroup].
- *
- * NOTE: This does not check whether the column is actually a [<code>ColumnGroup</code>][ColumnGroup] or not. It just casts it.
- *
- * #### For example:
- *
- * `df.`[<code>select</code>][DataFrame.select]` { `[<code>first</code>][ColumnsSelectionDsl.first]`().`[<code>asColumnGroup</code>][SingleColumn.asColumnGroup]`().`[<code>firstCol</code>][ColumnsSelectionDsl.firstCol]`() }`
- *
- * @receiver The column reference to cast to a [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
- * @param [C] The type of the (group) column.
- * @return A [<code>SingleColumn</code>][SingleColumn]`<`[<code>DataRow</code>][DataRow]`<`[<code>C</code>][C]`>>`.
- */
-private typealias SingleColumnAsColumnGroupDocs = Nothing
-
 /** ## As ColumnGroup
  *
  * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[<code>DataRow</code>][org.jetbrains.kotlinx.dataframe.DataRow]`<`[<code>C</code>][C]`>>` from [<code>this</code>][this].
@@ -299,14 +279,6 @@ public enum class Infer {
      * In many cases, letting the library infer by `reified` types is enough and more efficient.
      */
     Type,
-
-    ;
-
-    /**
-     * @param [infer] [<code>An enum</code>][Infer] that indicates how [<code>DataColumn.type</code>][DataColumn.type] should be calculated.
-     * Either [<code>None</code>][None], [<code>Nulls</code>][Nulls], or [<code>Type</code>][Type].
-     */
-    internal typealias ParamDoc = Nothing
 }
 
 /**

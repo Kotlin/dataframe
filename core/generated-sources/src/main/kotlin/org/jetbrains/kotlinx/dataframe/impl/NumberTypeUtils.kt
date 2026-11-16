@@ -146,7 +146,7 @@ internal fun getUnifiedNumberClassGraph(
  *
  * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless two unsigned types are provided in the input, it will never be returned.
- * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
+ * Meaning, given a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
  * @param first The first numeric type to compare. Can be null, in which case the second type is returned.
  * @param second The second numeric type to compare. Cannot be null.
@@ -183,7 +183,7 @@ internal fun getUnifiedNumberTypeOrNull(
  *
  * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
  * but unless two unsigned types are provided in the input, it will never be returned.
- * Meaning, a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
+ * Meaning, given a single [<code>Number</code>][Number] input, the output will always be a [<code>Number</code>][Number].
  *
  * @param first The first numeric type to compare. Can be null, in which case the second type is returned.
  * @param second The second numeric type to compare. Cannot be null.
@@ -204,10 +204,10 @@ internal fun getUnifiedNumberClassOrNull(
     }
 
 /**
- * Determines the nearest common numeric type, in terms of complexity, all types in [<code>this</code>][this].
+ * Determines the nearest common numeric type, in terms of complexity, among all types in [<code>this</code>][this].
  *
  * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
- * but unless the input solely exists of unsigned numbers, it will never be returned.
+ * but unless the input solely consists of unsigned numbers, it will never be returned.
  * Meaning, given a [<code>Number</code>][Number] in the input, the output will always be a [<code>Number</code>][Number].
  *
  * @param options See [<code>UnifiedNumberTypeOptions</code>][UnifiedNumberTypeOptions]
@@ -222,10 +222,10 @@ internal fun Iterable<KType>.unifiedNumberTypeOrNull(
         getUnifiedNumberTypeOrNull(a, b, options) ?: return null
     }
 
-/** Determines the nearest common numeric type, in terms of complexity, all types in [<code>this</code>][this].
+/** Determines the nearest common numeric type, in terms of complexity, among all types in [<code>this</code>][this].
  *
  * Unsigned types are supported too even though they are not a [<code>Number</code>][Number] instance,
- * but unless the input solely exists of unsigned numbers, it will never be returned.
+ * but unless the input solely consists of unsigned numbers, it will never be returned.
  * Meaning, given a [<code>Number</code>][Number] in the input, the output will always be a [<code>Number</code>][Number].
  *
  * @param options See [<code>UnifiedNumberTypeOptions</code>][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions]

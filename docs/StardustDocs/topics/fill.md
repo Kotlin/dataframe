@@ -4,7 +4,7 @@
 
 Replace missing values.
 
-**API reference**: [`fill`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill.html)
+**API reference**: [`fillNulls`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-nulls.html), [`fillNaNs`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-na-ns.html), [`fillNA`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/fill-n-a.html)
 
 **Related operations**: [](updateConvert.md)
 

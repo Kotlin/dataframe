@@ -465,7 +465,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * @param expression [<code>AddExpression</code>][AddExpression] that computes column value for every [<code>DataRow</code>][DataRow] of a new column.
  * @return new [<code>GroupBy</code>][GroupBy] with added column.
  *
- * @throws DuplicateColumnNamesException if group [<code>DataFrame</code>][DataFrame]s already contains a column with given [<code>name</code>][name].
+ * @throws DuplicateColumnNamesException if group [<code>DataFrame</code>][DataFrame]s already contain a column with given [<code>name</code>][name].
  */
 @Refine
 @Interpretable("GroupByAdd")
