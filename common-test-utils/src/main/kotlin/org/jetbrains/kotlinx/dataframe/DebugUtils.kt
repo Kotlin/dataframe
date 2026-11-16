@@ -12,7 +12,7 @@ import kotlin.reflect.typeOf
 
 public fun <T : DataFrame<*>> T.toDebugString(rowsLimit: Int = 20): String =
     """
-    ${renderToString(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)}
+    ${renderToString(borders = true, title = true, columnTypes = true, valueLimit = null, rowsLimit = rowsLimit)}
 
     ${schema()}
     """.trimIndent()
@@ -23,7 +23,7 @@ public fun <T : DataFrame<*>> T.toDebugString(rowsLimit: Int = 20): String =
 public fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T =
     apply {
         println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
+        print(borders = true, title = true, columnTypes = true, valueLimit = null, rowsLimit = rowsLimit)
         schema().print()
     }
 

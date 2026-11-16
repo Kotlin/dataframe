@@ -26,10 +26,11 @@ import java.math.BigDecimal
 
 /**
  * @param [rowsLimit\] The maximum number of rows to render (default: `20`). When some rows are skipped,
- * a `...` line and the total column and row counts are rendered below the table. `null` renders all rows.
+ * a `...` line and the total column and row counts are rendered below the table. `null` renders all rows;
+ * a negative value throws [IllegalArgumentException].
  * @param [valueLimit\] The maximum length of a rendered cell value (default: `40`). Longer values are cut
  * to `valueLimit` characters ending in `...`, or replaced with just `...` when `valueLimit` is 1 to 3.
- * `null`, `0`, or a negative value does not limit the length.
+ * `null` does not limit the length; a non-positive value throws [IllegalArgumentException].
  * @param [borders\] Whether to draw borders around the table (default: `false`).
  * @param [alignLeft\] Whether to align the cell content to the left instead of the right (default: `false`).
  * @param [columnTypes\] Whether to render the column types under the header (default: `true`).
@@ -62,6 +63,8 @@ public fun AnyFrame.renderToString(
     rowIndex: Boolean = true,
     borderStyle: StringBorderStyle = StringBorderStyle.DottedLineWithRounderCorners,
 ): String {
+    require(rowsLimit == null || rowsLimit >= 0) { "Requested rows count $rowsLimit is less than zero." }
+    require(valueLimit == null || valueLimit > 0) { "Requested value limit $valueLimit is not positive." }
     val sb = StringBuilder()
     val table = prepareTable(rowsLimit, valueLimit, columnTypes, rowIndex)
     val columnWidths = table.values.mapIndexed { col, vals ->

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 import java.io.ByteArrayOutputStream
@@ -59,6 +60,16 @@ class PrintTests {
             "...\n" +
             "2 columns x 3 rows\n" +
             "\n"
+    }
+
+    @Test
+    fun `print rejects a negative rowsLimit`() {
+        val df = dataFrameOf("a", "b")(
+            1, "x",
+            2, "y",
+        )
+        val e = shouldThrowExactly<IllegalArgumentException> { df.print(rowsLimit = -1) }
+        e.message shouldBe "Requested rows count -1 is less than zero."
     }
 
     @Test

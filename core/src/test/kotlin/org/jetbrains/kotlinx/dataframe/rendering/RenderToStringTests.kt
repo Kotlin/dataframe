@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.StringBorderStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
-import org.junit.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -246,17 +245,12 @@ class RenderToStringTests {
     }
 
     @Test
-    fun `cell values are not limited when valueLimit is zero or negative`() {
+    fun `renderToString rejects a valueLimit that is not positive`() {
         val df = dataFrameOf("a")("abcdefgh")
-        val expected = """
-            |            a
-            |       String
-            |         ----
-            |  0  abcdefgh
-            |
-        """.trimMargin()
-        assertEquals(expected, df.renderToString(valueLimit = 0))
-        assertEquals(expected, df.renderToString(valueLimit = -5))
+        val zero = assertFailsWith<IllegalArgumentException> { df.renderToString(valueLimit = 0) }
+        assertEquals("Requested value limit 0 is not positive.", zero.message)
+        val negative = assertFailsWith<IllegalArgumentException> { df.renderToString(valueLimit = -5) }
+        assertEquals("Requested value limit -5 is not positive.", negative.message)
     }
 
     @Test
@@ -291,16 +285,13 @@ class RenderToStringTests {
         assertEquals(expected, result)
     }
 
-    // TODO(<issue link>): remove @Ignore when renderToString rejects a negative rowsLimit
-    @Ignore
     @Test
     fun `renderToString rejects a negative rowsLimit with IllegalArgumentException`() {
-        // Expected behaviour once the bug is fixed. Today the call throws IndexOutOfBoundsException
-        // (with rowIndex = true) or IllegalArgumentException (with rowIndex = false) from subList bounds.
         val df = dataFrameOf("a", "b")(
             1, "x",
             2, "y",
         )
-        assertFailsWith<IllegalArgumentException> { df.renderToString(rowsLimit = -1) }
+        val e = assertFailsWith<IllegalArgumentException> { df.renderToString(rowsLimit = -1) }
+        assertEquals("Requested rows count -1 is less than zero.", e.message)
     }
 }
