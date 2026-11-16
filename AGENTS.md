@@ -49,11 +49,11 @@ Dependency graph is rooted at `core`, with I/O and integration split into option
   - `dataframe-compiler-plugin-core` — a shaded subset of `:core` bundled *inside* that compiler plugin (and
     IntelliJ) to run compile-time interpreters of operations; it is not itself a compiler plugin. See its
     `AGENTS.md`.
-  - `plugins/*` is mostly dead code — see `plugins/AGENTS.md` before touching any of it.
-    `plugins/symbol-processor` (KSP codegen for `@DataSchema`) and `plugins/dataframe-gradle-plugin` are
-    **disabled** too (KSP1 is not compatible with Kotlin 2.3+); neither is in `settings.gradle.kts`, so nothing
-    there is compiled or tested. Still active: `expressions-converter` and `public-api-modifier`. The former
-    `keywords-generator` module has moved into `build-logic` as the `dfbuild.keywordsGenerator` convention plugin.
+  - `plugins/*` holds the remaining plugins, `expressions-converter` and `public-api-modifier` (see
+    `plugins/AGENTS.md`). The deprecated `plugins/symbol-processor` (KSP codegen for `@DataSchema`) and
+    `plugins/dataframe-gradle-plugin` have been removed from the repository — KSP1 is not compatible with
+    Kotlin 2.3+, and their last release is `1.0.0-Beta4`. The former `keywords-generator` module has moved into
+    `build-logic` as the `dfbuild.keywordsGenerator` convention plugin.
 - **Build logic** lives in `build-logic/` and `build-settings-logic/` as convention plugins
   (e.g. `conventions.plugins.dfbuild.*`), not inline in the module build files.
 
@@ -103,7 +103,7 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   path is never staged; `docs/StardustDocs/topics/_shadow_resources.md`, whose path is staged but whose
   generating task (`updateShadowResources`) the bot never runs; and the data-schema accessors under
   `**/src/generated-dataschema-accessors/`, which **can no longer be generated at all** — the KSP/Gradle plugin
-  that produced them is deprecated (`plugins/symbol-processor`, `plugins/dataframe-gradle-plugin`, see above), so
+  that produced them is deprecated and has been removed from the repository (its last release is `1.0.0-Beta4`), so
   they are frozen, hand-maintained sources that happen to be named "generated". Their path is not staged either;
   only the second copy inside `*/generated-sources/src/generated-dataschema-accessors/` rides along, because it
   sits under a staged `generated-sources` directory. See `docs/StardustDocs/AGENTS.md`.

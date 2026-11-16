@@ -4,17 +4,13 @@ Guidance for this folder. See the root `AGENTS.md` for repo-wide build/style rul
 
 ## Read this before using anything here
 
-**Most of this folder is dead code.** Two of the four modules are disabled, and neither of the two is registered
-in `settings.gradle.kts` — so nothing in them is compiled, tested, or published by the normal build. Code in a
-disabled module can be arbitrarily out of date and **nothing will fail to tell you**. Do not cite it as evidence
-of how anything currently behaves, and do not change it expecting an effect.
-
 | Module | State |
 |---|---|
-| `symbol-processor` | **Disabled** — KSP1 is not compatible with Kotlin 2.3+. |
-| `dataframe-gradle-plugin` | **Disabled** for the same reason (it drove `symbol-processor` to generate schemas from a data sample). |
 | `expressions-converter` | Active, in `settings.gradle.kts`. |
 | `public-api-modifier` | Active, in `settings.gradle.kts`. |
+
+The deprecated `symbol-processor` and `dataframe-gradle-plugin` modules were removed from the repository
+(KSP1 is not compatible with Kotlin 2.3+; their last release is `1.0.0-Beta4`).
 
 Plugins that are still used are being migrated to convention plugins in `build-logic/` — `keywords-generator`
 already went that way and is no longer here at all; it lives in `build-logic` as `dfbuild.keywordsGenerator`.
