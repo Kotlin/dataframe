@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
@@ -411,5 +412,39 @@ class ConvertToTests {
         }
         converted["a"].type() shouldBe typeOf<SimpleEnum?>()
         converted shouldBe dataFrameOf("a")(SimpleEnum.A, SimpleEnum.B, null)
+    }
+
+    @Test
+    fun `exact type converter takes priority over a matching convertIf`() {
+        val df = dataFrameOf("a")(1)
+
+        // the `convertIf` matches too, but the exact-type converter must win
+        val converted = df.convertTo<Schema> {
+            convertIf({ _, _ -> true }) { A(-1) }
+            convert<Int>().with { A(it) }
+        }
+
+        converted.single().a shouldBe A(1)
+    }
+
+    @Test
+    fun `among matching convertIf converters the first one is used`() {
+        val df = dataFrameOf("a")(1)
+
+        val converted = df.convertTo<Schema> {
+            convertIf({ _, _ -> true }) { A(it as Int) }
+            convertIf({ _, _ -> true }) { A(-(it as Int)) }
+        }
+
+        converted.single().a shouldBe A(1)
+    }
+
+    @Test
+    fun `null in a column the schema declares non-null throws TypeConversionException`() {
+        val df = dataFrameOf("a")(1, null)
+
+        shouldThrow<TypeConversionException> {
+            df.convertTo<Schema> { convert<Int>().with { A(it) } }
+        }
     }
 }
