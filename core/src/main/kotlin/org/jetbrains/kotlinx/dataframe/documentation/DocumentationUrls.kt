@@ -565,6 +565,9 @@ public interface DocumentationUrls {
     /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
     public typealias Split = Nothing
 
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
+
     /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
     public typealias WithoutNulls = Nothing
 
