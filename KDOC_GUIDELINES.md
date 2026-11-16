@@ -51,6 +51,10 @@ KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
 
+A replacement operation's KDoc does not reference the function it replaces: the deprecation
+message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
+when the deprecated function is deleted.
+
 For the internal API, please add at least a small note.
 
 ## KoDEx & KDoc-helpers
@@ -381,6 +385,8 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* When a `See also` entry names an operation pair such as `x` and `xDesc`, list the ascending
+variant first — the pair reads "ascending and descending", like its neighbouring entries.
 
 For example, from `group` KDoc:
 
