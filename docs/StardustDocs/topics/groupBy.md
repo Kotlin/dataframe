@@ -17,7 +17,7 @@ groupBy(moveToTop = true) { columns }
       [ transformations ]
       reducer | aggregator | pivot | mapper
 
-transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCountDesc() | .sortByCountAsc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
+transformations = [ .sortByGroup { expression } | .sortByGroupDesc { expression } | .sortByCountAsc() | .sortByCountDesc() | .sortByKey [ { columns } ] | .sortByKeyDesc [ { columns } ] | .sortBy { columns } | .sortByDesc { columns } ]
                   [ .updateGroups { frameExpression } ]
                   [ .filter { rowExpression } ]
                   [ .add(column) { rowExpression } ]
@@ -187,7 +187,7 @@ Returns `GroupBy` object.
 A `GroupBy` can be transformed into a new `GroupBy` using one of the following methods:
 
 * `sortByGroup` / `sortByGroupDesc` — sorts the **order of groups** (and their corresponding keys) by values computed with a `DataFrameExpression` applied to each group;
-* `sortByCountDesc` / `sortByCountAsc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCountDesc` sorts in descending order, `sortByCountAsc` — in ascending order;
+* `sortByCountAsc` / `sortByCountDesc` — sorts the **order of groups** (and their corresponding keys) by the number of rows they contain; `sortByCountAsc` sorts in ascending order, `sortByCountDesc` — in descending order;
 * `sortByKey` / `sortByKeyDesc` — sorts the **order of groups**
   (and their corresponding keys) by the grouping key values;
 * [`sortBy`](sortBy.md) / [`sortByDesc`](sortBy.md#sortbydesc) — sorts the **order of rows within each group** by one or more column values, preserving the order of groups and their corresponding keys;

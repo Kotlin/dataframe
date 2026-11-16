@@ -476,7 +476,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
  * for selecting columns, allowing specifying sort directions and `null`s position.
  *   - [sortByDesc][GroupBy.sortByDesc] that sorts rows in descending order.
  *   - [sortByGroup] and [sortByGroupDesc] that sort key-group pairs by values computed for each group.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort key-group pairs by group size.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -524,7 +524,7 @@ public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): 
  * See also
  *   - [sortByDesc][GroupBy.sortByDesc] that sorts rows in descending order by default.
  *   - [sortByGroup] and [sortByGroupDesc] that sort key-group pairs by values computed for each group.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort key-group pairs by group size.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -572,7 +572,7 @@ public fun <T, G, C> GroupBy<T, G>.sortBy(selector: SortColumnsSelector<G, C>): 
  * for selecting columns, allowing specifying sort directions and `null`s position.
  *   - [sortBy][GroupBy.sortBy] that sorts rows in ascending order.
  *   - [sortByGroup] and [sortByGroupDesc] that sort key-group pairs by values computed for each group.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort key-group pairs by group size.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -621,7 +621,7 @@ public fun <T, G> GroupBy<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?
  * See also
  *   - [sortBy][GroupBy.sortBy] that sorts rows in ascending order by default.
  *   - [sortByGroup] and [sortByGroupDesc] that sort key-group pairs by values computed for each group.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort key-group pairs by group size.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort key-group pairs by group size.
  *   - [sortByKey] and [sortByKeyDesc] that sort key-group pairs by key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -685,7 +685,7 @@ private typealias NullsLastArgumentDescription = Nothing
  *
  * See also
  *   - [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values descending.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -724,7 +724,7 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroup(
  *
  * See also
  *   - [sortByGroup] that sorts the key-group pairs of this [GroupBy] based on computed values ascending.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByKey] and [sortByKeyDesc] that sort the key-group pairs of this [GroupBy] by the key values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -776,9 +776,6 @@ public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { 
  * Returns a new [GroupBy] containing the same keys and groups in the resulting order.
  * The contents of the groups remain unchanged.
  *
- * This is a replacement for the deprecated [sortByCount]: the `Desc` suffix follows
- * [sortByGroupDesc] and [sortByKeyDesc]. For ascending order, use [sortByCountAsc].
- *
  * Don't confuse this with [sortByDesc][GroupBy.sortByDesc] that sorts rows within groups.
  *
  * See also
@@ -815,7 +812,7 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByCountDesc()
  *
  * See also
  *   - [sortByKey] that sorts the key-group pairs of this [GroupBy] by the selected key values ascending.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
@@ -849,7 +846,7 @@ public fun <T, G> GroupBy<T, G>.sortByKeyDesc(
  *
  * See also
  *   - [sortByKeyDesc] that sorts the key-group pairs of this [GroupBy] by the selected key values descending.
- *   - [sortByCountDesc] and [sortByCountAsc] that sort the key-group pairs of this [GroupBy] by the group sizes.
+ *   - [sortByCountAsc] and [sortByCountDesc] that sort the key-group pairs of this [GroupBy] by the group sizes.
  *   - [sortByGroup] and [sortByGroupDesc] that sorts the key-group pairs of this [GroupBy] based on computed values.
  *
  * Check out the [`GroupBy grammar`][Grammar].
