@@ -114,7 +114,7 @@ See [](extensionPropertiesApi.md) for more information.
 (or [`DataRow`](DataRow.md), [`ColumnGroup`](DataColumn.md#columngroup), etc.)
 with a type parameter annotated with `@DataSchema`.
 
-> While you can annotate any Kotlin class or object with a `@DataSchema`,
+> While you can annotate any Kotlin class or object with the `@DataSchema` annotation,
 > we highly recommend using it only on interfaces and data classes specially made
 > for representing the data schema of a `DataFrame`.
 >

@@ -119,7 +119,11 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
-Also, you can use 
+An included snippet must stay true in every function it is included into: re-read it against each
+host's signature, not only where it was written. A wording that names one host's behaviour — printing,
+mutating, returning — is false on a host that does something else with the same parameters.
+
+Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
@@ -381,6 +385,9 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
+file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
+name appears in the KDoc only; such imports are load-bearing, keep them.
 
 For example, from `group` KDoc:
 
@@ -398,6 +405,11 @@ For example, from `group` KDoc:
 
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
+
+Before linking an operation whose page already exists, check whether `DocumentationUrls` has a
+constant for the page itself, not only for its section anchors — with anchors alone the KDoc ends up
+pointing at a section instead of the operation's overview. If the page-level constant is missing,
+add it next to the anchors.
 
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)

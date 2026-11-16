@@ -67,7 +67,7 @@ to prevent accessor leakage across nested `select`s. Lambdas resolve to a `colum
 ## Typesafe access: compiler plugin vs codegen
 
 Extension properties on `ColumnsScope<Schema>` (returning `DataColumn<X>`) and `DataRow<Schema>` (returning `X`),
-each with a `@JvmName`, are what make `df.someColumn` type-safe — and why `T` is a schema marker. There are three
+each with a `@JvmName`, are what make `df.someColumn` type-safe — and why `T` is a schema marker. There are two
 ways they get produced, and picking the wrong one is a common mistake:
 
 - **Kotlin compiler plugin — the recommended path.** It generates accessors on-the-fly at compile time (and in the
@@ -75,16 +75,10 @@ ways they get produced, and picking the wrong one is a common mistake:
   (`github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`), not here. The operation annotations in this
   module (`@Refine`, `@Interpretable("…")`, `@RequiredByIntellijPlugin`, `@AccessApiOverload`, from `annotations/`)
   exist specifically to drive it, and it consumes `dataframe-compiler-plugin-core` for its interpreters.
-- **KSP symbol processor + Gradle plugin — the older `@DataSchema` build-time path (now legacy/deprecated).**
-  `@DataSchema` (`annotations/DataSchema.kt`) marks an interface as a schema (related: `ColumnName`,
-  `ImportDataSchema`, `HasSchema`, … in `annotations/`); `plugins/symbol-processor` + `plugins/dataframe-gradle-plugin`
-  invoke this module's `CodeGenerator` at build time to emit accessors. Note: `plugins/symbol-processor` is now
-  disabled because KSP1 is no longer compatible with Kotlin 2.3+ (`plugins/README.md`).
 - **Runtime `ReplCodeGenerator` — Jupyter/REPL only.** `impl/codeGen/ReplCodeGenerator` emits accessor source as
   strings to be `eval`'d in the next notebook cell (used by the `jupyter/` helpers); it is not a path for ordinary
   compiled projects. The underlying engine `CodeGenerator` (`codeGen/CodeGenerator.kt`, `ExtensionsCodeGenerator.kt`,
-  `SchemaProcessor.kt`, `Marker*.kt`, `NameNormalizer.kt`, `DefaultReadDfMethods.kt`; impl in `impl/codeGen/`) is
-  **shared** — it is what the build-time `@DataSchema` path above also calls.
+  `SchemaProcessor.kt`, `Marker*.kt`, `NameNormalizer.kt`, `DefaultReadDfMethods.kt`; impl is in `impl/codeGen/`)
 
 The runtime schema model (used for generation and schema comparison) is in `schema/` (`DataFrameSchema.kt`,
 `ColumnSchema.kt`, `CompareResult.kt`).

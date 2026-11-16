@@ -90,10 +90,10 @@ internal interface GroupByDocs {
      * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]` \[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]` \[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
@@ -306,6 +306,31 @@ internal interface GroupByDocs {
      * For more information: {@include [DocumentationUrls.GroupByReducing]}
      */
     typealias Reducing = Nothing
+
+    /**
+     * {@comment Note about the [ReducedGroupBy] methods being the final step of [Reducing]. KDoc-snippet.}
+     *
+     * This is the final step of [GroupBy reducing][Reducing].
+     * A [ReducedGroupBy] is created by a reducing method, like [first][GroupBy.first], [last][GroupBy.last],
+     * [minBy][GroupBy.minBy], [maxBy][GroupBy.maxBy], [medianBy][GroupBy.medianBy], or
+     * [percentileBy][GroupBy.percentileBy], which selects at most one row in each group.
+     *
+     * Check out [`GroupBy grammar`][Grammar].
+     */
+    @ExcludeFromSources
+    typealias ReducedGroupByFinalStepSnippet = Nothing
+
+    /**
+     * {@comment Note about the groups without a selected row in the [ReducedGroupBy] methods. KDoc-snippet.}
+     *
+     * If no row is selected in a group (for example, if no row of the group satisfies
+     * the predicate of [first][GroupBy.first]), the result still contains a row for this group.
+     * This row is treated as missing every value, so its value columns contain `null` and become nullable.
+     *
+     * @include [ConcatDocs.MissingColumnValues]
+     */
+    @ExcludeFromSources
+    typealias ReducedGroupByNoSelectedRowSnippet = Nothing
 
     /**
      * ### [GroupBy] aggregation

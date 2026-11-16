@@ -99,7 +99,7 @@ internal fun getUnifiedNumberClassGraph(
  *
  * Unsigned types are supported too even though they are not a [Number] instance,
  * but unless two unsigned types are provided in the input, it will never be returned.
- * Meaning, a single [Number] input, the output will always be a [Number].
+ * Meaning, given a single [Number] input, the output will always be a [Number].
  *
  * @param first The first numeric type to compare. Can be null, in which case the second type is returned.
  * @param second The second numeric type to compare. Cannot be null.
@@ -146,10 +146,10 @@ internal fun getUnifiedNumberClassOrNull(
     }
 
 /**
- * Determines the nearest common numeric type, in terms of complexity, all types in [this].
+ * Determines the nearest common numeric type, in terms of complexity, among all types in [this].
  *
  * Unsigned types are supported too even though they are not a [Number] instance,
- * but unless the input solely exists of unsigned numbers, it will never be returned.
+ * but unless the input solely consists of unsigned numbers, it will never be returned.
  * Meaning, given a [Number] in the input, the output will always be a [Number].
  *
  * @param options See [UnifiedNumberTypeOptions]

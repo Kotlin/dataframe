@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.documentation.TakeAndDropColumnsSelectionDslGrammar
@@ -198,21 +199,27 @@ public interface DropColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)` */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnSet.dropLast]`)` */
+        @ExcludeFromSources
         public typealias ColumnSetName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols] */
+        @ExcludeFromSources
         public typealias ColumnGroupName = Nothing
 
         /** [**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
+        @ExcludeFromSources
         public typealias PlainDslWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile] */
+        @ExcludeFromSources
         public typealias ColumnSetWhileName = Nothing
 
         /** __`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile] */
+        @ExcludeFromSources
         public typealias ColumnGroupWhileName = Nothing
     }
 
@@ -233,6 +240,7 @@ public interface DropColumnsSelectionDsl {
      * - [take][ColumnsSelectionDsl.take] — keeps only the first `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing all columns except the first [n\].
      */
+    @ExcludeFromSources
     private typealias CommonDropFirstDocs = Nothing
 
     /**
@@ -310,6 +318,7 @@ public interface DropColumnsSelectionDsl {
      * - [takeLast][ColumnsSelectionDsl.takeLast] — keeps only the last `n` columns.
      * @set [CommonTakeAndDropDocs.RETURN] A [ColumnSet] containing all columns except the last [n\].
      */
+    @ExcludeFromSources
     private typealias CommonDropLastDocs = Nothing
 
     /**
@@ -389,6 +398,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing all columns except the first
      * ones adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonDropWhileDocs = Nothing
 
     /**
@@ -470,6 +480,7 @@ public interface DropColumnsSelectionDsl {
      * @set [CommonTakeAndDropWhileDocs.RETURN] A [ColumnSet] containing all columns except the last
      * ones adhering to the [predicate\].
      */
+    @ExcludeFromSources
     private typealias CommonDropLastWhileDocs = Nothing
 
     /**

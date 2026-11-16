@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -106,95 +107,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**`colGroup`**</code>][ColumnsSelectionDsl.colGroup] */
-        public typealias PlainDslName = Nothing
-
-        /** __`.`__[<code>**`colGroup`**</code>][ColumnsSelectionDsl.colGroup] */
-        public typealias ColumnSetName = Nothing
-
-        /** __`.`__[<code>**`colGroup`**</code>][ColumnsSelectionDsl.colGroup] */
-        public typealias ColumnGroupName = Nothing
-    }
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][ColumnAccessor] (or [<code>SingleColumn</code>][SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroup</code>][colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]`  {  `[<code>colGroup</code>][colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * To create a [<code>ColumnAccessor</code>][ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     */
-    private interface CommonColGroupDocs {
-
-        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        typealias EXAMPLE = Nothing
-
-        /**
-         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>colGroup</code>][colGroup]`() }`
-         */
-        typealias SingleExample = Nothing
-
-        /**
-         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>colGroup</code>][colGroup]`() }`
-         *
-         * `df.`[<code>select</code>][DataFrame.select]` { `[<code>colGroup</code>][colGroup]`<`[<code>String</code>][String]`>() }`
-         */
-        typealias DoubleExample = Nothing
-
-        // Receiver argument for the example(s)
-        typealias RECEIVER = Nothing
-
-        // Argument for the example(s)
-        typealias ARG = Nothing
-
-        // Optional note
-        typealias NOTE = Nothing
-
-        /** @param [C] The type of the column group. */
-        typealias ColumnGroupTypeParam = Nothing
-    }
+    public interface Grammar
 
     // region reference
 
@@ -247,61 +160,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][ColumnAccessor] pointing to the column group.
-     * @param [C] The type of the column group.
-     */
-    private typealias ColGroupReferenceDocs = Nothing
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][org.jetbrains.kotlinx.dataframe.api.columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(columnGroupA) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -358,7 +217,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -422,7 +281,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -480,7 +339,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -537,7 +396,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -594,7 +453,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [col] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
+     * @param [colGroup] The [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -657,62 +516,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
-     */
-    private typealias ColGroupNameDocs = Nothing
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][org.jetbrains.kotlinx.dataframe.api.columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("columnGroupName") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("columnGroupName") }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -769,7 +573,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name).ensureIsColumnGroup()
@@ -825,7 +629,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -882,7 +686,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<C>> =
@@ -944,7 +748,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1001,7 +805,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -1058,7 +862,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1115,7 +919,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> String.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -1172,7 +976,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1231,7 +1035,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -1290,7 +1094,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1347,7 +1151,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column.
+     * @param [name] The name of the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -1408,62 +1212,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
-     */
-    private typealias ColGroupPathDocs = Nothing
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][org.jetbrains.kotlinx.dataframe.api.columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`("pathTo"["columnGroupName"] ) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("pathTo"["columnGroupName"] ) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1520,7 +1269,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path).ensureIsColumnGroup()
@@ -1576,7 +1325,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1633,7 +1382,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<C>> =
@@ -1696,7 +1445,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1753,7 +1502,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnAccessor<DataRow<*>>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -1810,7 +1559,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1867,7 +1616,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -1924,7 +1673,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -1983,7 +1732,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2042,7 +1791,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
@@ -2099,7 +1848,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column.
+     * @param [path] The path to the column group.
      * @param [C] The type of the column group.
      */
     public fun <C> ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -2158,61 +1907,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
-     * @param [C] The type of the column group.
-     */
-    private typealias ColGroupKPropertyDocs = Nothing
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][org.jetbrains.kotlinx.dataframe.api.columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(Type::columnGroupA) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2271,7 +1966,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2328,7 +2023,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2387,7 +2082,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2444,7 +2139,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2503,7 +2198,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2560,7 +2255,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2619,7 +2314,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2676,7 +2371,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2735,7 +2430,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2792,7 +2487,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2851,7 +2546,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [property] The [<code>KProperty</code>][KProperty] reference to the value column.
+     * @param [property] The [<code>KProperty</code>][KProperty] reference to the column group.
      * @param [C] The type of the column group.
      */
     @Deprecated(DEPRECATED_ACCESS_API)
@@ -2862,62 +2557,6 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     // endregion
 
     // region index
-
-    /**
-     * ## Col Group
-     *
-     * Creates a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] (or [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]) for a column group with the given argument which can be either
-     * an index ([<code>Int</code>][Int]) or a reference to a column
-     * ([<code>String</code>][String], [<code>ColumnPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], [<code>KProperty</code>][KProperty], or [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]; any [<code>Access APIs</code>][org.jetbrains.kotlinx.dataframe.documentation.AccessApis]).
-     *
-     * This is a DSL-shorthand for [<code>columnGroup</code>][org.jetbrains.kotlinx.dataframe.api.columnGroup] and can be both typed and untyped (in case you're supplying
-     * a column name, -path, or index). In addition, extra runtime checks are in place to ensure that the column
-     * you specify is actually a column group.
-     * The function can also be called on [<code>ColumnGroups</code>][org.jetbrains.kotlinx.dataframe.ColumnGroupReference] to create
-     * an accessor for a column group inside a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     *
-     * For more information: [See `colGroup` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#value-col-frame-col-col-group)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>("colGroupA") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(SomeType::colGroupB) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(1) }`
-     *
-     * #### Examples for this overload:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`(0) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[<code>colGroup</code>][org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.colGroup]`<`[<code>String</code>][String]`>(0) }`
-     *
-     * To create a [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for another kind of column, take a look at the functions
-     * [<code>col</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col],
-     * [<code>valueCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol],
-     * and [<code>frameCol</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol].
-     *
-     * @return A [<code>ColumnAccessor</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] for the column group with the given argument if possible, else a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn].
-     * @throws [IllegalStateException] if the column with the given argument does not exist.
-     * @throws [IllegalArgumentException] if the column with the given argument is not a column group.
-     *
-     * @see [columnGroup]
-     * @see [ColumnsSelectionDsl.frameCol]
-     * @see [ColumnsSelectionDsl.valueCol]
-     * @see [ColumnsSelectionDsl.col]
-     *
-     *
-     *
-     * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
-     */
-    private typealias ColGroupIndexDocs = Nothing
 
     /**
      * ## Col Group
@@ -2968,7 +2607,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      *
@@ -3027,7 +2666,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      *
@@ -3086,7 +2725,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3144,7 +2783,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3202,7 +2841,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3260,7 +2899,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3322,7 +2961,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3380,7 +3019,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3437,7 +3076,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3497,7 +3136,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3556,7 +3195,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -3614,7 +3253,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [index] The index of the value column.
+     * @param [index] The index of the column group.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column group.
      */
@@ -3625,7 +3264,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
 /**
  * Checks the validity of this [<code>SingleColumn</code>][SingleColumn],
- * by adding a check to see it's a [<code>ColumnGroup</code>][ColumnGroup] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>ColumnGroup</code>][ColumnGroup] (so, a [<code>SingleColumn</code>][SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not.
  */
 @PublishedApi
@@ -3637,7 +3276,7 @@ internal fun <C> SingleColumn<DataRow<C>>.ensureIsColumnGroup(): SingleColumn<Da
     }
 
 /** Checks the validity of this [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
- * by adding a check to see it's a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
+ * by adding a check to see if it's a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] (so, a [<code>SingleColumn</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
  * and throwing an [<code>IllegalArgumentException</code>][IllegalArgumentException] if it's not. */
 internal fun <C> ColumnAccessor<DataRow<C>>.ensureIsColumnGroup(): ColumnAccessor<DataRow<C>> =
     onResolve { col: ColumnWithPath<*>? ->

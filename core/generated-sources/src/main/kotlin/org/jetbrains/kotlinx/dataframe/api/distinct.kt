@@ -218,11 +218,7 @@ public interface DistinctColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** __`.`__[<code>**`distinct`**</code>][ColumnsSelectionDsl.distinct] */
-        public typealias ColumnSetName = Nothing
-    }
+    public interface Grammar
 
     /**
      * Returns a new [<code>ColumnSet</code>][ColumnSet] from [<code>this</code>][this] [<code>ColumnSet</code>][ColumnSet] containing only distinct columns (by path).

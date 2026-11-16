@@ -2,8 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns [`DataFrame`](DataFrame.md) which contains all columns from the original [`DataFrame`](DataFrame.md) followed by newly added columns. 
-Original [`DataFrame`](DataFrame.md) is not modified.
+Returns a [`DataFrame`](DataFrame.md) that contains all columns from the original [`DataFrame`](DataFrame.md), followed by the newly added columns.
+The original [`DataFrame`](DataFrame.md) is not modified.
 
 **API reference**: [`add`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/add.html)
 
@@ -39,7 +39,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html" width="100%"/>
 <!---END-->
 
-See [row expressions](DataRow.md#row-expressions)
+See [row expressions](DataRow.md#row-expressions).
 
 You can use the `newValue()` function to access the value that was already calculated for the preceding row.
 It is helpful for recurrent computations:
