@@ -40,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.percentile
 import org.jetbrains.kotlinx.dataframe.api.percentileBy
@@ -597,6 +598,30 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleEnd
     }
 
+    @Test
+    fun groupByValuesAllColumns() {
+        // SampleStart
+        // For each `isHappy` value, the values of the youngest person
+        df.groupBy { isHappy }.minBy { age }.values()
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "name", "age", "city", "weight")
+                result["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+    }
+
+    @Test
+    fun groupByIntoColumnGroup() {
+        // SampleStart
+        // For each `isHappy` value, the whole row of the youngest person in the "youngest" column group
+        df.groupBy { isHappy }.minBy { age }.into("youngest")
+            // SampleEnd
+            .also { result ->
+                result.columnNames() shouldBe listOf("isHappy", "youngest")
+                result["youngest"]["name"]["lastName"].toList() shouldBe listOf("Cooper", "Brown")
+            }
+    }
+
     // endregion
 
     // region aggregation
@@ -1097,6 +1122,31 @@ class GroupBySamples : DataFrameSampleHelper("groupBy", "api") {
         // SampleStart
         df.groupBy { "name"["firstName"] }.mapToFrames { group.sortByDesc("age").take(2) }
         // SampleEnd
+    }
+
+    // endregion
+
+    // region ColumnsForAggregateSelectionDsl
+
+    @Test
+    fun columnsForAggregateSelectionDsl() {
+        // SampleStart
+        // Store the maximum "age" of each city in the "maxAge" column
+        df.groupBy { city }.maxFor { age into "maxAge" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into "max" }
+
+        // Put the maximum "age" and "weight" values into the "max" column group,
+        // nested in the "stats" column group
+        df.groupBy { isHappy }.maxFor { (age and weight) into pathOf("stats", "max") }
+
+        // Use 0 for the pivot cells without any "weight" values
+        df.groupBy { city }.pivot { isHappy }.maxFor { weight default 0 }
+            // SampleEnd
+            .also { result ->
+                result["isHappy"]["false"].toList() shouldBe listOf(60, 70, 0, 52, 0, 55)
+            }
     }
 
     // endregion

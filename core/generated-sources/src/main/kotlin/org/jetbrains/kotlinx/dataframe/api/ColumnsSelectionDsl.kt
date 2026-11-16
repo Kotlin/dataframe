@@ -461,7 +461,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
@@ -508,7 +508,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -557,7 +557,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
@@ -607,7 +607,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      * @receiver The [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
      * @throws [IllegalArgumentException] If [this] is not a [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
      * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
-     * @see [SingleColumn.except]
+     * @see [ColumnsSelectionDsl.except]
      */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 

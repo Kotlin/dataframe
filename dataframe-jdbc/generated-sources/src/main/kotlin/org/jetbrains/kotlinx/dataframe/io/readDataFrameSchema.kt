@@ -444,7 +444,7 @@ public fun DataFrameSchema.Companion.readAllSqlTables(
     while (tables.next()) {
         val jdbcTable = determinedDbType.buildTableMetadata(tables)
         if (!determinedDbType.isSystemTable(jdbcTable)) {
-            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
+            // we filter here a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = jdbcTable.name
             val dataFrameSchema = readSqlTable(connection, tableName, determinedDbType)
             dataFrameSchemas += tableName to dataFrameSchema

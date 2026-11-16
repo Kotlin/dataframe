@@ -1,6 +1,6 @@
 [//]: # (title: Gradle Plugin (deprecated))
 
-> The current Gradle plugin is **deprecated**. Its latest release is 1.0.0-Beta4 and will not have future releases.
+> The Gradle plugin is **deprecated**. Its final release was 1.0.0-Beta4.
 >
 > At the moment, **[data schema generation is handled via dedicated methods](DataSchemaGenerationMethods.md)** instead of relying on the plugin.
 > Our plans for the next iteration of this feature can be found in [Issue #1844](https://github.com/Kotlin/dataframe/issues/1844).
@@ -16,7 +16,7 @@ It's different from the DataFrame compiler plugin:
 kotlin("plugin.dataframe") version "%compilerPluginKotlinVersion%"
 ```
 
-Gradle plugin by default adds a KSP annotation processor to your build:
+By default, the Gradle plugin adds a KSP annotation processor to your build:
 
 ```kotlin
 ksp("org.jetbrains.kotlinx.dataframe:symbol-processor-all:%dataFrameVersion%")
@@ -30,7 +30,7 @@ kotlin.dataframe.add.ksp=false
 ```
 
 ## Examples
-In the best scenario, your schema could be defined as simple as this:
+In the best-case scenario, your schema can be defined as simply as this:
 ```kotlin
 dataframes {
     // output: build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
@@ -104,7 +104,7 @@ dataframes {
 ```
 
 By default, the plugin will generate output in a specified source set. 
-Source set could be specified for all schemas or for specific schema:
+A source set can be specified for all schemas or for a specific schema:
 
 ```kotlin
 dataframes {
@@ -138,7 +138,7 @@ dataframes {
 
 To generate a schema for an existing SQL table, 
 you need to define a few parameters to establish a JDBC connection:
-URL (passing to `data` field), username, and password.
+URL (passed to the `data` field), username, and password.
 
 Also, the `tableName` parameter should be specified to convert the data from the table with that name to the dataframe.
 
@@ -157,7 +157,7 @@ dataframes {
 ```
 
 To generate a schema for the result of an SQL query,
-you need to define the same parameters as before together with the SQL query to establish connection.
+you need to define the same connection parameters as before and provide an SQL query in `sqlQuery`.
 
 ```kotlin
 dataframes {

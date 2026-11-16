@@ -117,6 +117,62 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 
 // region ReducedGroupBy
 
+/**
+ * Returns a [<code>DataFrame</code>][DataFrame] with one row per group of this [<code>ReducedGroupBy</code>][ReducedGroupBy]:
+ * the grouping key columns and a new column with the value of [<code>expression</code>][expression]
+ * computed on the reduced row of the group.
+ *
+ *
+ *
+ * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
+ * A [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] is created by a reducing method, like [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first], [<code>last</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.last],
+ * [<code>minBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.minBy], [<code>maxBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.maxBy], [<code>medianBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.medianBy], or
+ * [<code>percentileBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.percentileBy], which selects at most one row in each group.
+ *
+ * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
+ *
+ *
+ *
+ * If no row is selected in a group (for example, if no row of the group satisfies
+ * the predicate of [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first]), the result still contains a row for this group.
+ * This row is treated as missing every value, so its value columns contain `null` and become nullable.
+ *
+ * Missing values in a [<code>List</code>][List] column are represented by empty lists, and missing values in a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] by empty
+ * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s; these columns do not become nullable. A missing [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] remains a column group, and its
+ * nested columns are filled according to these same rules recursively.
+ *
+ * [<code>expression</code>][expression] is a [<code>RowExpression</code>][RowExpression] computed only on the single reduced row of each group;
+ * this row is both the receiver (`this`) and the argument (`it`) of the expression.
+ * See [<code>Row Expression</code>][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow]
+ *
+ * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
+ *
+ * Don't confuse this with [<code>into</code>][GroupBy.into] on a [<code>GroupBy</code>][GroupBy], which computes the expression on all rows
+ * of each group and collects the results into lists.
+ *
+ * See also:
+ * - [<code>into</code>][ReducedGroupBy.into]`(columnName)` — puts the whole reduced rows into a new column group.
+ * - [<code>values</code>][ReducedGroupBy.values] — takes the values of the selected columns of the reduced rows.
+ * - [<code>concat</code>][ReducedGroupBy.concat] — returns the reduced rows themselves.
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * df.groupBy { isHappy }.minBy { age }.into("youngest") { name }
+ * ```
+ *
+ * ```kotlin
+ * df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
+ * ```
+ *
+ * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].
+ * @param [G] The schema marker type of the groups.
+ * @param [V] The type of the values computed by [<code>expression</code>][expression].
+ * @param [columnName] The name of the new column. If `null` (the default),
+ *   the name of the [<code>groups</code>][GroupBy.groups] column of the underlying [<code>GroupBy</code>][GroupBy] is used.
+ * @param [expression] The [<code>RowExpression</code>][RowExpression] computing the value of the new column from the reduced row.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns and the column with the computed values.
+ */
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     columnName: String? = null,
     noinline expression: RowExpression<G, V>,
@@ -145,6 +201,53 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.columnName, expression)
 
+/**
+ * Returns a [<code>DataFrame</code>][DataFrame] with one row per group of this [<code>ReducedGroupBy</code>][ReducedGroupBy]:
+ * the grouping key columns and a new
+ * [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] named [<code>columnName</code>][columnName]
+ * containing the reduced row of the group.
+ *
+ *
+ *
+ * This is the final step of [<code>GroupBy reducing</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Reducing].
+ * A [<code>ReducedGroupBy</code>][org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy] is created by a reducing method, like [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first], [<code>last</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.last],
+ * [<code>minBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.minBy], [<code>maxBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.maxBy], [<code>medianBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.medianBy], or
+ * [<code>percentileBy</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.percentileBy], which selects at most one row in each group.
+ *
+ * Check out [<code>`GroupBy grammar`</code>][org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar].
+ *
+ *
+ *
+ * If no row is selected in a group (for example, if no row of the group satisfies
+ * the predicate of [<code>first</code>][org.jetbrains.kotlinx.dataframe.api.GroupBy.first]), the result still contains a row for this group.
+ * This row is treated as missing every value, so its value columns contain `null` and become nullable.
+ *
+ * Missing values in a [<code>List</code>][List] column are represented by empty lists, and missing values in a [<code>FrameColumn</code>][org.jetbrains.kotlinx.dataframe.columns.FrameColumn] by empty
+ * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]s; these columns do not become nullable. A missing [<code>ColumnGroup</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] remains a column group, and its
+ * nested columns are filled according to these same rules recursively.
+ *
+ * For more information: [See "`GroupBy` Reducing" on the documentation website.](https://kotlin.github.io/dataframe/groupby.html#reducing)
+ *
+ * Don't confuse this with [<code>into</code>][GroupBy.into] on a [<code>GroupBy</code>][GroupBy], which puts the whole groups
+ * into a [<code>FrameColumn</code>][FrameColumn].
+ *
+ * See also:
+ * - [<code>into</code>][ReducedGroupBy.into]` { expression }` — puts a value computed from each reduced row into a new column.
+ * - [<code>values</code>][ReducedGroupBy.values] — takes the values of the selected columns of the reduced rows.
+ * - [<code>concat</code>][ReducedGroupBy.concat] — returns the reduced rows themselves.
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * // For each `isHappy` value, the whole row of the youngest person in the "youngest" column group
+ * df.groupBy { isHappy }.minBy { age }.into("youngest")
+ * ```
+ *
+ * @param [T] The schema marker type of the grouping keys in the underlying [<code>GroupBy</code>][GroupBy].
+ * @param [G] The schema marker type of the groups.
+ * @param [columnName] The name of the new column group.
+ * @return A new [<code>DataFrame</code>][DataFrame] with the grouping key columns and the column group with the reduced rows.
+ */
 @Refine
 @Interpretable("GroupByReduceInto")
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 
 // region DataColumn
@@ -71,6 +72,7 @@ public interface NoneColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`none`**][ColumnsSelectionDsl.none] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
     }
 

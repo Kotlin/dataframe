@@ -47,7 +47,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * ```
  *
  * @param body The aggregation logic defined using [AggregateDsl].
- * @return A new [DataFrame] with the results of the aggregation applied to each group.
+ * @return A new [DataRow] with the results of the aggregation applied to each group.
  */
 public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
     delegate {

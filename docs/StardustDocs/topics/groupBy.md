@@ -691,7 +691,7 @@ and an additional [`column`](DataColumn.md) with the number of rows in each corr
 and an additional [`column`](DataColumn.md) with the number of distinct rows in each corresponding group.
 * `aggregate` — performs a set of custom aggregations using `AggregateDsl`, 
 allowing you to compute one or more [statistics](summaryStatistics.md) per every group of `GroupBy`. 
-The body if this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) 
+The body of this function will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) 
 that represents the current data group being aggregated. 
 To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of the new column to infix function `into`.
 
