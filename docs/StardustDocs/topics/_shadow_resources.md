@@ -482,11 +482,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.implode.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insert.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.merge.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDefault.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeDifferentWith.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeIntoList.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mergeSameWith.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.move.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"></resource>
