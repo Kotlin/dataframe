@@ -10,8 +10,10 @@ import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.StringBorderStyle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
+import org.junit.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class RenderToStringTests {
@@ -231,7 +233,7 @@ class RenderToStringTests {
     }
 
     @Test
-    fun `cell values replaced with just ellipsis when valueLimit is less than 4`() {
+    fun `cell values replaced with just ellipsis when valueLimit is from 1 to 3`() {
         val result = dataFrameOf("a")("abcdefgh").renderToString(valueLimit = 3)
         val expected = """
             |          a
@@ -241,6 +243,20 @@ class RenderToStringTests {
             |
         """.trimMargin()
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `cell values are not limited when valueLimit is zero or negative`() {
+        val df = dataFrameOf("a")("abcdefgh")
+        val expected = """
+            |            a
+            |       String
+            |         ----
+            |  0  abcdefgh
+            |
+        """.trimMargin()
+        assertEquals(expected, df.renderToString(valueLimit = 0))
+        assertEquals(expected, df.renderToString(valueLimit = -5))
     }
 
     @Test
@@ -273,5 +289,18 @@ class RenderToStringTests {
             |
         """.trimMargin()
         assertEquals(expected, result)
+    }
+
+    // TODO(<issue link>): remove @Ignore when renderToString rejects a negative rowsLimit
+    @Ignore
+    @Test
+    fun `renderToString rejects a negative rowsLimit with IllegalArgumentException`() {
+        // Expected behaviour once the bug is fixed. Today the call throws IndexOutOfBoundsException
+        // (with rowIndex = true) or IllegalArgumentException (with rowIndex = false) from subList bounds.
+        val df = dataFrameOf("a", "b")(
+            1, "x",
+            2, "y",
+        )
+        assertFailsWith<IllegalArgumentException> { df.renderToString(rowsLimit = -1) }
     }
 }

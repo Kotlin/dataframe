@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.getColumns
@@ -27,8 +28,8 @@ import java.math.BigDecimal
  * @param [rowsLimit\] The maximum number of rows to render (default: `20`). When some rows are skipped,
  * a `...` line and the total column and row counts are rendered below the table. `null` renders all rows.
  * @param [valueLimit\] The maximum length of a rendered cell value (default: `40`). Longer values are cut
- * to `valueLimit` characters ending in `...`, or replaced with just `...` when `valueLimit` is less than 4.
- * `null` does not limit the length.
+ * to `valueLimit` characters ending in `...`, or replaced with just `...` when `valueLimit` is 1 to 3.
+ * `null`, `0`, or a negative value does not limit the length.
  * @param [borders\] Whether to draw borders around the table (default: `false`).
  * @param [alignLeft\] Whether to align the cell content to the left instead of the right (default: `false`).
  * @param [columnTypes\] Whether to render the column types under the header (default: `true`).

@@ -75,6 +75,61 @@ class PrintTests {
     }
 
     @Test
+    fun `print prints a column group as its name and schema`() {
+        val df = dataFrameOf("a", "b")(
+            1, "x",
+            2, "y",
+        )
+        val printed = captureStdout { df.group("a", "b").into("g")["g"].print() }
+        printed shouldBe "g: {a:Int, b:String}\n"
+    }
+
+    @Test
+    fun `print prints at most twenty rows of the data column`() {
+        val column = columnOf(*(0..20).toList().toTypedArray()).named("a")
+        val printed = captureStdout { column.print() }
+        printed shouldBe
+            "        a\n" +
+            "      Int\n" +
+            "     ----\n" +
+            "   0    0\n" +
+            "   1    1\n" +
+            "   2    2\n" +
+            "   3    3\n" +
+            "   4    4\n" +
+            "   5    5\n" +
+            "   6    6\n" +
+            "   7    7\n" +
+            "   8    8\n" +
+            "   9    9\n" +
+            "  10   10\n" +
+            "  11   11\n" +
+            "  12   12\n" +
+            "  13   13\n" +
+            "  14   14\n" +
+            "  15   15\n" +
+            "  16   16\n" +
+            "  17   17\n" +
+            "  18   18\n" +
+            "  19   19\n" +
+            "...\n" +
+            "1 columns x 21 rows\n" +
+            "\n"
+    }
+
+    @Test
+    fun `print cuts long cell values of the data column to forty characters`() {
+        val column = columnOf("x".repeat(50)).named("s")
+        val printed = captureStdout { column.print() }
+        printed shouldBe
+            "                                            s\n" +
+            "                                       String\n" +
+            "                                         ----\n" +
+            "  0  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\n" +
+            "\n"
+    }
+
+    @Test
     fun `print prints the data row as a curly-braced list of values`() {
         val df = dataFrameOf("a", "b")(
             1, "x",
@@ -96,6 +151,14 @@ class PrintTests {
         )
         captureStdout { nullDf[1].print() } shouldBe "{ a:2 }\n"
         captureStdout { listDf[1].print() } shouldBe "{ a:2 }\n"
+    }
+
+    @Test
+    fun `print prints empty collections other than lists in the data row`() {
+        val setDf = dataFrameOf("a", "c")(1, emptySet<String>())
+        val mapDf = dataFrameOf("a", "c")(1, emptyMap<String, String>())
+        captureStdout { setDf[0].print() } shouldBe "{ a:1, c:[] }\n"
+        captureStdout { mapDf[0].print() } shouldBe "{ a:1, c:{} }\n"
     }
 
     @Test

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.io.RenderToStringParamsSnippet
 import org.jetbrains.kotlinx.dataframe.io.StringBorderStyle
@@ -21,6 +22,11 @@ internal typealias PrintConvenienceSnippet = Nothing
 
 /**
  * Prints this [DataColumn] to standard output as a one-column table with its type.
+ * A [ColumnGroup] is printed as its name and schema only.
+ *
+ * At most `20` rows are printed, and cell values are cut to `40` characters ending in `...`.
+ * To change the limits, wrap the column into a [DataFrame] with [dataFrameOf] and call
+ * [print][DataFrame.print].
  *
  * @include [PrintConvenienceSnippet]
  */
@@ -32,7 +38,7 @@ public fun <T> DataColumn<T>.print(): Unit = println(this)
 
 /**
  * Prints this [DataRow] to standard output in the `{ name:value, ... }` format.
- * Null values and empty collections are skipped.
+ * Null values, empty lists, and nested rows without visible values are skipped.
  *
  * @include [PrintConvenienceSnippet]
  */
@@ -90,7 +96,9 @@ public fun <T> DataFrame<T>.print(
 
 /**
  * Prints this [GroupBy] to standard output: its key columns and its [groups][GroupBy.groups] column
- * are rendered as a text table, one row per group. The other columns of the source [DataFrame] are not shown.
+ * are rendered as a text table, one row per group. Each group is shown as `[rows x columns]`, plus the
+ * row itself when the group has a single row. The other columns of the source [DataFrame] are not
+ * shown as table columns.
  *
  * @include [PrintConvenienceSnippet]
  */
