@@ -44,7 +44,7 @@ import kotlin.reflect.typeOf
  *
  * Finally, produce the result using one of the following methods:
  * - [into][Merge.into] — stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList][Merge.intoList] — returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
+ * - [intoList][Merge.intoList] — returns the merged values as a [List], one per row.
  *
  * This operation is the reverse of [split].
  *
@@ -133,7 +133,7 @@ public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>
  * and serves as a transitional step before the merged values are computed.
  * It must be followed by one of the final methods to produce the result:
  * - [into] – stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList] – returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
+ * - [intoList] – returns the merged values as a [List], one per row.
  *
  * You can also configure the merge using:
  * - [notNull] – to exclude `null` and empty row values;
@@ -167,7 +167,7 @@ public data class Merge<T, C, R>(
  * It stores the transform applied to the collected values and must be followed
  * by one of the final methods to produce the result:
  * - [into] – stores the merged values in a new column and returns the updated [DataFrame];
- * - [intoList] – returns the merged values as a [List], one per row; the [DataFrame] itself is not changed: the selected columns stay in place.
+ * - [intoList] – returns the merged values as a [List], one per row.
  *
  * For more information: {@include [DocumentationUrls.Merge]}
  *
@@ -262,7 +262,6 @@ public inline fun <T, C, reified R> MergeWithTransform<T, C, R>.into(column: Col
 /**
  * Merges the selected columns and returns the merged values as a [List] —
  * one merged value per row, in the row order of the [DataFrame].
- * The [DataFrame] itself is not changed: the selected columns stay in place.
  *
  * For more information: {@include [DocumentationUrls.Merge]}
  *
