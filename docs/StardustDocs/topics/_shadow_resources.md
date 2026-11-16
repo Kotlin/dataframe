@@ -89,6 +89,7 @@
 <resource src="convertToEnum.html"></resource>
 <resource src="convertToIFrame.html"></resource>
 <resource src="convertToImg.html"></resource>
+<resource src="convertToJavaDuration.html"></resource>
 <resource src="convertToJavaLocalDate.html"></resource>
 <resource src="convertToLocalDate.html"></resource>
 <resource src="convertToLocalDateTime.html"></resource>

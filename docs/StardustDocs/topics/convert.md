@@ -10,7 +10,7 @@ convert { columnsSelector }
     .cast<Type>() // optional: adjusts the static type before the terminal step
     .with { rowExpression } | .notNull { rowExpression } | .perRowCol { rowColExpression }
     | .asFrame { frameExpression } | .asColumn { colExpression }
-    | to<Type>() | toDataFrames()
+    | .to<Type>() | .toDataFrames()
 
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = (DataRow, DataColumn) -> NewValue
@@ -55,16 +55,16 @@ Computes a new value for every cell of the selected columns with a [row expressi
 <tab title="Properties">
 
 ```kotlin
-df.convert { age }.with { it.toDouble() }
 df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+df.convert { age }.with { it.toDouble() }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.convert { "age"<Int>() }.with { it.toDouble() }
 df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+df.convert { "age"<Int>() }.with { it.toDouble() }
 ```
 
 </tab></tabs>
@@ -124,7 +124,9 @@ df.convert { name }.asFrame { it.asDataFrame().add("fullName") { "$firstName $la
 
 ```kotlin
 df.convert { colGroup("name") }.asFrame {
-    it.asDataFrame().add("fullName") { getValue<String>("firstName") + " " + getValue<String>("lastName") }
+    it.asDataFrame().add("fullName") {
+        getValue<String>("firstName") + " " + getValue<String>("lastName")
+    }
 }
 ```
 
@@ -144,7 +146,9 @@ For example, parallel processing:
 
 ```kotlin
 df.convert { name }.asColumn { col ->
-    col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
+    col.toList()
+        .parallelStream().map { it.toString() }.collect(Collectors.toList())
+        .toColumn()
 }
 ```
 
@@ -179,9 +183,9 @@ Converts the selected columns to `Type` automatically:
 <!---FUN convertTo-->
 
 ```kotlin
-df.convert { age }.to<Double>()
 df.convert { colsOf<Number>() }.to<String>()
 df.convert { weight }.toFloat()
+df.convert { age }.to<Double>()
 ```
 
 <inline-frame src="./resources/convertTo.html" width="100%" height="500px"></inline-frame>
@@ -230,8 +234,8 @@ which supports the same automatic conversions as `convert { }.to<Type>()`:
 <!---FUN convertColumnTo-->
 
 ```kotlin
-df.weight.convertTo<Float?>()
 df.age.convertToDouble()
+df.weight.convertTo<Float?>()
 ```
 
 <inline-frame src="./resources/convertColumnTo.html" width="100%" height="500px"></inline-frame>
@@ -258,11 +262,6 @@ stringDf
 <!---FUN convertStringTo-->
 
 ```kotlin
-// String -> Double? conversion
-stringDf.convert { value }.to<Double?>(
-    parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
-)
-
 // String -> LocalDate conversion
 stringDf.convert { date }.to<LocalDate>(
     parserOptions = ParserOptions(
@@ -271,6 +270,11 @@ stringDf.convert { date }.to<LocalDate>(
 )
 // shortcut for String -> LocalDate conversion
 stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
+
+// String -> Double? conversion
+stringDf.convert { value }.to<Double?>(
+    parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
+)
 ```
 
 <inline-frame src="./resources/convertStringTo.html" width="100%" height="500px"></inline-frame>
@@ -319,8 +323,10 @@ dataFrameOf("value")("1", "2") // note that values are strings; conversion is do
 ## Specialized date/time conversions {id="specialized-date-time-conversions"}
 
 `to<Type>()` converts dates and times with the default parser.
-The specialized functions give you control over the pattern, the format and the time zone.
-They use this [`DataFrame`](DataFrame.md):
+The specialized functions give you control over the
+[pattern and the format](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime.format/)
+and the time zone.
+The following examples use this [`DataFrame`](DataFrame.md):
 
 <!---FUN datesDfInput-->
 
@@ -335,13 +341,13 @@ datesDf
 <!---FUN convertToLocalDate-->
 
 ```kotlin
+// Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
+datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
+
 // String -> kotlinx.datetime.LocalDate with a pattern
 // the pattern-string overload requires an explicit opt-in
 @OptIn(FormatStringsInDatetimeFormats::class)
 datesDf.convert { date }.toLocalDate("dd.MM.yyyy")
-
-// Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
-datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
 ```
 
 <inline-frame src="./resources/convertToLocalDate.html" width="100%" height="500px"></inline-frame>
@@ -379,11 +385,11 @@ or a `DateTimeFormatter`:
 <!---FUN convertToJavaLocalDate-->
 
 ```kotlin
-// String -> java.time.LocalDate with a pattern and a locale
-datesDf.convert { date }.toJavaLocalDate("dd.MM.yyyy", Locale.GERMANY)
-
 // or with a DateTimeFormatter
 datesDf.convert { date }.toJavaLocalDate(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+
+// String -> java.time.LocalDate with a pattern and a locale
+datesDf.convert { date }.toJavaLocalDate("dd.MM.yyyy", Locale.GERMANY)
 ```
 
 <inline-frame src="./resources/convertToJavaLocalDate.html" width="100%" height="500px"></inline-frame>
@@ -478,12 +484,22 @@ durationsDf
 ```kotlin
 // String -> kotlin.time.Duration
 durationsDf.convert { duration }.toDuration()
+```
 
+<inline-frame src="./resources/convertToDuration.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+`toJavaDuration()` converts to `java.time.Duration`:
+
+<!---FUN convertToJavaDuration-->
+
+```kotlin
 // String -> java.time.Duration
 durationsDf.convert { duration }.toJavaDuration()
 ```
 
-<inline-frame src="./resources/convertToDuration.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/convertToJavaDuration.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 

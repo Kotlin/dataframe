@@ -1,7 +1,7 @@
 [//]: # (title: convertTo)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ConvertToSamples-->
 
-Converts all columns in the [`DataFrame`](DataFrame.md) to match a given schema [`Schema`](schema.md).
+[Converts](convert.md) all columns in the [`DataFrame`](DataFrame.md) to match a given schema [`Schema`](schema.md).
 
 **API reference**: [`convertTo`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/convert-to.html)
 
@@ -13,14 +13,14 @@ convertTo<Schema>(
 
 **Related operations**: [](adjustSchema.md), [](convert.md), [](cast.md)
 
-> `convertTo` is the name of two different operations, and they are easy to confuse:
+> `convertTo` is the name of two different operations, and they are easily mixed up:
 >
 > * `DataFrame<*>.convertTo<Schema>()` — **this page**: converts the whole dataframe
 >   so that its columns match a schema
 > * [`DataColumn<*>.convertTo<ValueType>()`](convert.md#single-columns) —
 >   converts one column to a value type
 >
-> The receivers differ: a whole dataframe against a single column.
+> The receivers differ: a whole dataframe versus a single column.
 
 ## How it works
 
@@ -105,7 +105,8 @@ df.convertTo<MySchema> {
 <!---END-->
 
 A custom `parser { }` is also the way to convert date-like strings that the default date parser
-can't read:
+can't read. The format below is built with the
+[kotlinx-datetime formatting DSL](https://kotlinlang.org/api/kotlinx-datetime/kotlinx-datetime/kotlinx.datetime.format/):
 
 <!---FUN convertToWithDateParser-->
 
@@ -169,15 +170,11 @@ recursively, and the nested columns are converted too:
 <!---FUN convertToNestedSchema-->
 
 ```kotlin
-val df: AnyFrame = dataFrameOf("firstName", "lastName", "city", "weight")(
-    "Alice",
-    "Cooper",
-    "London",
-    "54",
-    "Bob",
-    "Dylan",
-    "Dubai",
-    "87",
+val df: AnyFrame = dataFrameOf(
+    "firstName" to columnOf("Alice", "Bob"),
+    "lastName" to columnOf("Cooper", "Dylan"),
+    "city" to columnOf("London", "Dubai"),
+    "weight" to columnOf("54", "87"),
 ).group("firstName", "lastName").into("name")
     .group("city", "weight").into("info")
 // `info.weight` is a String column; the schema requires Int, so it is converted inside the group

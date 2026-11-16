@@ -56,15 +56,12 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
             // providing the filler for `c`, as it's missing in `df`
             fill { c }.with { a.value + b.value }
         }
-        // SampleEnd
-        val converted = df.convertTo<MySchema> {
-            convert<Int>().with { MyType(it) }
-            parser { MyType(it.toInt()) }
-            fill { c }.with { a.value + b.value }
-        }
-        converted.a.values().map { it.value } shouldBe listOf(1, 2, 3)
-        converted.b.values().map { it.value } shouldBe listOf(1, 2, 3)
-        converted.c.toList() shouldBe listOf(2, 4, 6)
+            // SampleEnd
+            .also {
+                it.a.values().map { v -> v.value } shouldBe listOf(1, 2, 3)
+                it.b.values().map { v -> v.value } shouldBe listOf(1, 2, 3)
+                it.c.toList() shouldBe listOf(2, 4, 6)
+            }
     }
 
     @Test
@@ -82,15 +79,12 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
             // providing the filler for `c`, as it's missing in `df`
             fill { col<Int>("c") }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
         }
-        // SampleEnd
-        val converted = df.convertTo<MySchema> {
-            convert<Int>().with { MyType(it) }
-            parser { MyType(it.toInt()) }
-            fill { col<Int>("c") }.with { getValue<MyType>("a").value + getValue<MyType>("b").value }
-        }
-        converted.a.values().map { it.value } shouldBe listOf(1, 2, 3)
-        converted.b.values().map { it.value } shouldBe listOf(1, 2, 3)
-        converted.c.toList() shouldBe listOf(2, 4, 6)
+            // SampleEnd
+            .also {
+                it.a.values().map { v -> v.value } shouldBe listOf(1, 2, 3)
+                it.b.values().map { v -> v.value } shouldBe listOf(1, 2, 3)
+                it.c.toList() shouldBe listOf(2, 4, 6)
+            }
     }
 
     @DataSchema
@@ -121,23 +115,11 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
                 )
             }
         }
-        // SampleEnd
-        df.convertTo<Event> {
-            parser {
-                LocalDate.parse(
-                    it,
-                    LocalDate.Format {
-                        day()
-                        chars(".")
-                        monthNumber()
-                        chars(".")
-                        year()
-                    },
-                )
+            // SampleEnd
+            .also {
+                it.date.toList() shouldBe listOf(LocalDate(2025, 11, 22), LocalDate(2025, 12, 5))
             }
-        }.also {
-            it.date.toList() shouldBe listOf(LocalDate(2025, 11, 22), LocalDate(2025, 12, 5))
-        }.saveDfHtmlSample()
+            .saveDfHtmlSample()
     }
 
     @DataSchema
@@ -157,11 +139,10 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
         // `weight` is not in the schema:
         df.convertTo<PersonCore>() // kept, because `ExcessiveColumns.Keep` is the default
         df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Remove) // dropped
-        // SampleEnd
+            // SampleEnd
+            .also { it.columnNames() shouldBe listOf("name", "age") }
+            .saveDfHtmlSample()
         df.convertTo<PersonCore>().columnNames() shouldBe listOf("name", "age", "weight")
-        val removed = df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Remove)
-        removed.columnNames() shouldBe listOf("name", "age")
-        removed.saveDfHtmlSample()
         shouldThrow<ExcessiveColumnsException> {
             df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Fail)
         }
@@ -188,23 +169,18 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
     @Test
     fun convertToNestedSchema() {
         // SampleStart
-        val df: AnyFrame = dataFrameOf("firstName", "lastName", "city", "weight")(
-            "Alice",
-            "Cooper",
-            "London",
-            "54",
-            "Bob",
-            "Dylan",
-            "Dubai",
-            "87",
+        val df: AnyFrame = dataFrameOf(
+            "firstName" to columnOf("Alice", "Bob"),
+            "lastName" to columnOf("Cooper", "Dylan"),
+            "city" to columnOf("London", "Dubai"),
+            "weight" to columnOf("54", "87"),
         ).group("firstName", "lastName").into("name")
             .group("city", "weight").into("info")
         // `info.weight` is a String column; the schema requires Int, so it is converted inside the group
         df.convertTo<Person>()
-        // SampleEnd
-        val converted = df.convertTo<Person>()
-        converted.getColumnGroup("info")["weight"].values() shouldBe listOf(54, 87)
-        converted.saveDfHtmlSample()
+            // SampleEnd
+            .also { it.getColumnGroup("info")["weight"].values() shouldBe listOf(54, 87) }
+            .saveDfHtmlSample()
     }
 
     @DataSchema
@@ -220,9 +196,7 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
         shouldThrow<IllegalArgumentException> {
             dataFrameOf("name")("Alice", "Bob").convertTo<PersonWithAge>()
         }
-        // SampleEnd
-        shouldThrow<IllegalArgumentException> {
-            dataFrameOf("name")("Alice", "Bob").convertTo<PersonWithAge>()
-        }.message!!.saveTextSample()
+            // SampleEnd
+            .message!!.saveTextSample()
     }
 }
