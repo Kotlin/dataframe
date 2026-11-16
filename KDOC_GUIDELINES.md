@@ -51,6 +51,10 @@ KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
 
+A replacement operation's KDoc does not reference the function it replaces: the deprecation
+message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
+when the deprecated function is deleted.
+
 For the internal API, please add at least a small note.
 
 ## KoDEx & KDoc-helpers
@@ -388,6 +392,8 @@ write it down exactly like that.
 * `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
 file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
 name appears in the KDoc only; such imports are load-bearing, keep them.
+* When a `See also` entry names an operation pair such as `x` and `xDesc`, list the ascending
+variant first — the pair reads "ascending and descending", like its neighbouring entries.
 
 For example, from `group` KDoc:
 

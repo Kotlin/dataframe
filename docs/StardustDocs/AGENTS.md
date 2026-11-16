@@ -143,6 +143,13 @@ To add one:
   source file is still referenced as `./resources/<file>.html`: `sliceRows.md:13` says
   `./resources/sliceRowsDf.html` for a file at `resources/api/sliceRows/sliceRowsDf.html`. A nested
   `src` builds fine and silently renders an empty frame.
+- **`_shadow_resources.md` is generator-positioned, not append-friendly.** `updateShadowResources`
+  sorts entries by full path, so a new `<resource>` line belongs at that sorted position — not
+  next to its neighbour by name. The sort is deterministic for a fixed file set, but
+  platform-dependent (`Path.compareTo` is case-insensitive on Windows, byte-wise on Linux/macOS),
+  so a full regeneration on another OS reorders blocks beyond the change's own lines and rewrites
+  CRLF to LF. Never carry a fully regenerated file in a PR: revert it and re-add only the lines of
+  the change's own resources, at the generator-sorted position.
 - **Nothing validates links.** Writerside resolves topic links by file name (`DataFrame.md`, not a relative
   path); anchors are the lowercased heading with punctuation dropped and spaces → `-` (or an explicit
   `{id="..."}`). Punctuation drops **without** a dash: "Specialized date/time conversions" anchors as

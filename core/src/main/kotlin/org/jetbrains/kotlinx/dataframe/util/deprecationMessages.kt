@@ -311,6 +311,9 @@ internal const val NAME_REPAIR_STRATEGY: String =
 internal const val DESC_TO_REVERSED: String =
     "This function is deprecated and renamed to `reversed()` to better reflect its purpose. $MESSAGE_1_1"
 
+internal const val SORT_BY_COUNT_TO_SORT_BY_COUNT_DESC: String =
+    "This function is deprecated and renamed to `sortByCountDesc()` to better reflect its purpose. $MESSAGE_1_1"
+
 internal const val AGGREGATE_DSL_PATH: String =
     "This function duplicates `pathOf()` and is deprecated in favor of it. $MESSAGE_1_1"
 internal const val AGGREGATE_DSL_PATH_REPLACE = "pathOf(*names)"
