@@ -25,6 +25,11 @@ Represents a sequence of values.
 It can store values of primitive (integers, strings, decimals, etc.) or reference types.
 Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
 
+> Creating a `ValueColumn` of `DataFrame` is not allowed. Create a `FrameColumn` instead.
+> One exception: `ValueColumn<DataFrame<*>?>` is allowed, since `FrameColumn`s cannot contain `null`s.
+>
+> {style="warning"}
+
 #### ColumnGroup
 
 Container for nested columns. Used to create column hierarchy.
@@ -39,3 +44,7 @@ Special kind of [`DataColumn`](DataColumn.md) that stores other [`DataFrame`](Da
 
 [`FrameColumn`](DataColumn.md#framecolumn) may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).
 
+> A `FrameColumn` cannot contain `null` values. Use empty [`DataFrames`](DataFrame.md) inside a `FrameColumn` or
+> create a `ValueColumn<DataFrame<*>?>` instead.
+>
+> {style="warning"}
