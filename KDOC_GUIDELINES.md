@@ -385,6 +385,9 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
+file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
+name appears in the KDoc only; such imports are load-bearing, keep them.
 
 For example, from `group` KDoc:
 
