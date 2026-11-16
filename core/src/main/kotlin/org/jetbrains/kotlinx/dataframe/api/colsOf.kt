@@ -276,7 +276,7 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
  * match the given [filter] and are of the given [type].
  *
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
- * match the given [filter] and are the given [type].
+ * match the given [filter] and are of the given [type].
  */
 @Suppress("UNCHECKED_CAST")
 internal inline fun <C> ColumnsResolver<*>.colsOfInternal(
