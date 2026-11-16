@@ -113,11 +113,12 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
   `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
-- **Assert the shown code, not a copy of it.** Chain assertions (`.also { }`) and the output-saving calls onto
-  the sample's last statement after `// SampleEnd` — korro excludes everything past the mark from the snippet,
-  so the test exercises exactly the code the page shows. Never re-invoke a whole shown statement as the test;
-  in a multi-statement sample only the last statement can carry the chain, so earlier statements' assertions go
-  inside that `.also { }`.
+- **Assert the shown code, not a copy of it — one asserted statement per sample.** Chain assertions (`.also { }`)
+  and the output-saving calls onto the shown statement after `// SampleEnd` — korro excludes everything past the
+  mark from the snippet, so the test exercises exactly the code the page shows. Never assert a shown statement
+  through a re-invoked copy, top-level or inside an `.also { }`: when a section shows several operations, split
+  it into separate samples/FUN blocks, each with its own chain and its own saved output. Input constructions
+  (`val df = …`) may share the sample with the one asserted statement.
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
   etc. is the default; otherwise declare a `@DataSchema` class/interface in the sample class (class level only)
   + `dataFrameOf(...)` (see `ConcatSamples.kt`). The compiler plugin rejects `@DataSchema`/enum/value class

@@ -188,38 +188,56 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     @Test
     fun convert_properties() {
         // SampleStart
-        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
         df.convert { age }.with { it.toDouble() }
             // SampleEnd
-            .also {
-                it.age.toList() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0)
-                df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
-                    .getColumnGroup("name")["firstName"].values().first() shouldBe listOf('A', 'l', 'i', 'c', 'e')
-            }
+            .also { it.age.toList() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
             .saveDfHtmlSample()
     }
 
     @Test
     fun convert_strings() {
         // SampleStart
-        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
         df.convert { "age"<Int>() }.with { it.toDouble() }
             // SampleEnd
             .also { it["age"].values() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
+    }
+
+    @Test
+    fun convertChars_properties() {
+        // SampleStart
+        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+            // SampleEnd
             .also {
-                df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
-                    .getColumnGroup("name")["firstName"].values().first() shouldBe listOf('A', 'l', 'i', 'c', 'e')
+                it.getColumnGroup("name")["firstName"].values().first() shouldBe listOf('A', 'l', 'i', 'c', 'e')
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertChars_strings() {
+        // SampleStart
+        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+            // SampleEnd
+            .also {
+                it.getColumnGroup("name")["firstName"].values().first() shouldBe listOf('A', 'l', 'i', 'c', 'e')
             }
     }
 
     @Test
     fun convertColumnTo() {
         // SampleStart
-        df.age.convertToDouble()
         df.weight.convertTo<Float?>()
             // SampleEnd
             .also { it.values() shouldBe listOf(54.0f, 87.0f, null, null, 68.0f, 55.0f, 90.0f) }
-            .also { df.age.convertToDouble().values() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertColumnToDouble() {
+        // SampleStart
+        df.age.convertToDouble()
+            // SampleEnd
+            .also { it.values() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
             .saveDfHtmlSample()
     }
 
@@ -296,22 +314,32 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     @Test
     fun convertTo() {
         // SampleStart
-        df.convert { colsOf<Number>() }.to<String>()
-        df.convert { weight }.toFloat()
         df.convert { age }.to<Double>()
             // SampleEnd
-            .also {
-                it.age.toList() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0)
-                df.convert { colsOf<Number>() }.to<String>()
-                    .also { c -> c["age"].values() shouldBe listOf("15", "45", "20", "40", "30", "20", "30") }
-                df.convert { weight }.toFloat()
-                    .also { w -> w["weight"].values() shouldBe listOf(54.0f, 87.0f, null, null, 68.0f, 55.0f, 90.0f) }
-            }
+            .also { it.age.toList() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
             .saveDfHtmlSample()
     }
 
     @Test
-    fun convertStringTo() {
+    fun convertColsToString() {
+        // SampleStart
+        df.convert { colsOf<Number>() }.to<String>()
+            // SampleEnd
+            .also { it["age"].values() shouldBe listOf("15", "45", "20", "40", "30", "20", "30") }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertToFloat() {
+        // SampleStart
+        df.convert { weight }.toFloat()
+            // SampleEnd
+            .also { it["weight"].values() shouldBe listOf(54.0f, 87.0f, null, null, 68.0f, 55.0f, 90.0f) }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertStringToLocalDate() {
         // SampleStart
         // String -> LocalDate conversion
         stringDf.convert { date }.to<LocalDate>(
@@ -319,35 +347,42 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
                 dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
             ),
         )
+            // SampleEnd
+            .also {
+                it.date.toList() shouldBe listOf(
+                    LocalDate(2025, 11, 22),
+                    LocalDate(2025, 11, 23),
+                    LocalDate(2025, 11, 24),
+                )
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertStringToLocalDateShortcut() {
+        // SampleStart
         // shortcut for String -> LocalDate conversion
         stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
+            // SampleEnd
+            .also {
+                it["date"].values() shouldBe listOf(
+                    LocalDate(2025, 11, 22),
+                    LocalDate(2025, 11, 23),
+                    LocalDate(2025, 11, 24),
+                )
+            }
+            .saveDfHtmlSample()
+    }
 
+    @Test
+    fun convertStringTo() {
+        // SampleStart
         // String -> Double? conversion
         stringDf.convert { value }.to<Double?>(
             parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
         )
             // SampleEnd
             .also { it.value.toList() shouldBe listOf(1.0, 200000.0, null) }
-            .also {
-                stringDf.convert { date }.to<LocalDate>(
-                    parserOptions = ParserOptions(
-                        dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
-                    ),
-                ).also {
-                    it.date.toList() shouldBe listOf(
-                        LocalDate(2025, 11, 22),
-                        LocalDate(2025, 11, 23),
-                        LocalDate(2025, 11, 24),
-                    )
-                }
-                stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO).also {
-                    it["date"].values() shouldBe listOf(
-                        LocalDate(2025, 11, 22),
-                        LocalDate(2025, 11, 23),
-                        LocalDate(2025, 11, 24),
-                    )
-                }
-            }
             .saveDfHtmlSample()
     }
 
@@ -382,21 +417,24 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     }
 
     @Test
-    fun convertToLocalDate() {
+    fun convertToLocalDateMillis() {
         // SampleStart
         // Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
         datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
+            // SampleEnd
+            .also { it.millis.toList() shouldBe listOf(LocalDate(1970, 1, 1), LocalDate(1970, 1, 2)) }
+            .saveDfHtmlSample()
+    }
 
+    @Test
+    fun convertToLocalDate() {
+        // SampleStart
         // String -> kotlinx.datetime.LocalDate with a pattern
         // the pattern-string overload requires an explicit opt-in
         @OptIn(FormatStringsInDatetimeFormats::class)
         datesDf.convert { date }.toLocalDate("dd.MM.yyyy")
             // SampleEnd
             .also { it.date.toList() shouldBe listOf(LocalDate(2025, 11, 22), LocalDate(2025, 12, 5)) }
-            .also {
-                datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
-                    .also { m -> m.millis.toList() shouldBe listOf(LocalDate(1970, 1, 1), LocalDate(1970, 1, 2)) }
-            }
             .saveDfHtmlSample()
     }
 
@@ -427,23 +465,27 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
     }
 
     @Test
-    fun convertToJavaLocalDate() {
+    fun convertToJavaLocalDateFormatter() {
         // SampleStart
         // or with a DateTimeFormatter
         datesDf.convert { date }.toJavaLocalDate(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            // SampleEnd
+            .also {
+                it["date"].values() shouldBe
+                    listOf(java.time.LocalDate.of(2025, 11, 22), java.time.LocalDate.of(2025, 12, 5))
+            }
+            .saveDfHtmlSample()
+    }
 
+    @Test
+    fun convertToJavaLocalDate() {
+        // SampleStart
         // String -> java.time.LocalDate with a pattern and a locale
         datesDf.convert { date }.toJavaLocalDate("dd.MM.yyyy", Locale.GERMANY)
             // SampleEnd
             .also {
                 it.date.toList() shouldBe
                     listOf(java.time.LocalDate.of(2025, 11, 22), java.time.LocalDate.of(2025, 12, 5))
-            }
-            .also {
-                datesDf.convert { date }.toJavaLocalDate(DateTimeFormatter.ofPattern("dd.MM.yyyy")).also {
-                    it["date"].values() shouldBe
-                        listOf(java.time.LocalDate.of(2025, 11, 22), java.time.LocalDate.of(2025, 12, 5))
-                }
             }
             .saveDfHtmlSample()
     }
@@ -482,16 +524,18 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
         // SampleStart
         // DateTimeComponents -> UtcOffset
         componentsDf.convert { components }.toUtcOffset()
+            // SampleEnd
+            .also { it.components.toList() shouldBe listOf(UtcOffset.parse("+03:00"), UtcOffset.parse("-05:00")) }
+            .saveDfHtmlSample()
+    }
 
+    @Test
+    fun convertToYearMonth() {
+        // SampleStart
         // DateTimeComponents -> YearMonth
         componentsDf.convert { components }.toYearMonth()
             // SampleEnd
             .also { it.components.toList() shouldBe listOf(YearMonth(2026, 5), YearMonth(2025, 11)) }
-            .also {
-                componentsDf.convert { components }.toUtcOffset().also {
-                    it.components.toList() shouldBe listOf(UtcOffset.parse("+03:00"), UtcOffset.parse("-05:00"))
-                }
-            }
             .saveDfHtmlSample()
     }
 
@@ -526,16 +570,26 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
             listOf(listOf("name", "age"), listOf("Alice", 15), listOf("Bob", 45)),
         ).cast<WithUserData>()
 
+        rowLists.convert { userData }.toDataFrames()
+            // SampleEnd
+            .also {
+                it["userData"][0] shouldBe dataFrameOf("name", "age")("Alice", 15, "Bob", 45)
+            }
+            .saveDfHtmlSample()
+    }
+
+    @Test
+    fun convertToDataFramesContainsColumns() {
+        // SampleStart
         // column-oriented: each inner list is one column, its first element is the column name
         val columnLists = dataFrameOf("userData")(
             listOf(listOf("name", "Alice", "Bob"), listOf("age", 15, 45)),
         ).cast<WithUserData>()
 
-        rowLists.convert { userData }.toDataFrames()
         columnLists.convert { userData }.toDataFrames(containsColumns = true)
             // SampleEnd
             .also {
-                it["userData"][0] shouldBe rowLists.convert { userData }.toDataFrames()["userData"][0]
+                it["userData"][0] shouldBe dataFrameOf("name", "age")("Alice", 15, "Bob", 45)
             }
             .saveDfHtmlSample()
     }

@@ -138,14 +138,26 @@ class ConvertToSamples : DataFrameSampleHelper("convertTo", "api") {
         )
         // `weight` is not in the schema:
         df.convertTo<PersonCore>() // kept, because `ExcessiveColumns.Keep` is the default
+            // SampleEnd
+            .also { it.columnNames() shouldBe listOf("name", "age", "weight") }
+            .saveDfHtmlSample()
+        shouldThrow<ExcessiveColumnsException> {
+            df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Fail)
+        }
+    }
+
+    @Test
+    fun convertToExcessiveColumnsRemove() {
+        val df: AnyFrame = dataFrameOf(
+            "name" to columnOf("Alice", "Bob"),
+            "age" to columnOf(15, 45),
+            "weight" to columnOf(54, 87),
+        )
+        // SampleStart
         df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Remove) // dropped
             // SampleEnd
             .also { it.columnNames() shouldBe listOf("name", "age") }
             .saveDfHtmlSample()
-        df.convertTo<PersonCore>().columnNames() shouldBe listOf("name", "age", "weight")
-        shouldThrow<ExcessiveColumnsException> {
-            df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Fail)
-        }
     }
 
     @DataSchema

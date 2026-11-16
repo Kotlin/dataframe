@@ -155,10 +155,19 @@ val df: AnyFrame = dataFrameOf(
 )
 // `weight` is not in the schema:
 df.convertTo<PersonCore>() // kept, because `ExcessiveColumns.Keep` is the default
-df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Remove) // dropped
 ```
 
 <inline-frame src="./resources/convertToExcessiveColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToExcessiveColumnsRemove-->
+
+```kotlin
+df.convertTo<PersonCore>(excessiveColumnsBehavior = ExcessiveColumns.Remove) // dropped
+```
+
+<inline-frame src="./resources/convertToExcessiveColumnsRemove.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 

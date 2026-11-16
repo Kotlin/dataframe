@@ -55,7 +55,6 @@ Computes a new value for every cell of the selected columns with a [row expressi
 <tab title="Properties">
 
 ```kotlin
-df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
 df.convert { age }.with { it.toDouble() }
 ```
 
@@ -63,12 +62,31 @@ df.convert { age }.with { it.toDouble() }
 <tab title="Strings">
 
 ```kotlin
-df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
 df.convert { "age"<Int>() }.with { it.toDouble() }
 ```
 
 </tab></tabs>
 <inline-frame src="./resources/convert.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertChars-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
+```
+
+</tab></tabs>
+<inline-frame src="./resources/convertChars.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -183,12 +201,30 @@ Converts the selected columns to `Type` automatically:
 <!---FUN convertTo-->
 
 ```kotlin
-df.convert { colsOf<Number>() }.to<String>()
-df.convert { weight }.toFloat()
 df.convert { age }.to<Double>()
 ```
 
 <inline-frame src="./resources/convertTo.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertColsToString-->
+
+```kotlin
+df.convert { colsOf<Number>() }.to<String>()
+```
+
+<inline-frame src="./resources/convertColsToString.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToFloat-->
+
+```kotlin
+df.convert { weight }.toFloat()
+```
+
+<inline-frame src="./resources/convertToFloat.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -234,11 +270,20 @@ which supports the same automatic conversions as `convert { }.to<Type>()`:
 <!---FUN convertColumnTo-->
 
 ```kotlin
-df.age.convertToDouble()
 df.weight.convertTo<Float?>()
 ```
 
 <inline-frame src="./resources/convertColumnTo.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertColumnToDouble-->
+
+```kotlin
+df.age.convertToDouble()
+```
+
+<inline-frame src="./resources/convertColumnToDouble.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -259,7 +304,7 @@ stringDf
 
 <!---END-->
 
-<!---FUN convertStringTo-->
+<!---FUN convertStringToLocalDate-->
 
 ```kotlin
 // String -> LocalDate conversion
@@ -268,9 +313,26 @@ stringDf.convert { date }.to<LocalDate>(
         dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
     ),
 )
+```
+
+<inline-frame src="./resources/convertStringToLocalDate.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertStringToLocalDateShortcut-->
+
+```kotlin
 // shortcut for String -> LocalDate conversion
 stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
+```
 
+<inline-frame src="./resources/convertStringToLocalDateShortcut.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertStringTo-->
+
+```kotlin
 // String -> Double? conversion
 stringDf.convert { value }.to<Double?>(
     parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
@@ -338,12 +400,20 @@ datesDf
 
 <!---END-->
 
-<!---FUN convertToLocalDate-->
+<!---FUN convertToLocalDateMillis-->
 
 ```kotlin
 // Long epoch milliseconds -> kotlinx.datetime.LocalDate in the given time zone
 datesDf.convert { millis }.toLocalDate(TimeZone.UTC)
+```
 
+<inline-frame src="./resources/convertToLocalDateMillis.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToLocalDate-->
+
+```kotlin
 // String -> kotlinx.datetime.LocalDate with a pattern
 // the pattern-string overload requires an explicit opt-in
 @OptIn(FormatStringsInDatetimeFormats::class)
@@ -382,12 +452,20 @@ datesDf.convert { dateTime }.toLocalDateTime(format)
 `java.time` targets have their own shortcuts that take a pattern with an optional locale,
 or a `DateTimeFormatter`:
 
-<!---FUN convertToJavaLocalDate-->
+<!---FUN convertToJavaLocalDateFormatter-->
 
 ```kotlin
 // or with a DateTimeFormatter
 datesDf.convert { date }.toJavaLocalDate(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+```
 
+<inline-frame src="./resources/convertToJavaLocalDateFormatter.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToJavaLocalDate-->
+
+```kotlin
 // String -> java.time.LocalDate with a pattern and a locale
 datesDf.convert { date }.toJavaLocalDate("dd.MM.yyyy", Locale.GERMANY)
 ```
@@ -453,12 +531,20 @@ From `DateTimeComponents` you can then convert to types that need only some of t
 ```kotlin
 // DateTimeComponents -> UtcOffset
 componentsDf.convert { components }.toUtcOffset()
+```
 
+<inline-frame src="./resources/convertFromDateTimeComponents.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToYearMonth-->
+
+```kotlin
 // DateTimeComponents -> YearMonth
 componentsDf.convert { components }.toYearMonth()
 ```
 
-<inline-frame src="./resources/convertFromDateTimeComponents.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/convertToYearMonth.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
@@ -518,16 +604,25 @@ val rowLists = dataFrameOf("userData")(
     listOf(listOf("name", "age"), listOf("Alice", 15), listOf("Bob", 45)),
 ).cast<WithUserData>()
 
+rowLists.convert { userData }.toDataFrames()
+```
+
+<inline-frame src="./resources/convertToDataFrames.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
+<!---FUN convertToDataFramesContainsColumns-->
+
+```kotlin
 // column-oriented: each inner list is one column, its first element is the column name
 val columnLists = dataFrameOf("userData")(
     listOf(listOf("name", "Alice", "Bob"), listOf("age", 15, 45)),
 ).cast<WithUserData>()
 
-rowLists.convert { userData }.toDataFrames()
 columnLists.convert { userData }.toDataFrames(containsColumns = true)
 ```
 
-<inline-frame src="./resources/convertToDataFrames.html" width="100%" height="500px"></inline-frame>
+<inline-frame src="./resources/convertToDataFramesContainsColumns.html" width="100%" height="500px"></inline-frame>
 
 <!---END-->
 
