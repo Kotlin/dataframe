@@ -18,15 +18,6 @@ class CastTests {
     @DataSchema
     data class Data(val a: Int, val b: String)
 
-    @DataSchema
-    data class NullableData(val a: Int, val b: String?)
-
-    @DataSchema
-    data class NullableValue(val value: String?)
-
-    @DataSchema
-    data class NestedData(val a: Int, val group: NullableValue, val frames: DataFrame<Data>)
-
     // region DataFrame
 
     @Test
@@ -46,7 +37,7 @@ class CastTests {
     }
 
     @Test
-    fun `verified dataframe cast accepts matching schema and preserves excessive columns`() {
+    fun `verified dataframe cast returns the same dataframe and keeps excessive columns`() {
         val df = dataFrameOf(
             "a" to columnOf(1, 2),
             "b" to columnOf("one", "two"),
@@ -54,49 +45,7 @@ class CastTests {
         )
         val casted: DataFrame<Data> = df.cast(verify = true)
 
-        casted shouldBe df
-    }
-
-    @Test
-    fun `verified cast fills missing nullable column with nulls`() {
-        val df = dataFrameOf("a" to columnOf(1, 2))
-
-        val casted = df.cast<NullableData>(verify = true)
-
-        casted["a"] shouldBe df["a"]
-        casted["b"].toList() shouldBe listOf(null, null)
-        casted["b"].type() shouldBe typeOf<String?>()
-    }
-
-    @Test
-    fun `verified cast creates missing groups and frame columns`() {
-        val df = dataFrameOf("a" to columnOf(1, 2))
-        val emptyFrame = dataFrameOf(
-            "a" to columnOf(values = emptyArray<Int>()),
-            "b" to columnOf(values = emptyArray<String>()),
-        )
-
-        val casted = df.cast<NestedData>(verify = true)
-
-        casted["a"] shouldBe df["a"]
-        val group = casted["group"].asColumnGroup()
-        group["value"].toList() shouldBe listOf(null, null)
-        group["value"].type() shouldBe typeOf<String?>()
-        val frames = casted["frames"].asFrameColumn()
-        frames.toList() shouldBe listOf(emptyFrame, emptyFrame)
-        frames.schema.value shouldBe emptyFrame.schema()
-    }
-
-    @Test
-    fun `verified cast of empty dataframe creates target schema`() {
-        val df = dataFrameOf("extra" to columnOf(values = emptyArray<Boolean>()))
-
-        val casted = df.cast<Data>(verify = true)
-
-        casted shouldBe dataFrameOf(
-            "a" to columnOf(values = emptyArray<Int>()),
-            "b" to columnOf(values = emptyArray<String>()),
-        )
+        casted shouldBeSameInstanceAs df
     }
 
     @Test
@@ -136,7 +85,7 @@ class CastTests {
 
         val casted: DataFrame<Data> = df.castTo(schemaFrom = schemaSource, verify = true)
 
-        casted shouldBe df
+        casted shouldBeSameInstanceAs df
     }
 
     @Test
@@ -170,7 +119,7 @@ class CastTests {
 
         val casted: DataFrame<Data> = df.castTo(schemaFrom = ::dataFactory, verify = true)
 
-        casted shouldBe df
+        casted shouldBeSameInstanceAs df
     }
 
     @Test
@@ -212,12 +161,14 @@ class CastTests {
     fun `cast should disregard column order`() {
         // https://github.com/Kotlin/dataframe/issues/1644
         // it ensures that variable in notebooks can be `castTo` to its own marker type
-        dataFrameOf(
+        val df = dataFrameOf(
             "test" to columnOf(
                 "rawData" to columnOf("string"),
                 "score" to columnOf(1f),
             ),
-        ).cast<Container>(verify = true)
+        )
+
+        df.cast<Container>(verify = true) shouldBeSameInstanceAs df
     }
 
     // endregion

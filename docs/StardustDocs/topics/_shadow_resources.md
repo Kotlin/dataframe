@@ -5,7 +5,6 @@
 <resource src="notebook_test_between_3.html"></resource>
 <resource src="castDf.html"></resource>
 <resource src="castKeepsExtraColumns.html"></resource>
-<resource src="castMissingNullableColumn.html"></resource>
 <resource src="dataColumnCast.html"></resource>
 <resource src="frameColumnCast.html"></resource>
 <resource src="groupByCast.html"></resource>

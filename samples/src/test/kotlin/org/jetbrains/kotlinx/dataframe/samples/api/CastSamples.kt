@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.AgeKeySchema.AgeKey
 import org.jetbrains.kotlinx.dataframe.samples.api.CastSamples.PersonSchema.Person
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class CastSamples : DataFrameSampleHelper("cast", "api") {
     interface PersonSchema {
@@ -29,9 +28,6 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
         data class Person(val name: String, val age: Int)
         // SampleEnd
     }
-
-    @DataSchema
-    data class PersonWithCity(val name: String, val age: Int, val city: String?)
 
     interface AgeKeySchema {
         // SampleStart
@@ -58,7 +54,7 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
         // SampleStart
         df.cast<Person>(verify = true)
             // SampleEnd
-            .also { it shouldBe df }
+            .also { it shouldBeSameInstanceAs df }
     }
 
     @Test
@@ -94,34 +90,6 @@ class CastSamples : DataFrameSampleHelper("cast", "api") {
                 )
             }
             .saveDfHtmlSample()
-    }
-
-    @Test
-    fun castMissingNullableColumn() {
-        // SampleStart
-        df.cast<PersonWithCity>(verify = true)
-            // SampleEnd
-            .also {
-                it["city"].type() shouldBe typeOf<String?>()
-                it["city"].toList() shouldBe listOf(null, null)
-            }
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun castEmptyDataFrame() {
-        // SampleStart
-        // Input schema: extra: Boolean
-        dataFrameOf("extra" to columnOf(values = emptyArray<Boolean>()))
-            .cast<Person>(verify = true)
-            // Result schema: name: String, age: Int
-            // SampleEnd
-            .also {
-                it shouldBe dataFrameOf(
-                    "name" to columnOf(values = emptyArray<String>()),
-                    "age" to columnOf(values = emptyArray<Int>()),
-                )
-            }
     }
 
     @Test
