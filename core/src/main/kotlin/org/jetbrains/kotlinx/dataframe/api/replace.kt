@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -36,6 +37,13 @@ import kotlin.reflect.KProperty
  * Each method returns a new [DataFrame].
  * Every new column takes the place of the column it replaces, in the same column group,
  * but keeps its own name, so the name of the column can change.
+ *
+ * `replace` is a low-level building block: several other operations
+ * ([update][DataFrame.update], [gather][DataFrame.gather], [move][DataFrame.move],
+ * [reorder][DataFrame.reorder], [implode][DataFrame.implode]) are implemented through it.
+ * It is intended for generic logic that works with an [AnyFrame], for example in library functions;
+ * in a type-safe pipeline prefer [convert][DataFrame.convert]`.`[asColumn][Convert.asColumn]
+ * or [rename][DataFrame.rename].
  *
  * Check out [Grammar].
  *
@@ -188,7 +196,8 @@ public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceCla
  * The dataframes inside frame columns are not changed.
  * Use [columns] to replace values only in some of the columns.
  *
- * A new value has to fit the type of the column where it is put,
+ * `replaceAll` cannot change the type of a column, only its nullability:
+ * a new value has to fit the type of the column where it is put,
  * otherwise an [IllegalStateException] is thrown.
  * `null` fits any column: the column becomes nullable.
  * For example, `df.replaceAll(null to "Unknown")` fails if a column of [Int] values contains `null`;
