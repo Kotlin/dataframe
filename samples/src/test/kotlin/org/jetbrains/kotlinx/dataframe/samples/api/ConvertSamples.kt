@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -200,6 +201,17 @@ class ConvertSamples : DataFrameSampleHelper("convert", "api") {
         df.convert { "age"<Int>() }.with { it.toDouble() }
             // SampleEnd
             .also { it["age"].values() shouldBe listOf(15.0, 45.0, 20.0, 40.0, 30.0, 20.0, 30.0) }
+    }
+
+    @Test
+    fun convertRunningTotal() {
+        // SampleStart
+        df.convert { age }.with {
+            (prev()?.newValue<Int>() ?: 0) + it
+        }
+            // SampleEnd
+            .also { it.age.toList() shouldBe listOf(15, 60, 80, 120, 150, 170, 200) }
+            .saveDfHtmlSample()
     }
 
     @Test
