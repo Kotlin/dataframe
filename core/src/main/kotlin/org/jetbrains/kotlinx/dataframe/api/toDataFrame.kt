@@ -9,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -51,7 +53,7 @@ internal interface ToDataFrameDocs {
      * A property getter that throws stores the exception it threw in the cell instead of a value,
      * and the column type is then inferred from the values.
      * When the elements themselves cannot be unfolded — they are of a simple type,
-     * or of a class without public properties — the result is a single `value` column
+     * or of a class without public properties or getter-like functions — the result is a single `value` column
      * that stores them as they are.
      */
     typealias FromObjectsSnippet = Nothing
@@ -600,7 +602,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(columnName: String): DataF
 /**
  * A [DataSchema] for the `value` column: the single column that [toDataFrame][Iterable.toDataFrame]
  * creates when the elements of the [Iterable] are stored as they are — they are of a simple type,
- * or of a class without public properties.
+ * or of a class without public properties or getter-like functions.
  *
  * Cast the resulting [DataFrame] to `DataFrame<ValueProperty<T>>` to access the `value` column
  * type-safely, for example to add computed columns to it.
