@@ -156,7 +156,7 @@ internal interface ConvertDocs {
      * **[`convert`][DataFrame.convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
      *
      * {@include [Indent]}
-     * __`.`__[**`with`**][Convert.with]`(infer: `[`Infer`][Infer]`, rowExpression: `[`RowValueExpression`][RowValueExpression]`)`
+     * __`.`__[**`with`**][Convert.with]`(infer: `[`Infer`][Infer]`, rowConverter: `[`AddDataRow`][AddDataRow]`<T>.(C) -> R)`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`notNull`**][Convert.notNull]`  { rowExpression: `[`RowValueExpression`][RowValueExpression]`  }`
@@ -319,7 +319,6 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
 /**
  * Converts specified columns
  * using row converter [expression] within the [DataFrame].
- * {@include [ExpressionsGivenRow.RowValueExpression]}
  * {@include [DocumentationUrls.Convert]}
  *
  * ## Note
@@ -332,7 +331,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
  * // Convert values in selected column to a trimmed `String`.
  * df.convert("valueA", "valueB") { it.toString().trim() }
  * ```
- * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
+ * @param [expression] The expression that provides a new value for every selected cell given its row and original value.
  * @return A new [DataFrame] with the converted values.
  */
 @Refine
@@ -341,7 +340,7 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowValueExpression<T, Any?, R>,
+    noinline expression: AddDataRow<T>.(Any?) -> R,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 @Refine
@@ -494,11 +493,8 @@ private typealias SeeAlsoConvertPerRowCol = Nothing
 private typealias SeeAlsoConvertAsColumn = Nothing
 
 /**
- * Converts values in columns previously selected by [convert] using the specified [rowConverter],
- * a [row value expression][RowValueExpression] applied to each row in the [DataFrame].
- *
- * A [row value expression][RowValueExpression] allows you to provide a new value for every selected cell
- * given its row (as a receiver) and its previous value (as a lambda argument).
+ * Converts values in columns previously selected by [convert] using the specified [rowConverter]
+ * applied to each row in the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -518,14 +514,14 @@ private typealias SeeAlsoConvertAsColumn = Nothing
  *
  * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
- * @param [rowConverter] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
+ * @param [rowConverter] The expression that provides a new value for every selected cell given its row and original value.
  * @return A new [DataFrame] with the converted values.
  */
 @Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    noinline rowConverter: RowValueExpression<T, C, R>,
+    noinline rowConverter: AddDataRow<T>.(C) -> R,
 ): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
 /**
