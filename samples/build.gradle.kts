@@ -103,6 +103,7 @@ korro {
                 include("readSqlFromCustomDatabase.md")
                 include("write.md")
                 include("rename.md")
+                include("require.md")
                 include("format.md")
                 include("parse.md")
                 include("toHTML.md")

@@ -127,6 +127,8 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   render the declaration header either — a class `FUN` target emits only the `// SampleStart`–`// SampleEnd`
   region inside the body, never the `enum class X { … }` line — so the `text` fence is the only shape that can
   show it.
+  Numbers that read as real-world facts (star counts, prices, view counts) are either copied from a tracked
+  dataset (e.g. `data/*.csv`) or clearly synthetic — the rendered iframe presents them to the reader as real.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Conversion shortcuts with `@Refine` (e.g. `toLocalDate(format)`, `toJavaLocalDate(formatter)`) change the
