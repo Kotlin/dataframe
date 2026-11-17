@@ -123,6 +123,7 @@ korro {
                 include("convertTo.md")
                 include("ColumnSelectors.md")
                 include("concat.md")
+                include("cast.md")
                 include("concatDf.md")
                 include("groupBy.md")
                 include("map.md")
