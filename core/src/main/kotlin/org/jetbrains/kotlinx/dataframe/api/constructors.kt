@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_OF_WITH_VALUES
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.random.Random
 import kotlin.random.nextInt
+import kotlin.random.nextLong
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -1107,13 +1108,13 @@ public class DataFrameBuilder(private val header: List<String>) {
      * Convenient for tests and demos.
      *
      * @param [nrow] The number of rows in every column.
-     * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
-     * @throws [IllegalArgumentException] if [range] is empty or its bounds are equal — no random value can be produced.
+     * @param [range] The range of the random values (both bounds included).
+     * @throws [IllegalArgumentException] if [range] is empty.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomLongRange")
     public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> =
-        fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
+        fillNotNull(nrow) { Random.nextLong(range.start..range.endInclusive) }
 
     /**
      * Creates a [DataFrame] where every column has [nrow] random [Boolean] values.

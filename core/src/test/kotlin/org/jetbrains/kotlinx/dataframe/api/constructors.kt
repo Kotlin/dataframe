@@ -732,13 +732,14 @@ class ConstructorsTests {
         val noRangeLongs = dataFrameOf("l").randomLong(2)
         noRangeLongs["l"].type shouldBe typeOf<Long>()
 
-        // the upper bound of randomInt ranges is included, of randomLong/randomDouble — not
+        // the upper bound of randomInt/randomLong ranges is included, of randomDouble — not
         val boundaryInts = dataFrameOf("i").randomInt(100, 1..2)
         boundaryInts["i"].values.all { (it as Int) in 1..2 } shouldBe true
         boundaryInts["i"].values.any { it == 2 } shouldBe true
 
         val boundaryLongs = dataFrameOf("l").randomLong(100, 1L..2L)
-        boundaryLongs["l"].values.all { (it as Long) == 1L } shouldBe true
+        boundaryLongs["l"].values.all { (it as Long) in 1L..2L } shouldBe true
+        boundaryLongs["l"].values.any { it == 2L } shouldBe true
 
         val boundaryDoubles = dataFrameOf("d").randomDouble(100, 1.0..2.0)
         boundaryDoubles["d"].values.all { (it as Double) < 2.0 } shouldBe true
@@ -752,9 +753,16 @@ class ConstructorsTests {
     }
 
     @Test
-    fun `builder randomLong on single-value range throws`() {
+    fun `builder randomLong on single-value range returns the bound`() {
+        val df = dataFrameOf("x").randomLong(3, 5L..5L)
+
+        df["x"].values shouldBe listOf(5L, 5L, 5L)
+    }
+
+    @Test
+    fun `builder randomLong on empty range throws`() {
         shouldThrow<IllegalArgumentException> {
-            dataFrameOf("x").randomLong(3, 5L..5L)
+            dataFrameOf("x").randomLong(3, 5L..1L)
         }
     }
 
@@ -762,6 +770,13 @@ class ConstructorsTests {
     fun `builder randomDouble on single-value range throws`() {
         shouldThrow<IllegalArgumentException> {
             dataFrameOf("x").randomDouble(3, 1.0..1.0)
+        }
+    }
+
+    @Test
+    fun `builder randomDouble on empty range throws`() {
+        shouldThrow<IllegalArgumentException> {
+            dataFrameOf("x").randomDouble(3, 5.0..1.0)
         }
     }
 

@@ -106,8 +106,16 @@ recreate it), then run in this order (`korro` **must** run after `test`):
   `.saveTextSample()` for `String`/`CodeString` — see above) and add highlighting (`.format` / `.formatHeader` /
   `.defaultHeaderFormatting { }` — rows for row-oriented operations, headers for column-oriented ones). Korro puts
   every saved output into the topic itself, inside the sample's `FUN`/`END` block.
+  When the sample's result is an expression, keep `val df =` out of the shown code by putting `// SampleEnd`
+  mid-chain and continuing with `.saveDfHtmlSample()` on the next line (`MapSamples.mapDf` is the pattern).
 - Use small, illustrative data (e.g. a frame with `null`s for `null`-related operations). `TestBase`'s `peopleDf`
-  etc. is the default; otherwise declare a local `@DataSchema` + `dataFrameOf(...)` (see `ConcatSamples.kt`).
+  etc. is the default; otherwise declare a `@DataSchema` class in the sample file + `dataFrameOf(...)` (see
+  `ConcatSamples.kt`). The compiler plugin rejects `@DataSchema` declarations inside a function body, so a schema
+  class a sample shows is either top-level in the file (outside the shown block) or carries no annotation
+  (reflection-based APIs like `emptyDataFrame` work without it).
+- Shown sample code is page content: when its faithful shape violates ktlint, suppress at file level
+  (`@file:Suppress("ktlint")`, as `Generate.kt` and `TestBase.kt` do) rather than letting `ktlintFormat` rewrite
+  what the page displays.
 - **No deprecated API** — no deprecated operations, overloads or parameters; samples must compile without
   deprecation warnings.
 - Write each sample as a runnable test with optional assertions; it must pass and must not be `@Ignore`d (except
