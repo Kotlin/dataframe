@@ -150,6 +150,7 @@ korro {
                 include("single.md")
                 include("indexing.md")
                 include("unfold.md")
+                include("replace.md")
                 include("reorder.md")
                 include("operations.md")
             },

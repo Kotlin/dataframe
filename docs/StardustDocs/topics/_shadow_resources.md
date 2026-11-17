@@ -365,6 +365,15 @@
 <resource src="reorderInDifferentGroups.html"></resource>
 <resource src="reorderInGroup.html"></resource>
 <resource src="reorderSome.html"></resource>
+<resource src="replaceAllInColumns.html"></resource>
+<resource src="replaceAllValues.html"></resource>
+<resource src="replaceDf.html"></resource>
+<resource src="replaceGroupWithColumn.html"></resource>
+<resource src="replaceKeepName.html"></resource>
+<resource src="replaceRename.html"></resource>
+<resource src="replaceVsConvertAsColumn.html"></resource>
+<resource src="replaceWithColumns.html"></resource>
+<resource src="replaceWithFrameColumn.html"></resource>
 <resource src="notebook_test_shuffle_1.html"></resource>
 <resource src="notebook_test_shuffle_2.html"></resource>
 <resource src="single.html"></resource>
@@ -488,7 +497,6 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.remove.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html"></resource>
-<resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.replace.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"></resource>
