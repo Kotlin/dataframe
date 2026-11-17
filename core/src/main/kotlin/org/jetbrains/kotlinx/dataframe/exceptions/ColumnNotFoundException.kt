@@ -10,8 +10,7 @@ package org.jetbrains.kotlinx.dataframe.exceptions
  * Extends [IllegalStateException], the type the column resolution machinery throws for a missing
  * column, so existing `catch (IllegalStateException)` code keeps working.
  *
- * Implements [DataFrameError], so when the compiler plugin calls the operation, [message] is reported
- * as a warning instead of failing the execution.
+ * Implements [DataFrameError].
  */
 public class ColumnNotFoundException(public val columnName: String, public override val message: String) :
     IllegalStateException(),

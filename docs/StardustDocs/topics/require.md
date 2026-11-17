@@ -40,7 +40,9 @@ Let's start with a pipeline that uses only [String Column Accessors](concepts/St
 <!---FUN requireColumnStringApi-->
 
 ```kotlin
-val repos = DataFrame.readCsv(file)
+val repos = DataFrame.readCsv(
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
 
 repos
     .filter { "stargazers_count"<Int>() > 100 }
@@ -57,7 +59,9 @@ Notice how the `stargazers_count` string is repeated three times. We can refacto
 <!---FUN requireColumnTyped-->
 
 ```kotlin
-val repos = DataFrame.readCsv(file)
+val repos = DataFrame.readCsv(
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
     .requireColumn { "stargazers_count"<Int>() }
 
 repos
@@ -70,15 +74,17 @@ repos
 
 <!---END-->
 
-This way code becomes a bit more robust. For example, after `.rename { stargazers_count }.into("stars")`
+This way code becomes a bit more robust. For example, after `.rename { stargazers_count }.to("stars")`
 usages of the `stargazers_count` property become compile-time errors that are easy to spot and update to `stars`:
 
 <!---FUN requireColumnRename-->
 
 ```kotlin
-val repos = DataFrame.readCsv(file)
+val repos = DataFrame.readCsv(
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
     .requireColumn { "stargazers_count"<Int>() }
-    .rename { stargazers_count }.into("stars")
+    .rename { stargazers_count }.to("stars")
 
 // usages of the `stargazers_count` property no longer resolve:
 // repos.filter { stargazers_count > 100 }
@@ -91,7 +97,6 @@ repos.filter { stars > 100 }
 
 `requireColumn` can also change the compile-time type of a column that is already in the schema: pass a [cast](cast.md) selector,
 and the runtime type of the column must be a subtype of the new type.
-(`columnOf` infers the runtime type from the values, so in the sample below it is `String`, not `Any`.)
 
 <!---FUN requireColumnCast-->
 

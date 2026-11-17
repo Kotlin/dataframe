@@ -21,35 +21,34 @@ import kotlin.reflect.typeOf
  *
  * We recommend considering declaring a [DataSchema] and using [cast] or [convertTo] if you end up with more than a few `requireColumn` calls.
  *
- * For more information: {@include [DocumentationUrls.Require]}
- *
  * ### Examples
  *
  * Require a nested column with a runtime check and use the extension property afterwards:
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnNested]
  *
- * A pipeline that uses only String Column Accessors and String API overloads repeats the `stargazers_count` string three times:
+ * A pipeline that uses only String Column Accessors and String API overloads repeats the `stargazers_count` string three times.
+ * We can use `requireColumn` to add information about this column to the compile-time schema:
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnStringApi]
  *
  * `requireColumn` adds the column to the compile-time schema, so the same pipeline can use the extension property instead:
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnTyped]
  *
  * This way code becomes a bit more robust.
- * For example, after `.rename { stargazers_count }.into("stars")`
+ * For example, after `.rename { stargazers_count }.to("stars")`
  * usages of the `stargazers_count` property become compile-time errors
  * that are easy to spot and update to `stars`:
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnRename]
  *
  * `requireColumn` can also change the compile-time type of a column that is already in the schema:
  * the runtime type of the column must be a subtype of [C].
- * (`columnOf` infers the runtime type from the values, so in the sample below it is `String`, not `Any`.)
  * @sample [org.jetbrains.kotlinx.dataframe.samples.api.RequireSamples.requireColumnCast]
+ *
+ * For more information: {@include [DocumentationUrls.Require]}
  *
  * @param [T] The schema marker type of this [DataFrame].
  * @param [C] The type the column is required to have.
  * @param [column] The [ColumnSelector] for the column to require.
  * @throws [ColumnNotFoundException] if [column] can't be resolved in this [DataFrame].
- * The exception implements [DataFrameError], so the compiler plugin reports it as a warning.
  * @throws [IllegalArgumentException] if the runtime type of the resolved column is not a subtype of [C].
  * @return This [DataFrame] with [column] added to the compile-time schema.
  */

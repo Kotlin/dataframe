@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
-import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
 
@@ -36,24 +35,26 @@ class RequireSamples : DataFrameSampleHelper("require", "api") {
 
     @Test
     fun requireColumnStringApi() {
-        val file = testCsv("repositories")
         // SampleStart
-        val repos = DataFrame.readCsv(file)
+        val repos = DataFrame.readCsv(
+            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+        )
 
         repos
             .filter { "stargazers_count"<Int>() > 100 }
             .sortByDesc("stargazers_count")
             .select("full_name", "stargazers_count")
             // SampleEnd
-            .also { it.rowsCount() shouldBe 4 }
+            .also { it.rowsCount() shouldBe 91 }
             .saveDfHtmlSample()
     }
 
     @Test
     fun requireColumnTyped() {
-        val file = testCsv("repositories")
         // SampleStart
-        val repos = DataFrame.readCsv(file)
+        val repos = DataFrame.readCsv(
+            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+        )
             .requireColumn { "stargazers_count"<Int>() }
 
         repos
@@ -61,23 +62,24 @@ class RequireSamples : DataFrameSampleHelper("require", "api") {
             .sortByDesc { stargazers_count }
             .select { "full_name" and stargazers_count }
             // SampleEnd
-            .also { it.rowsCount() shouldBe 4 }
+            .also { it.rowsCount() shouldBe 91 }
             .saveDfHtmlSample()
     }
 
     @Test
     fun requireColumnRename() {
-        val file = testCsv("repositories")
         // SampleStart
-        val repos = DataFrame.readCsv(file)
+        val repos = DataFrame.readCsv(
+            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+        )
             .requireColumn { "stargazers_count"<Int>() }
-            .rename { stargazers_count }.into("stars")
+            .rename { stargazers_count }.to("stars")
 
         // usages of the `stargazers_count` property no longer resolve:
         // repos.filter { stargazers_count > 100 }
         repos.filter { stars > 100 }
             // SampleEnd
-            .also { it.rowsCount() shouldBe 4 }
+            .also { it.rowsCount() shouldBe 91 }
             .saveDfHtmlSample()
     }
 
