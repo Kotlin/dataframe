@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -82,6 +83,30 @@ internal interface SelectingRows {
     /** {@set [FIRST_OPERATION] operation}{@set [SECOND_OPERATION] where} */
     @ExcludeFromSources
     typealias SetDefaultOperationArg = Nothing
+
+    /*
+     * The key for a `@set` that defines which rows the operation takes (`first` or `last`).
+     */
+    @ExcludeFromSources
+    typealias WHICH_ROWS = Nothing
+
+    /**
+     * {@comment
+     *    Column types after a row slice. Include it into KDoc with `@include [SelectingRows.SlicedColumnTypesSnippet]`,
+     *    setting [WHICH_ROWS] to `first` or `last`.
+     * }
+     *
+     * If the number of rows to take is greater than or equal to the number of rows, the whole [DataFrame]
+     * is returned as it is.
+     * Otherwise, each column keeps its runtime type except for nullability: a nullable column
+     * whose `{@get [WHICH_ROWS] first}` values contain no `null` becomes non-nullable at runtime;
+     * the compile-time type is not affected.
+     *
+     * When the number of rows to take is `0`, the result has no rows but keeps all columns:
+     * a column group keeps its nested columns, and a frame column keeps its schema.
+     */
+    @ExcludeFromSources
+    typealias SlicedColumnTypesSnippet = Nothing
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
     @ExcludeFromSources
