@@ -21,8 +21,10 @@ Gradle (Kotlin DSL), multi-module. Use the wrapper (`./gradlew`, or `gradlew.bat
 - `./gradlew <module>:test --tests "org.jetbrains.kotlinx.dataframe.SomeTest"` — run a single test class/method.
 - Add `-Pkotlin.dataframe.debug=true` when validating changes. It enables extra, heavier correctness checks that
   are off in production. PR/CI builds run with this flag (`build -Pkotlin.dataframe.debug=true`), so match it locally.
-- `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips KDoc
+- `./gradlew publishToMavenLocal -PskipKodex` — publish locally for iteration. `-PskipKodex` skips `apiCheck` and KDoc
   preprocessing (see below); the result has "broken" KDocs, so it is for local dev only.
+- `./gradlew dokkaGeneratePublicationHtml` — build the multi-module Dokka API reference into `build/dokka/html`
+  (what CI deploys under `https://kotlin.github.io/dataframe/api-docs/`). Takes several minutes, as it runs KoDEx first.
 
 Module names for `<module>:` come from `settings.gradle.kts` (e.g. `core`, `dataframe-csv`, `dataframe-jdbc`,
 `dataframe-json`, `dataframe-arrow`, `dataframe-excel`, `dataframe-jupyter`).
@@ -43,17 +45,14 @@ Dependency graph is rooted at `core`, with I/O and integration split into option
 - **Compiler/build tooling**:
   - The **Kotlin DataFrame compiler plugin** — the recommended way to get compile-time type-safe extension
     properties — is **NOT in this repo**. It is developed in the Kotlin repository at
-    `github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`. This repo's `plugins/kotlin-dataframe`
-    is a **disabled, out-of-date legacy copy** (its tests are turned off; see issue #1290) — do not treat it as
-    the live plugin.
+    `github.com/JetBrains/kotlin/tree/master/plugins/kotlin-dataframe`.
   - `dataframe-compiler-plugin-core` — a shaded subset of `:core` bundled *inside* that compiler plugin (and
     IntelliJ) to run compile-time interpreters of operations; it is not itself a compiler plugin. See its
     `AGENTS.md`.
-  - `plugins/*` is mostly dead code — see `plugins/AGENTS.md` before touching any of it.
-    `plugins/symbol-processor` (KSP codegen for `@DataSchema`) and `plugins/dataframe-gradle-plugin` are
-    **disabled** too (KSP1 is not compatible with Kotlin 2.3+), alongside `plugins/kotlin-dataframe`; none of the
-    three is in `settings.gradle.kts`, so nothing there is compiled or tested. Still active:
-    `expressions-converter` and `public-api-modifier`. The former `keywords-generator` module has moved into
+  - `plugins/*` holds the remaining plugins, `expressions-converter` and `public-api-modifier` (see
+    `plugins/AGENTS.md`). The deprecated `plugins/symbol-processor` (KSP codegen for `@DataSchema`) and
+    `plugins/dataframe-gradle-plugin` have been removed from the repository — KSP1 is not compatible with
+    Kotlin 2.3+, and their last release is `1.0.0-Beta4`. The former `keywords-generator` module has moved into
     `build-logic` as the `dfbuild.keywordsGenerator` convention plugin.
 - **Build logic** lives in `build-logic/` and `build-settings-logic/` as convention plugins
   (e.g. `conventions.plugins.dfbuild.*`), not inline in the module build files.
@@ -73,8 +72,17 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
 `@ExportAsHtml`). See `KODEX_KDOC_PREPROCESSING.md` and `KDOC_GUIDELINES.md`.
 
 - **KoDEx** (an external KDoc-preprocessing tool, applied via the `kodex` convention plugin) expands the templated
-  KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; `changeJarTask` makes `sources.jar` use
-  those.
+  KDocs. `core:processKDocsMain` processes KDocs into `generated-sources`; the `mainKodex` compilation builds those
+  processed sources into KoDEx jars (so `@ExcludeFromSources` is stripped from both sources and compiled classes).
+  Publishing selects the `kodexJava` component via `composeOf { from(kodexAwareComponentToPublish()) }`, and
+  `apiBuild` (`apiDump`/`apiCheck`) reads the KoDEx jar to validate the published API.
+- **Dokka documents the KoDEx-processed sources too.** In KoDEx modules, `dfbuild.kodex` suppresses the `main` Dokka
+  source set and enables `mainKodex` instead (display name copied from `main`), so the API reference shows the
+  expanded KDocs. With `-PskipKodex`, Dokka falls back to the plain `main` sources. Dokka's HTML styling (logo,
+  footer, homepage link) lives in `dfbuild.dokka` and `docs/dokka/`.
+- **`processKDocsMain` does not track its output files** — it only checks that `generated-sources/` is non-empty.
+  After reverting or editing anything under `*/generated-sources`, run `./gradlew processKDocsMain --rerun`, or
+  Dokka/the KoDEx jars are built from the stale files.
 - **Don't hand-edit generated sources, and don't grep/crawl the tree.** Every module built with KoDEx (`core`,
   `dataframe-csv`, `dataframe-json`, `dataframe-excel`, `dataframe-geo`, `dataframe-jdbc`) has a tracked
   `generated-sources/` copy,
@@ -95,7 +103,7 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
   path is never staged; `docs/StardustDocs/topics/_shadow_resources.md`, whose path is staged but whose
   generating task (`updateShadowResources`) the bot never runs; and the data-schema accessors under
   `**/src/generated-dataschema-accessors/`, which **can no longer be generated at all** — the KSP/Gradle plugin
-  that produced them is deprecated (`plugins/symbol-processor`, `plugins/dataframe-gradle-plugin`, see above), so
+  that produced them is deprecated and has been removed from the repository (its last release is `1.0.0-Beta4`), so
   they are frozen, hand-maintained sources that happen to be named "generated". Their path is not staged either;
   only the second copy inside `*/generated-sources/src/generated-dataschema-accessors/` rides along, because it
   sits under a staged `generated-sources` directory. See `docs/StardustDocs/AGENTS.md`.
@@ -109,6 +117,8 @@ Public KDocs use KoDEx notations (`{@include [X]}`, `@set`/`@get`/`$`, `@sample`
 Documentation snippets are runnable tests. The `samples` module and `core`'s `samplesTest`/`korro` tasks execute
 sample code, save outputs, and inject them into the WriterSide docs under `docs/StardustDocs/`. Migration of samples
 into the `:samples` module is in progress; new documentation samples belong there.
+Rules for website topics and samples are in `DOCUMENTATION_GUIDELINES.md`; for an operation page use the
+`operation-website-documentation` skill (`.agents/skills/operation-website-documentation/SKILL.md`).
 
 ## Code style
 
@@ -136,7 +146,9 @@ into the `:samples` module is in progress; new documentation samples belong ther
 ## Constraints
 
 - Base all PRs on `master`; the current checked-out branch may be a feature branch (`git status` at session start).
-- Bug fixes require a reproducing test; new public APIs require docs + tests.
+- Bug fixes require a reproducing test; new public APIs require docs + tests. A change in behaviour that users
+  can observe also requires docs: the operation's website page and the KDoc of the public function a user calls,
+  not only the KDoc of an internal function or an extension point.
 - Public API is guarded by **binary-compatibility-validator** in every publishable module — when you change public
   signatures, run the `apiDump`/`apiCheck` Gradle tasks and commit the module's updated `api/*.api` dump.
 - DB tests in `dataframe-jdbc` are structured to run against either Dockerized or locally installed DBMS

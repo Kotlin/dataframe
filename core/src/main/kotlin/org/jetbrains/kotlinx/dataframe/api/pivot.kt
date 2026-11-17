@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -17,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -173,6 +173,34 @@ internal interface PivotDocs {
     typealias Reducing = Nothing
 
     /**
+     * {@comment Note about the [ReducedPivot] methods being the final step of [Reducing]. KDoc-snippet.}
+     *
+     * This is the final step of [Pivot reducing][Reducing].
+     * A [ReducedPivot] is created by a reducing method, like [first][Pivot.first], [last][Pivot.last],
+     * [minBy][Pivot.minBy], [maxBy][Pivot.maxBy], [medianBy][Pivot.medianBy], or
+     * [percentileBy][Pivot.percentileBy], which selects at most one row in each [pivot] group.
+     *
+     * If no row is selected in a group (for example, if no row of the group satisfies
+     * the predicate of [first][Pivot.first]), the [pivot] key of this group is still present
+     * in the resulting [DataRow], but all the values under it are `null`.
+     *
+     * Check out [`Pivot grammar`][PivotDocs.Grammar].
+     */
+    @ExcludeFromSources
+    typealias ReducedPivotFinalStepSnippet = Nothing
+
+    /**
+     * {@comment Note about the structure of the [ReducedPivot.values] result. KDoc-snippet.}
+     *
+     * If a single column is taken, its value is stored directly under the [pivot] key.
+     * If several columns are taken and `separate` is `false` (the default), the value of each [pivot] key
+     * is a row with the values of these columns; if `separate` is `true`, the results are grouped
+     * by the names of these columns first, and by the [pivot] keys second.
+     */
+    @ExcludeFromSources
+    typealias ReducedPivotValuesStructureSnippet = Nothing
+
+    /**
      * ### [Pivot] aggregation
      *
      * Each [Pivot] group can be aggregated — that is, transformed into a new value, [DataRow], or [DataFrame] —
@@ -254,7 +282,7 @@ internal interface PivotDocs {
 
     /**
      * Pivoted columns can also be created inline
-     * (i.g. by creating a new column using [expr] or simply renaming the old one
+     * (e.g. by creating a new column using [expr] or simply renaming the old one
      * using [named]):
      * ```kotlin
      * // Create a new column "newName" based on existing "oldName" values
@@ -439,7 +467,7 @@ public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = nul
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivot(vararg columns: AnyColumnReference, inward: Boolean? = null): Pivot<T> =
+public fun <T> DataFrame<T>.pivot(vararg columns: ColumnReference<*>, inward: Boolean? = null): Pivot<T> =
     pivot(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -535,7 +563,7 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -581,6 +609,7 @@ internal typealias PivotCountsResultCellDescription = Nothing
  *
  * ### This `pivotCounts` Overload
  */
+@ExcludeFromSources
 internal typealias DataFramePivotCountsCommonDocs = Nothing
 
 /**
@@ -627,7 +656,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean 
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<T> =
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<T> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -674,7 +703,7 @@ public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: PivotColumns
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivot(vararg columns: AnyColumnReference, inward: Boolean = true): PivotGroupBy<G> =
+public fun <G> GroupBy<*, G>.pivot(vararg columns: ColumnReference<*>, inward: Boolean = true): PivotGroupBy<G> =
     pivot(inward) { columns.toColumnSet() }
 
 /**
@@ -719,6 +748,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
  *
  * ### This `pivotMatches` Overload
  */
+@ExcludeFromSources
 internal typealias GroupByPivotMatchesCommonDocs = Nothing
 
 /**
@@ -763,7 +793,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolea
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotMatches(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -795,6 +825,7 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: 
  *
  * ### This `pivotCounts` Overload
  */
+@ExcludeFromSources
 internal typealias GroupByPivotCountsCommonDocs = Nothing
 
 /**
@@ -839,7 +870,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: AnyColumnReference, inward: Boolean = true): DataFrame<G> =
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: ColumnReference<*>, inward: Boolean = true): DataFrame<G> =
     pivotCounts(inward) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -959,7 +990,7 @@ public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Bool
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivot(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): PivotGroupBy<T> = pivot(inward) { columns.toColumnSet() }
 
@@ -1045,7 +1076,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inwar
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotMatches(inward) { columns.toColumnSet() }
 
@@ -1088,7 +1119,7 @@ internal typealias AggregateGroupedDslPivotCountsDocs = Nothing
  * ### Example
  * ```kotlin
  * df.groupBy { name.firstName }.aggregate {
- *     // Compute number of for all unique values of "city"
+ *     // Compute number of matching rows for all unique values of "city"
  *     // across all "name.firstName" key values and adds it to the aggregation result
  *     pivotCounts { city }
  * }
@@ -1131,7 +1162,7 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     inward: Boolean = true,
 ): DataFrame<T> = pivotCounts(inward) { columns.toColumnSet() }
 
@@ -1280,7 +1311,7 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
      * #### Example
      * ```kotlin
      * df.pivot { city }.groupBy { name.firstName }.aggregate {
-     *   // Сount rows within each firstName" × "city" combination group and store the result
+     *   // Count rows within each "firstName" × "city" combination group and store the result
      *   // into a new "total" column (a new sub-column under each pivot key column)
      *   count() into "total"
      *

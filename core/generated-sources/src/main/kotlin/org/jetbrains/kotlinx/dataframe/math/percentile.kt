@@ -1,12 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -94,36 +92,13 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
             )
     }
 
-    val indexedSequence = this.mapIndexedNotNull { i, it ->
-        if (it == null) {
-            null
-        } else {
-            IndexedComparable(i, it)
-        }
-    }
-
     // TODO make configurable https://github.com/Kotlin/dataframe/issues/1121
-    val method = QuantileEstimationMethod.R3
-
-    // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
-    val p = percentile / 100.0
-
-    // get the index where the percentile can be found in the sorted sequence
-    val indexEstimation = indexedSequence.quantileIndexEstimation(
-        p = p,
-        type = typeOf<IndexedComparable<Nothing>>(),
+    return quantileIndex(
+        // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
+        p = percentile / 100.0,
+        type = type,
         skipNaN = skipNaN,
-        method = method,
+        method = QuantileEstimationMethod.R3,
         name = "percentile",
     )
-    if (indexEstimation.isNaN()) return this.indexOfFirst { it.isNaN }
-    if (indexEstimation < 0.0) return -1
-    require(indexEstimation == round(indexEstimation)) {
-        "percentile expected a whole number index from quantileIndexEstimation but was $indexEstimation"
-    }
-
-    val percentileResult = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
-
-    // return the original unsorted index of the found result
-    return percentileResult.index
 }

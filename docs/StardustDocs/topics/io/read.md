@@ -19,6 +19,8 @@ with format auto-detection and parsing options.
 
 The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, and Apache Arrow input formats.
 
+**API reference**: [`readCsv`](https://kotlin.github.io/dataframe/api-docs/dataframe-csv/org.jetbrains.kotlinx.dataframe.io/read-csv.html), [`readJson`](https://kotlin.github.io/dataframe/api-docs/dataframe-json/org.jetbrains.kotlinx.dataframe.io/read-json.html), [`readExcel`](https://kotlin.github.io/dataframe/api-docs/dataframe-excel/org.jetbrains.kotlinx.dataframe.io/read-excel.html), [`readArrow`](https://kotlin.github.io/dataframe/api-docs/dataframe-arrow/org.jetbrains.kotlinx.dataframe.io/read-arrow.html), [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html)
+
 Reading from SQL databases is also supported.
 Read [here](readSqlDatabases.md) to know more 
 or explore the [example project](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples).
@@ -141,8 +143,9 @@ val df = DataFrame.readCsv(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readCsvTypeInference.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 with the following schema:
 
@@ -165,8 +168,9 @@ We get this [`DataFrame`](DataFrame.md)
 val df = DataFrame.readCsv(file)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readCsvWithJsonColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 with a data schema where D is a [`ColumnGroup`](DataColumn.md#columngroup) with two nested columns:
 
@@ -189,8 +193,9 @@ We get this [`DataFrame`](DataFrame.md):
 val df = DataFrame.readCsv(file)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readCsvWithJsonListsColumns.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 with the following schema:
 
@@ -208,7 +213,7 @@ Sometimes columns in your CSV can be interpreted differently depending on your s
 
 <inline-frame src="./resources/csvLocale.html" width="100%" height="500px"></inline-frame>
 
-Here a comma can be a decimal-, or thousands separator, and thus become different values.
+Here a comma can be a decimal- or thousands separator, and thus become different values.
 You can deal with it in multiple ways, for instance:
 
 1) Provide locale as a parser option
@@ -222,8 +227,9 @@ val df = DataFrame.readCsv(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readNumbersWithSpecificLocale.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 2) Disable type inference for a specific column and convert it yourself
 
@@ -236,8 +242,9 @@ val df = DataFrame.readCsv(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readNumbersWithColType.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ### Work with specific date-time formats
 
@@ -268,8 +275,9 @@ val df = DataFrame.readCsv(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readDatesWithSpecificDateTimePattern.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
 
@@ -288,8 +296,9 @@ val df = DataFrame.readCsv(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readDatesWithSpecificDateTimeFormatter.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 These two approaches are essentially the same, just specified in different ways.
 The result will be a dataframe with properly parsed `DateTime` columns.
@@ -424,8 +433,9 @@ val text = """
 val df = DataFrame.readJsonStr(text)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonFromString.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The corresponding [`DataFrame`](DataFrame.md) schema is:
 
@@ -461,8 +471,9 @@ no clash to begin with.
 val df = DataFrame.readJsonStr("""[1, 2, 3]""")
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonValueColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 * An array of arrays, into a single "array" column of lists:
 
@@ -472,8 +483,9 @@ val df = DataFrame.readJsonStr("""[1, 2, 3]""")
 val df = DataFrame.readJsonStr("""[[1], [2]]""")
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonArrayColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 * When those arrays hold objects, "array" becomes a [`FrameColumn`](DataColumn.md#framecolumn):
 
@@ -483,8 +495,9 @@ val df = DataFrame.readJsonStr("""[[1], [2]]""")
 val df = DataFrame.readJsonStr("""[[{ "a": 1 }], [{ "a": 2 }]]""")
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonArrayOfObjectsColumn.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 The second situation is a **type clash**, described below.
 
@@ -493,7 +506,7 @@ The second situation is a **type clash**, described below.
 By default, if a type clash occurs when reading JSON — the same property holds elements of different shapes across
 records (objects, values or arrays) 
 — a new [`column group`](DataColumn.md#columngroup) is created for that property.
-This column group contains a column for each children object property
+This column group contains a column for each child object property
 (across all records), and
 "value" and "array" columns following the logic of reading row values and arrays as 
 [described above](#value-and-array-columns).
@@ -517,8 +530,9 @@ val complexClashedJson = """
 val df = DataFrame.readJsonStr(complexClashedJson)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonTypeClash.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 A clash at the top level has no property to group under, so there "value", "array", and the objects' properties
 become top-level columns of the [`DataFrame`](DataFrame.md) itself, 
@@ -530,8 +544,9 @@ as in [usual standalone values reading](#value-and-array-columns):
 val df = DataFrame.readJsonStr("""[1, { "label": "record" }]""")
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonTopLevelTypeClash.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Without a clash there's no such group: a property whose elements are all arrays simply becomes a `List` column under
 its own name, and one whose elements are all objects becomes a group of just those objects' properties.
@@ -545,7 +560,7 @@ are nullable. A JSON `null` element, as well as a missing property, is `null` in
 > element without an array is an empty [`DataFrame`](DataFrame.md), because frame columns cannot hold `null`.
 > {style="note"}
 
-Default type clash tactic makes it more convenient to work with the data, 
+The default type clash tactic makes it more convenient to work with the data, 
 but it can be confusing if you're not expecting it or if you
 just need the type to be an `Any`.
 
@@ -557,8 +572,9 @@ For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` 
 val df = DataFrame.readJsonStr(complexClashedJson, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonTypeClashTactic.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 #### Specify Key/Value Paths
 
@@ -602,8 +618,9 @@ This can be the difference between:
 val df = DataFrame.readJsonStr(pets)
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonFromStringWithoutKeyValuePairs.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 and
 
@@ -619,8 +636,9 @@ DataFrame.readJsonStr(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonFromStringWithKeyValuePairs.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 To specify the paths, you can use the `JsonPath` class.
 (The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
@@ -662,8 +680,9 @@ DataFrame.readJson(
 )
 ```
 
-<!---END-->
 <inline-frame src="./resources/readJsonWithJsonInstance.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 
 ## Read from Excel

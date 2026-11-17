@@ -34,6 +34,9 @@ public interface DocumentationUrls {
     /** [See Compiler Plugin on the documentation website.]({@include [Url]}/compiler-plugin.html) */
     public typealias CompilerPlugin = Nothing
 
+    /** [See Packaging into a fat JAR on the documentation website.]({@include [Url]}/packaging.html) */
+    public typealias Packaging = Nothing
+
     public interface DataRow {
         /** [See Row Expressions on the documentation website.]({@include [Url]}/datarow.html#row-expressions) */
         public typealias RowExpressions = Nothing
@@ -107,6 +110,15 @@ public interface DocumentationUrls {
     /** [See `distinctBy` on the documentation website.]({@include [Url]}/distinct.html#distinctby) */
     public typealias DistinctBy = Nothing
 
+    /** [See `duplicateRows` on the documentation website.]({@include [Url]}/duplicate.html#duplicaterows) */
+    public typealias DuplicateRows = Nothing
+
+    /** [See `duplicate` on a DataRow on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-datarow) */
+    public typealias DuplicateOnDataRow = Nothing
+
+    /** [See `duplicate` on a DataFrame on the documentation website.]({@include [Url]}/duplicate.html#duplicate-on-a-dataframe) */
+    public typealias DuplicateOnDataFrame = Nothing
+
     /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
     public typealias Flatten = Nothing
 
@@ -118,6 +130,15 @@ public interface DocumentationUrls {
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
     public typealias Move = Nothing
+
+    /** [See `reorder` on the documentation website.]({@include [Url]}/reorder.html) */
+    public typealias Reorder = Nothing
+
+    /** [See `reorderColumnsBy` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsby) */
+    public typealias ReorderColumnsBy = Nothing
+
+    /** [See `reorderColumnsByName` on the documentation website.]({@include [Url]}/reorder.html#reordercolumnsbyname) */
+    public typealias ReorderColumnsByName = Nothing
 
     /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
     public typealias Group = Nothing
@@ -133,6 +154,15 @@ public interface DocumentationUrls {
 
     /** [See `convertTo` on the documentation website.]({@include [Url]}/convertto.html) */
     public typealias ConvertTo = Nothing
+
+    /** [See `toList` on the documentation website.]({@include [Url]}/tolist.html) */
+    public typealias ToList = Nothing
+
+    /** [See `toListOf` on the documentation website.]({@include [Url]}/tolist.html#tolistof) */
+    public typealias ToListOf = Nothing
+
+    /** [See `toSequence` on the documentation website.]({@include [Url]}/tolist.html#tosequence-and-tosequenceof) */
+    public typealias ToSequence = Nothing
 
     /** [See `corr` on the documentation website.]({@include [Url]}/corr.html) */
     public typealias Corr = Nothing
@@ -179,6 +209,15 @@ public interface DocumentationUrls {
 
     /** [See `asIterable` on the documentation website.]({@include [Url]}/asiterable.html) */
     public typealias AsIterable = Nothing
+
+    /** [See iterating on the documentation website.]({@include [Url]}/iterate.html) */
+    public typealias Iterate = Nothing
+
+    /** [See `forEach` on a `DataColumn` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-datacolumn) */
+    public typealias IterateOnColumn = Nothing
+
+    /** [See `forEach` on a `GroupBy` on the documentation website.]({@include [Url]}/iterate.html#foreach-on-groupby) */
+    public typealias IterateOnGroupBy = Nothing
 
     /** [See `asSequence` on the documentation website.]({@include [Url]}/assequencecolumn.html) */
     public typealias AsSequenceCol = Nothing
@@ -273,6 +312,9 @@ public interface DocumentationUrls {
     /** [See `explode` on the documentation website.]({@include [Url]}/explode.html) */
     public typealias Explode = Nothing
 
+    /** [See `implode` on the documentation website.]({@include [Url]}/implode.html) */
+    public typealias Implode = Nothing
+
     /** [See `Data Schemas/Data Classes Generation` on the documentation website.]({@include [Url]}/dataschemagenerationmethods.html) */
     public typealias DataSchemaGeneration = Nothing
 
@@ -366,6 +408,30 @@ public interface DocumentationUrls {
 
         /** [See "`mean` Type Conversion" on the documentation website.]({@include [Url]}/mean.html#type-conversion) */
         public typealias TypeConversion = Nothing
+    }
+
+    /** [See `std` on the documentation website.]({@include [Url]}/std.html) */
+    public interface Std {
+
+        /** [See "`std` Type Conversion" on the documentation website.]({@include [Url]}/std.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `median` on the documentation website.]({@include [Url]}/median.html) */
+    public interface Median {
+
+        /** [See "`median` Type Conversion" on the documentation website.]({@include [Url]}/median.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+    }
+
+    /** [See `percentile` on the documentation website.]({@include [Url]}/percentile.html) */
+    public interface Percentile {
+
+        /** [See "`percentile` Type Conversion" on the documentation website.]({@include [Url]}/percentile.html#type-conversion) */
+        public typealias TypeConversion = Nothing
+
+        /** [See "Quantile Estimation Methods" on the documentation website.]({@include [Url]}/percentile.html#quantile-estimation-methods) */
+        public typealias QuantileEstimationMethods = Nothing
     }
 
     /** [See "min / max" on the documentation website.]({@include [Url]}/minmax.html) */
@@ -496,11 +562,17 @@ public interface DocumentationUrls {
     /** [See `requireColumn` on the documentation website.]({@include [Url]}/require.html) */
     public typealias Require = Nothing
 
+    /** [See `head` on the documentation website.]({@include [Url]}/head.html) */
+    public typealias Head = Nothing
+
     /** [See `tail` on the documentation website.]({@include [Url]}/tail.html) */
     public typealias Tail = Nothing
 
     /** [See `split` on the documentation website.]({@include [Url]}/split.html) */
     public typealias Split = Nothing
+
+    /** [See `merge` on the documentation website.]({@include [Url]}/merge.html) */
+    public typealias Merge = Nothing
 
     /** [See (Cols) Without Nulls on the documentation website.]({@include [Url]}/columnselectors.html#cols-without-nulls) */
     public typealias WithoutNulls = Nothing
@@ -544,6 +616,9 @@ public interface DocumentationUrls {
     /** [See Parsing Doubles on the documentation website.]({@include [Url]}/parse.html#parsing-doubles) */
     public typealias ParsingDoubles = Nothing
 
+    /** [See `parse` on the documentation website.]({@include [Url]}/parse.html) */
+    public typealias Parse = Nothing
+
     /** [See `parse` on a DataColumn on the documentation website.]({@include [Url]}/parse.html#on-a-datacolumn) */
     public typealias ParseOnDataColumn = Nothing
 
@@ -570,4 +645,7 @@ public interface DocumentationUrls {
 
     /** [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) */
     public typealias ApacheCsv = Nothing
+
+    /** [See PostgreSQL type mapping on the documentation website.]({@include [Url]}/readsqltypemapping-postgresql.html) */
+    public typealias ReadSqlTypeMappingPostgreSql = Nothing
 }

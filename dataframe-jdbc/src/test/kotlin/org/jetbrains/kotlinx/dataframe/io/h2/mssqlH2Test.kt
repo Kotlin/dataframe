@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
@@ -15,6 +16,7 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -22,6 +24,7 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
 import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL =
     "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
@@ -38,7 +41,7 @@ interface Table1MSSSQL {
     val datetime2Column: Instant
     val decimalColumn: BigDecimal
     val floatColumn: Double
-    val imageColumn: ByteArray?
+    val imageColumn: Blob?
     val intColumn: Int
     val moneyColumn: BigDecimal
     val ncharColumn: String
@@ -53,13 +56,13 @@ interface Table1MSSSQL {
     val timeColumn: java.sql.Time
     val timestampColumn: Instant
     val tinyintColumn: Int
-    val uniqueidentifierColumn: Char
+    val uniqueidentifierColumn: Uuid
     val varbinaryColumn: ByteArray
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
     val varcharMaxColumn: String
-    val geometryColumn: ByteArray
-    val geographyColumn: ByteArray
+    val geometryColumn: ByteArray? // no such column in the table yet: read as nulls
+    val geographyColumn: ByteArray? // no such column in the table yet: read as nulls
 }
 
 class MSSQLH2Test {
@@ -173,7 +176,7 @@ class MSSQLH2Test {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>()
+        val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>(verify = true)
 
         val result = df1.filter { "id"<Int>() == 1 }
         result[0][30] shouldBe "Sample1 text"
@@ -224,7 +227,7 @@ class MSSQLH2Test {
             FROM Table1
             """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3)
         val result = df.filter { "id"<Int>() == 1 }
         result[0]["bigintColumn"] shouldBe 123456789012345L
 
@@ -237,7 +240,7 @@ class MSSQLH2Test {
     fun `read from all tables`() {
         val dataframes = DataFrame.readAllSqlTables(connection, limit = 4).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MSSSQL>()
+        val table1Df = dataframes[0].cast<Table1MSSSQL>(verify = true)
 
         table1Df.rowsCount() shouldBe 4
         table1Df.filter { "id"<Int>() > 2 }.rowsCount() shouldBe 2
@@ -247,5 +250,10 @@ class MSSQLH2Test {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
     }
 }

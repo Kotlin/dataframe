@@ -12,9 +12,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
  * - For column groups, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the nested columns.
  * - For frame columns, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the contained dataframes.
  *
- * Use [<code>schema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.schema] to read the schema of a
+ * Use [<code>schema</code>][org.jetbrains.kotlinx.dataframe.api.schema] to read the schema of a
  * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from its columns, and
- * [<code>compileTimeSchema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.compileTimeSchema] to get the one
+ * [<code>compileTimeSchema</code>][org.jetbrains.kotlinx.dataframe.api.compileTimeSchema] to get the one
  * that follows from its type.
  *
  * Use [<code>compare</code>][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
@@ -46,7 +46,7 @@ public interface DataFrameSchema {
     /**
      * Compares this schema with [<code>other</code>][other] schema.
      *
-     * Returns one of possible [<code>CompareResult</code>][CompareResult] based on the specified [<code>comparisonMode</code>][comparisonMode]:
+     * Returns one of the possible [<code>CompareResult</code>][CompareResult]s based on the specified [<code>comparisonMode</code>][comparisonMode]:
      *
      * - [<code>LENIENT</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT]: Schemas may have different sets of columns. Missing or additional columns
      *   are reported as [<code>CompareResult.IsDerived</code>][org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsDerived] or [<code>CompareResult.IsSuper</code>][org.jetbrains.kotlinx.dataframe.schema.CompareResult.IsSuper].
@@ -55,7 +55,7 @@ public interface DataFrameSchema {
      * - [<code>STRICT_FOR_NESTED_SCHEMAS</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS]: Uses [<code>LENIENT</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.LENIENT] comparison for the top-level schema
      *   and [<code>STRICT</code>][org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT] comparison for nested schemas.
      *
-     * @param comparisonMode The [<code>mode</code>][ComparisonMode] to compare the schema's by.
+     * @param comparisonMode The [<code>mode</code>][ComparisonMode] to compare the schemas by.
      *   By default, generated markers for leaves aren't used as supertypes: `@DataSchema(isOpen = false)`
      *   Setting [<code>comparisonMode</code>][comparisonMode] to [<code>ComparisonMode.STRICT_FOR_NESTED_SCHEMAS</code>][ComparisonMode.STRICT_FOR_NESTED_SCHEMAS] takes this into account
      *   for internal codegen logic.

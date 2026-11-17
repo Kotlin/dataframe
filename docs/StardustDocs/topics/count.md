@@ -4,14 +4,17 @@
 
 Counts the number of rows.
 
+**API reference**: [`count`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/count.html)
+
 <!---FUN countDf-->
 
 ```kotlin
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/countDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN count-->
 
@@ -63,8 +66,9 @@ df.groupBy("city").count()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 
 <!---FUN countPivot-->
@@ -83,8 +87,9 @@ df.pivot("city").count { "age"<Int>() > 18 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countPivot.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countPivot_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN countPivotGroupBy-->
 <tabs>
@@ -104,8 +109,9 @@ df.pivot { "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/countPivotGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/countPivotGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 
 ## On a [`DataRow`](DataRow.md)

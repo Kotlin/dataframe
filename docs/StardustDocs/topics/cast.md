@@ -3,6 +3,8 @@
 
 Changes the type argument of the [`DataFrame`](DataFrame.md) instance without changing its contents.
 
+**API reference**: [`cast`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast.html)
+
 ```kotlin
 cast<T>(verify = false)
 ```

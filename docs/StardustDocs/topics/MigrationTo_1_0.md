@@ -188,6 +188,24 @@ Use `.filter(predicate)` for filtering instead.
 | `df.select { colGroup.singleCol { predicate } }` | `df.select { colGroup.allCols().filter { predicate }.single() }` |
 | `df.select { colSet.single { predicate } }`      | `df.select { colSet.filter { predicate }.single() }`             |
 
+### `reorderColumnsBy` and `reorderColumnsByName` no longer reorder inside frame columns by default
+
+With `atAnyDepth = true` (the default), [`reorderColumnsBy`](reorder.md#reordercolumnsby) and
+[`reorderColumnsByName`](reorder.md#reordercolumnsbyname) now reorder the columns inside column groups only,
+like `colsAtAnyDepth()`. The columns inside the dataframes of frame columns keep their order.
+To reorder them too, as before, pass `inFrameColumns = true`: `df.reorderColumnsByName(inFrameColumns = true)`.
+
+### `GroupBy.sortBy` and `sortByDesc` no longer reorder groups
+
+[`GroupBy.sortBy`](sortBy.md#sorting-within-groups) and `GroupBy.sortByDesc` now sort rows only within each group
+and preserve the order of key-group pairs. To sort the groups themselves by their keys, use `sortByKey` or
+`sortByKeyDesc` instead. If both the groups and their rows need to be sorted, call the corresponding operations
+separately.
+
+| 0.15                                            | 1.0                                                     |
+|-------------------------------------------------|---------------------------------------------------------|
+| `df.groupBy { city }.sortBy { city and day }`   | `df.groupBy { city }.sortByKey().sortBy { day }`        |
+
 ### Removed functions and classes
 
 The following functions and classes raise `ERROR` in 1.0 and will be removed in 1.1.
@@ -235,6 +253,8 @@ The following functions and classes raise `WARNING` in 1.0 and `ERROR` in 1.1.
 | `KeyValueProperty<T>`                                                                                    | `NameValueProperty<T>`                                                                                                        | Removed duplicated functionality.                                            |
 | `rename { columns }.into(..)` (will remain WARNING)                                                      | `rename { columns }.to(..)`                                                                                                   | Renamed to better reflect the English sentence "rename this column to that". |
 | `df.sortBy { col.desc() }` / `df.sortByDesc { col.desc() }`                                              | `df.sortBy { col.reversed() }` / `df.sortByDesc { col.reversed() }`                                                           | Renamed to better reflect its purpose.                                       |
+| `gb.sortByCount()`                                                                                       | `gb.sortByCountDesc()`                                                                                                         | Renamed to better reflect its purpose.                                       |
+| `df.sumFor { cols into path(..) }`                                                     | `df.sumFor { cols into pathOf(..) }`                                                                        | Removed duplicated functionality. All methods with `ColumnsForAggregateSelector` lambda.                                           |
 
 ## Parsing and Converting Date-Time
 
@@ -292,7 +312,7 @@ df.parse(
 ```
 
 </td>
-<td>If you want to force parsing to Java date-time types, you no longer have use skipTypes, you can simply change the `dateTime` argument.</td>
+<td>If you want to force parsing to Java date-time types, you no longer have to use skipTypes; you can simply change the `dateTime` argument.</td>
 </tr>
 <tr>
 <td>
@@ -369,7 +389,7 @@ ParserOptions(
 ```
 
 </td>
-<td>Locale for date-time only works for Java types. If you need Kotlin types ánd a locale use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
+<td>Locale for date-time only works for Java types. If you need Kotlin types and a locale, use <a href="convert.md">convert</a> to convert to Kotlin types afterwards.</td>
 </tr>
 <tr>
 <td rowspan="2">

@@ -18,6 +18,8 @@ with full schema inference and flexible JDBC setup.
 
 These functions allow you to interact with an SQL database using the Kotlin DataFrame library.
 
+**API reference**: [`readSqlTable`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-table.html), [`readSqlQuery`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-sql-query.html), [`readAllSqlTables`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io/read-all-sql-tables.html), [`DbType`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-db-type/index.html)
+
 There are two main blocks of available functionality:
 * Methods for reading data from a database
   *  ```DataFrame.readSqlTable()``` reads a specific database table
@@ -44,15 +46,15 @@ Also, there are a few **extension functions** available on `Connection`,
 * Methods for reading data from a database
     *  ```readDataFrame()``` on `Connection` or `DbConnectionConfig` 
   converts the result of an SQL query or SQL table to a `DataFrame` object.
-    *  ```readDataFrame()``` on `ResultSet` reads from created earlier `ResultSet`
+    *  ```readDataFrame()``` on `ResultSet` reads from a previously created `ResultSet`
 * Methods for reading table schemas from a database
     * ```getDataFrameSchema()``` on `Connection` or `DbConnectionConfig`
   for an SQL query result or the SQL table
-    * ```getDataFrameSchema()``` on `ResultSet` for created earlier `ResultSet`
+    * ```getDataFrameSchema()``` on `ResultSet` for a previously created `ResultSet`
 
 
 > **NOTE:** This is an experimental module, and for now, 
-> we only support these databases: MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
+> we only support these databases: H2, MS SQL, MariaDB, MySQL, PostgreSQL, SQLite, and DuckDB. 
 > 
 > Moreover, since release 0.15 you can register a custom SQL database; read more in our [guide](readSqlFromCustomDatabase.md).
 >
@@ -298,6 +300,10 @@ you can delegate the creation of the connection to `DbConnectionConfig`.
 These functions execute an SQL query on the database and convert the result into a [`DataFrame`](DataFrame.md) object. 
 If a limit is provided, only that many rows will be returned from the result.
 
+A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+gives a column `customer_id`. The name is the one the database reports, so H2 without a compatibility mode
+gives `CUSTOMER_ID` for this unquoted alias.
+
 **readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Execute a specific SQL query on the SQL database and retrieve the resulting data as an `AnyFrame`.
@@ -405,7 +411,7 @@ val df = DataFrame.readResultSet(resultSet, PostgreSql)
 
 **readResultSet(resultSet: ResultSet, connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
-Another variant, we use a JDBC connection: `Connection` object.
+Another variant uses a JDBC `Connection` object.
 
 <!---FUN readResultSetConnection-->
 
@@ -730,7 +736,7 @@ based on
 
 ## Schema reading for all non-system tables
 
-These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
+These functions return a map from table names to [`DataFrameSchema`](schema.md) for all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
 **DataFrameSchema.readAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType?): Map<String, DataFrameSchema>**

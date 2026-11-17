@@ -36,7 +36,7 @@ internal typealias IsBetterThan<C> = C.(other: C) -> Boolean
 /**
  * Returns the index of the first element in this sequence that is not null and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`null` elements in [<code>this</code>][this].
+ * Returns -1 if there are no non-`null` elements in [<code>this</code>][this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */
@@ -50,7 +50,7 @@ internal inline fun <C> Sequence<C>.indexOfBestNotNullBy(isBetterThan: IsBetterT
  * Returns the index of the first element in this sequence
  * that is not [<code>NA (null or NaN)</code>][NA] and is better than all previous elements.
  *
- * Returns -1 if there are no elements non-`NA` elements in [<code>this</code>][this].
+ * Returns -1 if there are no non-`NA` elements in [<code>this</code>][this].
  *
  * @param isBetterThan A function defining what it means for a value to be "better" than another.
  */

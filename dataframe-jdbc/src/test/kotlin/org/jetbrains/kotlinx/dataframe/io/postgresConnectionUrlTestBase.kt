@@ -31,12 +31,12 @@ abstract class PostgresConnectionUrlTestBase {
         DriverManager.getConnection(urlWithLoginPassword).use { connection ->
             createPostgresTestData(connection)
 
-            val df1 = DataFrame.readSqlTable(connection, TABLE_NAME).cast<Table1Postgres>()
+            val df1 = DataFrame.readSqlTable(connection, TABLE_NAME).cast<Table1Postgres>(verify = true)
             val result1 = df1.filter { "id"<Int>() == 1 }
 
             result1[0][2] shouldBe 11
 
-            val df2 = connection.readDataFrame(TABLE_NAME).cast<Table1Postgres>()
+            val df2 = connection.readDataFrame(TABLE_NAME).cast<Table1Postgres>(verify = true)
             val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11
@@ -51,12 +51,12 @@ abstract class PostgresConnectionUrlTestBase {
             createPostgresTestData(connection)
 
             val dbConfig = DbConnectionConfig(urlWithLoginPassword)
-            val df1 = DataFrame.readSqlTable(dbConfig = dbConfig, TABLE_NAME).cast<Table1Postgres>()
+            val df1 = DataFrame.readSqlTable(dbConfig = dbConfig, TABLE_NAME).cast<Table1Postgres>(verify = true)
             val result1 = df1.filter { "id"<Int>() == 1 }
 
             result1[0][2] shouldBe 11
 
-            val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1Postgres>()
+            val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1Postgres>(verify = true)
             val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11
@@ -96,7 +96,7 @@ abstract class PostgresConnectionUrlTestBase {
         DriverManager.getConnection(urlWithLoginPassword).use { connection ->
             createPostgresTestData(connection)
 
-            val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1Postgres>()
+            val df2 = dbConfig.readDataFrame(TABLE_NAME).cast<Table1Postgres>(verify = true)
             val result2 = df2.filter { "id"<Int>() == 1 }
 
             result2[0][2] shouldBe 11

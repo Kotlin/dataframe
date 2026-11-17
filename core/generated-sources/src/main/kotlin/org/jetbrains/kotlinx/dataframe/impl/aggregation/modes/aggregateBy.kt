@@ -11,24 +11,35 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.indexOfAggregationResult
 import kotlin.reflect.typeOf
 
+@PublishedApi
+internal object NoElementAtIndex
+
 /**
  * Selects the best matching value in the [<code>sequence</code>][values]
  * using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "ktlint:standard:comment-wrapping")
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     values: Sequence<T>,
     crossinline selector: (T) -> V,
-): T? =
-    values.elementAtOrNull(
+): Result<T> {
+    val res /* : T | NoElementAtIndex */ = values.elementAtOrElse(
         indexOfAggregationResult(
             values = values.map { selector(it) },
             valueType = typeOf<V>(),
         ),
-    )
+    ) { NoElementAtIndex }
+
+    return when (res) {
+        is NoElementAtIndex ->
+            Result.failure(NoSuchElementException("No values to aggregate"))
+
+        else -> Result.success(res as T)
+    }
+}
 
 /**
  * Selects the best matching value in the [<code>iterable</code>][values]
@@ -38,18 +49,26 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
  *
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "ktlint:standard:comment-wrapping")
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     values: Iterable<T>,
     crossinline selector: (T) -> V,
-): T? =
-    values.elementAtOrNull(
+): Result<T> {
+    val res /* : T | NoElementAtIndex */ = values.elementAtOrElse(
         indexOfAggregationResult(
             values = values.asSequence().map { selector(it) },
             valueType = typeOf<V>(),
         ),
-    )
+    ) { NoElementAtIndex }
+
+    return when (res) {
+        is NoElementAtIndex ->
+            Result.failure(NoSuchElementException("No values to aggregate"))
+
+        else -> Result.success(res as T)
+    }
+}
 
 /**
  * Selects the best matching value in the [<code>column</code>][column] using the provided [<code>Aggregator</code>][Aggregator] `by` the provided [<code>selector</code>][selector].
@@ -57,10 +76,10 @@ internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregat
  * @param V is used to infer whether there are nulls in the values fed to the aggregator!
  */
 @PublishedApi
-internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateBy(
     column: DataColumn<T>,
     crossinline selector: (T) -> V,
-): T? = aggregateByOrNull(column.values(), selector)
+): Result<T> = aggregateBy(column.values(), selector)
 
 /**
  * Selects the best matching value in the [<code>dataframe</code>][data]

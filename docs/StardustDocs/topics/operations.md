@@ -15,8 +15,8 @@ Navigate a wide set of operations in Kotlin DataFrame — from filtering and gro
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
-The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+A data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
+The Kotlin DataFrame API is designed in a functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
 [`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
@@ -31,12 +31,6 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <!---END-->
 
-<tip>
-
-You can play with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
-
-</tip>
-
 ## Multiplex operations
 
 Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return new [`DataFrame`](DataFrame.md) immediately, while more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
@@ -49,6 +43,12 @@ Every multiplex operation configuration consists of:
 Most multiplex operations end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
+
+
+## Full API reference
+
+For full signature details and KDocs of all operations, see the
+[Dokka API Reference](https://kotlin.github.io/dataframe/api-docs/index.html) (or [Core API Package](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/index.html)).
 
 ## List of DataRow operations
 
@@ -80,18 +80,18 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [filter](filter.md) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
 * [flatten](flatten.md) — remove column groupings recursively
-* [forEachRow](iterate.md) / [forEachColumn](iterate.md) — iterate over rows or columns
+* [forEach / forEachIndexed](iterate.md) — iterate over rows, columns, cells, the values of a column, or the key–group pairs of a `GroupBy`
 * [format](format.md) — conditional formatting for cell rendering
 * [gather](gather.md) — convert pairs of column names and values into new columns
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
-* [head](head.md) — get first 5 rows of [`DataFrame`](DataFrame.md)
+* [head](head.md) — get the first `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [implode](implode.md) — collapse column values into lists grouping by other columns
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join two [`DataFrame`](DataFrame.md) objects by key columns
-* [joinWith](joinWith.md) — join two [`DataFrame`](DataFrame.md) object by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
+* [joinWith](joinWith.md) — join two [`DataFrame`](DataFrame.md) objects by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 
@@ -117,10 +117,11 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
+* [tail](tail.md) — get the last `numRows` rows of [`DataFrame`](DataFrame.md), five by default
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
-* [unfold](unfold.md) - unfold objects (normal class instances) in columns according to their properties
+* [unfold](unfold.md) — unfold objects (normal class instances) in columns according to their properties
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
 * [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 

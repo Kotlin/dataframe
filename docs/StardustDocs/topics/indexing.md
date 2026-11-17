@@ -2,6 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.IndexingSamples-->
 
+**API reference**: [`DataFrame`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-frame/index.html), [`DataRow`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-row/index.html)
+
 The examples on this page use the following [`DataFrame`](DataFrame.md):
 
 <!---FUN indexingDf-->
@@ -10,8 +12,9 @@ The examples on this page use the following [`DataFrame`](DataFrame.md):
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/indexingDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 ## Access a cell by index
 
@@ -77,8 +80,9 @@ Use the result to [slice those rows](sliceRows.md) out of the dataframe:
 df.getRows(df.indices { city == "Moscow" })
 ```
 
-<!---END-->
 <inline-frame src="./resources/indicesGetRows.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 See also [`rowsCount`](rowsCount.md), which returns how many rows there are rather than their indices,
 and [`filter`](filter.md), which returns the matching rows themselves.

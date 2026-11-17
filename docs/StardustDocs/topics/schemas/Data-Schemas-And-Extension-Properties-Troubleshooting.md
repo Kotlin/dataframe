@@ -58,7 +58,7 @@ make sure your data schema is compatible with the dataframe.
 * Use [`.cast<Schema>()`](cast.md) with `verify=true` for verifying the `Schema` compatibility.
 * Use [special methods](DataSchemaGenerationMethods.md) for generating a data schema code 
 instead of defining data schema manually. However, you may still need to edit a generated schema —
-adjust a type nullability or the whole type, since sometimes type can be inferred incorrect 
+adjust a type nullability or the whole type, since sometimes a type can be inferred incorrectly 
 if the data sample used for generation is not representative or if there's a bug in this `DataFrame`.
 
 ### Bug in the DataFrame reader
@@ -66,7 +66,7 @@ if the data sample used for generation is not representative or if there's a bug
 Sometimes a column is created internally with an incorrect `KType` that doesn't represent actual runtime values.
 As a result, [`schema().print()`](schema.md), 
 [`generateInterfaces`](DataSchemaGenerationMethods.md#generateinterfaces), 
-`print(columnTypes = true)` show misleading type.
+and `print(columnTypes = true)` show misleading types.
 
 This can happen when reading a dataframe from files or databases.
 
@@ -93,7 +93,7 @@ Possible workarounds (for [`ValueColumn`s](DataColumn.md#valuecolumn)):
     > using it once to figure out the actual type and change it to `changeType()` for production code.
     {style="warning"}
 
-2) Change the compiler-time schema of a dataframe
+2) Change the compile-time schema of a dataframe
 
 You need to edit (you can view the correct one with [`.schema().print()`](schema.md)) or regenerate 
 the correct data schema (with [generate..()](DataSchemaGenerationMethods.md) methods)

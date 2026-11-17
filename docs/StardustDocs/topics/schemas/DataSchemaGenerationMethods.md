@@ -70,9 +70,9 @@ in cases where the schema cannot be inferred automatically from the source.
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_generate_docs_1.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN notebook_test_generate_docs_2-->
 
@@ -133,7 +133,7 @@ Useful when you want to:
 
 - Work with the data as regular Kotlin data classes.
 - Convert a dataframe to instantiated data classes with `df.toListOf<DataClassType>()`.
-- Work with data classes serialization.
+- Serialize data classes.
 - Extract structured types for further use in your application.
 
 ### Arguments {id="generateDataClasses-arguments"}

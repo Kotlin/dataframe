@@ -1,23 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
@@ -42,12 +38,13 @@ import kotlin.reflect.KProperty
 /**
  * Moves the specified [columns] within the [<code>DataFrame</code>][DataFrame].
  *
- * This function does not immediately move the columns but instead select columns to move and
+ * This function does not immediately move the columns but instead selects columns to move and
  * returns a [<code>MoveClause</code>][MoveClause],
  * which serves as an intermediate step. The [<code>MoveClause</code>][MoveClause] allows specifying the final
  * destination of the selected columns using methods such as [<code>to</code>][MoveClause.to], [<code>toStart</code>][MoveClause.toStart],
  * [<code>toEnd</code>][MoveClause.toEnd], [<code>into</code>][MoveClause.into], [<code>intoIndexed</code>][MoveClause.intoIndexed], [<code>toTop</code>][MoveClause.toTop],
- * [<code>after</code>][MoveClause.after] or [<code>under</code>][MoveClause.under], that return a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * [<code>after</code>][MoveClause.after] or [<code>under</code>][MoveClause.under], that return a new [<code>DataFrame</code>][DataFrame]
+ * with an updated column structure.
  *
  * Check out [<code>Grammar</code>][Grammar].
  *
@@ -161,12 +158,13 @@ internal interface Move {
 /**
  * Moves the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function does not immediately move the columns but instead select columns to move and
+ * This function does not immediately move the columns but instead selects columns to move and
  * returns a [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
  * destination of the selected columns using methods such as [<code>to</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [<code>toStart</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
  * [<code>toEnd</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [<code>intoIndexed</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [<code>toTop</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * with an updated column structure.
  *
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
@@ -210,12 +208,13 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
 /**
  * Moves the specified [columns] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * This function does not immediately move the columns but instead select columns to move and
+ * This function does not immediately move the columns but instead selects columns to move and
  * returns a [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [<code>MoveClause</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
  * destination of the selected columns using methods such as [<code>to</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [<code>toStart</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
  * [<code>toEnd</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [<code>into</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [<code>intoIndexed</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [<code>toTop</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * [<code>after</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [<code>under</code>][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame]
+ * with an updated column structure.
  *
  * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
@@ -258,7 +257,7 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
  * Moves the specified [columns] to a new position specified by
  * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][DataFrame].
  *
- * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with an updated column structure.
  *
  *
  *
@@ -332,7 +331,7 @@ internal interface MoveTo {
  * Moves the specified [columns] to a new position specified by
  * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -378,7 +377,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
  * Moves the specified [columns] to a new position specified by
  * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -408,7 +407,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String):
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: ColumnReference<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
@@ -425,7 +424,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
  * Moves the specified [columns] to a new position specified by
  * [<code>newColumnIndex</code>][newColumnIndex] within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -478,7 +477,7 @@ public fun <T> DataFrame<T>.moveTo(
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][DataFrame] start (on top-level).
- * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with an updated column structure.
  *
  *
  *
@@ -553,7 +552,7 @@ public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFram
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -602,7 +601,7 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -657,7 +656,7 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -688,12 +687,12 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = 
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToStart(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToStart(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
@@ -712,7 +711,7 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][DataFrame] end.
- * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with an updated column structure.
  *
  *
  *
@@ -787,7 +786,7 @@ public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFra
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -836,7 +835,7 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -891,7 +890,7 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
 
 /**
  * Moves the specified [columns] to the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with an updated column structure.
  *
  *
  *
@@ -922,12 +921,12 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = mo
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToRight(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.moveToEnd(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.moveToEnd(vararg columns: ColumnReference<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
 @Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
@@ -990,7 +989,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.into(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> =
     moveImpl(
         under = false,
@@ -1059,7 +1058,7 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * a path in the [<code>DataFrame</code>][DataFrame] to move columns.
  */
 public fun <T, C> MoveClause<T, C>.intoIndexed(
-    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> AnyColumnReference,
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> ColumnReference<*>,
 ): DataFrame<T> {
     var counter = 0
     return into { col ->
@@ -1100,7 +1099,7 @@ public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = under {
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = under { column.path() }
+public fun <T, C> MoveClause<T, C>.under(column: ColumnAccessor<DataRow<*>>): DataFrame<T> = under { column.path() }
 
 /**
  * Moves columns, previously selected with [<code>move</code>][move] under a new or
@@ -1149,7 +1148,7 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
 @Refine
 @Interpretable("MoveUnder1")
 public fun <T, C> MoveClause<T, C>.under(
-    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> ColumnReference<*>,
 ): DataFrame<T> =
     moveImpl(
         under = true,
@@ -1164,7 +1163,7 @@ public fun <T, C> MoveClause<T, C>.under(
  * Moves columns, previously selected with [<code>move</code>][move] to a new position specified
  * by [<code>columnIndex</code>][columnIndex] within the [<code>DataFrame</code>][DataFrame].
  *
- * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with an updated column structure.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1186,7 +1185,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * by [<code>columnIndex</code>][columnIndex]. If [<code>insideGroup</code>][insideGroup] is true, selected columns will be moved remaining within their [<code>ColumnGroup</code>][ColumnGroup],
  * else they will be moved to the top level.
  *
- * Returns a new [<code>DataFrame</code>][DataFrame] with updated columns structure.
+ * Returns a new [<code>DataFrame</code>][DataFrame] with an updated column structure.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
@@ -1306,7 +1305,7 @@ public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after {
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T, C> MoveClause<T, C>.after(column: AnyColumnReference): DataFrame<T> = after { column }
+public fun <T, C> MoveClause<T, C>.after(column: ColumnReference<*>): DataFrame<T> = after { column }
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload

@@ -18,6 +18,8 @@ and the Kotlin type produced when the column is read into a DataFrame. MariaDB
 canonicalizes aliases at `CREATE TABLE` time, so DataFrame only ever sees the canonical
 type; they are listed in the same row as the canonical type for reference.
 
+**API reference**: [`MariaDB`](https://kotlin.github.io/dataframe/api-docs/dataframe-jdbc/org.jetbrains.kotlinx.dataframe.io.db/-maria-db/index.html)
+
 Column nullability is determined from the metadata provided by the JDBC driver. If the driver does not explicitly report a column as non-nullable, it is mapped to a nullable Kotlin type (`Int?` instead of `Int`).
 
 ## Numeric types
@@ -27,7 +29,7 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | `TINYINT[(M)]`       | `INT1`                                | `Int`                  | 1-byte signed integer (`-128 .. 127`).                                                              |
 | `TINYINT UNSIGNED`   | `INT1 UNSIGNED`                       | `Int`                  | 1-byte unsigned integer (`0 .. 255`).                                                               |
 | `BOOL`, `BOOLEAN`    | alias for `TINYINT(1)`                | `Boolean`              | Stored as `TINYINT(1)`; values are `0`/`1`.                                                         |
-| `SMALLINT[(M)]`      | `INT2`                                | `Int`                  | 2-byte signed integer. Becomes `Short` if the driver reports the column class as `java.lang.Short`. |
+| `SMALLINT[(M)]`      | `INT2`                                | `Short`                | 2-byte signed integer. The MariaDB driver reports the column class as `java.lang.Short`.           |
 | `SMALLINT UNSIGNED`  | `INT2 UNSIGNED`                       | `Int`                  | 2-byte unsigned integer.                                                                            |
 | `MEDIUMINT[(M)]`     | `INT3`, `MIDDLEINT`                   | `Int`                  | 3-byte signed integer.                                                                              |
 | `MEDIUMINT UNSIGNED` | `INT3 UNSIGNED`, `MIDDLEINT UNSIGNED` | `Int`                  | 3-byte unsigned integer.                                                                            |
@@ -38,7 +40,8 @@ Column nullability is determined from the metadata provided by the JDBC driver. 
 | `DECIMAL(M,D)`       | `DEC`, `NUMERIC`, `FIXED`             | `java.math.BigDecimal` | Fixed-point.                                                                                        |
 | `FLOAT[(P)]`         | `FLOAT4`                              | `Float`                | 4-byte float. Becomes `Double` if the driver reports the column class as `java.lang.Double`.        |
 | `DOUBLE`             | `FLOAT8`, `DOUBLE PRECISION`, `REAL`  | `Double`               | 8-byte float.                                                                                       |
-| `BIT(M)`             | *none*                                | `ByteArray`            | Reported as `VARBINARY` for `M > 1`; `BIT(1)` may map to `Boolean`.                                 |
+| `BIT(1)`             | *none*                                | `Boolean`              | Single-bit column; the driver reports it as `Types.BOOLEAN`.                                        |
+| `BIT(M)`, `M > 1`    | *none*                                | `ByteArray`            | Reported as `Types.BIT`, but the value is the raw `byte[]` of the bit string.                       |
 
 ## Date and time types
 

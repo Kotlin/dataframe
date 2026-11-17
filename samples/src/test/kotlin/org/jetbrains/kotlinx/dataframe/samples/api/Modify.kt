@@ -2,7 +2,9 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.FormattingDsl
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.and
+import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.div
@@ -11,24 +13,33 @@ import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.getColumnIndex
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.gt
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.linearBg
 import org.jetbrains.kotlinx.dataframe.api.lt
 import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.neq
 import org.jetbrains.kotlinx.dataframe.api.not
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.plus
+import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.unaryMinus
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
+import org.jetbrains.kotlinx.dataframe.samples.api.firstName
+import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.kandy.dsl.plot
 import org.jetbrains.kotlinx.kandy.letsplot.layers.line
 import org.junit.Test
@@ -330,32 +341,23 @@ class Modify : DataFrameSampleHelper("operations", "modify") {
     }
 
     @Test
-    fun filter_properties() {
-        // SampleStart
-        df.filter { age > 18 && name.firstName.startsWith("A") }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
+    fun multiCallOperations() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 102, "Paris", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 110, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 105, "Moscow", 90, true,
+        ).group { firstName and lastName }.into("name")
 
-    @Test
-    fun filter_strings() {
         // SampleStart
-        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
-        // SampleEnd
-    }
-
-    @Test
-    fun filterColumn_properties() {
-        // SampleStart
-        df.age.filter { it > 17 }
-            // SampleEnd
-            .saveDfHtmlSample()
-    }
-
-    @Test
-    fun filterColumn_strings() {
-        // SampleStart
-        df.age.filter { it > 17 }
+        df.update { age }.where { city == "Paris" }.with { it - 5 }
+            .filter { isHappy && age > 100 }
+            .move { name.firstName and name.lastName }.after { isHappy }
+            .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
+            .rename { isHappy }.to("isOK")
         // SampleEnd
     }
 }

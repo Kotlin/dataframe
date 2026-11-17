@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.math.BigDecimal
@@ -284,6 +285,29 @@ class CreateDataFrameTests {
         val value = listOf(element).toDataFrame(maxDepth = 10)
 
         value["data"].type() shouldBe typeOf<List<Int?>>()
+    }
+
+    // TODO(#2133): `KType.replace` drops the `?` of a type parameter use
+    @Ignore("toDataFrame drops the `?` of `V?` inside `List<V?>`")
+    @Test
+    fun `nullable type parameter inside a property type keeps its nullability`() {
+        class ListBox<V>(val items: List<V?>)
+
+        val df = listOf(ListBox<Int>(listOf(1, null))).toDataFrame()
+
+        // `items` is `List<V?>`, so for `ListBox<Int>` it is `List<Int?>`.
+        df["items"].type() shouldBe typeOf<List<Int?>>()
+    }
+
+    // TODO(#2133): `KType.replace` drops the `?` of a type parameter use
+    @Ignore("toDataFrame drops the `?` of `V?` inside `List<V?>`")
+    @Test
+    fun `nullable type parameter inside a property type keeps its nullability with maxDepth`() {
+        class ListBox<V>(val items: List<V?>)
+
+        val df = listOf(ListBox<Int>(listOf(1, null))).toDataFrame(maxDepth = 10)
+
+        df["items"].type() shouldBe typeOf<List<Int?>>()
     }
 
     @Suppress("unused")

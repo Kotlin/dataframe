@@ -16,6 +16,8 @@ Discover `last` operation in Kotlin DataFrame.
 
 Returns the last value in this [`DataColumn`](DataColumn.md). If the [`DataColumn`](DataColumn.md) is empty, throws an exception.
 
+**API reference**: [`last`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/last.html)
+
 If a predicate is specified, returns the last value in this [`DataColumn`](DataColumn.md) that matches the predicate.
 Throws an exception if the [`DataColumn`](DataColumn.md) contains no elements matching the predicate.
 

@@ -4,6 +4,8 @@ The [`DataFrame`](DataFrame.md) interface has type argument `T` that doesn't aff
 but marks [`DataFrame`](DataFrame.md) with a type that represents the data schema that this [`DataFrame`](DataFrame.md) is supposed to have.
 This argument is used to generate [extension properties](extensionPropertiesApi.md) for typed data access.
 
+**API reference**: [`cast`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/cast.html), [`convertTo`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/convert-to.html)
+
 Another place where this argument has a special role is in [interop with data classes](collectionsInterop.md#interop-with-data-classes):
 * `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)

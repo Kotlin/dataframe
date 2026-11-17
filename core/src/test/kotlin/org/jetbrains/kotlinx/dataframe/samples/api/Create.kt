@@ -12,16 +12,12 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ValueProperty
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.preserve
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
@@ -49,38 +45,6 @@ class Create : TestBase() {
     fun createValueByToColumn() {
         // SampleStart
         listOf("Alice", "Bob").toColumn("name")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnAccessorMap() {
-        // SampleStart
-        val age by column<Int>()
-        val year by age.map { 2021 - it }
-
-        df.filter { year > 2000 }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnAccessorComputed_properties() {
-        // SampleStart
-        val fullName by column(df) { name.firstName + " " + name.lastName }
-
-        df[fullName]
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun columnAccessorComputed_strings() {
-        // SampleStart
-
-        val fullName by column { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
-
-        df[fullName]
         // SampleEnd
     }
 
@@ -135,41 +99,6 @@ class Create : TestBase() {
 
         // Create FrameColumn with two elements of type DataFrame
         val frames by columnOf(df1, df2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createColumnAccessor() {
-        // SampleStart
-        val name by column<String>()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createColumnAccessorRenamed() {
-        // SampleStart
-        val accessor by column<String>("complex column name")
-        // SampleEnd
-        accessor.name() shouldBe "complex column name"
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createDeepColumnAccessor() {
-        // SampleStart
-        val name by columnGroup()
-        val firstName by name.column<String>()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createGroupOrFrameColumnAccessor() {
-        // SampleStart
-        val columns by columnGroup()
-        val frames by frameColumn()
         // SampleEnd
     }
 
@@ -300,33 +229,6 @@ class Create : TestBase() {
                 "$x" from { x * it }
             }
         }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createDataFrameFillConstant() {
-        // SampleStart
-        val names = listOf("first", "second", "third")
-
-        // DataFrame with 3 columns, fill each column with 15 `true` values
-        val df = dataFrameOf(names).fill(15, true)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun createDataFrameWithRandom() {
-        // SampleStart
-        // 5 columns filled with 7 random double values:
-        val names = (1..5).map { "column$it" }
-        dataFrameOf(names).randomDouble(7)
-
-        // 5 columns filled with 7 random double values between 0 and 1 (inclusive)
-        dataFrameOf(names).randomDouble(7, 0.0..1.0).print()
-
-        // 5 columns filled with 7 random int values between 0 and 100 (inclusive)
-        dataFrameOf(names).randomInt(7, 0..100).print()
         // SampleEnd
     }
 

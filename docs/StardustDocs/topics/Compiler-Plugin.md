@@ -58,7 +58,7 @@ implementation("org.jetbrains.kotlinx:dataframe:%dataFrameVersion%")
 ```
 
 If you're using a version older than Kotlin 2.4.0,
-incremental compilation must be disabled due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735),
+incremental compilation must be disabled due to [this issue](https://youtrack.jetbrains.com/issue/KT-66735).
 
 Add the following line to your `gradle.properties` file:
 

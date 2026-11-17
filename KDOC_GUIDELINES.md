@@ -2,6 +2,8 @@
 
 This document outlines the guidelines for writing KDocs in the Kotlin DataFrame project.
 
+For website documentation guidelines, see [DOCUMENTATION_GUIDELINES.md](DOCUMENTATION_GUIDELINES.md).
+
 <!-- TOC -->
 * [KDocs Guidelines](#kdocs-guidelines)
   * [The most important advice](#the-most-important-advice)
@@ -48,6 +50,10 @@ Some parts of public API are not intended for end users but can be used in Compi
 KDF extension libraries. These methods should have a small KDoc as well.
 
 Deprecated methods, properties, classes, and constructors are not required to have KDocs.
+
+A replacement operation's KDoc does not reference the function it replaces: the deprecation
+message and the migration guide carry the rename story, so nothing in the KDoc has to be removed
+when the deprecated function is deleted.
 
 For the internal API, please add at least a small note.
 
@@ -117,7 +123,11 @@ lines included. Unescaped, the reference is resolved where it is written (`[colu
 becomes a link to the `…dataframe.columns` *package*). Escaped, KoDEx leaves it in place and it
 resolves after processing, once the snippet sits in a function that has that parameter.
 
-Also, you can use 
+An included snippet must stay true in every function it is included into: re-read it against each
+host's signature, not only where it was written. A wording that names one host's behaviour — printing,
+mutating, returning — is false on a host that does something else with the same parameters.
+
+Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
 writing examples of methods with similar usage but with different names.
@@ -135,8 +145,8 @@ More about `@set` and `@get` conventions [here](#setget-references).
 internal interface ~SnippetDescription~Snippet {
     /*
      * The key for a @set that will define the operation name for the snippet example.
+     * Not annotated: everything nested in an `@ExcludeFromSources` interface is excluded with it.
      */
-    @ExcludeFromSources
     typealias OPERATION = Nothing
 }
 
@@ -198,7 +208,7 @@ In the future, we want to have nice topic names with backticks
 
 All KDoc-helpers must be `internal` or `private`!
 
-Some of KDoc-helpers can be used both as -snippets and -topics.
+Some KDoc-helpers can be used both as snippets and as topics.
 
 ### Common KDoc-helpers
 
@@ -237,6 +247,11 @@ When linking to external URLs, it's recommended to use
 
 It's a central place where we can store URLs that can be used in multiple places in the library. Plus, it makes
 it easier to update the documentation whenever (a part of) a URL changes.
+
+A KDoc that uses `{@include [DocumentationUrls.X]}` needs
+`import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls` in the same file
+(as `count.kt` does): without it KoDEx fails with `Reference not found` at `processKDocsMain` time,
+and the import is doc-only — it is stripped from the processed sources, so nothing flags it earlier.
 
 For [Kotlin DataFrame GitHub issues and PRs](https://github.com/Kotlin/dataframe/issues),
 you can just write its number like `#1234` in the KDoc.
@@ -330,13 +345,13 @@ and it should be continued with other methods. Also add a note about the [operat
 For example (from the `insert` KDoc):
 
 ```
- * This function does not immediately insert the new column but instead specify a column to insert and
+ * This function does not immediately insert the new column but instead specifies a column to insert and
  * returns an [InsertClause],
  * which serves as an intermediate step.
  * The [InsertClause] object provides methods to insert a new column using:
  * - [under][InsertClause.under] - inserts a new column under the specified column group.
  * - [after][InsertClause.after] - inserts a new column after the specified column.
- * - [at][InsertClause.at]- inserts a new column at the specified position.
+ * - [at][InsertClause.at] - inserts a new column at the specified position.
  *
  * Each method returns a new [DataFrame] with the inserted column.
  * 
@@ -379,6 +394,11 @@ Example from `DataFrame.first` KDoc:
 add a note about it. 
 * If you think a user can confuse the operation with another one,
 write it down exactly like that.
+* `[link]` references resolve by the normal Kotlin rules — against the imports and the package of the
+file the KDoc lives in. A link like `[DataFrame]` from another package needs the import even when the
+name appears in the KDoc only; such imports are load-bearing, keep them.
+* When a `See also` entry names an operation pair such as `x` and `xDesc`, list the ascending
+variant first — the pair reads "ascending and descending", like its neighbouring entries.
 
 For example, from `group` KDoc:
 
@@ -396,6 +416,11 @@ For example, from `group` KDoc:
 
 Add a link to the corresponding operation in the 
 [documentation website](https://kotlin.github.io/dataframe).
+
+Before linking an operation whose page already exists, check whether `DocumentationUrls` has a
+constant for the page itself, not only for its section anchors — with anchors alone the KDoc ends up
+pointing at a section instead of the operation's overview. If the page-level constant is missing,
+add it next to the anchors.
 
 Please add it as a KDoc-snippet inside 
 [DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt)
@@ -436,6 +461,68 @@ Start the section with
 ```
 ### Examples
 ```
+
+Do not write examples as literal ` ```kotlin ` blocks in a KDoc. Write each example as a passing test in the
+[`:samples`](samples) module and include it with the KoDEx
+[`@sample`](KODEX_KDOC_PREPROCESSING.md#sample-and-samplenocomments-including-code-samples) notation.
+KoDEx copies the code into a ` ```kt ` block of the processed KDoc, so the example compiles and is checked by
+the test run, and it can't go stale.
+
+Write the sample the same way as a sample for the documentation website
+(see [Samples information](DOCUMENTATION_GUIDELINES.md#samples-information)
+and [`samples/AGENTS.md`](samples/AGENTS.md)):
+
+* Put it in the sample class of the operation's website page
+  (`samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/<Operation>Samples.kt`), not in `:core`.
+* Reusing the website samples in KDocs is preferred, but not required: if they don't fit a KDoc,
+  write a separate sample for it in the same class.
+* Mark the shown code with `// SampleStart` and `// SampleEnd`. Put assertions (`shouldBe`, …) and
+  `.saveDfHtmlSample()` after `// SampleEnd`, so the KDoc shows only the call.
+* The test must not be ignored and must pass: `./gradlew :samples:test`.
+* Reference the sample by its fully qualified name, like
+  `@sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataColumns]`.
+  A short name with an import doesn't work: `:samples` depends on `:core` and the other modules, not the other way
+  around, so a sample can't be imported from inside them.
+* Choose the API of the example by the overload:
+  * an overload with the Columns Selection DSL — the Extension Properties API (the `_properties` sample);
+  * an overload with `String` column names — the String API (the `_strings` sample);
+  * an overload with a row expression — both APIs. The website shows them in two tabs
+    (`_properties` and `_strings` samples); for a KDoc, you can instead write a single sample
+    (a name without the suffix) that contains both versions one after another.
+
+```kotlin
+/**
+ * ...
+ *
+ * ### Examples
+ *
+ * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ConcatSamples.concatDataColumns]
+ *
+ * @param ...
+ */
+public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T>
+```
+
+with the sample in [`ConcatSamples.kt`](samples/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/ConcatSamples.kt):
+
+```kotlin
+@Test
+fun concatDataColumns() {
+    // SampleStart
+    peopleDf1.age.concat(peopleDf2.age)
+        // SampleEnd
+        .also { it shouldBe columnOf<Number>(20, 15, 25.0).named("age") }
+        .toDataFrame()
+        .saveDfHtmlSample()
+}
+```
+
+Use `@sampleNoComments` instead of `@sample` if the sample code has KDocs that shouldn't be copied.
+Check the result in `generated-sources` after `processKDocsMain` (see [Compiling KDocs](#compiling-kdocs)).
+
+The IntelliJ KoDEx plugin doesn't resolve references into `:samples` yet, so the IDE hover shows a
+`SampleDocProcessor` error where the sample would be; the rest of the KDoc is rendered fine.
+This only affects the preview in the IDE; the Gradle build resolves them.
 
 #### Data tables in examples
 
@@ -583,6 +670,12 @@ The grammars are also almost always decorated with highlighted code snippets all
 
 No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
 
+If several steps are mutually exclusive — for example, overloads that lead to the same next step — list them
+as alternatives inside **one** optional group: '`[ `**`a`**` | `**`b`**` | `**`c`**` ]`'. Do not model them as
+several separate '`[ ... ]`' groups: each reads as an independent step, so the grammar would permit chains
+the receiver types do not allow — the receiver after a step is that step's result type, and every chain a
+grammar permits must compile.
+
 Note that the grammar is not always 100% accurate to keep the readability acceptable.
 Always use your common sense reading it, and if you're unsure, try out the function yourself or check
 the source code :).
@@ -671,6 +764,9 @@ But keep these things in mind:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
+- Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
+  `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a
+  `NullPointerException` in `DocTagToContentConverter`. Write it out instead: ``if [skipNaN] is `false` ``.
 
 
 ### Advanced DSL Grammar Templating (Columns Selection DSL)

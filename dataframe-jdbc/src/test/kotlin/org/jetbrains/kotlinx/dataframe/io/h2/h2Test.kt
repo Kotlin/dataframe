@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.SqlValidation
+import org.jetbrains.kotlinx.dataframe.io.aliasesNameColumns
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.H2.Mode
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
@@ -39,11 +40,19 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
+import java.sql.Clob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
+import java.sql.Time
+import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.util.Date
 import kotlin.reflect.typeOf
+import kotlin.time.Instant
+import kotlin.uuid.Uuid
 
 private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
@@ -51,55 +60,55 @@ private const val MAXIMUM_POOL_SIZE = 5
 
 private const val QUERY_SELECT_ONE = "SELECT 1"
 
+// No `name` and `age`: `cast(verify = true)` needs their exact nullability, and it is inferred from the rows,
+// so they read as non-null with a `limit` and as nullable without one
 @DataSchema
 interface Customer {
-    val id: Int?
-    val name: String?
-    val age: Int?
+    val id: Int
 }
 
 @DataSchema
 interface Sale {
-    val id: Int?
-    val customerId: Int?
-    val amount: Double
+    val id: Int
+    val customerId: Int
+    val amount: BigDecimal
 }
 
 @DataSchema
 interface CustomerSales {
-    val customerName: String?
-    val totalSalesAmount: Double?
+    val customerName: String
+    val totalSalesAmount: BigDecimal
 }
 
 @DataSchema
 interface TestTableData {
-    val characterCol: String?
-    val characterVaryingCol: String?
-    val characterLargeObjectCol: String?
-    val mediumTextCol: String?
-    val varcharIgnoreCaseCol: String?
-    val binaryCol: ByteArray?
-    val binaryVaryingCol: ByteArray?
-    val binaryLargeObjectCol: ByteArray?
-    val booleanCol: Boolean?
-    val tinyIntCol: Int?
-    val smallIntCol: Int?
-    val integerCol: Int?
-    val bigIntCol: Long?
-    val numericCol: BigDecimal?
-    val realCol: Float?
-    val doublePrecisionCol: Double?
-    val decFloatCol: BigDecimal?
-    val dateCol: String?
-    val timeCol: String?
-    val timeWithTimeZoneCol: String?
-    val timestampCol: String?
-    val timestampWithTimeZoneCol: String?
-    val intervalCol: String?
+    val characterCol: String
+    val characterVaryingCol: String
+    val characterLargeObjectCol: Clob
+    val mediumTextCol: Clob
+    val varcharIgnoreCaseCol: String
+    val binaryCol: ByteArray
+    val binaryVaryingCol: ByteArray
+    val binaryLargeObjectCol: Blob
+    val booleanCol: Boolean
+    val tinyIntCol: Int
+    val smallIntCol: Int
+    val integerCol: Int
+    val bigIntCol: Long
+    val numericCol: BigDecimal
+    val realCol: Float
+    val doublePrecisionCol: Double
+    val decFloatCol: BigDecimal
+    val dateCol: Date
+    val timeCol: Time
+    val timeWithTimeZoneCol: OffsetTime
+    val timestampCol: Instant
+    val timestampWithTimeZoneCol: OffsetDateTime
+    val intervalCol: String? // no such column in the table yet: read as nulls
     val javaObjectCol: Any?
-    val enumCol: String?
-    val jsonCol: String?
-    val uuidCol: String?
+    val enumCol: String
+    val jsonCol: ByteArray
+    val uuidCol: Uuid
 }
 
 class JdbcTest {
@@ -179,7 +188,7 @@ class JdbcTest {
 
         // Helper assertion functions
         private fun assertCustomerData(df: AnyFrame, expectedRows: Int = 4) {
-            val casted = df.cast<Customer>()
+            val casted = df.cast<Customer>(verify = true)
             casted.rowsCount() shouldBe expectedRows
             val expectedOlderThan30 = when (expectedRows) {
                 4 -> 2
@@ -198,16 +207,16 @@ class JdbcTest {
         }
 
         private fun assertCustomerSalesData(df: AnyFrame, expectedRows: Int = 2) {
-            val casted = df.cast<CustomerSales>()
+            val casted = df.cast<CustomerSales>(verify = true)
             casted.rowsCount() shouldBe expectedRows
             // In current tests, regardless of limit (2 or 1), the count of totalSalesAmount > 100 is 1
-            casted.filter { "totalSalesAmount"<Double?>()!! > 100 }.rowsCount() shouldBe 1
+            casted.filter { "totalSalesAmount"<BigDecimal>() > BigDecimal(100) }.rowsCount() shouldBe 1
             casted[0][0] shouldBe "John"
         }
 
         private fun assertCustomerSalesSchema(schema: DataFrameSchema) {
             schema.columns.size shouldBe 2
-            schema.columns["name"]!!.type shouldBe typeOf<String?>()
+            schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         }
 
         private fun assertAllTablesData(dataFrameMap: Map<String, AnyFrame>) {
@@ -216,28 +225,28 @@ class JdbcTest {
 
             val dataframes = dataFrameMap.values.toList()
 
-            val customerDf = dataframes[0].cast<Customer>()
+            val customerDf = dataframes[0].cast<Customer>(verify = true)
             customerDf.rowsCount() shouldBe 4
             customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 2
             customerDf[0][1] shouldBe "John"
 
-            val saleDf = dataframes[1].cast<Sale>()
+            val saleDf = dataframes[1].cast<Sale>(verify = true)
             saleDf.rowsCount() shouldBe 4
-            saleDf.filter { "amount"<Double>() > 40 }.rowsCount() shouldBe 3
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 3
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
         private fun assertAllTablesDataWithLimit(dataFrameMap: Map<String, AnyFrame>) {
             val dataframes = dataFrameMap.values.toList()
 
-            val customerDf = dataframes[0].cast<Customer>()
+            val customerDf = dataframes[0].cast<Customer>(verify = true)
             customerDf.rowsCount() shouldBe 1
             customerDf.filter { "age"<Int?>()?.let { it > 30 } ?: false }.rowsCount() shouldBe 1
             customerDf[0][1] shouldBe "John"
 
-            val saleDf = dataframes[1].cast<Sale>()
+            val saleDf = dataframes[1].cast<Sale>(verify = true)
             saleDf.rowsCount() shouldBe 1
-            saleDf.filter { "amount"<Double>() > 40 }.rowsCount() shouldBe 1
+            saleDf.filter { "amount"<BigDecimal>() > BigDecimal(40) }.rowsCount() shouldBe 1
             (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
         }
 
@@ -374,9 +383,9 @@ class JdbcTest {
         ).executeUpdate()
 
         val tableName = "TestTable"
-        val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
+        val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>(verify = true)
         df.rowsCount() shouldBe 3
-        df.filter { "integerCol"<Int?>()!! > 1000 }.rowsCount() shouldBe 2
+        df.filter { "integerCol"<Int>() > 1000 }.rowsCount() shouldBe 2
 
         // testing numeric columns
         val result = df.select("tinyIntCol")
@@ -594,7 +603,7 @@ class JdbcTest {
     @Test
     fun `read from non-existing table`() {
         shouldThrow<IllegalStateException> {
-            DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>()
+            DataFrame.readSqlTable(connection, "WrongTableName").cast<Customer>(verify = true)
         }
     }
 
@@ -962,7 +971,7 @@ class JdbcTest {
         @Language("SQL")
         val sqlQuery =
             """
-            SELECT c1.name as name, c2.name as name_1, c1.name as name_1
+            SELECT c1.name, c2.name, c1.name
             FROM Customer c1
             INNER JOIN Customer c2 ON c1.id = c2.id
             """.trimIndent()
@@ -972,6 +981,21 @@ class JdbcTest {
         schema.columns.toList()[0].first shouldBe "name"
         schema.columns.toList()[1].first shouldBe "name1"
         schema.columns.toList()[2].first shouldBe "name2"
+    }
+
+    @Test
+    fun `read from sql query with repeated aliases`() {
+        @Language("SQL")
+        val sqlQuery =
+            """
+            SELECT c1.name as name, c2.name as name_1, c1.name as name_1
+            FROM Customer c1
+            INNER JOIN Customer c2 ON c1.id = c2.id
+            """.trimIndent()
+
+        val schema = DataFrameSchema.readSqlQuery(connection, sqlQuery)
+        // the aliases name the columns; the repeated `name_1` is made unique as in any DataFrame
+        schema.columns.keys.toList() shouldBe listOf("name", "name_1", "name_11")
     }
 
     @Test
@@ -999,6 +1023,18 @@ class JdbcTest {
     @Test
     fun `infer nullability`() {
         inferNullability(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column`() {
+        aliasesNameColumns(connection)
+    }
+
+    @Test
+    fun `an SQL alias names the column in H2 without a compatibility mode`() {
+        DriverManager.getConnection("jdbc:h2:mem:aliasRegular;DB_CLOSE_DELAY=-1").use { regular ->
+            aliasesNameColumns(regular) { it.uppercase() }
+        }
     }
 
     @Test

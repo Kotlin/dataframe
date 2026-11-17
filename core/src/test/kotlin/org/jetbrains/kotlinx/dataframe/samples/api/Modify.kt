@@ -3,57 +3,40 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDate
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.DateTimeParserOptions
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.byName
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castTo
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.inward
-import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.mapValues
-import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.merge
@@ -61,7 +44,6 @@ import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perCol
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
@@ -70,19 +52,13 @@ import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.reverse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
-import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toStart
@@ -98,8 +74,6 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.junit.Ignore
 import org.junit.Test
-import java.util.Locale
-import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
 class Modify : TestBase() {
@@ -167,105 +141,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun convert() {
-        // SampleStart
-        df.convert { age }.with { it.toDouble() }
-        df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
-        // SampleEnd
-    }
-
-    @Test
-    fun convertColumnTo() {
-        // SampleStart
-        df.weight.convertTo<Float?>()
-        df.age.convertToDouble()
-        // SampleEnd
-    }
-
-    val stringDf = dataFrameOf(
-        "date" to columnOf("2025-11-22", "2025-11-23", "2025-11-24"),
-        "value" to columnOf("1,0", "200.000,0", "-"),
-    ).cast<ParseDf>()
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertStringTo() {
-        // SampleStart
-        // String -> Double? conversion
-        stringDf.convert { value }.to<Double?>(
-            parserOptions = ParserOptions(locale = Locale.GERMAN, nullStrings = setOf("-")),
-        )
-
-        // String -> LocalDate conversion
-        stringDf.convert { date }.to<LocalDate>(
-            parserOptions = ParserOptions(
-                dateTime = DateTimeParserOptions.Kotlin.withFormat(LocalDate.Formats.ISO),
-            ),
-        )
-        // shortcut for String -> LocalDate conversion
-        stringDf.convert { date }.toLocalDate(LocalDate.Formats.ISO)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertTo() {
-        // SampleStart
-        df.convert { age }.to<Double>()
-        df.convert { colsOf<Number>() }.to<String>()
-        df.convert { name.firstName and name.lastName }.asColumn { col -> col.map { it.length } }
-        df.convert { weight }.toFloat()
-        // SampleEnd
-    }
-
-    enum class Direction {
-        NORTH,
-        SOUTH,
-        WEST,
-        EAST,
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertToEnum() {
-        // SampleStart
-        dataFrameOf("direction")("NORTH", "WEST")
-            .convert("direction").to<Direction>()
-        // SampleEnd
-    }
-
-    @JvmInline
-    value class IntClass(val value: Int)
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertToValueClass() {
-        // SampleStart
-        dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
-            .convert("value").to<IntClass>()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertAsFrame() {
-        // SampleStart
-        df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun convertAsColumn() {
-        // SampleStart
-        df.convert { name }.asColumn { col ->
-            col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
-        }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun reverse() {
         // SampleStart
         df.reverse()
@@ -310,7 +185,7 @@ class Modify : TestBase() {
     fun sortBy_properties() {
         // SampleStart
         df.sortBy { age }
-        df.sortBy { age and name.firstName.desc() }
+        df.sortBy { age and name.firstName.reversed() }
         df.sortBy { weight.nullsLast() }
         // SampleEnd
     }
@@ -320,7 +195,7 @@ class Modify : TestBase() {
     fun sortBy_strings() {
         // SampleStart
         df.sortBy("age")
-        df.sortBy { "age" and "name"["firstName"].desc() }
+        df.sortBy { "age" and "name"["firstName"].reversed() }
         df.sortBy { "weight".nullsLast() }
         // SampleEnd
     }
@@ -352,206 +227,6 @@ class Modify : TestBase() {
                 else -> row1.name.firstName.compareTo(row2.name.firstName)
             }
         }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_properties() {
-        // SampleStart
-        df.reorder { age..isHappy }.byName()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorder_strings() {
-        // SampleStart
-        df.reorder { "age".."isHappy" }.byName()
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderSome() {
-        // SampleStart
-        val df = dataFrameOf("c", "d", "a", "b")(
-            3, 4, 1, 2,
-            1, 1, 1, 1,
-        )
-        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
-            // SampleEnd
-            .columnNames() shouldBe listOf("c", "b", "a", "d")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun reorderInGroup() {
-        // SampleStart
-        df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
-            // SampleEnd
-            .name.columnNames() shouldBe listOf("lastName", "firstName")
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitInplace_properties() {
-        // SampleStart
-        df.split { name.firstName }.by { it.asIterable() }.inplace()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitInplace_strings() {
-        // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split_properties() {
-        // SampleStart
-        df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split_strings() {
-        // SampleStart
-        df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "char2")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split1_properties() {
-        // SampleStart
-        df.split { name.lastName }
-            .by { it.asIterable() }.default(' ')
-            .inward { "char$it" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun split1_strings() {
-        // SampleStart
-        df.split { "name"["lastName"]<String>() }
-            .by { it.asIterable() }.default(' ')
-            .inward { "char$it" }
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitRegex() {
-        // SampleStart
-        val merged = df.merge { name.lastName and name.firstName }
-            .by { it[0] + " (" + it[1] + ")" }
-            .into("name")
-        // SampleEnd
-    }
-
-    private val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitRegex1() {
-        // SampleStart
-        merged.split { "name"<String>() }
-            .match("""(.*) \((.*)\)""")
-            .inward("firstName", "lastName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitFrameColumn() {
-        // SampleStart
-        val df1 = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            4, 5, 6,
-        )
-        val df2 = dataFrameOf("a", "b")(
-            5, 6,
-            7, 8,
-            9, 10,
-        )
-        val df = dataFrameOf(
-            "id" to columnOf("x", "y"),
-            "group" to columnOf(df1, df2)
-        )
-
-        df.split { "group"<AnyFrame>() }.intoColumns()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitIntoRows_properties() {
-        // SampleStart
-        df.split { name.firstName }.by { it.asIterable() }.intoRows()
-
-        df.split { name }.by { it.values() }.intoRows()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun splitIntoRows_strings() {
-        // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.intoRows()
-
-        df.split { colGroup("name") }.by { it.values() }.intoRows()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun merge() {
-        // SampleStart
-        // Merge two columns into one column "fullName"
-        df.merge { name.firstName and name.lastName }.by(" ").into("fullName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeIntoList() {
-        // SampleStart
-        // Merge data from two columns into List<String>
-        df.merge { name.firstName and name.lastName }.by(",").intoList()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeSameWith() {
-        // SampleStart
-        df.merge { name.firstName and name.lastName }
-            .by { it[0] + " (" + it[1].uppercase() + ")" }
-            .into("fullName")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeDifferentWith() {
-        // SampleStart
-        df.merge { name.firstName and age and isHappy }
-            .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
-            .into("status")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun mergeDefault() {
-        // SampleStart
-        df.merge { colsOf<Number>() }.into("data")
         // SampleEnd
     }
 
@@ -615,15 +290,6 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
-    fun gatherNames() {
-        // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>()
-            .where { it > 0 }.keysInto("city")
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
     fun gather() {
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.into("city", "population")
@@ -665,82 +331,6 @@ class Modify : TestBase() {
         // SampleStart
         val score by columnOf(4, 5, 3, 5, 4, 5, 3)
         df.insert(score).at(2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatDataFrames() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        df.concat(df1, df2)
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumns() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        a.concat(b)
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatColumnsIterable() {
-        // SampleStart
-        val a by columnOf(1, 2)
-        val b by columnOf(3, 4)
-        listOf(a, b).concat()
-            // SampleEnd
-            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatIterable() {
-        val df1 = df
-        val df2 = df
-        // SampleStart
-        listOf(df1, df2).concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatRows() {
-        // SampleStart
-        val rows = listOf(df[2], df[4], df[5])
-        rows.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatFrameColumn() {
-        // SampleStart
-        val x = dataFrameOf("a", "b")(
-            1, 2,
-            3, 4,
-        )
-        val y = dataFrameOf("b", "c")(
-            5, 6,
-            7, 8,
-        )
-        val frameColumn by columnOf(x, y)
-        frameColumn.concat()
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun concatGroupBy() {
-        // SampleStart
-        df.groupBy { name }.concat()
         // SampleEnd
     }
 
@@ -928,52 +518,6 @@ class Modify : TestBase() {
     fun flattenAll() {
         // SampleStart
         df.flatten()
-        // SampleEnd
-    }
-
-    // @TransformDataFrameExpressions
-    @Test
-    fun multiCallOperations() {
-        // SampleStart
-        df.update { age }.where { city == "Paris" }.with { it - 5 }
-            .filter { isHappy && age > 100 }
-            .move { name.firstName and name.lastName }.after { isHappy }
-            .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-            .rename { isHappy }.to("isOK")
-        // SampleEnd
-    }
-
-    class MyType(val value: Int)
-
-    @DataSchema
-    class MySchema(val a: MyType, val b: MyType, val c: Int)
-
-    fun customConvertersData() {
-        // SampleStart
-        class MyType(val value: Int)
-
-        @DataSchema
-        class MySchema(val a: MyType, val b: MyType, val c: Int)
-
-        // SampleEnd
-    }
-
-    @Test
-    @TransformDataFrameExpressions
-    fun customConverters() {
-        // SampleStart
-        val df: AnyFrame = dataFrameOf(
-            "a" to columnOf(1, 2, 3),
-            "b" to columnOf("1", "2", "3"),
-        )
-        df.convertTo<MySchema> {
-            // providing the converter: Int -> MyType, so column `a` can be converted
-            convert<Int>().with { MyType(it) }
-            // providing the parser: String -> MyType, so column `b` can be converted
-            parser { MyType(it.toInt()) }
-            // providing the filler for `c`, as it's missing in `df`
-            fill { c }.with { a.value + b.value }
-        }
         // SampleEnd
     }
 

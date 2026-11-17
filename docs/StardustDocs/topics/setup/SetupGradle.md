@@ -70,7 +70,7 @@ plugins {
 </tab>
 </tabs>
 
-In versions older than Kotlin 2.4.0 add following line to your `gradle.properties`:
+In versions older than Kotlin 2.4.0, add the following line to your `gradle.properties`:
 
 ```properties
 kotlin.incremental=false
@@ -101,7 +101,7 @@ dependencies {
 </tab>
 </tabs>
 
-This will add [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
+This will add the [general Kotlin DataFrame dependency](Modules.md#dataframe-general), 
 i.e., [core API and implementation](Modules.md#dataframe-core) as well as all 
 [IO modules](Modules.md#io-modules) (excluding [experimental ones](Modules.md#experimental-modules)).  
 For flexible dependencies configuration see [Custom configuration](SetupCustomGradle.md).

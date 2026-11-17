@@ -9,11 +9,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
@@ -110,26 +107,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**`nameContains`**</code>][ColumnsSelectionDsl.nameContains] */
-        public typealias PlainDslNameContains = Nothing
-
-        /** __`name`__`(`[<code>**`Starts`**</code>][ColumnsSelectionDsl.nameStartsWith]`|`[<code>**`Ends`**</code>][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public typealias PlainDslNameStartsEndsWith = Nothing
-
-        /** __`.`__[<code>**`nameContains`**</code>][ColumnsSelectionDsl.nameContains] */
-        public typealias ColumnSetNameContains = Nothing
-
-        /** __`.name`__`(`[<code>**`Starts`**</code>][ColumnsSelectionDsl.nameStartsWith]`|`[<code>**`Ends`**</code>][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
-        public typealias ColumnSetNameStartsEndsWith = Nothing
-
-        /** __`.`__[<code>**`colsNameContains`**</code>][ColumnsSelectionDsl.colsNameContains] */
-        public typealias ColumnGroupNameContains = Nothing
-
-        /** __`.colsName`__`(`[<code>**`Starts`**</code>][ColumnsSelectionDsl.colsNameStartsWith]`|`[<code>**`Ends`**</code>][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
-        public typealias ColumnGroupNameStartsWith = Nothing
-    }
+    public interface Grammar
 
     // region nameContains
 
@@ -370,43 +348,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     public fun ColumnPath.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): ColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
-
-    /**
-     * ## (Cols) Name Contains
-     * Returns a [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] having
-     * [regex] in their name.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
-     *
-     * This function is a shorthand for [<code>cols</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  {  `[regex][regex]` `[<code>in</code>][String.contains]` it.`[<code>name</code>][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`.
-     *
-     * For more information: [See `Column Name Filters` on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html#column-name-filters)
-     *
-     * ### Check out: [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[<code>nameContains</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsNameContains]`("my") }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "someGroupCol".`[<code>nameContains</code>][kotlin.String.colsNameContains]`(`[<code>Regex</code>][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
-     *
-     * `df.`[<code>select</code>][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::someGroupCol.`[<code>nameContains</code>][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param [regex] what the column name should contain to be included in the result.
-     *
-     * @return A [<code>ColumnSet</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing
-     *   all columns containing [regex] in their name.
-     * @see [nameEndsWith]
-     * @see [nameStartsWith]
-     *
-     */
-    private typealias NameContainsRegexDocs = Nothing
 
     /**
      * ## (Cols) Name Contains

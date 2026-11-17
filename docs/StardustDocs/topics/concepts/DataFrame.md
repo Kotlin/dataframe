@@ -4,6 +4,9 @@
 
 Columns in [`DataFrame`](DataFrame.md) must have equal size and unique names.
 
+**API Reference:**
+- [`DataFrame` Dokka API](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe/-data-frame/index.html)
+
 **Learn how to:**
 - [Create DataFrame](createDataFrame.md)
 - [Read DataFrame](read.md)

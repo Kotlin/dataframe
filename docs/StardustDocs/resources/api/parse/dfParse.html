@@ -459,7 +459,27 @@ summary {
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: String: String\">date: String</span>", children: [], rightAlign: false, values: ["2025-11-22","2025-11-23","2025-11-24"] }, 
 { name: "<span title=\"value: String: String\">value: String</span>", children: [], rightAlign: false, values: ["1.0","200,000.0","1.123"] }, 
+{ name: "<span title=\"code: Char: Char\">code: Char</span>", children: [], rightAlign: false, values: ["1","2","3"] }, 
+{ name: "<span title=\"city: String: String\">city: String</span>", children: [], rightAlign: false, values: ["Moscow","Berlin","Paris"] }, 
+{ name: "<span title=\"age: String: String\">age: String</span>", children: [], rightAlign: false, values: ["30","25","41"] }, 
+{ name: "<span title=\"info: DataRow<*>: DataRow<*>\">info: DataRow<*></span>", children: [3, 4], rightAlign: false, values: ["<span class=\"formatted\" title=\"city: String: Moscow\nage: String: 30\"><span class=\"structural\">{ </span><span class=\"structural\">city: String: </span>Moscow<span class=\"structural\">, </span><span class=\"structural\">age: String...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"city: String: Berlin\nage: String: 25\"><span class=\"structural\">{ </span><span class=\"structural\">city: String: </span>Berlin<span class=\"structural\">, </span><span class=\"structural\">age: String...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"city: String: Paris\nage: String: 41\"><span class=\"structural\">{ </span><span class=\"structural\">city: String: </span>Paris<span class=\"structural\">, </span><span class=\"structural\">age: String: </span>41<span class=\"structural\"> }</span></span>"] }, 
+{ name: "<span title=\"history: DataFrame<*>: DataFrame<*>\">history: DataFrame<*></span>", children: [], rightAlign: false, values: [{ frameId: 1, value: "<b>DataFrame 1 x 1</b>" },{ frameId: 2, value: "<b>DataFrame 1 x 1</b>" },{ frameId: 3, value: "<b>DataFrame 1 x 1</b>" }] }, 
 ], id: 0, rootId: 0, totalRows: 3 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"visit: String\">visit</span>", children: [], rightAlign: false, values: ["2024-05-01"] }, 
+], id: 1, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"visit: String\">visit</span>", children: [], rightAlign: false, values: ["2024-06-15"] }, 
+], id: 2, rootId: 0, totalRows: 1 } ) });
+/*-->*/
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"visit: String\">visit</span>", children: [], rightAlign: false, values: ["2024-07-30"] }, 
+], id: 3, rootId: 0, totalRows: 1 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });

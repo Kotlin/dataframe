@@ -12,7 +12,6 @@ import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.toStdlibInstant
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -635,7 +634,7 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  * @param [C] The target type to convert values to.
  * @return A new [DataColumn] with the values converted to type [C].
  */
-public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
+public inline fun <reified C> DataColumn<*>.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 /**
  * Converts values in this column to the specified [type][newType].
@@ -648,7 +647,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
  * @return A new [DataColumn] with the values converted to [type].
  */
 @Suppress("UNCHECKED_CAST")
-public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType, null)
+public fun DataColumn<*>.convertTo(newType: KType): DataColumn<*> = convertToTypeImpl(newType, null)
 
 /**
  * Converts values in this `String` column to the specified type [C].
@@ -679,7 +678,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
  * @return A new [DataColumn] with the values converted to [type].
  */
-public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
+public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): DataColumn<*> =
     convertToTypeImpl(newType, parserOptions)
 
 /**

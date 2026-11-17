@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByKey
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -64,7 +65,8 @@ class SeriesTests {
         val k = 3
         val withMa = typed
             .groupBy { city }
-            .sortBy { city and day }
+            .sortByKey()
+            .sortBy { day }
             .add("ma_temp") { it.movingAverage(k) { it.temp } }
             .concat()
 

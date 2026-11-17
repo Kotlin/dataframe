@@ -30,7 +30,7 @@ Explore our structured, in-depth guides to steadily improve your Kotlin DataFram
 and make working with your data both convenient and type-safe.
 
 * [Enhanced Column Selection DSL](https://blog.jetbrains.com/kotlin/2024/07/enhanced-column-selection-dsl-in-kotlin-dataframe/)
-  — explore powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
+  — explore the powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
 * [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)
   — discover interactive Kotlin DataFrame outputs in
   [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
@@ -56,7 +56,7 @@ and make working with your data both convenient and type-safe.
 
 
 * Using Unsupported Data Sources:
-  — A guide by examples. While these might one day become proper integrations of DataFrame, for now,
+  — A guide with examples. While these might one day become proper integrations of DataFrame, for now,
   we provide them as examples for how to make such integrations yourself.
     * [Apache Spark Interop (With and Without Kotlin Spark API)](https://github.com/Kotlin/dataframe/tree/master/examples/projects/kotlin-spark)
     * [Multik Interop](https://github.com/Kotlin/dataframe/tree/master/examples/projects/multik)
@@ -101,7 +101,7 @@ Explore our extensive collection of practical examples and real-world analytics 
   — explore TV shows and movies from Netflix with the powerful Kotlin DataFrame API and beautiful
   [Kandy](https://kotlin.github.io/kandy/) visualizations.
 
-* [Top-12 German Companies Financial Analyze](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
+* [Top-12 German Companies Financial Analysis](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/top_12_german_companies)
   — analyze key financial metrics for several major German companies.
 
 * [Movies Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/movies/movies.ipynb)
@@ -116,7 +116,7 @@ Explore our extensive collection of practical examples and real-world analytics 
 
 * [Reading Parquet files from Apache Spark](https://github.com/Kotlin/dataframe/tree/master/examples/projects/spark-parquet-dataframe)
   — this project showcases how to export data and ML models from Apache Spark via reading from Parquet files. 
-Also, [Kandy](https://kotlin.github.io/kandy/) used to visualize the exported data and Linear Regression model.
+[Kandy](https://kotlin.github.io/kandy/) is used to visualize the exported data and Linear Regression model.
 
 See also [Kandy User Guides](https://kotlin.github.io/kandy/user-guide.html)
 and [Examples Gallery](https://kotlin.github.io/kandy/examples.html)

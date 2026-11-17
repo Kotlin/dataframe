@@ -24,12 +24,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
-import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestWhenNoElements
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MAX_NO_SKIPNAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MAX
@@ -98,7 +100,11 @@ internal interface MaxDocs : CommonMinMaxDocs {
     @ExcludeFromSources
     typealias AggregateColumnsSelectorParam = Nothing
 
-    /** @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]} */
+    /**
+     * @include [CommonStatisticsDocs.ColumnNamesParam] {@include [SetMaxStatisticArgs]}
+     *   These must be existing mutually comparable columns,
+     *   else an [IllegalStateException] or [IllegalArgumentException] is thrown.
+     */
     @ExcludeFromSources
     typealias ColumnNamesParam = Nothing
 
@@ -181,7 +187,7 @@ private typealias SetMaxOrNullOperationArg = Nothing
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.max(skipNaN: Boolean = skipNaNDefault): T =
-    maxOrNull(skipNaN).suggestIfNull("max")
+    maxOrNull(skipNaN).throwAndSuggestIfNull("max")
 
 /**
  * Returns the maximum of the values in this [DataColumn], or `null` if there is nothing to compare.
@@ -220,6 +226,8 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the maximum value.
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
@@ -248,11 +256,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
+): T =
+    Aggregators.max<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrElse { throwAndSuggestWhenNoElements("maxBy") }
 
 /**
  * Returns the first element of this [DataColumn] for which the given [selector]
  * returns the maximum value, or `null` if there is nothing to compare.
+ *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -283,7 +296,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.max<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? =
+    Aggregators.max<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrNull()
 
 /**
  * Returns the maximum of the values that the given [selector] returns
@@ -321,7 +337,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNul
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = maxOfOrNull(skipNaN, selector).suggestIfNull("maxOf")
+): R & Any = maxOfOrNull(skipNaN, selector).throwAndSuggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [selector] returns
@@ -441,7 +457,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOfOrNull(skipNaN:
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boolean = skipNaNDefault): T =
-    rowMaxOfOrNull<T>(skipNaN).suggestIfNull("rowMaxOf")
+    rowMaxOfOrNull<T>(skipNaN).throwAndSuggestIfNull("rowMaxOf")
 
 // endregion
 
@@ -470,7 +486,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMaxOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the largest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.max()
+ * df.flatten().max()
  * ```
  *
  * @include [MaxDocs.SkipNanParam]
@@ -606,7 +622,7 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.maxFor(
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = maxOrNull(skipNaN, columns).suggestIfNull("max")
+): C & Any = maxOrNull(skipNaN, columns).throwAndSuggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [DataFrame].
@@ -643,21 +659,21 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.max(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any> =
-    maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+    maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C & Any = maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.max(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = maxOrNull(*columns, skipNaN = skipNaN).suggestIfNull("max")
+): C & Any = maxOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("max")
 
 /**
  * Returns a single maximum of all the values in the selected columns of this [DataFrame],
@@ -793,7 +809,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxOrNull(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = maxOfOrNull(skipNaN, expression).suggestIfNull("maxOf")
+): C & Any = maxOfOrNull(skipNaN, expression).throwAndSuggestIfNull("maxOf")
 
 /**
  * Returns the maximum of the values that the given [expression] returns
@@ -843,6 +859,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * @include [MaxDocs.ThrowsOnEmptySnippet]
@@ -875,7 +893,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxOfOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T> = maxByOrNull(skipNaN, expression).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(skipNaN, expression).throwAndSuggestIfNull("maxBy")
 
 /**
  * Returns the first row of this [DataFrame] that has the largest value
@@ -910,27 +928,29 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.maxBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
-    maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+    maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = maxByOrNull(column, skipNaN).suggestIfNull("maxBy")
+): DataRow<T> = maxByOrNull(column, skipNaN).throwAndSuggestIfNull("maxBy")
 
 /**
  * Returns the first row of this [DataFrame] for which the given [expression] returns
  * the maximum value, or `null` if there is nothing to compare.
  *
  * @include [MaxDocs.RowExpressionSnippet]
+ *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -1313,6 +1333,8 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.maxOf(
  *
  * @include [MaxDocs.RowExpressionSnippet]
  *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
+ *
  * @include [MaxDocs.InputValuesSnippet]
  *
  * Groups that have no values to compare cannot select a row, and produce `null` values instead.
@@ -1407,7 +1429,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.maxBy(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * Check out the [`Pivot` Grammar][PivotDocs.Grammar].
  *
@@ -1443,7 +1465,7 @@ public fun <T> Pivot<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1489,7 +1511,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1547,7 +1569,7 @@ public fun <T, R : Comparable<*>?> Pivot<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1587,7 +1609,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1643,7 +1665,7 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptySnippet]
  *
  * Don't confuse [maxOf] with [maxBy][Pivot.maxBy], which returns the first row of each group for
  * which the expression returns the maximum value, instead of that value.
@@ -1679,6 +1701,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.maxOf(
  * for which the given [rowExpression] returns the maximum value.
  *
  * @include [MaxDocs.RowExpressionSnippet]
+ *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -1781,7 +1805,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Check out the [`PivotGroupBy` Grammar][PivotGroupByDocs.Grammar].
  *
@@ -1818,7 +1842,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean =
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [MaxDocs.AggregateColumnsSelectorSnippet]
  *
@@ -1864,7 +1888,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1925,7 +1949,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.maxFor(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -1968,7 +1992,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * @include [SelectingColumns.ColumnGroupsAndNestedColumnsSnippet]
  *
@@ -2026,7 +2050,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.max(
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
- * @include [MaxDocs.NullCellOnEmptyPivotSnippet]
+ * @include [MaxDocs.NullCellOnEmptyPivotGroupBySnippet]
  *
  * Don't confuse [maxOf] with [maxBy][PivotGroupBy.maxBy], which returns the first row of each group
  * for which the expression returns the maximum value, instead of that value.
@@ -2063,6 +2087,8 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.maxOf(
  * the first [row][DataRow] for which the given [rowExpression] returns the maximum value.
  *
  * @include [MaxDocs.RowExpressionSnippet]
+ *
+ * @include [MaxDocs.ExpressionResultIsInputSnippet]
  *
  * @include [MaxDocs.InputValuesSnippet]
  *
@@ -2163,7 +2189,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(): T = max(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(): T? = maxOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T & Any =
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(noinline selector: (T) -> R): T =
     maxBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)

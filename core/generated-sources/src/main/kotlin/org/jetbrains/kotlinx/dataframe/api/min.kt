@@ -13,23 +13,20 @@ import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs
-import org.jetbrains.kotlinx.dataframe.documentation.CommonMinMaxDocs.InputValuesSnippet
 import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_COLUMN_NAME
-import org.jetbrains.kotlinx.dataframe.documentation.CommonStatisticsDocs.STATISTIC_VERB
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
-import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestIfNull
+import org.jetbrains.kotlinx.dataframe.impl.throwAndSuggestWhenNoElements
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import org.jetbrains.kotlinx.dataframe.util.MIN_NO_SKIPNAN
 import org.jetbrains.kotlinx.dataframe.util.ROW_MIN
@@ -47,9 +44,12 @@ import kotlin.reflect.KProperty
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -209,9 +209,12 @@ internal interface MinDocs : CommonMinMaxDocs {
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -258,16 +261,19 @@ internal interface MinDocs : CommonMinMaxDocs {
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T : Comparable<T>> DataColumn<T?>.min(skipNaN: Boolean = skipNaNDefault): T =
-    minOrNull(skipNaN).suggestIfNull("min")
+    minOrNull(skipNaN).throwAndSuggestIfNull("min")
 
 /**
  * Returns the minimum of the values in this [<code>DataColumn</code>][DataColumn], or `null` if there is nothing to compare.
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -322,9 +328,16 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -366,7 +379,10 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T & Any = minByOrNull(skipNaN, selector).suggestIfNull("minBy")
+): T =
+    Aggregators.min<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrElse { throwAndSuggestWhenNoElements("minBy") }
 
 /**
  * Returns the first element of this [<code>DataColumn</code>][DataColumn] for which the given [<code>selector</code>][selector]
@@ -374,9 +390,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -419,7 +442,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): T? = Aggregators.min<R>(skipNaN).aggregateByOrNull(this, selector)
+): T? =
+    Aggregators.min<R>(skipNaN)
+        .aggregateBy(this, selector)
+        .getOrNull()
 
 /**
  * Returns the minimum of the values that the given [<code>selector</code>][selector] returns
@@ -431,9 +457,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -482,7 +511,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNul
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
-): R & Any = minOfOrNull(skipNaN, selector).suggestIfNull("minOf")
+): R & Any = minOfOrNull(skipNaN, selector).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [<code>selector</code>][selector] returns
@@ -494,9 +523,12 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -570,9 +602,12 @@ public fun DataRow<*>.rowMin(): Nothing = error(ROW_MIN)
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -630,9 +665,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -679,7 +717,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOfOrNull(skipNaN:
  * @throws NoSuchElementException if there are no values to compare.
  */
 public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boolean = skipNaNDefault): T =
-    rowMinOfOrNull<T>(skipNaN).suggestIfNull("rowMinOf")
+    rowMinOfOrNull<T>(skipNaN).throwAndSuggestIfNull("rowMinOf")
 
 // endregion
 
@@ -696,9 +734,12 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -729,7 +770,7 @@ public inline fun <reified T : Comparable<T>> DataRow<*>.rowMinOf(skipNaN: Boole
  * ```kotlin
  * // A single row with the smallest value of each comparable column
  * // ("name"/"firstName", "name"/"lastName", "age", "city", "weight", and "isHappy")
- * df.min()
+ * df.flatten().min()
  * ```
  *
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
@@ -747,9 +788,12 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -770,10 +814,21 @@ public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
  *
  *
  *
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  *
@@ -816,9 +871,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -858,6 +916,8 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   These must be existing mutually comparable columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -887,9 +947,12 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -975,16 +1038,19 @@ public fun <T, C : Comparable<*>?> DataFrame<T>.minFor(
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
-): C & Any = minOrNull(skipNaN, columns).suggestIfNull("min")
+): C & Any = minOrNull(skipNaN, columns).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame].
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1050,21 +1116,21 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.min(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Comparable<Any> =
-    minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+    minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): C & Any = minOrNull(*columns, skipNaN = skipNaN).suggestIfNull("min")
+): C & Any = minOrNull(*columns, skipNaN = skipNaN).throwAndSuggestIfNull("min")
 
 /**
  * Returns a single minimum of all the values in the selected columns of this [<code>DataFrame</code>][DataFrame],
@@ -1072,9 +1138,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1169,9 +1238,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1272,9 +1344,12 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1326,7 +1401,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minOrNull(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): C & Any = minOfOrNull(skipNaN, expression).suggestIfNull("minOf")
+): C & Any = minOfOrNull(skipNaN, expression).throwAndSuggestIfNull("minOf")
 
 /**
  * Returns the minimum of the values that the given [<code>expression</code>][expression] returns
@@ -1346,9 +1421,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOf(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1416,9 +1494,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1465,7 +1550,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minOfOrNull
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T> = minByOrNull(skipNaN, expression).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(skipNaN, expression).throwAndSuggestIfNull("minBy")
 
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] that has the smallest value
@@ -1473,9 +1558,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1518,21 +1606,21 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  * @throws NoSuchElementException if there are no values to compare.
  */
 public fun <T> DataFrame<T>.minBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
-    minByOrNull(column, skipNaN).suggestIfNull("minBy")
+    minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = minByOrNull(column, skipNaN).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T> = minByOrNull(column, skipNaN).suggestIfNull("minBy")
+): DataRow<T> = minByOrNull(column, skipNaN).throwAndSuggestIfNull("minBy")
 
 /**
  * Returns the first row of this [<code>DataFrame</code>][DataFrame] for which the given [<code>expression</code>][expression] returns
@@ -1548,9 +1636,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minBy(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1601,9 +1696,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1679,9 +1777,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1738,9 +1839,12 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1761,10 +1865,21 @@ public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
  *
  *
  *
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  *
@@ -1814,9 +1929,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1861,6 +1979,8 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   These must be existing mutually comparable columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [skipNaN] If `true`, [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] values are ignored, just like `null` values.
  *   If `false` (the default), a [<code>`NaN`</code>][org.jetbrains.kotlinx.dataframe.documentation.NaN] in the input is propagated to the result.
  *   This only has an effect on [<code>Double</code>][Double] and [<code>Float</code>][Float] values.
@@ -1896,9 +2016,12 @@ public fun <T, C : Comparable<*>?> Grouped<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -1973,9 +2096,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2076,9 +2202,12 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2158,9 +2287,16 @@ public inline fun <T, reified C : Comparable<C & Any>?> Grouped<T>.minOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2222,9 +2358,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2287,9 +2426,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2301,16 +2443,12 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.minBy(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Check out the [<code>`Pivot` Grammar</code>][PivotDocs.Grammar].
  *
@@ -2353,9 +2491,12 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2367,8 +2508,8 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
@@ -2376,14 +2517,21 @@ public fun <T> Pivot<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNa
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
  *
  *
  *
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  *
@@ -2437,9 +2585,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2451,16 +2602,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2488,6 +2635,8 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   These must be existing mutually comparable columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
@@ -2527,9 +2676,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2541,16 +2693,12 @@ public fun <T, R : Comparable<*>?> Pivot<T>.minFor(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2598,9 +2746,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2612,16 +2763,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  *
  *
@@ -2693,9 +2840,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2707,16 +2857,12 @@ public fun <T, R : Comparable<R & Any>?> Pivot<T>.min(
  *
  *
  *
- * Result cells for which there exists a group, but there is nothing left to compare
- * (for instance, because the group was empty or contained only `null` values)
+ * Result cells for which there is nothing left to compare
+ * (for instance, because the input was empty or contained only `null` values)
  * simply become `null`.
  *
  * For more information about the resulting types:
  * [See "min / max Type Conversion" on the documentation website.](https://kotlin.github.io/dataframe/minmax.html#type-conversion)
- *
- *
- *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][Pivot.minBy], which returns the first row of each group for
  * which the expression returns the minimum value, instead of that value.
@@ -2766,9 +2912,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.minOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2829,9 +2982,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2903,9 +3059,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2926,7 +3085,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Check out the [<code>`PivotGroupBy` Grammar</code>][PivotGroupByDocs.Grammar].
  *
@@ -2970,9 +3129,12 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -2993,14 +3155,25 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean =
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
- * The columns are selected with the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] — an extension of the
- * Columns Selection DSL which lets you rename the result of a column with
- * [<code>`into`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] and supply a
- * [<code>`default`</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] value for columns without any values.
+ * Select the columns using the [<code>ColumnsForAggregateSelectionDsl</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl].
+ *
+ *
+ *
+ *
+ *
+ * The [<code>Columns For Aggregate Selection DSL</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl] allows selecting columns
+ * to aggregate, just like the [<code>Columns Selection DSL</code>][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * It also allows configuring how the aggregation result of each selected column is stored:
+ * - [<code>into</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.into] sets the name
+ *   (or the [<code>path</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnPath], see [<code>pathOf</code>][org.jetbrains.kotlinx.dataframe.api.pathOf]) of the resulting column.
+ *   If several columns are selected, their results are put into a [<code>column group</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
+ *   with this name, keeping the names of the columns.
+ * - [<code>default</code>][org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl.default] sets the value used in [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] aggregations
+ *   instead of `null` results, including the [<code>pivot</code>][org.jetbrains.kotlinx.dataframe.api.pivot] cells without any rows.
  *
  *
  *
@@ -3054,9 +3227,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3077,7 +3253,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3107,6 +3283,8 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  * ```
  *
  * @param [columns] The names of the columns to compute the minimum of.
+ *   These must be existing mutually comparable columns,
+ *   else an [<code>IllegalStateException</code>][IllegalStateException] or [<code>IllegalArgumentException</code>][IllegalArgumentException] is thrown.
  * @param [separate] If `false` (the default), the resulting columns are indexed
  *   first by the pivot key(s) and then by the names of the aggregated columns.
  *   If `true`, this order is reversed: the results are grouped by aggregated column first.
@@ -3147,9 +3325,12 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3170,7 +3351,7 @@ public fun <T, R : Comparable<*>?> PivotGroupBy<T>.minFor(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3221,9 +3402,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3244,7 +3428,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  *
  *
@@ -3318,9 +3502,12 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3341,7 +3528,7 @@ public fun <T, R : Comparable<R & Any>?> PivotGroupBy<T>.min(
  *
  *
  *
- * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] are used.
+ * For empty pivot intersections, `null` or the [<code>set default</code>][org.jetbrains.kotlinx.dataframe.api.PivotGroupBy.default] is used.
  *
  * Don't confuse [<code>minOf</code>][minOf] with [<code>minBy</code>][PivotGroupBy.minBy], which returns the first row of each group
  * for which the expression returns the minimum value, instead of that value.
@@ -3392,9 +3579,16 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.minOf(
  *
  *
  *
+ * The result of the expression is considered the 'input' of this operation.
+ *
+ *
+ *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3456,9 +3650,12 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.minBy(
  *
  *
  *
+ *
+ *
  * Only self-comparable values are supported: values of a type `T : Comparable<T>`
  * that are mutually comparable (like strings, primitive numbers, or dates).
- * This includes all primitive number types, but no mix of different number types.
+ * This includes all primitive number types, but no mix of different number types,
+ * which would result in a [<code>ClassCastException</code>][ClassCastException].
  *
  *
  *
@@ -3525,7 +3722,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(): T = min(skipNaN = skipNaNDe
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = minOrNull(skipNaN = skipNaNDefault)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T & Any =
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(noinline selector: (T) -> R): T =
     minBy(skipNaN = skipNaNDefault, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)

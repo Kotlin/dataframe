@@ -4,6 +4,8 @@
 
 Returns [`DataFrame`](DataFrame.md) with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
 
+**API reference**: [`describe`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/describe.html)
+
 ```kotlin
 describe [ columns ]
 ```
@@ -13,7 +15,7 @@ describe [ columns ]
 ### Summary Metrics:
 
 - **`name`** — The name of the column.
-- **`path`** — path to the column (for hierarchical `DataFrame`)
+- **`path`** — The path to the column (for a hierarchical `DataFrame`).
 - **`type`** — The data type of the column (e.g., Int, String, Boolean).
 - **`count`** — The total number of non-null values in the column.
 - **`unique`** — The number of unique values in the column.

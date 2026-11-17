@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -8,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -132,7 +131,7 @@ internal interface UngroupDocs {
  * ```kotlin
  * // Ungroups "groupA" and "groupB" column groups
  * df.ungroup { groupA and groupB }
- * // Ungroups all column groups at any depth which name contains "group" substring
+ * // Ungroups all column groups at any depth whose name contains the "group" substring
  * df.ungroup { colsAtAnyDepth().colGroups { it.name().contains("group") } }
  * ```
  * @param [columns] The [<code>Columns Selector</code>][ColumnsSelector] used to select the column groups of this [<code>DataFrame</code>][DataFrame] to ungroup.
@@ -186,7 +185,7 @@ public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungr
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.ungroup(vararg columns: AnyColumnReference): DataFrame<T> =
+public fun <T> DataFrame<T>.ungroup(vararg columns: ColumnReference<*>): DataFrame<T> =
     ungroup { columns.toColumnSet() }
 
 @Deprecated(DEPRECATED_ACCESS_API)

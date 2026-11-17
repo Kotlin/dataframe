@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import kotlin.reflect.typeOf
 
@@ -39,6 +40,7 @@ public interface ExprColumnsSelectionDsl {
     public interface Grammar {
 
         /** [**`expr`**][ColumnsSelectionDsl.expr] */
+        @ExcludeFromSources
         public typealias PlainDslName = Nothing
     }
 }

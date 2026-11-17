@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -232,7 +233,14 @@ internal fun <A, B> DataFrame<A>.joinImpl(
                 type = srcColumn.type.withNullability(hasNulls),
             )
 
-            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
+            ColumnKind.Frame -> {
+                // rows without a match on the other side have no dataframe, so they get
+                // an empty dataframe with the schema of the source column instead of null
+                val frameSchema = srcColumn.asAnyFrameColumn().schema
+                val emptyFrame by lazy { DataFrame.empty(frameSchema.value) }
+                val groups = columnValues.map { (it as AnyFrame?) ?: emptyFrame }
+                DataColumn.createFrameColumn(srcColumn.name, groups, frameSchema)
+            }
 
             ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
         }

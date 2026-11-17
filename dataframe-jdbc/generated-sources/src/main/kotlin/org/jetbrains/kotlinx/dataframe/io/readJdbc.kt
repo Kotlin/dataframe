@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.`dataframe-jdbc`.BuildConfig
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
 import org.jetbrains.kotlinx.dataframe.io.db.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
@@ -162,7 +163,7 @@ public fun DataFrame.Companion.readSqlTable(
 }
 
 /**
- * Reads a data frame from the specified database using the provided SQL query and configurations.
+ * Reads a dataframe from the specified database using the provided SQL query and configurations.
  *
  * @param [connection] The database connection to be used for executing the query.
  * @param [sqlQuery]  The SQL query string to be executed.
@@ -171,7 +172,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [limit] the maximum number of rows to retrieve from the table.
  *   `null` (default) means no limit - all available rows will be fetched.
  * @param [inferNullability]  A flag to determine whether to infer nullability for result set fields.
- * @return The data frame constructed from the database query results.
+ * @return The dataframe constructed from the database query results.
  * @throws [IllegalStateException]  If an error occurs while reading from the database or processing the data.
  */
 private fun executeQueryAndBuildDataFrame(
@@ -208,6 +209,9 @@ private fun executeQueryAndBuildDataFrame(
 
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
+ *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`.
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
@@ -258,6 +262,9 @@ public fun DataFrame.Companion.readSqlQuery(
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
  *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`.
+ *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]
  * in the resulting [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
@@ -296,6 +303,9 @@ public fun DataFrame.Companion.readSqlQuery(
 
 /**
  * Converts the result of an SQL query to the [<code>DataFrame</code>][DataFrame].
+ *
+ * A column renamed in the query with `AS` is named by its alias: `SELECT id AS customer_id FROM Users`
+ * gives a column `customer_id`.
  *
  * Note that if input dataframe contains duplicate column names,
  * they will be [<code>automatically renamed</code>][org.jetbrains.kotlinx.dataframe.documentation.AutoRenamingColumnsInDataFrame]

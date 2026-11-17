@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * #### Example
  * ```kotlin
  * df.pivot { city }.aggregate {
- *   // Сount rows within each pivot group and store the result
+ *   // Count rows within each pivot group and store the result
  *   // into a new "total" column (a new sub-column under each key column)
  *   count() into "total"
  *
@@ -47,7 +47,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
  * ```
  *
  * @param body The aggregation logic defined using [AggregateDsl].
- * @return A new [DataFrame] with the results of the aggregation applied to each group.
+ * @return A new [DataRow] with the results of the aggregation applied to each group.
  */
 public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
     delegate {
@@ -73,7 +73,7 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
  * #### Examples
  * ```kotlin
  * df.groupBy { city }.aggregate {
- *   // Сount rows within each group and store the result
+ *   // Count rows within each group and store the result
  *   // into a new "total" column
  *   count() into "total"
  *

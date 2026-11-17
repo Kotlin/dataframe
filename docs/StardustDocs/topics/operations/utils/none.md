@@ -17,6 +17,8 @@ Discover `none` operation in Kotlin DataFrame.
 
 Checks that none of the rows in the [`DataFrame`](DataFrame.md) satisfy the predicate.
 
+**API reference**: [`none`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/none.html)
+
 Returns `Boolean` — `true` if none of the rows satisfy the predicate, `false` otherwise.
 
 ```kotlin
@@ -37,8 +39,9 @@ When called on a [`DataColumn`](DataColumn.md), checks that none of the values i
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/noneDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Check that none of the persons' `age` is greater than 21:
 

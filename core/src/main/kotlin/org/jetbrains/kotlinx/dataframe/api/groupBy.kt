@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -19,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.api.GroupByDocs.Grammar
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
@@ -61,7 +61,7 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.GroupBy]}
  *
- * Don't confuse this with [group], which groups column into
+ * Don't confuse this with [group], which groups columns into a
  * [column group][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
  *
  * See also [pivot][DataFrame.pivot] that groups rows of [DataFrame] vertically.
@@ -84,16 +84,16 @@ internal interface GroupByDocs {
      * `\[ `__`.`__[**`sortByGroupDesc`**][GroupBy.sortByGroupDesc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByCount`**][GroupBy.sortByCount]**`() `**`]`
-     *
-     * {@include [Indent]}
      * `\[ `__`.`__[**`sortByCountAsc`**][GroupBy.sortByCountAsc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]**`() `**`]`
+     * `\[ `__`.`__[**`sortByCountDesc`**][GroupBy.sortByCountDesc]**`() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]**`() `**`]`
+     * `\[ `__`.`__[**`sortByKey`**][GroupBy.sortByKey]` \[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
+     *
+     * {@include [Indent]}
+     * `\[ `__`.`__[**`sortByKeyDesc`**][GroupBy.sortByKeyDesc]` \[ `**`{ `**`columns: `[`SortColumnsSelector`][SortColumnsSelector]**` }`**` \] ]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`sortBy`**][GroupBy.sortBy]**`  {  `**`columns: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**`]`
@@ -253,8 +253,9 @@ internal interface GroupByDocs {
      * A [GroupBy] can be transformed into a new [GroupBy] using one of the following methods:
      * * [sortByGroup][GroupBy.sortByGroup] / [sortByGroupDesc][GroupBy.sortByGroupDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by values computed with a [DataFrameExpression] applied to each group;
-     * * [sortByCount][GroupBy.sortByCount] / [sortByCountAsc][GroupBy.sortByCountAsc] — sorts the **order
-     *   of groups** (and their corresponding keys) by the number of rows they contain;
+     * * [sortByCountAsc][GroupBy.sortByCountAsc] / [sortByCountDesc][GroupBy.sortByCountDesc] — sorts the **order
+     *   of groups** (and their corresponding keys) by the number of rows they contain; [sortByCountAsc] — in ascending order,
+     *   [sortByCountDesc] — in descending order;
      * * [sortByKey][GroupBy.sortByKey] / [sortByKeyDesc][GroupBy.sortByKeyDesc] — sorts the **order
      *   of groups** (and their corresponding keys) by the grouping key values;
      * * [sortBy][GroupBy.sortBy] / [sortByDesc][GroupBy.sortByDesc] — sorts the **order of rows within each group**
@@ -306,6 +307,31 @@ internal interface GroupByDocs {
      * For more information: {@include [DocumentationUrls.GroupByReducing]}
      */
     typealias Reducing = Nothing
+
+    /**
+     * {@comment Note about the [ReducedGroupBy] methods being the final step of [Reducing]. KDoc-snippet.}
+     *
+     * This is the final step of [GroupBy reducing][Reducing].
+     * A [ReducedGroupBy] is created by a reducing method, like [first][GroupBy.first], [last][GroupBy.last],
+     * [minBy][GroupBy.minBy], [maxBy][GroupBy.maxBy], [medianBy][GroupBy.medianBy], or
+     * [percentileBy][GroupBy.percentileBy], which selects at most one row in each group.
+     *
+     * Check out [`GroupBy grammar`][Grammar].
+     */
+    @ExcludeFromSources
+    typealias ReducedGroupByFinalStepSnippet = Nothing
+
+    /**
+     * {@comment Note about the groups without a selected row in the [ReducedGroupBy] methods. KDoc-snippet.}
+     *
+     * If no row is selected in a group (for example, if no row of the group satisfies
+     * the predicate of [first][GroupBy.first]), the result still contains a row for this group.
+     * This row is treated as missing every value, so its value columns contain `null` and become nullable.
+     *
+     * @include [ConcatDocs.MissingColumnValues]
+     */
+    @ExcludeFromSources
+    typealias ReducedGroupByNoSelectedRowSnippet = Nothing
 
     /**
      * ### [GroupBy] aggregation
@@ -443,7 +469,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupB
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: Boolean = true): GroupBy<T, T> =
+public fun <T> DataFrame<T>.groupBy(vararg cols: ColumnReference<*>, moveToTop: Boolean = true): GroupBy<T, T> =
     groupBy(moveToTop) { cols.toColumnSet() }
 
 // endregion
@@ -485,7 +511,7 @@ public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelec
 
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
+public fun <T> Pivot<T>.groupBy(vararg columns: ColumnReference<*>): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
 /**
  * {@include [CommonGroupByForPivotDocs]}

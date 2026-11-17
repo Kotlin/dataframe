@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.concepts
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -15,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.junit.Ignore
 import org.junit.Test
+import java.util.Locale
 
 class AccessApis {
 
@@ -91,33 +93,42 @@ class AccessApis {
     @Test
     fun strings() {
         // SampleStart
-        DataFrame.readCsv("titanic.csv")
-            .add("lastName") { "name"<String>().split(",").last() }
-            .dropNulls("age")
+        DataFrame.readCsv(
+            "titanic.csv",
+            delimiter = ';',
+            parserOptions = ParserOptions(locale = Locale.GERMANY),
+        )
+            .add("lastName") { "name"<String>().substringBefore(",") }
+            .dropNulls("age", "homedest")
             .filter {
-                "survived"<Boolean>() &&
-                    "home"<String>().endsWith("NY") &&
-                    "age"<Int>() in 10..20
+                "survived"<Int>() == 1 &&
+                    "homedest"<String>().endsWith("NY") &&
+                    "age"<Double>() in 10.0..20.0
             }
         // SampleEnd
     }
 
     @DataSchema
     interface TitanicPassenger {
-        val survived: Boolean
-        val home: String
-        val age: Int
+        val survived: Int
+        val homedest: String?
+        val age: Double?
         val name: String
     }
 
     @Ignore
     @Test
     fun extensionProperties2() {
-        val df = DataFrame.readCsv("titanic.csv").cast<TitanicPassenger>()
+        val df =
+            DataFrame.readCsv(
+                "titanic.csv",
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.GERMANY),
+            ).cast<TitanicPassenger>()
         // SampleStart
-        df.add("lastName") { name.split(",").last() }
-            .dropNulls { age }
-            .filter { survived && home.endsWith("NY") && age in 10..20 }
+        df.add("lastName") { name.substringBefore(",") }
+            .dropNulls { age and homedest }
+            .filter { survived == 1 && homedest.endsWith("NY") && age in 10.0..20.0 }
         // SampleEnd
     }
 
@@ -125,7 +136,12 @@ class AccessApis {
     @Test
     fun extensionProperties1() {
         // SampleStart
-        val df = DataFrame.readCsv("titanic.csv")
+        val df =
+            DataFrame.readCsv(
+                "titanic.csv",
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.GERMANY),
+            )
         // SampleEnd
     }
 }

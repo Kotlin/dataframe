@@ -3,6 +3,8 @@
 
 This section describes ways to create a [`DataFrame`](DataFrame.md) instance.
 
+**API reference**: [`dataFrameOf`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/data-frame-of.html), [`toDataFrame`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/to-data-frame.html)
+
 ### emptyDataFrame
 
 Returns a [`DataFrame`](DataFrame.md) with empty columns according to schema `T`.
@@ -61,7 +63,7 @@ val df = dataFrameOf(
 
 <!---END-->
 
-Returns a [`DataFrame`](DataFrame.md) with given column names and values.
+Returns a [`DataFrame`](DataFrame.md) with the given column names and values.
 
 <!---FUN createDataFrameOf-->
 
@@ -156,7 +158,7 @@ val categories = listOf("Electronics", "Books", "Clothing")
 <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html" width="100%"/>
 <!---END-->
 
-Use `from` in combination with loops to generate DataFrame:
+Use `from` in combination with loops to generate a DataFrame:
 
 <!---FUN createDataFrameWithFill-->
 

@@ -22,7 +22,7 @@ import java.net.URL
  *
  * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * from the input file :
+ * from the input file:
  * * `"geometry"` value is stored in the `geometry` column.
  * * `"properties"` are flattened into individual columns using their keys as column names.
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
@@ -31,7 +31,7 @@ import java.net.URL
  * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field is used for now;
+ * > the deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
  * @param [path] a [<code>String</code>][String] path to GeoJSON file
@@ -46,7 +46,7 @@ public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = r
  *
  * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * from the input file :
+ * from the input file:
  * * `"geometry"` value is stored in the `geometry` column.
  * * `"properties"` are flattened into individual columns using their keys as column names.
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
@@ -55,7 +55,7 @@ public fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = r
  * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field is used for now;
+ * > the deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
  * @param [url] a [<code>URL</code>][URL] of GeoJSON file
@@ -74,7 +74,7 @@ public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
  *
  * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * from the input file :
+ * from the input file:
  * * `"geometry"` value is stored in the `geometry` column.
  * * `"properties"` are flattened into individual columns using their keys as column names.
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
@@ -83,7 +83,7 @@ public fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
  * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field is used for now;
+ * > the deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
  * @param [path] a [<code>String</code>][String] path to GeoJSON file
@@ -98,7 +98,7 @@ public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoD
  *
  * Each row in the resulting [<code>GeoDataFrame</code>][org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame] corresponds to a single
  * [`Feature`](https://datatracker.ietf.org/doc/html/rfc7946#section-3.2)
- * from the input file :
+ * from the input file:
  * * `"geometry"` value is stored in the `geometry` column.
  * * `"properties"` are flattened into individual columns using their keys as column names.
  * * `"crs"` is read as `null` if not specified (interpreted as WGS 84 by default).
@@ -107,7 +107,7 @@ public fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoD
  * > Nested properties are not supported and parsed as [<code>`LinkedHashMap<*, *>`</code>][java.util.LinkedHashMap].
  * > According to the specification, the CRS in GeoJSON should be
  * > [WGS 84](https://datatracker.ietf.org/doc/html/rfc7946#section-4);
- * > deprecated "crs" field is used for now;
+ * > the deprecated "crs" field is used for now;
  * > if it is not present, it is read as `null`.
  *
  * @param [url] a [<code>URL</code>][URL] of GeoJSON file

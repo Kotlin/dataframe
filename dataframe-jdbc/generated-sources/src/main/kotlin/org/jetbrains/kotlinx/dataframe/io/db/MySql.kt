@@ -17,12 +17,26 @@ public object MySql : DbType("mysql") {
     override val driverClassName: String
         get() = "com.mysql.jdbc.Driver"
 
+    /**
+     * MySQL-specific deviations from the default type mapping:
+     *
+     * - `INT UNSIGNED` does not fit an [<code>Int</code>][Int] (`0 .. 2^32 - 1`), so it is read as [<code>Long</code>][Long], and
+     *   `BIGINT UNSIGNED` does not fit a [<code>Long</code>][Long] (`0 .. 2^64 - 1`), so it is read as [<code>java.math.BigInteger</code>][java.math.BigInteger].
+     *   The driver returns exactly those types for them.
+     * - A multi-bit `BIT(M)` column is read as [<code>ByteArray</code>][ByteArray], because that is what the driver returns
+     *   for it while reporting `java.lang.Boolean` as the column class — see [<code>isMultiBit</code>][isMultiBit] and #2087.
+     *
+     * Everything else falls through to [<code>DbType.getExpectedJdbcType</code>][DbType.getExpectedJdbcType].
+     */
     override fun getExpectedJdbcType(tableColumnMetadata: TableColumnMetadata): KType {
         if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             return typeOf<Long>().withNullability(tableColumnMetadata.isNullable)
         }
         if (tableColumnMetadata.sqlTypeName == "BIGINT UNSIGNED") {
             return typeOf<BigInteger>().withNullability(tableColumnMetadata.isNullable)
+        }
+        if (tableColumnMetadata.isMultiBit) {
+            return typeOf<ByteArray>().withNullability(tableColumnMetadata.isNullable)
         }
         return super.getExpectedJdbcType(tableColumnMetadata)
     }

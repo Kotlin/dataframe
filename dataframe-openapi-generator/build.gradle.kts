@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     with(conventions.plugins.dfbuild) {
         alias(kotlinJvm8)
+        alias(dokka)
     }
     with(libs.plugins) {
         alias(publisher)
@@ -43,7 +44,7 @@ kotlinPublications {
     }
 }
 
-// uses jupyter for testing, so requires java 11 for that
+// uses jupyter for testing, so requires Java 11 for that
 tasks.compileTestKotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11

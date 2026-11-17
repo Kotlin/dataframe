@@ -1,22 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.documentationCsv
 
-import io.deephaven.csv.CsvSpecs
-import org.apache.commons.csv.CSVFormat
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import java.nio.charset.Charset
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
  */
-@Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
+@Suppress("ktlint:standard:class-naming", "KDocUnresolvedReference")
 internal object DelimParams {
 
     /**
@@ -163,7 +159,7 @@ internal object DelimParams {
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
      *   If [parserOptions] or any of the arguments are `null`, the global parser configuration
-     *   ([<code>DataFrame.parser</code>][DataFrame.Companion.parser]) will be queried.
+     *   ([<code>DataFrame.parser</code>][org.jetbrains.kotlinx.dataframe.api.parser]) will be queried.
      *
      *   The only exceptions are:
      *   - [<code>nullStrings</code>][ParserOptions.nullStrings], which, if `null`,
@@ -224,9 +220,10 @@ internal object DelimParams {
     const val PARSE_PARALLEL: Boolean = true
 
     /**
-     * @param adjustCsvSpecs Optional extra [<code>CsvSpecs</code>][CsvSpecs] configuration. Default: `{ it }`.
+     * @param adjustCsvSpecs Optional extra [<code>CsvSpecs</code>][io.deephaven.csv.CsvSpecs] configuration. Default: `{ it }`.
      *
-     *   Before instantiating the [<code>CsvSpecs</code>][CsvSpecs], the [<code>CsvSpecs.Builder</code>][CsvSpecs.Builder] will be passed to this lambda.
+     *   Before instantiating the [<code>CsvSpecs</code>][io.deephaven.csv.CsvSpecs],
+     *   the [<code>CsvSpecs.Builder</code>][io.deephaven.csv.CsvSpecs.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV parsing options.
      */
     val ADJUST_CSV_SPECS: AdjustCsvSpecs = { it }
@@ -265,9 +262,11 @@ internal object DelimParams {
     val HEADER_COMMENTS: List<String> = emptyList()
 
     /**
-     * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][CSVFormat] configuration. Default: `{ it }`.
+     * @param adjustCsvFormat Optional extra [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat] configuration.
+     *   Default: `{ it }`.
      *
-     *   Before instantiating the [<code>CSVFormat</code>][CSVFormat], the [<code>CSVFormat.Builder</code>][CSVFormat.Builder] will be passed to this lambda.
+     *   Before instantiating the [<code>CSVFormat</code>][org.apache.commons.csv.CSVFormat],
+     *   the [<code>CSVFormat.Builder</code>][org.apache.commons.csv.CSVFormat.Builder] will be passed to this lambda.
      *   This will allow you to configure/overwrite any CSV / TSV writing options.
      */
     val ADJUST_CSV_FORMAT: AdjustCSVFormat = { it }

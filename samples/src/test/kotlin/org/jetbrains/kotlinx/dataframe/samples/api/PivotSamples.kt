@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
@@ -393,6 +394,32 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     }
 
     @Test
+    fun pivotValuesSelectedColumns_properties() {
+        // SampleStart
+        // For each `isHappy` value, the `name` and `age` of the first person
+        df.pivot { isHappy }.first().values { name and age }
+            // SampleEnd
+            .toDataFrame()
+            .also { result ->
+                result["true"]["age"].toList() shouldBe listOf(15)
+                result["false"]["age"].toList() shouldBe listOf(20)
+            }
+    }
+
+    @Test
+    fun pivotValuesSelectedColumns_strings() {
+        // SampleStart
+        // For each `isHappy` value, the `name` and `age` of the first person
+        df.pivot("isHappy").first().values("name", "age")
+            // SampleEnd
+            .toDataFrame()
+            .also { result ->
+                result["true"]["age"].toList() shouldBe listOf(15)
+                result["false"]["age"].toList() shouldBe listOf(20)
+            }
+    }
+
+    @Test
     fun pivotWith_properties() {
         // SampleStart
         df.pivot { isHappy }
@@ -511,6 +538,22 @@ class PivotSamples : DataFrameSampleHelper("pivot", "api") {
     fun withOnPivot_strings() {
         // SampleStart
         df.pivot("isHappy").with { "name"["lastName"]<String>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun withOnPivotGroupBy() {
+        // SampleStart
+        df.groupBy { city }.pivot { isHappy }.with { name.lastName }
+        df.groupBy("city").pivot("isHappy").with { "name"["lastName"]<String>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun withOnReducedPivotGroupBy() {
+        // SampleStart
+        df.groupBy { city }.pivot { isHappy }.maxBy { age }.with { name.lastName }
+        df.groupBy("city").pivot("isHappy").maxBy("age").with { "name"["lastName"]<String>() }
         // SampleEnd
     }
 

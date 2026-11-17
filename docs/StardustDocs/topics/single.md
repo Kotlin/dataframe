@@ -1,15 +1,15 @@
 [//]: # (title: single)
 
 <web-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </link-summary>
 
 Returns the single [row](DataRow.md) in this [`DataFrame`](DataFrame.md).
@@ -17,6 +17,8 @@ Throws [`NoSuchElementException`](https://kotlinlang.org/api/core/kotlin-stdlib/
 if the [`DataFrame`](DataFrame.md) is empty, and
 [`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
 if it has more than one row.
+
+**API reference**: [`single`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/single.html)
 
 The examples on this page use the following [`DataFrame`](DataFrame.md):
 
@@ -26,8 +28,9 @@ The examples on this page use the following [`DataFrame`](DataFrame.md):
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/singleDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN single-->
 <tabs>
@@ -49,8 +52,9 @@ df
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/single.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/single_properties.html" width="100%" height="500px"></inline-frame>
 
 If a [condition](DataRow.md#row-conditions) is specified,
 returns the single [row](DataRow.md) that matches it,
@@ -72,8 +76,9 @@ df.single { "age"<Int>() == 45 } // only Bob Dylan is 45
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/singleCondition.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/singleCondition_properties.html" width="100%" height="500px"></inline-frame>
 
 ## singleOrNull
 

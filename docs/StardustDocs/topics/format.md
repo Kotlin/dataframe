@@ -17,6 +17,8 @@ DataFrame Format Operation: Apply CSS formatting for rendering a dataframe to HT
 Formats the specified columns or cells within the dataframe such that
 they have specific CSS attributes applied to them when rendering the dataframe to HTML.
 
+**API reference**: [`format`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/format.html)
+
 See [column selectors](ColumnSelectors.md) for how to select the columns for this operation.
 
 The selection of columns and rows to apply formatting to follows the [`update` operation](update.md).
@@ -114,9 +116,9 @@ df
 ```
 
 </tab></tabs>
-<!---END-->
+<inline-frame src="./resources/formatExample.html" width="100%" height="500px"></inline-frame>
 
-<inline-frame src="resources/formatExample_properties.html" width="100%"/>
+<!---END-->
 
 Alternatively, you could also customize the dataframe in a data-independent manner:
 
@@ -134,8 +136,9 @@ df2.format().perRowCol { row, col ->
 }
 ```
 
+<inline-frame src="./resources/formatExampleNumbers.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/formatExampleNumbers.html" width="100%"/>
 
 ## formatHeader
 
@@ -161,5 +164,6 @@ df
     .formatHeader { colsOf<Number?>() }.with { underline }
 ```
 
+<inline-frame src="./resources/formatHeader.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="resources/formatHeader.html" width="100%"/>

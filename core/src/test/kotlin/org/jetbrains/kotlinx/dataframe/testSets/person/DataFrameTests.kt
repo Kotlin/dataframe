@@ -500,13 +500,6 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `group and sort`() {
-        val expected = typed.sortBy { name.desc() and age }
-        val actual = typed.groupBy { name }.sortBy { name.desc() and age }.concat()
-        actual shouldBe expected
-    }
-
-    @Test
     fun filter() {
         val expected = listOf("Bob", "Bob", "Charlie")
 
@@ -2305,7 +2298,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun reorderColumns() {
         typed.reorderColumnsByName().columnNames() shouldBe typed.columnNames().sorted()
-        val grouped = typed.groupBy { city }.into("a").reorderColumnsByName()
+        val grouped = typed.groupBy { city }.into("a").reorderColumnsByName(inFrameColumns = true)
         grouped.columnNames() shouldBe listOf("a", "city")
         grouped.getFrameColumn("a")[0].columnNames() shouldBe typed.columnNames().sorted()
     }

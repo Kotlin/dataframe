@@ -469,7 +469,7 @@ private fun createArrayColumn(
     }
 
 /**
- * Json to DataFrame converter that creates allows creates `value` and `array` accessors
+ * Json to DataFrame converter that creates `value` and `array` accessors
  * instead of [<code>Any</code>][Any] columns.
  * A.k.a. [<code>TypeClashTactic.ARRAY_AND_VALUE_COLUMNS</code>][TypeClashTactic.ARRAY_AND_VALUE_COLUMNS].
  *

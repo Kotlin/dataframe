@@ -4,6 +4,8 @@
 
 Moves one or several columns within [`DataFrame`](DataFrame.md).
 
+**API reference**: [`move`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/move.html)
+
 ```kotlin
 move { columns }
     .into { pathSelector } | .under { parentColumn } | .after { column } | .to(position) | .toTop() | .toStart() | .toEnd()

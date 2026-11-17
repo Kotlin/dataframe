@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -163,7 +162,7 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): DataFr
  *     "colA" from { ... }
  *     properties {
  *         preserve<T>()
- *         "colB" from { ... } // ERROR, cannot be called in this context an implicit receiver.
+ *         "colB" from { ... } // ERROR, cannot be called in this context with an implicit receiver.
  *     }
  * }
  * ```
@@ -211,7 +210,7 @@ public interface TraversePropertiesDsl {
 }
 
 /**
- * Store values of given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+ * Store values of the given type [<code>T</code>][T] in ValueColumns without transformation into ColumnGroups or FrameColumns.
  *
  * For more information: [See DataFrame from Iterable<T> on the documentation website.](https://kotlin.github.io/dataframe/createdataframe.html#dataframe-from-iterable-t)
  */

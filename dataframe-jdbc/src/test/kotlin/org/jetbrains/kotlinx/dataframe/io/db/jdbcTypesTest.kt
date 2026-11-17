@@ -160,7 +160,7 @@ class JdbcTypesTest {
     class SqliteTypes {
 
         @Test
-        fun `INTEGER affinity — declared int-like types map to Int or Long`() {
+        fun `INTEGER affinity — declared int-like types map to Long`() {
             assertMappings(Sqlite.default, sqliteIntegerAffinityMappings)
         }
 
@@ -298,6 +298,31 @@ class JdbcTypesTest {
         }
 
         @Test
+        fun `PGobject types without a dedicated driver class map to String`() {
+            assertMappings(PostgreSql, postgreSqlTextFormMappings)
+        }
+
+        @Test
+        fun `uuid maps to Uuid`() {
+            assertMappings(PostgreSql, listOf(postgreSqlUuidMapping))
+        }
+
+        @Test
+        fun `JSON and UUID of H2 in PostgreSQL mode keep the H2 mapping`() {
+            // H2 in PostgreSQL mode delegates its type mapping to PostgreSql, but reports its own
+            // metadata: a JSON column comes back as a byte array, and a UUID column as Types.BINARY.
+            // Both values are read differently from the PostgreSQL driver's, so neither may switch
+            // to the PostgreSQL mapping.
+            assertMappings(
+                H2(H2.Mode.PostgreSql),
+                listOf(
+                    TypeMapping("JSON", Types.OTHER, "[B", typeOf<ByteArray>()),
+                    TypeMapping("UUID", Types.BINARY, "java.util.UUID", typeOf<Uuid>()),
+                ),
+            )
+        }
+
+        @Test
         fun `unknown jdbcType falls back to String`() {
             assertUnknownMapsToString(PostgreSql)
         }
@@ -308,6 +333,11 @@ class JdbcTypesTest {
         @Test
         fun `common SQL types map to the expected Kotlin type`() {
             assertMappings(MsSql, commonJdbcTypeMappings)
+        }
+
+        @Test
+        fun `MSSQL-specific overrides`() {
+            assertMappings(MsSql, msSqlSpecificMappings)
         }
 
         @Test
@@ -351,12 +381,18 @@ class JdbcTypesTest {
  * @property javaClassName the JDBC-reported class name for this column (as returned by
  *   [java.sql.ResultSetMetaData.getColumnClassName])
  * @property expectedType the expected non-nullable Kotlin type
+ * @property size the jdbc reported column display size; only matters for the few mappings that depend
+ *   on the declared column width, namely the `BIT(n)` ones in MySQL, MariaDB and PostgreSQL.
+ *   Defaults to `1`, the width that means "not a multi-bit column" — so a new `BIT` entry added
+ *   without an explicit [size] keeps the single-bit meaning instead of silently flipping to the
+ *   multi-bit mapping
  */
 internal data class TypeMapping(
     val sqlTypeName: String,
     val jdbcType: Int,
     val javaClassName: String,
     val expectedType: KType,
+    val size: Int = 1,
 )
 
 internal const val UNKNOWN_JDBC_TYPE: Int = -9999
@@ -394,6 +430,7 @@ internal fun assertMappings(dbType: DbType, mappings: List<TypeMapping>) {
             val meta = createColumnMetadata(
                 sqlTypeName = m.sqlTypeName,
                 jdbcType = m.jdbcType,
+                size = m.size,
                 javaClassName = m.javaClassName,
                 isNullable = isNullable,
             )
@@ -431,7 +468,8 @@ internal fun assertUnknownMapsToString(dbType: DbType) {
  * Every DB that does not override the given entry falls through to this table.
  */
 internal val commonJdbcTypeMappings: List<TypeMapping> = listOf(
-    TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<Boolean>()),
+    // a single-bit column; drivers report BIT for wider columns too, see [postgreSqlSpecificMappings]
+    TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<Boolean>(), size = 1),
     TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Int>()),
     TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
     TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
@@ -496,16 +534,55 @@ internal val mariaDbSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("INT UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
     TypeMapping("INTEGER UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
     TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Short", typeOf<Short>()),
-    // MariaDB reports BLOB columns as `[B` (byte array), not `java.sql.Blob`.
+    // A column reported as `[B` (byte array) is read as `ByteArray`.
     TypeMapping("BLOB", Types.BLOB, "[B", typeOf<ByteArray>()),
+    // The MariaDB driver reports `java.sql.Blob` as the column class for TINYBLOB/BLOB/MEDIUMBLOB/LONGBLOB,
+    // while `ResultSet.getObject` returns `byte[]` for them, so they are read as `ByteArray` (#2087).
+    // The driver reports these columns as VARBINARY/LONGVARBINARY, never as `Types.BLOB`.
+    TypeMapping("TINYBLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("BLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("MEDIUMBLOB", Types.VARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    TypeMapping("LONGBLOB", Types.LONGVARBINARY, "java.sql.Blob", typeOf<ByteArray>()),
+    // H2 in MariaDB mode delegates its type mapping here, but reports `Types.BLOB` and does return
+    // real `java.sql.Blob` values, so that combination must stay mapped to `Blob`.
+    TypeMapping("BINARY LARGE OBJECT", Types.BLOB, "java.sql.Blob", typeOf<Blob>()),
+    // A multi-bit BIT(M) column returns a byte[]; MariaDB reports its column class as `byte[]`,
+    // not as the `"[B"` JVM binary name the default mapping looks for (#2087).
+    TypeMapping("BIT", Types.BIT, "byte[]", typeOf<ByteArray>(), size = 3),
     // YEAR columns are reported as Types.DATE by the driver.
     TypeMapping("YEAR", Types.DATE, "java.sql.Date", typeOf<Date>()),
+)
+
+/**
+ * MSSQL overrides on top of [commonJdbcTypeMappings].
+ *
+ * `-155` is the driver-specific `microsoft.sql.Types.DATETIMEOFFSET`; the default mapping has no
+ * entry for it, so without the override the column would fall back to `String` while the driver
+ * returns a `microsoft.sql.DateTimeOffset` value (#2087).
+ *
+ * The two driver-specific type constants are written out as literals here on purpose, rather than
+ * shared with the private ones in `MsSql`: they are the driver's values, so an independent copy pins
+ * them, while a shared constant would make a wrong value pass this test and only fail against a real
+ * server.
+ */
+internal val msSqlSpecificMappings: List<TypeMapping> = listOf(
+    TypeMapping("datetimeoffset", -155, "microsoft.sql.DateTimeOffset", typeOf<OffsetDateTime>()),
+    // the driver returns Short for both; TINYINT is unsigned (0..255) in MSSQL and does not fit a Byte
+    TypeMapping("smallint", Types.SMALLINT, "java.lang.Short", typeOf<Short>()),
+    TypeMapping("tinyint", Types.TINYINT, "java.lang.Short", typeOf<Short>()),
+    // `-156` is `microsoft.sql.Types.SQL_VARIANT`; the class of the value differs from row to row
+    TypeMapping("sql_variant", -156, "java.lang.Object", typeOf<Any>()),
 )
 
 /** MySQL overrides on top of [commonJdbcTypeMappings]. */
 internal val mySqlSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("BIGINT UNSIGNED", Types.BIGINT, "java.math.BigInteger", typeOf<BigInteger>()),
     TypeMapping("INT UNSIGNED", Types.INTEGER, "java.lang.Long", typeOf<Long>()),
+    // A multi-bit BIT(M) column returns a byte[] in both MySQL and MariaDB, while the column class
+    // they report is `java.lang.Boolean` (MySQL) or `byte[]` (MariaDB) — neither of which the default
+    // mapping recognizes, so it fell through to Boolean (#2087). BIT(1) really is a Boolean.
+    TypeMapping("BIT", Types.BIT, "java.lang.Boolean", typeOf<ByteArray>(), size = 3),
+    TypeMapping("BIT", Types.BIT, "byte[]", typeOf<ByteArray>(), size = 3),
 )
 
 /** PostgreSQL PGobject overrides — matched by `sqlTypeName` (case-insensitively). */
@@ -519,7 +596,45 @@ internal val postgreSqlSpecificMappings: List<TypeMapping> = listOf(
     TypeMapping("polygon", Types.OTHER, "org.postgresql.geometric.PGpolygon", typeOf<PGpolygon>()),
     TypeMapping("money", Types.OTHER, "org.postgresql.util.PGmoney", typeOf<PGmoney>()),
     TypeMapping("interval", Types.OTHER, "org.postgresql.util.PGInterval", typeOf<PGInterval>()),
+    // The driver reports every BIT column as Types.BIT with `java.lang.Boolean` as its column class,
+    // but only a single-bit column really returns a Boolean; a wider one returns a PGobject holding
+    // the bit string, which is read as its String form instead (#2087). The declared column width is
+    // the only thing in the metadata that tells the two apart.
+    TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<Boolean>(), size = 1),
+    TypeMapping("bit", Types.BIT, "java.lang.Boolean", typeOf<String>(), size = 3),
 )
+
+/**
+ * PostgreSQL types the driver returns as a plain `PGobject`, with no class of their own. They are read
+ * as the text PostgreSQL prints for the value (#2103). The column classes are the ones the driver
+ * reports: `PGobject` for `json`/`jsonb`, `java.lang.String` for the rest.
+ */
+internal val postgreSqlTextFormMappings: List<TypeMapping> = listOf(
+    TypeMapping("json", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("jsonb", Types.OTHER, "org.postgresql.util.PGobject", typeOf<String>()),
+    TypeMapping("inet", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("cidr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("macaddr8", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsvector", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsquery", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("varbit", Types.OTHER, "java.lang.String", typeOf<String>(), size = 3),
+    TypeMapping("int4range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8range", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("numrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzrange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("daterange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int4multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("int8multirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("nummultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tsmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("tstzmultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+    TypeMapping("datemultirange", Types.OTHER, "java.lang.String", typeOf<String>()),
+)
+
+/** The PostgreSQL driver reports `uuid` as `Types.OTHER` and returns a `java.util.UUID` (#2103). */
+internal val postgreSqlUuidMapping: TypeMapping = TypeMapping("uuid", Types.OTHER, "java.util.UUID", typeOf<Uuid>())
 
 // -------------------- SQLite-specific mappings --------------------
 //
@@ -531,19 +646,23 @@ internal val postgreSqlSpecificMappings: List<TypeMapping> = listOf(
 //   - REAL    affinity: declared type contains "REAL", "FLOA", or "DOUB"
 //   - NUMERIC affinity: everything else (e.g. BOOLEAN, DATE, DATETIME, DECIMAL, NUMERIC, ...)
 //
-// The Xerial JDBC driver reports the declared type in `sqlTypeName` and infers `jdbcType` from
-// affinity, but reports `javaClassName` from the *actual stored value*. The mappings below
-// reflect what `getExpectedJdbcType` returns for a column of the given declared type once
-// a representative value has been inserted (i.e. the common case for reading data).
+// The Xerial JDBC driver reports the declared type verbatim in `sqlTypeName`, but both
+// `jdbcType` and `javaClassName` follow the storage class of the *first row* (a BIGINT column
+// whose first row is 'abc' is reported as `Types.VARCHAR`). The mappings below reflect what
+// the column is read as for a column of the given declared type once a representative value
+// has been inserted (i.e. the common case for reading data).
 
-/** INTEGER affinity — declared int-like types storing an int value. */
+/**
+ * INTEGER affinity — declared int-like types storing an int value. All of them are [Long]:
+ * SQLite stores every integer as a 64-bit value, whatever width the declared type names.
+ */
 internal val sqliteIntegerAffinityMappings: List<TypeMapping> = listOf(
-    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("INT", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("MEDIUMINT", Types.INTEGER, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
-    TypeMapping("INT2", Types.SMALLINT, "java.lang.Integer", typeOf<Int>()),
+    TypeMapping("INTEGER", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("MEDIUMINT", Types.INTEGER, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("TINYINT", Types.TINYINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("SMALLINT", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
+    TypeMapping("INT2", Types.SMALLINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("BIGINT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("UNSIGNED BIG INT", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),
     TypeMapping("INT8", Types.BIGINT, "java.lang.Integer", typeOf<Long>()),

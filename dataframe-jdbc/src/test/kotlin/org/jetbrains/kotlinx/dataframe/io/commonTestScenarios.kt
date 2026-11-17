@@ -139,6 +139,39 @@ internal fun inferNullability(connection: Connection) {
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $TEST_TABLE_NAME") }
 }
 
+private const val ALIAS_TABLE_NAME = "alias_test_table"
+
+/**
+ * An SQL `AS` alias names the column it renames, both in the [DataFrame] and in its [DataFrameSchema]:
+ * on a plain column, on an expression, and on two same-named columns of a join.
+ * The aliases are unquoted and lower-case; [reportedAs] is how the database reports such an identifier
+ * (H2 without a compatibility mode upper-cases it).
+ */
+internal fun aliasesNameColumns(connection: Connection, reportedAs: (String) -> String = { it }) {
+    connection.createStatement().use { st ->
+        st.execute("DROP TABLE IF EXISTS $ALIAS_TABLE_NAME")
+        st.execute("CREATE TABLE $ALIAS_TABLE_NAME (id INT, name VARCHAR(50))")
+        st.execute("INSERT INTO $ALIAS_TABLE_NAME (id, name) VALUES (1, 'John')")
+    }
+
+    @Language("SQL")
+    val plainAndExpression =
+        "SELECT id AS customer_id, name AS customer_name, id + 1 AS next_id FROM $ALIAS_TABLE_NAME"
+    val aliases = listOf("customer_id", "customer_name", "next_id").map(reportedAs)
+    DataFrame.readSqlQuery(connection, plainAndExpression).columnNames() shouldBe aliases
+    DataFrameSchema.readSqlQuery(connection, plainAndExpression).columns.keys.toList() shouldBe aliases
+
+    @Language("SQL")
+    val sameNamedColumns =
+        "SELECT a.name AS first_name, b.name AS second_name " +
+            "FROM $ALIAS_TABLE_NAME a JOIN $ALIAS_TABLE_NAME b ON a.id = b.id"
+    val joinAliases = listOf("first_name", "second_name").map(reportedAs)
+    DataFrame.readSqlQuery(connection, sameNamedColumns).columnNames() shouldBe joinAliases
+    DataFrameSchema.readSqlQuery(connection, sameNamedColumns).columns.keys.toList() shouldBe joinAliases
+
+    connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS $ALIAS_TABLE_NAME") }
+}
+
 /**
  * Helper to check whether the provided schema matches the inferred schema.
  *

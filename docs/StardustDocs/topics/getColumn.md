@@ -4,6 +4,8 @@
 
 Return column by column name or [column selector](ColumnSelectors.md) as [`DataColumn`](DataColumn.md). Throws exception if requested column doesn't exist.
 
+**API reference**: [`getColumn`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/get-column.html)
+
 <!---FUN getColumn-->
 <tabs>
 <tab title="Properties">

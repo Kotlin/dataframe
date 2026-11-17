@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -13,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
 import kotlin.reflect.KProperty
 
-public fun AnyCol.inferType(): DataColumn<*> =
+public fun DataColumn<*>.inferType(): DataColumn<*> =
     createColumnGuessingType(
         name = name,
         values = toList(),

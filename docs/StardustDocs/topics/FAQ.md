@@ -29,7 +29,7 @@ Yes — Kotlin DataFrame can be used in Android projects.
 There is no dedicated Android artifact yet, but you can include the standard **JVM artifact**  
 by setting up a [custom Gradle configuration](SetupAndroid.md).
 
-## How to start with Kotlin DataFrame ?
+## How to start with Kotlin DataFrame?
 
 If you're new to Kotlin DataFrame, the [Quickstart guide](quickstart.md) is the perfect place to begin —  
 it gives a brief yet comprehensive introduction to the basics of working with DataFrame.

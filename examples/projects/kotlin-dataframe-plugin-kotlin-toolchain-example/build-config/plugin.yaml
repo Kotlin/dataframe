@@ -3,16 +3,14 @@ tasks:
     action: !buildconfig.ktlint
       ktlintClasspath:
         dependencies:
-          # TODO - $libs.ktlint.cli
-          - com.pinterest.ktlint:ktlint-cli:1.8.0
+          - $libs.ktlint.cli
       moduleDir: ${module.rootDir}
       doFormat: false
   ktlintFormat:
     action: !buildconfig.ktlint
       ktlintClasspath:
         dependencies:
-          # TODO - $libs.ktlint.cli
-          - com.pinterest.ktlint:ktlint-cli:1.8.0
+          - $libs.ktlint.cli
       moduleDir: ${module.rootDir}
       doFormat: true
 

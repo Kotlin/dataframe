@@ -76,7 +76,7 @@ internal interface GatherDocs {
      * `\[ `__`.`__[**`cast`**][Gather.cast]**`<T>() `**`]`
      *
      * {@include [Indent]}
-     * `\[ `__`.`__[**`notNull`**][Gather.cast]**`() `**`]`
+     * `\[ `__`.`__[**`notNull`**][Gather.notNull]**`() `**`]`
      *
      * {@include [Indent]}
      * `\[ `__`.`__[**`where`**][Gather.where]**`  {  `**`filter: `[`RowValueFilter`][RowValueFilter]**` } `**`]`
@@ -251,8 +251,8 @@ public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = wher
  * ```kotlin
  * // Gather `resultA` and `resultB` columns into a single "value" column,
  * // with the "series" column containing a key.
- * // Assuming `resultA` contains `Double` values and `
- * // resultB` contains `List<Double>` values,
+ * // Assuming `resultA` contains `Double` values
+ * // and `resultB` contains `List<Double>` values,
  * // `explodeLists` will apply only to values from `resultB`,
  * // resulting in all gathered values being of type `Double`.
  * df.gather { resultA and resultB }

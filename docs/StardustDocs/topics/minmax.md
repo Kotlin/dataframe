@@ -4,6 +4,8 @@
 
 Computes the [minimum / maximum](https://en.wikipedia.org/wiki/Maximum_and_minimum) of values.
 
+**API reference**: [`min`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/min.html), [`max`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/max.html)
+
 `null` values in the input are ignored.
 The operations either throw an exception when the input is empty (after filtering `null` or `NaN` values),
 or they return `null` when using the `-orNull` overloads.

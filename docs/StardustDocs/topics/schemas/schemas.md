@@ -21,6 +21,8 @@ The Kotlin DataFrame library provides typed data access via
 and [`ColumnGroup<T>`](DataColumn.md#columngroup)), where
 `T` is a marker class representing the `DataSchema` of the [`DataFrame`](DataFrame.md).
 
+**API reference**: [`DataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-data-schema/index.html), [`ImportDataSchema`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.annotations/-import-data-schema/index.html)
+
 A *schema* of a [`DataFrame`](DataFrame.md) is a mapping from column names to column types.  
 This data schema can be expressed as a Kotlin interface or data class by annotating it with `@DataSchema`.  
 If the dataframe is hierarchical — contains a [column group](DataColumn.md#columngroup) or a
@@ -112,7 +114,7 @@ See [](extensionPropertiesApi.md) for more information.
 (or [`DataRow`](DataRow.md), [`ColumnGroup`](DataColumn.md#columngroup), etc.)
 with a type parameter annotated with `@DataSchema`.
 
-> While you can annotate any Kotlin class or object with a `@DataSchema`,
+> While you can annotate any Kotlin class or object with the `@DataSchema` annotation,
 > we highly recommend using it only on interfaces and data classes specially made
 > for representing the data schema of a `DataFrame`.
 >

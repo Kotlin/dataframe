@@ -4,6 +4,8 @@
 
 Splits the rows of a [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of the original [`DataFrame`](DataFrame.md).
 
+**API reference**: [`pivot`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/pivot.html), [`Pivot`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/-pivot/index.html)
+
 ```text
 pivot (inward = true) { pivotColumns }
   [ .groupBy { indexColumns } | .groupByOther() ]
@@ -32,8 +34,9 @@ See [column selectors](ColumnSelectors.md) for how to select the columns for thi
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/df.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN pivot-->
 <tabs>
@@ -51,8 +54,9 @@ df.pivot("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivot.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivot_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotInward-->
 <tabs>
@@ -70,11 +74,12 @@ df.pivot("isHappy", inward = true)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotInward.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotInward_properties.html" width="100%" height="500px"></inline-frame>
 
 
-To pivot several columns at once, you can combine them using `and` or `then` infix function:
+To pivot several columns at once, you can combine them using `and` or `then` infix functions:
 * `and` will pivot columns independently
 * `then` will create column hierarchy from combinations of values from pivoted columns
 
@@ -94,8 +99,9 @@ df.pivot { "isHappy" and "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotAnd.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotAnd_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotThen-->
 <tabs>
@@ -113,8 +119,9 @@ df.pivot { "isHappy" then "name"["firstName"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotThen.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotThen_properties.html" width="100%" height="500px"></inline-frame>
 
 ## pivot + groupBy
 
@@ -142,8 +149,9 @@ df.groupBy { "name"["firstName"] }.pivot("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 To group by all columns except pivoted, use `groupByOther`:
 
@@ -163,8 +171,9 @@ df.pivot("isHappy").groupByOther()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotGroupByOther.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotGroupByOther_properties.html" width="100%" height="500px"></inline-frame>
 
 `PivotGroupBy` supports the same reducing and aggregation operations as `Pivot`.
 In addition, `PivotGroupBy` supports the [`default`](pivot.md#default-values-for-aggregation) 
@@ -186,8 +195,14 @@ df.groupBy { "name"["firstName"] }.pivot("isHappy").max("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotGroupByAggregation.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotGroupByAggregation_properties.html" width="100%" height="500px"></inline-frame>
+
+`frames` keeps each group as a frame — it returns a [`DataFrame`](DataFrame.md)
+with one row per unique combination of the grouping values and one [`column group`](DataColumn.md#columngroup)
+per pivoted column, with [`FrameColumn`](DataColumn.md#framecolumn)s inside holding the corresponding groups
+as [`DataFrame`](DataFrame.md) values; a combination with no rows is an empty frame:
 
 <!---FUN pivotGroupByFrames-->
 <tabs>
@@ -205,8 +220,9 @@ df.pivot("isHappy").groupBy { "name"["firstName"] }.frames()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotGroupByFrames.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotGroupByFrames_properties.html" width="100%" height="500px"></inline-frame>
 
 ## Reducing
 A [`Pivot`](pivot.md) can be reduced into a [`DataRow`](DataRow.md). 
@@ -245,8 +261,9 @@ df.pivot("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotReducing.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotReducing_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### first {collapsible="true"}
 <!---FUN pivotFirst-->
@@ -265,8 +282,9 @@ df.pivot("isHappy").first()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotFirst.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotFirst_properties.html" width="100%" height="500px"></inline-frame>
 
 The [`first`](first.md) function can be used with a predicate:
 
@@ -286,8 +304,9 @@ df.pivot("isHappy").first { "age"<Int>() == 30 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotFirstWithPredicate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotFirstWithPredicate_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### last {collapsible="true"}
 <!---FUN pivotLast-->
@@ -306,8 +325,9 @@ df.pivot("isHappy").last()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotLast.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotLast_properties.html" width="100%" height="500px"></inline-frame>
 
 The [`last`](last.md) function can be used with a predicate:
 
@@ -327,8 +347,9 @@ df.pivot("isHappy").last { "age"<Int>() > 20 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotLastWithPredicate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotLastWithPredicate_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### minBy {collapsible="true"}
 <!---FUN pivotMinBy-->
@@ -347,8 +368,9 @@ df.pivot("isHappy").minBy { "weight"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMinBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMinBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### maxBy {collapsible="true"}
 <!---FUN pivotMaxBy-->
@@ -367,8 +389,9 @@ df.pivot("isHappy").maxBy { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMaxBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMaxBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### medianBy {collapsible="true"}
 <!---FUN pivotMedianBy-->
@@ -387,8 +410,9 @@ df.pivot("isHappy").medianBy { "weight"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMedianBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMedianBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### percentileBy {collapsible="true"}
 <!---FUN pivotPercentileBy-->
@@ -407,8 +431,9 @@ df.pivot("isHappy").percentileBy(25.0) { "weight"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotPercentileBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotPercentileBy_properties.html" width="100%" height="500px"></inline-frame>
 
 
 ### Step 2: transform the resulting reduced rows into a new [`DataRow`](DataRow.md)
@@ -440,8 +465,9 @@ df.pivot("isHappy").first().values()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotValues.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotValues_properties.html" width="100%" height="500px"></inline-frame>
 
 ##### with {collapsible="true"}
 <!---FUN pivotWith-->
@@ -464,8 +490,9 @@ df.pivot("isHappy")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotWith.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotWith_properties.html" width="100%" height="500px"></inline-frame>
 
 ## Aggregation
 
@@ -507,8 +534,9 @@ df.pivot("isHappy").frames()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotFrames.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotFrames_properties.html" width="100%" height="500px"></inline-frame>
 
 #### values on Pivot {collapsible="true"}
 <!---FUN pivotValuesAggregate-->
@@ -527,8 +555,9 @@ df.pivot("isHappy").values("name", "age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotValuesAggregate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotValuesAggregate_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotValuesAggregateAll-->
 <tabs>
@@ -546,8 +575,9 @@ df.pivot("isHappy").values()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotValuesAggregateAll.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotValuesAggregateAll_properties.html" width="100%" height="500px"></inline-frame>
 
 #### count {collapsible="true"}
 <!---FUN pivotCount-->
@@ -566,8 +596,9 @@ df.pivot("isHappy").count()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotCount.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotCount_properties.html" width="100%" height="500px"></inline-frame>
 
 #### with on Pivot {collapsible="true"}
 <!---FUN withOnPivot-->
@@ -586,8 +617,9 @@ df.pivot("isHappy").with { "name"["lastName"]<String>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/withOnPivot.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/withOnPivot_properties.html" width="100%" height="500px"></inline-frame>
 
 #### aggregate {collapsible="true"}
 <!---FUN pivotAggregateMultiple-->
@@ -618,8 +650,9 @@ df.pivot("isHappy").aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotAggregateMultiple.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotAggregateMultiple_properties.html" width="100%" height="500px"></inline-frame>
 
 If only one aggregation function is used, the column name can be omitted:
 <!---FUN pivotAggregate-->
@@ -638,8 +671,9 @@ df.pivot("isHappy").aggregate { minBy("age")["name"] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotAggregate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotAggregate_properties.html" width="100%" height="500px"></inline-frame>
 
 ### Aggregation statistics
 [`Aggregation statistics`](summaryStatistics.md) are predefined shortcuts for common statistical aggregations 
@@ -696,8 +730,9 @@ df.pivot("isHappy").max("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMax.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMax_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotMaxMultiple-->
 <tabs>
@@ -715,8 +750,9 @@ df.pivot("isHappy").max("age", "weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMaxMultiple.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMaxMultiple_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotMaxForMultiple-->
 <tabs>
@@ -734,8 +770,9 @@ df.pivot("isHappy").maxFor("age", "weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMaxForMultiple.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMaxForMultiple_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotMaxOf-->
 <tabs>
@@ -753,8 +790,9 @@ df.pivot("isHappy").maxOf { if ("age"<Int>() < 30) "weight"<Int>() else null }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMaxOf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMaxOf_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### min {collapsible="true"}
 <!---FUN pivotMin-->
@@ -773,8 +811,9 @@ df.pivot("isHappy").min("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMin.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMin_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### sum {collapsible="true"}
 <!---FUN pivotSum-->
@@ -793,8 +832,9 @@ df.pivot("isHappy").sum("weight")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotSum.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotSum_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### mean {collapsible="true"}
 <!---FUN pivotMeanAll-->
@@ -813,8 +853,9 @@ df.pivot("isHappy").mean()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMeanAll.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMeanAll_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotMean-->
 <tabs>
@@ -832,8 +873,9 @@ df.pivot("isHappy").mean { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMean.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMean_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### std {collapsible="true"}
 <!---FUN pivotStd-->
@@ -852,8 +894,9 @@ df.pivot("isHappy").std { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotStd.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotStd_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### median {collapsible="true"}
 <!---FUN pivotMedian-->
@@ -872,8 +915,9 @@ df.pivot("isHappy").median("age")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMedian.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMedian_properties.html" width="100%" height="500px"></inline-frame>
 
 ###### percentile {collapsible="true"}
 <!---FUN pivotPercentile-->
@@ -892,8 +936,9 @@ df.pivot("isHappy").percentile(25.0) { "age"<Int>() }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotPercentile.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotPercentile_properties.html" width="100%" height="500px"></inline-frame>
 
 #### The `separate` flag
 
@@ -919,8 +964,9 @@ df.pivot("isHappy").maxFor("age", "weight", separate = true)
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotSeparate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotSeparate_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotAggregateSeparate-->
 <tabs>
@@ -944,8 +990,9 @@ df.pivot("isHappy").aggregate(separate = true) {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotAggregateSeparate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotAggregateSeparate_properties.html" width="100%" height="500px"></inline-frame>
 
 #### Default values for aggregation
 By default, any aggregation function will result in a `null` value for those matrix cells where the intersection of column and row keys produced an empty data group.
@@ -968,8 +1015,9 @@ df.pivot("isHappy").groupBy("city").aggregate { min("age") default 0 }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotDefault.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotDefault_properties.html" width="100%" height="500px"></inline-frame>
 
 
 <!---FUN pivotDefaultDirect-->
@@ -988,8 +1036,9 @@ df.pivot("isHappy").groupBy("city").default(0).min()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotDefaultDirect.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotDefaultDirect_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotDefaultMultiple-->
 <tabs>
@@ -1013,8 +1062,9 @@ df.pivot("isHappy").groupBy("city").aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotDefaultMultiple.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotDefaultMultiple_properties.html" width="100%" height="500px"></inline-frame>
 
 ### Pivot inside aggregate
 
@@ -1049,8 +1099,9 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotInAggregate.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotInAggregate_properties.html" width="100%" height="500px"></inline-frame>
 
 ### pivotCounts
 
@@ -1077,8 +1128,9 @@ df.pivot("isHappy").groupByOther().count()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotCountsOnDf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotCountsOnDf_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotCountsOnGroupBy-->
 <tabs>
@@ -1108,8 +1160,9 @@ df.groupBy("name").aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotCountsOnGroupBy.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotCountsOnGroupBy_properties.html" width="100%" height="500px"></inline-frame>
 
 ### pivotMatches
 
@@ -1137,8 +1190,9 @@ df.pivot("city").groupByOther().matches()
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMatchesGroupByOther.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMatchesGroupByOther_properties.html" width="100%" height="500px"></inline-frame>
 
 <!---FUN pivotMatches-->
 <tabs>
@@ -1168,5 +1222,6 @@ df.groupBy("name").aggregate {
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/pivotMatches.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
-<inline-frame src="./resources/pivotMatches_properties.html" width="100%" height="500px"></inline-frame>

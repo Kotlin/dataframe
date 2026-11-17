@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,10 +9,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.RequiredByIntellijPlugin
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.NALink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.util.DEPRECATED_ACCESS_API
@@ -110,7 +108,13 @@ public fun <T> DataColumn<T>.valueCounts(
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
-    val values = DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val values =
+        if (grouped.isEmpty() && !isValueColumn()) {
+            // #2034 Preserve nested columns even when the input is empty
+            this.take(0)
+        } else {
+            DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
+        }
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
     val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
@@ -285,7 +289,7 @@ public fun <T> DataFrame<T>.valueCounts(
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
 public fun <T> DataFrame<T>.valueCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: ColumnReference<*>,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,

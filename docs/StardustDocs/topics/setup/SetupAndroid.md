@@ -48,7 +48,7 @@ plugins {
 </tab>
 </tabs>
 
-In versions older than Kotlin 2.4.0 add following line to your `gradle.properties`:
+In versions older than Kotlin 2.4.0, add the following line to your `gradle.properties`:
 
 ```properties
 kotlin.incremental=false

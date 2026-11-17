@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
@@ -17,18 +16,18 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Specifies how to handle columns in the original dataframe that were not matched to any column in destination dataframe schema.
+ * Specifies how to handle columns in the original dataframe that were not matched to any column in the destination dataframe schema.
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */
 public enum class ExcessiveColumns {
     /**
-     * Remove excessive columns from resulting dataframe
+     * Remove excessive columns from the resulting dataframe
      */
     Remove,
 
     /**
-     * Keep excessive columns in resulting dataframe
+     * Keep excessive columns in the resulting dataframe
      */
     Keep,
 
@@ -86,7 +85,7 @@ public interface ConvertSchemaDsl<in T> {
      * If you want to define a common conversion for multiple types (or any type), or
      * you need extra information about the target, such as its schema, use this method.
      *
-     * The exact type conversion does have higher priority. After that, this flexible conversions will be checked
+     * The exact type conversion does have higher priority. After that, these flexible conversions will be checked
      * in order.
      *
      * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
@@ -102,7 +101,7 @@ public interface ConvertSchemaDsl<in T> {
 }
 
 /**
- * Defines how to fill specified columns in destination schema that were not found in the original dataframe.
+ * Defines how to fill all specified columns in the destination schema that were not found in the original dataframe.
  * All [<code>fill</code>][fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [<code>with</code>][with] expression.
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
@@ -118,7 +117,7 @@ public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
 }
 
 /**
- * Defines how to convert `String` values into given type [<code>C</code>][C].
+ * Defines how to convert `String` values into the given type [<code>C</code>][C].
  *
  * This method is a shortcut for `convert<String>().with { }`.
  *
@@ -130,7 +129,7 @@ public inline fun <reified C> ConvertSchemaDsl<*>.parser(noinline parser: (Strin
     convert<String>().with(parser)
 
 /**
- * Defines how to convert values of given type [<code>C</code>][C]
+ * Defines how to convert values of the given type [<code>C</code>][C].
  *
  * For more information: [See `convertTo` on the documentation website.](https://kotlin.github.io/dataframe/convertto.html)
  */

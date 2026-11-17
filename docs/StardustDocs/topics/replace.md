@@ -4,6 +4,8 @@
 Replaces one or several columns with new columns and returns a new [`DataFrame`](DataFrame.md).
 To replace values inside the columns instead of whole columns, use [`replaceAll`](#replaceall).
 
+**API reference**: [`replace`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/replace.html)
+
 ```text
 replace { columns }
     .with(newColumns) | .with { transform }
@@ -26,8 +28,8 @@ The examples on this page use the following dataframe:
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/replaceDf.html" width="100%" height="500px"></inline-frame>
+<!---END-->
 
 ## Replace with an expression
 
@@ -53,8 +55,8 @@ df.replace("name").with { this[pathOf("name", "firstName")] }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceGroupWithColumn.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceGroupWithColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 To keep the name, return a column with the same name. Here the `String` columns at the top level
 (only `city` in this dataframe) get lowercase values, and the names stay the same:
@@ -65,8 +67,8 @@ To keep the name, return a column with the same name. Here the `String` columns 
 df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
 ```
 
-<!---END-->
 <inline-frame src="./resources/replaceKeepName.html" width="100%" height="500px"></inline-frame>
+<!---END-->
 
 To change the name, use `named` or `rename` on the new column:
 
@@ -86,8 +88,8 @@ df.replace("age").with { 2021 - it.cast<Int>() named "year" }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceRename.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceRename_properties.html" width="100%" height="500px"></inline-frame>
 
 The new column must have as many rows as the dataframe, and its name must not be used by another column
 in the same column group that is not replaced. Otherwise, `with` throws an exception.
@@ -115,8 +117,8 @@ df.replace("weight", "age").with(df.weight * 1000 named "weightInGrams", df.age 
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceWithColumns.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceWithColumns_properties.html" width="100%" height="500px"></inline-frame>
 
 `weight` is selected first, so it is replaced with `weightInGrams`,
 although `age` comes first in the dataframe.
@@ -155,8 +157,8 @@ df.convert("age").asColumn { it.convertToString().rename("ageText") }
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceVsConvertAsColumn.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceVsConvertAsColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 The [compiler plugin](Compiler-Plugin.md) does not track `replace`: after it, the extension properties keep
 the old column names and types. In a project with the plugin, use `convert { columns }.asColumn { transform }`.
@@ -201,8 +203,8 @@ reposWithFrames.asGroupBy("contributors").max("contributions")
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceWithFrameColumn.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceWithFrameColumn_properties.html" width="100%" height="500px"></inline-frame>
 
 ## replaceAll
 
@@ -226,8 +228,8 @@ The examples use the dataframe from the top of this page:
 df.replaceAll("Alice" to "Alicia", "Moscow" to null)
 ```
 
-<!---END-->
 <inline-frame src="./resources/replaceAllValues.html" width="100%" height="500px"></inline-frame>
+<!---END-->
 
 If the same value is given in several pairs, the last pair wins.
 A value can be replaced with `null`, and `null` can be replaced with a value.
@@ -250,8 +252,8 @@ df.replaceAll(null to "Unknown", columns = { "city"<String?>() })
 ```
 
 </tab></tabs>
+<inline-frame src="./resources/replaceAllInColumns.html" width="100%" height="500px"></inline-frame>
 <!---END-->
-<inline-frame src="./resources/replaceAllInColumns_properties.html" width="100%" height="500px"></inline-frame>
 
 A new value has to fit the type of the column where it is put, otherwise `replaceAll` throws an exception.
 `null` fits any column: the column becomes nullable.

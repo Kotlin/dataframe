@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -278,7 +277,7 @@ private typealias ReplaceWithColumnsDocs = Nothing
  * @param [columns] The new columns, one for each selected column.
  * @return A new [DataFrame] with the selected columns replaced.
  */
-public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T> = with(columns.toList())
+public fun <T, C> ReplaceClause<T, C>.with(vararg columns: DataColumn<*>): DataFrame<T> = with(columns.toList())
 
 /**
  * @include [ReplaceWithColumnsDocs]
@@ -294,7 +293,7 @@ public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T>
  * @param [newColumns] The new columns, one for each selected column.
  * @return A new [DataFrame] with the selected columns replaced.
  */
-public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
+public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<DataColumn<*>>): DataFrame<T> {
     var index = 0
     return with {
         require(index < newColumns.size) {

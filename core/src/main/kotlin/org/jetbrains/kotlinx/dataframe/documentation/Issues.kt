@@ -15,4 +15,10 @@ internal interface Issues {
 
     /** [#KT-68546](https://youtrack.jetbrains.com/issue/KT-68546/Conflicting-overloads-in-non-generic-interface-K2-2.0.0) */
     typealias ConflictingOverloadsK2Link = Nothing
+
+    /** [KT-76683](https://youtrack.jetbrains.com/issue/KT-76683) */
+    typealias OverloadResolutionByLambdaReturnTypeLink = Nothing
+
+    /** [KT-51107](https://youtrack.jetbrains.com/issue/KT-51107/ELA-Overload-resolution-via-eager-lambda-return-type-analysis) */
+    typealias EagerLambdaAnalysisLink = Nothing
 }

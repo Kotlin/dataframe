@@ -5,6 +5,8 @@
 Changes the type of the selected columns based on the runtime values stored in these columns.
 The resulting type of the column will be the nearest common supertype of all column values.
 
+**API reference**: [`inferType`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/infer-type.html)
+
 ```text
 inferType [ { columns } ]
 ```

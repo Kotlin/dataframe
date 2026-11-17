@@ -30,7 +30,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  *
  * @include [AddDataRowNote]
  *
- * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
+ * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but expects a [Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
 
@@ -54,7 +54,6 @@ internal interface ExpressionsGivenRow {
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
      */
-    @ExcludeFromSources
     typealias AddDataRowNote = Nothing
 
     /**

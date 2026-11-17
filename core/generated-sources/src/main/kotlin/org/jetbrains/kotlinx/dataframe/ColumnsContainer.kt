@@ -28,7 +28,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
     // region columns
 
     @RequiredByIntellijPlugin
-    public fun columns(): List<AnyCol>
+    public fun columns(): List<DataColumn<*>>
 
     @RequiredByIntellijPlugin
     public fun columnsCount(): Int
@@ -43,9 +43,9 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region getColumnOrNull
 
-    public fun getColumnOrNull(name: String): AnyCol?
+    public fun getColumnOrNull(name: String): DataColumn<*>?
 
-    public fun getColumnOrNull(index: Int): AnyCol?
+    public fun getColumnOrNull(index: Int): DataColumn<*>?
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -55,7 +55,7 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
     @AccessApiOverload
     public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
 
-    public fun getColumnOrNull(path: ColumnPath): AnyCol?
+    public fun getColumnOrNull(path: ColumnPath): DataColumn<*>?
 
     public fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>?
 
@@ -63,9 +63,9 @@ public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region get
 
-    public override operator fun get(columnName: String): AnyCol = getColumn(columnName)
+    public override operator fun get(columnName: String): DataColumn<*> = getColumn(columnName)
 
-    public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
+    public operator fun get(columnPath: ColumnPath): DataColumn<*> = getColumn(columnPath)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload

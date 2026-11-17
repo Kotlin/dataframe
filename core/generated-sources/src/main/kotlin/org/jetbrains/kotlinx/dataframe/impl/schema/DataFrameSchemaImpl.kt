@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT
 import org.jetbrains.kotlinx.dataframe.schema.ComparisonMode.STRICT_FOR_NESTED_SCHEMAS
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchemaDoc
 import org.jetbrains.kotlinx.dataframe.schema.plus
 
 /**
@@ -26,9 +25,9 @@ import org.jetbrains.kotlinx.dataframe.schema.plus
  * - For column groups, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the nested columns.
  * - For frame columns, it contains the [<code>DataFrameSchema</code>][org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema] of the contained dataframes.
  *
- * Use [<code>schema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.schema] to read the schema of a
+ * Use [<code>schema</code>][org.jetbrains.kotlinx.dataframe.api.schema] to read the schema of a
  * [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] from its columns, and
- * [<code>compileTimeSchema</code>][org.jetbrains.kotlinx.dataframe.DataFrame.compileTimeSchema] to get the one
+ * [<code>compileTimeSchema</code>][org.jetbrains.kotlinx.dataframe.api.compileTimeSchema] to get the one
  * that follows from its type.
  *
  * Use [<code>compare</code>][org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl.compare]
@@ -128,25 +127,23 @@ internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, in
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")
         when (columnSchema) {
-            is ColumnSchema.Group -> {
+            is ColumnSchema.Group -> if (columnSchema.schema.columns.isNotEmpty()) {
                 sb.appendLine()
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
             }
 
             is ColumnSchema.Frame -> {
-                sb.appendLine(" *")
-                columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
-                sb.appendLine()
-            }
-
-            is ColumnSchema.Value -> {
-                sb.append(" ${renderType(columnSchema.type)}")
-                if (i != size - 1) {
+                sb.append(" *")
+                if (columnSchema.schema.columns.isNotEmpty()) {
                     sb.appendLine()
+                    columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
                 }
             }
+
+            is ColumnSchema.Value -> sb.append(" ${renderType(columnSchema.type)}")
         }
+        // the newline goes between entries; the last entry of a map never ends with one
+        if (i != size - 1) sb.appendLine()
     }
     return sb.toString()
 }

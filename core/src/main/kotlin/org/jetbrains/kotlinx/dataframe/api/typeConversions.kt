@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
@@ -107,7 +108,7 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
-public fun AnyCol.setNullable(nullable: Boolean): AnyCol =
+public fun DataColumn<*>.setNullable(nullable: Boolean): DataColumn<*> =
     if (nullable) {
         this.castToNullable()
     } else {
@@ -132,13 +133,13 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 // endregion
 
-public fun AnyCol.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
+public fun DataColumn<*>.asValueColumn(): ValueColumn<*> = this as ValueColumn<*>
 
 @JvmName("asColumnGroupUntyped")
-public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+public fun DataColumn<*>.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asFrameColumnUntyped")
-public fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+public fun DataColumn<*>.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> =
     (this as AnyCol).asAnyFrameColumn().castFrameColumn()
@@ -179,6 +180,7 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
  * @param [C\] The type of the (group) column.
  * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  */
+@ExcludeFromSources
 private typealias SingleColumnAsColumnGroupDocs = Nothing
 
 /** @include [SingleColumnAsColumnGroupDocs] */
@@ -271,9 +273,10 @@ public enum class Infer {
     ;
 
     /**
-     * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
+     * @param [infer\] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
+    @ExcludeFromSources
     internal typealias ParamDoc = Nothing
 }
 
@@ -283,18 +286,20 @@ public enum class Infer {
  */
 public enum class NullabilityOptions {
     /**
-     * Use only actual data, set [DataColumn.hasNulls] to true if and only if there are null values in the column.
-     * On empty dataset use False.
+     * Use only actual data, set [DataColumn.hasNulls] to `true` if and only if there are null values in the column.
+     * On an empty dataset, use `false`.
      */
     Infer,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value. Throw exception if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value.
+     * Throws an exception if the column should be not nullable but there are null values.
      */
     Checking,
 
     /**
-     * Set [DataColumn.hasNulls] to expected value by default. Change False to True if column should be not nullable but there are null values.
+     * Set [DataColumn.hasNulls] to the expected value by default.
+     * Change `false` to `true` if the column should be not nullable but there are null values.
      */
     Widening,
 }
@@ -302,7 +307,8 @@ public enum class NullabilityOptions {
 public class NullabilityException : Exception()
 
 /**
- * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
+ * @return whether the column should be marked nullable for the current [NullabilityOptions] value
+ * with actual [data] and [expectedNulls] per some schema/signature.
  * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
  */
 public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {

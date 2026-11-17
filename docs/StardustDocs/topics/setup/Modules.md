@@ -5,6 +5,8 @@ In addition, Kotlin DataFrame provides several [plugins](#plugins)
 that significantly enhance the development experience 
 — making it more convenient, powerful, and enjoyable to work with.
 
+**API reference**: [API reference](https://kotlin.github.io/dataframe/api-docs/index.html)
+
 <table>
   <thead>
     <tr>
@@ -298,6 +300,9 @@ dependencies {
 </tab>
 </tabs>
 
+When packaging this module into a fat JAR, merge `META-INF/services` resources as described in
+[Packaging into a fat JAR](Packaging.md).
+
 #### `dataframe-jdbc` {id="dataframe-jdbc"}
 
 Provides all logic for DataFrame to be able to work with  
@@ -330,7 +335,7 @@ dependencies {
 
 #### `dataframe-arrow` {id="dataframe-arrow"}
 
-Provides all logic and tests for DataFrame to be able to work with
+Provides the logic needed for DataFrame to work with
 [Apache Arrow](https://arrow.apache.org), and for **reading**
 [Apache Parquet](https://parquet.apache.org/) through
 [Apache Arrow Dataset](https://arrow.apache.org/docs/java/dataset.html). Writing Parquet is not supported.

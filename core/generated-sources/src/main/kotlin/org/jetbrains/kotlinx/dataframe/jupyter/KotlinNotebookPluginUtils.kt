@@ -75,13 +75,14 @@ public object KotlinNotebookPluginUtils {
      * If a column type is not comparable, sorting by string representation is applied instead.
      * Sorts DataFrames by their size because looking at the smallest / biggest groups after groupBy is very popular.
      *
-     * Returns "lazily materialized" dataframe, which means get, getRows, take operation must be applied to turn it to a valid sorted dataframe.
-     * "lazily materialized" - after sorting 1 million of rows and given the page size = 100, a dataframe with only 100 rows is created.
+     * Returns a "lazily materialized" dataframe, which means a get, getRows, or take operation must be applied
+     * to turn it into a valid sorted dataframe.
+     * "lazily materialized" - after sorting 1 million rows and given the page size = 100, a dataframe with only 100 rows is created.
      *
      * @param dataFrameLike The dataframe-like object to sort.
-     * @param columnPaths The list of columns to sort by. Each element in the list represents a column path
+     * @param columnPaths The list of columns to sort by. Each element in the list represents a column path.
      * @param desc The list of booleans indicating whether each column should be sorted in descending order.
-     *             The size of this list should be the same as the size of the `columns` list.
+     *             The size of this list should be the same as the size of the [columnPaths] list.
      *
      * @throws IllegalArgumentException if `dataFrameLike` is `null`.
      *

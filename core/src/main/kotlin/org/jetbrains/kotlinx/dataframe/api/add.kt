@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -146,13 +144,14 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<DataFrame<*>>): DataFram
 public interface AddDataRow<out T> : DataRow<T> {
 
     /**
-     * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
+     * Returns a new value that was already computed for some preceding row
+     * during the current [add] or [update] column operation.
      *
-     * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
+     * Can be used to compute a series of values with recurrence relations, e.g. fibonacci.
      *
      * For more information: {@include [DocumentationUrls.Add]}
      *
-     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
+     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have a new value yet
      */
     public fun <C> DataRow<*>.newValue(): C
 }
@@ -294,10 +293,10 @@ public class AddDsl<T>(
     @PublishedApi
     internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
+    public fun add(column: ColumnReference<*>): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
     @Interpretable("AddDslReferencePlus")
-    public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
+    public operator fun ColumnReference<*>.unaryPlus(): Boolean = add(this)
 
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
@@ -328,7 +327,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: AddExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
-    public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
+    public infix fun String.from(column: ColumnReference<*>): Boolean = add(column.rename(this))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -339,7 +338,7 @@ public class AddDsl<T>(
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
-    public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
+    public infix fun ColumnReference<*>.into(name: String): Boolean = add(rename(name))
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
@@ -354,11 +353,11 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+    public infix fun ColumnAccessor<DataRow<*>>.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
+    public fun group(column: ColumnAccessor<DataRow<*>>, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
     @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
@@ -375,7 +374,7 @@ public class AddDsl<T>(
 
     @Deprecated(DEPRECATED_ACCESS_API)
     @AccessApiOverload
-    public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
+    public infix fun AddGroup<T>.into(column: ColumnAccessor<DataRow<*>>): Unit = into(column.name())
 }
 
 /**
@@ -460,7 +459,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
  * @param expression [AddExpression] that computes column value for every [DataRow] of a new column.
  * @return new [GroupBy] with added column.
  *
- * @throws DuplicateColumnNamesException if group [DataFrame]s already contains a column with given [name].
+ * @throws DuplicateColumnNamesException if group [DataFrame]s already contain a column with given [name].
  */
 @Refine
 @Interpretable("GroupByAdd")

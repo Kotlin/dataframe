@@ -17,6 +17,8 @@ Discover `any` operation in Kotlin DataFrame.
 
 Checks if there is at least one row in the [](DataFrame.md) that satisfies the predicate.
 
+**API reference**: [`any`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/any.html)
+
 Returns `Boolean` — `true` if there is at least one row that satisfies the predicate, `false` otherwise.
 
 ```kotlin
@@ -35,9 +37,9 @@ rowCondition: (DataRow) -> Boolean
 df
 ```
 
-<!---END-->
-
 <inline-frame src="./resources/notebook_test_any_3.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 Check if any person `age` is greater than 21:
 

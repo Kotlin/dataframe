@@ -16,7 +16,7 @@ rendering Kotlin dataframes in the Kotlin notebooks plugin of IntelliJ IDEA.
    information for all groups, frames and values.
 
 **2.1.1:**
- * Added a new type of `ValueColumn` value that is DataFrameConvertable type
+ * Added a new type of `ValueColumn` value that is of the `DataFrameConvertable` type
 
 **2.2.0:**
  * Added the `is_formatted` property in the `metadata` of the dataframe.

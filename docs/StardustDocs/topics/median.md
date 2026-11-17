@@ -4,6 +4,8 @@
 
 Computes the [median](https://en.wikipedia.org/wiki/Median) of values.
 
+**API reference**: [`median`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/median.html)
+
 This is also called the "middle" of a sorted list, the "50th [percentile](percentile.md)", or
 the 2-[quantile](https://en.wikipedia.org/wiki/Quantile).
 
@@ -19,7 +21,7 @@ When the number of values is even, the median is the average of the two middle v
 The operation is also available for self-comparable columns
 (so columns of type `T : Comparable<T>`, whose values are mutually comparable, like `DateTime`, `String`, etc.)
 In this case, the return type remains `T?`.
-When the number of values is even, the median is the low of the two middle values.
+When the number of values is even, the median is the lower of the two middle values.
 
 All operations on `Double`/`Float` have the `skipNaN` option, which is
 set to `false` by default. This means that if a `NaN` is present in the input, it will be propagated to the result.

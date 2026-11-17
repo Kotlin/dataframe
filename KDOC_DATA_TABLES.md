@@ -28,6 +28,9 @@ internal interface ~OperationName~Docs {
 }
 ````
 
+If the enclosing interface is itself `@ExcludeFromSources`, drop the annotation from the typealias:
+everything nested in an excluded declaration is excluded with it.
+
 Each overload includes it, then the call and its result:
 
 ````kotlin

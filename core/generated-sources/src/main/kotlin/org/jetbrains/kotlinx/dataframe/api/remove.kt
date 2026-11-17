@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
@@ -9,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.annotations.StringApiInterpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
@@ -21,21 +19,6 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 // region remove
-
-/**
- * ## The Remove Operation
- *
- * Removes the specified [<code>columns</code>][columns] from the original [<code>DataFrame</code>][DataFrame] and returns a new [<code>DataFrame</code>][DataFrame] without them.
- *
- *
- *
- * This can include [<code>column groups</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
- *
- * See [<code>Selecting Columns</code>][Select.SelectSelectingOptions].
- *
- * For more information: [See `remove` on the documentation website.](https://kotlin.github.io/dataframe/remove.html)
- */
-internal typealias Remove = Nothing
 
 /**
  * ## The Remove Operation
@@ -138,7 +121,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  */
 @Deprecated(DEPRECATED_ACCESS_API)
 @AccessApiOverload
-public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumnSet() }
+public fun <T> DataFrame<T>.remove(vararg columns: ColumnReference<*>): DataFrame<T> = remove { columns.toColumnSet() }
 
 /**
  * ## The Remove Operation
@@ -172,7 +155,7 @@ public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> =
 
 @Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
-public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
+public infix operator fun <T> DataFrame<T>.minus(column: ColumnReference<*>): DataFrame<T> = remove(column)
 
 @Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload

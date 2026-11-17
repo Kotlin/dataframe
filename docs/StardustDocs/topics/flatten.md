@@ -4,12 +4,14 @@
 
 Returns [`DataFrame`](DataFrame.md) without column groupings under selected columns.
 
+**API reference**: [`flatten`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/flatten.html)
+
 ```text
 flatten  [ { columns } ]
 ```
 
 Columns will keep their original names after flattening.
-Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
+Potential column name clashes are resolved by adding the minimal possible name prefix from ancestor columns.
 
 **Related operations**: [](groupUngroupFlatten.md)
 

@@ -15,13 +15,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -42,7 +37,7 @@ import kotlin.reflect.KProperty
  * The [<code>RenameClause</code>][RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][DataFrame] with the renamed columns.
@@ -177,7 +172,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
  * The [<code>RenameClause</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the renamed columns.
@@ -246,7 +241,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * The [<code>RenameClause</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause] object provides methods to rename selected columns using:
  * - [<code>to(name)</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns to the specified names.
  * - [<code>to { nameExpression }</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.to] - renames selected columns using a provided
- * expression assuming column with its path and returning a new name.
+ * expression that takes a column with its path and returns a new name.
  * - [<code>toCamelCase()</code>][org.jetbrains.kotlinx.dataframe.api.RenameClause.toCamelCase] - renames all selected columns to "camelCase".
  *
  * Each method returns a new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the renamed columns.
@@ -275,7 +270,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
  * // Renames "arrival_date" and "passport-ID" columns to "camelCase"
  * df.rename("arrival_date", "passport-ID").toCamelCase()
  * ```
- * @param [columns] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
+ * @param [cols] The [<code>Column Names</code>][String] used to select the columns of this [<code>DataFrame</code>][DataFrame] to rename.
  */
 @StringApiInterpretable(interpreter = "Rename", stringArgument = "cols", targetArgument = "columns")
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
@@ -304,6 +299,61 @@ public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> =
 @HasSchema(schemaArg = 0)
 public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     override fun toString(): String = "RenameClause(df=$df, columns=$columns)"
+
+    /**
+     * Renames the columns selected with [<code>rename</code>][org.jetbrains.kotlinx.dataframe.api.rename] to the specified [newNames],
+     * preserving their values and positions within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+     *
+     * The mapping is positional: [newNames] are applied in the order
+     * the columns were selected — the first selected column is renamed to the first name,
+     * the second to the second, and so on.
+     *
+     * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
+     *
+     * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar].
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename("col1", "col2").to("width", "length")
+     *
+     * // Rename "col1" to "width" and "col2" to "length"
+     * df.rename { col1 and col2 }.to("width", "length")
+     * ```
+     *
+     * @param [newNames] The new names for the selected columns, applied in order of selecting.
+     * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the columns renamed.
+     */
+    @Refine
+    @Interpretable("RenameInto")
+    public fun to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
+
+    /**
+     * Renames the columns selected with [<code>rename</code>][org.jetbrains.kotlinx.dataframe.api.rename] by applying the [transform] expression
+     * to each of them. This expression receives the column together with its full path
+     * (as [<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]) and must return the new name for that column.
+     * The operation preserves the original columns’ values and their positions within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
+     *
+     * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
+     *
+     * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar] for more details.
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Rename all columns using their full path, delimited by "->"
+     * df.rename { colsAtAnyDepth() }.to { it.path.joinToString("->") }
+     *
+     * // Rename all `String` columns with uppercase
+     * df.rename { colsOf<String>() }.to { it.name.uppercase() }
+     * ```
+     *
+     * @param [transform] A function that takes a [<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath] for each selected column
+     * and returns the new column name.
+     * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the columns renamed.
+     */
+    @Refine
+    @Interpretable("RenameIntoLambda")
+    public fun to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)
 }
 
 /**
@@ -384,17 +434,16 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
 @Deprecated(message = RENAME_INTO, replaceWith = ReplaceWith("to(*newNames)"))
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
-/**
- * Renames the columns selected with [<code>rename</code>][rename] to the specified [<code>newNames</code>][newNames],
- * preserving their values and positions within the [<code>DataFrame</code>][DataFrame].
+/** Renames the columns selected with [<code>rename</code>][org.jetbrains.kotlinx.dataframe.api.rename] to the specified [newNames],
+ * preserving their values and positions within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * The mapping is positional: [<code>newNames</code>][newNames] are applied in the order
+ * The mapping is positional: [newNames] are applied in the order
  * the columns were selected — the first selected column is renamed to the first name,
  * the second to the second, and so on.
  *
  * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
  *
- * Check out [<code>Grammar</code>][RenameDocs.Grammar].
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar].
  *
  * ### Examples:
  * ```kotlin
@@ -405,9 +454,8 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T>
  * df.rename { col1 and col2 }.to("width", "length")
  * ```
  *
- * @param newNames The new names for the selected columns, applied in order of selecting.
- * @return A new [<code>DataFrame</code>][DataFrame] with the columns renamed.
- */
+ * @param [newNames] The new names for the selected columns, applied in order of selecting.
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the columns renamed. */
 @Refine
 @Interpretable("RenameInto")
 public fun <T, C> RenameClause<T, C>.to(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
@@ -449,15 +497,14 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFr
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
     renameImpl(transform)
 
-/**
- * Renames the columns selected with [<code>rename</code>][rename] by applying the [<code>transform</code>][transform] expression
+/** Renames the columns selected with [<code>rename</code>][org.jetbrains.kotlinx.dataframe.api.rename] by applying the [transform] expression
  * to each of them. This expression receives the column together with its full path
- * (as [<code>ColumnWithPath</code>][ColumnWithPath]) and must return the new name for that column.
- * The operation preserves the original columns’ values and their positions within the [<code>DataFrame</code>][DataFrame].
+ * (as [<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath]) and must return the new name for that column.
+ * The operation preserves the original columns’ values and their positions within the [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * For more information: [See `rename` on the documentation website.](https://kotlin.github.io/dataframe/rename.html)
  *
- * Check out [<code>Grammar</code>][RenameDocs.Grammar] for more details.
+ * Check out [<code>Grammar</code>][org.jetbrains.kotlinx.dataframe.api.RenameDocs.Grammar] for more details.
  *
  * ### Examples:
  * ```kotlin
@@ -468,10 +515,9 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * df.rename { colsOf<String>() }.to { it.name.uppercase() }
  * ```
  *
- * @param transform A function that takes a [<code>ColumnWithPath</code>][ColumnWithPath] for each selected column
+ * @param [transform] A function that takes a [<code>ColumnWithPath</code>][org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath] for each selected column
  * and returns the new column name.
- * @return A new [<code>DataFrame</code>][DataFrame] with the columns renamed.
- */
+ * @return A new [<code>DataFrame</code>][org.jetbrains.kotlinx.dataframe.DataFrame] with the columns renamed. */
 @Refine
 @Interpretable("RenameIntoLambda")
 public fun <T, C> RenameClause<T, C>.to(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = renameImpl(transform)
@@ -641,20 +687,7 @@ public interface RenameColumnsSelectionDsl {
      *
      *
      */
-    public interface Grammar {
-
-        /** [<code>**named**</code>][ColumnsSelectionDsl.named] */
-        public typealias InfixNamedName = Nothing
-
-        /** [<code>**into**</code>][ColumnsSelectionDsl.into] */
-        public typealias InfixIntoName = Nothing
-
-        /** __`.`__[<code>**named**</code>][ColumnsSelectionDsl.named] */
-        public typealias NamedName = Nothing
-
-        /** __`.`__[<code>**into**</code>][ColumnsSelectionDsl.into] */
-        public typealias IntoName = Nothing
-    }
+    public interface Grammar
 
     /**
      * ## Rename: `named` / `into`

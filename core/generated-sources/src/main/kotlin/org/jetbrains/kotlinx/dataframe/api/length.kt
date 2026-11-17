@@ -8,6 +8,6 @@ import org.jetbrains.kotlinx.dataframe.util.MESSAGE_SHORTCUT
 // region StringCol
 
 @Deprecated(MESSAGE_SHORTCUT, ReplaceWith(LENGTH_REPLACE), DeprecationLevel.WARNING)
-public fun StringCol.length(): DataColumn<Int> = map { it?.length ?: 0 }
+public fun DataColumn<String?>.length(): DataColumn<Int> = map { it?.length ?: 0 }
 
 // endregion

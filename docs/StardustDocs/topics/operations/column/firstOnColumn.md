@@ -16,14 +16,17 @@ Discover `first` operation in Kotlin DataFrame.
 
 Returns the first value in this [`DataColumn`](DataColumn.md). If the [`DataColumn`](DataColumn.md) is empty, throws an exception.
 
+**API reference**: [`first`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/first.html)
+
 <!---FUN firstOnColumnDf-->
 
 ```kotlin
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/firstOnColumnDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN firstOnColumn-->
 

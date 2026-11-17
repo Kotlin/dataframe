@@ -2,15 +2,15 @@
 
 
 <web-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </web-summary>
 
 <card-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </card-summary>
 
 <link-summary>
-Discover `single` operation in Kotlin Dataframe.
+Discover `single` operation in Kotlin DataFrame.
 </link-summary>
 
 
@@ -20,14 +20,17 @@ if the [`DataColumn`](DataColumn.md) is empty, and
 [`IllegalArgumentException`](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/)
 if it contains more than one value.
 
+**API reference**: [`single`](https://kotlin.github.io/dataframe/api-docs/core/org.jetbrains.kotlinx.dataframe.api/single.html)
+
 <!---FUN singleOnColumnDf-->
 
 ```kotlin
 df
 ```
 
-<!---END-->
 <inline-frame src="./resources/singleOnColumnDf.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
 
 <!---FUN singleOnColumn-->
 <tabs>
