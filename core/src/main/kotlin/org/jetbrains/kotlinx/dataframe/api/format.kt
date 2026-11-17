@@ -920,7 +920,7 @@ public class FormattedFrame<T>(
         )
 
     override fun toString(): String =
-        "FormattedFrame(df=$df, hasFormatter=${formatter != null}, hasHeaderFormatter=${headerFormatter != null})"
+        "FormattedFrame(df=DataFrame [${df.size}], hasFormatter=${formatter != null}, hasHeaderFormatter=${headerFormatter != null})"
 }
 
 /**
