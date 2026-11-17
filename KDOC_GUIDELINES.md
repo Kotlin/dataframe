@@ -127,6 +127,12 @@ An included snippet must stay true in every function it is included into: re-rea
 host's signature, not only where it was written. A wording that names one host's behaviour — printing,
 mutating, returning — is false on a host that does something else with the same parameters.
 
+A snippet nested inside a class or enum must not reference its enclosing type by `[Name]`: when the
+snippet is included into another declaration, the reference resolves to a doubled fully qualified path
+(`Infer` referenced from inside `enum class Infer` came out as `…api.Infer.Infer` — a broken link in
+every consumer). Reference the enclosing type from plain text, or inline the sentence instead of
+including the snippet.
+
 Also, you can use
 [`@set` and `@get` tags](https://github.com/Jolanrensen/KoDEx/wiki/Notation#set-and-get---setting-and-getting-variables)
 along with `@include` to change variable values in common parts. This is especially useful for 
@@ -763,6 +769,9 @@ But keep these things in mind:
 - KoDEx reads `$` even inside a ` ``` ` block, so a Kotlin string template in an example is silently eaten:
   `"${i + 1}. $name"` came out of `processKDocsMain` as `"+ 1. "`. Escape every `$` you mean literally as
   `\$` — the escape character is removed in the last processing wave, so the generated KDoc shows `$` again.
+- A `@set` value that is a markdown link (`[Float][Float]`) does not render as a link when `{@get}`
+  substitutes it inside a code span — it comes out as literal `[Float][Float]Array`. When composing a
+  name from `{@get [TYPE]}` plus literal characters inside backticks, pass plain values (`Float`), not links.
 - Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in your code samples.
 - Never put `!` directly in front of a `[]` reference, like `if ![skipNaN]`. KoDEx turns the reference into
   `![<code>skipNaN</code>][skipNaN]`, which Markdown reads as an image without a URL, crashing Dokka with a

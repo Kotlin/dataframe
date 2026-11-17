@@ -292,6 +292,10 @@ Then all `@get` statements are processed:
  */
 ```
 
+A `@get` with no value expands to nothing in the template's own KDoc. For templates that are not
+marked `@ExcludeFromSources` (private file-local ones ship in `sources.jar`), give every `@get` a
+default: `{@get [TYPE] [Number]}` — the default is used only where no `@set` supplies a value.
+
 You can put as many `@set` and `@get` / `$` tags in a KDoc as you want, just make sure to pick unique
 key names :).
 I'd always recommend using a `[Reference]` as key name.
