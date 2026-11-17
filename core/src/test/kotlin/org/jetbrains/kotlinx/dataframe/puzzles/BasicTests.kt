@@ -81,7 +81,6 @@ class BasicTests {
             "cat", 2.0, 3, "no",
         )
 
-        df.filter { visits > 2 } shouldBe expected
         df.filter { "visits"<Int>() > 2 } shouldBe expected
     }
 

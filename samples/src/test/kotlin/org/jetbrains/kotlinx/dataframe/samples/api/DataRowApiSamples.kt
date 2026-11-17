@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.RgbColor
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.and
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
@@ -54,6 +56,23 @@ class DataRowApiSamples : DataFrameSampleHelper("dataRowApi", "api") {
         df
             // SampleEnd
             .saveDfHtmlSample()
+    }
+
+    @Test
+    fun getWithExpression() {
+        // SampleStart
+        val row = df.first()
+
+        // Row expression computes a value from the row cells
+        val fullName = row.get { name.firstName + " " + name.lastName }
+        val isAdult = row.get { age >= 18 }
+
+        // The same via the String API
+        val isAdultString = row.get { "age"<Int>() >= 18 }
+        // SampleEnd
+        fullName shouldBe "Alice Cooper"
+        isAdult shouldBe false
+        isAdultString shouldBe false
     }
 
     @Test
