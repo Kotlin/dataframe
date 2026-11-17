@@ -852,7 +852,7 @@ public class DataFrameHtmlData(
  * Kotlin Notebook table output.
  *
  * @param rowsLimit null to disable rows limit
- * @param cellContentLimit -1 to disable content trimming
+ * @param cellContentLimit null to disable content trimming
  * @param enableFallbackStaticTables true to add additional pure HTML table that will be visible only if JS  is disabled;
  * For example hosting *.ipynb files with outputs on GitHub
  * @param cellFormatter Optional cell formatter applied to data cells during HTML rendering.
@@ -861,7 +861,7 @@ public class DataFrameHtmlData(
 public data class DisplayConfiguration(
     var rowsLimit: Int? = 20,
     var nestedRowsLimit: Int? = 5,
-    var cellContentLimit: Int = 40,
+    var cellContentLimit: Int? = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
     var headerFormatter: HeaderColFormatter<*>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
@@ -885,24 +885,55 @@ public data class DisplayConfiguration(
         nestedRowsLimit: Int? = 5,
         cellContentLimit: Int = 40,
         cellFormatter: RowColFormatter<*, *>? = null,
+        headerFormatter: HeaderColFormatter<*>? = null,
         decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
         isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
         localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
         useDarkColorScheme: Boolean = false,
         enableFallbackStaticTables: Boolean = true,
         downsizeBufferedImage: Boolean = true,
-    ) : this (
-        rowsLimit,
-        nestedRowsLimit,
-        cellContentLimit,
-        cellFormatter,
-        null,
-        decimalFormat,
-        isolatedOutputs,
-        localTesting,
-        useDarkColorScheme,
-        enableFallbackStaticTables,
-        downsizeBufferedImage,
+    ) : this(
+        rowsLimit = rowsLimit,
+        nestedRowsLimit = nestedRowsLimit,
+        cellContentLimit = cellContentLimit,
+        cellFormatter = cellFormatter,
+        headerFormatter = headerFormatter,
+        decimalFormat = decimalFormat,
+        isolatedOutputs = isolatedOutputs,
+        localTesting = localTesting,
+        useDarkColorScheme = useDarkColorScheme,
+        enableFallbackStaticTables = enableFallbackStaticTables,
+        downsizeBufferedImage = downsizeBufferedImage,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = DISPLAY_CONFIGURATION,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        rowsLimit: Int? = 20,
+        nestedRowsLimit: Int? = 5,
+        cellContentLimit: Int = 40,
+        cellFormatter: RowColFormatter<*, *>? = null,
+        decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
+        isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+        localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+        useDarkColorScheme: Boolean = false,
+        enableFallbackStaticTables: Boolean = true,
+        downsizeBufferedImage: Boolean = true,
+    ) : this(
+        rowsLimit = rowsLimit,
+        nestedRowsLimit = nestedRowsLimit,
+        cellContentLimit = cellContentLimit,
+        cellFormatter = cellFormatter,
+        headerFormatter = null,
+        decimalFormat = decimalFormat,
+        isolatedOutputs = isolatedOutputs,
+        localTesting = localTesting,
+        useDarkColorScheme = useDarkColorScheme,
+        enableFallbackStaticTables = enableFallbackStaticTables,
+        downsizeBufferedImage = downsizeBufferedImage,
     )
 
     /** For binary compatibility. */
@@ -913,7 +944,7 @@ public data class DisplayConfiguration(
     public fun copy(
         rowsLimit: Int? = this.rowsLimit,
         nestedRowsLimit: Int? = this.nestedRowsLimit,
-        cellContentLimit: Int = this.cellContentLimit,
+        cellContentLimit: Int = this.cellContentLimit ?: Int.MAX_VALUE,
         cellFormatter: RowColFormatter<*, *>? = this.cellFormatter,
         decimalFormat: RendererDecimalFormat = this.decimalFormat,
         isolatedOutputs: Boolean = this.isolatedOutputs,
@@ -923,17 +954,17 @@ public data class DisplayConfiguration(
         downsizeBufferedImage: Boolean = this.downsizeBufferedImage,
     ): DisplayConfiguration =
         DisplayConfiguration(
-            rowsLimit,
-            nestedRowsLimit,
-            cellContentLimit,
-            cellFormatter,
-            null,
-            decimalFormat,
-            isolatedOutputs,
-            localTesting,
-            useDarkColorScheme,
-            enableFallbackStaticTables,
-            downsizeBufferedImage,
+            rowsLimit = rowsLimit,
+            nestedRowsLimit = nestedRowsLimit,
+            cellContentLimit = cellContentLimit,
+            cellFormatter = cellFormatter,
+            headerFormatter = null,
+            decimalFormat = decimalFormat,
+            isolatedOutputs = isolatedOutputs,
+            localTesting = localTesting,
+            useDarkColorScheme = useDarkColorScheme,
+            enableFallbackStaticTables = enableFallbackStaticTables,
+            downsizeBufferedImage = downsizeBufferedImage,
         )
 
     /** DSL accessor. */
@@ -1005,7 +1036,7 @@ internal class DataFrameFormatter(
         }
 
     internal fun truncate(str: String, limit: Int): RenderedContent =
-        if (limit in 1 until str.length) {
+        if (limit in 1..<str.length) {
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) {
                 ellipsis
@@ -1024,7 +1055,7 @@ internal class DataFrameFormatter(
 
             result.isFormatted || result.isTruncated -> {
                 val tooltip = result.fullContent?.escapeHTML() ?: ""
-                return "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
+                "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
             }
 
             else -> result.truncatedContent
@@ -1050,11 +1081,21 @@ internal class DataFrameFormatter(
             if (content.isFormatted) isFormatted = true
         }
 
-        fun result() = RenderedContent(sb.toString(), len, if (isTruncated) "" else null, isFormatted)
+        fun result() =
+            RenderedContent(
+                truncatedContent = sb.toString(),
+                textLength = len,
+                fullContent = if (isTruncated) "" else null,
+                isFormatted = isFormatted,
+            )
     }
 
     private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
-        val limit = configuration.cellContentLimit
+        val limit = configuration.cellContentLimit ?: Int.MAX_VALUE
+        require(limit >= 0) {
+            "DisplayConfiguration.cellContentLimit must be non-negative but was $limit. " +
+                "Set it to `null` if you want to disable the limit."
+        }
 
         fun renderList(values: List<*>, prefix: String, postfix: String): RenderedContent {
             val sb = Builder()
@@ -1065,10 +1106,11 @@ internal class DataFrameFormatter(
                 }
 
                 fun addEllipsis() {
-                    if (limit == sb.len + "..".length + postfix.length) {
-                        sb += "..".addCss(structuralClass)
-                    } else {
-                        sb += "...".addCss(structuralClass)
+                    sb += when (limit) {
+                        sb.len + "..".length + postfix.length ->
+                            "..".addCss(structuralClass)
+
+                        else -> "...".addCss(structuralClass)
                     }
                     sb.isTruncated = true
                 }
@@ -1091,7 +1133,7 @@ internal class DataFrameFormatter(
                     }
 
                     else -> limit - sb.len - ", ...".length - postfix.length
-                }
+                }.coerceAtLeast(0)
 
                 val rendered = render(values[index], renderer, configuration.copy(cellContentLimit = valueLimit))
                 if (rendered == null || (rendered.textLength == 3 && rendered.isTruncated)) {
@@ -1152,9 +1194,12 @@ internal class DataFrameFormatter(
                         null
                     }
                 } else {
-                    val renderedValue =
-                        render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))
-                            ?: "...".addCss(structuralClass)
+                    val renderedValue = render(
+                        value = value.second,
+                        renderer = renderer,
+                        configuration = configuration.copy(cellContentLimit = limit - key.length),
+                    )
+                        ?: "...".addCss(structuralClass)
                     key.addCss(structuralClass) + renderedValue
                 }
             }
@@ -1177,7 +1222,7 @@ internal class DataFrameFormatter(
 
             else -> renderer.content(value, configuration)
         }
-        if (result != null && result.textLength > configuration.cellContentLimit) return null
+        if (result != null && configuration.cellContentLimit?.let { result.textLength > it } == true) return null
         return result
     }
 }

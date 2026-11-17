@@ -283,7 +283,7 @@ To configure the display for the entire notebook, please refer to the [](jupyter
 <!---FUN configureCellOutput-->
 
 ```kotlin
-df.toHtml(DisplayConfiguration(cellContentLimit = -1))
+df.toHtml(DisplayConfiguration(cellContentLimit = null))
 ```
 
 <!---END-->
