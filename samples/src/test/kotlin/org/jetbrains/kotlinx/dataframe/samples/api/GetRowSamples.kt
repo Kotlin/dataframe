@@ -4,8 +4,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.getOrNull
 import org.jetbrains.kotlinx.dataframe.api.getRows
-import org.jetbrains.kotlinx.dataframe.api.toList
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
@@ -18,7 +16,7 @@ class GetRowSamples : DataFrameSampleHelper("getRow", "api") {
         df.getRows(0..2) // a DataFrame with the first three rows
         df.getRows(listOf(4, 1)) // a DataFrame with the rows 4 and 1, in this order
         // SampleEnd
-        df.getRows(0..2).nrow shouldBe 3
+        df.getRows(0..2).rowsCount() shouldBe 3
         df.getRows(0..2).age.toList() shouldBe listOf(15, 45, 20)
         df.getRows(listOf(4, 1)).age.toList() shouldBe listOf(30, 45)
 
