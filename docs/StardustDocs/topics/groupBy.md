@@ -668,6 +668,29 @@ df.groupBy("isHappy").minBy("age").into("youngest") { getColumnGroup("name") }
 
 <!---END-->
 
+Passing only the column name, without an expression, stores the whole reduced row in a new
+[`column group`](DataColumn.md#columngroup). The reduced row keeps all the original columns, the grouping keys included.
+
+<!---FUN groupByIntoColumnGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { isHappy }.minBy { age }.into("youngest")
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("isHappy").minBy("age").into("youngest")
+```
+
+</tab></tabs>
+<inline-frame src="./resources/groupByIntoColumnGroup.html" width="100%" height="500px"></inline-frame>
+
+<!---END-->
+
 ## Aggregation
 
 A `GroupBy` can be directly transformed into a new [`DataFrame`](DataFrame.md) by applying one or more aggregation operations to its groups.

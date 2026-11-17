@@ -187,6 +187,7 @@
 <resource src="groupByExpr.html"></resource>
 <resource src="groupByFirst.html"></resource>
 <resource src="groupByInto.html"></resource>
+<resource src="groupByIntoColumnGroup.html"></resource>
 <resource src="groupByLast.html"></resource>
 <resource src="groupByMapToFrames.html"></resource>
 <resource src="groupByMapToRows.html"></resource>
