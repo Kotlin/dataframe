@@ -1,5 +1,5 @@
 [//]: # (title: Create DataColumn)
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.CreateColumnSamples-->
 
 This section describes ways to create a [`DataColumn`](DataColumn.md).
 
@@ -125,16 +125,16 @@ val age by personal.column<Int>()
 <tab title="Properties">
 
 ```kotlin
-val isAdult = column(df, "isAdult") { age > 18 }
-val withColumn = df.add { add(isAdult) }
+val isAdult = column(peopleDf, "isAdult") { age > 18 }
+val withColumn = peopleDf.add { add(isAdult) }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-val isAdult = column<Boolean>("isAdult") { "age"<Int>() > 18 }
-val withColumn = dataFrameOf("age")(20, 15).add { add(isAdult) }
+val isAdult = column<Boolean>("isAdult") { getValue<Int>("age") > 18 }
+val withColumn = peopleDf.add { add(isAdult) }
 ```
 
 </tab></tabs>

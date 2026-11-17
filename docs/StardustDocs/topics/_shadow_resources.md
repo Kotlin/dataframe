@@ -389,6 +389,16 @@
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotMany.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotManySeparate.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.statisticPivotSingle.html"></resource>
+<resource src="createDataFrameFromMap.html"></resource>
+<resource src="createDataFrameWithFill.html"></resource>
+<resource src="createNestedRandomDataFrame.html"></resource>
+<resource src="createRandomDataFrame.html"></resource>
+<resource src="duplicatedColumns.html"></resource>
+<resource src="readDataFrameFromDeepObject.html"></resource>
+<resource src="readDataFrameFromDeepObjectWithExclude.html"></resource>
+<resource src="readDataFrameFromObject.html"></resource>
+<resource src="toDataFrameColumn.html"></resource>
+<resource src="toDataFrameLists.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameWithFill.html"></resource>
 <resource src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createNestedRandomDataFrame.html"></resource>

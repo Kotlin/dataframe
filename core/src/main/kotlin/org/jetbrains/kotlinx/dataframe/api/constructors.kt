@@ -789,6 +789,8 @@ public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(he
  * Creates a [DataFrame] with the given column [header] where the values of each column
  * are produced by [fill]: it is called once per column name and returns the values for that column.
  *
+ * @include [ConstructorsDocs.InferredColumnTypeSnippet]
+ *
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
  * @param [header] The names of the columns.
@@ -832,6 +834,8 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 /**
  * Creates a [DataFrame] where each column is produced by [fill] from an element of [header];
  * the column name is the string representation of that element.
+ *
+ * @include [ConstructorsDocs.InferredColumnTypeSnippet]
  *
  * For more information: {@include [DocumentationUrls.DataFrameOf]}
  *
@@ -934,7 +938,9 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     /**
      * Creates a [DataFrame] where the values of each column are produced by [valuesBuilder]
-     * for that column's name; the column type comes from [T].
+     * for that column's name.
+     *
+     * @include [ConstructorsDocs.InferredColumnTypeSnippet]
      *
      * @param [valuesBuilder] Produces the values of a column by its name.
      */
@@ -1069,6 +1075,7 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
+     * @throws [IllegalArgumentException] if [range] is empty or its bounds are equal — no random value can be produced.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomDoubleRange")
@@ -1101,6 +1108,7 @@ public class DataFrameBuilder(private val header: List<String>) {
      *
      * @param [nrow] The number of rows in every column.
      * @param [range] The range of the random values: the lower bound is included, the upper bound is not.
+     * @throws [IllegalArgumentException] if [range] is empty or its bounds are equal — no random value can be produced.
      */
     @Refine
     @Interpretable("DataFrameBuilderRandomLongRange")

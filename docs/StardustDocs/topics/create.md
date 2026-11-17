@@ -1,6 +1,5 @@
 [//]: # (title: Create)
 <show-structure depth="3"/>
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 There are several ways to create [`DataFrame`](DataFrame.md) objects from data that is already loaded into memory:
 * [create columns with data](createColumn.md) and then [bundle them](createDataFrame.md) into a [`DataFrame`](DataFrame.md)

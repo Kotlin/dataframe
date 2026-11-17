@@ -38,4 +38,11 @@ internal interface ConstructorsDocs {
      * @throws [UnequalColumnSizesException] if column sizes are not equal
      */
     typealias DataFrameOfContractSnippet = Nothing
+
+    /**
+     * The type of each column is inferred from its values, with the reified type argument as an upper bound:
+     * with `Number` as the type argument, `listOf(1, 2)` produces a column of type `Int`,
+     * and only mixed values such as `listOf(1, 2.5)` produce a column of type `Number`.
+     */
+    typealias InferredColumnTypeSnippet = Nothing
 }

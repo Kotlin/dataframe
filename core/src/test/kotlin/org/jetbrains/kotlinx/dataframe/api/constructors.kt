@@ -752,6 +752,20 @@ class ConstructorsTests {
     }
 
     @Test
+    fun `builder randomLong on single-value range throws`() {
+        shouldThrow<IllegalArgumentException> {
+            dataFrameOf("x").randomLong(3, 5L..5L)
+        }
+    }
+
+    @Test
+    fun `builder randomDouble on single-value range throws`() {
+        shouldThrow<IllegalArgumentException> {
+            dataFrameOf("x").randomDouble(3, 1.0..1.0)
+        }
+    }
+
+    @Test
     fun `builder invoke with sequence fills row by row`() {
         val df = dataFrameOf("a", "b").invoke(sequenceOf(1, 2, 3, 4))
 
@@ -767,6 +781,27 @@ class ConstructorsTests {
         df["a"].values shouldBe listOf(1)
         df["b"].type shouldBe typeOf<String>()
         df["b"].values shouldBe listOf("x")
+    }
+
+    @Test
+    fun `builder invoke infers a narrower type from values within the reified bound`() {
+        val ints = dataFrameOf("a").invoke<Number> { listOf(1, 2) }
+        ints["a"].type shouldBe typeOf<Int>()
+
+        val mixed = dataFrameOf("a").invoke<Number> { listOf(1, 2.5) }
+        mixed["a"].type shouldBe typeOf<Number>()
+    }
+
+    @Test
+    fun `dataFrameOf fill infers a narrower type from values within the reified bound`() {
+        val varargFill = dataFrameOf("a") { listOf<Number>(1, 2) }
+        varargFill["a"].type shouldBe typeOf<Int>()
+
+        val headerFill = dataFrameOf(listOf("a")) { listOf<Number>(1, 2) }
+        headerFill["a"].type shouldBe typeOf<Int>()
+
+        val mixed = dataFrameOf("a") { listOf<Number>(1, 2.5) }
+        mixed["a"].type shouldBe typeOf<Number>()
     }
 
     // endregion
