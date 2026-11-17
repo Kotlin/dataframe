@@ -29,6 +29,7 @@ df
 ```
 
 <inline-frame src="./resources/replaceDf.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 ## Replace with an expression
@@ -56,6 +57,7 @@ df.replace("name").with { this[pathOf("name", "firstName")] }
 
 </tab></tabs>
 <inline-frame src="./resources/replaceGroupWithColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 To keep the name, return a column with the same name. Here the `String` columns at the top level
@@ -68,6 +70,7 @@ df.replace { colsOf<String?>() }.with { col -> col.map { it?.lowercase() } }
 ```
 
 <inline-frame src="./resources/replaceKeepName.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 To change the name, use `named` or `rename` on the new column:
@@ -89,6 +92,7 @@ df.replace("age").with { 2021 - it.cast<Int>() named "year" }
 
 </tab></tabs>
 <inline-frame src="./resources/replaceRename.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 The new column must have as many rows as the dataframe, and its name must not be used by another column
@@ -118,6 +122,7 @@ df.replace("weight", "age").with(df.weight * 1000 named "weightInGrams", df.age 
 
 </tab></tabs>
 <inline-frame src="./resources/replaceWithColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 `weight` is selected first, so it is replaced with `weightInGrams`,
@@ -158,6 +163,7 @@ df.convert("age").asColumn { it.convertToString().rename("ageText") }
 
 </tab></tabs>
 <inline-frame src="./resources/replaceVsConvertAsColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 The [compiler plugin](Compiler-Plugin.md) does not track `replace`: after it, the extension properties keep
@@ -204,6 +210,7 @@ reposWithFrames.asGroupBy("contributors").max("contributions")
 
 </tab></tabs>
 <inline-frame src="./resources/replaceWithFrameColumn.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 ## replaceAll
@@ -229,6 +236,7 @@ df.replaceAll("Alice" to "Alicia", "Moscow" to null)
 ```
 
 <inline-frame src="./resources/replaceAllValues.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 If the same value is given in several pairs, the last pair wins.
@@ -253,6 +261,7 @@ df.replaceAll(null to "Unknown", columns = { "city"<String?>() })
 
 </tab></tabs>
 <inline-frame src="./resources/replaceAllInColumns.html" width="100%" height="500px"></inline-frame>
+
 <!---END-->
 
 A new value has to fit the type of the column where it is put, otherwise `replaceAll` throws an exception.
