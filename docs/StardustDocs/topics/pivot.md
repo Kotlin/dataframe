@@ -201,8 +201,8 @@ df.groupBy { "name"["firstName"] }.pivot("isHappy").max("age")
 
 `frames` keeps each group as a frame — it returns a [`DataFrame`](DataFrame.md)
 with one row per unique combination of the grouping values and one [`column group`](DataColumn.md#columngroup)
-per pivoted column, holding the corresponding groups as [`FrameColumn`](DataColumn.md#framecolumn) values;
-a combination with no rows is an empty frame:
+per pivoted column, with [`FrameColumn`](DataColumn.md#framecolumn)s inside holding the corresponding groups
+as [`DataFrame`](DataFrame.md) values; a combination with no rows is an empty frame:
 
 <!---FUN pivotGroupByFrames-->
 <tabs>

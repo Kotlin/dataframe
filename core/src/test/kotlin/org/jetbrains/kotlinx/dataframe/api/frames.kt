@@ -24,6 +24,10 @@ import org.junit.Test
  *
  * - on a [Pivot] with nested keys (`then`): the key values nest in column groups
  * reflecting the key structure.
+ *
+ * - on a [Pivot] with `and` keys or an explicit `inward`: one column group per pivot key
+ * with `and`; `inward = true` wraps a single key's values in a column group named after
+ * the pivoted column; `inward = false` does not change the `then` nesting.
  */
 class FramesTests : TestBase() {
 
@@ -60,6 +64,43 @@ class FramesTests : TestBase() {
         pivoted.getColumnGroup("Bob").columnNames() shouldBe listOf("true")
         pivoted.getColumnGroup("Charlie").columnNames() shouldBe listOf("false", "true")
         // the nested frame columns hold the rows of the corresponding pivot group
+        (pivoted["Bob"] as DataRow<*>)["true"] shouldBe df.filter { name.firstName == "Bob" && isHappy }
+    }
+
+    @Test
+    fun `pivot frames with a single key and inward true wraps the key values in a column group`() {
+        val pivoted = df.pivot(inward = true) { isHappy }.frames()
+        pivoted.columnNames() shouldBe listOf("isHappy")
+        val isHappyGroup = pivoted.df().getColumnGroup("isHappy")
+        isHappyGroup.columnNames() shouldBe listOf("true", "false")
+        isHappyGroup.columns().map { it.kind() } shouldBe listOf(ColumnKind.Frame, ColumnKind.Frame)
+        // the group columns hold the frames of the corresponding pivot groups
+        (pivoted["isHappy"] as DataRow<*>)["true"] shouldBe df.filter { isHappy }
+    }
+
+    @Test
+    fun `pivot frames with several keys joined by and creates a column group per pivot key`() {
+        val pivoted = df.pivot { isHappy and name.firstName }.frames()
+        pivoted.columnNames() shouldBe listOf("isHappy", "name")
+        val isHappyGroup = pivoted.df().getColumnGroup("isHappy")
+        isHappyGroup.columnNames() shouldBe listOf("true", "false")
+        isHappyGroup.columns().map { it.kind() } shouldBe listOf(ColumnKind.Frame, ColumnKind.Frame)
+        (pivoted["isHappy"] as DataRow<*>)["true"] shouldBe df.filter { isHappy }
+        val nameGroup = pivoted.df().getColumnGroup("name")
+        nameGroup.columnNames() shouldBe listOf("firstName")
+        // the `name.firstName` key path stays nested inside the `name` group
+        val firstNameGroup = nameGroup.getColumnGroup("firstName")
+        firstNameGroup.columnNames() shouldBe listOf("Alice", "Bob", "Charlie")
+        firstNameGroup.columns().map { it.kind() } shouldBe
+            listOf(ColumnKind.Frame, ColumnKind.Frame, ColumnKind.Frame)
+    }
+
+    @Test
+    fun `pivot frames with nested pivot keys keeps the key value nesting with inward false`() {
+        // `inward` does not change the nesting of `then` keys, so the shape is the same as with the default
+        val pivoted = df.pivot(inward = false) { name.firstName then isHappy }.frames()
+        pivoted.columnNames() shouldBe listOf("Alice", "Bob", "Charlie")
+        pivoted.getColumnGroup("Alice").columnNames() shouldBe listOf("true", "false")
         (pivoted["Bob"] as DataRow<*>)["true"] shouldBe df.filter { name.firstName == "Bob" && isHappy }
     }
 
